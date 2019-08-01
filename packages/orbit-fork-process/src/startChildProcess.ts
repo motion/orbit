@@ -9,6 +9,10 @@ export type ChildProcessProps = {
   inspectPortRemote?: number
 }
 
+/**
+ * TODO theres some duplication here with forkAndStartOrbitApp
+ */
+
 export function startChildProcess({
   name = '',
   isNode = false,
@@ -17,8 +21,6 @@ export function startChildProcess({
   env = {},
 }: ChildProcessProps): ChildProcess {
   const Config = getGlobalConfig()
-  console.error('starting process, entry:', Config.paths.appEntry)
-
   let args = [Config.paths.appEntry]
 
   if (!Config.isProd) {
@@ -45,6 +47,7 @@ export function startChildProcess({
       NODE_ENV: process.env.NODE_ENV,
       PATH: process.env.PATH,
       LOG_LEVEL: process.env.LOG_LEVEL,
+      SINGLE_USE_MODE: process.env.SINGLE_USE_MODE,
       ...env,
       ORBIT_CONFIG: JSON.stringify(Config),
     },
@@ -56,17 +59,8 @@ export function startChildProcess({
 
   child.stderr.on('data', b => {
     const out = b.toString()
-    // ignore errors
-    if (
-      out.indexOf('Debugger listening on') >= 0 ||
-      out.indexOf('Debugger attached.') >= 0 ||
-      out.indexOf('DeprecationWarning:') >= 0
-    ) {
-      return
-    }
     if (/error/i.test(out) === false) {
-      console.error('\nGot an error that may not be worth reporting:')
-      console.error(`${name} error:`, out, '\n\n\n')
+      console.error('\nGot an error that may not be worth reporting:', name, out, '\n')
       return
     }
     console.error(`${name} error:`, out)

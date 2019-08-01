@@ -1,12 +1,18 @@
 import { getGlobalConfig } from '@o/config'
+import { Logger } from '@o/logger'
 import { app, dialog } from 'electron'
 
 import { handleExit } from './helpers/handleExit'
 
+const log = new Logger('startElectron')
+
 export function startElectron({ mainProcess }) {
   if (mainProcess) {
     // this works in prod
-    app.on('before-quit', handleExit)
+    app.on('before-quit', () => {
+      log.info('before-quit')
+      handleExit()
+    })
 
     if (app.isReady) {
       finishLaunchingElectron({ mainProcess })
@@ -25,7 +31,7 @@ const finishLaunchingElectron = async ({ mainProcess }) => {
   ElectronApp.main()
 
   // PRODUCTION
-  if (mainProcess && Config.isProd) {
+  if (mainProcess && Config.isProd && !process.env.SINGLE_USE_MODE) {
     // move to app folder
     if (!app.isInApplicationsFolder()) {
       app.dock.bounce('informational')

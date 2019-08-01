@@ -80,8 +80,20 @@ function SetupAppCustom() {
                       {
                         label: 'Blank',
                         template: 'blank',
-                        icon: 'template',
-                        subTitle: 'Empty app template',
+                        icon: 'square',
+                        subTitle: 'Empty app template.',
+                      },
+                      {
+                        label: 'Index/Detail',
+                        template: 'index-detail',
+                        icon: 'panel-stats',
+                        subTitle: 'Sidebar with list controlling main view.',
+                      },
+                      {
+                        label: 'Grid',
+                        template: 'grid',
+                        icon: 'grid-view',
+                        subTitle: 'Grid view, orderable and resizable.',
                       },
                     ]}
                     getItem={(props, { isSelected, select }) => (
@@ -278,16 +290,22 @@ const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
             </Text>
           </View>
         )}
-        <Button
-          alt="confirm"
-          onClick={async () => {
-            const definition = await getAppDefinition(flow.data.selectedAppIdentifier)
-            installApp(definition, newAppStore.app)
-          }}
-          icon="chevron-right"
-        >
-          Add
-        </Button>
+        {flow.index === 0 ? (
+          <Button onClick={flow.next} icon="chevron-right">
+            Customize
+          </Button>
+        ) : (
+          <Button
+            alt="confirm"
+            onClick={async () => {
+              const definition = await getAppDefinition(flow.data.selectedAppIdentifier)
+              installApp(definition, newAppStore.app)
+            }}
+            icon="chevron-right"
+          >
+            Add
+          </Button>
+        )}
       </Toolbar>
     </Scale>
   )

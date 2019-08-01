@@ -1,3 +1,4 @@
+import { selectDefined } from '@o/utils'
 import { Row } from 'gloss'
 import React, { useEffect, useState } from 'react'
 
@@ -122,6 +123,8 @@ export function FormField(props: FormFieldProps) {
   } else if ('value' in props) {
     val = props.value
   }
+  // default to string
+  val = selectDefined(val, '')
   const type = props.type || getDataType(val)
   const [name, setName] = useState(props.name || `field-${type}-${Math.random()}`)
 

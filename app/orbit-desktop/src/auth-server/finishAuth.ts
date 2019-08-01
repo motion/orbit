@@ -1,11 +1,11 @@
-import { downloadAppDefinition, getPackageId, requireAppDefinition } from '@o/cli'
+import { downloadAppDefinition, getPackageId, requireAppDefinition } from '@o/apps-manager'
 import { newEmptyAppBit } from '@o/libs'
 import { Logger } from '@o/logger'
 import { AppBit, AppEntity } from '@o/models'
 import { getRepository } from 'typeorm'
 
 import { getActiveSpace } from '../helpers/getActiveSpace'
-import { getCurrentWorkspace } from '../resolvers/AppOpenWorkspaceResolver'
+import { getCurrentWorkspace } from '../helpers/getCurrentWorkspace'
 import { OAuthStrategies } from './oauthStrategies'
 import { OauthValues } from './oauthTypes'
 

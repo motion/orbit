@@ -19,6 +19,8 @@ type ReactionConfig = {
   nameFull: string
 }
 
+const isVerbose = process.env.LOG_LEVEL && +process.env.LOG_LEVEL > 5
+
 // watches values in an autorun, and resolves their results
 export function createReaction(
   reaction: any,
@@ -260,6 +262,10 @@ export function createReaction(
       let curID = reactionID
       let result: any
 
+      if (isVerbose) {
+        log.verbose(`Running reaction ${config.nameFull}`)
+      }
+
       // async update helpers
       const updateAsync = val => updateAsyncValue(start, reactValArg, curID === reactionID, val)
       reactionHelpers.setValue = updateAsync
@@ -274,9 +280,9 @@ export function createReaction(
         curID = -1
         // got a nice cancel!
         if (err instanceof ReactionRejectionError || err instanceof ReactionTimeoutError) {
-          // if (!IS_PROD) {
-          //   log.verbose(`  ${config.name} [${curID}] cancelled: ${err.message}`)
-          // }
+          if (isVerbose) {
+            log.verbose(`${config.name} [${curID}] cancelled: ${err.message}`)
+          }
           return
         }
         throw err
@@ -301,9 +307,9 @@ export function createReaction(
           })
           .catch(err => {
             if (err instanceof ReactionRejectionError || err instanceof ReactionTimeoutError) {
-              // if (!IS_PROD) {
-              //   log.verbose(`${config.name} [${curID}] cancelled`)
-              // }
+              if (isVerbose) {
+                log.verbose(`${config.name} [${curID}] cancelled`)
+              }
             } else {
               throw err
             }

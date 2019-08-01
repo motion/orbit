@@ -1,4 +1,4 @@
-import { getWorkspaceApps, requireAppDefinition } from '@o/cli'
+import { getWorkspaceApps, requireAppDefinition } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppDefinition, Space } from '@o/models'
 
@@ -10,7 +10,7 @@ export async function getWorkspaceNodeApis(space: Space): Promise<AppDefinition[
     appsMeta.map(async ({ packageId, directory }) => {
       const res = await requireAppDefinition({ packageId, directory, types: ['node'] })
       if (res.type === 'error') {
-        log.info(`No node api, error: ${res.message}`)
+        log.verbose(`No node api, error: ${res.message}`)
         return null
       }
       return res.value

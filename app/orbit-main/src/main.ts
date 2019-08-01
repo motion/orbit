@@ -22,20 +22,15 @@ const { SUB_PROCESS, PROCESS_NAME, ORBIT_CONFIG, DISABLE_WORKERS, DISABLE_ELECTR
 
 const log = new Logger('orbit-main')
 
+const envInfo = {
+  SUB_PROCESS,
+  PROCESS_NAME,
+  DISABLE_WORKERS,
+  DISABLE_ELECTRON,
+}
+
 export async function main() {
-  log.info(
-    `starting ${PROCESS_NAME || 'orbit-main'} ${SUB_PROCESS} ${JSON.stringify(
-      {
-        SUB_PROCESS,
-        PROCESS_NAME,
-        ORBIT_CONFIG,
-        DISABLE_WORKERS,
-        DISABLE_ELECTRON,
-      },
-      null,
-      2,
-    )}`,
-  )
+  log.info(`starting ${PROCESS_NAME || 'orbit-main'} ${SUB_PROCESS}`, envInfo, ORBIT_CONFIG)
 
   // setup config
   if (SUB_PROCESS) {
@@ -58,7 +53,7 @@ export async function main() {
 
   const config = getGlobalConfig()
 
-  if (!SUB_PROCESS) {
+  if (!SUB_PROCESS && !process.env.SINGLE_USE_MODE) {
     // 🐛 for some reason you'll get "directv-tick" consistently on a port
     // EVEN IF port was found to be empty.... killing again helps
     const ports = Object.values(config.ports)
@@ -78,8 +73,8 @@ export async function main() {
       case 'desktop':
         require('@o/orbit-desktop').main()
         return
-      case 'syncers':
-        require('@o/orbit-syncers').main()
+      case 'workers':
+        require('@o/orbit-workers').main()
         return
       case 'electron-menus':
       case 'electron-apps':
@@ -116,7 +111,7 @@ export async function main() {
   // each call pushes the process into the array and then gives them all over to setupHandleExit
   const setupProcess = (opts: ChildProcessProps) => {
     const p = startChildProcess(opts)
-    setupHandleExit(p)
+    setupHandleExit(opts.name, p)
   }
 
   // start desktop before starting other processes (it runs the server)...
@@ -126,6 +121,11 @@ export async function main() {
     isNode: true,
   })
 
+  if (process.env.SINGLE_USE_MODE) {
+    log.verbose(`Single use mode!, not running other processes`)
+    return
+  }
+
   if (DISABLE_ELECTRON !== 'true') {
     log.info('Starting electron...')
 
@@ -133,11 +133,18 @@ export async function main() {
     require('./startElectron').startElectron({ mainProcess: true })
   }
 
-  // syncers
+  // workers
   if (!DISABLE_WORKERS) {
-    await new Promise(res => setTimeout(res, 1000))
+    // i bumped up the wait time here because when you run `orbit ws` the CLI:
+    //  1. starts orbit-desktop
+    //  2. sends OpenWorkspaceCommand to the resolver
+    //  3. that then needs to validate/update the space.directory if it moved
+    //  4. if workers runs too quickly it will run its OrbitAppsManager with the wrong space.directory
+    //
+    //  the ideal fix would be a big refactor of this whole area taking into account many moving pieces
+    await new Promise(res => setTimeout(res, 8000))
     setupProcess({
-      name: 'syncers',
+      name: 'workers',
       inspectPort: 9003,
       isNode: true,
       env: {

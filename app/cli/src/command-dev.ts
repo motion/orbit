@@ -1,72 +1,72 @@
-import { AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand } from '@o/models'
-import { copy, pathExists, readJSON } from 'fs-extra'
-import { join } from 'path'
+import { AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand, CommandDevOptions } from '@o/models'
 
-import { isInWorkspace, commandWs } from './command-ws'
 import { getOrbitDesktop } from './getDesktop'
+import { logStatusReply } from './logStatusReply'
 import { addProcessDispose } from './processDispose'
 import { reporter } from './reporter'
-import { baseWorkspaceDir, configStore } from './util/configStore'
-
-export type CommandDevOptions = { projectRoot: string }
 
 export async function commandDev(options: CommandDevOptions) {
   const { mediator, didStartOrbit } = await getOrbitDesktop()
 
-  if (!mediator) {
-    process.exit(0)
-  }
-
   if (didStartOrbit) {
     reporter.info(`Starting workspace from command: dev`)
-    const baseWorkspace = await ensureBaseWorkspace()
-    const lastWorkspace = configStore.lastActiveWorkspace.get()
-    const workspaceRoot = (await isInWorkspace(options.projectRoot, lastWorkspace))
-      ? lastWorkspace
-      : baseWorkspace
-    reporter.info(`Using workspace: ${workspaceRoot}`)
-
-    await commandWs({
-      workspaceRoot,
-      // TODO
-      mode: 'development',
-    })
+    console.log('TODO re-enable this')
+    // const baseWorkspace = await ensureBaseWorkspace()
+    // const lastWorkspace = configStore.lastActiveWorkspace.get()
+    // const workspaceRoot = (await isInWorkspace(options.projectRoot, lastWorkspace))
+    //   ? lastWorkspace
+    //   : baseWorkspace
+    // reporter.info(`Using workspace: ${workspaceRoot}`)
+    // await commandWs({
+    //   workspaceRoot,
+    //   mode: 'development',
+    // })
   }
 
-  const entry = await getAppEntry(options.projectRoot)
-
   try {
-    const appId = await mediator.command(AppDevOpenCommand, {
-      path: options.projectRoot,
-      entry,
-    })
+    const reply = await mediator.command(AppDevOpenCommand, options)
+    if (reply.type !== 'success') {
+      reporter.panic(reply.message)
+      return
+    }
+    const appId = +reply.value
     await mediator.command(AppOpenWindowCommand, {
       appId,
       isEditing: true,
     })
     addProcessDispose(async () => {
       reporter.info('Disposing orbit dev process...')
-      await mediator.command(AppDevCloseCommand, {
-        appId,
-      })
+      logStatusReply(
+        await mediator.command(AppDevCloseCommand, {
+          appId,
+        }),
+      )
     })
   } catch (err) {
     reporter.panic(`Error opening app for dev ${err.message}\n${err.stack}`)
   }
 }
 
-export async function getAppEntry(appRoot: string) {
-  const pkg = await readJSON(join(appRoot, 'package.json'))
-  return join(appRoot, `${pkg['ts:main'] || pkg.main}`)
-}
+// async function isInWorkspace(packagePath: string, workspacePath: string): Promise<boolean> {
+//   try {
+//     const packageInfo = await readJSON(join(packagePath, 'package.json'))
+//     const workspaceInfo = await getWorkspaceApps(workspacePath)
+//     if (packageInfo && workspaceInfo) {
+//       return workspaceInfo.some(x => x.packageId === packageInfo.name)
+//     }
+//   } catch (err) {
+//     reporter.verbose(`Potential err ${err.message}`)
+//   }
+//   return false
+// }
 
-/**
- * Copy an empty workspace somewhere so we can use it for developing apps outside a workspace
- */
-async function ensureBaseWorkspace() {
-  if (await pathExists(baseWorkspaceDir)) {
-    return baseWorkspaceDir
-  }
-  await copy(join(__dirname, '..', 'base-workspace'), baseWorkspaceDir)
-  return baseWorkspaceDir
-}
+// /**
+//  * Copy an empty workspace somewhere so we can use it for developing apps outside a workspace
+//  */
+// async function ensureBaseWorkspace() {
+//   if (await pathExists(baseWorkspaceDir)) {
+//     return baseWorkspaceDir
+//   }
+//   await copy(join(__dirname, '..', 'base-workspace'), baseWorkspaceDir)
+//   return baseWorkspaceDir
+// }

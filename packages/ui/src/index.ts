@@ -5,7 +5,6 @@ module['hot'] && module['hot'].accept()
 export * from './helpers/configureHotKeys'
 export { default as allIcons } from './icons'
 
-export { ImmutableUpdateFn } from './types'
 export * from '@o/color'
 export * from '@o/utils'
 

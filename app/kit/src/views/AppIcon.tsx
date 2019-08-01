@@ -43,6 +43,10 @@ export const AppIcon = memo(
       return <SVG fill={color} svg={iconSrc} width={`${props.size}px`} height={`${props.size}px`} />
     }
 
+    if (typeof icon !== 'string') {
+      throw new Error(`Icon isn't a string ${icon}`)
+    }
+
     return (
       <IconShape ref={ref} gradient={colors} size={48} shape="squircle" name={icon} {...props} />
     )

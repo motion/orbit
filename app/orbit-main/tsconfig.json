@@ -13,7 +13,7 @@
 
     // processes
     { "path": "../orbit-desktop" },
-    { "path": "../orbit-syncers" },
+    { "path": "../orbit-workers" },
     { "path": "../orbit-electron" },
 
     // including orbit-app references here

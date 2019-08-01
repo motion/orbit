@@ -163,7 +163,7 @@ export class Syncer {
    * Reacts on app changes - manages apps lifecycle and how syncer deals with it.
    */
   private async reactOnSettingsChanges(apps: AppBit[]) {
-    this.log.info('got apps in syncer', apps.length)
+    this.log.verbose('got apps in syncer', apps.length)
 
     const intervalSettings = this.intervals
       .filter(interval => !!interval.app)
@@ -175,7 +175,7 @@ export class Syncer {
     // find new apps (for those we don't have intervals) and run intervals for them
     const newSettings = apps.filter(app => intervalSettingIds.indexOf(app.id) === -1)
     if (newSettings.length) {
-      this.log.info('found new apps, creating intervals for them', newSettings)
+      this.log.verbose('found new apps, creating intervals for them', newSettings)
       for (let app of newSettings) {
         await this.runInterval(app)
       }
@@ -184,7 +184,7 @@ export class Syncer {
     // find removed apps and remove intervals for them if they exist
     const removedSettings = intervalSettings.filter(app => appIds.indexOf(app.id) === -1)
     if (removedSettings.length) {
-      this.log.info('found removed apps, removing their intervals', removedSettings)
+      this.log.verbose('found removed apps, removing their intervals', removedSettings)
       for (let app of removedSettings) {
         const interval = this.intervals.find(interval => {
           return interval.app && interval.app.id === app.id
@@ -198,7 +198,7 @@ export class Syncer {
           this.intervals.splice(this.intervals.indexOf(interval), 1)
         }
       }
-      this.log.info('intervals were removed', this.intervals)
+      this.log.verbose('intervals were removed', this.intervals)
     }
   }
 
@@ -231,13 +231,13 @@ export class Syncer {
 
         // if app was closed when syncer was in processing
         if (lastJob.status === 'PROCESSING' && !interval) {
-          this.log.info(
+          this.log.verbose(
             `found job for ${jobName} but it left uncompleted (probably app was closed before job completion). Removing stale job and run synchronization again`,
           )
           await getRepository(JobEntity).remove(lastJob)
         } else {
           if (needToWait > 0) {
-            this.log.info(
+            this.log.verbose(
               `found last job ${jobName} should wait until enough interval time will pass`,
               {
                 jobTime,
@@ -249,7 +249,7 @@ export class Syncer {
             setTimeout(() => this.runInterval(app), needToWait)
             return
           }
-          this.log.info(
+          this.log.verbose(
             `found last executed job for ${this.name} and its okay to execute a new job`,
             lastJob,
           )
@@ -259,7 +259,7 @@ export class Syncer {
 
     // clear previously run interval if exist
     if (interval) {
-      this.log.info('clearing previous interval', interval)
+      this.log.verbose('clearing previous interval', interval)
       if (interval.running)
         // if its running await it
         await interval.running
@@ -279,7 +279,7 @@ export class Syncer {
         timer: setInterval(async () => {
           // if we still have previous interval running - we don't do anything
           if (interval.running) {
-            this.log.info(
+            this.log.verbose(
               `tried to run ${
                 this.name
               } based on interval, but synchronization is already running, skipping`,

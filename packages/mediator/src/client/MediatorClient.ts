@@ -79,16 +79,19 @@ export class MediatorClient {
     // see MediatorServer.command setting timeout
     options: { timeout?: number } = { timeout: 20000 },
   ): Promise<ReturnType> {
+    log.info(`MediatorClient.command`, command, args)
+
     const name = typeof command === 'string' ? command : command.name
 
     for (let transport of this.options.transports) {
       try {
+        const timeout = options.timeout || 20000
         const response = await orTimeout(
           transport.execute('command', {
             command: name,
             args,
           }),
-          options.timeout || 20000,
+          timeout,
         )
 
         if (response && response.notFound === true) {

@@ -14,7 +14,7 @@ const endpoint = 'https://jsonplaceholder.typicode.com'
 const type = ['paid', 'trial', 'enterprise', 'power']
 const active = ['active', 'inactive']
 
-export function DemoAppUserManager() {
+function DemoAppUserManager() {
   const [highlighted, setHighlighted] = useState([])
   const form = useCreateForm()
   const allUsers = useFetch(`${endpoint}/users`)

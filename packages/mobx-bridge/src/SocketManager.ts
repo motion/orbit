@@ -25,6 +25,7 @@ export class SocketManager {
 
   dispose() {
     this.server.clients.forEach(ws => {
+      ws.close()
       ws.terminate()
     })
   }

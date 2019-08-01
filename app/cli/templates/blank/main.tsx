@@ -1,6 +1,6 @@
 import { App, createApp } from '@o/kit'
-import React from 'react'
 import { Title } from '@o/ui'
+import React from 'react'
 
 /**
  * Your default export creates the app. Some notes:
@@ -12,9 +12,9 @@ import { Title } from '@o/ui'
  */
 
 export default createApp({
-  id: '$APP_IDENTIFIER',
-  name: '',
-  icon: '',
+  id: '$ID',
+  name: '$NAME',
+  icon: '$ICON',
   iconColors: ['#111', '#222'],
   app: () => (
     <App>

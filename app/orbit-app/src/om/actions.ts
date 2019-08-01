@@ -18,14 +18,22 @@ export const setShare: Action<{ id: string; value: ShareItem }> = ({ state }, { 
   state.share[id] = filterCleanObject(value)
 }
 
+export const rerenderApp: Action = () => {
+  window['rerender']()
+}
+
 export const finishAuthorization: AsyncAction<{ path: string }> = async (_, { path }) => {
-  console.log('finishAuthorization path', path)
   if (firebase.auth().isSignInWithEmailLink(path)) {
     try {
       const user = await loadOne(UserModel, { args: {} })
       if (!user.email) throw new Error(`There is no email in user, something went wrong...`)
 
       const result = await firebase.auth().signInWithEmailLink(user.email, path)
+
+      if (!result.user) {
+        console.warn('no user')
+        return
+      }
 
       await save(UserModel, { ...user, cloudId: result.user.uid })
 

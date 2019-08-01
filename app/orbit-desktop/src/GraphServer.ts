@@ -1,8 +1,8 @@
-import { requireWorkspaceDefinitions } from '@o/cli'
+import { requireWorkspaceDefinitions } from '@o/apps-manager'
 import { getGlobalConfig } from '@o/config'
 import { nestSchema } from '@o/graphql-nest-schema'
 import { Logger } from '@o/logger'
-import { AppBit, AppEntity, Space, SpaceEntity } from '@o/models'
+import { AppBit } from '@o/models'
 import { partition } from '@o/utils'
 import { createHttpLink } from 'apollo-link-http'
 import bodyParser from 'body-parser'
@@ -15,8 +15,8 @@ import {
   makeRemoteExecutableSchema,
   mergeSchemas,
 } from 'graphql-tools'
-import killPort from 'kill-port'
-import { getRepository } from 'typeorm'
+
+import { getActiveSpace } from './helpers/getActiveSpace'
 
 const log = new Logger('graphServer')
 const Config = getGlobalConfig()
@@ -28,16 +28,14 @@ export class GraphServer {
 
   constructor() {
     this.server = express()
-    this.server.set('port', port)
+  }
+
+  start() {
     this.server.use(require('cors')())
     this.server.disable('etag')
     this.server.use(bodyParser.json({ limit: '2048mb' }))
     this.server.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
     this.server.get('/hello', (_, res) => res.send('hello world'))
-  }
-
-  start() {
-    this.watchWorkspacesForGraphs()
 
     // graphql
     this.server.use('/graphql/:workspaceId', bodyParser.json(), (req, res, next) => {
@@ -54,130 +52,99 @@ export class GraphServer {
     })
 
     return new Promise(async res => {
-      log.verbose(`Killing old server on ${port}...`)
-      await killPort(port)
-
+      log.info(`Starting on ${port}`)
       this.server.listen(port, () => {
-        res()
         log.info('Server listening', port)
+        res()
       })
     })
   }
 
-  private watchWorkspacesForGraphs() {
-    let subs: ZenObservable.Subscription[] = []
+  async setupGraph(apps: AppBit[]) {
+    const space = await getActiveSpace()
+    let schemas = []
 
-    getRepository(SpaceEntity)
-      .observe()
-      .subscribe(async _ => {
-        for (const sub of subs) {
-          sub.unsubscribe()
-        }
+    const allWorkspaceDefs = await requireWorkspaceDefinitions(space.directory, 'node')
+    const [errors, nonErrors] = partition(allWorkspaceDefs, x => x.type === 'error')
+    const appDefs = nonErrors
+      .filter(x => x.type === 'success')
+      .map(x => x.type === 'success' && x.value)
 
-        let spaces: Space[] = _ as any
+    if (errors.length) {
+      // TODO should have a build process here where we automatically build un-built things, but requires work
+      log.error(
+        `errors in app definitions ${errors.map(x => x.type === 'error' && x.value).join('\n')}`,
+      )
+    }
 
-        for (const space of spaces) {
-          subs.push(this.watchAppsForSchemaSetup(space))
-        }
-      })
-  }
+    for (const app of apps) {
+      const appDef = appDefs.find(def => def.id === app.identifier)
 
-  private watchAppsForSchemaSetup(space: Space) {
-    return getRepository(AppEntity)
-      .observe({
-        where: {
-          spaceId: space.id,
-        },
-      })
-      .subscribe(async _ => {
-        const apps: AppBit[] = _ as any
+      if (app && !appDef) {
+        log.verbose(
+          `GraphServer, ${
+            app.identifier
+          }: WARNING! found an app-bit but no app-def, DB maybe out of sync.`,
+        )
+      } else {
+        // console.log(`
+        //   loading ${app.identifier}, graph? ${!!appDef.graph}
+        // `)
+      }
 
-        let schemas = []
+      if (!appDef) continue
+      if (!appDef.graph) continue
 
-        const allWorkspaceDefs = await requireWorkspaceDefinitions(space.directory, 'node')
-        const [errors, nonErrors] = partition(allWorkspaceDefs, x => x.type === 'error')
-        const appDefs = nonErrors
-          .filter(x => x.type === 'success')
-          .map(x => x.type === 'success' && x.value)
+      try {
+        const appSchema = await appDef.graph(app)
 
-        if (errors.length) {
-          // TODO should have a build process here where we automatically build un-built things, but requires work
-          log.error(
-            `errors in app definitions ${errors
-              .map(x => x.type === 'error' && x.value)
-              .join('\n')}`,
-          )
-        }
+        let schema: GraphQLSchema
 
-        for (const app of apps) {
-          const appDef = appDefs.find(def => def.id === app.identifier)
-
-          if (app && !appDef) {
-            log.verbose(
-              `GraphServer, ${
-                app.identifier
-              }: WARNING! found an app-bit but no app-def, DB maybe out of sync.`,
-            )
-          } else {
-            // console.log(`
-            //   loading ${app.identifier}, graph? ${!!appDef.graph}
-            // `)
-          }
-
-          if (!appDef) continue
-          if (!appDef.graph) continue
-
-          try {
-            const appSchema = await appDef.graph(app)
-
-            let schema: GraphQLSchema
-
-            if (appSchema.remoteHttpLink) {
-              const link = createHttpLink(appSchema.remoteHttpLink)
-              const introspectionSchema = await introspectSchema(link)
-              schema = makeRemoteExecutableSchema({
-                schema: introspectionSchema,
-                link,
-              })
-            } else {
-              if (typeof appSchema.schema === 'string') {
-                schema = makeExecutableSchema({
-                  typeDefs: appSchema.schema,
-                  resolvers: appSchema.resolvers,
-                })
-              } else {
-                schema = appSchema.schema || appSchema
-              }
-              if (appSchema.link) {
-                schema = makeRemoteExecutableSchema({
-                  schema,
-                  link: appSchema.link,
-                })
-              }
-            }
-
-            const whiteSpaceRegex = /[\s]+/g
-            const typeName = app.name
-              .split(whiteSpaceRegex)
-              .map(x => x.replace(/[^a-zA-Z]/g, ''))
-              .join('_')
-            const fieldName = app.identifier.replace('-', '_')
-
-            schema = await nestSchema({
-              typeName,
-              fieldName,
-              schema,
+        if (appSchema.remoteHttpLink) {
+          const link = createHttpLink(appSchema.remoteHttpLink)
+          const introspectionSchema = await introspectSchema(link)
+          schema = makeRemoteExecutableSchema({
+            schema: introspectionSchema,
+            link,
+          })
+        } else {
+          if (typeof appSchema.schema === 'string') {
+            schema = makeExecutableSchema({
+              typeDefs: appSchema.schema,
+              resolvers: appSchema.resolvers,
             })
-
-            schemas.push(schema)
-          } catch (err) {
-            log.error(`\n\n Error loading graph for ${app.id}: ${err.message}\n${err.stack}`)
+          } else {
+            schema = appSchema.schema || appSchema
+          }
+          if (appSchema.link) {
+            schema = makeRemoteExecutableSchema({
+              schema,
+              link: appSchema.link,
+            })
           }
         }
 
-        this.graphMiddleware[space.id] = graphqlExpress({
-          schema: mergeSchemas({ schemas }),
+        const whiteSpaceRegex = /[\s]+/g
+        const typeName = app.name
+          .split(whiteSpaceRegex)
+          .map(x => x.replace(/[^a-zA-Z]/g, ''))
+          .join('_')
+        const fieldName = app.identifier.replace('-', '_')
+
+        schema = await nestSchema({
+          typeName,
+          fieldName,
+          schema,
         })
-      })
+
+        schemas.push(schema)
+      } catch (err) {
+        log.error(`\n\n Error loading graph for ${app.id}: ${err.message}\n${err.stack}`)
+      }
+    }
+
+    this.graphMiddleware[space.id] = graphqlExpress({
+      schema: mergeSchemas({ schemas }),
+    })
   }
 }

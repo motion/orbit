@@ -219,7 +219,7 @@ const useIsAppWrapped = (appDef: AppDefinition) => {
             return finish(false)
           }
           const appChildEl = appView({})
-          return finish(!!(appChildEl && appChildEl.type['isApp']))
+          return finish(!!(appChildEl && appChildEl.type && appChildEl.type['isApp']))
         } catch (err) {
           if (err.message.indexOf('Invalid hook call') > -1) {
             // ignore

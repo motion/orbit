@@ -1,5 +1,4 @@
 import { getGlobalConfig } from '@o/config'
-import { Cosal } from '@o/cosal'
 import { Logger } from '@o/logger'
 import {
   MediatorClient,
@@ -9,7 +8,6 @@ import {
   typeormResolvers,
   WebSocketClientTransport,
   WebSocketServerTransport,
-  resolveObserveOne,
 } from '@o/mediator'
 import {
   AppEntity,
@@ -31,19 +29,13 @@ import {
   SpaceModel,
   UserEntity,
   UserModel,
-  AppDevCloseCommand,
-  AppDevOpenCommand,
-  CloseAppCommand,
-  AppMetaCommand,
   AuthAppCommand,
-  AppGetWorkspaceAppsCommand,
   StateModel,
   StateEntity,
   RemoveAllAppDataCommand,
   AppStatusModel,
   ResetDataCommand,
 } from '@o/models'
-import { OrbitAppsManager } from '@o/libs-node'
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
 import { writeJSONSync } from 'fs-extra'
@@ -60,15 +52,11 @@ import { COSAL_DB } from './constants'
 import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
-// import { Screen } from '@o/screen'
-// import { OCRManager } from './managers/OCRManager'
-// import { ScreenManager } from './managers/ScreenManager'
 import { OnboardManager } from './managers/OnboardManager'
 import { OperatingSystemManager } from './managers/OperatingSystemManager'
 import { OrbitDataManager } from './managers/OrbitDataManager'
 import { TopicsManager } from './managers/TopicsManager'
 import { AppRemoveResolver } from './resolvers/AppRemoveResolver'
-import { createCallAppBitApiMethodResolver } from './resolvers/CallAppBitApiMethodResolver'
 import { ChangeDesktopThemeResolver } from './resolvers/ChangeDesktopThemeResolver'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { NewFallbackServerPortResolver } from './resolvers/NewFallbackServerPortResolver'
@@ -77,18 +65,38 @@ import { SearchResultResolver } from './resolvers/SearchResultResolver'
 import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
 import { WebServer } from './WebServer'
 import { GraphServer } from './GraphServer'
-import { AppMiddleware, AppDesc } from '@o/build-server'
-import { remove } from 'lodash'
 import { loadAppDefinitionResolvers } from './resolvers/loadAppDefinitionResolvers'
 import { FinishAuthQueue } from './auth-server/finishAuth'
-import { createAppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
-import { AppCreateWorkspaceResolver } from './resolvers/AppCreateWorkspaceResolver'
 import { createAppCreateNewResolver } from './resolvers/AppCreateNewResolver'
-import { appStatusManager } from './managers/AppStatusManager'
-import { WorkspaceManager } from '@o/cli/_/WorkspaceManager'
-import { getIdentifierToPackageId } from '@o/cli'
+import { WorkspaceManager } from './WorkspaceManager/WorkspaceManager'
+import { orTimeout, OR_TIMED_OUT } from '@o/utils'
 
-const log = new Logger('desktop')
+const log = new Logger('OrbitDesktopRoot')
+
+async function startSeries(
+  fns: (() => Promise<void>)[],
+  options: {
+    timeout?: number
+  } = {},
+) {
+  log.verbose(`startSeries ${fns.length}`)
+  for (const [index, fn] of fns.entries()) {
+    log.verbose(`startSeries, start function ${index}`, fn, options.timeout)
+    try {
+      if (options.timeout) {
+        await orTimeout(fn(), options.timeout)
+      } else {
+        await fn()
+      }
+    } catch (err) {
+      if (err === OR_TIMED_OUT) {
+        log.error('Timed out starting', fn)
+      }
+      log.error('got real err', err)
+      throw err
+    }
+  }
+}
 
 export class OrbitDesktopRoot {
   // public
@@ -104,84 +112,115 @@ export class OrbitDesktopRoot {
   webServer: WebServer
   bonjour: bonjour.Bonjour
   bonjourService: bonjour.Service
-  appMiddleware: AppMiddleware
 
   // managers
+  workspaceManager: WorkspaceManager
   orbitDataManager: OrbitDataManager
   cosalManager: CosalManager
   generalSettingManager: GeneralSettingManager
   topicsManager: TopicsManager
   operatingSystemManager: OperatingSystemManager
-  orbitAppsManager: OrbitAppsManager
-  workspaceManager: WorkspaceManager | null = null
 
   start = async () => {
-    await Desktop.start({
-      ignoreSelf: true,
-      master: true,
-      stores: {
-        App,
-        Electron,
-        Desktop,
-      },
-    })
+    // this is if we are running a CLI command that exits on finish
+    const singleUseMode = !!process.env.SINGLE_USE_MODE
+    log.verbose(`start(), singleUseMode ${singleUseMode}`)
 
-    // TODO: this abritrary ordering here is really a dependency graph, should be setup in that way
+    this.registerREPLGlobals()
 
-    // FIRST THING
-    // databaserunner runs your migrations which everything can be impacted by...
-    // leave it as high up here as possible
-    this.databaseManager = new DatabaseManager()
-    await this.databaseManager.start()
-
-    // run this early, it sets up the general setting if needed
-    this.generalSettingManager = new GeneralSettingManager()
-
-    // manages operating system state
-    this.operatingSystemManager = new OperatingSystemManager()
-
-    // search index
-    this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
-    await this.cosalManager.start()
-
-    // manage apps/apis
-    this.orbitAppsManager = new OrbitAppsManager()
-
-    await Promise.all([
-      this.generalSettingManager.start(),
-      this.operatingSystemManager.start(),
-      this.orbitAppsManager.start(),
-    ])
-
-    // signals to frontend to update app definitions
-    this.orbitAppsManager.onUpdatedAppMeta(appMeta => {
-      log.info('orbitAppsManager updating app meta', appMeta)
-      const identifiers = Object.keys(appMeta)
-      const packageIds = identifiers.map(getIdentifierToPackageId)
-      Desktop.setState({
-        workspaceState: {
-          packageIds,
-          identifiers,
+    await startSeries(
+      [
+        async () => {
+          if (!singleUseMode) {
+            await Desktop.start({
+              ignoreSelf: true,
+              master: true,
+              stores: {
+                App,
+                Electron,
+                Desktop,
+              },
+            })
+          }
         },
-      })
-    })
-
-    this.appMiddleware = new AppMiddleware()
-
-    this.appMiddleware.onStatus(status => {
-      appStatusManager.sendMessage(status)
-    })
-
-    const cosal = this.cosalManager.cosal
+        async () => {
+          // databaserunner runs your migrations which everything can be impacted by...
+          // leave it as high up here as possible
+          this.databaseManager = new DatabaseManager()
+          await this.databaseManager.start()
+        },
+        async () => {
+          this.workspaceManager = new WorkspaceManager(this.mediatorServer)
+          await this.workspaceManager.start({
+            singleUseMode,
+          })
+        },
+        async () => {
+          if (!singleUseMode) {
+            // run this early, it sets up the general setting if needed
+            this.generalSettingManager = new GeneralSettingManager()
+            await this.generalSettingManager.start()
+          }
+        },
+        async () => {
+          if (!singleUseMode) {
+            // manages operating system state
+            this.operatingSystemManager = new OperatingSystemManager()
+            await this.operatingSystemManager.start()
+          }
+        },
+        async () => {
+          if (!singleUseMode) {
+            // search index
+            this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
+            await this.cosalManager.start()
+          }
+        },
+        async () => {
+          if (!singleUseMode) {
+            // the electron app wont start until this runs
+            // start server a bit early so it lets them start
+            this.webServer = new WebServer({
+              middlewares: [this.workspaceManager.middleware],
+            })
+            await this.webServer.start()
+          }
+        },
+        async () => {
+          if (!singleUseMode) {
+            this.authServer = new AuthServer()
+            await this.authServer.start()
+          }
+        },
+        async () => {
+          if (!singleUseMode) {
+            // depends on cosal
+            this.topicsManager = new TopicsManager({ cosal: this.cosalManager.cosal })
+            await this.topicsManager.start()
+          }
+        },
+        async () => {
+          if (!singleUseMode) {
+            this.onboardManager = new OnboardManager()
+            await this.onboardManager.start()
+          }
+        },
+        async () => {
+          if (!singleUseMode) {
+            this.orbitDataManager = new OrbitDataManager()
+            await this.orbitDataManager.start()
+          }
+        },
+      ],
+      {
+        timeout: 3000,
+      },
+    )
 
     // pass dependencies into here as arguments to be clear
-    const mediatorPort = this.registerMediatorServer({
-      appMiddleware: this.appMiddleware,
-      cosal,
-      orbitAppsManager: this.orbitAppsManager,
-    })
+    const mediatorPort = this.registerMediatorServer()
 
-    // start announcing on bonjour
+    log.verbose(`Starting Bonjour service on ${mediatorPort}`)
     this.bonjour = bonjour()
     this.bonjourService = this.bonjour.publish({
       name: 'orbitDesktop',
@@ -190,53 +229,7 @@ export class OrbitDesktopRoot {
     })
     this.bonjourService.start()
 
-    // the electron app wont start until this runs
-    // start server a bit early so it lets them start
-    this.webServer = new WebServer(this.appMiddleware)
-    await this.webServer.start()
-
-    this.authServer = new AuthServer()
-    this.graphServer = new GraphServer()
-
-    await Promise.all([this.authServer.start(), this.graphServer.start()])
-
-    // depends on cosal
-    this.topicsManager = new TopicsManager({ cosal })
-    await this.topicsManager.start()
-
-    this.onboardManager = new OnboardManager()
-    await this.onboardManager.start()
-
-    // DISABLED: OCR/screen stuff
-
-    // setup screen before we pass into managers...
-    // this.screen = new Screen({
-    //   ...screenOptions,
-    //   showTray: true,
-    // })
-
-    // this.screen.onError(err => {
-    //   if (err.indexOf('Could not watch application') >= 0) {
-    //     return
-    //   }
-    //   console.log('Screen error', err)
-    // })
-
-    // start managers...
-
-    // if (!process.env.DISABLE_MENU) {
-    //   this.oracleManager = new OracleManager()
-    //   await this.oracleManager.start()
-    // }
-
-    // new ContextManager({ screen: this.screen })
-
-    this.orbitDataManager = new OrbitDataManager()
-    await this.orbitDataManager.start()
-
-    this.registerREPLGlobals()
-
-    console.log('DESKTOP FINISHED START()')
+    log.info('DESKTOP FINISHED START()')
   }
 
   restart = () => {
@@ -282,31 +275,24 @@ export class OrbitDesktopRoot {
     root.mediatorServer = this.mediatorServer
   }
 
-  setWorkspaceManager(wsManager: WorkspaceManager) {
-    this.workspaceManager = wsManager
-  }
-
   /**
    * Registers a mediator server which is responsible
    * for communication between processes.
    */
-  private registerMediatorServer(props: {
-    cosal: Cosal
-    orbitAppsManager: OrbitAppsManager
-    appMiddleware: AppMiddleware
-  }) {
-    const syncersTransport = new WebSocketClientTransport(
-      'syncers',
-      new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.syncersMediator}`, [], {
+  private registerMediatorServer() {
+    const cosal = this.cosalManager && this.cosalManager.cosal
+
+    const workersTransport = new WebSocketClientTransport(
+      'workers',
+      new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.workersMediator}`, [], {
         WebSocket,
         minReconnectionDelay: 1,
       }),
     )
 
-    const client = new MediatorClient({ transports: [syncersTransport] })
+    const client = new MediatorClient({ transports: [workersTransport] })
 
     const mediatorServerPort = this.config.ports.desktopMediator
-    let developingApps: AppDesc[] = []
 
     this.mediatorServer = new MediatorServer({
       models: [
@@ -336,38 +322,10 @@ export class OrbitDesktopRoot {
           { entity: UserEntity, models: [UserModel] },
           { entity: StateEntity, models: [StateModel] },
         ]),
-        resolveObserveOne(AppStatusModel, args => {
-          return appStatusManager.observe(args.appId)
-        }),
         ...loadAppDefinitionResolvers(),
-        resolveCommand(AppMetaCommand, async ({ identifier }) => {
-          return this.orbitAppsManager.appMeta[identifier] || null
-        }),
+        ...this.workspaceManager.getResolvers(),
         resolveCommand(GetPIDCommand, async () => {
           return process.pid
-        }),
-        resolveCommand(AppDevOpenCommand, async ({ path, entry }) => {
-          const appId = Object.keys(Electron.state.appWindows).length
-
-          // launch new app
-          Electron.setState({
-            appWindows: {
-              ...Electron.state.appWindows,
-              [appId]: {
-                appId,
-                appRole: 'editing',
-              },
-            },
-          })
-
-          developingApps.push({
-            entry,
-            appId,
-            path,
-            publicPath: `/appServer/${appId}`,
-          })
-          props.appMiddleware.setApps(developingApps)
-          return appId
         }),
         resolveCommand(RemoveAllAppDataCommand, async () => {
           log.info('Remove all app data!')
@@ -381,68 +339,46 @@ export class OrbitDesktopRoot {
           ])
           log.info('Remove all app data done')
         }),
-        resolveCommand(AppDevCloseCommand, async ({ appId }) => {
-          log.info('Removing build server', appId)
-          developingApps = remove(developingApps, x => x.appId === appId)
-          props.appMiddleware.setApps(developingApps)
-          log.info('Removing process', appId)
-          await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
-          log.info('Closed app', appId)
-        }),
-        createAppOpenWorkspaceResolver(this),
         createAppCreateNewResolver(this),
-        AppCreateWorkspaceResolver,
         AppRemoveResolver,
         NewFallbackServerPortResolver,
-        createCallAppBitApiMethodResolver(props.orbitAppsManager),
-        ...getCosalResolvers(props.cosal),
+        ...getCosalResolvers(cosal),
         resolveMany(SearchResultModel, async args => {
-          return await new SearchResultResolver(props.cosal, args).resolve()
+          return await new SearchResultResolver(cosal, args).resolve()
         }),
-        getSalientWordsResolver(props.cosal),
+        getSalientWordsResolver(cosal),
         resolveCommand(ResetDataCommand, async () => {
           log.info(`resetting data...`)
           await this.databaseManager.resetAllData()
         }),
         SendClientDataResolver,
         ChangeDesktopThemeResolver,
+
         resolveCommand(CheckProxyCommand, checkAuthProxy),
+
         resolveCommand(AuthAppCommand, async ({ authKey, identifier }) => {
           const success = (await checkAuthProxy()) || (await startAuthProxy())
-
           if (!success) {
             return {
               type: 'error' as const,
               message: `Error setting up local authentication proxy.`,
             }
           }
-
           const url = `${getGlobalConfig().urls.auth}/auth/${authKey}`
           const didOpenAuthUrl = await openUrl({ url })
-
           if (!didOpenAuthUrl) {
             return {
               type: 'error' as const,
               message: `Couldn't open the authentication url: ${url}`,
             }
           }
-
           // wait for finish from finishAuth()
           let finish
           const promise = new Promise(res => {
             finish = res
           })
-
           FinishAuthQueue.set(authKey, { identifier, finish })
-
           return await promise
-        }),
-
-        resolveCommand(AppGetWorkspaceAppsCommand, async () => {
-          if (this.workspaceManager) {
-            return this.workspaceManager.apps
-          }
-          return []
         }),
 
         resolveCommand(SetupProxyCommand, async () => {

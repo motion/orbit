@@ -6,6 +6,11 @@ import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
 import { IS_ELECTRON } from './constants'
 import { sleep } from './helpers'
 
+/**
+ * Warning: I ran into a bug importing @/kit or @/ui here (or anything from the base DLL)
+ * It causes many imports that shouldn't be undefined to be undefined.
+ */
+
 // Be careful not to import anything that depends on getGlobalConfig() here
 // we set it up once with setGlobalConfig() and then import the rest of the app
 // @ts-ignore
@@ -42,10 +47,16 @@ async function fetchInitialConfig() {
   window['GlobalConfig'] = config
 }
 
+// helper for force-rerender
+window['rerender'] = (force = true) => startApp(force)
+
 // setup for app
 async function main() {
   // we've already started, ignore
   if (getGlobalConfig()) return
+
+  // if you want to show a loading screen, do it above here
+  await fetchInitialConfig()
 
   // until resolved: https://github.com/webpack-contrib/webpack-hot-middleware/pull/362
   console.group = console.groupCollapsed
@@ -69,10 +80,6 @@ async function main() {
       ],
     })
   }
-
-  // if you want to show a loading screen, do it above here
-
-  await fetchInitialConfig()
 
   // start cross-process stores
   console.time('loadStores')
@@ -98,9 +105,6 @@ async function main() {
   startApp()
   console.timeEnd('startApp')
 }
-
-// helper for force-rerender
-window['rerender'] = (force = true) => startApp(force)
 
 const React = require('react')
 const ReactDOM = require('react-dom')

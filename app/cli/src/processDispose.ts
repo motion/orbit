@@ -10,10 +10,12 @@ process.on('SIGQUIT', dispose)
 
 // log errors
 process.on('uncaughtException', err => {
-  console.log('uncaughtException', err.message, err.stack)
+  console.error('uncaughtException', err.message, err.stack)
+  // process.exit(1)
 })
 process.on('unhandledRejection', err => {
-  console.log('unhandledRejection', err)
+  console.error('unhandledRejection', err)
+  // process.exit(1)
 })
 
 let disposers = []

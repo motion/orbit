@@ -202,7 +202,7 @@ export const Banner = (props: BannerViewProps) => {
       className="ui-banner"
       pointerEvents="auto"
       position="relative"
-      alt={type}
+      alt={type || 'action'}
       sizeRadius
       margin="md"
       marginTop={0}

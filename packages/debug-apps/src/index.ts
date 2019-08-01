@@ -5,7 +5,6 @@ import killPort from 'kill-port'
 
 import Browser from './debugBrowser'
 
-
 // quiet exit handling
 let browser
 
@@ -24,7 +23,7 @@ process.on('unhandledRejection', function(reason: any) {
   if (reason.message.indexOf('Execution context was destroyed.')) {
     return
   }
-  console.log('debug.unhandledRejection', reason.message, reason.stack)
+  console.error('debug.unhandledRejection', reason.message, reason.stack)
 })
 process.on('SIGUSR1', setExiting)
 process.on('SIGUSR2', setExiting)

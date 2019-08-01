@@ -19,6 +19,6 @@
     "ws": "^7.0.0"
   },
   "devDependencies": {
-    "execa": "^0.8.0"
+    "execa": "^2.0.3"
   }
 }

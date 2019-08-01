@@ -1,27 +1,12 @@
 #!/usr/bin/env node
-import { CommandWsOptions } from '@o/models'
+import { CommandBuildOptions, CommandDevOptions, CommandGenTypesOptions, CommandInstallOptions, CommandWsOptions, StatusReply } from '@o/models'
 import { readJSON } from 'fs-extra'
 import { join, resolve } from 'path'
 import Yargs from 'yargs'
 
-import { CommandBuildOptions } from './command-build'
-import { CommandDevOptions } from './command-dev'
-import { CommandGenTypesOptions } from './command-gen-types'
-import { CommandInstallOptions, CommandInstallRes } from './command-install'
 import { CommandNewOptions } from './command-new'
 import { CommandPublishOptions } from './command-publish'
 import { reporter } from './reporter'
-
-// programmatic API
-
-export * from './util/downloadAppDefinition'
-export * from './util/requireAppDefinition'
-export * from './util/requireWorkspaceDefinitions'
-export * from './util/getPackageId'
-export * from './util/findPackage'
-export * from './util/getWorkspaceApps'
-export * from './util/updateWorkspacePackageIds'
-export * from './util/getIsInMonorepo'
 
 // these require inside fn because we want to avoid long startup time requiring everything
 
@@ -33,7 +18,7 @@ export const commandPublish = (x: CommandPublishOptions) =>
 export const commandNew = (x: CommandNewOptions) => require('./command-new').commandNew(x)
 export const commandGenTypes = (x: CommandGenTypesOptions) =>
   require('./command-gen-types').commandGenTypes(x)
-export const commandInstall = (x: CommandInstallOptions): CommandInstallRes =>
+export const commandInstall = (x: CommandInstallOptions): StatusReply =>
   require('./command-install').commandInstall(x)
 
 // using require here because it's outside of ts's rootDir and ts complains otherwise
@@ -44,9 +29,9 @@ let version = packageJson.version
 let description = `Orbit v${version} - Build Amazing Apps Together`
 
 const setVerbose = (logLevel?: number) => {
-  if (logLevel) {
+  process.env.LOG_LEVEL = `${logLevel || 0}`
+  if (logLevel > 0) {
     reporter.setVerbose(true)
-    process.env.LOG_LEVEL = `${logLevel}`
   }
 }
 
@@ -74,15 +59,22 @@ function main() {
             describe:
               'Choose from pre-defined starter app templates, or give an identifier of an existing orbit app, or a shorthand to a github repository.',
             default: 'blank',
+          })
+          .option('icon', {
+            type: 'string',
+            describe: 'Give it an icon.',
+            default: 'square',
           }),
       async argv => {
         setVerbose(argv.logLevel)
-        reporter.info(`argv ${JSON.stringify(argv)}`)
+        reporter.verbose(`argv ${JSON.stringify(argv)}`)
         let projectRoot = resolve(cwd, argv.appName)
         const res = await commandNew({
           projectRoot,
           name: argv.appName,
           template: argv.template,
+          identifier: argv.appName,
+          icon: argv.icon,
         })
         if (res.type === 'error') {
           reporter.panic(res.message)
@@ -129,12 +121,11 @@ function main() {
           }),
       async argv => {
         setVerbose(argv.logLevel)
-        reporter.info(`argv ${JSON.stringify(argv)}`)
+        reporter.verbose(`argv ${JSON.stringify(argv)}`)
         let directory = resolve(cwd, argv.ws)
         await commandInstall({
           identifier: argv.id,
           directory,
-          verbose: !!argv.verbose,
           forceInstall: !!argv['force-install'],
           upgrade: !!argv.upgrade,
         })
@@ -164,13 +155,12 @@ function main() {
           }),
       async argv => {
         setVerbose(argv.logLevel)
-        reporter.info(`argv ${JSON.stringify(argv)}`)
+        reporter.verbose(`argv ${JSON.stringify(argv)}`)
         let projectRoot = resolve(cwd, argv.app)
         await commandBuild({
           projectRoot,
           watch: !!argv.watch,
           force: !!argv.force,
-          verbose: !!argv.verbose,
           debugBuild: !!argv['debug-build'],
         })
       },
@@ -204,7 +194,7 @@ function main() {
           }),
       async argv => {
         setVerbose(argv.logLevel)
-        reporter.info(`argv ${JSON.stringify(argv)}`)
+        reporter.verbose(`argv ${JSON.stringify(argv)}`)
         let projectRoot = resolve(cwd, argv.app)
         await commandPublish({
           projectRoot,
@@ -234,7 +224,7 @@ function main() {
           }),
       async argv => {
         setVerbose(argv.logLevel)
-        reporter.info(`argv ${JSON.stringify(argv)}`)
+        reporter.verbose(`argv ${JSON.stringify(argv)}`)
         let workspaceRoot = resolve(cwd, argv.workspace)
         await commandWs({
           workspaceRoot,
@@ -246,15 +236,21 @@ function main() {
     .command(
       'gen-types [app]',
       'Generate a types.json for the public API (internal, useful for testing)',
-      p => p.option('out', { alias: 'o' }),
+      p =>
+        p
+          .positional('app', {
+            type: 'string',
+            default: '.',
+            describe: 'The application to run',
+          })
+          .option('out', { alias: 'o' }),
       async argv => {
         setVerbose(argv.logLevel)
-        reporter.info(`argv ${JSON.stringify(argv)}`)
+        reporter.verbose(`argv ${JSON.stringify(argv)}`)
         const projectRoot = resolve(cwd)
         const projectEntry = join(
           projectRoot,
-          // ts:main?
-          (await readJSON(join(projectRoot, 'package.json')))['ts:main'],
+          (await readJSON(join(projectRoot, 'package.json')))['main'],
         )
         await commandGenTypes({
           projectRoot,

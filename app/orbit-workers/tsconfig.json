@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.base",
+  "compilerOptions": {
+    "composite": true,
+    "module": "CommonJS",
+    "outDir": "_",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*"],
+  "references": [
+    { "path": "../models" },
+    { "path": "../worker-kit" },
+    { "path": "../config" },
+    { "path": "../libs-node" },
+    { "path": "../apps-manager" },
+    { "path": "../../packages/logger" },
+    { "path": "../../packages/mediator" },
+    { "path": "../../packages/cosal" },
+    { "path": "../../packages/utils" }
+  ]
+}

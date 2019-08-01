@@ -78,12 +78,12 @@ export function AppsMainAddAppContent({
       afterTitle={
         <>
           {def.auth && (
-            <Button alt="confirm" icon="lock" onClick={() => installApp(def)}>
+            <Button alt="confirm" icon="lock" onClick={() => installApp(def!)}>
               Authenticate and add
             </Button>
           )}
           {!def.auth && !def.setup && (
-            <Button alt="confirm" icon="plus" onClick={() => installApp(def, true)}>
+            <Button alt="confirm" icon="plus" onClick={() => installApp(def!, true)}>
               Add
             </Button>
           )}

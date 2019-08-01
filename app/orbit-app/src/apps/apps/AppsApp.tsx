@@ -216,6 +216,7 @@ function AppSettings(props: { appId: number }) {
   return (
     <Section
       flex={1}
+      scrollable="y"
       titleBorder
       icon={<AppIcon identifier={app.identifier} colors={app.colors} />}
       space

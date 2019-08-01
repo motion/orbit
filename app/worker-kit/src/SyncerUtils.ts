@@ -1,6 +1,14 @@
 import { Logger } from '@o/logger'
 import { MediatorClient } from '@o/mediator'
-import { AppBit, AppEntity, Bit, BitContentType, BitEntity, CosalTopWordsModel, Location } from '@o/models'
+import {
+  AppBit,
+  AppEntity,
+  Bit,
+  BitContentType,
+  BitEntity,
+  CosalTopWordsModel,
+  Location,
+} from '@o/models'
 import { sleep, stringHash } from '@o/utils'
 import { chunk, uniqBy } from 'lodash'
 import { EntityManager, In, MoreThan } from 'typeorm'

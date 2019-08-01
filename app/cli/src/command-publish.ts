@@ -1,8 +1,7 @@
 import 'isomorphic-fetch'
 
+import { npmCommand, yarnOrNpm } from '@o/libs-node'
 import { AppDefinition } from '@o/models'
-import commandExists from 'command-exists'
-import exec from 'execa'
 import { pathExists, readFile, readJSON } from 'fs-extra'
 import { join } from 'path'
 import prompts from 'prompts'
@@ -50,10 +49,13 @@ export async function commandPublish(options: CommandPublishOptions) {
   try {
     // wont build it already built
     if (!options.ignoreBuild) {
-      await commandBuild({
-        projectRoot: options.projectRoot,
-        force: true,
-      })
+      await commandBuild(
+        {
+          projectRoot: options.projectRoot,
+          force: true,
+        },
+        false,
+      )
     }
 
     // publish to registry
@@ -131,13 +133,13 @@ export async function commandPublish(options: CommandPublishOptions) {
 
     if (shouldPublish) {
       // npm first so if it fails we dont udpate search
-      reporter.info(`Publishing app to npm registry`)
+      reporter.info(`Publishing to npm registry`)
       let err = await publishApp(`https://registry.npmjs.org`)
       if (err) {
         reporter.error(err.message, err.error)
         return err
       }
-      reporter.info(`Publishing app to our registry for search update`)
+      reporter.info(`Publishing to Orbit registry`)
       err = await publishApp()
       if (err) {
         reporter.error(err.message, err.error)
@@ -146,7 +148,7 @@ export async function commandPublish(options: CommandPublishOptions) {
     }
 
     // trigger search api index update
-    reporter.info(`Indexing new app information for search`)
+    reporter.info(`Pushing to Orbit app store`)
 
     // get README.md description
     let fullDescription = pkg.description
@@ -185,6 +187,8 @@ export async function commandPublish(options: CommandPublishOptions) {
   } catch (err) {
     reporter.error(err.message, err)
   }
+
+  process.exit(0)
 }
 
 async function publishApp(registry?: string) {
@@ -197,18 +201,4 @@ async function publishApp(registry?: string) {
       error: err,
     }
   }
-}
-
-export async function npmCommand(args: string) {
-  const cmd = await yarnOrNpm()
-  await exec(cmd, args.split(' '))
-}
-
-export async function yarnOrNpm() {
-  const hasYarn = await commandExists('yarn')
-  const hasNpm = await commandExists('npm')
-  if (!hasYarn && !hasNpm) {
-    throw new Error(`Neither npm or yarn installed, need one of them to continue.`)
-  }
-  return hasYarn ? 'yarn' : 'npm'
 }

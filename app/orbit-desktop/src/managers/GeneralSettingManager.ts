@@ -16,13 +16,13 @@ export class GeneralSettingManager {
     if (Config.isProd) {
       try {
         const dotApp = Config.paths.dotApp
-        console.log('auto launch path', dotApp)
+        log.verbose('auto launch path', dotApp)
         this.autoLaunch = new AutoLaunch({
           name: 'Orbit',
           path: dotApp,
         })
       } catch (err) {
-        console.error(err)
+        log.error(err)
       }
     }
   }
@@ -31,8 +31,6 @@ export class GeneralSettingManager {
     let user = await getRepository(UserEntity).findOne()
     this.handleAutoLaunch(user)
   }
-
-  dispose() {}
 
   handleAutoLaunch = (user: User) => {
     if (!this.autoLaunch) {

@@ -1,6 +1,7 @@
 import { Model } from '@o/mediator'
 import { FindOptions, FindOptionsWhere } from 'typeorm'
 
+import { AppDefinition } from './AppDefinition'
 import { AppBit } from './interfaces/AppBit'
 import { Bit } from './interfaces/Bit'
 import { BitContentType } from './interfaces/BitContentType'
@@ -56,6 +57,16 @@ export const AppStatusModel = new Model<AppStatusMessage, { appId: number }>('Ap
 export const AppStatusId = {
   install: (identifier: string) => `install-${identifier}`,
 }
+
+/**
+ * For communicating the status of the current workspace, for reloading app definitions
+ * across processes (see orbit-workers using this).
+ */
+export type WorkspaceInfo = {
+  identifier: string
+  definitions: AppDefinition & { version?: number }
+}
+export const WorkspaceInfoModel = new Model<WorkspaceInfo, undefined>('WorkspaceInfoModel')
 
 export type GroupResult = {
   title: string

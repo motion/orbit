@@ -30,7 +30,7 @@ export type GlobalConfig = {
     ocrBridge: number
     mediator: number
     desktopMediator: number
-    syncersMediator: number
+    workersMediator: number
     electronMediators: number[]
     auth: number
     authProxy: number
@@ -51,3 +51,6 @@ export function setGlobalConfig(nextConfig: GlobalConfig) {
   }
   config = Object.freeze(nextConfig)
 }
+
+// persisted config
+export * from './configStore.node'

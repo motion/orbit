@@ -1,4 +1,4 @@
-import { commandInstall, getPackageId, requireAppDefinition, updateWorkspacePackageIds } from '@o/cli'
+import { getPackageId, requireAppDefinition, updateWorkspacePackageIds } from '@o/apps-manager'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
@@ -7,8 +7,9 @@ import { pathExists } from 'fs-extra'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
+import { getCurrentWorkspace } from '../helpers/getCurrentWorkspace'
 import { appStatus } from '../managers/AppStatusManager'
-import { getCurrentWorkspace } from './AppOpenWorkspaceResolver'
+import { commandInstall } from '../WorkspaceManager/commandInstall'
 
 const log = new Logger('app-store-definition-resolvers')
 

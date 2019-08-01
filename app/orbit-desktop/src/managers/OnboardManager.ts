@@ -61,10 +61,8 @@ export class OnboardManager {
     // first copy it so it's not getting locked by active chrome
     // @ts-ignore it has wrong types
     await Fs.copyFile(dbPath, tmpDbPath)
-
     const db = await sqlite.open(tmpDbPath)
     const foundSources = {}
-
     for (const { name, patterns } of sourcePatterns) {
       for (const pattern of patterns) {
         const found = await this.getTopUrlsLike(db, pattern)
@@ -74,11 +72,8 @@ export class OnboardManager {
         }
       }
     }
-
     await Fs.remove(tmpDbPath)
-
     this.foundSources = foundSources
-
     Desktop.setState({
       onboardState: {
         foundSources,

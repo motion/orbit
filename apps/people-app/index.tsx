@@ -11,7 +11,7 @@ export default createApp({
   app: () => <AppNavigator index={PeopleAppIndex} detail={PeopleAppMain} />,
 })
 
-export function PeopleAppIndex(props: NavigatorProps) {
+function PeopleAppIndex(props: NavigatorProps) {
   const people = useBitSearch({
     type: 'person',
     excludeData: true,
@@ -45,7 +45,7 @@ export function PeopleAppIndex(props: NavigatorProps) {
   )
 }
 
-export function PeopleAppMain(props: AppViewProps) {
+function PeopleAppMain(props: AppViewProps) {
   if (!props.id) {
     return (
       <Center>

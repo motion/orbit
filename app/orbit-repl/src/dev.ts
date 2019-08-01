@@ -17,7 +17,7 @@ async function start() {
     { port: '9001' },
     { port: '9002' },
 
-    // syncers
+    // workers
     !DISABLE_WORKERS && { port: '9003' },
 
     // electron apps (look for a few)

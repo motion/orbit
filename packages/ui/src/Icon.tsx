@@ -28,6 +28,10 @@ const names = Object.keys(IconSvgPaths16)
 
 const cache = {}
 export const findName = (name: string) => {
+  if (!name || typeof name !== 'string') {
+    console.warn(`Bad name provided`, name)
+    name = ''
+  }
   if (cache[name]) return cache[name]
   if (IconSvgPaths16[name]) return name
   const matches = fuzzySort.go(name, names)

@@ -18,7 +18,7 @@ If you just want to re-build everyhting, try `yarn build`.
 
 ## run
 
-Orbit now "self-builds" so you can just run with `yarn start` which runs `orbit ws` inside the `app/example-workspace`.
+Orbit now "self-builds" so you can just run with `yarn start` which runs `orbit ws` inside `example-workspace`.
 
 To run the development tools, run `yarn start:devtools`. This will run two things:
 
@@ -60,7 +60,7 @@ What we may want to do is split these a bit further:
   /orbit-desktop    # node process (runs server for oauth, runs a variety of backend services)
   /build-server     # used by orbit-desktop to run webpack for apps
   /orbit-electron   # electron process (one-per-window, controls electron windows and other state)
-  /orbit-syncers    # workers process, runs the apps node-processes
+  /orbit-workers    # workers process, runs the apps node-processes
   /config           # set on startup, config shared by all processes
   /kit              # The public facing APIs for building apps: higher level hooks, views and components that work together
   /kit-internal     # "Private" kit for our internal use
@@ -244,32 +244,4 @@ Desktop.sendMessage(App, App.messages.TOGGLE_SHOWN)
 
 // in App
 App.sendMessage(Electron, Electron.messages.SOME_MESSAGE, 'hello world')
-```
-
-### Syncers
-
-You can manually stop/run any syncers using REPL.
-
-To start any syncer you can use following command:
-
-```
-await Syncers.[SyncerName].start()
-```
-
-To stop any syncer you can use following command:
-
-```
-await Syncers.[SyncerName].stop()
-```
-
-To reset any syncer you can use following command:
-
-```
-await Syncers.[SyncerName].reset()
-```
-
-To apply same operations on multiple syncers you can use following pattern:
-
-```got an error but may not be worth reporting
-await Promise.all(Object.keys(Syncers).map(syncer => Syncers[syncer].start()))
 ```

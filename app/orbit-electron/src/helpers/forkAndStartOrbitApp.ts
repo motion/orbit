@@ -6,6 +6,10 @@ import { addAppProcess } from '../resolver/CloseAppResolver'
 const log = new Logger('forkAndStartOrbitApp')
 const lastUsedInspectPort = 9003
 
+/**
+ * TODO theres some duplication here with startChildProcess
+ */
+
 export function forkAndStartOrbitApp({ appId }: { appId: number }, environmentVariables = null) {
   if (typeof appId !== 'number') {
     throw new Error('No appId given')
@@ -25,6 +29,7 @@ export function forkAndStartOrbitApp({ appId }: { appId: number }, environmentVa
       LOG_LEVEL: process.env.LOG_LEVEL,
       STACK_FILTER: process.env.STACK_FILTER,
       NODE_ENV: process.env.NODE_ENV,
+      SINGLE_USE_MODE: process.env.SINGLE_USE_MODE,
       ...environmentVariables,
       APP_ID: appId,
     },

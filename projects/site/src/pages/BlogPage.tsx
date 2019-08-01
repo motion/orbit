@@ -11,7 +11,8 @@ import { SectionContent } from '../views/SectionContent'
 import { TitleText } from '../views/TitleText'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { BlogPageIndex, PostMeta } from './BlogPage/BlogPageIndex'
-import { PostEntry, posts } from './BlogPage/posts'
+import { posts } from './BlogPage/posts'
+import { PostEntry } from './BlogPage/PostEntry'
 import { BlogTitle } from './BlogTitle'
 
 export default compose(

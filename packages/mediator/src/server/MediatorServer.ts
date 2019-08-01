@@ -21,6 +21,7 @@ export class MediatorServer {
   commands: Command<any, any>[] = []
 
   constructor(public options: MediatorServerOptions) {
+    log.verbose('Starting MediatorServer', options)
     this.commands = this.options.resolvers.flatMap(x => (x.type === 'command' ? [x.command] : []))
   }
 
@@ -36,7 +37,6 @@ export class MediatorServer {
   }
 
   private async handleMessage(data: TransportRequest) {
-    log.verbose('MediatorServer.message', data)
     const onSuccess = result => {
       log.verbose(`onSuccess`, data, result)
       this.options.transport.send({
@@ -212,7 +212,7 @@ export class MediatorServer {
         try {
           const name = 'model' in resolver ? resolver.model.name : resolver.command.name
           result = resolver.resolve(data.args)
-          log.info(`Resolving ${resolver.type}: ${name}`)
+          log.verbose(`Resolving ${resolver.type}: ${name}`, data.args)
         } catch (error) {
           log.error('error executing resolver', error)
           throw error
@@ -231,7 +231,7 @@ export class MediatorServer {
         const subscription = result.subscribe(next => {
           if (next === undefined) {
             console.log(
-              '----- GOT UNDEFIEND NEXT, either typeorm or syncers fallback responding with no resolver? ------',
+              '----- GOT UNDEFIEND NEXT, either typeorm or workers fallback responding with no resolver? ------',
             )
           } else {
             onSuccess(next)

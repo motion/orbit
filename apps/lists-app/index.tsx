@@ -6,6 +6,9 @@ import React from 'react'
 
 import { API } from './api.node'
 
+// module['hot'] && module['hot'].accept()
+// require('webpack-hot-middleware/client.js?name=app_o_lists_app&path=/__webpack_hmr_app_o_lists_app')
+
 export default createApp({
   id: 'lists',
   name: 'Lists',

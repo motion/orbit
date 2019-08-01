@@ -1,4 +1,7 @@
+import { Logger } from '@o/logger'
 import getPort from 'get-port'
+
+const log = new Logger('findContiguousPorts')
 
 export const findContiguousPorts = async (total = 3, start = 3000): Promise<number[] | false> => {
   let current = start
@@ -11,14 +14,14 @@ export const findContiguousPorts = async (total = 3, start = 3000): Promise<numb
     const foundPorts = await Promise.all(next.map(port => getPort({ port })))
     // found in a row
     if (foundPorts.every(Boolean)) {
-      console.log(`Found ports: ${next}`)
+      log.verbose(`Found ports ${next.length}`, next)
       found = next
     } else {
       current += 10
     }
     // break if didnt find any
     if (current > start * 1000) {
-      console.log('no ports found!')
+      log.info('no ports found!')
       return false
     }
   }

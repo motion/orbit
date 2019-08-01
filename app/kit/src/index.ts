@@ -28,7 +28,7 @@ export * from '@o/use-store'
 export * from '@o/utils'
 export { isEqual } from '@o/fast-compare'
 
-export * from './hmrSocket'
+export * from './createHotHandler'
 
 export * from './AppLoadContext'
 export * from './bit/Readability'

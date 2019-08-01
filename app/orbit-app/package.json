@@ -44,7 +44,6 @@
     "fuzzysort": "1.1.4",
     "graphiql-explorer": "^0.4.2",
     "graphql": "14.2.1",
-    "hash-sum": "1.0.2",
     "immer": "^3.1.2",
     "invariant": "2.2.4",
     "key-event-to-string": "1.2.0",
@@ -65,7 +64,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-flip-toolkit": "6.6.4",
-    "react-hot-loader": "4.12.9",
+    "react-hot-loader": "4.12.10",
     "react-shadow": "16.3.2",
     "react-spring": "9.0.0-beta.31",
     "react-svg-inline": "2.1.1",
@@ -80,7 +79,6 @@
     "resize-observer-polyfill": "^1.5.1",
     "raven": "^2.6.4",
     "react-use-gesture": "^5.1.2",
-    "react-events": "^1.0.1",
     "@welldone-software/why-did-you-render": "3.2.1"
   },
   "devDependencies": {

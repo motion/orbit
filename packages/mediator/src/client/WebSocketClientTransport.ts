@@ -18,6 +18,8 @@ export class WebSocketClientTransport implements ClientTransport {
     onSuccess: (response: TransportResponse) => any
     onError: Function
   }[] = []
+  private isOpen = false
+  private openListeners = new Set<Function>()
   private onConnectedCallbacks: (() => void)[] = []
 
   constructor(name: string, websocket: any) {
@@ -28,8 +30,16 @@ export class WebSocketClientTransport implements ClientTransport {
       clearTimeout(tm || 0)
       this.onConnectedCallbacks.forEach(callback => callback())
       this.onConnectedCallbacks = []
+      this.isOpen = true
+      if (this.openListeners.size) {
+        this.openListeners.forEach(cb => cb())
+        this.openListeners.clear()
+      }
     }
-    websocket.onmessage = ({ data }) => this.handleData(JSON.parse(data))
+
+    websocket.onmessage = ({ data }) => {
+      this.handleData(JSON.parse(data))
+    }
 
     let retryDelay = 1000
     websocket.onerror = ({ error }) => {
@@ -46,17 +56,22 @@ export class WebSocketClientTransport implements ClientTransport {
     }
 
     websocket.onclose = () => {
+      this.isOpen = false
       if (websocket._shouldReconnect) {
         websocket._connect()
       }
     }
+  }
 
-    // pong functionality
-    // setInterval(() => {
-    //   if (this.websocket.readyState === this.websocket.OPEN) {
-    //     this.websocket.send("PONG")
-    //   }
-    // }, 1000);
+  onOpen(): Promise<boolean> {
+    if (this.isOpen) {
+      return Promise.resolve(true)
+    }
+    return new Promise(res => {
+      this.openListeners.add(() => {
+        res(true)
+      })
+    })
   }
 
   /**

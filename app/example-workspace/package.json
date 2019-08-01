@@ -5,7 +5,11 @@
   "config": {
     "orbitWorkspace": true
   },
+  "workspaces": [
+    "apps"
+  ],
   "dependencies": {
+    "@babel/runtime": "^7.4.5",
     "@o/demo-app-api-grid": "^2.5.6",
     "@o/demo-app-flow": "^2.5.6",
     "@o/demo-app-layout": "^2.5.6",

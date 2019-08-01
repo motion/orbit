@@ -1,14 +1,5 @@
 import nateImg from '../../../public/images/nate.jpg'
-
-export type PostEntry = {
-  view: () => Promise<{ default: any }>
-  title: string
-  date: string
-  author: string
-  authorImage: string
-  preview?: string
-  private?: boolean
-}
+import { PostEntry } from './PostEntry'
 
 export type PostDirectory = {
   [key: string]: PostEntry

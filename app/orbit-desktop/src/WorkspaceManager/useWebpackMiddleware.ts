@@ -40,9 +40,9 @@ export function useWebpackMiddleware(configs: { main: any; [key: string]: any })
 
   middlewares.push(devMiddleware)
   global.webpackMiddlewares.main = { devMiddleware }
-  middlewares.push(historyAPIFallback())
-  // need to have this one after, see:
+  // need to have another devMiddleware  after historyAPIFallback, see:
   // https://github.com/webpack/webpack-dev-middleware/issues/88#issuecomment-252048006
+  middlewares.push(historyAPIFallback())
   middlewares.push(devMiddleware)
 
   return middlewares
@@ -92,6 +92,11 @@ const pathMatch = function(url, path) {
     return false
   }
 }
+
+/**
+ * This is a lightly modified webpack-hot-middleware for our sakes imported here,
+ * so it can be modified to support putting multiple compilers under one EventStream
+ */
 
 function WebpackHotMiddleware(compilers: webpack.Compiler[], opts) {
   opts = opts || {}

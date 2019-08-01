@@ -245,7 +245,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
    */
   const appDefinitionsSrc = `// all apps
 export default {
-  ${apps.map(app => `${cleanString(app.packageId)}: require('${app.packageId}')`).join(',\n')}
+  ${apps.map(app => `${cleanString(app.packageId)}: () => require('${app.packageId}')`).join(',\n')}
 }`
   // const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
   const workspaceEntry = join(directory, 'dist', 'workspace-entry.js')

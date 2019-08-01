@@ -60,7 +60,7 @@ export function createHotHandler(props: {
     }
 
     function handleOnline() {
-      console.log('[HMR] connected')
+      console.debug('[HMR] connected')
     }
 
     function handleMessage(event) {
@@ -208,7 +208,6 @@ export function createHotHandler(props: {
             applyCallback(null, outdatedModules)
             // render after hmr
             window['rerender'](false)
-
           })
           applyResult.catch(applyCallback)
         }

@@ -166,12 +166,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
         publicPath: '/',
         outputFile: `${cleanName}.dll.js`,
         outputDir,
-        injectHot:
-          app.packageId === '@o/demo-app-api-grid' ||
-          app.packageId === '@o/lists-app' ||
-          app.packageId === '@o/people-app' ||
-          app.packageId === '@o/demo-app-layout' ||
-          app.packageId === '@o/demo-app-flow',
+        injectHot: true,
         output: {
           library: cleanName,
         },
@@ -341,9 +336,10 @@ ${apps.map(app => `    <script src="/${cleanString(app.packageId)}.dll.js"></scr
   return {
     base,
     main,
-    workspace,
     ...appsConfigs,
     ...extraEntries,
+    // ordering last here so it resolves last in useWebpackMiddleware, should fix it there
+    workspace,
   }
 }
 

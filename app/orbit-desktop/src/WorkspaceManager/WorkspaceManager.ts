@@ -50,7 +50,6 @@ export class WorkspaceManager {
   middleware: Handler = async (req, res) => {
     const sendIndex = () => res.sendfile(join(this.directory, 'dist', 'index.html'))
     // hacky way to just serve our own index.html for now
-    console.log('waht', req.path)
     if (req.path[1] !== '_' && req.path.indexOf('.') === -1) {
       return sendIndex()
     }

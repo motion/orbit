@@ -9,7 +9,7 @@ const log = new Logger('useWebpackMiddleware')
 
 export function useWebpackMiddleware(configs: { main: any; [key: string]: any }) {
   const { main, ...rest } = configs
-  log.verbose(`configs ${Object.keys(configs).join(', ')}`, configs)
+  log.info(`configs ${Object.keys(configs).join(', ')}`, configs)
   const middlewares = []
 
   // you have to do it this janky ass way because webpack just isnt really great at

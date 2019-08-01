@@ -101,7 +101,6 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     '@o/color',
     '@o/automagical',
     '@o/use-store',
-    'webpack-hot-middleware',
   ]
 
   // gather all packages we want included in base dll
@@ -134,6 +133,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
   const base = await addDLL({
     name: `base`,
     injectHot: true,
+    watch,
     entry: [...new Set(allPackages)],
     ignore: ['electron-log', 'configstore', 'typeorm'],
     context: directory,
@@ -260,7 +260,7 @@ export default function getApps() {
     entry: [workspaceEntry],
     target: 'web',
     watch,
-    hot: true,
+    hot: false,
     dllReferences,
     output: {
       library: `window['__orbit_workspace']`,

@@ -47,7 +47,7 @@ export class WorkspaceManager {
     this.appsManager.onUpdatedApps(this.handleUpdatedApps)
   }
 
-  middleware: Handler = async (req, res) => {
+  middleware: Handler = async (req, res, next) => {
     const sendIndex = () => res.sendfile(join(this.directory, 'dist', 'index.html'))
     // hacky way to just serve our own index.html for now
     if (req.path[1] !== '_' && req.path.indexOf('.') === -1) {
@@ -66,7 +66,7 @@ export class WorkspaceManager {
     }
     // this is the last middleware, catch everything else and serve index
     console.log('nothing happened?', req.path)
-    return sendIndex()
+    return next()
   }
 
   async start(opts: { singleUseMode: boolean }) {

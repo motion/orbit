@@ -184,8 +184,8 @@ export function createHotHandler(props: {
       check()
     }
 
-    function check() {
-      var cb = function(err, updatedModules) {
+    async function check() {
+      async function finishUpdateCallback(err, updatedModules) {
         if (err) return handleError(err)
 
         restartSockets()
@@ -199,34 +199,29 @@ export function createHotHandler(props: {
           return null
         }
 
-        var applyCallback = function(applyErr, renewedModules) {
+        function applyCallback(applyErr, renewedModules) {
           if (applyErr) return handleError(applyErr)
-
           if (!upToDate()) check()
-
           logUpdates(updatedModules, renewedModules)
         }
 
-        var applyResult = module.hot.apply(applyOptions, applyCallback) as any
-        // webpack 2 promise
-        if (applyResult && applyResult.then) {
-          // HotModuleReplacement.runtime.js refers to the result as `outdatedModules`
-          applyResult.then(function(outdatedModules) {
-            applyCallback(null, outdatedModules)
-            // render after hmr
-            window['rerender'](false)
-          })
-          applyResult.catch(applyCallback)
+        // APPLY UPDATE
+        try {
+          const outdatedModules = await module.hot.apply(applyOptions, applyCallback)
+          applyCallback(null, outdatedModules)
+          // render after hmr
+          window['rerender'](false)
+        } catch (err) {
+          applyCallback(err, null)
         }
       }
 
-      var result = module.hot.check(false, cb) as any
-      // webpack 2 promise
-      if (result && result.then) {
-        result.then(function(updatedModules) {
-          cb(null, updatedModules)
-        })
-        result.catch(cb)
+      // CHECK FOR UPDATE
+      try {
+        const updatedModules = await module.hot.check(false, finishUpdateCallback)
+        finishUpdateCallback(null, updatedModules)
+      } catch (err) {
+        finishUpdateCallback(err, null)
       }
     }
 

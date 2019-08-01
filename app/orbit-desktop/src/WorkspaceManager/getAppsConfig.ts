@@ -21,6 +21,7 @@ export const cleanString = (x: string) =>
  * This returns the configuration object for everything:
  *   1. a base.dll.js that includes the big shared libraries
  *   2. each app as it's own dll
+ *   3. the workspaceEntry which imports app DLLs and concats them
  *   3. the "main" entry point with orbit-app
  */
 
@@ -130,7 +131,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
   // base dll with shared libraries
   const baseDllManifest = join(outputDir, 'manifest-base.json')
   const baseDllOutputFileName = 'base.dll.js'
-  const baseConfig = await addDLL({
+  const base = await addDLL({
     name: `base`,
     injectHot: true,
     entry: [...new Set(allPackages)],
@@ -244,8 +245,8 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
    * Create the apps import
    */
   const appDefinitionsSrc = `// all apps
-export default {
-  ${apps.map(app => `${cleanString(app.packageId)}: () => require('${app.packageId}')`).join(',\n')}
+export default function getApps() {
+  return [${apps.map(app => `require('${app.packageId}')`).join(',')}]
 }`
   // const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
   const workspaceEntry = join(directory, 'dist', 'workspace-entry.js')
@@ -255,7 +256,7 @@ export default {
   /**
    * Workspace config, this hopefully gives us some more control/ease with managing hmr/apps
    */
-  const workspaceConfig = await makeWebpackConfig({
+  const workspace = await makeWebpackConfig({
     name: 'workspaceEntry',
     outputFile: 'workspaceEntry.js',
     outputDir,
@@ -320,7 +321,7 @@ ${apps.map(app => `    <script src="/${cleanString(app.packageId)}.dll.js"></scr
   /**
    * Load all apps now as one export
    */
-  const mainConfig = await makeWebpackConfig(
+  const main = await makeWebpackConfig(
     {
       name: 'main',
       outputFile: 'main.js',
@@ -338,9 +339,9 @@ ${apps.map(app => `    <script src="/${cleanString(app.packageId)}.dll.js"></scr
   )
 
   return {
-    base: baseConfig,
-    main: mainConfig,
-    workspace: workspaceConfig,
+    base,
+    main,
+    workspace,
     ...appsConfigs,
     ...extraEntries,
   }

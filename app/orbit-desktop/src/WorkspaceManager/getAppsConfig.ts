@@ -75,14 +75,14 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       log.info(`Ensuring config built once: ${params.name}...`)
       const buildOnceConfig = await makeWebpackConfig({
         ...params,
-        hot: watch,
+        hot: true,
         watch: false,
       })
       await webpackPromise([buildOnceConfig], { loud: true })
     }
     return await makeWebpackConfig({
       ...params,
-      hot: watch,
+      hot: true,
       watch,
     })
   }
@@ -232,7 +232,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
           context: directory,
           ignore: ['electron-log', 'configstore'],
           target: 'web',
-          hot: watch,
+          hot: true,
           watch,
         },
         extraConfig[name],
@@ -265,7 +265,7 @@ export default function getApps() {
     entry: [workspaceEntry],
     target: 'web',
     watch,
-    hot: watch,
+    hot: true,
     dllReferences,
     output: {
       library: `window['__orbit_workspace']`,
@@ -332,7 +332,7 @@ ${apps.map(app => `    <script src="/${cleanString(app.packageId)}.dll.js"></scr
       ignore: ['electron-log', 'configstore', '@o/worker-kit'],
       target: 'web',
       watch,
-      hot: watch,
+      hot: true,
       dllReferences,
     },
     extraMainConfig,

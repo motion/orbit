@@ -1,6 +1,6 @@
 {
   "name": "@o/config",
-  "version": "2.5.2",
+  "version": "2.6.0",
   "main": "_/config.js",
   "sideEffects": false,
   "scripts": {
@@ -8,8 +8,8 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/utils": "*",
-    "@o/logger": "*",
+    "@o/logger": "^2.6.0",
+    "@o/utils": "^2.6.0",
     "configstore": "4.0.0"
   }
 }

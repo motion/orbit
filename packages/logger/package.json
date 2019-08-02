@@ -1,6 +1,6 @@
 {
   "name": "@o/logger",
-  "version": "2.5.2",
+  "version": "2.6.0",
   "author": "Motion",
   "main": "_/index.js",
   "sideEffects": false,

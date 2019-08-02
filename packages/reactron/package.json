@@ -1,6 +1,6 @@
 {
   "name": "@o/reactron",
-  "version": "2.5.2",
+  "version": "2.6.0",
   "description": "React renderer for Electron apps",
   "main": "_/index.js",
   "sideEffects": false,
@@ -16,7 +16,7 @@
     "react-dom": "^16.8.3"
   },
   "dependencies": {
-    "@o/logger": "^2.5.2",
+    "@o/logger": "^2.6.0",
     "lodash.isequal": "^4.5.0",
     "react-reconciler": "0.19.1",
     "scheduler": "0.13.0"

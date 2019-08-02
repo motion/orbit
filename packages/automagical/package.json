@@ -2,19 +2,19 @@
   "name": "@o/automagical",
   "main": "_/automagical.js",
   "sideEffects": false,
-  "version": "2.5.2",
+  "version": "2.6.0",
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/fast-compare": "^2.5.2",
-    "@o/logger": "^2.5.2",
+    "@o/fast-compare": "^2.6.0",
+    "@o/logger": "^2.6.0",
     "event-kit": "2.5.3",
     "global": "^4.3.2",
     "json-stringify-pretty-compact": "1.2.0",
-    "zen-observable": "0.8.13",
-    "mobx": "^5.13.0"
+    "mobx": "^5.13.0",
+    "zen-observable": "0.8.13"
   },
   "devDependencies": {
     "@types/webpack-env": "*"

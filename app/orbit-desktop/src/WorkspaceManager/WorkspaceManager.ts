@@ -77,8 +77,8 @@ export class WorkspaceManager {
       this.appMiddleware.onStatus(status => {
         appStatusManager.sendMessage(status)
       })
-      this.started = true
     }
+    this.started = true
   }
 
   middleware: Handler = async (req, res, next) => {

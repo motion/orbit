@@ -1,8 +1,0 @@
-{
-  "name": "@o/current-workspace",
-  "version": "2.6.0",
-  "main": "index.js",
-  "sideEffects": false,
-  "author": "Motion",
-  "license": "MIT"
-}

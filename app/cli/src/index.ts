@@ -1,10 +1,9 @@
 #!/usr/bin/env node
-import { CommandBuildOptions, CommandDevOptions, CommandGenTypesOptions, CommandInstallOptions, CommandWsOptions, StatusReply } from '@o/models'
+import { AppCreateNewOptions, CommandBuildOptions, CommandDevOptions, CommandGenTypesOptions, CommandInstallOptions, CommandWsOptions, StatusReply } from '@o/models'
 import { readJSON } from 'fs-extra'
 import { join, resolve } from 'path'
 import Yargs from 'yargs'
 
-import { CommandNewOptions } from './command-new'
 import { CommandPublishOptions } from './command-publish'
 import { reporter } from './reporter'
 
@@ -15,7 +14,7 @@ export const commandDev = (x: CommandDevOptions) => require('./command-dev').com
 export const commandBuild = (x: CommandBuildOptions) => require('./command-build').commandBuild(x)
 export const commandPublish = (x: CommandPublishOptions) =>
   require('./command-publish').commandPublish(x)
-export const commandNew = (x: CommandNewOptions) => require('./command-new').commandNew(x)
+export const commandNew = (x: AppCreateNewOptions) => require('./command-new').commandNew(x)
 export const commandGenTypes = (x: CommandGenTypesOptions) =>
   require('./command-gen-types').commandGenTypes(x)
 export const commandInstall = (x: CommandInstallOptions): StatusReply =>
@@ -68,9 +67,8 @@ function main() {
       async argv => {
         setVerbose(argv.logLevel)
         reporter.verbose(`argv ${JSON.stringify(argv)}`)
-        let projectRoot = resolve(cwd, argv.appName)
         const res = await commandNew({
-          projectRoot,
+          projectRoot: cwd,
           name: argv.appName,
           template: argv.template,
           identifier: argv.appName,

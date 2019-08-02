@@ -1,24 +1,24 @@
 import { commandNew } from '@o/cli'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
-import { AppCreateNewCommand, AppCreateNewOptions, SpaceEntity } from '@o/models'
+import { AppCreateNewCommand, AppCreateNewOptions, Space } from '@o/models'
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
 import sanitize from 'sanitize-filename'
 
-import { getCurrentWorkspace } from '../helpers/getCurrentWorkspace'
 import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
+import { loadWorkspace } from '../WorkspaceManager/commandWs'
 
 const log = new Logger('AppCreateNewCommand')
 
 export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
-  return resolveCommand(AppCreateNewCommand, async ({ name, template, icon, identifier }) => {
-    log.info(`Creating new app ${name} ${template}`)
-    const ws = await getCurrentWorkspace()
-    return await createNewWorkspaceApp(ws, { name, template, icon, identifier })
+  return resolveCommand(AppCreateNewCommand, async props => {
+    log.info(`Creating new app ${props.name} ${props.template} in ${props.projectRoot}`)
+    const ws = await loadWorkspace(props.projectRoot)
+    return await createNewWorkspaceApp(ws, props)
   })
 
-  async function createNewWorkspaceApp(space: SpaceEntity, opts: AppCreateNewOptions) {
+  async function createNewWorkspaceApp(space: Space, opts: AppCreateNewOptions) {
     try {
       const appsDir = join(space.directory, 'apps')
       const name = await findValidDirectoryName(appsDir, opts.identifier)

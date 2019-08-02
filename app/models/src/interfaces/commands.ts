@@ -44,6 +44,7 @@ export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'li
 )
 
 export type AppCreateNewOptions = {
+  projectRoot: string
   template: string
   name: string
   icon: string

@@ -9,12 +9,7 @@ import bodyParser from 'body-parser'
 import express from 'express'
 import { GraphQLSchema } from 'graphql'
 import { graphqlExpress } from 'graphql-server-express'
-import {
-  introspectSchema,
-  makeExecutableSchema,
-  makeRemoteExecutableSchema,
-  mergeSchemas,
-} from 'graphql-tools'
+import { introspectSchema, makeExecutableSchema, makeRemoteExecutableSchema, mergeSchemas } from 'graphql-tools'
 
 import { getActiveSpace } from './helpers/getActiveSpace'
 
@@ -25,12 +20,17 @@ const port = Config.ports.graphServer
 export class GraphServer {
   server: express.Application
   graphMiddleware = {}
+  started = false
 
   constructor() {
     this.server = express()
   }
 
   start() {
+    if (this.started) {
+      return
+    }
+    this.started = true
     this.server.use(require('cors')())
     this.server.disable('etag')
     this.server.use(bodyParser.json({ limit: '2048mb' }))

@@ -14,9 +14,7 @@
     "@o/automagical": "^2.6.0",
     "@o/fast-compare": "^2.6.0",
     "@o/utils": "^2.6.0",
-    "lodash": "^4.17.15"
-  },
-  "peerDependencies": {
+    "lodash": "^4.17.15",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   },

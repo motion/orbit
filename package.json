@@ -26,7 +26,7 @@
     "build:apps": "lerna exec --concurrency 1 --scope '@o/*-app' --no-bail -- orbit build --debug-build --logLevel 1",
     "deploy:site": "cd projects/site && yarn deploy",
     "publish:app": "cd app/build-orbit && yarn run publish",
-    "publish:packages": "bin/publish",
+    "publish:packages": "lerna publish",
     "publish:apps": "lerna exec --concurrency 1 --scope '@o/*-app' --no-bail -- orbit publish --ignore-version",
     "publish:apps:patch": "lerna exec --concurrency 1 --scope '@o/*-app' --no-bail -- orbit publish --bump-version patch",
     "publish:apps:patch:ignore-build": "lerna exec --scope '@o/*-app' --no-bail -- orbit publish --bump-version patch --ignore-version --ignore-build",

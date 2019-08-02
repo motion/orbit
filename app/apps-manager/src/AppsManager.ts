@@ -105,7 +105,7 @@ export class AppsManager {
 
   updateAppDefinitions = async (space: Space) => {
     const definitions = await requireWorkspaceDefinitions((space && space.directory) || '', 'node')
-    log.info(`Got definitions ${definitions.map(x => x.type)}`, definitions)
+    log.verbose(`Got definitions ${definitions.map(x => x.type)}`, definitions)
     this.nodeAppDefinitions = definitions.map(x => x.type === 'success' && x.value).filter(Boolean)
   }
 

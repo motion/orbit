@@ -72,7 +72,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     })
     // ensure built
     if (options.clean || !(await pathExists(params.dll))) {
-      log.info(`Ensuring config built once: ${params.name}...`)
+      log.info(`Ensuring config built once: ${params.name}`, params.dll)
       const buildOnceConfig = await makeWebpackConfig({
         ...params,
         hot: true,
@@ -101,6 +101,9 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     '@o/color',
     '@o/automagical',
     '@o/use-store',
+    '@babel/runtime',
+    'node-libs-browser',
+    'react-hot-loader',
   ]
 
   // gather all packages we want included in base dll
@@ -183,12 +186,12 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     }),
   )
   const appsConfigs = {}
-  await Promise.all([
+  await Promise.all(
     appParams.map(async params => {
       const config = await addDLL(getAppParams(params))
       appsConfigs[params.name] = config
     }),
-  ])
+  )
 
   /**
    * Only needed when developing orbit itself.

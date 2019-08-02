@@ -52,8 +52,6 @@ export async function commandWs(options: CommandWsOptions, workspaceManager: Wor
     space = await getRepository(SpaceEntity).findOne({ identifier })
   }
 
-  log.info(`got space ${space.directory}`)
-
   // set user active space
   const user = await getRepository(UserEntity).findOne({})
   user.activeSpace = space.id

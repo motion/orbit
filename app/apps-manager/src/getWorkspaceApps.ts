@@ -27,7 +27,7 @@ export async function getWorkspaceApps(workspaceRoot: string): Promise<AppMeta[]
     const packageDirs: OrbitAppDirDesc[] = Object.keys(packageJson.dependencies).map(packageId => {
       const directory = findPackage({ directory: workspaceRoot, packageId })
       if (!directory) {
-        log.error(`No directory found for package ${workspaceRoot} ${packageId}`)
+        log.verbose(`No directory found for package ${workspaceRoot} ${packageId}`)
         return null
       }
       return { directory, packageId, isLocal: false }

@@ -36,7 +36,10 @@ export function useWebpackMiddleware(configs: { main: any; [key: string]: any })
     log: console.log,
     heartBeat: 10 * 1000,
   })
-  middlewares.push(resolveIfExists(hotMiddleware, tasks.map(x => x.config.output.path)))
+  middlewares.push(
+    resolveIfExists(hotMiddleware, tasks.map(x => x.config.output.path), ['/__webpack_hmr']),
+  )
+  global.webpackMiddlewares.hot = hotMiddleware
 
   middlewares.push(devMiddleware)
   global.webpackMiddlewares.main = { devMiddleware }

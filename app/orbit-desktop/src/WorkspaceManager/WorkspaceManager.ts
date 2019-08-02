@@ -1,7 +1,32 @@
-import { AppMetaDict, AppsManager, getBuildInfo, getWorkspaceApps, updateWorkspacePackageIds } from '@o/apps-manager'
+import {
+  AppMetaDict,
+  AppsManager,
+  getBuildInfo,
+  getWorkspaceApps,
+  updateWorkspacePackageIds,
+} from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppGenTypesCommand, AppGetWorkspaceAppsCommand, AppInstallCommand, AppMeta, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusMessage, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
+import {
+  AppBuildCommand,
+  AppCreateWorkspaceCommand,
+  AppDevCloseCommand,
+  AppDevOpenCommand,
+  AppEntity,
+  AppGenTypesCommand,
+  AppGetWorkspaceAppsCommand,
+  AppInstallCommand,
+  AppMeta,
+  AppMetaCommand,
+  AppOpenWorkspaceCommand,
+  AppStatusMessage,
+  AppStatusModel,
+  CallAppBitApiMethodCommand,
+  CloseAppCommand,
+  CommandWsOptions,
+  WorkspaceInfo,
+  WorkspaceInfoModel,
+} from '@o/models'
 import { Desktop, Electron } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
@@ -128,15 +153,16 @@ export class WorkspaceManager {
     () => [this.directory, this.workspaceVersion],
     async ([directory], { sleep, when }) => {
       await when(() => !!this.options)
+      ensure('not in single build mode', !this.options.build)
       ensure('directory', !!directory)
-      log.info(`updateWorkspace ${directory} ${JSON.stringify(this.options)}`)
-      await this.updateApps()
       await sleep()
       this.buildWorkspace()
     },
   )
 
   async buildWorkspace() {
+    await this.updateApps()
+    log.info(`buildWorkspace ${this.appsMeta.length}`)
     try {
       Desktop.setState({
         workspaceState: {

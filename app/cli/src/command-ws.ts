@@ -9,7 +9,7 @@ export async function commandWs(options: CommandWsOptions) {
     singleUseMode: options.build,
   })
   try {
-    reporter.info(`Sending open workspace command`)
+    reporter.info(options.build ? `Building workspace` : `Running workspace`)
     // this will tell orbit to look for this workspace and re-run the cli
     // we centralize all commands through orbit so we don't want to do it directly here
     await mediator.command(AppOpenWorkspaceCommand, options, {

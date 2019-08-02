@@ -140,7 +140,7 @@ export async function commandPublish(options: CommandPublishOptions) {
         reporter.error(err.message, err.error)
         return err
       }
-      // reporter.info(`Publishing to Orbit registry`)
+      reporter.info(`Publishing to Orbit registry...`)
       err = await publishApp()
       if (err) {
         reporter.error(err.message, err.error)
@@ -149,7 +149,7 @@ export async function commandPublish(options: CommandPublishOptions) {
     }
 
     // trigger search api index update
-    reporter.info(`Publishing on Orbit registry...`)
+    reporter.info(`Publishing to Orbit store...`)
 
     // get README.md description
     let fullDescription = pkg.description

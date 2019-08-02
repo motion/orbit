@@ -194,7 +194,8 @@ export async function commandPublish(options: CommandPublishOptions) {
 
 async function publishApp(registry?: string) {
   try {
-    await npmCommand(`publish --registry ${registry || registryUrl}`)
+    // TODO access control via CLI
+    await npmCommand(`publish --registry ${registry || registryUrl} --access public`)
   } catch (err) {
     return {
       type: 'error' as const,

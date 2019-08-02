@@ -71,7 +71,9 @@ export async function commandPublish(options: CommandPublishOptions) {
     try {
       app = require(join(options.projectRoot, 'dist', 'appInfo.js')).default
     } catch (err) {
-      reporter.error(`appInfo.js didn't build, there was some error building your app`)
+      reporter.panic(
+        `appInfo.js didn't build, there was some error building your app. Did you export default createApp({ ... })?`,
+      )
       return
     }
 
@@ -132,13 +134,13 @@ export async function commandPublish(options: CommandPublishOptions) {
 
     if (shouldPublish) {
       // npm first so if it fails we dont udpate search
-      reporter.info(`Publishing to npm registry`)
+      reporter.info(`Publishing to npm...`)
       let err = await publishApp(`https://registry.npmjs.org`)
       if (err) {
         reporter.error(err.message, err.error)
         return err
       }
-      reporter.info(`Publishing to Orbit registry`)
+      // reporter.info(`Publishing to Orbit registry`)
       err = await publishApp()
       if (err) {
         reporter.error(err.message, err.error)
@@ -147,7 +149,7 @@ export async function commandPublish(options: CommandPublishOptions) {
     }
 
     // trigger search api index update
-    reporter.info(`Pushing to Orbit app store`)
+    reporter.info(`Publishing on Orbit registry...`)
 
     // get README.md description
     let fullDescription = pkg.description

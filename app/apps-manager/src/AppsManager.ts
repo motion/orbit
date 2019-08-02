@@ -1,5 +1,6 @@
 import { Logger } from '@o/logger'
 import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
+import { OR_TIMED_OUT, orTimeout } from '@o/ui'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
 import { isEqual } from 'lodash'
@@ -37,12 +38,13 @@ export class AppsManager {
   subscriptions = new Set<ZenObservable.Subscription>()
   nodeAppDefinitions: AppDefinition[] = []
 
-  started = false
+  private status: 'idle' | 'starting' | 'started' = 'idle'
   spaces: PartialSpace[] = []
   user: User | null = null
   appMeta: AppMetaDict = {}
   apps: AppBit[] = []
 
+  private finishStarting = null
   private packageJsonUpdate = 0
   private updatePackagesVersion = 0
 
@@ -50,10 +52,13 @@ export class AppsManager {
   getIdentifierToPackageId = getIdentifierToPackageId
 
   async start() {
-    if (this.started) {
+    if (this.status !== 'idle') {
       return
     }
-    log.info('Starting...')
+    log.verbose('Starting...')
+    const startFinish = new Promise(res => {
+      this.finishStarting = res
+    })
     const spacesSubscription = getRepository(SpaceEntity)
       .observe({
         select: ['id', 'directory'],
@@ -74,7 +79,21 @@ export class AppsManager {
 
     this.subscriptions.add(userSubscription)
     this.subscriptions.add(spacesSubscription)
-    this.started = true
+
+    this.status = 'starting'
+
+    try {
+      await orTimeout(startFinish, 5000)
+    } catch (err) {
+      if (err === OR_TIMED_OUT) {
+        log.error(`Error, timed out starting AppsManager!`)
+        return
+      } else {
+        throw err
+      }
+    }
+
+    this.status = 'started'
   }
 
   get activeSpace() {
@@ -111,16 +130,24 @@ export class AppsManager {
     this.onUpdatedCb.add(cb)
   }
 
+  /**
+   * Runs on every change of packageJson/space, collecting app information
+   */
   updateAppDefinitionsReaction = react(
     () => [this.activeSpace, this.packageJsonUpdate],
     async ([space], { when }) => {
-      await when(() => this.started)
+      await when(() => this.status !== 'idle')
       ensure('space', !!space)
       if (space) {
         this.updateAppDefinitions(space)
         // have cli update its cache of packageId => identifier for use installing
         await updateWorkspacePackageIds(space.directory || '')
         this.updatePackagesVersion = Math.random()
+        // dont finish starting appsManager until we've run this once
+        if (this.finishStarting) {
+          this.finishStarting()
+          this.finishStarting = null
+        }
       }
     },
   )
@@ -134,16 +161,17 @@ export class AppsManager {
   updateAppMeta = react(
     () => [this.activeSpace, this.nodeAppDefinitions, this.updatePackagesVersion],
     async ([activeSpace, appDefs], { when }) => {
-      await when(() => this.started)
+      await when(() => this.status === 'started')
       ensure('appDefs', !!appDefs)
       if (!activeSpace) return
       const apps = await getWorkspaceApps(activeSpace.directory || '')
       ensure('apps', !!apps)
+      log.verbose(`got apps ${apps.map(x => x.packageId).join(',')}`)
 
       let updated = false
       for (const appInfo of apps) {
         const identifier = getIdentifierFromPackageId(appInfo.packageId)
-        log.verbose('setting apps meta', appInfo.packageId, identifier)
+        log.verbose(`setting apps meta ${appInfo.packageId} => ${identifier}`)
         if (identifier !== null) {
           this.appMeta[identifier] = appInfo
           updated = true
@@ -163,7 +191,7 @@ export class AppsManager {
   syncFromActiveSpacePackageJSON = react(
     () => this.activeSpace,
     async (space, { useEffect, when }) => {
-      await when(() => this.started)
+      await when(() => this.status === 'started')
       ensure('space', !!space)
       const pkg = join(space.directory || '', 'package.json')
       log.info('watching package.json for changes', pkg)

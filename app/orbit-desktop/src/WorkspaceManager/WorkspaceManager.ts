@@ -5,7 +5,6 @@ import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppEnti
 import { Desktop } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { Handler } from 'express'
-import { debounce } from 'lodash'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 import Observable from 'zen-observable'
@@ -64,10 +63,9 @@ export class WorkspaceManager {
     log.info(`setWorkspace ${JSON.stringify(opts)}`)
     this.options = opts
     if (!this.startOpts.singleUseMode) {
+      this.buildWorkspace()
       this.graphServer.start()
       this.appsManager.start()
-      this.updateWorkspace()
-      this.onWorkspaceChange()
       /**
        * Sends messages between webpack and client apps so we can display status messages
        */
@@ -102,7 +100,7 @@ export class WorkspaceManager {
   }
 
   onNewWorkspaceVersion = react(
-    () => [this.options, this.workspaceVersion],
+    () => this.workspaceVersion,
     async (_, { sleep, when }) => {
       await when(() => !!this.options)
       ensure('not in single build mode', !this.options.build)
@@ -136,8 +134,6 @@ export class WorkspaceManager {
       console.error('Error running workspace', err.message, err.stack)
     }
   }
-
-  private onWorkspaceChange = debounce(this.updateWorkspace, 50)
 
   /**
    * Returns Observable for the current workspace information

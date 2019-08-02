@@ -11,7 +11,7 @@ const log = new Logger('updateWorkspacePackageIds')
  */
 export async function updateWorkspacePackageIds(workspaceRoot: string) {
   const paths = await getWorkspaceApps(workspaceRoot)
-  log.info(
+  log.verbose(
     `Updating workspace package ids: ${workspaceRoot}, got ${paths
       .map(x => x.packageId)
       .join(', ')}`,

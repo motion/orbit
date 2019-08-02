@@ -18,6 +18,8 @@ import SpacesApp from './SpacesApp'
 
 // let causes a instantiation bug...
 var dynamicApps: AppDefinition[] = []
+// debugging
+window['__dynamicApps'] = dynamicApps
 
 updateDefinitions()
 
@@ -63,6 +65,7 @@ export const orbitStaticApps: AppDefinition[] = [
 ]
 
 export const getAllAppDefinitions = (): AppDefinition[] => {
+  console.log('getting all defintiions', dynamicApps)
   return [...orbitStaticApps, ...dynamicApps]
 }
 

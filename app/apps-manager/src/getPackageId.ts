@@ -51,7 +51,7 @@ export function getIdentifierFromPackageId(packageId: string) {
   if (found) {
     return found
   }
-  log.verbose(
+  log.info(
     `getIdentifierFromPackageId failed to find ${packageId} ${JSON.stringify(
       identifierToPackageId,
     )}`,

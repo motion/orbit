@@ -1,6 +1,7 @@
 let activeHandlers = []
 
 async function stopSockets() {
+  return
   for (const { source } of activeHandlers) {
     source.close()
   }
@@ -8,6 +9,7 @@ async function stopSockets() {
 }
 
 async function restartSockets() {
+  return
   activeHandlers = []
   for (const key of Object.keys(window['__hmr_handlers'])) {
     window['__hmr_handlers'][key]()
@@ -26,7 +28,7 @@ export function createHotHandler(props: { getHash: Function; module: any; action
   activeHandlers.push({ ...props, source })
 
   window.addEventListener('beforeunload', source.close)
-  module.hot.dispose(source.close)
+  // module.hot.dispose(source.close)
 
   function handleMessage(event) {
     if (event.data == '\uD83D\uDC93') return

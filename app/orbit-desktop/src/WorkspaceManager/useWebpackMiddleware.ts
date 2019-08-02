@@ -8,7 +8,10 @@ import WebpackDevMiddleware from 'webpack-dev-middleware'
 
 const log = new Logger('useWebpackMiddleware')
 
-export function useWebpackMiddleware(configs: { main: any; [key: string]: any }) {
+export function useWebpackMiddleware(configs: {
+  main: webpack.Configuration
+  [key: string]: webpack.Configuration
+}) {
   const { main, ...rest } = configs
   log.info(`configs ${Object.keys(configs).join(', ')}`, configs)
   const middlewares = []
@@ -24,23 +27,26 @@ export function useWebpackMiddleware(configs: { main: any; [key: string]: any })
     middlewares.push(resolveIfExists(devMiddleware, [config.output.path]))
   }
 
-  // falls back to the main entry middleware
-  const { devMiddleware, compiler } = getMiddleware(main)
-  tasks.push({ compiler, config: main })
-
   /**
    * One HMR server for everything because EventStream's don't support >5 in Chrome
    */
-  const hotMiddleware = WebpackHotMiddleware(tasks.map(x => x.compiler), {
+  const appsHowMiddleware = WebpackHotMiddleware(tasks.map(x => x.compiler), {
     path: '/__webpack_hmr',
     log: console.log,
     heartBeat: 10 * 1000,
   })
   middlewares.push(
-    resolveIfExists(hotMiddleware, tasks.map(x => x.config.output.path), ['/__webpack_hmr']),
+    resolveIfExists(appsHowMiddleware, tasks.map(x => x.config.output.path), ['/__webpack_hmr']),
   )
-  global.webpackMiddlewares.hot = hotMiddleware
 
+  // falls back to the main entry middleware
+  const { devMiddleware, compiler } = getMiddleware(main)
+  const mainHotMiddleware = WebpackHotMiddleware([compiler], {
+    path: '/__webpack_hmr',
+    log: console.log,
+    heartBeat: 10 * 1000,
+  })
+  middlewares.push(resolveIfExists(mainHotMiddleware, [main.output.path], ['/__webpack_hmr_main']))
   middlewares.push(devMiddleware)
   global.webpackMiddlewares.main = { devMiddleware }
   // need to have another devMiddleware  after historyAPIFallback, see:

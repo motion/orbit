@@ -1,22 +1,4 @@
 let activeHandlers = []
-
-async function stopSockets() {
-  return
-  for (const { source } of activeHandlers) {
-    source.close()
-  }
-  await new Promise(res => setTimeout(res, 20))
-}
-
-async function restartSockets() {
-  return
-  activeHandlers = []
-  for (const key of Object.keys(window['__hmr_handlers'])) {
-    window['__hmr_handlers'][key]()
-    await new Promise(res => setTimeout(res, 20))
-  }
-}
-
 let source
 
 export function createHotHandler(props: {
@@ -122,15 +104,12 @@ export function createHotHandler(props: {
     var reload = options.reload
     if (!upToDate(hash) && module.hot.status() == 'idle') {
       if (options.log) console.log('[HMR] Checking for updates on the server...')
-      await stopSockets()
       check()
     }
 
     function check() {
       var cb = function(err, updatedModules) {
         if (err) return handleError(err)
-
-        restartSockets()
 
         if (!updatedModules) {
           if (options.warn) {

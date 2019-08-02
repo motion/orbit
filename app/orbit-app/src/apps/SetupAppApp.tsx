@@ -1,6 +1,7 @@
 import { AppIcon, command, createApp, getAppDefinition, useLocationLink, useSearchState } from '@o/kit'
 import { AppCreateNewCommand } from '@o/models'
-import { Button, Col, Flow, FlowLayoutInline, FlowProvide, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, SelectableSurface, Text, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
+import { Button, Col, Flow, FlowLayoutInline, FlowProvide, Form, IconLabeled, List, ListItemProps, Scale, SectionPassProps, SelectableGrid, SelectableSurface, Text, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
+import { stringToIdentifier } from '@o/utils'
 import React, { memo, useLayoutEffect } from 'react'
 
 import { createAppBitInActiveSpace, useInstallApp } from '../helpers/installApp'
@@ -53,7 +54,7 @@ function SetupAppCustom() {
         name: 'Unique ID',
         description: 'You can change this later.',
         type: 'text',
-        value: `${randomAdjective()}${randomNoun()}${Math.round(Math.random() * 10)}`,
+        value: fields => stringToIdentifier(fields.name),
       },
     } as const,
   })
@@ -62,7 +63,7 @@ function SetupAppCustom() {
     <>
       <Col margin="auto" width="90%" flex={1} padding scrollable="y">
         <Flow useFlow={flow} Layout={FlowLayoutInline}>
-          <Flow.Step title="Customize" subTitle="Pick a name and ID 123 ok.">
+          <Flow.Step title="Customize" subTitle="Pick a name and ID.">
             <Col padding>
               <Scale size={1.2}>
                 <Form useForm={form} />

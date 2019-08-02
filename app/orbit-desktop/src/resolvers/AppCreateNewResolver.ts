@@ -6,6 +6,7 @@ import { pathExists } from 'fs-extra'
 import { join } from 'path'
 import sanitize from 'sanitize-filename'
 
+import { getCurrentWorkspace } from '../helpers/getCurrentWorkspace'
 import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
 import { loadWorkspace } from '../WorkspaceManager/commandWs'
 
@@ -13,8 +14,9 @@ const log = new Logger('AppCreateNewCommand')
 
 export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
   return resolveCommand(AppCreateNewCommand, async props => {
-    log.info(`Creating new app ${props.name} ${props.template} in ${props.projectRoot}`)
-    const ws = await loadWorkspace(props.projectRoot)
+    const directory = props.projectRoot || (await getCurrentWorkspace()).directory
+    log.info(`Creating new app ${props.name} ${props.template} in ${directory}`)
+    const ws = await loadWorkspace(directory)
     return await createNewWorkspaceApp(ws, props)
   })
 

@@ -1,6 +1,7 @@
 import { AppMetaDict } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppMeta, CommandWsOptions } from '@o/models'
+import { stringToIdentifier } from '@o/utils'
 import { ensureDir, ensureSymlink, pathExists, readJSON, writeFile } from 'fs-extra'
 import { join } from 'path'
 import webpack from 'webpack'
@@ -10,13 +11,6 @@ import { DLLReferenceDesc, makeWebpackConfig, WebpackParams } from './makeWebpac
 import { webpackPromise } from './webpackPromise'
 
 const log = new Logger('getAppsConfig')
-
-export const cleanString = (x: string) =>
-  x
-    .replace(/[^a-z0-9_]/gi, '_')
-    .replace(/-{2,}/g, '_')
-    .replace(/^[^a-z]/i, '')
-    .replace(/[^a-z]$/i, '')
 
 /**
  * This returns the configuration object for everything:
@@ -100,7 +94,9 @@ export async function getAppsConfig(
       }
     </script>
     <script src="/base.dll.js"></script>
-${apps.map(app => `    <script src="/${cleanString(app.packageId)}.dll.js"></script>`).join('\n')}
+${apps
+  .map(app => `    <script src="/${stringToIdentifier(app.packageId)}.dll.js"></script>`)
+  .join('\n')}
     <script src="/workspaceEntry.js"></script>
     <script src="/main.js"></script>
   </body>
@@ -152,7 +148,7 @@ ${apps.map(app => `    <script src="/${cleanString(app.packageId)}.dll.js"></scr
   // add app dll configs
   const appParams: WebpackParams[] = await Promise.all(
     apps.map(async app => {
-      const cleanName = cleanString(app.packageId)
+      const cleanName = stringToIdentifier(app.packageId)
       nameToAppMeta[cleanName] = app
       const dllFile = join(outputDir, `manifest-${cleanName}.json`)
       const appEntry = join(
@@ -363,7 +359,7 @@ export async function getBaseDllParams(directory: string): Promise<WebpackParams
   // base dll with shared libraries
   return {
     name: `base`,
-    injectHot: true,
+    injectHot: join(require.resolve('@o/kit'), '..', '..', 'src', 'index.ts'),
     entry: [...new Set(allPackages)],
     ignore: ['electron-log', 'configstore', 'typeorm'],
     context: directory,

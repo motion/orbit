@@ -25,7 +25,7 @@ export type WebpackParams = {
   watch?: boolean
   dll?: string
   dllReferences?: DLLReferenceDesc[]
-  injectHot?: boolean
+  injectHot?: boolean | string
   hot?: boolean
   minify?: boolean
   noChunking?: boolean
@@ -230,6 +230,9 @@ export function makeWebpackConfig(
 
         injectHot && {
           test: x => {
+            if (typeof injectHot === 'string') {
+              return x === injectHot
+            }
             if (x === entry[0]) return true
             return false
           },

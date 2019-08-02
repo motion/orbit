@@ -48,8 +48,9 @@ export class AppMiddleware {
     configs: WebpackConfigObj,
     nameToAppMeta: AppMetaDict,
   ): WebpackAppsDesc[] {
-    const { main, ...rest } = configs
     log.info(`configs ${Object.keys(configs).join(', ')}`, configs)
+
+    const { main, ...rest } = configs
     const res: WebpackAppsDesc[] = []
     // you have to do it this janky ass way because webpack just isnt really great at
     // doing multi-config hmr, and this makes sure the 404 hot-update bug if fixed (google)
@@ -62,6 +63,7 @@ export class AppMiddleware {
         config,
       })
     }
+
     /**
      * One HMR server for everything because EventStream's don't support >5 in Chrome
      */
@@ -75,6 +77,7 @@ export class AppMiddleware {
         '/__webpack_hmr',
       ]),
     })
+
     // falls back to the main entry middleware
     if (main) {
       const { devMiddleware, compiler } = this.getMiddleware(main)
@@ -98,6 +101,7 @@ export class AppMiddleware {
         middleware: devMiddleware,
       })
     }
+
     return res
   }
 

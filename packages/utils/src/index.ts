@@ -192,3 +192,13 @@ export const numberBounder = (min: number, max: number) => (val: number) =>
 export const shouldDebug = (level: number = 1) => {
   return typeof window !== 'undefined' && window['enableLog'] >= level
 }
+
+/**
+ * Returns a string that is a valid variable name and package name
+ */
+export const stringToIdentifier = (x: string, separator = '_') =>
+  x
+    .replace(/[^a-z0-9]/gi, separator)
+    .replace(new RegExp(`${separator}{2,}`, 'g'), separator)
+    .replace(/^[^a-z]/i, '')
+    .replace(/[^a-z]$/i, '')

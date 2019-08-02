@@ -85,7 +85,7 @@ export async function bundleApp(entry: string, options: CommandBuildOptions) {
 
   if (hasKey(appInfo, 'app')) {
     log.info(`Found web app, building`)
-    webConf = getWebAppConfig(entry, pkg.name, options)
+    webConf = await getWebAppConfig(entry, pkg.name, options)
   }
 
   if (hasKey(appInfo, 'graph', 'workers', 'api')) {
@@ -116,18 +116,30 @@ function getAppInfo(appRoot: string): AppDefinition | null {
   }
 }
 
-function getWebAppConfig(entry: string, name: string, options: CommandBuildOptions) {
-  return getAppParams({
-    name,
-    context: options.projectRoot,
-    entry: [entry],
-    target: 'web', // TODO electron-renderer
-    ignore: ['electron-log'],
-    outputFile: 'index.js',
-    watch: options.watch,
-    mode: 'production',
-    minify: false,
-  })
+const defaultBaseDll = {
+  // default base dll
+  manifest: join(__dirname, '..', '..', '..', 'example-workspace', 'dist', 'manifest-base.json'),
+  filepath: join(__dirname, '..', '..', '..', 'example-workspace', 'dist', 'base.dll.js'),
+}
+if (process.env.NODE_ENV === 'production') {
+  throw new Error(`Yo need to make this production ^^`)
+}
+
+async function getWebAppConfig(entry: string, name: string, options: CommandBuildOptions) {
+  return await makeWebpackConfig(
+    getAppParams({
+      name,
+      context: options.projectRoot,
+      entry: [entry],
+      target: 'web', // TODO electron-renderer
+      outputFile: 'index.js',
+      watch: options.watch,
+      mode: 'production',
+      minify: false,
+      hot: false,
+      dllReferences: [defaultBaseDll],
+    }),
+  )
 }
 
 async function getNodeAppConfig(entry: string, name: any, options: CommandBuildOptions) {
@@ -140,6 +152,7 @@ async function getNodeAppConfig(entry: string, name: any, options: CommandBuildO
       outputFile: 'index.node.js',
       watch: options.watch,
       mode: 'development',
+      dllReferences: [defaultBaseDll],
     }),
     {
       node: {

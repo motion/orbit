@@ -90,7 +90,7 @@ export class PaneManagerStore {
       ensure('keyable', next && next.keyable)
       this.setPane(next.id)
     } catch (e) {
-      if (e instanceof ReactionRejectionError) {
+      if (e === ReactionRejectionError) {
         console.debug('Not in keyable range')
         return
       }

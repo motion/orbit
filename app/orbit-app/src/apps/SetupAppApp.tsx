@@ -129,15 +129,6 @@ function SetupAppCustom() {
               const name = form.getValue('name')
               const identifier = form.getValue('identifier')
 
-              if (!identifier || !name || !template) {
-                console.log(identifier, name, template)
-                banner.set({
-                  message: `Error, must have identifier, name, and template selected`,
-                  timeout: 2,
-                })
-                return
-              }
-
               banner.set({
                 message: `Creating app "${name}" with template "${template}".`,
               })
@@ -166,6 +157,7 @@ function SetupAppCustom() {
               banner.set({
                 type: 'success',
                 message: `Successfully created, opening...`,
+                timeout: 2,
               })
             }}
             icon="chevron-right"

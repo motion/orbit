@@ -151,8 +151,7 @@ export class OrbitDesktopRoot {
         },
         async () => {
           console.log('create workspace manager')
-          this.workspaceManager = new WorkspaceManager(this.mediatorServer)
-          await this.workspaceManager.start({
+          this.workspaceManager = new WorkspaceManager(this.mediatorServer, {
             singleUseMode,
           })
         },

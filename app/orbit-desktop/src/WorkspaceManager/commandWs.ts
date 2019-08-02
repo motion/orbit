@@ -44,7 +44,7 @@ export async function commandWs(options: CommandWsOptions, workspaceManager: Wor
 
   // validate/update directory
   if (workspaceRoot !== space.directory) {
-    console.log('You moved this space, updating to new directory', workspaceRoot)
+    log.info(`You moved this space, updating to new directory: ${workspaceRoot}`)
     await getRepository(SpaceEntity).save({
       ...space,
       directory: workspaceRoot,

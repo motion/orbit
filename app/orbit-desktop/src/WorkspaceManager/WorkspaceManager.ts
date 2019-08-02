@@ -34,7 +34,10 @@ export class WorkspaceManager {
   appMiddleware = new AppMiddleware(this.appsManager)
   graphServer = new GraphServer()
 
-  constructor(private mediatorServer: MediatorServer) {
+  constructor(
+    private mediatorServer: MediatorServer,
+    private startOpts: { singleUseMode: boolean },
+  ) {
     this.appsManager.onUpdatedAppMeta(async (appMeta: AppMetaDict) => {
       log.verbose('appsManager updating app meta', appMeta)
       const identifiers = Object.keys(appMeta)
@@ -57,6 +60,23 @@ export class WorkspaceManager {
     return this.options.workspaceRoot
   }
 
+  setWorkspace(opts: CommandWsOptions) {
+    log.info(`setWorkspace ${JSON.stringify(opts)}`)
+    this.options = opts
+    if (!this.startOpts.singleUseMode) {
+      this.graphServer.start()
+      this.appsManager.start()
+      this.updateWorkspace()
+      this.onWorkspaceChange()
+      /**
+       * Sends messages between webpack and client apps so we can display status messages
+       */
+      this.appMiddleware.onStatus(status => {
+        appStatusManager.sendMessage(status)
+      })
+    }
+  }
+
   middleware: Handler = async (req, res, next) => {
     const sendIndex = () => res.sendFile(join(this.directory, 'dist', 'index.html'))
     // hacky way to just serve our own index.html for now
@@ -75,27 +95,6 @@ export class WorkspaceManager {
     }
     log.verbose('no match', req.path)
     return next()
-  }
-
-  async start(opts: { singleUseMode: boolean }) {
-    if (!opts.singleUseMode) {
-      await this.appsManager.start()
-      await this.graphServer.start()
-      this.onWorkspaceChange()
-
-      /**
-       * Sends messages between webpack and client apps so we can display status messages
-       */
-      this.appMiddleware.onStatus(status => {
-        appStatusManager.sendMessage(status)
-      })
-    }
-  }
-
-  setWorkspace(opts: CommandWsOptions) {
-    log.info(`setWorkspace ${JSON.stringify(opts)}`)
-    this.options = opts
-    this.updateWorkspace()
   }
 
   updateWorkspace = async () => {

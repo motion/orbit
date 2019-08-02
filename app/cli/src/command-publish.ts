@@ -70,7 +70,6 @@ export async function commandPublish(options: CommandPublishOptions) {
     let app: AppDefinition
     try {
       app = require(join(options.projectRoot, 'dist', 'appInfo.js')).default
-      console.log('appInfo', app)
     } catch (err) {
       reporter.error(`appInfo.js didn't build, there was some error building your app`)
       return

@@ -9,10 +9,8 @@ const identifierToPackageId: { [key: string]: string } = {}
 const log = new Logger('getPackageId')
 
 export function setIdentifierToPackageId(identifier: string, packageId: string) {
-  if (identifierToPackageId[identifier] !== packageId) {
-    log.verbose(`setIdentifierToPackageId ${identifier} ${packageId}`)
-    identifierToPackageId[identifier] = packageId
-  }
+  log.verbose(`setIdentifierToPackageId ${identifier} ${packageId}`)
+  identifierToPackageId[identifier] = packageId
 }
 
 export function getIdentifierToPackageId(identifier?: string) {

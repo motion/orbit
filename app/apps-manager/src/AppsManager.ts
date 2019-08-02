@@ -134,34 +134,32 @@ export class AppsManager {
    * Runs on every change of packageJson/space, collecting app information
    */
   updateAppDefinitionsReaction = react(
-    () => [this.activeSpace, this.packageJsonUpdate],
+    () => [this.activeSpace, this.packageJsonUpdate, this.status],
     async ([space], { when }) => {
       await when(() => this.status !== 'idle')
       ensure('space', !!space)
       if (space) {
-        this.updateAppDefinitions(space)
-        // have cli update its cache of packageId => identifier for use installing
-        await updateWorkspacePackageIds(space.directory || '')
+        await Promise.all([
+          this.updateNodeDefinitions(space),
+          // have cli update its cache of packageId => identifier for use installing
+          updateWorkspacePackageIds(space.directory || '')
+        ])
         this.updatePackagesVersion = Math.random()
-        // dont finish starting appsManager until we've run this once
-        if (this.finishStarting) {
-          this.finishStarting()
-          this.finishStarting = null
-        }
       }
     },
   )
 
-  updateAppDefinitions = async (space: Space) => {
+  updateNodeDefinitions = async (space: Space) => {
     const definitions = await requireWorkspaceDefinitions((space && space.directory) || '', 'node')
     log.verbose(`Got definitions ${definitions.map(x => x.type)}`, definitions)
     this.nodeAppDefinitions = definitions.map(x => x.type === 'success' && x.value).filter(Boolean)
   }
 
   updateAppMeta = react(
-    () => [this.activeSpace, this.nodeAppDefinitions, this.updatePackagesVersion],
+    () => [this.activeSpace, this.nodeAppDefinitions, this.updatePackagesVersion, this.status],
     async ([activeSpace, appDefs], { when }) => {
-      await when(() => this.status === 'started')
+      await when(() => this.status === 'starting')
+      await when(() => this.updatePackagesVersion !== 0)
       ensure('appDefs', !!appDefs)
       if (!activeSpace) return
       const apps = await getWorkspaceApps(activeSpace.directory || '')
@@ -184,6 +182,12 @@ export class AppsManager {
         for (const cb of [...this.onUpdatedCb]) {
           cb(this.appMeta)
         }
+      }
+
+      // dont finish starting appsManager until we've run this once
+      if (this.finishStarting) {
+        this.finishStarting()
+        this.finishStarting = null
       }
     },
   )

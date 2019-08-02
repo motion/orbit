@@ -59,6 +59,8 @@ export async function commandWs(options: CommandWsOptions, workspaceManager: Wor
 
   // update workspace
   await workspaceManager.setWorkspace(options)
+
+  // TODO i think we can remove this after checking, this should happen on setWorksapce
   // make sure we've finished updating new app info before running
   await workspaceManager.appsManager.updateAppDefinitions(space)
 

@@ -18,6 +18,7 @@ export async function updateWorkspacePackageIds(workspaceRoot: string) {
   )
   for (const { packageId, directory } of paths) {
     const buildInfo = await getBuildInfo(directory)
+    log.verbose(`got ${packageId} ${JSON.stringify(buildInfo)}`)
     if (buildInfo) {
       if (buildInfo.identifier) {
         setIdentifierToPackageId(buildInfo.identifier, packageId)

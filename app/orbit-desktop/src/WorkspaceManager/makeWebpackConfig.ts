@@ -137,6 +137,7 @@ export function makeWebpackConfig(
   const main = hot && !injectHot ? [hotEntry, ...entry] : entry
 
   let config: webpack.Configuration = {
+    name,
     watch,
     context,
     target,

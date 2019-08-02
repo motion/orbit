@@ -42,7 +42,7 @@ export function useWebpackMiddleware(configs: {
   // falls back to the main entry middleware
   const { devMiddleware, compiler } = getMiddleware(main)
   const mainHotMiddleware = WebpackHotMiddleware([compiler], {
-    path: '/__webpack_hmr',
+    path: '/__webpack_hmr_main',
     log: console.log,
     heartBeat: 10 * 1000,
   })
@@ -113,9 +113,9 @@ function WebpackHotMiddleware(compilers: webpack.Compiler[], opts) {
   opts.path = opts.path || '/__webpack_hmr'
   opts.heartbeat = opts.heartbeat || 10 * 1000
 
-  var eventStream = createEventStream(opts.heartbeat)
-  var latestStats = null
-  var closed = false
+  let eventStream = createEventStream(opts.heartbeat)
+  let latestStats = null
+  let closed = false
 
   for (const compiler of compilers) {
     if (compiler.hooks) {
@@ -125,20 +125,18 @@ function WebpackHotMiddleware(compilers: webpack.Compiler[], opts) {
       compiler.plugin('invalid', onInvalid)
       compiler.plugin('done', onDone)
     }
-  }
-
-  function onInvalid() {
-    if (closed) return
-    latestStats = null
-    if (opts.log) opts.log('webpack building...')
-    eventStream.publish({ action: 'building' })
-  }
-
-  function onDone(statsResult) {
-    if (closed) return
-    // Keep hold of latest stats so they can be propagated to new clients
-    latestStats = statsResult
-    publishStats('built', latestStats, eventStream, opts.log)
+    function onInvalid() {
+      if (closed) return
+      latestStats = null
+      if (opts.log) opts.log('webpack building...')
+      eventStream.publish({ action: 'building' })
+    }
+    function onDone(statsResult) {
+      if (closed) return
+      // Keep hold of latest stats so they can be propagated to new clients
+      latestStats = statsResult
+      publishStats('built', latestStats, eventStream, opts.log)
+    }
   }
 
   function middleware(req, res, next) {
@@ -146,8 +144,6 @@ function WebpackHotMiddleware(compilers: webpack.Compiler[], opts) {
     if (!pathMatch(req.url, opts.path)) return next()
     eventStream.handler(req, res)
     if (latestStats) {
-      // Explicitly not passing in `log` fn as we don't want to log again on
-      // the server
       publishStats('sync', latestStats, eventStream, opts.log)
     }
   }
@@ -159,8 +155,6 @@ function WebpackHotMiddleware(compilers: webpack.Compiler[], opts) {
 
   middleware.close = function() {
     if (closed) return
-    // Can't remove compiler plugins, so we just set a flag and noop if closed
-    // https://github.com/webpack/tapable/issues/32#issuecomment-350644466
     closed = true
     eventStream.close()
     eventStream = null
@@ -205,7 +199,6 @@ function createEventStream(heartbeat: number) {
           Connection: 'keep-alive',
         })
       }
-
       res.writeHead(200, headers)
       res.write('\n')
       var id = clientId++
@@ -260,10 +253,8 @@ function publishStats(action, statsResult, eventStream, log) {
 function extractBundles(stats) {
   // Stats has modules, single bundle
   if (stats.modules) return [stats]
-
   // Stats has children, multiple bundles
   if (stats.children && stats.children.length) return stats.children
-
   // Not sure, assume single
   return [stats]
 }

@@ -1,32 +1,7 @@
-import {
-  AppMetaDict,
-  AppsManager,
-  getBuildInfo,
-  getWorkspaceApps,
-  updateWorkspacePackageIds,
-} from '@o/apps-manager'
+import { AppMetaDict, AppsManager, getBuildInfo, getWorkspaceApps, updateWorkspacePackageIds } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import {
-  AppBuildCommand,
-  AppCreateWorkspaceCommand,
-  AppDevCloseCommand,
-  AppDevOpenCommand,
-  AppEntity,
-  AppGenTypesCommand,
-  AppGetWorkspaceAppsCommand,
-  AppInstallCommand,
-  AppMeta,
-  AppMetaCommand,
-  AppOpenWorkspaceCommand,
-  AppStatusMessage,
-  AppStatusModel,
-  CallAppBitApiMethodCommand,
-  CloseAppCommand,
-  CommandWsOptions,
-  WorkspaceInfo,
-  WorkspaceInfoModel,
-} from '@o/models'
+import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppGenTypesCommand, AppGetWorkspaceAppsCommand, AppInstallCommand, AppMeta, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusMessage, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
@@ -90,6 +65,9 @@ export class WorkspaceManager {
       }
     }
     // this is the last middleware, catch everything else and serve index
+    // if (req.path.indexOf('hot-update.json') > -1) {
+    //   res.json({})
+    // }
     console.log('nothing happened?', req.path)
     return next()
   }

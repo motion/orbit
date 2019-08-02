@@ -383,7 +383,7 @@ export const OrbitAppsCarousel = memo(() => {
     if (rowRef.current) {
       const curLeft = Math.round(rowRef.current.scrollLeft)
       const index = appsCarouselStore.focusedIndex
-      const expectedLeft = Math.round(index * rowWidth)
+      const expectedLeft = Math.floor(index * rowWidth)
       if (curLeft !== expectedLeft) {
         appsCarouselStore.animateAndScrollTo(0)
         sleep(100).then(() => {

@@ -54,9 +54,9 @@ function SetupAppCustom() {
         name: 'Unique ID',
         description: 'You can change this later.',
         type: 'text',
-        value: fields => stringToIdentifier(fields.name),
+        value: fields => stringToIdentifier(fields.name, '-'),
       },
-    } as const,
+    },
   })
 
   return (

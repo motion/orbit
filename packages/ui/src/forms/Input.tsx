@@ -1,7 +1,8 @@
 import { gloss, ThemeFn } from 'gloss'
-import React, { forwardRef, useCallback, useMemo } from 'react'
+import React, { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { isWebkit } from '../constants'
+import { composeRefs } from '../helpers/composeRefs'
 import { useThrottledFn } from '../hooks/useThrottleFn'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { DataType } from '../types'
@@ -37,6 +38,7 @@ export const Input = React.forwardRef(function Input(
   { onEnter, type = 'text', ...props }: InputProps,
   ref,
 ) {
+  const innerRef = useRef<HTMLInputElement>(null)
   const formStore = useParentForm()
 
   // update form context every so often, avoid too many re-renders
@@ -54,9 +56,13 @@ export const Input = React.forwardRef(function Input(
     [formStore, type, props.name],
   )
 
+  useEffect(() => {
+    innerRef.current.value = `${props.defaultValue}`
+  }, [props.defaultValue])
+
   return (
     <SimpleInput
-      ref={ref}
+      ref={composeRefs(ref, innerRef)}
       {...props}
       type={type}
       onKeyDown={useCallback(
@@ -75,12 +81,8 @@ export const Input = React.forwardRef(function Input(
       onChange={useCallback(
         e => {
           updateFormContext(e.target.value)
-
           if (props.onChange) {
             props.onChange(e)
-          }
-          return () => {
-            formStore.removeField(props.name)
           }
         },
         [props.name, props.onChange, formStore],

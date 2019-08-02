@@ -1,4 +1,4 @@
-import { createStoreContext, ensure, react, shallow, useStore } from '@o/use-store'
+import { createStoreContext, ensure, react, shallow, useReaction, useStore } from '@o/use-store'
 import { flatten } from 'lodash'
 import React, { forwardRef, HTMLProps, useCallback } from 'react'
 
@@ -70,6 +70,13 @@ class FormStore {
   values: FormFieldsObj = shallow({})
   errors: FormErrors<any> = null
   mountKey = 0
+
+  get simpleValues() {
+    return Object.keys(this.values).reduce((acc, key) => {
+      acc[key] = this.values[key].value
+      return acc
+    }, {})
+  }
 
   setErrors(value: FormErrors<any>) {
     this.globalError = null
@@ -173,19 +180,10 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
 ) {
   const formStore = parentUseForm ? useStore(parentUseForm) : useCreateForm({ fields, errors })
   const finalFields = formStore.props ? formStore.props.fields : undefined
-
-  if (finalFields && children) {
-    return (
-      <ErrorMessage
-        message={`Can't pass both fields and children, Form accepts one or the other.`}
-      />
-    )
-  }
-
   let elements = children
-
+  const fieldElements = useFormFields(formStore, finalFields)
   if (finalFields) {
-    elements = generateFields(finalFields)
+    elements = fieldElements
   }
 
   const onSubmitInner = useCallback(
@@ -235,6 +233,14 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
     [onSubmit],
   )
 
+  if (finalFields && children) {
+    return (
+      <ErrorMessage
+        message={`Can't pass both fields and children, Form accepts one or the other.`}
+      />
+    )
+  }
+
   return (
     <form
       ref={ref}
@@ -276,7 +282,19 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
   )
 })
 
-function generateFields(fields: FormFieldsObj): React.ReactNode {
+function useFormFields(store: FormStore, fields: FormFieldsObj): React.ReactNode {
+  const values = useReaction(() => {
+    const next = {}
+    for (const key of Object.keys(fields)) {
+      if (typeof fields[key].value === 'function') {
+        next[key] = fields[key].value(store.simpleValues)
+      } else {
+        next[key] = fields[key].value
+      }
+    }
+    return next
+  })
+
   return Object.keys(fields).map(key => {
     const field = fields[key]
     return (
@@ -285,7 +303,7 @@ function generateFields(fields: FormFieldsObj): React.ReactNode {
         label={field.name}
         name={key}
         type={DataType[field.type]}
-        defaultValue={field.value}
+        defaultValue={values[key]}
         description={'description' in field ? field.description : undefined}
         {...field.type === 'custom' && { children: field.children }}
       />

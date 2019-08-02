@@ -116,10 +116,11 @@ function getAppInfo(appRoot: string): AppDefinition | null {
   }
 }
 
+const monoRoot = join(__dirname, '..', '..', '..', '..')
 const defaultBaseDll = {
   // default base dll
-  manifest: join(__dirname, '..', '..', '..', 'example-workspace', 'dist', 'manifest-base.json'),
-  filepath: join(__dirname, '..', '..', '..', 'example-workspace', 'dist', 'base.dll.js'),
+  manifest: join(monoRoot, 'example-workspace', 'dist', 'manifest-base.json'),
+  filepath: join(monoRoot, 'example-workspace', 'dist', 'base.dll.js'),
 }
 if (process.env.NODE_ENV === 'production') {
   throw new Error(`Yo need to make this production ^^`)

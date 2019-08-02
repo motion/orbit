@@ -29,7 +29,7 @@ tsconfig.tsbuildinfo
 
 common/temp/**
 
-app/example-workspace/apps/**/yarn.lock
+example-workspace/apps/**/yarn.lock
 
 app/build-orbit/stage-app/package-lock.json
 

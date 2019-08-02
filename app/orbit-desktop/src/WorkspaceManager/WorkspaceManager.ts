@@ -1,8 +1,8 @@
 import { AppMetaDict, AppsManager, updateWorkspacePackageIds } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppGenTypesCommand, AppInstallCommand, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
-import { Desktop, Electron } from '@o/stores'
+import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppEntity, AppGenTypesCommand, AppInstallCommand, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
+import { Desktop } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { Handler } from 'express'
 import { debounce } from 'lodash'
@@ -15,7 +15,7 @@ import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 import { getActiveSpace } from '../helpers/getActiveSpace'
 import { appStatusManager } from '../managers/AppStatusManager'
 import { AppMiddleware } from './AppMiddleware'
-import { commandBuild, getAppEntry } from './commandBuild'
+import { commandBuild } from './commandBuild'
 import { commandGenTypes } from './commandGenTypes'
 import { commandInstall } from './commandInstall'
 import { commandWs } from './commandWs'
@@ -180,33 +180,32 @@ export class WorkspaceManager {
       resolveCommand(AppInstallCommand, commandInstall),
       resolveCommand(AppBuildCommand, commandBuild),
       resolveCommand(AppGenTypesCommand, commandGenTypes),
-      resolveCommand(AppDevOpenCommand, async ({ projectRoot }) => {
-        return
-        const entry = await getAppEntry(projectRoot)
-        const appId = Object.keys(Electron.state.appWindows).length
-        // launch new app
-        Electron.setState({
-          appWindows: {
-            ...Electron.state.appWindows,
-            [appId]: {
-              appId,
-              appRole: 'editing',
-            },
-          },
-        })
-        // this.developingApps.push({
-        //   entry,
-        //   appId,
-        //   path: projectRoot,
-        //   publicPath: `/appServer/${appId}`,
-        // })
-        // this.appMiddleware.setApps(this.developingApps)
-        return {
-          type: 'success',
-          message: 'Got app id',
-          value: `${appId}`,
-        } as const
-      }),
+      // resolveCommand(AppDevOpenCommand, async ({ projectRoot }) => {
+      //   const entry = await getAppEntry(projectRoot)
+      //   const appId = Object.keys(Electron.state.appWindows).length
+      //   // launch new app
+      //   Electron.setState({
+      //     appWindows: {
+      //       ...Electron.state.appWindows,
+      //       [appId]: {
+      //         appId,
+      //         appRole: 'editing',
+      //       },
+      //     },
+      //   })
+      //   this.developingApps.push({
+      //     entry,
+      //     appId,
+      //     path: projectRoot,
+      //     publicPath: `/appServer/${appId}`,
+      //   })
+      //   this.appMiddleware.setApps(this.developingApps)
+      //   return {
+      //     type: 'success',
+      //     message: 'Got app id',
+      //     value: `${appId}`,
+      //   } as const
+      // }),
       resolveCommand(AppDevCloseCommand, async ({ appId }) => {
         return
         log.info('Removing build server', appId)

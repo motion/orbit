@@ -119,7 +119,7 @@ export class AppMiddleware {
       for (const app of this.appsManager.apps) {
         const packageId = await getPackageId(app.identifier)
         if (packageId === appMeta.packageId) {
-          this.sendStatus({ appId: app.identifier, ...message })
+          this.sendStatus({ appId: app.id, ...message })
         }
       }
     }

@@ -1,7 +1,7 @@
 {
   "name": "@o/gmail-app",
   "description": "Query, explore and sync the full Gmail API",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "main": "index.tsx",
   "config": {
     "orbitApp": true

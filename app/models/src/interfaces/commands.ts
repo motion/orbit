@@ -84,8 +84,6 @@ export interface AppMeta {
   isLocal: boolean
 }
 
-export const AppGetWorkspaceAppsCommand = new Command<AppMeta[], void>('AppGetWorkspaceAppsCommand')
-
 // return extra information about app
 export const AppMetaCommand = new Command<
   AppMeta,

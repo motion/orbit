@@ -1,3 +1,4 @@
+import { AppMetaDict } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppMeta, CommandWsOptions } from '@o/models'
 import { ensureDir, ensureSymlink, pathExists, readJSON, writeFile } from 'fs-extra'
@@ -25,7 +26,13 @@ export const cleanString = (x: string) =>
  *   3. the "main" entry point with orbit-app
  */
 
-export async function getAppsConfig(apps: AppMeta[], options: CommandWsOptions) {
+export async function getAppsConfig(
+  apps: AppMeta[],
+  options: CommandWsOptions,
+): Promise<{
+  webpackConfigs: { [name: string]: webpack.Configuration }
+  nameToAppMeta: AppMetaDict
+} | null> {
   if (!apps.length) {
     return null
   }
@@ -140,10 +147,13 @@ ${apps.map(app => `    <script src="/${cleanString(app.packageId)}.dll.js"></scr
     webpackConfigs.base = await addDLL(baseDllParams)
   }
 
+  const nameToAppMeta: AppMetaDict = {}
+
   // add app dll configs
   const appParams: WebpackParams[] = await Promise.all(
     apps.map(async app => {
       const cleanName = cleanString(app.packageId)
+      nameToAppMeta[cleanName] = app
       const dllFile = join(outputDir, `manifest-${cleanName}.json`)
       const appEntry = join(
         app.directory,
@@ -276,7 +286,10 @@ export default function getApps() {
     },
   })
 
-  return webpackConfigs
+  return {
+    webpackConfigs,
+    nameToAppMeta,
+  }
 }
 
 export function getAppParams(props: WebpackParams): WebpackParams {

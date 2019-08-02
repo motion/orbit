@@ -1,5 +1,5 @@
 import { Logger } from '@o/logger'
-import { AppDefinition, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
+import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
 import { isEqual } from 'lodash'
@@ -41,6 +41,7 @@ export class AppsManager {
   spaces: PartialSpace[] = []
   user: User | null = null
   appMeta: AppMetaDict = {}
+  apps: AppBit[] = []
 
   private packageJsonUpdate = 0
   private updatePackagesVersion = 0
@@ -84,8 +85,29 @@ export class AppsManager {
     return this.spaces.find(x => x.id === user.activeSpace)
   }
 
+  appsUpdate = react(
+    () => this.activeSpace,
+    (_, { useEffect }) => {
+      ensure('this.activeSpace', !!this.activeSpace)
+      useEffect(() => {
+        const subsription = getRepository(AppEntity)
+          .observe({
+            where: {
+              spaceId: this.activeSpace.id,
+            },
+          })
+          .subscribe(next => {
+            this.apps = next as AppBit[]
+          })
+        return () => {
+          subsription.unsubscribe()
+        }
+      })
+    },
+  )
+
   onUpdatedCb = new Set<AppMetaDictCb>()
-  onUpdatedApps = (cb: AppMetaDictCb) => {
+  onUpdatedAppMeta = (cb: AppMetaDictCb) => {
     this.onUpdatedCb.add(cb)
   }
 
@@ -110,11 +132,10 @@ export class AppsManager {
   }
 
   updateAppMeta = react(
-    () => [this.nodeAppDefinitions, this.updatePackagesVersion],
-    async ([appDefs], { when }) => {
+    () => [this.activeSpace, this.nodeAppDefinitions, this.updatePackagesVersion],
+    async ([activeSpace, appDefs], { when }) => {
       await when(() => this.started)
       ensure('appDefs', !!appDefs)
-      const activeSpace = this.activeSpace
       if (!activeSpace) return
       const apps = await getWorkspaceApps(activeSpace.directory || '')
       ensure('apps', !!apps)
@@ -149,6 +170,7 @@ export class AppsManager {
       useEffect(() => {
         let watcher = watch(pkg, {
           persistent: true,
+          awaitWriteFinish: true,
         })
         watcher.on('change', () => {
           log.info('got package.json change')

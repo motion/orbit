@@ -8,10 +8,7 @@ import WebpackDevMiddleware from 'webpack-dev-middleware'
 
 const log = new Logger('useWebpackMiddleware')
 
-export function useWebpackMiddleware(configs: {
-  main: webpack.Configuration
-  [key: string]: webpack.Configuration
-}) {
+export function useWebpackMiddleware(configs: { [key: string]: webpack.Configuration }) {
   const { main, ...rest } = configs
   log.info(`configs ${Object.keys(configs).join(', ')}`, configs)
   const middlewares = []
@@ -40,19 +37,23 @@ export function useWebpackMiddleware(configs: {
   )
 
   // falls back to the main entry middleware
-  const { devMiddleware, compiler } = getMiddleware(main)
-  const mainHotMiddleware = WebpackHotMiddleware([compiler], {
-    path: '/__webpack_hmr_main',
-    log: console.log,
-    heartBeat: 10 * 1000,
-  })
-  middlewares.push(resolveIfExists(mainHotMiddleware, [main.output.path], ['/__webpack_hmr_main']))
-  middlewares.push(devMiddleware)
-  global.webpackMiddlewares.main = { devMiddleware }
-  // need to have another devMiddleware  after historyAPIFallback, see:
-  // https://github.com/webpack/webpack-dev-middleware/issues/88#issuecomment-252048006
-  middlewares.push(historyAPIFallback())
-  middlewares.push(devMiddleware)
+  if (main) {
+    const { devMiddleware, compiler } = getMiddleware(main)
+    const mainHotMiddleware = WebpackHotMiddleware([compiler], {
+      path: '/__webpack_hmr_main',
+      log: console.log,
+      heartBeat: 10 * 1000,
+    })
+    middlewares.push(
+      resolveIfExists(mainHotMiddleware, [main.output.path], ['/__webpack_hmr_main']),
+    )
+    middlewares.push(devMiddleware)
+    global.webpackMiddlewares.main = { devMiddleware }
+    // need to have another devMiddleware  after historyAPIFallback, see:
+    // https://github.com/webpack/webpack-dev-middleware/issues/88#issuecomment-252048006
+    middlewares.push(historyAPIFallback())
+    middlewares.push(devMiddleware)
+  }
 
   return middlewares
 }

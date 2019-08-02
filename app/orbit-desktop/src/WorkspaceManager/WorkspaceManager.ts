@@ -35,25 +35,28 @@ export class WorkspaceManager {
   developingApps: AppDesc[] = []
   appsMeta: AppMeta[] = []
   workspaceVersion = 0
-  directory = ''
-  options: CommandWsOptions
+  options: CommandWsOptions = null
   appWatchers: Disposable = new Set<{ id: string; dispose: Function }>()
   middlewares = []
 
   appsManager = new AppsManager()
   graphServer = new GraphServer()
 
+  get directory() {
+    if (!this.options) return ''
+    return this.options.workspaceRoot
+  }
+
   constructor(private mediatorServer: MediatorServer) {
     this.appsManager.onUpdatedApps(this.handleUpdatedApps)
   }
 
   middleware: Handler = async (req, res, next) => {
-    const sendIndex = () => res.sendfile(join(this.directory, 'dist', 'index.html'))
+    const sendIndex = () => res.sendFile(join(this.directory, 'dist', 'index.html'))
     // hacky way to just serve our own index.html for now
     if (req.path[1] !== '_' && req.path.indexOf('.') === -1) {
       return sendIndex()
     }
-
     let fin
     for (const middleware of this.middlewares) {
       fin = null
@@ -64,7 +67,7 @@ export class WorkspaceManager {
         return
       }
     }
-    console.log('no match', req.path)
+    log.verbose('no match', req.path)
     return next()
   }
 
@@ -114,7 +117,6 @@ export class WorkspaceManager {
 
   setWorkspace(opts: CommandWsOptions) {
     log.info(`setWorkspace ${JSON.stringify(opts)}`)
-    this.directory = opts.workspaceRoot
     this.options = opts
     this.updateWorkspace()
   }
@@ -124,11 +126,11 @@ export class WorkspaceManager {
   }
 
   onNewWorkspaceVersion = react(
-    () => [this.directory, this.workspaceVersion],
-    async ([directory], { sleep, when }) => {
+    () => [this.options, this.workspaceVersion],
+    async (_, { sleep, when }) => {
       await when(() => !!this.options)
       ensure('not in single build mode', !this.options.build)
-      ensure('directory', !!directory)
+      ensure('directory', !!this.directory)
       await sleep()
       this.buildWorkspace()
     },
@@ -143,7 +145,7 @@ export class WorkspaceManager {
           appImportNames: this.appsMeta.map(app => cleanString(app.packageId)),
         },
       })
-      const config = await getAppsConfig(this.directory, this.appsMeta, this.options)
+      const config = await getAppsConfig(this.appsMeta, this.options)
       if (!config) {
         console.error('No config')
         return

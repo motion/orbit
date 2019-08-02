@@ -101,7 +101,7 @@ export class WorkspaceManager {
     return next()
   }
 
-  updateWorkspace = async () => {
+  updateWorkspace = () => {
     this.workspaceVersion = (this.workspaceVersion + 1) % Number.MAX_SAFE_INTEGER
   }
 

@@ -1,7 +1,7 @@
 {
   "name": "@o/lists-app",
   "description": "Create lists of any bits or data.",
-  "version": "2.5.9",
+  "version": "2.5.10",
   "main": "index.tsx",
   "config": {
     "orbitApp": true

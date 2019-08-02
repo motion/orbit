@@ -240,16 +240,11 @@ export function makeWebpackConfig(
             loader: `add-source-loader`,
             options: {
               postfix: `
-function __hmrHandler() {
-  require('@o/kit').createHotHandler({
-    name: '${name}',
-    getHash: __webpack_require__.h,
-    module,
-  })
-}
-window['__hmr_handlers'] = window['__hmr_handlers'] || {}
-window['__hmr_handlers']['${name}'] = __hmrHandler
-__hmrHandler()
+require('@o/kit').createHotHandler({
+  name: '${name}',
+  getHash: __webpack_require__.h,
+  module,
+});
 `,
             },
           },

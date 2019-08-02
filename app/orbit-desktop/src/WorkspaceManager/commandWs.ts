@@ -5,7 +5,7 @@ import { readJSON } from 'fs-extra'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
-import { findOrCreateWorkspace } from './findOrCreateWorkspace'
+import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 import { WorkspaceManager } from './WorkspaceManager'
 
 const log = new Logger('commandWs')

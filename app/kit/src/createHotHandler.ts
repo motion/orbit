@@ -19,9 +19,14 @@ async function restartSockets() {
 
 let source
 
-export function createHotHandler(props: { getHash: Function; module: any; actions?: any }) {
+export function createHotHandler(props: {
+  name: string
+  getHash: Function
+  module: any
+  actions?: any
+}) {
   const url = '/__webpack_hmr'
-  const { getHash, module, actions = {} } = props
+  const { name, getHash, module, actions = {} } = props
 
   source = source || createEventSource(url)
   source.addMessageListener(handleMessage)
@@ -44,6 +49,9 @@ export function createHotHandler(props: { getHash: Function; module: any; action
   }
 
   function processMessage(obj) {
+    if (obj.name !== name) {
+      return
+    }
     switch (obj.action) {
       case 'building':
         // console.log('[HMR] bundle ' + (obj.name ? "'" + obj.name + "' " : '') + 'rebuilding')

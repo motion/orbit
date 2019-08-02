@@ -158,7 +158,7 @@ export function makeWebpackConfig(
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
     },
-    devtool: mode === 'production' || target === 'node' ? 'source-map' : undefined,
+    devtool: mode === 'production' || target === 'node' ? 'source-map' : 'cheap-source-map',
     externals: [
       {
         electron: '{}',
@@ -239,6 +239,7 @@ export function makeWebpackConfig(
               postfix: `
 function __hmrHandler() {
   require('@o/kit').createHotHandler({
+    name: '${name}',
     getHash: __webpack_require__.h,
     module,
   })

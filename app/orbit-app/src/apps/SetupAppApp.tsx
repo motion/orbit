@@ -54,7 +54,7 @@ function SetupAppCustom() {
         name: 'Unique ID',
         description: 'You can change this later.',
         type: 'text',
-        value: fields => stringToIdentifier(fields.name, '-'),
+        value: fields => stringToIdentifier(fields.name, '-').toLowerCase(),
       },
     },
   })
@@ -141,8 +141,6 @@ function SetupAppCustom() {
               banner.set({
                 message: `Creating app "${name}" with template "${template}".`,
               })
-
-              debugger
 
               const res = await command(AppCreateNewCommand, {
                 template,

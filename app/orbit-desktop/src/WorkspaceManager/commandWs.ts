@@ -33,20 +33,17 @@ export async function commandWs(options: CommandWsOptions, workspaceManager: Wor
 
 export async function loadWorkspace(directory: string): Promise<Space> {
   const identifier = (await readJSON(join(directory, 'package.json'))).name
-
   // ensure/find space
   let space = await findOrCreateWorkspace({
     identifier: identifier,
     directory: directory,
   })
-
   // verify matching identifier
   if (space.identifier !== identifier) {
     // we should prompt to make sure they either are in wrong directory / or to change it
     console.error(`Wrong space, not matching this identifier ${space.identifier} vs ${identifier}`)
     process.exit(1)
   }
-
   // validate/update directory
   if (directory !== space.directory) {
     log.info(`You moved this space, updating to new directory: ${directory}`)
@@ -56,11 +53,10 @@ export async function loadWorkspace(directory: string): Promise<Space> {
     })
     space = await getRepository(SpaceEntity).findOne({ identifier: identifier })
   }
-
   // set user active space
   const user = await getRepository(UserEntity).findOne({})
   user.activeSpace = space.id
   await getRepository(UserEntity).save(user)
-
+  log.verbose(`Returning space ${identifier}`)
   return space
 }

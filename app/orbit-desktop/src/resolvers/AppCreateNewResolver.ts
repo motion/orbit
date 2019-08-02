@@ -13,12 +13,22 @@ import { loadWorkspace } from '../WorkspaceManager/commandWs'
 const log = new Logger('AppCreateNewCommand')
 
 export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
-  return resolveCommand(AppCreateNewCommand, async props => {
-    const directory = props.projectRoot || (await getCurrentWorkspace()).directory
-    log.info(`Creating new app ${props.name} ${props.template} in ${directory}`)
-    const ws = await loadWorkspace(directory)
-    return await createNewWorkspaceApp(ws, props)
-  })
+  return resolveCommand(
+    AppCreateNewCommand,
+    statusReplyCommand(async props => {
+      const directory = props.projectRoot || (await getCurrentWorkspace()).directory
+      log.info(
+        `Creating new app ${props.name} ${props.identifier} ${props.template} in ${directory}`,
+      )
+      if (!props.identifier || !props.name || !props.template) {
+        throw new Error(
+          `Missing some props, needs identifier + name + template ${JSON.stringify(props)}`,
+        )
+      }
+      const ws = await loadWorkspace(directory)
+      return await createNewWorkspaceApp(ws, props)
+    }),
+  )
 
   async function createNewWorkspaceApp(space: Space, opts: AppCreateNewOptions) {
     try {
@@ -61,4 +71,22 @@ async function findValidDirectoryName(rootDir: string, preferredName: string) {
     return name
   }
   throw new Error(`Couldn't find a valid directory ${preferredName}`)
+}
+
+/**
+ * Catches errors during a command and returns them as the StatusReply
+ * TODO type this properly and move into util fn, use for all status reply commands
+ */
+function statusReplyCommand<A extends Function>(cb: A): A {
+  const res = async (...args) => {
+    try {
+      return await cb(...args)
+    } catch (error) {
+      return {
+        type: 'error',
+        message: `${error.message}`,
+      }
+    }
+  }
+  return (res as any) as A
 }

@@ -1,6 +1,5 @@
 import { Logger } from '@o/logger'
 import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
-import { OR_TIMED_OUT, orTimeout } from '@o/ui'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
 import { isEqual } from 'lodash'
@@ -38,7 +37,7 @@ export class AppsManager {
   subscriptions = new Set<ZenObservable.Subscription>()
   nodeAppDefinitions: AppDefinition[] = []
 
-  private status: 'idle' | 'starting' | 'started' = 'idle'
+  private started = false
   spaces: PartialSpace[] = []
   user: User | null = null
   appMeta: AppMetaDict = {}
@@ -51,14 +50,27 @@ export class AppsManager {
   // for easier debugging
   getIdentifierToPackageId = getIdentifierToPackageId
 
-  async start() {
-    if (this.status !== 'idle') {
-      return
-    }
+  async start(opts: { singleUseMode?: boolean } = {}) {
+    if (this.started) return
     log.verbose('Starting...')
-    const startFinish = new Promise(res => {
-      this.finishStarting = res
-    })
+    this.spaces = await getRepository(SpaceEntity).find()
+    this.user = await getRepository(UserEntity).findOne()
+    await this.updateAppMeta()
+    if (opts.singleUseMode === false) {
+      this.observeModels()
+      this.started = true
+    }
+  }
+
+  get activeSpace() {
+    const user = this.user
+    if (!user) {
+      return null
+    }
+    return this.spaces.find(x => x.id === user.activeSpace)
+  }
+
+  private observeModels = () => {
     const spacesSubscription = getRepository(SpaceEntity)
       .observe({
         select: ['id', 'directory'],
@@ -70,38 +82,13 @@ export class AppsManager {
           this.spaces = next
         }
       })
-
     const userSubscription = getRepository(UserEntity)
       .observeOne({})
       .subscribe(next => {
         this.user = next as User
       })
-
     this.subscriptions.add(userSubscription)
     this.subscriptions.add(spacesSubscription)
-
-    this.status = 'starting'
-
-    try {
-      await orTimeout(startFinish, 5000)
-    } catch (err) {
-      if (err === OR_TIMED_OUT) {
-        log.error(`Error, timed out starting AppsManager!`)
-        return
-      } else {
-        throw err
-      }
-    }
-
-    this.status = 'started'
-  }
-
-  get activeSpace() {
-    const user = this.user
-    if (!user) {
-      return null
-    }
-    return this.spaces.find(x => x.id === user.activeSpace)
   }
 
   appsUpdate = react(
@@ -130,74 +117,22 @@ export class AppsManager {
     this.onUpdatedCb.add(cb)
   }
 
-  /**
-   * Runs on every change of packageJson/space, collecting app information
-   */
-  updateAppDefinitionsReaction = react(
-    () => [this.activeSpace, this.packageJsonUpdate, this.status],
-    async ([space], { when }) => {
-      await when(() => this.status !== 'idle')
-      ensure('space', !!space)
-      if (space) {
-        await Promise.all([
-          this.updateNodeDefinitions(space),
-          // have cli update its cache of packageId => identifier for use installing
-          updateWorkspacePackageIds(space.directory || '')
-        ])
-        this.updatePackagesVersion = Math.random()
-      }
-    },
-  )
-
-  updateNodeDefinitions = async (space: Space) => {
-    const definitions = await requireWorkspaceDefinitions((space && space.directory) || '', 'node')
-    log.verbose(`Got definitions ${definitions.map(x => x.type)}`, definitions)
-    this.nodeAppDefinitions = definitions.map(x => x.type === 'success' && x.value).filter(Boolean)
-  }
-
-  updateAppMeta = react(
-    () => [this.activeSpace, this.nodeAppDefinitions, this.updatePackagesVersion, this.status],
+  updateAppMetaWatcher = react(
+    () => [this.activeSpace, this.nodeAppDefinitions, this.packageJsonUpdate],
     async ([activeSpace, appDefs], { when }) => {
-      await when(() => this.status === 'starting')
+      ensure('this.started', this.started)
       await when(() => this.updatePackagesVersion !== 0)
-      ensure('appDefs', !!appDefs)
-      if (!activeSpace) return
-      const apps = await getWorkspaceApps(activeSpace.directory || '')
-      ensure('apps', !!apps)
-      log.verbose(`got apps ${apps.map(x => x.packageId).join(',')}`)
-
-      let updated = false
-      for (const appInfo of apps) {
-        const identifier = getIdentifierFromPackageId(appInfo.packageId)
-        log.verbose(`setting apps meta ${appInfo.packageId} => ${identifier}`)
-        if (identifier !== null) {
-          this.appMeta[identifier] = appInfo
-          updated = true
-        } else {
-          log.warning(`no identifier found for ${appInfo.packageId}`)
-        }
-      }
-
-      if (updated) {
-        for (const cb of [...this.onUpdatedCb]) {
-          cb(this.appMeta)
-        }
-      }
-
-      // dont finish starting appsManager until we've run this once
-      if (this.finishStarting) {
-        this.finishStarting()
-        this.finishStarting = null
-      }
+      ensure('info', !!activeSpace && !!appDefs)
+      await this.updateAppMeta()
     },
   )
 
-  syncFromActiveSpacePackageJSON = react(
-    () => this.activeSpace,
-    async (space, { useEffect, when }) => {
-      await when(() => this.status === 'started')
-      ensure('space', !!space)
-      const pkg = join(space.directory || '', 'package.json')
+  updatePackageJsonVersionWatcher = react(
+    () => this.activeSpace && this.activeSpace.directory,
+    async (directory, { useEffect }) => {
+      ensure('directory', !!directory)
+      ensure('this.started', this.started)
+      const pkg = join(directory || '', 'package.json')
       log.info('watching package.json for changes', pkg)
       useEffect(() => {
         let watcher = watch(pkg, {
@@ -214,6 +149,48 @@ export class AppsManager {
       })
     },
   )
+
+  updateAppMeta = async () => {
+    if (!this.activeSpace) return
+    await Promise.all([
+      this.updateNodeDefinitions(this.activeSpace),
+      // have cli update its cache of packageId => identifier for use installing
+      updateWorkspacePackageIds(this.activeSpace.directory || ''),
+    ])
+    const apps = await getWorkspaceApps(this.activeSpace.directory || '')
+    if (!apps) return
+    log.verbose(`got apps ${apps.map(x => x.packageId).join(',')}`)
+
+    let updated = false
+    for (const appInfo of apps) {
+      const identifier = getIdentifierFromPackageId(appInfo.packageId)
+      log.verbose(`setting apps meta ${appInfo.packageId} => ${identifier}`)
+      if (identifier !== null) {
+        this.appMeta[identifier] = appInfo
+        updated = true
+      } else {
+        log.warning(`no identifier found for ${appInfo.packageId}`)
+      }
+    }
+
+    if (updated) {
+      for (const cb of [...this.onUpdatedCb]) {
+        cb(this.appMeta)
+      }
+    }
+
+    // dont finish starting appsManager until we've run this once
+    if (this.finishStarting) {
+      this.finishStarting()
+      this.finishStarting = null
+    }
+  }
+
+  private updateNodeDefinitions = async (space: Space) => {
+    const definitions = await requireWorkspaceDefinitions((space && space.directory) || '', 'node')
+    log.verbose(`Got definitions ${definitions.map(x => x.type)}`, definitions)
+    this.nodeAppDefinitions = definitions.map(x => x.type === 'success' && x.value).filter(Boolean)
+  }
 
   dispose() {
     for (const subscription of [...this.subscriptions]) {

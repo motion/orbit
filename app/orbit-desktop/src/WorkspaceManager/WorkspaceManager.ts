@@ -63,18 +63,22 @@ export class WorkspaceManager {
   async setWorkspace(opts: CommandWsOptions) {
     log.info(`setWorkspace ${JSON.stringify(opts)}`)
     this.options = opts
+
+    await this.appsManager.start({
+      singleUseMode: this.startOpts.singleUseMode,
+    })
+    await this.buildWorkspace()
+
     if (!this.startOpts.singleUseMode) {
       await this.graphServer.start()
-      await this.appsManager.start()
-      this.buildWorkspace()
       /**
        * Sends messages between webpack and client apps so we can display status messages
        */
       this.appMiddleware.onStatus(status => {
         appStatusManager.sendMessage(status)
       })
+      this.started = true
     }
-    this.started = true
   }
 
   middleware: Handler = async (req, res, next) => {
@@ -103,8 +107,8 @@ export class WorkspaceManager {
 
   onNewWorkspaceVersion = react(
     () => this.workspaceVersion,
-    async (_, { sleep, when }) => {
-      await when(() => this.started)
+    async (_, { sleep }) => {
+      ensure('this.started', this.started)
       ensure('not in single build mode', !this.options.build)
       ensure('directory', !!this.directory)
       await sleep()

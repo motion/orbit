@@ -15,6 +15,7 @@ export async function commandBuild(options: CommandBuildOptions, singleUseMode =
   const { mediator, orbitProcess } = await getOrbitDesktop({
     singleUseMode,
   })
+  reporter.info(`Building...`)
   const res = await mediator.command(AppBuildCommand, options, { timeout: 50000 })
   logStatusReply(res)
   if (orbitProcess) {

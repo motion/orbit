@@ -64,11 +64,7 @@ export class WorkspaceManager {
         return
       }
     }
-    // this is the last middleware, catch everything else and serve index
-    // if (req.path.indexOf('hot-update.json') > -1) {
-    //   res.json({})
-    // }
-    console.log('nothing happened?', req.path)
+    console.log('no match', req.path)
     return next()
   }
 

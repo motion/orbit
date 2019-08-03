@@ -199,6 +199,7 @@ function webpackDevReporter(middlewareOptions, options) {
     const displayStats = middlewareOptions.stats !== false
 
     if (displayStats) {
+      console.log('showing stats')
       if (stats.hasErrors()) {
         log.error(stats.toString(middlewareOptions.stats))
       } else if (stats.hasWarnings()) {

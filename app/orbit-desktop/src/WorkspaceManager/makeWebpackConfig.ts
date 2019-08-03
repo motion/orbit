@@ -133,13 +133,16 @@ export function makeWebpackConfig(
     console.log('err testing monorepo', err)
   }
 
+  const hotEntry = `webpack-hot-middleware/client?name=${name}&path=/__webpack_hmr_${name}`
+  const main = hot && !injectHot ? [hotEntry, ...entry] : entry
+
   let config: webpack.Configuration = {
     name,
     watch,
     context,
     target,
     mode,
-    entry,
+    entry: main,
     optimization: optimization[mode],
     output: {
       path: outputDir,
@@ -233,6 +236,7 @@ export function makeWebpackConfig(
             loader: `add-source-loader`,
             options: {
               postfix: `
+// inject hot loading
 require('@o/kit').createHotHandler({
   name: '${name}',
   getHash: __webpack_require__.h,

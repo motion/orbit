@@ -25,7 +25,7 @@ export type WebpackParams = {
   watch?: boolean
   dll?: string
   dllReferences?: DLLReferenceDesc[]
-  injectHot?: boolean
+  injectHot?: boolean | string
   hot?: boolean
   minify?: boolean
   noChunking?: boolean
@@ -137,15 +137,12 @@ export function makeWebpackConfig(
   const main = hot && !injectHot ? [hotEntry, ...entry] : entry
 
   let config: webpack.Configuration = {
+    name,
     watch,
     context,
     target,
     mode,
-    entry: dll
-      ? main
-      : {
-          main,
-        },
+    entry: main,
     optimization: optimization[mode],
     output: {
       path: outputDir,
@@ -157,7 +154,7 @@ export function makeWebpackConfig(
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
     },
-    devtool: mode === 'production' || target === 'node' ? 'source-map' : 'source-map',
+    devtool: mode === 'production' || target === 'node' ? 'source-map' : 'cheap-source-map',
     externals: [
       {
         electron: '{}',
@@ -229,6 +226,9 @@ export function makeWebpackConfig(
 
         injectHot && {
           test: x => {
+            if (typeof injectHot === 'string') {
+              return x === injectHot
+            }
             if (x === entry[0]) return true
             return false
           },
@@ -236,16 +236,12 @@ export function makeWebpackConfig(
             loader: `add-source-loader`,
             options: {
               postfix: `
-function __hmrHandler() {
-  require('@o/kit').createHotHandler({
-    url: '/__webpack_hmr_${name}',
-    getHash: __webpack_require__.h,
-    module,
-  })
-}
-window['__hmr_handlers'] = window['__hmr_handlers'] || {}
-window['__hmr_handlers']['${name}'] = __hmrHandler
-__hmrHandler()
+// inject hot loading
+require('@o/kit').createHotHandler({
+  name: '${name}',
+  getHash: __webpack_require__.h,
+  module,
+});
 `,
             },
           },
@@ -253,6 +249,7 @@ __hmrHandler()
         {
           test: /\.tsx?$/,
           use: [
+            'thread-loader',
             {
               loader: 'babel-loader',
               options: {
@@ -368,7 +365,7 @@ __hmrHandler()
           ({ manifest }) =>
             new webpack.DllReferencePlugin({
               manifest,
-              context: '.',
+              context,
             }),
         )) ||
         []),

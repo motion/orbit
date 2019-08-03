@@ -29,6 +29,8 @@ tsconfig.tsbuildinfo
 
 common/temp/**
 
+example-workspace/apps/**/yarn.lock
+
 app/build-orbit/stage-app/package-lock.json
 
 app/orbit-dotapp/macapp/orbit.xcodeproj/project.xcworkspace

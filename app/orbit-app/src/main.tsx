@@ -28,7 +28,6 @@ if (process.env) {
 async function fetchInitialConfig() {
   // set config before app starts...
   let config: GlobalConfig | null = null
-
   while (!config) {
     try {
       config = await fetch('/config').then(res => res.json())
@@ -40,15 +39,16 @@ async function fetchInitialConfig() {
       await sleep(500)
     }
   }
-
   setGlobalConfig(config)
-
   // TODO im just doing this mid-big refactor until we fix it in @o/bridge
   window['GlobalConfig'] = config
 }
 
 // helper for force-rerender
-window['rerender'] = (force = true) => startApp(force)
+window['rerender'] = (force = true) => {
+  require('./apps/orbitApps').updateDefinitions()
+  startApp(force)
+}
 
 // setup for app
 async function main() {
@@ -87,6 +87,9 @@ async function main() {
   await App.start()
   console.timeEnd('loadStores')
 
+  // install dev tools
+  require('./helpers/installDevelopmentHelpers')
+
   // prevent scroll bounce
   document.body.style.overflow = 'hidden'
   document.documentElement.style.overflow = 'hidden'
@@ -96,9 +99,6 @@ async function main() {
   const { om } = require('./om/om')
   await om.initialized
   console.timeEnd('loadOm')
-
-  // install dev tools
-  require('./helpers/installDevelopmentHelpers')
 
   // now run app..
   console.time('startApp')

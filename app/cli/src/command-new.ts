@@ -1,8 +1,9 @@
 import { configStore } from '@o/config'
+import { AppCreateNewCommand, AppCreateNewOptions, StatusReply } from '@o/models'
 import { trackCli, trackError } from '@o/telemetry'
 import { execSync } from 'child_process'
 import execa from 'execa'
-import fs, { pathExistsSync, remove } from 'fs-extra'
+import fs, { pathExists, pathExistsSync, readJSON, remove } from 'fs-extra'
 import hostedGitInfo from 'hosted-git-info'
 import isValid from 'is-valid-path'
 import { basename, join, resolve } from 'path'
@@ -10,51 +11,56 @@ import prompts from 'prompts'
 import replaceInFile from 'replace-in-file'
 import url from 'url'
 
+import { getOrbitDesktop } from './getDesktop'
 import { isTty } from './isTty'
+import { logStatusReply } from './logStatusReply'
 import { reporter } from './reporter'
 
 // adapted from gatsby
 // The MIT License (MIT)
 // Copyright (c) 2015 Gatsbyjs
 
-export type CommandNewOptions = {
-  projectRoot: string
-  name: string
-  template: string
-  identifier: string
-  icon: string
-}
-
 /**
  * Main function that clones or copies the template.
  */
-export async function commandNew(options: CommandNewOptions) {
-  const projectRoot = join(options.projectRoot || process.cwd(), options.name)
+export async function commandNew(options: AppCreateNewOptions): Promise<StatusReply> {
+  if (await isInWorkspace(options.projectRoot)) {
+    // inside orbit workspace, create app in it
+    reporter.info(`Creating app ${options.name} in workspace...`)
+    const { mediator, orbitProcess } = await getOrbitDesktop({
+      singleUseMode: true,
+    })
+    const res = await mediator.command(AppCreateNewCommand, options)
+    logStatusReply(res)
+    orbitProcess && orbitProcess.kill()
+    process.exit(0)
+  }
 
-  const urlObject = url.parse(projectRoot)
+  const appRoot = join(options.projectRoot || process.cwd(), options.name)
+
+  const urlObject = url.parse(appRoot)
   if (urlObject.protocol && urlObject.host) {
     trackError(`NEW_PROJECT_NAME_MISSING`)
     return {
       type: 'error',
-      message: `It looks like you forgot to add a name for your new project. Try running instead "orbit new new-orbit-project ${projectRoot}"`,
-    } as const
+      message: `It looks like you forgot to add a name for your new project. Try running instead "orbit new new-orbit-project ${appRoot}"`,
+    }
   }
 
-  if (!isValid(projectRoot)) {
+  if (!isValid(appRoot)) {
     return {
       type: 'error',
-      message: `Could not create a project in "${resolve(
-        projectRoot,
-      )}" because it's not a valid path`,
-    } as const
+      message: `Could not create a project in "${resolve(appRoot)}" because it's not a valid path`,
+    }
   }
 
-  if (pathExistsSync(join(projectRoot, `package.json`))) {
+  const pkjPath = join(appRoot, `package.json`)
+  if (pathExistsSync(pkjPath)) {
     trackError(`NEW_PROJECT_IS_NPM_PROJECT`)
     return {
       type: 'error',
-      message: `Directory ${projectRoot} is already an npm project`,
-    } as const
+      message: `Directory ${appRoot} is already an npm project`,
+    }
   }
 
   const hostedInfo = hostedGitInfo.fromUrl(options.template)
@@ -64,37 +70,48 @@ export async function commandNew(options: CommandNewOptions) {
   try {
     if (hostedInfo) {
       reporter.info(`Cloning from git ${JSON.stringify(hostedInfo)}`)
-      await clone(hostedInfo, projectRoot)
+      await clone(hostedInfo, appRoot)
     } else {
       const templatePath = join(__dirname, '..', 'templates', options.template)
       if (!pathExistsSync(templatePath)) {
         return {
           type: 'error',
           message: `Couldn't find local template with name ${options.template} at ${templatePath}`,
-        } as const
+        }
       }
-      await copy(templatePath, projectRoot)
+      await copy(templatePath, appRoot)
     }
 
     await replaceInFile({
-      files: join(projectRoot, '**'),
+      files: join(appRoot, '**'),
       from: ['$ID', '$NAME', '$ICON'],
       to: [options.identifier, options.name, options.icon],
     })
 
+    await install(appRoot)
+
     return {
       type: 'success',
-      message: `Created app at ${projectRoot}`,
-    } as const
+      message: `Created app at ${appRoot}`,
+    }
   } catch (err) {
     try {
-      await remove(projectRoot)
+      await remove(appRoot)
     } catch {}
     return {
       type: 'error',
       message: `Error copying template ${err.message}`,
-    } as const
+    }
   }
+}
+
+async function isInWorkspace(directory: string) {
+  const pkgPath = join(directory, 'package.json')
+  if (await pathExists(pkgPath)) {
+    const pkg = await readJSON(pkgPath)
+    return !!(pkg && pkg.config && pkg.config.orbitWorkspace)
+  }
+  return false
 }
 
 const spawn = (cmd: string, options?: any) => {
@@ -209,21 +226,18 @@ const copy = async (templatePath: string, projectRoot: string) => {
   if (templatePath === `.`) {
     throw new Error(
       `You can't create a template from the existing directory. If you want to
-      create a new site in the current directory, the trailing dot isn't
-      necessary. If you want to create a new site from a local template, run
-      something like "orbit new new-orbit-site ../my-orbit-template"`,
+      create a new app in the current directory, the trailing dot isn't
+      necessary. If you want to create a new app from a local template, run
+      something like "orbit new new-orbit-app ../my-orbit-template"`,
     )
   }
 
-  reporter.info(`Creating new site from local template: ${templatePath}`)
-
-  reporter.log(`Copying local template to ${projectRoot} ...`)
+  reporter.info(`Creating new app from local template: ${templatePath}`)
+  reporter.info(`Copying local template to ${projectRoot} ...`)
 
   await fs.copy(templatePath, projectRoot, { filter: ignored })
 
   reporter.success(`Created template directory layout`)
-
-  await install(projectRoot)
 
   return true
 }
@@ -241,7 +255,7 @@ const clone = async (hostInfo: any, projectRoot: string) => {
 
   const branch = hostInfo.committish ? `-b ${hostInfo.committish}` : ``
 
-  reporter.info(`Creating new site from git: ${url}`)
+  reporter.info(`Creating new app from git: ${url}`)
 
   await spawn(`git clone ${branch} ${url} ${projectRoot} --single-branch`)
 

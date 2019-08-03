@@ -1,24 +1,36 @@
 import { commandNew } from '@o/cli'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
-import { AppCreateNewCommand, AppCreateNewOptions, SpaceEntity } from '@o/models'
+import { AppCreateNewCommand, AppCreateNewOptions, Space } from '@o/models'
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
 import sanitize from 'sanitize-filename'
 
 import { getCurrentWorkspace } from '../helpers/getCurrentWorkspace'
 import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
+import { loadWorkspace } from '../WorkspaceManager/commandWs'
 
 const log = new Logger('AppCreateNewCommand')
 
 export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
-  return resolveCommand(AppCreateNewCommand, async ({ name, template, icon, identifier }) => {
-    log.info(`Creating new app ${name} ${template}`)
-    const ws = await getCurrentWorkspace()
-    return await createNewWorkspaceApp(ws, { name, template, icon, identifier })
-  })
+  return resolveCommand(
+    AppCreateNewCommand,
+    statusReplyCommand(async props => {
+      const directory = props.projectRoot || (await getCurrentWorkspace()).directory
+      log.info(
+        `Creating new app ${props.name} ${props.identifier} ${props.template} in ${directory}`,
+      )
+      if (!props.identifier || !props.name || !props.template) {
+        throw new Error(
+          `Missing some props, needs identifier + name + template ${JSON.stringify(props)}`,
+        )
+      }
+      const ws = await loadWorkspace(directory)
+      return await createNewWorkspaceApp(ws, props)
+    }),
+  )
 
-  async function createNewWorkspaceApp(space: SpaceEntity, opts: AppCreateNewOptions) {
+  async function createNewWorkspaceApp(space: Space, opts: AppCreateNewOptions) {
     try {
       const appsDir = join(space.directory, 'apps')
       const name = await findValidDirectoryName(appsDir, opts.identifier)
@@ -33,7 +45,7 @@ export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
         return res
       }
       // ensure we update the workspace with new package id
-      return await orbitDesktop.workspaceManager.updateWorkspace()
+      return await orbitDesktop.workspaceManager.buildWorkspace()
     } catch (err) {
       return {
         type: 'error',
@@ -59,4 +71,22 @@ async function findValidDirectoryName(rootDir: string, preferredName: string) {
     return name
   }
   throw new Error(`Couldn't find a valid directory ${preferredName}`)
+}
+
+/**
+ * Catches errors during a command and returns them as the StatusReply
+ * TODO type this properly and move into util fn, use for all status reply commands
+ */
+function statusReplyCommand<A extends Function>(cb: A): A {
+  const res = async (...args) => {
+    try {
+      return await cb(...args)
+    } catch (error) {
+      return {
+        type: 'error',
+        message: `${error.message}`,
+      }
+    }
+  }
+  return (res as any) as A
 }

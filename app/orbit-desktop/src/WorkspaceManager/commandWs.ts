@@ -1,18 +1,14 @@
 import { Logger } from '@o/logger'
-import { CommandWsOptions, SpaceEntity, UserEntity } from '@o/models'
+import { CommandWsOptions, Space, SpaceEntity, UserEntity } from '@o/models'
 import { Desktop } from '@o/stores'
-import { readJSON } from 'fs-extra'
+import { readJSON, remove } from 'fs-extra'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
-import { findOrCreateWorkspace } from './findOrCreateWorkspace'
+import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 import { WorkspaceManager } from './WorkspaceManager'
 
 const log = new Logger('commandWs')
-
-type WorkspaceInfo = {
-  identifier: string
-}
 
 /**
  * This sets the current active workspace.
@@ -27,50 +23,45 @@ export async function commandWs(options: CommandWsOptions, workspaceManager: Wor
     },
   })
 
-  const { identifier } = await loadWorkspace(workspaceRoot)
-
-  // ensure/find space
-  let space = await findOrCreateWorkspace({
-    identifier,
-    directory: workspaceRoot,
-  })
-
-  // verify matching identifier
-  if (space.identifier !== identifier) {
-    // we should prompt to make sure they either are in wrong directory / or to change it
-    console.error(`Wrong space, not matching this identifier`)
-    process.exit(1)
+  if (options.clean) {
+    log.info(`Cleaning workspace dist directory`)
+    await remove(join(workspaceRoot, 'dist'))
   }
 
-  // validate/update directory
-  if (workspaceRoot !== space.directory) {
-    console.log('You moved this space, updating to new directory', workspaceRoot)
-    await getRepository(SpaceEntity).save({
-      ...space,
-      directory: workspaceRoot,
-    })
-    space = await getRepository(SpaceEntity).findOne({ identifier })
-  }
-
-  log.info(`got space ${space.directory}`)
-
-  // set user active space
-  const user = await getRepository(UserEntity).findOne({})
-  user.activeSpace = space.id
-  await getRepository(UserEntity).save(user)
+  await loadWorkspace(workspaceRoot)
 
   // update workspace
   await workspaceManager.setWorkspace(options)
 
-  // make sure we've finished updating new app info before running
-  await workspaceManager.appsManager.updateAppDefinitions(space)
-
   return true
 }
 
-async function loadWorkspace(path: string): Promise<WorkspaceInfo> {
-  const pkg = await readJSON(join(path, 'package.json'))
-  return {
-    identifier: pkg.name,
+export async function loadWorkspace(directory: string): Promise<Space> {
+  const identifier = (await readJSON(join(directory, 'package.json'))).name
+  // ensure/find space
+  let space = await findOrCreateWorkspace({
+    identifier: identifier,
+    directory: directory,
+  })
+  // verify matching identifier
+  if (space.identifier !== identifier) {
+    // we should prompt to make sure they either are in wrong directory / or to change it
+    console.error(`Wrong space, not matching this identifier ${space.identifier} vs ${identifier}`)
+    process.exit(1)
   }
+  // validate/update directory
+  if (directory !== space.directory) {
+    log.info(`You moved this space, updating to new directory: ${directory}`)
+    await getRepository(SpaceEntity).save({
+      ...space,
+      directory: directory,
+    })
+    space = await getRepository(SpaceEntity).findOne({ identifier: identifier })
+  }
+  // set user active space
+  const user = await getRepository(UserEntity).findOne({})
+  user.activeSpace = space.id
+  await getRepository(UserEntity).save(user)
+  log.verbose(`Returning space ${identifier}`)
+  return space
 }

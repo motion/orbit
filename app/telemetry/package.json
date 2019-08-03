@@ -1,6 +1,6 @@
 {
   "name": "@o/telemetry",
-  "version": "2.5.2",
+  "version": "2.6.0",
   "main": "./_/index.js",
   "sideEffects": false,
   "scripts": {
@@ -8,10 +8,10 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/config": "^2.5.2",
-    "is-docker": "2.0.0",
+    "@o/config": "^2.6.0",
     "ci-info": "2.0.0",
     "configstore": "4.0.0",
+    "is-docker": "2.0.0",
     "prompts": "2.0.4"
   }
 }

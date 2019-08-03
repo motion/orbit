@@ -1,4 +1,5 @@
 import { Bridge, BridgeOptions, proxySetters } from '@o/mobx-bridge'
+import { AppMeta } from '@o/models'
 import { decorate, deep } from '@o/use-store'
 
 // store export
@@ -20,6 +21,7 @@ class DesktopStore {
     workspaceState: {
       path: '',
       packageIds: [] as string[],
+      appMeta: {} as { [identifier: string]: AppMeta },
     },
     appState: {
       id: '',

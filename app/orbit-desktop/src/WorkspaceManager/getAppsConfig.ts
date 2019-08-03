@@ -1,5 +1,7 @@
+import { AppMetaDict } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppMeta, CommandWsOptions } from '@o/models'
+import { stringToIdentifier } from '@o/utils'
 import { ensureDir, ensureSymlink, pathExists, readJSON, writeFile } from 'fs-extra'
 import { join } from 'path'
 import webpack from 'webpack'
@@ -10,28 +12,31 @@ import { webpackPromise } from './webpackPromise'
 
 const log = new Logger('getAppsConfig')
 
-const cleanString = (x: string) =>
-  x
-    .replace(/[^a-z0-9_]/gi, '_')
-    .replace(/-{2,}/g, '_')
-    .replace(/^[^a-z]/i, '')
-    .replace(/[^a-z]$/i, '')
-
 /**
  * This returns the configuration object for everything:
  *   1. a base.dll.js that includes the big shared libraries
  *   2. each app as it's own dll
+ *   3. the workspaceEntry which imports app DLLs and concats them
  *   3. the "main" entry point with orbit-app
  */
 
-export async function getAppsConfig(directory: string, apps: AppMeta[], options: CommandWsOptions) {
+export async function getAppsConfig(
+  apps: AppMeta[],
+  options: CommandWsOptions,
+): Promise<{
+  webpackConfigs: { [name: string]: webpack.Configuration }
+  nameToAppMeta: AppMetaDict
+} | null> {
   if (!apps.length) {
     return null
   }
 
-  log.info(`mode ${options.mode} ${directory}, apps ${apps.length}`, options)
-
+  const directory = options.workspaceRoot
+  const outputDir = join(directory, 'dist')
+  const watch = !options.build // watch mode by default (if not building)
   const isInMonoRepo = await getIsInMonorepo()
+
+  log.info(`mode ${options.mode} watch ${watch} ${directory}, apps ${apps.length}`, options)
 
   // link local apps into local node_modules
   await ensureDir(join(directory, 'node_modules'))
@@ -52,7 +57,52 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       }),
   )
 
-  const outputDir = join(directory, 'dist')
+  /**
+   * Create index.html
+   */
+  const indexFile = join(directory, 'dist', 'index.html')
+  await writeFile(
+    indexFile,
+    `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>
+      console.time('splash')
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" type="image/png" href="./favicon.png" />
+    <title>Orbit</title>
+    <script>
+      if (typeof require !== 'undefined') {
+        window.electronRequire = require
+      } else {
+        window.notInElectron = true
+        window.electronRequire = module => {
+          return {}
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <script>
+      if (window.notInElectron) {
+        // easier to see what would be transparent in dev mode in browser
+        document.body.style.background = '#eee'
+      }
+    </script>
+    <script src="/base.dll.js"></script>
+${apps
+  .map(app => `    <script src="/${stringToIdentifier(app.packageId)}.dll.js"></script>`)
+  .join('\n')}
+    <script src="/workspaceEntry.js"></script>
+    <script src="/main.js"></script>
+  </body>
+</html>`,
+  )
+
   let dllReferences: DLLReferenceDesc[] = []
 
   /**
@@ -62,13 +112,13 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
    */
   async function addDLL(params: WebpackParams): Promise<webpack.Configuration> {
     // add to dlls
-    dllReferences.push({
+    dllReferences.unshift({
       manifest: params.dll,
       filepath: join(params.outputDir || outputDir, params.outputFile),
     })
     // ensure built
     if (options.clean || !(await pathExists(params.dll))) {
-      log.info(`Ensuring config built once: ${params.name}...`)
+      log.info(`Ensuring config built once: ${params.name}`, params.dll)
       const buildOnceConfig = await makeWebpackConfig({
         ...params,
         hot: true,
@@ -79,72 +129,27 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     return await makeWebpackConfig({
       ...params,
       hot: true,
-      watch: true,
+      watch,
     })
   }
 
-  const basePackages = [
-    '@o/kit',
-    '@o/ui',
-    '@o/utils',
-    '@o/bridge',
-    '@o/logger',
-    '@o/config',
-    '@o/models',
-    '@o/stores',
-    '@o/libs',
-    '@o/css',
-    '@o/color',
-    '@o/automagical',
-    '@o/use-store',
-    'webpack-hot-middleware',
-  ]
-  let allPackages = [...basePackages]
+  const webpackConfigs: { [key: string]: webpack.Configuration } = {}
 
-  for (const pkg of basePackages) {
-    const path = require.resolve(`${pkg}/package.json`)
-    const pkgJson = await readJSON(path)
-    const deps = [
-      ...Object.keys(pkgJson.dependencies || {}),
-      ...Object.keys(pkgJson.peerDependencies || {}),
-    ]
-    allPackages = [...allPackages, ...deps]
+  // add base dll config
+  const baseDllParams = await getBaseDllParams(directory)
+  if (isInMonoRepo) {
+    baseDllParams.mode = options.mode
+    baseDllParams.watch = watch
+    webpackConfigs.base = await addDLL(baseDllParams)
   }
 
-  // ignore electron things
-  allPackages = allPackages.filter(
-    x =>
-      x !== 'electron-log' &&
-      x !== 'configstore' &&
-      x !== 'react-use' &&
-      x !== '@babel/runtime' &&
-      x !== 'typeorm',
-  )
+  const nameToAppMeta: AppMetaDict = {}
 
-  // base dll with shared libraries
-  const baseDllManifest = join(outputDir, 'manifest-base.json')
-  const baseDllOutputFileName = 'base.dll.js'
-  const baseConfig = await addDLL({
-    name: `base`,
-    injectHot: true,
-    entry: [...new Set(allPackages)],
-    ignore: ['electron-log', 'configstore', 'typeorm'],
-    context: directory,
-    mode: options.mode,
-    target: 'web',
-    publicPath: '/',
-    outputFile: baseDllOutputFileName,
-    outputDir,
-    output: {
-      library: 'base',
-    },
-    dll: baseDllManifest,
-  })
-
-  // apps dlls with just each apps code
+  // add app dll configs
   const appParams: WebpackParams[] = await Promise.all(
     apps.map(async app => {
-      const cleanName = cleanString(app.packageId)
+      const cleanName = stringToIdentifier(app.packageId)
+      nameToAppMeta[cleanName] = app
       const dllFile = join(outputDir, `manifest-${cleanName}.json`)
       const appEntry = join(
         app.directory,
@@ -159,48 +164,36 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
         publicPath: '/',
         outputFile: `${cleanName}.dll.js`,
         outputDir,
-        injectHot:
-          app.packageId === '@o/demo-app-api-grid' ||
-          app.packageId === '@o/lists-app' ||
-          app.packageId === '@o/people-app' ||
-          app.packageId === '@o/demo-app-layout' ||
-          app.packageId === '@o/demo-app-flow',
+        injectHot: true,
         output: {
           library: cleanName,
         },
-        // output: {
-        //   // TODO(andreypopp): sort this out, we need some custom symbol here which
-        //   // we will communicate to Orbit
-        //   library: `window['LoadOrbitApp_${index}']`,
-        //   libraryTarget: 'assign',
-        //   libraryExport: 'default',
-        // },
         dll: dllFile,
         // apps use the base dll
         dllReferences: [
           {
-            manifest: baseDllManifest,
-            filepath: join(outputDir, baseDllOutputFileName),
+            manifest: baseDllParams.dll,
+            filepath: join(outputDir, baseDllParams.outputFile),
           },
         ],
       }
       return params
     }),
   )
-  const appsConfigs = {}
-  await Promise.all([
+  await Promise.all(
     appParams.map(async params => {
       const config = await addDLL(getAppParams(params))
-      appsConfigs[params.name] = config
+      webpackConfigs[params.name] = config
     }),
-  ])
+  )
 
   /**
-   * Get the monorepo in development mode and build orbit
+   * Only needed when developing orbit itself.
+   * Lets us develop on the main orbit bundle at the same time.
    */
-  let entry = ''
-  let extraConfig
   if (isInMonoRepo) {
+    let entry = ''
+    let extraConfig
     // main entry for orbit-app
     const monoRoot = join(__dirname, '..', '..', '..', '..')
     const appEntry = join(monoRoot, 'app', 'orbit-app', 'src', 'main')
@@ -209,83 +202,89 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     if (await pathExists(extraConfFile)) {
       extraConfig = require(extraConfFile)
     }
-  }
+    /**
+     * Allows for our orbit app to define some extra configuration
+     * Could be used similarly in the future, if wanted, for apps too.
+     */
+    let extraMainConfig = null
 
-  /**
-   * Build appDefinitions.js which the main app uses to dynamically load apps
-   */
-  const appDefinitionsSrc = `
-// all apps
-${apps
-  .map((app, index) => {
-    // const params = appParams[index]
-    // const name = params.name
-    return `
-export const app_${index} = require('${app.packageId}')
-`
-    // didnt work, calls it but doesnt hmr the code
-    // require('webpack-hot-middleware/client?name=${name}&path=/__webpack_hmr_${name}')
-  })
-  .join('\n')}`
-  const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
-  log.info(`appDefsFile ${appDefsFile}`)
-  await writeFile(appDefsFile, appDefinitionsSrc)
-
-  /**
-   * Allows for our orbit app to define some extra configuration
-   * Could be used similarly in the future, if wanted, for apps too.
-   */
-  let extraEntries = {}
-  let extraMainConfig = null
-
-  if (extraConfig) {
-    const { main, ...others } = extraConfig
-    extraMainConfig = main
-    for (const name in others) {
-      extraEntries[name] = await makeWebpackConfig(
-        {
-          mode: options.mode,
-          name,
-          outputFile: `${name}.js`,
-          outputDir,
-          context: directory,
-          ignore: ['electron-log', 'configstore'],
-          target: 'web',
-          hot: true,
-          watch: true,
-        },
-        extraConfig[name],
-      )
-      log.info(`extra entry: ${name}`)
+    if (extraConfig) {
+      const { main, ...others } = extraConfig
+      extraMainConfig = main
+      for (const name in others) {
+        webpackConfigs[name] = await makeWebpackConfig(
+          {
+            mode: options.mode,
+            name,
+            outputFile: `${name}.js`,
+            outputDir,
+            context: directory,
+            ignore: ['electron-log', 'configstore'],
+            target: 'web',
+            hot: true,
+            watch,
+          },
+          extraConfig[name],
+        )
+        log.info(`extra entry: ${name}`)
+      }
     }
+    // main bundle
+    webpackConfigs.main = await makeWebpackConfig(
+      {
+        name: 'main',
+        outputFile: 'main.js',
+        outputDir,
+        mode: options.mode,
+        context: directory,
+        entry: [entry],
+        ignore: ['electron-log', 'configstore', '@o/worker-kit'],
+        target: 'web',
+        watch,
+        hot: true,
+        dllReferences,
+      },
+      extraMainConfig,
+    )
   }
 
   /**
-   * The orbit main app config
+   * Create the apps import
    */
-  dllReferences.reverse()
-  const mainConfig = await makeWebpackConfig(
-    {
-      name: 'main',
-      outputFile: 'main.js',
-      outputDir,
-      mode: options.mode,
-      context: directory,
-      entry: [entry],
-      ignore: ['electron-log', 'configstore'],
-      target: 'web',
-      watch: true,
-      hot: true,
-      dllReferences,
+  const appDefinitionsSrc = `// all apps
+export default function getApps() {
+  return [${apps.map(app => `require('${app.packageId}')`).join(',')}]
+}`
+  // const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
+  const workspaceEntry = join(directory, 'dist', 'workspace-entry.js')
+  log.info(`workspaceEntry ${workspaceEntry}`)
+  await writeFile(workspaceEntry, appDefinitionsSrc)
+
+  /**
+   * Workspace config, this hopefully gives us some more control/ease with managing hmr/apps.
+   * Having this ordered *last* is important, though we should fix it in useWebpackMiddleware
+   */
+  webpackConfigs.workspace = await makeWebpackConfig({
+    name: 'workspaceEntry',
+    outputFile: 'workspaceEntry.js',
+    outputDir,
+    mode: options.mode,
+    context: directory,
+    entry: [workspaceEntry],
+    target: 'web',
+    watch,
+    hot: false,
+    dllReferences,
+    output: {
+      library: `window['__orbit_workspace']`,
+      libraryTarget: 'assign',
+      libraryExport: 'default',
     },
-    extraMainConfig,
-  )
+  })
 
   return {
-    base: baseConfig,
-    main: mainConfig,
-    ...appsConfigs,
-    ...extraEntries,
+    webpackConfigs,
+    nameToAppMeta,
   }
 }
 
@@ -300,12 +299,79 @@ export function getAppParams(props: WebpackParams): WebpackParams {
     externals: {
       typeorm: 'typeorm',
     },
-    ignore: ['electron-log', '@o/worker-kit'],
+    ignore: ['electron-log', '@o/worker-kit', 'configstore'],
     ...props,
     output: {
       library: '[name]',
       libraryTarget: 'umd',
       ...props.output,
     },
+  }
+}
+
+export async function getBaseDllParams(directory: string): Promise<WebpackParams> {
+  const outputDir = join(directory, 'dist')
+  const basePackages = [
+    '@o/kit',
+    '@o/ui',
+    '@o/utils',
+    '@o/bridge',
+    '@o/logger',
+    '@o/config',
+    '@o/models',
+    '@o/stores',
+    '@o/libs',
+    '@o/css',
+    '@o/color',
+    '@o/automagical',
+    '@o/use-store',
+    '@babel/runtime',
+    'node-libs-browser',
+    'react-hot-loader',
+    'react',
+    'react-dom',
+  ]
+
+  // gather all packages we want included in base dll
+  // i had to add this at one point because webpack stopped providing
+  // the sub-packages of @o/ui and @o/kit, not sure why that happened
+  let allPackages = [...basePackages]
+  for (const pkg of basePackages) {
+    const path = require.resolve(`${pkg}/package.json`)
+    const pkgJson = await readJSON(path)
+    const deps = [
+      ...Object.keys(pkgJson.dependencies || {}),
+      ...Object.keys(pkgJson.peerDependencies || {}),
+    ]
+    allPackages = [...allPackages, ...deps]
+  }
+  // ignore electron things
+  // TODO make this a bit more... viable
+  allPackages = allPackages.filter(
+    x =>
+      x !== 'electron-log' &&
+      x !== 'configstore' &&
+      x !== 'react-use' &&
+      x !== '@babel/runtime' &&
+      x !== 'typeorm',
+  )
+
+  // base dll with shared libraries
+  return {
+    name: `base`,
+    // injectHot: join(require.resolve('@o/kit'), '..', '..', 'src', 'index.ts'),
+    entry: [...new Set(allPackages)],
+    ignore: ['electron-log', 'configstore', 'typeorm'],
+    context: directory,
+    mode: 'development',
+    watch: false,
+    target: 'web',
+    publicPath: '/',
+    outputFile: 'base.dll.js',
+    outputDir,
+    output: {
+      library: 'base',
+    },
+    dll: join(outputDir, 'manifest-base.json'),
   }
 }

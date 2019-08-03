@@ -1,40 +1,24 @@
 let activeHandlers = []
-
-async function stopSockets() {
-  for (const { source } of activeHandlers) {
-    source.close()
-  }
-  await new Promise(res => setTimeout(res, 20))
-}
-
-async function restartSockets() {
-  activeHandlers = []
-  Object.keys(window['__hmr_handlers']).forEach(key => {
-    window['__hmr_handlers'][key]()
-  })
-}
+let source
 
 export function createHotHandler(props: {
-  url: string
+  name: string
   getHash: Function
   module: any
   actions?: any
 }) {
-  const { url, getHash, module, actions = {} } = props
-  const source = createEventSource(url)
-  source.addMessageListener(handleMessage)
+  const url = '/__webpack_hmr'
+  const { name, getHash, module, actions = {} } = props
 
+  source = source || createEventSource(url)
+  source.addMessageListener(handleMessage)
   activeHandlers.push({ ...props, source })
 
   window.addEventListener('beforeunload', source.close)
-  module.hot.dispose(() => {
-    source.close()
-  })
+  // module.hot.dispose(source.close)
 
   function handleMessage(event) {
-    if (event.data == '\uD83D\uDC93') {
-      return
-    }
+    if (event.data == '\uD83D\uDC93') return
     try {
       const msg = JSON.parse(event.data)
       processMessage(msg)
@@ -46,48 +30,10 @@ export function createHotHandler(props: {
     }
   }
 
-  function createEventSource(url: string) {
-    var source
-    var listeners: any[] = []
-
-    init()
-
-    function init() {
-      source = new EventSource(url)
-      source.onopen = handleOnline
-      source.onerror = handleDisconnect
-      source.onmessage = handleMessage
-    }
-
-    function handleOnline() {
-      console.debug('[HMR] connected')
-    }
-
-    function handleMessage(event) {
-      for (var i = 0; i < listeners.length; i++) {
-        listeners[i](event)
-      }
-    }
-
-    function handleDisconnect() {
-      console.log('[HMR] disconnected')
-      source.close()
-      setTimeout(init, 1000)
-    }
-
-    return {
-      addMessageListener: function(fn) {
-        listeners.push(fn)
-      },
-      close: () => {
-        source.close()
-      },
-    }
-  }
-
-  var customHandler
-  var subscribeAllHandler
   function processMessage(obj) {
+    if (obj.name !== name) {
+      return
+    }
     switch (obj.action) {
       case 'building':
         // console.log('[HMR] bundle ' + (obj.name ? "'" + obj.name + "' " : '') + 'rebuilding')
@@ -119,22 +65,8 @@ export function createHotHandler(props: {
           processUpdate(obj.hash, obj.modules, { reload: true })
         }
         break
-      default:
-        if (customHandler) {
-          customHandler(obj)
-        }
-    }
-
-    if (subscribeAllHandler) {
-      subscribeAllHandler(obj)
     }
   }
-
-  /**
-   * Based heavily on https://github.com/webpack/webpack/blob/
-   *  c0afdf9c6abc1dd70707c594e473802a566f7b6e/hot/only-dev-server.js
-   * Original copyright Tobias Koppers @sokra (MIT license)
-   */
 
   if (!module.hot) {
     throw new Error('[HMR] Hot Module Replacement is disabled.')
@@ -142,8 +74,6 @@ export function createHotHandler(props: {
     // accept this we are at root
     module.hot.accept()
   }
-
-  var hmrDocsUrl = 'https://webpack.js.org/concepts/hot-module-replacement/' // eslint-disable-line max-len
 
   var lastHash
   var failureStatuses = { abort: 1, fail: 1 }
@@ -174,15 +104,12 @@ export function createHotHandler(props: {
     var reload = options.reload
     if (!upToDate(hash) && module.hot.status() == 'idle') {
       if (options.log) console.log('[HMR] Checking for updates on the server...')
-      await stopSockets()
       check()
     }
 
     function check() {
       var cb = function(err, updatedModules) {
         if (err) return handleError(err)
-
-        restartSockets()
 
         if (!updatedModules) {
           if (options.warn) {
@@ -231,15 +158,7 @@ export function createHotHandler(props: {
 
       if (unacceptedModules.length > 0) {
         if (options.warn) {
-          console.warn(
-            "[HMR] The following modules couldn't be hot updated: " +
-              '(Full reload needed)\n' +
-              'This is usually because the modules which have changed ' +
-              '(and their parents) do not know how to hot reload themselves. ' +
-              'See ' +
-              hmrDocsUrl +
-              ' for more details.',
-          )
+          console.warn("[HMR] The following modules couldn't be hot updated: (Full reload needed)")
           unacceptedModules.forEach(function(moduleId) {
             console.warn('[HMR]  - ' + (moduleMap[moduleId] || moduleId))
           })
@@ -284,5 +203,44 @@ export function createHotHandler(props: {
         // window.location.reload()
       }
     }
+  }
+}
+
+function createEventSource(url: string) {
+  var source
+  var listeners: any[] = []
+
+  init()
+
+  function init() {
+    source = new EventSource(url)
+    source.onopen = handleOnline
+    source.onerror = handleDisconnect
+    source.onmessage = handleMessage
+  }
+
+  function handleOnline() {
+    console.debug('[HMR] connected')
+  }
+
+  function handleMessage(event) {
+    for (var i = 0; i < listeners.length; i++) {
+      listeners[i](event)
+    }
+  }
+
+  function handleDisconnect() {
+    console.log('[HMR] disconnected')
+    source.close()
+    setTimeout(init, 1000)
+  }
+
+  return {
+    addMessageListener: function(fn) {
+      listeners.push(fn)
+    },
+    close: () => {
+      source.close()
+    },
   }
 }

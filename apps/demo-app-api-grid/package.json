@@ -1,6 +1,6 @@
 {
   "name": "@o/demo-app-api-grid",
-  "version": "2.5.6",
+  "version": "2.6.0",
   "main": "index.tsx",
   "config": {
     "orbitApp": true
@@ -10,10 +10,10 @@
     "build": "orbit build"
   },
   "dependencies": {
-    "@o/gmail-app": "^2.5.6",
-    "@o/kit": "^2.5.6",
-    "@o/ui": "^2.5.6",
-    "@o/postgres-app": "^2.5.6",
-    "@o/slack-app": "^2.5.6"
+    "@o/gmail-app": "^2.6.0",
+    "@o/kit": "^2.6.0",
+    "@o/postgres-app": "^2.6.0",
+    "@o/slack-app": "^2.6.0",
+    "@o/ui": "^2.6.0"
   }
 }

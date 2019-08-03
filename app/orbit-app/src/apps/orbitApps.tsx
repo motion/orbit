@@ -16,18 +16,19 @@ import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './SpacesApp'
 
-let dynamicApps: AppDefinition[] = []
+// let causes a instantiation bug...
+var dynamicApps: AppDefinition[] = []
+// debugging
+window['__dynamicApps'] = dynamicApps
 
 updateDefinitions()
 
-function updateDefinitions() {
-  const rawApps = require('../../appDefinitions.js')
-  dynamicApps = Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
+export function updateDefinitions() {
+  dynamicApps = window['__orbit_workspace']().map(x => x.default)
 }
 
 export async function startAppLoadWatch() {
   await updateDefinitions()
-
   // watch for updates
   reaction(
     () => Desktop.state.workspaceState.packageIds,

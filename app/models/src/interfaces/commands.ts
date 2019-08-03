@@ -44,6 +44,7 @@ export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'li
 )
 
 export type AppCreateNewOptions = {
+  projectRoot?: string
   template: string
   name: string
   icon: string
@@ -83,8 +84,6 @@ export interface AppMeta {
   apiInfo: ApiInfo
   isLocal: boolean
 }
-
-export const AppGetWorkspaceAppsCommand = new Command<AppMeta[], void>('AppGetWorkspaceAppsCommand')
 
 // return extra information about app
 export const AppMetaCommand = new Command<
@@ -150,8 +149,13 @@ export const AppCreateWorkspaceCommand = new Command<boolean, Partial<Space>>(
 
 export type CommandWsOptions = {
   workspaceRoot: string
+  // default mode to run in
   mode?: 'development' | 'production'
+  // reset and rebuild before running
   clean?: boolean
+  // develop on orbit itself
+  dev?: boolean
+  build?: boolean
 }
 
 export const AppOpenWorkspaceCommand = new Command<

@@ -11,13 +11,14 @@ const log = new Logger('updateWorkspacePackageIds')
  */
 export async function updateWorkspacePackageIds(workspaceRoot: string) {
   const paths = await getWorkspaceApps(workspaceRoot)
-  log.info(
+  log.verbose(
     `Updating workspace package ids: ${workspaceRoot}, got ${paths
       .map(x => x.packageId)
       .join(', ')}`,
   )
   for (const { packageId, directory } of paths) {
     const buildInfo = await getBuildInfo(directory)
+    log.verbose(`got ${packageId} ${JSON.stringify(buildInfo)}`)
     if (buildInfo) {
       if (buildInfo.identifier) {
         setIdentifierToPackageId(buildInfo.identifier, packageId)

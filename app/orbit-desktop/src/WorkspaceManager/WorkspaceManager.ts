@@ -1,52 +1,98 @@
-import { AppMetaDict, AppsManager, getBuildInfo, getWorkspaceApps, updateWorkspacePackageIds } from '@o/apps-manager'
+import { AppMetaDict, AppsManager } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppGenTypesCommand, AppGetWorkspaceAppsCommand, AppInstallCommand, AppMeta, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusMessage, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
-import { Desktop, Electron } from '@o/stores'
+import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppEntity, AppGenTypesCommand, AppInstallCommand, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
+import { Desktop } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
-import { watch } from 'chokidar'
 import { Handler } from 'express'
-import { debounce, isEqual, remove } from 'lodash'
+import { join } from 'path'
 import { getRepository } from 'typeorm'
 import Observable from 'zen-observable'
 
 import { GraphServer } from '../GraphServer'
+import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 import { getActiveSpace } from '../helpers/getActiveSpace'
 import { appStatusManager } from '../managers/AppStatusManager'
-import { AppDesc } from './AppMiddleware'
-import { commandBuild, getAppEntry } from './commandBuild'
+import { AppMiddleware } from './AppMiddleware'
+import { commandBuild } from './commandBuild'
 import { commandGenTypes } from './commandGenTypes'
 import { commandInstall } from './commandInstall'
 import { commandWs } from './commandWs'
-import { findOrCreateWorkspace } from './findOrCreateWorkspace'
 import { getAppsConfig } from './getAppsConfig'
-import { useWebpackMiddleware } from './useWebpackMiddleware'
+import { webpackPromise } from './webpackPromise'
 
 const log = new Logger('WorkspaceManager')
 
-export type AppBuildStatusListener = (status: AppStatusMessage) => any
-type Disposable = Set<{ id: string; dispose: Function }>
-const dispose = (x: Disposable, id: string) => x.forEach(x => x.id === id && x.dispose())
-
 @decorate
 export class WorkspaceManager {
-  developingApps: AppDesc[] = []
-  appsMeta: AppMeta[] = []
+  // developingApps: AppDesc[] = []
+  started = false
   workspaceVersion = 0
-  directory = ''
-  options: CommandWsOptions
-  buildConfig = null
-  appWatchers: Disposable = new Set<{ id: string; dispose: Function }>()
+  options: CommandWsOptions = null
   middlewares = []
-
   appsManager = new AppsManager()
+  appMiddleware = new AppMiddleware(this.appsManager)
   graphServer = new GraphServer()
 
-  constructor(private mediatorServer: MediatorServer) {
-    this.appsManager.onUpdatedApps(this.handleUpdatedApps)
+  constructor(
+    private mediatorServer: MediatorServer,
+    private startOpts: { singleUseMode: boolean },
+  ) {
+    this.appsManager.onUpdatedAppMeta(async (appMeta: AppMetaDict) => {
+      log.verbose('appsManager updating app meta', appMeta)
+      const identifiers = Object.keys(appMeta)
+      const space = await getActiveSpace()
+      const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
+      this.graphServer.setupGraph(apps)
+      const packageIds = identifiers.map(this.appsManager.getIdentifierToPackageId)
+      Desktop.setState({
+        workspaceState: {
+          appMeta,
+          packageIds,
+          identifiers,
+        },
+      })
+    })
+  }
+
+  get directory() {
+    if (!this.options) return ''
+    return this.options.workspaceRoot
+  }
+
+  async setWorkspace(opts: CommandWsOptions) {
+    log.info(`setWorkspace ${JSON.stringify(opts)}`)
+    this.options = opts
+
+    await this.appsManager.start({
+      singleUseMode: this.startOpts.singleUseMode,
+    })
+    await this.buildWorkspace()
+
+    if (!this.startOpts.singleUseMode) {
+      await this.graphServer.start()
+      /**
+       * Sends messages between webpack and client apps so we can display status messages
+       */
+      this.appMiddleware.onStatus(status => {
+        appStatusManager.sendMessage(status)
+      })
+    }
+    this.started = true
   }
 
   middleware: Handler = async (req, res, next) => {
+    const sendIndex = () => {
+      if (!this.directory) {
+        res.send({ fourohfour: 'ok' })
+      } else {
+        res.sendFile(join(this.directory, 'dist', 'index.html'))
+      }
+    }
+    // hacky way to just serve our own index.html for now
+    if (req.path[1] !== '_' && req.path.indexOf('.') === -1) {
+      return sendIndex()
+    }
     let fin
     for (const middleware of this.middlewares) {
       fin = null
@@ -57,145 +103,55 @@ export class WorkspaceManager {
         return
       }
     }
-    next(fin)
+    log.verbose('no match', req.path)
+    return next()
   }
 
-  async start(opts: { singleUseMode: boolean }) {
-    if (!opts.singleUseMode) {
-      await this.appsManager.start()
-      await this.graphServer.start()
-      this.onWorkspaceChange()
-      // this.appMiddleware.onStatus(status => {
-      //   appStatusManager.sendMessage(status)
-      // })
-    }
-  }
-
-  handleUpdatedApps = async (appMeta: AppMetaDict) => {
-    log.verbose('appsManager updating app meta', appMeta)
-    const identifiers = Object.keys(appMeta)
-    const space = await getActiveSpace()
-    const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
-    this.graphServer.setupGraph(apps)
-    const packageIds = identifiers.map(this.appsManager.getIdentifierToPackageId)
-    Desktop.setState({
-      workspaceState: {
-        packageIds,
-        identifiers,
-      },
-    })
-  }
-
-  watchWorkspace = react(
-    () => this.directory,
-    (directory, { useEffect }) => {
-      ensure('directory', !!directory)
-      useEffect(() => {
-        let watcher = watch(this.directory, {
-          persistent: true,
-          // only watch top level
-          depth: 0,
-        })
-        watcher.on('change', this.onWorkspaceChange)
-        return () => {
-          watcher.close()
-        }
-      })
-    },
-  )
-
-  setWorkspace(opts: CommandWsOptions) {
-    log.info(`setWorkspace ${JSON.stringify(opts)}`)
-    this.directory = opts.workspaceRoot
-    this.options = opts
-    this.updateWorkspace()
-  }
-
-  updateWorkspace = async () => {
+  updateWorkspace = () => {
     this.workspaceVersion = (this.workspaceVersion + 1) % Number.MAX_SAFE_INTEGER
   }
 
   onNewWorkspaceVersion = react(
-    () => [this.directory, this.workspaceVersion],
-    async ([directory], { sleep, when }) => {
-      await when(() => !!this.options)
-      ensure('directory', !!directory)
-      log.info(`updateWorkspace ${directory} ${JSON.stringify(this.options)}`)
-      await this.updateApps()
-      try {
-        const config = await getAppsConfig(this.directory, this.appsMeta, this.options)
-        ensure('config', !!config)
-        await sleep()
-        if (!isEqual(this.buildConfig, config)) {
-          this.buildConfig = config
-          this.middlewares = useWebpackMiddleware(config)
-          await updateWorkspacePackageIds(this.directory)
-        }
-      } catch (err) {
-        console.error('Error running workspace', err.message, err.stack)
-      }
+    () => this.workspaceVersion,
+    async (_, { sleep }) => {
+      ensure('this.started', this.started)
+      ensure('not in single build mode', !this.options.build)
+      ensure('directory', !!this.directory)
+      await sleep()
+      this.buildWorkspace()
     },
   )
 
-  private onWorkspaceChange = debounce(this.updateWorkspace, 50)
-
-  async updateApps() {
-    const next = await getWorkspaceApps(this.directory)
-    if (!isEqual(next, this.appsMeta)) {
-      // remove old
-      for (const app of this.appsMeta) {
-        if (next.some(x => x.packageId === app.packageId) === false) {
-          dispose(this.appWatchers, app.packageId)
-        }
+  async buildWorkspace() {
+    const appMeta = this.appsManager.appMeta
+    log.info(`Start building workspace...`, this.options.build, appMeta)
+    try {
+      const res = await getAppsConfig(Object.keys(appMeta).map(k => appMeta[k]), this.options)
+      if (!res) {
+        log.error('No config')
+        return
       }
-      // add new
-      for (const app of next) {
-        if (this.appsMeta.some(x => x.packageId === app.packageId) === false) {
-          // watch app for changes to build buildInfo
-          this.addAppWatcher(app)
-        }
+      const { webpackConfigs, nameToAppMeta } = res
+      if (this.options.build) {
+        const configs = Object.keys(webpackConfigs).map(key => webpackConfigs[key])
+        log.info(`Building ${Object.keys(webpackConfigs).join(', ')}...`)
+        const [base, ...rest] = configs
+        // build base dll first to ensure it feeds into rest
+        await webpackPromise([base], {
+          loud: true,
+        })
+        await webpackPromise(rest, {
+          loud: true,
+        })
+        log.info(`Build complete`)
+      } else {
+        this.middlewares = this.appMiddleware
+          .update(webpackConfigs, nameToAppMeta)
+          .map(x => x.middleware)
       }
-      this.appsMeta = next
+    } catch (err) {
+      log.error(`Error running workspace: ${err.message}\n${err.stack}`)
     }
-  }
-
-  /**
-   * For now, this just watches and builds the app
-   *
-   *   TODO really this shouldn't really be a watcher here, probably just put it in command-build
-   *        and have command-build just use webpack to watch and build everyting necessary.
-   *
-   */
-  private async addAppWatcher(app: AppMeta) {
-    const entry = await getAppEntry(app.directory)
-    log.verbose(`Adding app watcher ${app.packageId} ${entry}`)
-    // watch just the entry file to update buildInfo.json/appEntry.js
-    let watcher = watch(entry, {
-      persistent: true,
-      awaitWriteFinish: true,
-    })
-
-    const buildAppInfo = () => {
-      console.log('should build app info')
-      // log.info(`buildAppInfo ${app.packageId}`)
-      // bundleApp(entry, {
-      //   projectRoot: app.directory,
-      // })
-    }
-
-    watcher.on('change', debounce(buildAppInfo, 100))
-
-    // build once if not built yet
-    if (!(await getBuildInfo(app.directory))) {
-      buildAppInfo()
-    }
-
-    this.appWatchers.add({
-      id: app.packageId,
-      dispose: () => {
-        watcher.close()
-      },
-    })
   }
 
   /**
@@ -238,47 +194,44 @@ export class WorkspaceManager {
       resolveCommand(AppInstallCommand, commandInstall),
       resolveCommand(AppBuildCommand, commandBuild),
       resolveCommand(AppGenTypesCommand, commandGenTypes),
-      resolveCommand(AppDevOpenCommand, async ({ projectRoot }) => {
-        const entry = await getAppEntry(projectRoot)
-        const appId = Object.keys(Electron.state.appWindows).length
-        // launch new app
-        Electron.setState({
-          appWindows: {
-            ...Electron.state.appWindows,
-            [appId]: {
-              appId,
-              appRole: 'editing',
-            },
-          },
-        })
-        this.developingApps.push({
-          entry,
-          appId,
-          path: projectRoot,
-          publicPath: `/appServer/${appId}`,
-        })
-        // this.appMiddleware.setApps(this.developingApps)
-        return {
-          type: 'success',
-          message: 'Got app id',
-          value: `${appId}`,
-        } as const
-      }),
+      // resolveCommand(AppDevOpenCommand, async ({ projectRoot }) => {
+      //   const entry = await getAppEntry(projectRoot)
+      //   const appId = Object.keys(Electron.state.appWindows).length
+      //   // launch new app
+      //   Electron.setState({
+      //     appWindows: {
+      //       ...Electron.state.appWindows,
+      //       [appId]: {
+      //         appId,
+      //         appRole: 'editing',
+      //       },
+      //     },
+      //   })
+      //   this.developingApps.push({
+      //     entry,
+      //     appId,
+      //     path: projectRoot,
+      //     publicPath: `/appServer/${appId}`,
+      //   })
+      //   this.appMiddleware.setApps(this.developingApps)
+      //   return {
+      //     type: 'success',
+      //     message: 'Got app id',
+      //     value: `${appId}`,
+      //   } as const
+      // }),
       resolveCommand(AppDevCloseCommand, async ({ appId }) => {
+        return
         log.info('Removing build server', appId)
-        this.developingApps = remove(this.developingApps, x => x.appId === appId)
+        // this.developingApps = remove(this.developingApps, x => x.appId === appId)
         // this.appMiddleware.setApps(this.developingApps)
         log.info('Removing process', appId)
         await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
         log.info('Closed app', appId)
       }),
-      // TODO these two commands (AppMetaCommand, AppGetWorkspaceAppsCommand)
       // are both doing similar things but in different ways
       resolveCommand(AppMetaCommand, async ({ identifier }) => {
         return this.appsManager.appMeta[identifier] || null
-      }),
-      resolveCommand(AppGetWorkspaceAppsCommand, async () => {
-        return this.appsMeta
       }),
       resolveCommand(CallAppBitApiMethodCommand, async ({ appId, appIdentifier, method, args }) => {
         const app = await getRepository(AppEntity).findOneOrFail(appId)

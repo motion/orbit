@@ -1,7 +1,7 @@
 {
   "name": "@o/github-app",
   "description": "Query, explore and sync the full Github API",
-  "version": "2.5.10",
+  "version": "2.6.1",
   "main": "index.tsx",
   "config": {
     "orbitApp": true
@@ -12,9 +12,9 @@
     "deploy": "orbit publish"
   },
   "dependencies": {
-    "@o/kit": "^2.5.6",
-    "@o/ui": "^2.5.6",
-    "@o/worker-kit": "^2.5.2",
+    "@o/kit": "^2.6.0",
+    "@o/ui": "^2.6.0",
+    "@o/worker-kit": "^2.6.0",
     "@octokit/rest": "^16.21.0",
     "lodash": "4.17.11"
   }

@@ -1,6 +1,6 @@
 {
   "name": "mobile",
-  "version": "0.0.1",
+  "version": "2.6.0",
   "private": true,
   "workspaces": {
     "nohoist": [
@@ -22,10 +22,10 @@
     "react-native": "^0.59.9"
   },
   "devDependencies": {
-    "@o/kit": "*",
-    "@o/ui": "*",
     "@babel/core": "^7.4.5",
     "@babel/runtime": "^7.4.5",
+    "@o/kit": "^2.6.0",
+    "@o/ui": "^2.6.0",
     "babel-jest": "24.8.0",
     "haul": "^1.0.0-rc.12",
     "jest": "24.8.0",

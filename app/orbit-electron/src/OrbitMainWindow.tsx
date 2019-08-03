@@ -7,18 +7,18 @@ import { join } from 'path'
 import React, { useEffect } from 'react'
 
 import { ROOT } from './constants'
-import { getScreenSize } from './helpers/getScreenSize'
-import { Mediator } from './mediator'
 import { getDefaultAppBounds } from './helpers/getDefaultAppBounds'
-import { OrbitAppWindow } from './OrbitAppWindow'
+import { getScreenSize } from './helpers/getScreenSize'
 import { moveWindowToCurrentSpace } from './helpers/moveWindowToCurrentSpace'
+import { Mediator } from './mediator'
+import { OrbitAppWindow } from './OrbitAppWindow'
 
 const log = new Logger('OrbitMainWindow')
 // const isFirstOrbitWindow = Electron.appId === 0
 
 const setScreenSize = () => {
   const screenSize = getScreenSize()
-  log.info(`Updating screen size ${JSON.stringify(screenSize)}`)
+  log.verbose(`Updating screen size ${JSON.stringify(screenSize)}`)
   Electron.setState({ screenSize })
 }
 

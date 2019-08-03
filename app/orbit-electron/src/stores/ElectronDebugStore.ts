@@ -12,8 +12,6 @@ debugUseStore(event => {
 })
 
 export class ElectronDebugStore {
-  error = null
-
   restart() {
     if (process.env.NODE_ENV === 'development') {
       require('touch')(require('path').join(__dirname, '..', '..', '_', 'main.js'))

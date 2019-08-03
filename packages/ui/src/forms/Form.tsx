@@ -1,4 +1,5 @@
-import { createStoreContext, ensure, react, shallow, useStore } from '@o/use-store'
+import { createStoreContext, ensure, react, shallow, useReaction, useStore } from '@o/use-store'
+import { selectDefined } from '@o/utils'
 import { flatten } from 'lodash'
 import React, { forwardRef, HTMLProps, useCallback } from 'react'
 
@@ -68,24 +69,15 @@ class FormStore {
   props: FormStoreProps
   globalError: string = ''
   values: FormFieldsObj = shallow({})
+  derivedValues = shallow({})
   errors: FormErrors<any> = null
   mountKey = 0
 
-  setErrors(value: FormErrors<any>) {
-    this.globalError = null
-    if (value === true) {
-      this.errors = null
-    } else if (typeof value === 'string') {
-      this.globalError = value
-    } else if (value && Object.keys(value).length) {
-      // handle a general object describing a global error
-      if (value.type === 'error' && typeof value.message === 'string') {
-        this.globalError = value.message
-      }
-      this.errors = value
-    } else {
-      this.errors = null
-    }
+  get simpleValues() {
+    return Object.keys(this.values).reduce((acc, key) => {
+      acc[key] = this.values[key].value
+      return acc
+    }, {})
   }
 
   updateValuesFromProps = react(
@@ -103,6 +95,36 @@ class FormStore {
       }
     },
   )
+
+  updateDerivedValues = react(
+    () => [this.props.fields, this.simpleValues],
+    ([fields, simpleValues]) => {
+      for (const key of Object.keys(fields)) {
+        if (typeof fields[key].value === 'function') {
+          const next = fields[key].value(simpleValues)
+          this.derivedValues[key] = next
+          this.values[key] = next
+        }
+      }
+    },
+  )
+
+  setErrors(value: FormErrors<any>) {
+    this.globalError = null
+    if (value === true) {
+      this.errors = null
+    } else if (typeof value === 'string') {
+      this.globalError = value
+    } else if (value && Object.keys(value).length) {
+      // handle a general object describing a global error
+      if (value.type === 'error' && typeof value.message === 'string') {
+        this.globalError = value.message
+      }
+      this.errors = value
+    } else {
+      this.errors = null
+    }
+  }
 
   setFields(value: FormFieldsObj) {
     this.values = value
@@ -126,7 +148,7 @@ class FormStore {
     if (!this.values[name]) {
       this.values[name] = { value: null, name }
     }
-    return this.values[name].value
+    return this.derivedValues[name] || this.simpleValues[name]
   }
 
   getFilters(names: string[]) {
@@ -173,19 +195,10 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
 ) {
   const formStore = parentUseForm ? useStore(parentUseForm) : useCreateForm({ fields, errors })
   const finalFields = formStore.props ? formStore.props.fields : undefined
-
-  if (finalFields && children) {
-    return (
-      <ErrorMessage
-        message={`Can't pass both fields and children, Form accepts one or the other.`}
-      />
-    )
-  }
-
   let elements = children
-
+  const fieldElements = useFormFields(formStore, finalFields)
   if (finalFields) {
-    elements = generateFields(finalFields)
+    elements = fieldElements
   }
 
   const onSubmitInner = useCallback(
@@ -235,6 +248,14 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
     [onSubmit],
   )
 
+  if (finalFields && children) {
+    return (
+      <ErrorMessage
+        message={`Can't pass both fields and children, Form accepts one or the other.`}
+      />
+    )
+  }
+
   return (
     <form
       ref={ref}
@@ -276,7 +297,9 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
   )
 })
 
-function generateFields(fields: FormFieldsObj): React.ReactNode {
+function useFormFields(store: FormStore, fields: FormFieldsObj): React.ReactNode {
+  const values = useReaction(() => store.derivedValues)
+
   return Object.keys(fields).map(key => {
     const field = fields[key]
     return (
@@ -285,7 +308,7 @@ function generateFields(fields: FormFieldsObj): React.ReactNode {
         label={field.name}
         name={key}
         type={DataType[field.type]}
-        defaultValue={field.value}
+        defaultValue={selectDefined(values[key], fields[key].value)}
         description={'description' in field ? field.description : undefined}
         {...field.type === 'custom' && { children: field.children }}
       />

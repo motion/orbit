@@ -1,6 +1,6 @@
 {
   "name": "gloss",
-  "version": "2.5.6",
+  "version": "2.6.0",
   "description": "Higher order component for nicer component styles",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
@@ -18,17 +18,17 @@
   "license": "MIT",
   "homepage": "https://github.com/motion/gloss",
   "dependencies": {
-    "@o/css": "^2.5.5",
-    "@o/fast-compare": "^2.5.2"
+    "@o/css": "^2.6.0",
+    "@o/fast-compare": "^2.6.0"
   },
   "devDependencies": {
-    "enhanced-resolve": "^4.1.0",
-    "normalize-path": "^3.0.0",
-    "mkdirp": "^0.5.1",
     "@babel/generator": "^7.4.4",
-    "dedent": "0.7.0",
     "cosmiconfig": "^5.2.1",
-    "loader-utils": "^1.2.3"
+    "dedent": "0.7.0",
+    "enhanced-resolve": "^4.1.0",
+    "loader-utils": "^1.2.3",
+    "mkdirp": "^0.5.1",
+    "normalize-path": "^3.0.0"
   },
   "peerDependencies": {
     "react": "^16.8.6",

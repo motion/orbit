@@ -1,6 +1,6 @@
 {
   "name": "@o/orbit-repl",
-  "version": "2.5.2",
+  "version": "2.6.0",
   "private": true,
   "bin": {
     "orbit-repl": "./dev.js"
@@ -11,7 +11,7 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "devDependencies": {
-    "@o/debug-apps": "^2.5.2",
+    "@o/debug-apps": "^2.6.0",
     "execa": "^2.0.3"
   }
 }

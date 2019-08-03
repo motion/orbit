@@ -11,21 +11,15 @@ import { ElectronDebugStore } from './stores/ElectronDebugStore'
 
 const log = new Logger('OrbitRoot')
 
+const debugStore = new ElectronDebugStore()
+
 export function OrbitRoot() {
-  const debugStore = useStore(ElectronDebugStore)
   const { isMainWindow, appConf, appId } = useStore(Electron)
   log.verbose(`
     appId: ${appId} ${process.env.APP_ID}
     isMainWindow: ${isMainWindow}
     appConf.type: ${appConf.appRole}
 `)
-
-  if (debugStore.error) {
-    if (debugStore.error) {
-      log.info('error is', debugStore.error)
-    }
-    return null
-  }
 
   return (
     <ReactronApp

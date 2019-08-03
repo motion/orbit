@@ -1,6 +1,5 @@
 import AddAssetHtmlPlugin from 'add-asset-html-webpack-plugin'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
-import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import * as Path from 'path'
 import TerserPlugin from 'terser-webpack-plugin'
@@ -301,16 +300,16 @@ require('@o/kit').createHotHandler({
       ].filter(Boolean),
     },
     plugins: [
-      new HardSourceWebpackPlugin({
-        cacheDirectory: 'node_modules/.cache/hard-source/[confighash]',
-        environmentHash: {
-          root: process.cwd(),
-        },
-        info: {
-          mode: 'none',
-          level: 'error', // warn to debug if its slow
-        },
-      }),
+      // new HardSourceWebpackPlugin({
+      //   cacheDirectory: 'node_modules/.cache/hard-source/[confighash]',
+      //   environmentHash: {
+      //     root: process.cwd(),
+      //   },
+      //   info: {
+      //     mode: 'none',
+      //     level: 'error', // warn to debug if its slow
+      //   },
+      // }),
 
       new TimeFixPlugin(),
 

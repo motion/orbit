@@ -22,15 +22,12 @@ export class GraphServer {
   graphMiddleware = {}
   started = false
 
-  constructor() {
-    this.server = express()
-  }
-
   start() {
     if (this.started) {
       return
     }
     this.started = true
+    this.server = express()
     this.server.use(require('cors')())
     this.server.disable('etag')
     this.server.use(bodyParser.json({ limit: '2048mb' }))

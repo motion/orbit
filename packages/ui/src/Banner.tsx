@@ -9,6 +9,7 @@ import { FlipAnimate, FlipAnimateItem } from './FlipAnimate'
 import { Portal } from './helpers/portal'
 import { useOnUnmount } from './hooks/useOnUnmount'
 import { useWindowSize } from './hooks/useWindowSize'
+import { Spinner } from './Spinner'
 import { Message, MessageProps } from './text/Message'
 import { SimpleText } from './text/SimpleText'
 import { Col } from './View/Col'
@@ -21,6 +22,8 @@ export type BannerProps = {
   message: string
   /** The theme of the banner */
   type?: 'warn' | 'success' | 'error' | 'info'
+  /** Show a loading spinner */
+  loading?: boolean
   /** In seconds, hide the banner automatically after this time */
   timeout?: number
   /** This is the callback you can pass in optionally to do things when it closes */
@@ -178,7 +181,7 @@ export function useBanners() {
 export type BannerViewProps = MessageProps & BannerProps & { close: () => void }
 
 export const Banner = (props: BannerViewProps) => {
-  const { type, title, message, close, timeout, ...rest } = props
+  const { type, title, message, close, timeout, loading, ...rest } = props
   const [width, height] = useWindowSize({
     throttle: 50,
   })
@@ -215,6 +218,7 @@ export const Banner = (props: BannerViewProps) => {
       {...rest}
     >
       <Row flex={1} justifyContent="space-between" alignItems="center" afterSpace>
+        {!!loading && <Spinner />}
         <Col flex={1} space="xs">
           <Message.Title>{title}</Message.Title>
           <SimpleText whiteSpace="pre">{message}</SimpleText>

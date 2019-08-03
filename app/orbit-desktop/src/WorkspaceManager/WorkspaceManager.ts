@@ -127,9 +127,17 @@ export class WorkspaceManager {
       }
       const { webpackConfigs, nameToAppMeta } = res
       if (this.options.build) {
-        await webpackPromise(Object.keys(webpackConfigs).map(key => webpackConfigs[key]), {
+        const configs = Object.keys(webpackConfigs).map(key => webpackConfigs[key])
+        log.info(`Building ${Object.keys(webpackConfigs).join(', ')}...`)
+        const [base, ...rest] = configs
+        // build base dll first to ensure it feeds into rest
+        await webpackPromise([base], {
           loud: true,
         })
+        await webpackPromise(rest, {
+          loud: true,
+        })
+        log.info(`Build complete`)
       } else {
         this.middlewares = this.appMiddleware
           .update(webpackConfigs, nameToAppMeta)

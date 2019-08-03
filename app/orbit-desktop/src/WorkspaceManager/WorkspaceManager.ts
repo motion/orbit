@@ -82,7 +82,13 @@ export class WorkspaceManager {
   }
 
   middleware: Handler = async (req, res, next) => {
-    const sendIndex = () => res.sendFile(join(this.directory, 'dist', 'index.html'))
+    const sendIndex = () => {
+      if (!this.directory) {
+        res.send({ fourohfour: 'ok' })
+      } else {
+        res.sendFile(join(this.directory, 'dist', 'index.html'))
+      }
+    }
     // hacky way to just serve our own index.html for now
     if (req.path[1] !== '_' && req.path.indexOf('.') === -1) {
       return sendIndex()

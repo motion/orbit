@@ -245,6 +245,7 @@ require('@o/kit').createHotHandler({
         {
           test: /\.tsx?$/,
           use: [
+            'thread-loader',
             {
               loader: 'babel-loader',
               options: {

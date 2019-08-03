@@ -58,7 +58,7 @@ export function makeWebpackConfig(
   } = params
 
   // entry dir is the path above the entry file, this could be better...
-  const entryDir = Path.join(params.entry[0], '..')
+  // const entryDir = Path.join(params.entry[0], '..')
   const target = params.target || 'electron-renderer'
   const hasDLLReferences = !!(dllReferences && dllReferences.length)
 
@@ -184,7 +184,7 @@ export function makeWebpackConfig(
         target !== 'node' && {
           test: /.worker\.[jt]sx?$/,
           use: ['workerize-loader'],
-          // exclude: /node_modules/,
+          exclude: /node_modules/,
         },
         // ignore .node.js modules in web modes
         target !== 'node' && {
@@ -195,29 +195,29 @@ export function makeWebpackConfig(
           use: 'ignore-loader',
           test: x => {
             // explicit ignores from options
-            if (ignore.find(z => z.indexOf(x) > -1)) {
+            if (ignore.some(z => z.indexOf(x) > -1)) {
               return true
             }
             return false
           },
         },
         // ignore non-.node.js modules in node mode
-        target === 'node' && {
-          test: x => {
-            // dont ignore if is entry file
-            if (x === entry[0]) {
-              return false
-            }
-            // dont ignore if outside of this app source
-            if (x.indexOf(entryDir) !== 0) {
-              return false
-            }
-            // ignore if inside this apps src, and not matching our .node pattern (or entry):
-            const isValidNodeFile = entry === x || x.indexOf('.node.ts') > -1
-            return !isValidNodeFile
-          },
-          use: 'ignore-loader',
-        },
+        // target === 'node' && {
+        //   test: path => {
+        //     // dont ignore if is entry file
+        //     if (path === entry[0]) {
+        //       return false
+        //     }
+        //     // dont ignore if outside of this app source
+        //     if (path.indexOf(entryDir) !== 0) {
+        //       return false
+        //     }
+        //     // ignore if inside this apps src, and not matching our .node pattern (or entry):
+        //     const isValidNodeFile = entry === path || path.indexOf('.node.ts') > -1
+        //     return !isValidNodeFile
+        //   },
+        //   use: 'ignore-loader',
+        // },
         // ignore .electron.js modules if in web mode
         target !== 'electron-renderer' && {
           test: /\.electron.[jt]sx?/,

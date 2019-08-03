@@ -6,7 +6,7 @@ import { getOrbitDesktop } from './getDesktop'
 import { logStatusReply } from './logStatusReply'
 import { reporter } from './reporter'
 
-export async function commandGenTypes(options: CommandGenTypesOptions) {
+export async function commandGenTypes(options: CommandGenTypesOptions, singleUseMode = false) {
   reporter.info('Running orbit gen-types')
   const apiEntry = join(options.projectEntry, '..', 'api.node.ts')
   if (!(await pathExists(apiEntry))) {
@@ -17,8 +17,8 @@ export async function commandGenTypes(options: CommandGenTypesOptions) {
     singleUseMode: true,
   })
   logStatusReply(await mediator.command(AppGenTypesCommand, options))
-  if (orbitProcess) {
+  if (singleUseMode) {
     orbitProcess.kill()
-    process.exit(0)
   }
+  process.exit(0)
 }

@@ -9,6 +9,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from 'ws'
 
 import { cliPath } from './constants'
+import { addProcessDispose } from './processDispose'
 import { reporter } from './reporter'
 
 export type GetOrbitDesktopProps = {
@@ -59,6 +60,14 @@ export async function getOrbitDesktop(
 
   if (!mediator) {
     reporter.panic('No mediator found')
+  }
+
+  if (orbitProcess && (await getIsInMonorepo())) {
+    console.log('Dev mode helper enabled: CTRL+C will kill Orbit daemon.')
+    addProcessDispose({
+      action: 'SIGINT',
+      dispose: () => orbitProcess.kill(),
+    })
   }
 
   return {
@@ -112,7 +121,10 @@ export function runOrbitDesktop(
     const monoRoot = join(__dirname, '..', '..', '..')
     cwd = join(monoRoot, 'app', 'orbit-main')
     cmd = `npx electron --async-stack-traces --inspect=9001 --remote-debugging-port=9002 ./_/main.js`
+  } else {
+    throw new Error(`TODO Production mode`)
   }
+
   if (!cmd) {
     reporter.info('No orbit path found, searching...')
   }
@@ -122,7 +134,7 @@ export function runOrbitDesktop(
       // detached should keep it running as a daemon basically, which we want in production mode
       // TODO could make singleUseMode actually start it properly, but that would be tricky because we'd
       // want to avoid doing extra work initially, and then later "start" the rest of orbit (non singleUseMode stufg)
-      const detached = !isInMonoRepo && !singleUseMode
+      const detached = !singleUseMode
       reporter.verbose(`Running Orbit ${cmd} in ${cwd}, detached? ${detached}`)
       const child = execa.command(cmd, {
         detached,

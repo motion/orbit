@@ -20,7 +20,7 @@ export async function commandBuild(options: CommandBuildOptions): Promise<Status
     return {
       type: 'error',
       message: `\nNot inside an orbit app, add "config": { "orbitApp": true } } to the package.json`,
-    } as const
+    }
   }
 
   try {
@@ -29,34 +29,35 @@ export async function commandBuild(options: CommandBuildOptions): Promise<Status
       return {
         type: 'error',
         message: 'No package found!',
-      } as const
+      }
     }
 
     const entry = await getAppEntry(options.projectRoot)
-
     if (!entry || !(await pathExists(entry))) {
       return {
         type: 'error',
         message: `Make sure your package.json "entry" specifies the full filename with extension, ie: main.tsx`,
-      } as const
+      }
     }
 
-    await bundleApp(entry, options)
-    await commandGenTypes({
-      projectRoot: options.projectRoot,
-      projectEntry: entry,
-      out: join(options.projectRoot, 'dist', 'api.json'),
-    })
+    await Promise.all([
+      bundleApp(entry, options),
+      commandGenTypes({
+        projectRoot: options.projectRoot,
+        projectEntry: entry,
+        out: join(options.projectRoot, 'dist', 'api.json'),
+      }),
+    ])
 
     return {
       type: 'success',
       message: 'Built app',
-    } as const
+    }
   } catch (error) {
     return {
       type: 'error',
       message: `${error.message} ${error.stack}`,
-    } as const
+    }
   }
 }
 

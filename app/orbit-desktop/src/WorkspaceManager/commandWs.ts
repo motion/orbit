@@ -1,7 +1,7 @@
 import { Logger } from '@o/logger'
 import { CommandWsOptions, Space, SpaceEntity, UserEntity } from '@o/models'
 import { Desktop } from '@o/stores'
-import { readJSON } from 'fs-extra'
+import { readJSON, remove } from 'fs-extra'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
@@ -22,6 +22,11 @@ export async function commandWs(options: CommandWsOptions, workspaceManager: Wor
       workspaceRoot,
     },
   })
+
+  if (options.clean) {
+    log.info(`Cleaning workspace dist directory`)
+    await remove(join(workspaceRoot, 'dist'))
+  }
 
   await loadWorkspace(workspaceRoot)
 

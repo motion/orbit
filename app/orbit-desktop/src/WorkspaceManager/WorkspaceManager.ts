@@ -128,7 +128,7 @@ export class WorkspaceManager {
     try {
       const res = await getAppsConfig(Object.keys(appMeta).map(k => appMeta[k]), this.options)
       if (!res) {
-        console.error('No config')
+        log.error('No config')
         return
       }
       const { webpackConfigs, nameToAppMeta } = res
@@ -150,7 +150,7 @@ export class WorkspaceManager {
           .map(x => x.middleware)
       }
     } catch (err) {
-      console.error('Error running workspace', err.message, err.stack)
+      log.error(`Error running workspace: ${err.message}\n${err.stack}`)
     }
   }
 

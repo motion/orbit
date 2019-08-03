@@ -39,7 +39,7 @@ export async function getAppsConfig(
   log.info(`mode ${options.mode} watch ${watch} ${directory}, apps ${apps.length}`, options)
 
   // link local apps into local node_modules
-  await ensureDir(join(directory, 'node_modules'))
+  await Promise.all([ensureDir(join(directory, 'node_modules')), ensureDir(outputDir)])
   await Promise.all(
     apps
       .filter(x => x.isLocal)
@@ -118,7 +118,7 @@ ${apps
     })
     // ensure built
     if (options.clean || !(await pathExists(params.dll))) {
-      log.info(`Ensuring config built once: ${params.name}`, params.dll)
+      log.info(`Ensuring config built once: ${params.name}`, params)
       const buildOnceConfig = await makeWebpackConfig({
         ...params,
         hot: true,

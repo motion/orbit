@@ -132,20 +132,13 @@ export function makeWebpackConfig(
     console.log('err testing monorepo', err)
   }
 
-  const hotEntry = `webpack-hot-middleware/client?name=${name}&path=/__webpack_hmr_${name}`
-  const main = hot && !injectHot ? [hotEntry, ...entry] : entry
-
   let config: webpack.Configuration = {
     name,
     watch,
     context,
     target,
     mode,
-    entry: dll
-      ? main
-      : {
-          main,
-        },
+    entry,
     optimization: optimization[mode],
     output: {
       path: outputDir,

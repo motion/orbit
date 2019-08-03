@@ -14,6 +14,7 @@ type WebpackConfigObj = {
   [key: string]: webpack.Configuration
 }
 type WebpackAppsDesc = {
+  name: string
   middleware: Handler
   compiler?: webpack.Compiler
   config?: webpack.Configuration
@@ -61,6 +62,17 @@ export class AppMiddleware {
         middleware: resolveIfExists(devMiddleware, [config.output.path]),
         compiler,
         config,
+        name,
+      })
+    }
+
+    if (main) {
+      const { devMiddleware, compiler } = this.getMiddleware(main)
+      res.push({
+        middleware: devMiddleware,
+        compiler,
+        config: main,
+        name: 'main',
       })
     }
 
@@ -73,6 +85,7 @@ export class AppMiddleware {
       heartBeat: 10 * 1000,
     })
     res.push({
+      name: 'hot',
       middleware: resolveIfExists(appsHotMiddleware, res.map(x => x.config.output.path), [
         '/__webpack_hmr',
       ]),
@@ -80,25 +93,15 @@ export class AppMiddleware {
 
     // falls back to the main entry middleware
     if (main) {
-      const { devMiddleware, compiler } = this.getMiddleware(main)
-      const mainHotMiddleware = WebpackHotMiddleware([compiler], {
-        path: '/__webpack_hmr_main',
-        log: console.log,
-        heartBeat: 10 * 1000,
-      })
-      res.push({
-        middleware: resolveIfExists(mainHotMiddleware, [main.output.path], ['/__webpack_hmr_main']),
-      })
-      res.push({
-        middleware: devMiddleware,
-      })
       // need to have another devMiddleware  after historyAPIFallback, see:
       // https://github.com/webpack/webpack-dev-middleware/issues/88#issuecomment-252048006
       res.push({
+        name: 'history-api-fallback',
         middleware: historyAPIFallback(),
       })
       res.push({
-        middleware: devMiddleware,
+        name: 'dev-fallback',
+        middleware: res.find(x => x.name === 'main').middleware,
       })
     }
 

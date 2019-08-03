@@ -113,7 +113,7 @@
     "jest": "24.8.0",
     "json-diff": "0.5.4",
     "lerna": "^3.15.0",
-    "mobx": "5.10.1",
+    "mobx": "^5.13.0",
     "overmind-devtools": "20.0.1",
     "patch-package": "6.1.2",
     "prettier": "1.17.0",

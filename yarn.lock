@@ -23921,7 +23921,7 @@ webpack-dev-server@^3.7.2:
     webpack-log "^2.0.0"
     yargs "12.0.5"
 
-webpack-hot-middleware@^2.22.1, webpack-hot-middleware@^2.25.0:
+webpack-hot-middleware@^2.22.1:
   version "2.25.0"
   resolved "https://registry.yarnpkg.com/webpack-hot-middleware/-/webpack-hot-middleware-2.25.0.tgz#4528a0a63ec37f8f8ef565cf9e534d57d09fe706"
   integrity sha512-xs5dPOrGPCzuRXNi8F6rwhawWvQQkeli5Ro48PRuQh8pYPCPmNnltP9itiUPT4xI8oW+y0m59lyyeQk54s5VgA==

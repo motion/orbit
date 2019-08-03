@@ -126,7 +126,6 @@ async function installApp(
     timeout: 2,
   })
 
-  console.log('app bit is')
   if (appBit) {
     setTimeout(() => {
       om.actions.router.showAppPage({ id: appBit.id })

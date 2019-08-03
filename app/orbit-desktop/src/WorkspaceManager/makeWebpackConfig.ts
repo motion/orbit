@@ -154,7 +154,7 @@ export function makeWebpackConfig(
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
     },
-    devtool: mode === 'production' || target === 'node' ? 'source-map' : 'cheap-source-map',
+    devtool: mode === 'production' || target === 'node' ? 'source-map' : 'eval-source-map',
     externals: [
       {
         electron: '{}',

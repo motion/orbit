@@ -359,7 +359,7 @@ export async function getBaseDllParams(directory: string): Promise<WebpackParams
   // base dll with shared libraries
   return {
     name: `base`,
-    // injectHot: join(require.resolve('@o/kit'), '..', '..', 'src', 'index.ts'),
+    injectHot: join(require.resolve('@o/kit'), '..', '..', 'src', 'index.ts'),
     entry: [...new Set(allPackages)],
     ignore: ['electron-log', 'configstore', 'typeorm'],
     context: directory,

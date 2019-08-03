@@ -5,6 +5,7 @@ import { AppBit, AppInstallToWorkspaceCommand, AppModel, AuthAppCommand, SpaceMo
 import { BannerHandle, useBanner } from '@o/ui'
 import { useCallback } from 'react'
 
+import { om } from '../om/om'
 import { newAppStore } from '../om/stores'
 
 export function useNewAppBit(identifier: string) {
@@ -35,7 +36,10 @@ export async function createAppBitInActiveSpace(
 
 export function useInstallApp() {
   const banner = useBanner()
-  return useCallback((a: AppDefinition, b?: Partial<AppBit> | true) => installApp(a, b, banner), [])
+  return useCallback(
+    (a: AppDefinition, b: Partial<AppBit> | true = true) => installApp(a, b, banner),
+    [],
+  )
 }
 
 async function installApp(
@@ -77,23 +81,26 @@ async function installApp(
     return res
   }
 
+  let appBit
+
   // create AppBit
   if (newAppBit) {
     try {
       const activeSpace = await getActiveSpace()
-      const appBit =
+      const filledInBit =
         newAppBit === true ? newEmptyAppBit(def) : { ...newEmptyAppBit(def), ...newAppBit }
-      const bit = {
-        ...appBit,
+      appBit = {
+        ...filledInBit,
         spaceId: activeSpace.id,
         space: activeSpace,
-        name: appBit.name || newAppStore.app.name || def.name,
-        colors: appBit.colors || newAppStore.app.colors,
+        name: filledInBit.name || newAppStore.app.name || def.name,
+        colors: filledInBit.colors || newAppStore.app.colors,
         icon: def.icon,
         ...((typeof newAppBit === 'object' && newAppBit) || null),
       }
-      console.log('Saving new app', newAppBit, bit)
-      await save(AppModel, bit)
+      console.log('Saving new app', newAppBit, appBit)
+      // re-assign here to get the id
+      appBit = await save(AppModel, appBit)
 
       newAppStore.reset()
     } catch (err) {
@@ -118,6 +125,13 @@ async function installApp(
     message,
     timeout: 2,
   })
+
+  console.log('app bit is')
+  if (appBit) {
+    setTimeout(() => {
+      om.actions.router.showAppPage({ id: appBit.id })
+    }, 500)
+  }
 
   return {
     type: 'success' as const,

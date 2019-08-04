@@ -6,6 +6,7 @@ import { logStatusReply } from './logStatusReply'
 import { reporter } from './reporter'
 
 export async function commandBuild(options: CommandBuildOptions, singleUseMode = false) {
+  reporter.info(`Building...`)
   reporter.verbose(`command-build ${options.projectRoot}`)
   if (!(await isOrbitApp(options.projectRoot))) {
     reporter.panic(
@@ -15,9 +16,8 @@ export async function commandBuild(options: CommandBuildOptions, singleUseMode =
   const { mediator, orbitProcess } = await getOrbitDesktop({
     singleUseMode,
   })
-  reporter.info(`Building...`)
   const res = await mediator.command(AppBuildCommand, options, {
-    timeout: 50000,
+    timeout: 50_000,
     onMessage: reporter.info,
   })
   logStatusReply(res)

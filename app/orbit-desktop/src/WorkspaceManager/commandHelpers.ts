@@ -1,4 +1,4 @@
-import { Logger } from '@o/logger'
+import { Logger, LogMiddleware } from '@o/logger'
 import { CommandOpts } from '@o/mediator'
 import commandExists from 'command-exists'
 import exec from 'execa'
@@ -36,8 +36,10 @@ export function statusReplyCommand<A extends Function>(cb: A): A {
 }
 
 export function attachLogToCommand(log: Logger, options: CommandOpts) {
-  const sendMessage = (...messages: string[]) => {
-    options.sendMessage(messages.join(' '))
+  const sendMessage: LogMiddleware = (level, _namespace, messages: string[]) => {
+    if (level !== 'debug') {
+      options.sendMessage(messages.join(' '))
+    }
   }
   log.addMiddleware(sendMessage)
   options.onFinishCommand(() => {

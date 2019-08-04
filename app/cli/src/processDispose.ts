@@ -54,7 +54,7 @@ function createDispose(action: string) {
           250,
         )
         clearTimeout(finaltm)
-        reporter.info(`done disposing all, bye`)
+        reporter.info(`Until next time!`)
       } catch (err) {
         if (err === OR_TIMED_OUT) {
           reporter.info('Timed out killing processes')

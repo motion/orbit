@@ -66,13 +66,11 @@ export const resolveAppBuildCommand = resolveCommand(
 
 export async function bundleApp(entry: string, options: CommandBuildOptions) {
   const verbose = true
-
-  log.info(`Running orbit build: ${verbose} ${options.projectRoot}`)
   const pkg = await readPackageJson(options.projectRoot)
 
   // build appInfo first, we can then use it to determine if we need to build web/node
   const appInfoConf = await getAppInfoConfig(entry, pkg.name, options)
-  log.info(`Building appInfo`, appInfoConf)
+  log.info(`Building appInfo...`, appInfoConf)
   await webpackPromise([appInfoConf], {
     loud: verbose,
   })

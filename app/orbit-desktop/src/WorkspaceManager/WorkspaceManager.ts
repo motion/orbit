@@ -14,11 +14,11 @@ import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 import { getActiveSpace } from '../helpers/getActiveSpace'
 import { appStatusManager } from '../managers/AppStatusManager'
 import { AppMiddleware } from './AppMiddleware'
+import { resolveAppBuildCommand } from './commandBuild'
 import { resolveAppGenTypesCommand } from './commandGenTypes'
 import { resolveAppInstallCommand } from './commandInstall'
 import { commandWs } from './commandWs'
 import { getAppsConfig } from './getAppsConfig'
-import { resolveAppBuildCommand } from './resolveAppBuildCommand'
 import { webpackPromise } from './webpackPromise'
 
 const log = new Logger('WorkspaceManager')

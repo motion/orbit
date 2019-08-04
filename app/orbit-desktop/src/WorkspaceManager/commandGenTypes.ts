@@ -23,8 +23,7 @@ export async function commandGenTypes(
   if (options) {
     attachLogToCommand(log, options)
   }
-  log.info('Running orbit gen-types')
-
+  log.info('Generating typescript types...')
   const apiEntry = join(props.projectEntry, '..', 'api.node.ts')
 
   if (!(await pathExists(apiEntry))) {

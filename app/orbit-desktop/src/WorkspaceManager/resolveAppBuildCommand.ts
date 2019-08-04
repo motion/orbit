@@ -1,30 +1,35 @@
 import { updateBuildInfo } from '@o/apps-manager'
 import { isOrbitApp, readPackageJson } from '@o/libs-node'
 import { Logger } from '@o/logger'
-import { AppDefinition, CommandBuildOptions, StatusReply } from '@o/models'
+import { resolveCommand } from '@o/mediator'
+import { AppBuildCommand, AppDefinition, CommandBuildOptions } from '@o/models'
 import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
 import webpack = require('webpack')
 
 import { commandGenTypes } from './commandGenTypes'
+import { attachLogToCommand, statusReplyCommand } from './commandHelpers'
 import { getAppParams } from './getAppsConfig'
 import { makeWebpackConfig } from './makeWebpackConfig'
 import { webpackPromise } from './webpackPromise'
 
-const log = new Logger('commandBuild')
+const log = new Logger('resolveAppBuildCommand')
 
-export async function commandBuild(options: CommandBuildOptions): Promise<StatusReply> {
-  log.info(`Running build in ${options.projectRoot}`)
+export const resolveAppBuildCommand = resolveCommand(
+  AppBuildCommand,
+  statusReplyCommand(async (props, options) => {
+    attachLogToCommand(log, options)
 
-  if (!(await isOrbitApp(options.projectRoot))) {
-    return {
-      type: 'error',
-      message: `\nNot inside an orbit app, add "config": { "orbitApp": true } } to the package.json`,
+    log.info(`Running build in ${props.projectRoot}`)
+
+    if (!(await isOrbitApp(props.projectRoot))) {
+      return {
+        type: 'error',
+        message: `\nNot inside an orbit app, add "config": { "orbitApp": true } } to the package.json`,
+      }
     }
-  }
 
-  try {
-    const pkg = await readPackageJson(options.projectRoot)
+    const pkg = await readPackageJson(props.projectRoot)
     if (!pkg) {
       return {
         type: 'error',
@@ -32,7 +37,7 @@ export async function commandBuild(options: CommandBuildOptions): Promise<Status
       }
     }
 
-    const entry = await getAppEntry(options.projectRoot)
+    const entry = await getAppEntry(props.projectRoot)
     if (!entry || !(await pathExists(entry))) {
       return {
         type: 'error',
@@ -41,25 +46,23 @@ export async function commandBuild(options: CommandBuildOptions): Promise<Status
     }
 
     await Promise.all([
-      bundleApp(entry, options),
-      commandGenTypes({
-        projectRoot: options.projectRoot,
-        projectEntry: entry,
-        out: join(options.projectRoot, 'dist', 'api.json'),
-      }),
+      bundleApp(entry, props),
+      commandGenTypes(
+        {
+          projectRoot: props.projectRoot,
+          projectEntry: entry,
+          out: join(props.projectRoot, 'dist', 'api.json'),
+        },
+        options,
+      ),
     ])
 
     return {
       type: 'success',
       message: 'Built app',
     }
-  } catch (error) {
-    return {
-      type: 'error',
-      message: `${error.message} ${error.stack}`,
-    }
-  }
-}
+  }),
+)
 
 export async function bundleApp(entry: string, options: CommandBuildOptions) {
   const verbose = true

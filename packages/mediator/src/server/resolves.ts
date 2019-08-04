@@ -1,11 +1,11 @@
 import Observable from 'zen-observable'
 
 import { Command, Model } from '../common'
-import { ResolveInterface } from './ResolveInterface'
+import { ResolveInterface, CommandOpts } from './ResolveInterface'
 
 export function resolveCommand<ModelType, Args>(
   command: Command<ModelType, Args>,
-  resolve: (args: Args) => ModelType | Promise<ModelType>,
+  resolve: (args: Args, opts: CommandOpts) => ModelType | Promise<ModelType>,
 ): ResolveInterface<ModelType, never, Args> {
   return {
     type: 'command',

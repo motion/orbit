@@ -146,7 +146,7 @@ export class AppMiddleware {
   }
 
   private sendStatus(message: Pick<AppStatusMessage, 'type' | 'message' | 'appId'>) {
-    ;[...this.statusListeners].forEach(listener => {
+    this.statusListeners.forEach(listener => {
       listener({
         id: `${message.appId}-build-status`,
         ...message,

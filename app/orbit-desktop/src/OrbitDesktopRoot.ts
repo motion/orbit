@@ -290,8 +290,6 @@ export class OrbitDesktopRoot {
       }),
     )
 
-    const client = new MediatorClient({ transports: [workersTransport] })
-
     const mediatorServerPort = this.config.ports.desktopMediator
 
     this.mediatorServer = new MediatorServer({
@@ -313,7 +311,7 @@ export class OrbitDesktopRoot {
       transport: new WebSocketServerTransport({
         port: mediatorServerPort,
       }),
-      fallbackClient: client,
+      fallbackClient: new MediatorClient({ transports: [workersTransport] }),
       resolvers: [
         ...typeormResolvers(getConnection(), [
           { entity: AppEntity, models: [AppModel] },

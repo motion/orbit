@@ -16,7 +16,10 @@ export async function commandBuild(options: CommandBuildOptions, singleUseMode =
     singleUseMode,
   })
   reporter.info(`Building...`)
-  const res = await mediator.command(AppBuildCommand, options, { timeout: 50000 })
+  const res = await mediator.command(AppBuildCommand, options, {
+    timeout: 50000,
+    onMessage: reporter.info,
+  })
   logStatusReply(res)
   if (singleUseMode) {
     orbitProcess.kill()

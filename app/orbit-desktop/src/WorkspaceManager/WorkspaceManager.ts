@@ -1,7 +1,7 @@
 import { AppMetaDict, AppsManager } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppEntity, AppGenTypesCommand, AppInstallCommand, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
+import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppEntity, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { Handler } from 'express'
@@ -14,11 +14,11 @@ import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 import { getActiveSpace } from '../helpers/getActiveSpace'
 import { appStatusManager } from '../managers/AppStatusManager'
 import { AppMiddleware } from './AppMiddleware'
-import { commandBuild } from './commandBuild'
-import { commandGenTypes } from './commandGenTypes'
-import { commandInstall } from './commandInstall'
+import { resolveAppGenTypesCommand } from './commandGenTypes'
+import { resolveAppInstallCommand } from './commandInstall'
 import { commandWs } from './commandWs'
 import { getAppsConfig } from './getAppsConfig'
+import { resolveAppBuildCommand } from './resolveAppBuildCommand'
 import { webpackPromise } from './webpackPromise'
 
 const log = new Logger('WorkspaceManager')
@@ -191,9 +191,9 @@ export class WorkspaceManager {
       resolveCommand(AppOpenWorkspaceCommand, async options => {
         return await commandWs(options, this)
       }),
-      resolveCommand(AppInstallCommand, commandInstall),
-      resolveCommand(AppBuildCommand, commandBuild),
-      resolveCommand(AppGenTypesCommand, commandGenTypes),
+      resolveAppInstallCommand,
+      resolveAppBuildCommand,
+      resolveAppGenTypesCommand,
       // resolveCommand(AppDevOpenCommand, async ({ projectRoot }) => {
       //   const entry = await getAppEntry(projectRoot)
       //   const appId = Object.keys(Electron.state.appWindows).length

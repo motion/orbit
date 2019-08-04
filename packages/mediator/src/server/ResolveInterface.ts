@@ -1,5 +1,6 @@
-import { Command, Model } from '../common'
 import Observable from 'zen-observable'
+
+import { Command, Model } from '../common'
 
 export type ResolveType =
   | 'command'
@@ -15,10 +16,15 @@ export type ResolveType =
   | 'observeManyAndCount'
   | 'observeCount'
 
+export type CommandOpts = {
+  sendMessage: (message: string) => void
+  onFinishCommand: (cb: Function) => void
+}
+
 export type ResolveCommand<ModelType, Args> = {
   type: 'command'
   command: Command<ModelType, Args>
-  resolve: (args: Args) => ModelType | Promise<ModelType>
+  resolve: (args: Args, opts: CommandOpts) => ModelType | Promise<ModelType>
 }
 
 export type ResolveOne<ModelType, Args> = {

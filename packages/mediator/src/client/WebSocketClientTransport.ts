@@ -17,6 +17,7 @@ export class WebSocketClientTransport implements ClientTransport {
     name: string
     onSuccess: (response: TransportResponse) => any
     onError: Function
+    onMessage?: (response: TransportResponse) => any
   }[] = []
   private isOpen = false
   private openListeners = new Set<Function>()
@@ -137,11 +138,7 @@ export class WebSocketClientTransport implements ClientTransport {
           type: 'unsubscribe',
         }
         this.websocket.send(JSON.stringify(response))
-        log.verbose('removed subscription', {
-          id: response.id,
-          type: subscription.type,
-          name: subscription.name,
-        })
+        log.verbose('removed subscription', response, subscription)
       }
     })
   }
@@ -175,6 +172,11 @@ export class WebSocketClientTransport implements ClientTransport {
           id,
           type,
           name: values.command || '',
+          onMessage(response) {
+            if (values.onMessage) {
+              values.onMessage(response.result)
+            }
+          },
           onSuccess(result) {
             // remove subscription once command is done
             subscriptions.splice(subscriptions.indexOf(this), 1)
@@ -221,16 +223,15 @@ export class WebSocketClientTransport implements ClientTransport {
     }
 
     if (process.env.NODE_ENV === 'development') {
-      log.verbose('received data', {
-        id: data.id,
-        type: subscription.type,
-        name: subscription.name,
-        result: data.result,
-        notFound: data.notFound,
-        sendIdentifier: data.sendIdentifier,
-      })
+      log.verbose('received data', data, subscription)
     }
 
-    subscription.onSuccess(data)
+    if (data.message) {
+      if (subscription.onMessage) {
+        subscription.onMessage(data)
+      }
+    } else {
+      subscription.onSuccess(data)
+    }
   }
 }

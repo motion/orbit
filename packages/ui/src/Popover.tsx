@@ -159,7 +159,7 @@ class PopoverManager {
     last([...this.state]).forceClose()
   }
   closeAll() {
-    ;[...this.state].forEach(x => x.forceClose())
+    this.state.forEach(x => x.forceClose())
   }
 }
 

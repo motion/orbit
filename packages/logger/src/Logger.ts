@@ -1,14 +1,15 @@
 import { LOGGER_COLOR_WHEEL } from './constants'
 import { LoggerSettings } from './LoggerSettings'
 
-const voidfn = (...args: any[]) => args
-let log = {
-  info: voidfn,
-  debug: voidfn,
-  warn: voidfn,
-  error: voidfn,
-}
-
+// const voidfn = (...args: any[]) => args
+// let log = (level: string, namespace: string, ...messages: string[]) => {
+// }
+// {
+//   info: voidfn,
+//   debug: voidfn,
+//   warn: voidfn,
+//   error: voidfn,
+// }
 // // disable in renderer for now because were avoiding compiling it to electron
 // if (typeof window === 'undefined') {
 //   try {
@@ -28,13 +29,8 @@ let log = {
 type LogType = 'verbose' | 'info' | 'warning' | 'error' | 'timer' | 'vtimer'
 
 // for now just log because its not being output anywhere
-const debug = (...args) => {
-  if (typeof window !== 'undefined') {
-    console.debug(...args)
-  } else {
-    console.log(...args)
-  }
-}
+const debug =
+  typeof window !== 'undefined' ? console.debug.bind(console) : console.log.bind(console)
 
 type LoggerOpts = {
   trace?: boolean
@@ -52,10 +48,13 @@ const knownUselessLog = str => {
   return false
 }
 
+export type LogMiddleware = (...messages: string[]) => any
+
 /**
  * Creates a new logger with a new namespace.
  */
 export class Logger {
+  private middlewares = new Set<LogMiddleware>()
   private opts: LoggerOpts
   private namespace: string
   private timers: {
@@ -66,6 +65,14 @@ export class Logger {
   constructor(namespace: string, opts: LoggerOpts = { trace: false }) {
     this.namespace = namespace
     this.opts = opts
+  }
+
+  addMiddleware(fn: LogMiddleware) {
+    this.middlewares.add(fn)
+  }
+
+  removeMiddleware(fn: LogMiddleware) {
+    this.middlewares.delete(fn)
   }
 
   /**
@@ -225,23 +232,24 @@ export class Logger {
     // group traces to avoid large things clogging console
     if (isTrace) {
       console.groupCollapsed(`${this.namespace}`, ...messages)
-      console.log(traceLog)
+      this.flush('log', traceLog)
     }
 
     // output to the console
     // todo: in the production we'll need to output into our statistics/logger servers
     if (level === 'error') {
-      console.error(
+      this.flush(
+        'error',
         ...colored(
           this.namespace,
           'color: white; background-color: red; padding: 0 2px; margin: 0 2px',
         ),
         ...messages,
       )
-      log.error(this.namespace, ...messages)
     } else if (level === 'warning') {
       if (logLevel > 1) {
-        console.warn(
+        this.flush(
+          'warn',
           ...colored(
             this.namespace,
             'color: #666; background-color: yellow; padding: 0 2px; margin: 0 2px',
@@ -249,15 +257,18 @@ export class Logger {
           ...messages,
         )
       }
-      log.warn(this.namespace, ...messages)
     } else if (level === 'verbose') {
       if (logLevel > 2) {
-        debug(...colored(this.namespace, `color: ${color}; font-weight: bold`), ...messages)
-        log.debug(this.namespace, ...messages)
+        this.flush(
+          'debug',
+          ...colored(this.namespace, `color: ${color}; font-weight: bold`),
+          ...messages,
+        )
       }
     } else if (level === 'info') {
       if (logLevel > 0) {
-        console.log(
+        this.flush(
+          'info',
           ...colored(
             this.namespace,
             `color: ${color}; font-weight: bold; padding: 0 2px; margin: 0 2px`,
@@ -265,35 +276,47 @@ export class Logger {
           ...messages,
         )
       }
-      log.info(this.namespace, ...messages)
     } else if (level === 'timer' || level === 'vtimer') {
       if (logLevel > 2 || (level === 'timer' && logLevel > 0)) {
-        const consoleLog =
-          level === 'timer' ? console.info.bind(console) : console.debug.bind(console)
-        const defaultLog = level === 'timer' ? log.info.bind(log) : log.debug.bind(log)
+        const logLevel = level === 'timer' ? 'info' : ('debug' as const)
         const labelMessage = messages[0]
         const existTimer = this.timers.find(timer => timer.message === labelMessage)
         if (existTimer) {
           const delta = (Date.now() - existTimer.time) / 1000
           // reset it so we can see time since last message each message
           existTimer.time = Date.now()
-          consoleLog(`${this.namespace} ${delta}ms`, ...messages)
-          defaultLog(this.namespace, delta, ...messages)
+          this.flush(logLevel, `${this.namespace} ${delta}ms`, ...messages)
           this.timers.splice(this.timers.indexOf(existTimer), 1)
         } else {
-          consoleLog(`${this.namespace}`, ...messages)
-          defaultLog(this.namespace, 'started', ...messages)
+          this.flush(logLevel, `${this.namespace}`, ...messages)
           this.timers.push({ time: Date.now(), message: messages[0] })
         }
       }
     } else {
-      console.log(...colored(this.namespace, `color: ${color}; font-weight: bold`), ...messages)
-      log.info(this.namespace, ...messages)
+      this.flush(
+        'log',
+        ...colored(this.namespace, `color: ${color}; font-weight: bold`),
+        ...messages,
+      )
     }
 
     if (isTrace) {
       console.groupEnd()
     }
+  }
+
+  // maps to console.X
+  // allows us to handle middlewares
+  private flush(level: 'log' | 'info' | 'debug' | 'warn' | 'error', ...args: any[]) {
+    if (this.middlewares.size) {
+      this.middlewares.forEach(x => x(...args))
+    }
+    if (level === 'debug') {
+      debug(...args)
+    } else {
+      console[level](...args)
+    }
+    // log('info', this.namespace, ...messages)
   }
 }
 

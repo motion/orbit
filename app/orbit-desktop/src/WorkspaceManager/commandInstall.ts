@@ -1,13 +1,23 @@
 import { getPackageId, getRegistryLatestVersion, isInstalled } from '@o/apps-manager'
 import { Logger } from '@o/logger'
-import { CommandInstallOptions, StatusReply } from '@o/models'
+import { CommandOpts, resolveCommand } from '@o/mediator'
+import { AppInstallCommand, CommandInstallOptions, StatusReply } from '@o/models'
 import execa from 'execa'
 
-import { yarnOrNpm } from './commandHelpers'
+import { attachLogToCommand, statusReplyCommand, yarnOrNpm } from './commandHelpers'
 
 const log = new Logger('commandInstall')
 
-export async function commandInstall(options: CommandInstallOptions): Promise<StatusReply> {
+export const resolveAppInstallCommand = resolveCommand(
+  AppInstallCommand,
+  statusReplyCommand(commandInstall),
+)
+
+export async function commandInstall(
+  options: CommandInstallOptions,
+  helpers?: CommandOpts,
+): Promise<StatusReply> {
+  attachLogToCommand(log, helpers)
   log.info(`commandInstall ${options.directory} ${options.identifier}`)
 
   const command = await yarnOrNpm()
@@ -39,21 +49,14 @@ export async function commandInstall(options: CommandInstallOptions): Promise<St
   const packageInstallKey = `${packageId}@${curVersion || 'latest'}`
   log.info(`Installing ${packageInstallKey}`)
 
-  try {
-    if (command === 'yarn') {
-      await runCommand(`yarn add ${packageInstallKey}`, {
-        cwd: options.directory,
-      })
-    } else {
-      await runCommand(`npm install --save ${packageInstallKey}`, {
-        cwd: options.directory,
-      })
-    }
-  } catch (err) {
-    return {
-      type: 'error',
-      message: `${err.message} ${err.stack}`,
-    }
+  if (command === 'yarn') {
+    await runCommand(`yarn add ${packageInstallKey}`, {
+      cwd: options.directory,
+    })
+  } else {
+    await runCommand(`npm install --save ${packageInstallKey}`, {
+      cwd: options.directory,
+    })
   }
 
   // TODO app bit? we handle this in two ways: `installApp`  and then `ensureAppBitsForAppDefinitions`

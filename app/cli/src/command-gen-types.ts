@@ -16,7 +16,11 @@ export async function commandGenTypes(options: CommandGenTypesOptions, singleUse
   const { mediator, orbitProcess } = await getOrbitDesktop({
     singleUseMode: true,
   })
-  logStatusReply(await mediator.command(AppGenTypesCommand, options))
+  logStatusReply(
+    await mediator.command(AppGenTypesCommand, options, {
+      onMessage: reporter.info,
+    }),
+  )
   if (singleUseMode) {
     orbitProcess.kill()
   }

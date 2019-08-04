@@ -1,3 +1,4 @@
+import Observable from 'zen-observable'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import {
@@ -8,6 +9,7 @@ import {
   typeormResolvers,
   WebSocketClientTransport,
   WebSocketServerTransport,
+  resolveObserveOne,
 } from '@o/mediator'
 import {
   AppEntity,
@@ -33,6 +35,7 @@ import {
   StateModel,
   StateEntity,
   RemoveAllAppDataCommand,
+  OrbitProcessStdOutModel,
   AppStatusModel,
   ResetDataCommand,
 } from '@o/models'
@@ -70,6 +73,7 @@ import { FinishAuthQueue } from './auth-server/finishAuth'
 import { createAppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { WorkspaceManager } from './WorkspaceManager/WorkspaceManager'
 import { orTimeout, OR_TIMED_OUT } from '@o/utils'
+import { interceptStdOut } from './helpers/interceptStdOut'
 
 const log = new Logger('OrbitDesktopRoot')
 
@@ -307,6 +311,7 @@ export class OrbitDesktopRoot {
         CosalSaliencyModel,
         CosalTopWordsModel,
         AppStatusModel,
+        OrbitProcessStdOutModel,
       ],
       transport: new WebSocketServerTransport({
         port: mediatorServerPort,
@@ -320,6 +325,17 @@ export class OrbitDesktopRoot {
           { entity: UserEntity, models: [UserModel] },
           { entity: StateEntity, models: [StateModel] },
         ]),
+
+        resolveObserveOne(OrbitProcessStdOutModel, () => {
+          return new Observable<string>(observer => {
+            // start with empty
+            observer.next(null)
+            interceptStdOut(message => {
+              observer.next(message)
+            })
+          })
+        }),
+
         ...loadAppDefinitionResolvers(),
         ...this.workspaceManager.getResolvers(),
         resolveCommand(GetPIDCommand, async () => {

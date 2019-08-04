@@ -1,3 +1,4 @@
+import { OrbitProcessStdOutModel } from '@o/models'
 import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
 import { OR_TIMED_OUT, orTimeout, randomString } from '@o/utils'
 import bonjour from 'bonjour'
@@ -62,12 +63,22 @@ export async function getOrbitDesktop(
     reporter.panic('No mediator found')
   }
 
-  if (orbitProcess && (await getIsInMonorepo())) {
-    console.log('Dev mode helper enabled: CTRL+C will kill Orbit daemon.')
-    addProcessDispose({
-      action: 'SIGINT',
-      dispose: () => orbitProcess.kill(),
-    })
+  const inMono = await getIsInMonorepo()
+
+  if (inMono) {
+    if (orbitProcess) {
+      console.log('Dev mode helper enabled: CTRL+C will kill Orbit daemon.')
+      addProcessDispose({
+        action: 'SIGINT',
+        dispose: () => orbitProcess.kill(),
+      })
+    } else {
+      // in dev mode connect to orbit process and pipe logs here for easy debug
+      const model = mediator.observeOne(OrbitProcessStdOutModel, undefined).subscribe(msg => {
+        reporter.verbose('desktop:', msg)
+      })
+      addProcessDispose(() => model.unsubscribe())
+    }
   }
 
   return {

@@ -7,7 +7,6 @@ import { reporter } from './reporter'
 
 export async function commandBuild(options: CommandBuildOptions, singleUseMode = false) {
   reporter.info(`Building...`)
-  reporter.verbose(`command-build ${options.projectRoot}`)
   if (!(await isOrbitApp(options.projectRoot))) {
     reporter.panic(
       `\nNot inside an orbit app, add "config": { "orbitApp": true } } to the package.json`,
@@ -17,7 +16,7 @@ export async function commandBuild(options: CommandBuildOptions, singleUseMode =
     singleUseMode,
   })
   const res = await mediator.command(AppBuildCommand, options, {
-    timeout: 50_000,
+    timeout: 60_000 * 5,
     onMessage: reporter.info,
   })
   logStatusReply(res)

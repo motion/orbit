@@ -9,8 +9,11 @@ export async function commandInstall(options: CommandInstallOptions, singleUseMo
   const { mediator, orbitProcess } = await getOrbitDesktop({
     singleUseMode: true,
   })
-  const res = await mediator.command(AppInstallCommand, options)
-  logStatusReply(res)
+  logStatusReply(
+    await mediator.command(AppInstallCommand, options, {
+      onMessage: reporter.info,
+    }),
+  )
   if (singleUseMode) {
     orbitProcess.kill()
   }

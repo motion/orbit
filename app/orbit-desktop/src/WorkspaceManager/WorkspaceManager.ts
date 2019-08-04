@@ -1,20 +1,7 @@
 import { AppMetaDict, AppsManager } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import {
-  AppCreateWorkspaceCommand,
-  AppDevCloseCommand,
-  AppEntity,
-  AppMetaCommand,
-  AppOpenWorkspaceCommand,
-  AppStatusModel,
-  CallAppBitApiMethodCommand,
-  CloseAppCommand,
-  CommandWsOptions,
-  WorkspaceInfo,
-  WorkspaceInfoModel,
-  AppDevOpenCommand,
-} from '@o/models'
+import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { Handler } from 'express'
@@ -27,7 +14,7 @@ import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 import { getActiveSpace } from '../helpers/getActiveSpace'
 import { appStatusManager } from '../managers/AppStatusManager'
 import { AppMiddleware } from './AppMiddleware'
-import { resolveAppBuildCommand, getAppEntry } from './commandBuild'
+import { getAppEntry, resolveAppBuildCommand } from './commandBuild'
 import { resolveAppGenTypesCommand } from './commandGenTypes'
 import { resolveAppInstallCommand } from './commandInstall'
 import { commandWs } from './commandWs'

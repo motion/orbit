@@ -26,6 +26,7 @@ export class MediatorServer {
   }
 
   bootstrap() {
+    log.verbose(`MediatorServer.bootstrap()`)
     this.options.transport.onMessage(data => this.handleMessage(data))
   }
 
@@ -37,6 +38,7 @@ export class MediatorServer {
   }
 
   private async handleMessage(data: TransportRequest) {
+    log.verbose(`handleMessage`, data)
     // allow for hooks into before-finish command
     const onFinishCb = new Set<Function>()
 

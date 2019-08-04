@@ -82,13 +82,13 @@ export class MediatorClient {
       onMessage?: (message: string) => any
     } = { timeout: 20000 },
   ): Promise<ReturnType> {
-    log.info(`command ${command['name']}`, command, args)
+    const timeout = options.timeout || 20000
+    log.info(`command ${command['name']} ${timeout}`, command, args)
 
     const name = typeof command === 'string' ? command : command.name
 
     for (let transport of this.options.transports) {
       try {
-        const timeout = options.timeout || 20000
         const response = await orTimeout(
           transport.execute('command', {
             command: name,
@@ -106,7 +106,7 @@ export class MediatorClient {
           return response.result
         }
       } catch (err) {
-        console.error('command error', err)
+        console.error(`Mediator.client command error ${command['name']}`, err)
       }
     }
 

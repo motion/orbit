@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { AppCreateNewOptions, CommandBuildOptions, CommandDevOptions, CommandGenTypesOptions, CommandInstallOptions, CommandWsOptions, StatusReply } from '@o/models'
-import { readJSON } from 'fs-extra'
+import { pathExistsSync, readJSON } from 'fs-extra'
 import { join, resolve } from 'path'
 import Yargs from 'yargs'
 
@@ -34,6 +34,8 @@ const setVerbose = (logLevel?: number) => {
   }
 }
 
+const isInMonoRepo = pathExistsSync(join(__dirname, '..', '..', '..', 'package.json'))
+
 function main() {
   require('./processDispose')
 
@@ -41,7 +43,7 @@ function main() {
     .usage('$0 <cmd> [args]')
     .option('logLevel', {
       type: 'number',
-      default: 0,
+      default: isInMonoRepo ? 1 : 0,
     })
     .command(
       'new [appName] [template]',

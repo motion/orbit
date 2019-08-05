@@ -52,7 +52,10 @@ async function installApp(
   })
 
   if (def.auth) {
-    banner.set({ message: `Waiting for authentication...` })
+    banner.set({
+      message: `Waiting for authentication...`,
+      timeout: 6,
+    })
 
     const res = await command(AuthAppCommand, {
       authKey: def.auth,
@@ -62,6 +65,11 @@ async function installApp(
     if (res.type === 'error') {
       console.error('Error, TODO show banner!')
       alert(`Error authenticating app: ${res.message}`)
+      banner.set({
+        type: 'error',
+        message: res.message,
+        timeout: 4,
+      })
       return res
     }
 

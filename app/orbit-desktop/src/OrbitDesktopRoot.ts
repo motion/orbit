@@ -160,6 +160,7 @@ export class OrbitDesktopRoot {
           this.workspaceManager = new WorkspaceManager(this.mediatorServer, {
             singleUseMode,
           })
+          await this.workspaceManager.start()
         },
         async () => {
           if (!singleUseMode) {

@@ -38,7 +38,7 @@ export class AppMiddleware {
   }
 
   update(configs: { [key: string]: webpack.Configuration }, nameToAppMeta: AppMetaDict) {
-    log.info(`update ${Object.keys(configs).join(', ')}`, configs)
+    log.verbose(`update ${Object.keys(configs).join(', ')}`, configs)
     this.configs = configs
     this.apps = Object.keys(nameToAppMeta).map(k => nameToAppMeta[k])
     this.state = this.getAppMiddlewares(configs, nameToAppMeta)
@@ -93,7 +93,7 @@ export class AppMiddleware {
     configs: WebpackConfigObj,
     nameToAppMeta: AppMetaDict,
   ): WebpackAppsDesc[] {
-    log.info(`configs ${Object.keys(configs).join(', ')}`, configs)
+    log.verbose(`configs ${Object.keys(configs).join(', ')}`, configs)
 
     const { main, ...rest } = configs
     const res: WebpackAppsDesc[] = []

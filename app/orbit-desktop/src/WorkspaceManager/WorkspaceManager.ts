@@ -82,8 +82,9 @@ export class WorkspaceManager {
    * watches options and apps and updates the webpack/graph.
    */
   update = react(
-    () => [this.activeApps, this.options],
-    async ([activeApps], { sleep }) => {
+    () => [this.started, this.activeApps, this.options],
+    async ([started, activeApps], { sleep }) => {
+      ensure('started', started)
       ensure('directory', !!this.options.workspaceRoot)
       ensure('not in single build mode', !this.options.build)
       await sleep(100)
@@ -110,6 +111,7 @@ export class WorkspaceManager {
    * Handles all webpack related things, taking the app configurations, generating
    * a webpack configuration, and updating AppsMiddlware
    */
+  lastBuildConfig = ''
   async updateBuild() {
     const { options, activeApps } = this
     log.info(`Start building workspace, building ${activeApps.length} apps...`, options, activeApps)
@@ -117,6 +119,19 @@ export class WorkspaceManager {
       log.error(`Must have more than one app, workspace didn't detect any.`)
       return
     }
+
+    // avoid costly rebuilds
+    const nextBuildConfig = JSON.stringify({
+      options,
+      activeApps: activeApps.map(x => x.directory),
+    })
+    if (this.lastBuildConfig === nextBuildConfig) {
+      log.verbose(`Same build config, avoiding rebuild`)
+      return
+    } else {
+      this.lastBuildConfig = nextBuildConfig
+    }
+
     try {
       const res = await getAppsConfig(activeApps, options)
       if (!res) {

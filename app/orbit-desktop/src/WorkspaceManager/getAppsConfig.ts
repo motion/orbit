@@ -2,7 +2,7 @@ import { AppMetaDict } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppMeta, CommandWsOptions } from '@o/models'
 import { stringToIdentifier } from '@o/utils'
-import { ensureDir, ensureSymlink, pathExists, readJSON, writeFile } from 'fs-extra'
+import { ensureDir, ensureSymlink, pathExists, readFile, readJSON, writeFile } from 'fs-extra'
 import { join } from 'path'
 import webpack from 'webpack'
 
@@ -34,7 +34,7 @@ export async function getAppsConfig(
   const isInMonoRepo = await getIsInMonorepo()
   const mode = options.dev ? 'development' : 'production'
   const directory = options.workspaceRoot
-  const outputDir = join(directory, 'dist')
+  const outputDir = join(directory, 'dist', mode)
   const watch = !options.build // watch mode by default (if not building)
 
   log.info(
@@ -209,14 +209,17 @@ export async function getAppsConfig(
   /**
    * Create the apps import
    */
-  const appDefinitionsSrc = `// all apps
+  const next = `// all apps
 export default function getApps() {
   return [${apps.map(app => `require('${app.packageId}')`).join(',')}]
 }`
   // const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
   const workspaceEntry = join(outputDir, 'workspaceEntryIn.js')
   log.info(`workspaceEntry ${workspaceEntry}`)
-  await writeFile(workspaceEntry, appDefinitionsSrc)
+  const current = (await pathExists(workspaceEntry)) ? await readFile(workspaceEntry) : ''
+  if (current !== next) {
+    await writeFile(workspaceEntry, next)
+  }
 
   /**
    * Workspace config, this hopefully gives us some more control/ease with managing hmr/apps.

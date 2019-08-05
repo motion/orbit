@@ -1,7 +1,7 @@
 import { AppsManager, getAppMeta } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
+import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppStatusModel, AppWorkspaceCommand, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { remove } from 'lodash'
@@ -44,12 +44,7 @@ export class WorkspaceManager {
   ) {}
 
   async start() {
-    await this.appsManager.start({
-      singleUseMode: this.startOpts.singleUseMode,
-    })
-    /**
-     * Sends messages between webpack and client apps so we can display status messages
-     */
+    // Sends messages between webpack and client apps so we can display status messages
     this.appMiddleware.onStatus(status => {
       appStatusManager.sendMessage(status)
     })
@@ -57,7 +52,11 @@ export class WorkspaceManager {
 
   async updateWorkspace(opts: CommandWsOptions) {
     log.info(`updateWorkspace ${JSON.stringify(opts)}`)
+    await loadWorkspace(opts.workspaceRoot)
     if (!this.startOpts.singleUseMode) {
+      await this.appsManager.start({
+        singleUseMode: this.startOpts.singleUseMode,
+      })
       await this.graphServer.start()
     }
     this.options = opts
@@ -125,6 +124,10 @@ export class WorkspaceManager {
         const configs = Object.keys(rest).map(key => rest[key])
         log.info(`Building ${Object.keys(webpackConfigs).join(', ')}...`)
         // build base dll first to ensure it feeds into rest
+        await webpackPromise([rest.main], {
+          loud: true,
+        })
+        return
         await webpackPromise([base], {
           loud: true,
         })
@@ -174,14 +177,13 @@ export class WorkspaceManager {
         await findOrCreateWorkspace(props)
         return true
       }),
-      resolveCommand(AppOpenWorkspaceCommand, async options => {
+      resolveCommand(AppWorkspaceCommand, async options => {
         const { workspaceRoot } = options
         log.info(`AppOpenWorkspaceCommand ${workspaceRoot}`)
         if (options.clean) {
           log.info(`Cleaning workspace dist directory`)
           await remove(join(workspaceRoot, 'dist'))
         }
-        await loadWorkspace(workspaceRoot)
         await this.updateWorkspace(options)
         await this.updateBuild()
         return true

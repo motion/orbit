@@ -1,4 +1,4 @@
-import { AppOpenWorkspaceCommand, CommandWsOptions } from '@o/models'
+import { AppWorkspaceCommand, CommandWsOptions } from '@o/models'
 
 import { isInWorkspace } from './command-new'
 import { getOrbitDesktop } from './getDesktop'
@@ -18,7 +18,7 @@ export async function commandWs(options: CommandWsOptions) {
     reporter.info(options.build ? `Building workspace` : `Running workspace`)
     // this will tell orbit to look for this workspace and re-run the cli
     // we centralize all commands through orbit so we don't want to do it directly here
-    await mediator.command(AppOpenWorkspaceCommand, options, {
+    await mediator.command(AppWorkspaceCommand, options, {
       timeout: 1000 * 60 * 3,
       onMessage: reporter.info,
     })

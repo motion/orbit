@@ -3,6 +3,7 @@ import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, Us
 import { decorate, ensure, react, shallow } from '@o/use-store'
 import { watch } from 'chokidar'
 import { isEqual } from 'lodash'
+import { autorun } from 'mobx'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
@@ -46,6 +47,7 @@ export class AppsManager {
   private finishStarting = null
   private packageJsonUpdate = 0
   private updatePackagesVersion = 0
+  private resolvedApps = false
 
   // for easier debugging
   getIdentifierToPackageId = getIdentifierToPackageId
@@ -60,6 +62,15 @@ export class AppsManager {
       this.observeModels()
       this.started = true
     }
+    // wait for apps to come down
+    await new Promise(res => {
+      const dispose = autorun(() => {
+        if (this.resolvedApps) {
+          dispose()
+          res()
+        }
+      })
+    })
   }
 
   get activeSpace() {
@@ -103,6 +114,7 @@ export class AppsManager {
             },
           })
           .subscribe(next => {
+            this.resolvedApps = true
             this.apps = next as AppBit[]
           })
         return () => {

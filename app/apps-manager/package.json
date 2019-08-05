@@ -16,7 +16,10 @@
     "@o/models": "^2.6.0",
     "@o/use-store": "^2.6.0",
     "@o/utils": "^2.6.0",
-    "fs-extra": "^7.0.0",
-    "typeorm": "^0.3.0-alpha.23"
+    "fs-extra": "^7.0.0"
+  },
+  "peerDependencies": {
+    "typeorm": "*",
+    "mobx": "*"
   }
 }

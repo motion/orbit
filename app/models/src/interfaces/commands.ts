@@ -157,13 +157,13 @@ export type CommandWsOptions = {
   build?: boolean
 }
 
-export const AppOpenWorkspaceCommand = new Command<
+export const AppWorkspaceCommand = new Command<
   boolean,
   CommandWsOptions & {
     // Path to the workspace project in dev
     packageIds?: string[]
   }
->('AppOpenWorkspaceCommand')
+>('AppWorkspaceCommand')
 
 export const AppDevCloseCommand = new Command<undefined, { appId: number }>('app-dev-close')
 

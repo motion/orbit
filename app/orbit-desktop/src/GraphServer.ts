@@ -68,7 +68,7 @@ export class GraphServer {
     if (errors.length) {
       // TODO should have a build process here where we automatically build un-built things, but requires work
       log.error(
-        `errors in app definitions ${errors.map(x => x.type === 'error' && x.value).join('\n')}`,
+        `errors in app definitions ${errors.map(x => x.type === 'error' && x.message).join('\n')}`,
       )
     }
 
@@ -134,7 +134,7 @@ export class GraphServer {
 
         schemas.push(schema)
       } catch (err) {
-        log.error(`\n\n Error loading graph for ${app.id}: ${err.message}\n${err.stack}`)
+        log.warning(`\n\n Error loading graph for ${app.id}: ${err.message}`, err.stack)
       }
     }
 

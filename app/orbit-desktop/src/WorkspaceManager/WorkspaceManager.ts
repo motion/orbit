@@ -59,7 +59,6 @@ export class WorkspaceManager {
    * Combines active workspaces apps + any apps in dev mode
    */
   get activeApps(): AppMeta[] {
-    console.log('get me', this, this.developingApps)
     const wsAppsMeta = this.appsManager.appMeta
     return [
       // workspace apps

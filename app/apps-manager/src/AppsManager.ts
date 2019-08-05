@@ -1,6 +1,6 @@
 import { Logger } from '@o/logger'
 import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
-import { decorate, ensure, react } from '@o/use-store'
+import { decorate, ensure, react, shallow } from '@o/use-store'
 import { watch } from 'chokidar'
 import { isEqual } from 'lodash'
 import { join } from 'path'
@@ -40,7 +40,7 @@ export class AppsManager {
   private started = false
   spaces: PartialSpace[] = []
   user: User | null = null
-  appMeta: AppMetaDict = {}
+  appMeta: AppMetaDict = shallow({})
   apps: AppBit[] = []
 
   private finishStarting = null

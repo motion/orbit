@@ -1,5 +1,4 @@
 import { AppDefinition, AppIcon, Bit, configureKit, customItems, getAppDefinition, useAppState, useUserState } from '@o/kit'
-import { configureHotKeys, configureUI } from '@o/ui/config'
 import { configureUseStore } from '@o/use-store'
 import { configure as configureMobx } from 'mobx'
 import page from 'page'
@@ -33,6 +32,8 @@ export function runConfigurations(opts: { getLoadedApps: () => AppDefinition[] }
     // for safer mutation points
     enforceActions: 'never',
   })
+
+  const { configureUI, configureHotKeys } = require('@o/ui')
 
   configureUI({
     customItems,

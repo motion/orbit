@@ -275,7 +275,6 @@ export async function getBaseDllParams(
   const basePackages = [
     '@o/kit',
     '@o/ui',
-    '@o/ui/config',
     '@o/utils',
     '@o/bridge',
     '@o/logger',
@@ -307,8 +306,9 @@ export async function getBaseDllParams(
         ...Object.keys(pkgJson.peerDependencies || {}),
       ]
       allPackages = [...allPackages, ...deps]
-    } catch {
+    } catch (err) {
       // for example @o/ui/config/package.json isnt here
+      log.verbose(`Possible error resolving ${pkg}`, err)
     }
   }
   // ignore electron things

@@ -23,7 +23,7 @@ export async function requireAppDefinition({
     }
   }
 
-  const packageRoot = findPackage({ packageId, directory })
+  const packageRoot = await findPackage({ packageId, directory })
 
   if (!packageRoot) {
     return {

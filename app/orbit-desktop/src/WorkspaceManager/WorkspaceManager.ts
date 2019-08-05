@@ -1,10 +1,11 @@
-import { AppMetaDict, AppsManager } from '@o/apps-manager'
+import { AppMetaDict, AppsManager, getAppMeta } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
+import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { Handler } from 'express'
+import { remove } from 'lodash'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 import Observable from 'zen-observable'
@@ -14,7 +15,7 @@ import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 import { getActiveSpace } from '../helpers/getActiveSpace'
 import { appStatusManager } from '../managers/AppStatusManager'
 import { AppMiddleware } from './AppMiddleware'
-import { getAppEntry, resolveAppBuildCommand } from './commandBuild'
+import { resolveAppBuildCommand } from './commandBuild'
 import { resolveAppGenTypesCommand } from './commandGenTypes'
 import { resolveAppInstallCommand } from './commandInstall'
 import { commandWs } from './commandWs'
@@ -25,7 +26,7 @@ const log = new Logger('WorkspaceManager')
 
 @decorate
 export class WorkspaceManager {
-  // developingApps: AppDesc[] = []
+  developingApps: (AppMeta & { appId?: number })[] = []
   started = false
   workspaceVersion = 0
   options: CommandWsOptions = null
@@ -122,11 +123,18 @@ export class WorkspaceManager {
     },
   )
 
+  /**
+   * Combines active workspaces apps + any apps in dev mode
+   */
+  get activeApps(): AppMeta[] {
+    const wsAppsMeta = this.appsManager.appMeta
+    return [...Object.keys(wsAppsMeta).map(k => wsAppsMeta[k])]
+  }
+
   async buildWorkspace() {
-    const appMeta = this.appsManager.appMeta
-    log.info(`Start building workspace...`, this.options.build, appMeta)
+    log.info(`Start building workspace...`, this.options.build, this.activeApps)
     try {
-      const res = await getAppsConfig(Object.keys(appMeta).map(k => appMeta[k]), this.options)
+      const res = await getAppsConfig(this.activeApps, this.options)
       if (!res) {
         log.error('No config')
         return
@@ -195,7 +203,6 @@ export class WorkspaceManager {
       resolveAppBuildCommand,
       resolveAppGenTypesCommand,
       resolveCommand(AppDevOpenCommand, async ({ projectRoot }) => {
-        const entry = await getAppEntry(projectRoot)
         const appId = Object.keys(Electron.state.appWindows).length
         // launch new app
         Electron.setState({
@@ -207,14 +214,10 @@ export class WorkspaceManager {
             },
           },
         })
-        entry
-        // this.developingApps.push({
-        //   entry,
-        //   appId,
-        //   path: projectRoot,
-        //   publicPath: `/appServer/${appId}`,
-        // })
-        // this.appMiddleware.setApps(this.developingApps)
+        this.developingApps.push({
+          appId,
+          ...(await getAppMeta(projectRoot)),
+        })
         return {
           type: 'success',
           message: 'Got app id',
@@ -222,10 +225,8 @@ export class WorkspaceManager {
         } as const
       }),
       resolveCommand(AppDevCloseCommand, async ({ appId }) => {
-        return
-        log.info('Removing build server', appId)
-        // this.developingApps = remove(this.developingApps, x => x.appId === appId)
-        // this.appMiddleware.setApps(this.developingApps)
+        log.info('Removing build process', appId)
+        this.developingApps = remove(this.developingApps, x => x.appId === appId)
         log.info('Removing process', appId)
         await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
         log.info('Closed app', appId)

@@ -1,8 +1,7 @@
-import { join } from 'path'
-
-import { pathExistsSync, readFileSync } from 'fs-extra'
-import { Logger } from '@o/logger'
 import { isOrbitApp } from '@o/libs-node'
+import { Logger } from '@o/logger'
+import { pathExists, readFile } from 'fs-extra'
+import { join } from 'path'
 
 const log = new Logger('findPackage')
 
@@ -12,11 +11,17 @@ const log = new Logger('findPackage')
  *
  * Also supports workspace style apps that are directly in current directory.
  */
-export function findPackage({ packageId, directory }: { packageId: string; directory: string }) {
+export async function findPackage({
+  packageId,
+  directory,
+}: {
+  packageId: string
+  directory: string
+}) {
   // check if current directory is an orbit app already with packageId
   try {
-    if (pathExistsSync(join(directory, 'package.json')) && isOrbitApp(directory)) {
-      const pkgInfo = JSON.parse(readFileSync(join(directory, 'package.json')).toString())
+    if ((await pathExists(join(directory, 'package.json'))) && (await isOrbitApp(directory))) {
+      const pkgInfo = JSON.parse(await readFile(join(directory, 'package.json')).toString())
       if (pkgInfo.name === packageId) {
         return directory
       }

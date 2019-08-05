@@ -81,7 +81,7 @@ export interface AppMeta {
   packageId: string
   directory: string
   packageJson: PackageJson
-  apiInfo: ApiInfo
+  apiInfo: ApiInfo | null
   isLocal: boolean
 }
 

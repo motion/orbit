@@ -83,7 +83,7 @@ export class MediatorClient {
     } = { timeout: 20000 },
   ): Promise<ReturnType> {
     const timeout = options.timeout || 20000
-    log.info(`command ${command['name']} ${timeout}`, command, args)
+    log.verbose(`command ${command['name']} ${timeout}`, command, args)
 
     const name = typeof command === 'string' ? command : command.name
 

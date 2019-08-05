@@ -37,7 +37,6 @@ export async function commandDev(options: CommandDevOptions) {
       isEditing: true,
     })
     addProcessDispose(async () => {
-      reporter.info('Disposing orbit dev process...')
       logStatusReply(
         await mediator.command(AppDevCloseCommand, {
           appId,

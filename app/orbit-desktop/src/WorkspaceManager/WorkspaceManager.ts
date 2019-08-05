@@ -3,7 +3,7 @@ import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
 import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
-import { decorate, ensure, react } from '@o/use-store'
+import { decorate, react } from '@o/use-store'
 import { Handler } from 'express'
 import { remove } from 'lodash'
 import { join } from 'path'
@@ -29,7 +29,10 @@ export class WorkspaceManager {
   developingApps: (AppMeta & { appId?: number })[] = []
   started = false
   workspaceVersion = 0
-  options: CommandWsOptions = null
+  options: CommandWsOptions = {
+    build: false,
+    workspaceRoot: '',
+  }
   middlewares = []
   appsManager = new AppsManager()
   appMiddleware = new AppMiddleware(this.appsManager)
@@ -56,6 +59,7 @@ export class WorkspaceManager {
    * Combines active workspaces apps + any apps in dev mode
    */
   get activeApps(): AppMeta[] {
+    console.log('get me', this, this.developingApps)
     const wsAppsMeta = this.appsManager.appMeta
     return [
       // workspace apps
@@ -71,8 +75,7 @@ export class WorkspaceManager {
    */
   update = react(
     () => [this.activeApps, this.options],
-    async ([activeApps, options]) => {
-      ensure('options', !!options)
+    async ([activeApps]) => {
       const identifiers = Object.keys(activeApps)
       const space = await getActiveSpace()
       const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
@@ -109,7 +112,7 @@ export class WorkspaceManager {
 
   middleware: Handler = async (req, res, next) => {
     const sendIndex = () => {
-      if (!this.directory) {
+      if (!this.activeApps.length) {
         res.send({ fourohfour: 'ok' })
       } else {
         res.sendFile(join(this.directory, 'dist', 'index.html'))

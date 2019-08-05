@@ -30,8 +30,11 @@ export async function commandNew(options: AppCreateNewOptions): Promise<StatusRe
     const { mediator, orbitProcess } = await getOrbitDesktop({
       singleUseMode: true,
     })
-    const res = await mediator.command(AppCreateNewCommand, options)
-    logStatusReply(res)
+    logStatusReply(
+      await mediator.command(AppCreateNewCommand, options, {
+        onMessage: reporter.info,
+      }),
+    )
     orbitProcess && orbitProcess.kill()
     process.exit(0)
   }

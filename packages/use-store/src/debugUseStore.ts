@@ -49,7 +49,7 @@ export function debugUseStore(cb: (event: UseStoreDebugEvent) => any) {
 const allStores = new Set()
 const sendStateUpdate = throttle(() => {
   const value = simpleObject(allStores)
-  ;[...debugFns].forEach(fn => fn({ type: 'state', value }))
+  debugFns.forEach(fn => fn({ type: 'state', value }))
 })
 
 export function debugEmit(event: UseStoreDebugEvent, options?: { debug?: boolean }) {
@@ -67,7 +67,7 @@ export function debugEmit(event: UseStoreDebugEvent, options?: { debug?: boolean
     console.log(event)
   }
   if (debugFns.size) {
-    ;[...debugFns].forEach(fn => fn(event))
+    debugFns.forEach(fn => fn(event))
   }
   if (config.debugStoreState) {
     if (event.type === 'mount') {

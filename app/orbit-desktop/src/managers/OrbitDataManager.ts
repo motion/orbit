@@ -76,12 +76,12 @@ export class OrbitDataManager {
 
     addObserveMany(this.subscriptions, SpaceEntity, {}, spaces => {
       // unsubscribe last
-      ;[...disposers].forEach(o => o())
+      disposers.forEach(o => o())
 
       // watch spaces
       for (const space of spaces) {
         const subs = this.observeSpace(space)
-        disposers.add(() => [...subs].forEach(sub => sub.unsubscribe()))
+        disposers.add(() => subs.forEach(sub => sub.unsubscribe()))
       }
     })
   }

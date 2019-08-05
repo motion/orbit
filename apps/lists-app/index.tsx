@@ -2,7 +2,7 @@ import { AppContentView, AppNavigator, AppStatusBar, AppViewProps, createApp, Na
 import { Breadcrumb, Breadcrumbs, Dock, DockButton, randomAdjective, randomNoun, StatusBarText, TitleRow, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import pluralize from 'pluralize'
-import React from 'react'
+import React, { useCallback } from 'react'
 
 import { API } from './api.node'
 
@@ -80,13 +80,10 @@ function ListsAppMainFolder(props: AppViewProps) {
       items={treeList.state.items}
       droppable
       sortable
-      onDrop={items => {
+      onDrop={useCallback(items => {
         console.log('dropped an item', items)
         treeList.actions.addItemsFromDrop(items)
-      }}
-      onChange={items => {
-        console.log('got an update, persist back to main list', items)
-      }}
+      }, [])}
     />
   )
 }

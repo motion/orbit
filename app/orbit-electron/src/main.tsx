@@ -30,7 +30,7 @@ export async function main() {
     `IS_MAIN_ORBIT: ${IS_MAIN_ORBIT}`,
   )
 
-  await waitOn({ resources: [desktopServerUrl], interval: 50 })
+  await waitOn({ resources: [desktopServerUrl], interval: 40 })
 
   // start Electron state store
   await Electron.start({
@@ -97,6 +97,7 @@ export async function main() {
         }),
       ],
     })
+
     mediatorServer.bootstrap()
   }
 

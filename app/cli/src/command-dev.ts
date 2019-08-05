@@ -24,7 +24,9 @@ export async function commandDev(options: CommandDevOptions) {
   }
 
   try {
-    const reply = await mediator.command(AppDevOpenCommand, options)
+    const reply = await mediator.command(AppDevOpenCommand, options, {
+      onMessage: reporter.info,
+    })
     if (reply.type !== 'success') {
       reporter.panic(reply.message)
       return
@@ -35,7 +37,6 @@ export async function commandDev(options: CommandDevOptions) {
       isEditing: true,
     })
     addProcessDispose(async () => {
-      reporter.info('Disposing orbit dev process...')
       logStatusReply(
         await mediator.command(AppDevCloseCommand, {
           appId,

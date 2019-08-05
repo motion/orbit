@@ -23,7 +23,7 @@ export const removeApp = async (app: AppBit, banner: BannerHandle) => {
     banner.set({
       message: `Removed ${app.name}`,
       type: 'success',
-      timeout: 1800,
+      timeout: 2,
     })
   }
 }

@@ -4,7 +4,6 @@ import { flatten } from 'lodash'
 import React, { forwardRef, HTMLProps, useCallback } from 'react'
 
 import { Button } from '../buttons/Button'
-import { ErrorMessage } from '../ErrorMessage'
 import { Section, SectionProps } from '../Section'
 import { Space } from '../Space'
 import { TableFilterIncludeExclude } from '../tables/types'
@@ -66,7 +65,9 @@ type FormFieldType =
 export type FormStoreProps = Pick<FormProps<FormFieldsObj>, 'fields' | 'errors'>
 
 class FormStore {
-  props: FormStoreProps
+  props: FormStoreProps = {
+    fields: null,
+  }
   globalError: string = ''
   values: FormFieldsObj = shallow({})
   derivedValues = shallow({})
@@ -99,6 +100,7 @@ class FormStore {
   updateDerivedValues = react(
     () => [this.props.fields, this.simpleValues],
     ([fields, simpleValues]) => {
+      ensure('fields', !!fields)
       for (const key of Object.keys(fields)) {
         if (typeof fields[key].value === 'function') {
           const next = fields[key].value(simpleValues)
@@ -198,7 +200,12 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
   let elements = children
   const fieldElements = useFormFields(formStore, finalFields)
   if (finalFields) {
-    elements = fieldElements
+    elements = (
+      <>
+        {fieldElements}
+        {children}
+      </>
+    )
   }
 
   const onSubmitInner = useCallback(
@@ -248,14 +255,6 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
     [onSubmit],
   )
 
-  if (finalFields && children) {
-    return (
-      <ErrorMessage
-        message={`Can't pass both fields and children, Form accepts one or the other.`}
-      />
-    )
-  }
-
   return (
     <form
       ref={ref}
@@ -299,8 +298,7 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
 
 function useFormFields(store: FormStore, fields: FormFieldsObj): React.ReactNode {
   const values = useReaction(() => store.derivedValues)
-
-  return Object.keys(fields).map(key => {
+  return Object.keys(fields || {}).map(key => {
     const field = fields[key]
     return (
       <FormField

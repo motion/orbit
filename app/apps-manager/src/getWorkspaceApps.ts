@@ -8,12 +8,6 @@ import { findPackage } from './findPackage'
 
 const log = new Logger('getWorkspaceApps')
 
-type OrbitAppDirDesc = {
-  packageId: string
-  directory: string
-  isLocal: boolean
-}
-
 /**
  * Finds all valid orbit app package directories in a given workspace
  */
@@ -24,55 +18,53 @@ export async function getWorkspaceApps(workspaceRoot: string): Promise<AppMeta[]
   }
   try {
     const packageJson: PackageJson = await readJSON(join(workspaceRoot, 'package.json'))
-    const packageDirs: OrbitAppDirDesc[] = Object.keys(packageJson.dependencies).map(packageId => {
-      const directory = findPackage({ directory: workspaceRoot, packageId })
-      if (!directory) {
-        log.verbose(`No directory found for package ${workspaceRoot} ${packageId}`)
-        return null
-      }
-      return { directory, packageId, isLocal: false }
-    })
-    const wsDirs = await getWorkspaceLocalPackageDirs(workspaceRoot)
-    const allDirs = [...packageDirs, ...wsDirs].filter(Boolean)
-    log.verbose(`allDirs ${allDirs.length}`, allDirs)
-    return (await Promise.all(
-      allDirs.map(async ({ directory, packageId, isLocal }) => {
-        const apiInfoPath = join(directory, 'dist', 'api.json')
-        let apiInfo = null
-        if (await pathExists(apiInfoPath)) {
-          apiInfo = await readJSON(apiInfoPath)
+    const packageDirs: AppMeta[] = await Promise.all(
+      Object.keys(packageJson.dependencies).map(async packageId => {
+        const directory = await findPackage({ directory: workspaceRoot, packageId })
+        if (!directory) {
+          log.verbose(`No directory found for package ${workspaceRoot} ${packageId}`)
+          return null
         }
-        return {
-          packageId,
-          packageJson,
-          directory,
-          apiInfo,
-          isLocal,
-        }
+        return await getAppMeta(directory, false)
       }),
-    )).filter(Boolean)
+    )
+    const wsDirs = await getWorkspaceLocalAppsMeta(workspaceRoot)
+    const res = [...packageDirs, ...wsDirs].filter(Boolean)
+    log.verbose(`allDirs ${res.length}`, res)
+    return res
   } catch (err) {
     log.error(`Error finding app paths`, err)
+    return []
   }
 }
 
-async function getWorkspaceLocalPackageDirs(workspaceRoot: string): Promise<OrbitAppDirDesc[]> {
+async function getWorkspaceLocalAppsMeta(workspaceRoot: string): Promise<AppMeta[]> {
   const appsDir = join(workspaceRoot, 'apps')
   if (!(await pathExists(appsDir))) {
     return []
   }
   const directories = (await readdir(appsDir)).map(x => join(appsDir, x))
-  let res: OrbitAppDirDesc[] = []
-  for (const directory of directories) {
-    if (await isOrbitApp(directory)) {
-      const packageId = (await readJSON(join(directory, 'package.json'))).name
-      res.push({
-        directory,
-        packageId,
-        isLocal: true,
-      })
+  return (await Promise.all(directories.map(dir => getAppMeta(dir, true)))).filter(Boolean)
+}
+
+export async function getAppMeta(directory: string, isLocal: boolean = false): Promise<AppMeta> {
+  if (await isOrbitApp(directory)) {
+    const packageJson = await readJSON(join(directory, 'package.json'))
+    const packageId = packageJson.name
+    const apiInfoPath = join(directory, 'dist', 'api.json')
+    let apiInfo = null
+    if (await pathExists(apiInfoPath)) {
+      apiInfo = await readJSON(apiInfoPath)
     }
+    return {
+      packageJson,
+      directory,
+      packageId,
+      apiInfo,
+      isLocal,
+    }
+  } else {
+    log.error(`Not an orbit app! ${directory}`)
+    return null
   }
-  log.verbose(`getWorkspaceLocalPackageDirs ${JSON.stringify(res)}`)
-  return res
 }

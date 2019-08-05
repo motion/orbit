@@ -8,6 +8,7 @@ import sanitize from 'sanitize-filename'
 
 import { getCurrentWorkspace } from '../helpers/getCurrentWorkspace'
 import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
+import { statusReplyCommand } from '../WorkspaceManager/commandHelpers'
 import { loadWorkspace } from '../WorkspaceManager/commandWs'
 
 const log = new Logger('AppCreateNewCommand')
@@ -31,27 +32,20 @@ export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
   )
 
   async function createNewWorkspaceApp(space: Space, opts: AppCreateNewOptions) {
-    try {
-      const appsDir = join(space.directory, 'apps')
-      const name = await findValidDirectoryName(appsDir, opts.identifier)
-      let res = await commandNew({
-        projectRoot: appsDir,
-        name,
-        template: opts.template,
-        icon: opts.icon,
-        identifier: opts.identifier,
-      })
-      if (res.type === 'error') {
-        return res
-      }
-      // ensure we update the workspace with new package id
-      return await orbitDesktop.workspaceManager.buildWorkspace()
-    } catch (err) {
-      return {
-        type: 'error',
-        message: `${err.message}`,
-      } as const
+    const appsDir = join(space.directory, 'apps')
+    const name = await findValidDirectoryName(appsDir, opts.identifier)
+    let res = await commandNew({
+      projectRoot: appsDir,
+      name,
+      template: opts.template,
+      icon: opts.icon,
+      identifier: opts.identifier,
+    })
+    if (res.type === 'error') {
+      return res
     }
+    // ensure we update the workspace with new package id
+    return await orbitDesktop.workspaceManager.buildWorkspace()
   }
 }
 
@@ -71,22 +65,4 @@ async function findValidDirectoryName(rootDir: string, preferredName: string) {
     return name
   }
   throw new Error(`Couldn't find a valid directory ${preferredName}`)
-}
-
-/**
- * Catches errors during a command and returns them as the StatusReply
- * TODO type this properly and move into util fn, use for all status reply commands
- */
-function statusReplyCommand<A extends Function>(cb: A): A {
-  const res = async (...args) => {
-    try {
-      return await cb(...args)
-    } catch (error) {
-      return {
-        type: 'error',
-        message: `${error.message}`,
-      }
-    }
-  }
-  return (res as any) as A
 }

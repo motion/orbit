@@ -133,9 +133,9 @@ export async function main() {
     return
   }
 
+  // start electron
   if (DISABLE_ELECTRON !== 'true') {
     log.info('Starting electron...')
-
     // start main electron process inside this thread (no forking)
     require('./startElectron').startElectron({ mainProcess: true })
   }

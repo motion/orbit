@@ -1,74 +1,76 @@
 import { updateBuildInfo } from '@o/apps-manager'
 import { isOrbitApp, readPackageJson } from '@o/libs-node'
 import { Logger } from '@o/logger'
-import { AppDefinition, CommandBuildOptions, StatusReply } from '@o/models'
+import { resolveCommand } from '@o/mediator'
+import { AppBuildCommand, AppDefinition, CommandBuildOptions } from '@o/models'
 import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
 import webpack = require('webpack')
 
 import { commandGenTypes } from './commandGenTypes'
+import { attachLogToCommand, statusReplyCommand } from './commandHelpers'
 import { getAppParams } from './getAppsConfig'
 import { makeWebpackConfig } from './makeWebpackConfig'
 import { webpackPromise } from './webpackPromise'
 
-const log = new Logger('commandBuild')
+const log = new Logger('resolveAppBuildCommand')
 
-export async function commandBuild(options: CommandBuildOptions): Promise<StatusReply> {
-  log.info(`Running build in ${options.projectRoot}`)
+export const resolveAppBuildCommand = resolveCommand(
+  AppBuildCommand,
+  statusReplyCommand(async (props, options) => {
+    attachLogToCommand(log, options)
 
-  if (!(await isOrbitApp(options.projectRoot))) {
-    return {
-      type: 'error',
-      message: `\nNot inside an orbit app, add "config": { "orbitApp": true } } to the package.json`,
-    } as const
-  }
+    log.info(`Running build in ${props.projectRoot}`)
 
-  try {
-    const pkg = await readPackageJson(options.projectRoot)
+    if (!(await isOrbitApp(props.projectRoot))) {
+      return {
+        type: 'error',
+        message: `\nNot inside an orbit app, add "config": { "orbitApp": true } } to the package.json`,
+      }
+    }
+
+    const pkg = await readPackageJson(props.projectRoot)
     if (!pkg) {
       return {
         type: 'error',
         message: 'No package found!',
-      } as const
+      }
     }
 
-    const entry = await getAppEntry(options.projectRoot)
-
+    const entry = await getAppEntry(props.projectRoot)
     if (!entry || !(await pathExists(entry))) {
       return {
         type: 'error',
         message: `Make sure your package.json "entry" specifies the full filename with extension, ie: main.tsx`,
-      } as const
+      }
     }
 
-    await bundleApp(entry, options)
-    await commandGenTypes({
-      projectRoot: options.projectRoot,
-      projectEntry: entry,
-      out: join(options.projectRoot, 'dist', 'api.json'),
-    })
+    await Promise.all([
+      bundleApp(entry, props),
+      commandGenTypes(
+        {
+          projectRoot: props.projectRoot,
+          projectEntry: entry,
+          out: join(props.projectRoot, 'dist', 'api.json'),
+        },
+        options,
+      ),
+    ])
 
     return {
       type: 'success',
       message: 'Built app',
-    } as const
-  } catch (error) {
-    return {
-      type: 'error',
-      message: `${error.message} ${error.stack}`,
-    } as const
-  }
-}
+    }
+  }),
+)
 
 export async function bundleApp(entry: string, options: CommandBuildOptions) {
   const verbose = true
-
-  log.info(`Running orbit build: ${verbose} ${options.projectRoot}`)
   const pkg = await readPackageJson(options.projectRoot)
 
   // build appInfo first, we can then use it to determine if we need to build web/node
   const appInfoConf = await getAppInfoConfig(entry, pkg.name, options)
-  log.info(`Building appInfo`, appInfoConf)
+  log.info(`Building appInfo...`, appInfoConf)
   await webpackPromise([appInfoConf], {
     loud: verbose,
   })

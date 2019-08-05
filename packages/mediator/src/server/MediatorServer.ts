@@ -26,6 +26,7 @@ export class MediatorServer {
   }
 
   bootstrap() {
+    log.verbose(`MediatorServer.bootstrap()`)
     this.options.transport.onMessage(data => this.handleMessage(data))
   }
 
@@ -37,13 +38,22 @@ export class MediatorServer {
   }
 
   private async handleMessage(data: TransportRequest) {
+    log.verbose(`handleMessage`, data)
+    // allow for hooks into before-finish command
+    const onFinishCb = new Set<Function>()
+
     const onSuccess = result => {
       log.verbose(`onSuccess`, data, result)
+      if (onFinishCb.size) {
+        onFinishCb.forEach(cb => cb())
+        onFinishCb.clear()
+      }
       this.options.transport.send({
         id: data.id,
         result,
       })
     }
+
     const onError = (error: any) => {
       log.error(`error in mediator: `, data, error)
       this.options.transport.send({
@@ -211,7 +221,19 @@ export class MediatorServer {
       const resolveResult = () => {
         try {
           const name = 'model' in resolver ? resolver.model.name : resolver.command.name
-          result = resolver.resolve(data.args)
+          const transport = this.options.transport
+          result = resolver.resolve(data.args, {
+            onFinishCommand(cb) {
+              onFinishCb.add(cb)
+            },
+            sendMessage(message: string) {
+              transport.send({
+                id: data.id,
+                message: true,
+                result: message,
+              })
+            },
+          })
           log.verbose(`Resolving ${resolver.type}: ${name}`, data.args)
         } catch (error) {
           log.error('error executing resolver', error)

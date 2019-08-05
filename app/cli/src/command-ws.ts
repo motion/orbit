@@ -14,6 +14,7 @@ export async function commandWs(options: CommandWsOptions) {
     // we centralize all commands through orbit so we don't want to do it directly here
     await mediator.command(AppOpenWorkspaceCommand, options, {
       timeout: 1000 * 60 * 3,
+      onMessage: reporter.info,
     })
     if (options.build) {
       process.exit(0)

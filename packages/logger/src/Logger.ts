@@ -1,14 +1,15 @@
 import { LOGGER_COLOR_WHEEL } from './constants'
 import { LoggerSettings } from './LoggerSettings'
 
-const voidfn = (...args: any[]) => args
-let log = {
-  info: voidfn,
-  debug: voidfn,
-  warn: voidfn,
-  error: voidfn,
-}
-
+// const voidfn = (...args: any[]) => args
+// let log = (level: string, namespace: string, ...messages: string[]) => {
+// }
+// {
+//   info: voidfn,
+//   debug: voidfn,
+//   warn: voidfn,
+//   error: voidfn,
+// }
 // // disable in renderer for now because were avoiding compiling it to electron
 // if (typeof window === 'undefined') {
 //   try {
@@ -28,13 +29,8 @@ let log = {
 type LogType = 'verbose' | 'info' | 'warning' | 'error' | 'timer' | 'vtimer'
 
 // for now just log because its not being output anywhere
-const debug = (...args) => {
-  if (typeof window !== 'undefined') {
-    console.debug(...args)
-  } else {
-    console.log(...args)
-  }
-}
+const debug =
+  typeof window !== 'undefined' ? console.debug.bind(console) : console.log.bind(console)
 
 type LoggerOpts = {
   trace?: boolean
@@ -52,10 +48,14 @@ const knownUselessLog = str => {
   return false
 }
 
+type ConsoleLevel = 'log' | 'info' | 'debug' | 'warn' | 'error'
+export type LogMiddleware = (level: ConsoleLevel, namespace: string, messages: string[]) => any
+
 /**
  * Creates a new logger with a new namespace.
  */
 export class Logger {
+  private middlewares = new Set<LogMiddleware>()
   private opts: LoggerOpts
   private namespace: string
   private timers: {
@@ -66,6 +66,14 @@ export class Logger {
   constructor(namespace: string, opts: LoggerOpts = { trace: false }) {
     this.namespace = namespace
     this.opts = opts
+  }
+
+  addMiddleware(fn: LogMiddleware) {
+    this.middlewares.add(fn)
+  }
+
+  removeMiddleware(fn: LogMiddleware) {
+    this.middlewares.delete(fn)
   }
 
   /**
@@ -165,8 +173,9 @@ export class Logger {
     if (level !== 'error' && index !== -1) return
 
     // push namespace to the list if its still not in there
-    if (LoggerSettings.namespaces.indexOf(this.namespace) === -1)
+    if (LoggerSettings.namespaces.indexOf(this.namespace) === -1) {
       LoggerSettings.namespaces.push(this.namespace)
+    }
 
     // get the namespace color
     const color =
@@ -231,74 +240,90 @@ export class Logger {
     // output to the console
     // todo: in the production we'll need to output into our statistics/logger servers
     if (level === 'error') {
-      console.error(
+      this.flush(
+        true,
+        'error',
         ...colored(
           this.namespace,
           'color: white; background-color: red; padding: 0 2px; margin: 0 2px',
         ),
         ...messages,
       )
-      log.error(this.namespace, ...messages)
     } else if (level === 'warning') {
-      if (logLevel > 1) {
-        console.warn(
-          ...colored(
-            this.namespace,
-            'color: #666; background-color: yellow; padding: 0 2px; margin: 0 2px',
-          ),
-          ...messages,
-        )
-      }
-      log.warn(this.namespace, ...messages)
+      this.flush(
+        logLevel > 1,
+        'warn',
+        ...colored(
+          this.namespace,
+          'color: #666; background-color: yellow; padding: 0 2px; margin: 0 2px',
+        ),
+        ...messages,
+      )
     } else if (level === 'verbose') {
-      if (logLevel > 2) {
-        debug(...colored(this.namespace, `color: ${color}; font-weight: bold`), ...messages)
-        log.debug(this.namespace, ...messages)
-      }
+      this.flush(
+        logLevel > 2,
+        'debug',
+        ...colored(this.namespace, `color: ${color}; font-weight: bold`),
+        ...messages,
+      )
     } else if (level === 'info') {
-      if (logLevel > 0) {
-        console.log(
-          ...colored(
-            this.namespace,
-            `color: ${color}; font-weight: bold; padding: 0 2px; margin: 0 2px`,
-          ),
-          ...messages,
-        )
-      }
-      log.info(this.namespace, ...messages)
+      this.flush(
+        logLevel > 0,
+        'info',
+        ...colored(
+          this.namespace,
+          `color: ${color}; font-weight: bold; padding: 0 2px; margin: 0 2px`,
+        ),
+        ...messages,
+      )
     } else if (level === 'timer' || level === 'vtimer') {
-      if (logLevel > 2 || (level === 'timer' && logLevel > 0)) {
-        const consoleLog =
-          level === 'timer' ? console.info.bind(console) : console.debug.bind(console)
-        const defaultLog = level === 'timer' ? log.info.bind(log) : log.debug.bind(log)
-        const labelMessage = messages[0]
-        const existTimer = this.timers.find(timer => timer.message === labelMessage)
-        if (existTimer) {
-          const delta = (Date.now() - existTimer.time) / 1000
-          // reset it so we can see time since last message each message
-          existTimer.time = Date.now()
-          consoleLog(`${this.namespace} ${delta}ms`, ...messages)
-          defaultLog(this.namespace, delta, ...messages)
-          this.timers.splice(this.timers.indexOf(existTimer), 1)
-        } else {
-          consoleLog(`${this.namespace}`, ...messages)
-          defaultLog(this.namespace, 'started', ...messages)
-          this.timers.push({ time: Date.now(), message: messages[0] })
-        }
+      const shouldLog = logLevel > 2 || (level === 'timer' && logLevel > 0)
+      const type = level === 'timer' ? 'info' : ('debug' as const)
+      const labelMessage = messages[0]
+      const existTimer = this.timers.find(timer => timer.message === labelMessage)
+      if (existTimer) {
+        const delta = (Date.now() - existTimer.time) / 1000
+        // reset it so we can see time since last message each message
+        existTimer.time = Date.now()
+        this.flush(shouldLog, type, `${this.namespace} ${delta}ms`, ...messages)
+        this.timers.splice(this.timers.indexOf(existTimer), 1)
+      } else {
+        this.flush(shouldLog, type, `${this.namespace}`, ...messages)
+        this.timers.push({ time: Date.now(), message: messages[0] })
       }
     } else {
-      console.log(...colored(this.namespace, `color: ${color}; font-weight: bold`), ...messages)
-      log.info(this.namespace, ...messages)
+      this.flush(
+        true,
+        'log',
+        ...colored(this.namespace, `color: ${color}; font-weight: bold`),
+        ...messages,
+      )
     }
 
     if (isTrace) {
       console.groupEnd()
     }
   }
+
+  // maps to console.X
+  // allows us to handle middlewares
+  private flush(shouldPrint: boolean, level: ConsoleLevel, namespace?: string, ...args: any[]) {
+    if (this.middlewares.size) {
+      this.middlewares.forEach(x => x(level, namespace, args))
+    }
+    if (shouldPrint) {
+      if (level === 'debug') {
+        debug(namespace, ...args)
+      } else {
+        console[level](namespace, ...args)
+      }
+    }
+  }
 }
 
 const isNode =
   typeof process !== 'undefined' && process['release'] && process['release'].name === 'node'
-const colored = (ns: string, style: string) => {
+
+const colored = (ns: string, style: string): [string, string] | [string] => {
   return isNode === false ? [`%c${ns}`, style] : [ns]
 }

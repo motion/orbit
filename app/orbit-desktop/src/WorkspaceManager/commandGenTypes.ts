@@ -1,55 +1,30 @@
 import { Logger } from '@o/logger'
-import { ApiInfo } from '@o/models'
+import { CommandOpts, resolveCommand } from '@o/mediator'
+import { ApiInfo, AppGenTypesCommand, CommandGenTypesOptions, StatusReply } from '@o/models'
 import { pathExists, writeJSON } from 'fs-extra'
 import { join } from 'path'
 import ts from 'typescript'
+
+import { attachLogToCommand, statusReplyCommand } from './commandHelpers'
 
 let checker: ts.TypeChecker
 
 const log = new Logger('genTypesCommand')
 
-export type CommandGenTypesOptions = {
-  projectRoot: string
-  projectEntry: string
-  out?: string
-}
+export const resolveAppGenTypesCommand = resolveCommand(
+  AppGenTypesCommand,
+  statusReplyCommand(commandGenTypes),
+)
 
-const compilerOptions = JSON.parse(`{
-  "compilerOptions": {
-    "strict": true,
-    "skipLibCheck": true,
-    "rootDir": "src",
-    "incremental": true,
-    "declaration": true,
-    "declarationMap": true,
-    "module": "CommonJS",
-    "removeComments": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es2018",
-    "noImplicitAny": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noEmitOnError": false,
-    "strictNullChecks": false,
-    "strictFunctionTypes": true,
-    "preserveConstEnums": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "jsx": "react",
-    "allowJs": false,
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "lib": ["es2017", "es2018", "dom", "esnext.array"]
-  },
-  "include": ["src/**/*"],
-  "exclude": ["**/*.test.ts", "**/*.test.tsx"]
-}`)
-
-export async function commandGenTypes(options: CommandGenTypesOptions) {
-  log.info('Running orbit gen-types')
-  const apiEntry = join(options.projectEntry, '..', 'api.node.ts')
+export async function commandGenTypes(
+  props: CommandGenTypesOptions,
+  options?: CommandOpts,
+): Promise<StatusReply> {
+  if (options) {
+    attachLogToCommand(log, options)
+  }
+  log.info('Generating typescript types...')
+  const apiEntry = join(props.projectEntry, '..', 'api.node.ts')
 
   if (!(await pathExists(apiEntry))) {
     return {
@@ -122,13 +97,13 @@ export async function commandGenTypes(options: CommandGenTypesOptions) {
     }
   }
 
-  if (options.out) {
-    await writeJSON(options.out, apiTypes, {
+  if (props.out) {
+    await writeJSON(props.out, apiTypes, {
       spaces: 2,
     })
     return {
       type: 'success',
-      message: `Written to ${options.out}`,
+      message: `Written to ${props.out}`,
     } as const
   }
 
@@ -138,3 +113,36 @@ ${JSON.stringify(apiTypes, null, 2)}
 
 `)
 }
+
+const compilerOptions = JSON.parse(`{
+  "compilerOptions": {
+    "strict": true,
+    "skipLibCheck": true,
+    "rootDir": "src",
+    "incremental": true,
+    "declaration": true,
+    "declarationMap": true,
+    "module": "CommonJS",
+    "removeComments": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2018",
+    "noImplicitAny": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noEmitOnError": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": true,
+    "preserveConstEnums": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "jsx": "react",
+    "allowJs": false,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "lib": ["es2017", "es2018", "dom", "esnext.array"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx"]
+}`)

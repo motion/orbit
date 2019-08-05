@@ -77,18 +77,22 @@ export class MediatorClient {
     // we have a higher timeout for clients than for the server itself
     // so that if a client is down, the server still has time to go through many and finish them
     // see MediatorServer.command setting timeout
-    options: { timeout?: number } = { timeout: 20000 },
+    options: {
+      timeout?: number
+      onMessage?: (message: string) => any
+    } = { timeout: 20000 },
   ): Promise<ReturnType> {
-    log.info(`command ${command['name']}`, command, args)
+    const timeout = options.timeout || 20000
+    log.verbose(`command ${command['name']} ${timeout}`, command, args)
 
     const name = typeof command === 'string' ? command : command.name
 
     for (let transport of this.options.transports) {
       try {
-        const timeout = options.timeout || 20000
         const response = await orTimeout(
           transport.execute('command', {
             command: name,
+            onMessage: options.onMessage,
             args,
           }),
           timeout,
@@ -102,7 +106,7 @@ export class MediatorClient {
           return response.result
         }
       } catch (err) {
-        console.error('command error', err)
+        console.error(`Mediator.client command error ${command['name']}`, err)
       }
     }
 

@@ -12,15 +12,10 @@ export const Mediator =
         transports: [
           new WebSocketClientTransport(
             'app-client-' + randomString(5),
-            new ReconnectingWebSocket(
-              // TODO get this from actual getGlobalConfig()
-              `ws://localhost:${Config.ports.desktopMediator}`,
-              [],
-              {
-                WebSocket,
-                minReconnectionDelay: 1,
-              },
-            ),
+            new ReconnectingWebSocket(`ws://localhost:${Config.ports.desktopMediator}`, [], {
+              WebSocket,
+              minReconnectionDelay: 1,
+            }),
           ),
         ],
       })

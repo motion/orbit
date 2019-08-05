@@ -1,3 +1,4 @@
+import Observable from 'zen-observable'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import {
@@ -8,6 +9,7 @@ import {
   typeormResolvers,
   WebSocketClientTransport,
   WebSocketServerTransport,
+  resolveObserveOne,
 } from '@o/mediator'
 import {
   AppEntity,
@@ -33,8 +35,10 @@ import {
   StateModel,
   StateEntity,
   RemoveAllAppDataCommand,
+  OrbitProcessStdOutModel,
   AppStatusModel,
   ResetDataCommand,
+  NewFallbackServerPortCommand,
 } from '@o/models'
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
@@ -59,7 +63,6 @@ import { TopicsManager } from './managers/TopicsManager'
 import { AppRemoveResolver } from './resolvers/AppRemoveResolver'
 import { ChangeDesktopThemeResolver } from './resolvers/ChangeDesktopThemeResolver'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
-import { NewFallbackServerPortResolver } from './resolvers/NewFallbackServerPortResolver'
 import { getSalientWordsResolver } from './resolvers/SalientWordsResolver'
 import { SearchResultResolver } from './resolvers/SearchResultResolver'
 import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
@@ -70,8 +73,10 @@ import { FinishAuthQueue } from './auth-server/finishAuth'
 import { createAppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { WorkspaceManager } from './WorkspaceManager/WorkspaceManager'
 import { orTimeout, OR_TIMED_OUT } from '@o/utils'
+import { interceptStdOut } from './helpers/interceptStdOut'
 
 const log = new Logger('OrbitDesktopRoot')
+const Config = getGlobalConfig()
 
 async function startSeries(
   fns: (() => Promise<void>)[],
@@ -101,10 +106,11 @@ async function startSeries(
 export class OrbitDesktopRoot {
   // public
   stores = null
+  resolveWaitForElectronMediator: Function | null = null
   databaseManager: DatabaseManager
   mediatorServer: MediatorServer
 
-  config = getGlobalConfig()
+  config = Config
   authServer: AuthServer
   graphServer: GraphServer
   onboardManager: OnboardManager
@@ -154,6 +160,17 @@ export class OrbitDesktopRoot {
           this.workspaceManager = new WorkspaceManager(this.mediatorServer, {
             singleUseMode,
           })
+          await this.workspaceManager.start()
+        },
+        async () => {
+          if (!singleUseMode) {
+            // the electron app wont start until this runs
+            // start server a bit early so it lets them start
+            this.webServer = new WebServer({
+              middlewares: [this.workspaceManager.middleware],
+            })
+            await this.webServer.start()
+          }
         },
         async () => {
           if (!singleUseMode) {
@@ -174,16 +191,6 @@ export class OrbitDesktopRoot {
             // search index
             this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
             await this.cosalManager.start()
-          }
-        },
-        async () => {
-          if (!singleUseMode) {
-            // the electron app wont start until this runs
-            // start server a bit early so it lets them start
-            this.webServer = new WebServer({
-              middlewares: [this.workspaceManager.middleware],
-            })
-            await this.webServer.start()
           }
         },
         async () => {
@@ -219,6 +226,12 @@ export class OrbitDesktopRoot {
 
     // pass dependencies into here as arguments to be clear
     const mediatorPort = this.registerMediatorServer()
+
+    if (!process.env.SINGLE_USE_MODE) {
+      await new Promise(res => {
+        this.resolveWaitForElectronMediator = res
+      })
+    }
 
     log.verbose(`Starting Bonjour service on ${mediatorPort}`)
     this.bonjour = bonjour()
@@ -284,13 +297,11 @@ export class OrbitDesktopRoot {
 
     const workersTransport = new WebSocketClientTransport(
       'workers',
-      new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.workersMediator}`, [], {
+      new ReconnectingWebSocket(`ws://localhost:${Config.ports.workersMediator}`, [], {
         WebSocket,
         minReconnectionDelay: 1,
       }),
     )
-
-    const client = new MediatorClient({ transports: [workersTransport] })
 
     const mediatorServerPort = this.config.ports.desktopMediator
 
@@ -309,11 +320,12 @@ export class OrbitDesktopRoot {
         CosalSaliencyModel,
         CosalTopWordsModel,
         AppStatusModel,
+        OrbitProcessStdOutModel,
       ],
       transport: new WebSocketServerTransport({
         port: mediatorServerPort,
       }),
-      fallbackClient: client,
+      fallbackClient: new MediatorClient({ transports: [workersTransport] }),
       resolvers: [
         ...typeormResolvers(getConnection(), [
           { entity: AppEntity, models: [AppModel] },
@@ -322,6 +334,17 @@ export class OrbitDesktopRoot {
           { entity: UserEntity, models: [UserModel] },
           { entity: StateEntity, models: [StateModel] },
         ]),
+
+        resolveObserveOne(OrbitProcessStdOutModel, () => {
+          return new Observable<string>(observer => {
+            // start with empty
+            observer.next(null)
+            interceptStdOut(message => {
+              observer.next(message)
+            })
+          })
+        }),
+
         ...loadAppDefinitionResolvers(),
         ...this.workspaceManager.getResolvers(),
         resolveCommand(GetPIDCommand, async () => {
@@ -341,7 +364,29 @@ export class OrbitDesktopRoot {
         }),
         createAppCreateNewResolver(this),
         AppRemoveResolver,
-        NewFallbackServerPortResolver,
+        (() => {
+          let lastUsed = 0
+          return resolveCommand(NewFallbackServerPortCommand, () => {
+            if (this.resolveWaitForElectronMediator) {
+              this.resolveWaitForElectronMediator()
+              this.resolveWaitForElectronMediator = null
+            }
+            const port = Config.ports.electronMediators[lastUsed]
+            lastUsed++
+            const server = root.mediatorServer as MediatorServer
+            // mutate, bad for now but we'd need to refactor MediatorServer
+            server.options.fallbackClient.options.transports.push(
+              new WebSocketClientTransport(
+                'electron',
+                new ReconnectingWebSocket(`ws://localhost:${port}`, [], {
+                  WebSocket,
+                  minReconnectionDelay: 1,
+                }),
+              ),
+            )
+            return port
+          })
+        })(),
         ...getCosalResolvers(cosal),
         resolveMany(SearchResultModel, async args => {
           return await new SearchResultResolver(cosal, args).resolve()
@@ -364,7 +409,7 @@ export class OrbitDesktopRoot {
               message: `Error setting up local authentication proxy.`,
             }
           }
-          const url = `${getGlobalConfig().urls.auth}/auth/${authKey}`
+          const url = `${Config.urls.auth}/auth/${authKey}`
           const didOpenAuthUrl = await openUrl({ url })
           if (!didOpenAuthUrl) {
             return {

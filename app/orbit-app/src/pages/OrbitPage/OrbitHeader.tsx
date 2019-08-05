@@ -378,9 +378,14 @@ const HeaderTop = gloss(View, {
 const BackButton = memo(() => {
   const { state, actions } = useOm()
   const appsCarousel = useAppsCarousel()
+  const appsDrawer = useStore(appsDrawerStore)
   return (
     <Button
-      icon="chevron-left"
+      icon={appsDrawer.isOpen ? 'cross' : 'chevron-left'}
+      tooltip={appsDrawer.isOpen ? 'Close drawer' : 'Back'}
+      tooltipProps={{
+        delay: 800,
+      }}
       disabled={!appsCarousel.zoomedIn && state.router.historyIndex <= 0}
       iconSize={18}
       onClick={() => {

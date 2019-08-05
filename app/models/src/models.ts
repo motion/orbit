@@ -101,3 +101,5 @@ export const CosalSaliencyModel = new Model<SalientWord, { words: string }>('cos
 export const CosalTopicsModel = new Model<string, { query: string; count: number }>(
   'cosal-topics-model',
 )
+
+export const OrbitProcessStdOutModel = new Model<string, undefined>('OrbitProcessStdOutModel')

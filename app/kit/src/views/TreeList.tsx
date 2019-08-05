@@ -79,7 +79,6 @@ const getActions = (
         // should normalize fancier
         const item = x.type === 'row' ? x.values : x.item || x
         let name = item.title || item.name
-
         if (typeof name !== 'string') {
           if (name) {
             name = Object.keys(name)
@@ -92,7 +91,6 @@ const getActions = (
               .join(', ')
           }
         }
-
         Actions.addItem(
           {
             name,
@@ -308,7 +306,6 @@ function TreeListInner(props: TreeListProps) {
 
   useEffect(() => {
     if (!currentItem) return
-
     let cancel = false
     Promise.all(items[currentItem.id].children.map(id => loadTreeListItemProps(items[id]))).then(
       next => {
@@ -320,7 +317,7 @@ function TreeListInner(props: TreeListProps) {
     return () => {
       cancel = true
     }
-  }, [items, currentItem && currentItem.id])
+  }, [items, currentItem && currentItem.id, ...(currentItem.children || [])])
 
   // onChange callback
   const ignoreInitial = useRef(true)

@@ -5,6 +5,7 @@ import React, { memo } from 'react'
 
 import { om, useOm } from '../../om/om'
 import { paneManagerStore } from '../../om/stores'
+import { useAppsCarousel } from './OrbitAppsCarousel'
 
 export const OrbitHeaderOpenAppMenu = memo(() => {
   const { state, effects } = useOm()
@@ -23,6 +24,8 @@ export const OrbitHeaderOpenAppMenu = memo(() => {
       onClick: goToAppSettings,
     },
   ]
+
+  const { isOnOpenableApp } = useAppsCarousel()
 
   if (appRole === 'editing') {
     return (
@@ -53,17 +56,23 @@ export const OrbitHeaderOpenAppMenu = memo(() => {
       onClick={effects.openCurrentApp}
       elevation={8}
       items={[
-        {
-          title: 'Edit',
-          icon: 'edit',
-          onClick: () => {
-            console.warn('see AppDevOpenCommand, we need to fix it up to support editing here')
-          },
-        },
-        {
-          title: 'Fork',
-          icon: 'fork',
-        },
+        ...(isOnOpenableApp
+          ? [
+              {
+                title: 'Edit',
+                icon: 'edit',
+                onClick: () => {
+                  console.warn(
+                    'see AppDevOpenCommand, we need to fix it up to support editing here',
+                  )
+                },
+              },
+              {
+                title: 'Fork',
+                icon: 'fork',
+              },
+            ]
+          : []),
         ...constantMenuItems,
       ]}
     >

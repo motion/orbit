@@ -35,6 +35,13 @@ class OrbitAppsCarouselStore {
     return !this.state.zoomedOut
   }
 
+  get isOnOpenableApp() {
+    return (
+      this.focusedApp &&
+      (this.focusedApp.tabDisplay === 'plain' || this.focusedApp.tabDisplay === 'pinned')
+    )
+  }
+
   zoomIntoNextApp = false
   nextFocusedIndex = -1
   focusedIndex = 0

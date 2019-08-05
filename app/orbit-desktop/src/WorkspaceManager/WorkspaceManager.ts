@@ -4,6 +4,7 @@ import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
 import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppStatusModel, AppWorkspaceCommand, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
+import { unlink } from 'fs-extra'
 import { remove } from 'lodash'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
@@ -111,7 +112,11 @@ export class WorkspaceManager {
    */
   async updateBuild() {
     const { options, activeApps } = this
-    log.info(`Start building workspace...`, options, activeApps)
+    log.info(`Start building workspace, building ${activeApps.length} apps...`, options, activeApps)
+    if (!activeApps.length) {
+      log.error(`Must have more than one app, workspace didn't detect any.`)
+      return
+    }
     try {
       const res = await getAppsConfig(activeApps, options)
       if (!res) {
@@ -182,7 +187,11 @@ export class WorkspaceManager {
         log.info(`AppOpenWorkspaceCommand ${workspaceRoot}`)
         if (options.clean) {
           log.info(`Cleaning workspace dist directory`)
-          await remove(join(workspaceRoot, 'dist'))
+          try {
+            await unlink(join(workspaceRoot, 'dist'))
+          } catch (err) {
+            log.info(`Error cleaning ${err.message}`, err)
+          }
         }
         await this.updateWorkspace(options)
         await this.updateBuild()

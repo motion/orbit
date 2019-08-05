@@ -44,9 +44,9 @@ export class AppsManager {
   appMeta: AppMetaDict = shallow({})
   apps: AppBit[] = []
 
-  private finishStarting = null
   private packageJsonUpdate = 0
   private updatePackagesVersion = 0
+  private fetchedAppsMeta = false
   private resolvedApps = false
 
   // for easier debugging
@@ -62,10 +62,10 @@ export class AppsManager {
       this.observeModels()
       this.started = true
     }
-    // wait for apps to come down
+    // wait for apps/appsMeta to come down
     await new Promise(res => {
       const dispose = autorun(() => {
-        if (this.resolvedApps) {
+        if (this.resolvedApps && this.fetchedAppsMeta) {
           dispose()
           res()
         }
@@ -114,8 +114,8 @@ export class AppsManager {
             },
           })
           .subscribe(next => {
-            this.resolvedApps = true
             this.apps = next as AppBit[]
+            this.resolvedApps = true
           })
         return () => {
           subsription.unsubscribe()
@@ -192,10 +192,7 @@ export class AppsManager {
     }
 
     // dont finish starting appsManager until we've run this once
-    if (this.finishStarting) {
-      this.finishStarting()
-      this.finishStarting = null
-    }
+    this.fetchedAppsMeta = true
   }
 
   private updateNodeDefinitions = async (space: Space) => {

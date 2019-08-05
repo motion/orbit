@@ -94,7 +94,7 @@ export async function getAppsConfig(
   const webpackConfigs: { [key: string]: webpack.Configuration } = {}
 
   // add base dll config
-  const baseDllParams = await getBaseDllParams(directory, mode)
+  const baseDllParams = await getBaseDllParams(outputDir, directory, mode)
   if (isInMonoRepo) {
     baseDllParams.mode = mode
     baseDllParams.watch = watch
@@ -214,7 +214,7 @@ export default function getApps() {
   return [${apps.map(app => `require('${app.packageId}')`).join(',')}]
 }`
   // const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
-  const workspaceEntry = join(directory, 'dist', 'workspace-entry.js')
+  const workspaceEntry = join(outputDir, 'workspaceEntryIn.js')
   log.info(`workspaceEntry ${workspaceEntry}`)
   await writeFile(workspaceEntry, appDefinitionsSrc)
 
@@ -268,10 +268,10 @@ export function getAppParams(props: WebpackParams): WebpackParams {
 }
 
 export async function getBaseDllParams(
+  outputDir: string,
   directory: string,
   mode: 'production' | 'development',
 ): Promise<WebpackParams> {
-  const outputDir = join(directory, 'dist')
   const basePackages = [
     '@o/kit',
     '@o/ui',

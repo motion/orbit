@@ -1,9 +1,15 @@
 import { AppOpenWorkspaceCommand, CommandWsOptions } from '@o/models'
 
+import { isInWorkspace } from './command-new'
 import { getOrbitDesktop } from './getDesktop'
 import { reporter } from './reporter'
 
 export async function commandWs(options: CommandWsOptions) {
+  if (!(await isInWorkspace(options.workspaceRoot))) {
+    reporter.panic(
+      `Not in an orbit workspace, be sure package.json has "config": { "orbitWorkspace": true }`,
+    )
+  }
   reporter.info(`Running command ws mode${options.dev ? ' in dev mode' : ''}`)
   const { mediator } = await getOrbitDesktop({
     singleUseMode: options.build,

@@ -87,6 +87,7 @@ export class WorkspaceManager {
       ensure('directory', !!this.options.workspaceRoot)
       ensure('not in single build mode', !this.options.build)
       await sleep(100)
+      log.verbose(`update`)
       const identifiers = Object.keys(activeApps)
       const space = await getActiveSpace()
       const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })

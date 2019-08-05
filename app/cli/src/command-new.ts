@@ -108,7 +108,7 @@ export async function commandNew(options: AppCreateNewOptions): Promise<StatusRe
   }
 }
 
-async function isInWorkspace(directory: string) {
+export async function isInWorkspace(directory: string) {
   const pkgPath = join(directory, 'package.json')
   if (await pathExists(pkgPath)) {
     const pkg = await readJSON(pkgPath)

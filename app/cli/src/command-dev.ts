@@ -31,15 +31,15 @@ export async function commandDev(options: CommandDevOptions) {
       reporter.panic(reply.message)
       return
     }
-    const appId = +reply.value
+    const windowId = +reply.value
     await mediator.command(AppOpenWindowCommand, {
-      appId,
+      windowId,
       isEditing: true,
     })
     addProcessDispose(async () => {
       logStatusReply(
         await mediator.command(AppDevCloseCommand, {
-          appId,
+          windowId,
         }),
       )
     })

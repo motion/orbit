@@ -6,7 +6,7 @@ import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { APP_ID, IS_ELECTRON } from '../../constants'
+import { WINDOW_ID, IS_ELECTRON } from '../../constants'
 import { useOm } from '../../om/om'
 import { Stores, useThemeStore } from '../../om/stores'
 import { SearchStore } from '../../stores/SearchStore'
@@ -40,7 +40,7 @@ export const OrbitPage = memo(function OrbitPage() {
 const OrbitStatusMessages = memo(() => {
   const banner = useBanner()
   const [statusMessage] = useModel(AppStatusModel, {
-    appId: APP_ID,
+    appId: WINDOW_ID,
   })
 
   useEffect(() => {

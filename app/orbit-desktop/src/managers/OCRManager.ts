@@ -11,8 +11,8 @@
 
 // const log = new Logger('OCRManager')
 // const Config = getGlobalConfig()
-// // const ORBIT_APP_ID = Config.isProd ? 'com.o.orbit' : 'com.github.electron'
-// // const APP_ID = -1
+// // const ORBIT_WINDOW_ID = Config.isProd ? 'com.o.orbit' : 'com.github.electron'
+// // const WINDOW_ID = -1
 
 // // prevent apps from clearing highlights
 // const PREVENT_CLEAR = {
@@ -180,7 +180,7 @@
 //     //   const lastState = toJS(Desktop.appState)
 //     //   let appState: any = {}
 //     //   let id = this.curAppID
-//     //   const wasFocusedOnOrbit = this.curAppID === ORBIT_APP_ID
+//     //   const wasFocusedOnOrbit = this.curAppID === ORBIT_WINDOW_ID
 //     //   switch (event) {
 //     //     case 'FrontmostWindowChangedEvent':
 //     //       id = value.id
@@ -204,7 +204,7 @@
 //     //     log.info('Same app state, ignoring scan')
 //     //     return
 //     //   }
-//     //   const focusedOnOrbit = this.curAppID === ORBIT_APP_ID
+//     //   const focusedOnOrbit = this.curAppID === ORBIT_WINDOW_ID
 //     //   Desktop.setState({ focusedOnOrbit })
 //     //   // when were moving into focus prevent app, store its appName, pause then return
 //     //   if (PREVENT_APP_STATE[this.curAppName]) {
@@ -306,7 +306,7 @@
 //   //     showCursor: false,
 //   //     boxes: [
 //   //       {
-//   //         id: APP_ID,
+//   //         id: WINDOW_ID,
 //   //         x: offset[0],
 //   //         y: offset[1],
 //   //         width: bounds[0],

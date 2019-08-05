@@ -4,12 +4,12 @@ import { decorate, deep } from '@o/use-store'
 
 import { Desktop } from './Desktop'
 import { AppWindow, Electron } from './Electron'
-import { getAppId } from './getAppId'
+import { getWindowId } from './getWindowId'
 
 export let App = null as AppStore
 
 // run before window changes
-const appId = getAppId()
+const windowId = getWindowId()
 
 export type AppState = {
   id: number
@@ -78,21 +78,21 @@ class AppStore {
     showSpaceSwitcher: 0,
   })
 
-  get appId() {
-    return appId
+  get windowId() {
+    return windowId
   }
 
   get appConf(): AppWindow {
     return (
-      Electron.state.appWindows[this.appId] || {
-        appId: this.appId,
+      Electron.state.appWindows[this.windowId] || {
+        windowId: this.windowId,
         appRole: 'main',
       }
     )
   }
 
   get bundleUrl() {
-    return `/appServer/${this.appId}/bundle.js`
+    return `/appServer/${this.windowId}/bundle.js`
   }
 
   get appRole() {

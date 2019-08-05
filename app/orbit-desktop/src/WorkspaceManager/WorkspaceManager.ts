@@ -26,7 +26,8 @@ const log = new Logger('WorkspaceManager')
 
 @decorate
 export class WorkspaceManager {
-  developingApps: (AppMeta & { appId?: number })[] = []
+  // the apps we've toggled into development mode
+  developingApps: AppMeta[] = []
   started = false
   workspaceVersion = 0
   options: CommandWsOptions = {
@@ -38,6 +39,12 @@ export class WorkspaceManager {
   appMiddleware = new AppMiddleware(this.appsManager)
   graphServer = new GraphServer()
   middleware = this.appMiddleware.middleware
+
+  // use this to toggle between modes for the various apps
+  appMode: { [name: string]: 'development' | 'production' } = {}
+
+  // this tracks open windowId <=> packageId (in developingApps)
+  windowIdToDirectory: { [key: number]: string } = {}
 
   constructor(
     private mediatorServer: MediatorServer,
@@ -70,10 +77,10 @@ export class WorkspaceManager {
   get activeApps(): AppMeta[] {
     const wsAppsMeta = this.appsManager.appMeta
     return [
+      // developing apps
+      ...this.developingApps,
       // workspace apps
       ...Object.keys(wsAppsMeta).map(k => wsAppsMeta[k]),
-      // one-off developing apps
-      ...this.developingApps,
     ]
   }
 
@@ -82,7 +89,7 @@ export class WorkspaceManager {
    * watches options and apps and updates the webpack/graph.
    */
   update = react(
-    () => [this.started, this.activeApps, this.options],
+    () => [this.started, this.activeApps, this.options, this.appMode],
     async ([started, activeApps], { sleep }) => {
       ensure('started', started)
       ensure('directory', !!this.options.workspaceRoot)
@@ -141,17 +148,13 @@ export class WorkspaceManager {
         const configs = Object.keys(rest).map(key => rest[key])
         log.info(`Building ${Object.keys(webpackConfigs).join(', ')}...`)
         // build base dll first to ensure it feeds into rest
-        await webpackPromise([rest.main], {
-          loud: true,
-        })
-        return
         await webpackPromise([base], {
           loud: true,
         })
         await webpackPromise(configs, {
           loud: true,
         })
-        log.info(`Build complete`)
+        log.info(`Build complete!`)
       } else {
         this.appMiddleware.update(webpackConfigs, nameToAppMeta)
       }
@@ -212,39 +215,51 @@ export class WorkspaceManager {
       resolveAppInstallCommand,
       resolveAppBuildCommand,
       resolveAppGenTypesCommand,
-      resolveCommand(AppDevOpenCommand, async ({ projectRoot }) => {
-        const appId = Object.keys(Electron.state.appWindows).length
-        // launch new app
-        Electron.setState({
-          appWindows: {
-            ...Electron.state.appWindows,
-            [appId]: {
-              appId,
-              appRole: 'editing',
+
+      /**
+       * This handles developing a new app independently
+       */
+      resolveCommand(AppDevOpenCommand, async ({ projectRoot, openWindow }) => {
+        const windowId = Object.keys(Electron.state.appWindows).length
+        if (openWindow) {
+          // launch new app
+          Electron.setState({
+            appWindows: {
+              ...Electron.state.appWindows,
+              [windowId]: {
+                windowId,
+                appRole: 'editing',
+              },
             },
-          },
-        })
-        this.developingApps.push({
-          appId,
-          ...(await getAppMeta(projectRoot)),
-        })
+          })
+        }
+        const appMeta = await getAppMeta(projectRoot)
+        this.windowIdToDirectory[windowId] = appMeta.directory
+        this.developingApps.push(appMeta)
         return {
           type: 'success',
           message: 'Got app id',
-          value: `${appId}`,
+          value: `${windowId}`,
         } as const
       }),
-      resolveCommand(AppDevCloseCommand, async ({ appId }) => {
-        log.info('Removing build process', appId)
-        this.developingApps = _.remove(this.developingApps, x => x.appId === appId)
-        log.info('Removing process', appId)
-        await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
-        log.info('Closed app', appId)
+
+      resolveCommand(AppDevCloseCommand, async ({ windowId }) => {
+        log.info('Removing build process', windowId)
+        this.developingApps = _.remove(
+          this.developingApps,
+          x => x.directory === this.windowIdToDirectory[windowId],
+        )
+        delete this.windowIdToDirectory[windowId]
+        log.info('Removing process', windowId)
+        await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { windowId })
+        log.info('Closed app', windowId)
       }),
+
       // are both doing similar things but in different ways
       resolveCommand(AppMetaCommand, async ({ identifier }) => {
         return this.appsManager.appMeta[identifier] || null
       }),
+
       resolveCommand(CallAppBitApiMethodCommand, async ({ appId, appIdentifier, method, args }) => {
         const app = await getRepository(AppEntity).findOneOrFail(appId)
         const api = this.appsManager.nodeAppDefinitions.find(x => x.id === appIdentifier).api(app)

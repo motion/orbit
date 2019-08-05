@@ -11,36 +11,39 @@ import { forkAndStartOrbitApp } from '../helpers/forkAndStartOrbitApp'
 
 const log = new Logger('TearAppResolver')
 
-export const TearAppResolver: any = resolveCommand(TearAppCommand, async ({ appType, appId }) => {
-  log.info('Tearing app', appType, appId)
-  const iconPath = join(ROOT, 'resources', 'icons', `appicon-${appType}.png`)
-  if (!(await pathExists(iconPath))) {
-    // dialog.showErrorBox('No icon found for app...', 'Oops')
-    console.error('no icon for this app, not setting', iconPath)
-  } else {
-    app.dock.setIcon(iconPath)
-  }
+export const TearAppResolver: any = resolveCommand(
+  TearAppCommand,
+  async ({ appType, windowId }) => {
+    log.info('Tearing app', appType, windowId)
+    const iconPath = join(ROOT, 'resources', 'icons', `appicon-${appType}.png`)
+    if (!(await pathExists(iconPath))) {
+      // dialog.showErrorBox('No icon found for app...', 'Oops')
+      console.error('no icon for this app, not setting', iconPath)
+    } else {
+      app.dock.setIcon(iconPath)
+    }
 
-  const currentWindow = Electron.curMainWindow
+    const currentWindow = Electron.curMainWindow
 
-  Electron.setState({
-    // hide the next window
-    showOrbitMain: false,
-    // tear a new window
-    appWindows: {
-      ...Electron.state.appWindows,
-      // tear current window
-      [currentWindow.appId]: {
-        ...currentWindow,
-        appRole: 'torn',
+    Electron.setState({
+      // hide the next window
+      showOrbitMain: false,
+      // tear a new window
+      appWindows: {
+        ...Electron.state.appWindows,
+        // tear current window
+        [currentWindow.windowId]: {
+          ...currentWindow,
+          appRole: 'torn',
+        },
+        // launch new main window
+        [windowId]: {
+          windowId,
+          appRole: 'main',
+        },
       },
-      // launch new main window
-      [appId]: {
-        appId,
-        appRole: 'main',
-      },
-    },
-  })
+    })
 
-  forkAndStartOrbitApp({ appId })
-})
+    forkAndStartOrbitApp({ windowId })
+  },
+)

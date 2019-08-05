@@ -10,7 +10,7 @@ export const PEEK_ID = IS_APP
   : null
 
 const appMatch = window.location.search.match(/id=([0-9]+)/)
-export const APP_ID = appMatch && appMatch[1] ? +appMatch[1] : 0
+export const WINDOW_ID = appMatch && appMatch[1] ? +appMatch[1] : 0
 
 // menu and app sidebars are generally narrower
 // this gives us a flag to show more narrow things

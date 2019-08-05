@@ -9,7 +9,7 @@ export class MenuItems extends React.Component<{ restart: Function }> {
   isClosing = false
 
   toggleDevTools = () => {
-    const id = Electron.state.focusedAppId
+    const id = Electron.state.focusedWindowId
     const next = !Electron.state.showDevTools[id]
     console.log('toggle dev tools', next)
     Electron.setState({

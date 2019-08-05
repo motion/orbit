@@ -1,11 +1,12 @@
 import { Bridge, BridgeOptions, proxySetters } from '@o/mobx-bridge'
 import { decorate, deep } from '@o/use-store'
-import { getAppId } from './getAppId'
+
+import { getWindowId } from './getWindowId'
 
 export let Electron = null as ElectronStore
 
 export type AppWindow = {
-  appId: number
+  windowId: number
   appRole: 'main' | 'editing' | 'torn'
   path?: string
   bundleURL?: string
@@ -23,7 +24,7 @@ class ElectronStore {
 
   state = deep({
     showOrbitMain: false,
-    focusedAppId: 'app',
+    focusedWindowId: 'app',
     screenSize: [0, 0],
     updateState: {
       downloading: false,
@@ -32,7 +33,7 @@ class ElectronStore {
     appWindows: {
       // starts with orbit main window
       [0]: {
-        appId: 0,
+        windowId: 0,
         appRole: 'main',
       },
     } as { [id: number]: AppWindow },
@@ -49,18 +50,18 @@ class ElectronStore {
     return this.state.appWindows[lastIndex]
   }
 
-  get appId() {
-    return getAppId()
+  get windowId() {
+    return getWindowId()
   }
 
   // to be used in electron processes
   // todo we could make this work across all proceses, for now its duplicated in App/Electron
   get appConf() {
-    return this.state.appWindows[this.appId]
+    return this.state.appWindows[this.windowId]
   }
 
   get isMainWindow() {
-    return this.appId === this.curMainWindow.appId
+    return this.windowId === this.curMainWindow.windowId
   }
 
   start = async (options?: BridgeOptions) => {

@@ -17,6 +17,6 @@ export async function openCurrentApp() {
   const nextId = Object.keys(Electron.state.appWindows).length
   await command(TearAppCommand, {
     appType: type,
-    appId: nextId,
+    windowId: nextId,
   })
 }

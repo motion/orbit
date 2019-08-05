@@ -2,22 +2,25 @@ import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { CloseAppCommand } from '@o/models'
 import { forceKillProcess } from '@o/orbit-fork-process'
+import { Electron } from '@o/stores'
 import { ChildProcess } from 'child_process'
 import { remove } from 'lodash'
-import { Electron } from '@o/stores'
 
-const log = new Logger('command:close-app')
+const log = new Logger('CloseAppCommand')
 
-type AppProcess = { appId: number; process: ChildProcess }
+type AppProcess = {
+  windowId: number
+  process: ChildProcess
+}
 
 let appProcesses: AppProcess[] = []
 
-export const CloseAppResolver: any = resolveCommand(CloseAppCommand, async ({ appId }) => {
-  killAppProcess(appId)
+export const CloseAppResolver: any = resolveCommand(CloseAppCommand, async ({ windowId }) => {
+  killAppProcess(windowId)
   Electron.setState({
     appWindows: {
       // delete window
-      [appId]: null,
+      [windowId]: null,
     },
   })
 })
@@ -26,12 +29,12 @@ export function addAppProcess(info: AppProcess) {
   appProcesses.push(info)
 }
 
-export function killAppProcess(appId: number) {
-  log.info('got close app', appProcesses, appId)
-  const app = appProcesses.find(x => x.appId === appId)
-  appProcesses = remove(appProcesses, x => x.appId === appId)
+function killAppProcess(windowId: number) {
+  log.info('got close app', appProcesses, windowId)
+  const app = appProcesses.find(x => x.windowId === windowId)
+  appProcesses = remove(appProcesses, x => x.windowId === windowId)
   if (!app) {
-    console.error('No process found for id', appId)
+    console.error('No process found for id', windowId)
     return
   }
   forceKillProcess(app.process)

@@ -14,13 +14,12 @@ const log = new Logger('OrbitRoot')
 const debugStore = new ElectronDebugStore()
 
 export function OrbitRoot() {
-  const { isMainWindow, appConf, appId } = useStore(Electron)
-  log.verbose(`
-    appId: ${appId} ${process.env.APP_ID}
-    isMainWindow: ${isMainWindow}
-    appConf.type: ${appConf.appRole}
-`)
-
+  const { isMainWindow, appConf, windowId } = useStore(Electron)
+  log.verbose(
+    `windowId: ${windowId} ${process.env.WINDOW_ID}, isMainWindow: ${isMainWindow}, appConf.type: ${
+      appConf.appRole
+    }`,
+  )
   return (
     <ReactronApp
       onBeforeQuit={debugStore.handleBeforeQuit}

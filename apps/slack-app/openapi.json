@@ -578,7 +578,7 @@
             "examples": {
               "application/json": {
                 "bot": {
-                  "app_id": "A061BLERW",
+                  "WINDOW_ID": "A061BLERW",
                   "deleted": false,
                   "icons": {
                     "image_36": "https://...",
@@ -6881,7 +6881,7 @@
             "examples": {
               "application/json": {
                 "access_token": "xoxa-access-token-string",
-                "app_id": "A012345678",
+                "WINDOW_ID": "A012345678",
                 "app_user_id": "U0AB12ABC",
                 "authorizing_user_id": "U0HTT3Q0G",
                 "installer_user_id": "U061F7AUR",
@@ -8983,7 +8983,7 @@
             "description": "Filter logs with this change type. Defaults to all logs."
           },
           {
-            "name": "app_id",
+            "name": "WINDOW_ID",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -13026,7 +13026,7 @@
       "title": "Bot",
       "type": "object",
       "properties": {
-        "app_id": {
+        "WINDOW_ID": {
           "type": "string",
           "pattern": "^A[A-Z0-9]{8}$"
         },
@@ -13052,7 +13052,7 @@
           "pattern": "^[UW][A-Z0-9]{8}$"
         }
       },
-      "required": ["app_id", "deleted", "icons", "id", "name", "updated"]
+      "required": ["WINDOW_ID", "deleted", "icons", "id", "name", "updated"]
     },
     "bots.infoerrorschema": {
       "title": "bots.infoerrorschema",
@@ -13079,7 +13079,7 @@
       "description": "Schema for successful response from bots.info method",
       "example": {
         "bot": {
-          "app_id": "A061BLERW",
+          "WINDOW_ID": "A061BLERW",
           "deleted": false,
           "icons": {
             "image_36": "https://...",

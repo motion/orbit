@@ -15,7 +15,7 @@ const Config = getGlobalConfig()
 
 class OrbitAppWindowStore {
   props: {
-    appId: number
+    windowId: number
   }
 
   show = false
@@ -39,7 +39,9 @@ class OrbitAppWindowStore {
   // just set this here for devtools opening,
   // we are doing weird stuff with focus
   handleFocus = () => {
-    Electron.setState({ focusedAppId: this.props.appId })
+    Electron.setState({
+      focusedWindowId: this.props.windowId,
+    })
   }
 
   setShown = () => {
@@ -47,13 +49,13 @@ class OrbitAppWindowStore {
   }
 
   get showDevTools() {
-    return Electron.state.showDevTools[this.props.appId]
+    return Electron.state.showDevTools[this.props.windowId]
   }
 }
 
 type AppWindowProps = BrowserWindowConstructorOptions & {
   forwardRef?: any
-  appId: number
+  windowId: number
   size?: number[]
   onReadyToShow?: Function
   focus?: boolean
@@ -64,13 +66,13 @@ type AppWindowProps = BrowserWindowConstructorOptions & {
   defaultSize: number[]
 }
 
-export function OrbitAppWindow({ appId, forwardRef, ...windowProps }: AppWindowProps) {
-  const store = useStore(OrbitAppWindowStore, { appId })
-  const appQuery = appId === 0 ? '' : `/?id=${appId}`
+export function OrbitAppWindow({ windowId, forwardRef, ...windowProps }: AppWindowProps) {
+  const store = useStore(OrbitAppWindowStore, { windowId })
+  const appQuery = windowId === 0 ? '' : `/?id=${windowId}`
   const url = `${Config.urls.server}${appQuery}`
   const size = windowProps.size || store.size
 
-  log.info(`OrbitAppWindow ${appId} ${url} ${size} ${store.position}`)
+  log.info(`OrbitAppWindow ${windowId} ${url} ${size} ${store.position}`)
 
   if (!size[0]) {
     return null

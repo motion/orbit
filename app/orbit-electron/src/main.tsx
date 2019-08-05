@@ -64,13 +64,13 @@ export async function main() {
       models: [],
       transport: new WebSocketServerTransport({ port }),
       resolvers: [
-        resolveCommand(AppOpenWindowCommand, async ({ appId, isEditing }) => {
-          console.log('got open window command, opening...', appId)
+        resolveCommand(AppOpenWindowCommand, async ({ windowId, isEditing }) => {
+          console.log('got open window command, opening...', windowId)
           Electron.setState({
             appWindows: {
-              [appId]: {
+              [windowId]: {
                 type: 'app',
-                appId,
+                windowId,
                 isEditing,
                 isTorn: true,
               },
@@ -79,7 +79,7 @@ export async function main() {
           // setTimeout so command doesnt take forever to run
           setTimeout(() => {
             forkAndStartOrbitApp(
-              { appId },
+              { windowId },
               {
                 WAIT_FOR_ORBIT: 'false',
               },

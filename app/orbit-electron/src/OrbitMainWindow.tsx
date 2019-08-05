@@ -14,7 +14,6 @@ import { Mediator } from './mediator'
 import { OrbitAppWindow } from './OrbitAppWindow'
 
 const log = new Logger('OrbitMainWindow')
-// const isFirstOrbitWindow = Electron.appId === 0
 
 const setScreenSize = () => {
   const screenSize = getScreenSize()
@@ -117,12 +116,12 @@ class OrbitMainWindowStore {
 }
 
 export function OrbitMainWindow() {
-  const { isMainWindow, appId } = useStore(Electron)
+  const { isMainWindow, windowId } = useStore(Electron)
   const store = useStore(OrbitMainWindowStore, {
     enabled: isMainWindow,
   })
 
-  log.info(`render ${Electron.appConf.appRole} ${appId} ${store.show}`, store.initialState)
+  log.info(`render ${Electron.appConf.appRole} ${windowId} ${store.show}`, store.initialState)
 
   useMainWindowEffects({ isMainWindow })
 
@@ -133,7 +132,7 @@ export function OrbitMainWindow() {
 
   return (
     <OrbitAppWindow
-      appId={appId}
+      windowId={windowId}
       show={store.show}
       onReadyToShow={store.setIsReady}
       // TODO i think i need to make this toggle on show for a few ms, then go back to normal

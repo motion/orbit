@@ -34,8 +34,8 @@ export const ToggleOrbitMainCommand = new Command<undefined, boolean | undefined
   'ToggleOrbitMainCommand',
 )
 
-export const TearAppCommand = new Command<void, { appType: string; appId: number }>('tear-app')
-export const CloseAppCommand = new Command<void, { appId: number }>('close-app')
+export const TearAppCommand = new Command<void, { appType: string; windowId: number }>('tear-app')
+export const CloseAppCommand = new Command<void, { windowId: number }>('close-app')
 export const RestartAppCommand = new Command<void, void>('restart-app')
 export const ResetDataCommand = new Command<void, void>('reset-data')
 export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'light' }>(
@@ -95,7 +95,7 @@ export const AppMetaCommand = new Command<
 export const AppOpenWindowCommand = new Command<
   boolean,
   {
-    appId: number
+    windowId: number
     isEditing?: boolean
   }
 >('AppOpenWindowCommand')
@@ -137,6 +137,7 @@ export const AppDevOpenCommand = new Command<
   StatusReply,
   {
     projectRoot: string
+    openWindow: boolean
   }
 >('AppDevOpenCommand')
 
@@ -165,7 +166,7 @@ export const AppWorkspaceCommand = new Command<
   }
 >('AppWorkspaceCommand')
 
-export const AppDevCloseCommand = new Command<undefined, { appId: number }>('app-dev-close')
+export const AppDevCloseCommand = new Command<undefined, { windowId: number }>('app-dev-close')
 
 export const SendClientDataCommand = new Command<
   void,

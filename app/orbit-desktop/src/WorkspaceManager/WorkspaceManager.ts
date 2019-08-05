@@ -121,10 +121,7 @@ export class WorkspaceManager {
     }
 
     // avoid costly rebuilds
-    const nextBuildConfig = JSON.stringify({
-      options,
-      activeApps: activeApps.map(x => x.directory),
-    })
+    const nextBuildConfig = JSON.stringify({ options, activeApps })
     if (this.lastBuildConfig === nextBuildConfig) {
       log.verbose(`Same build config, avoiding rebuild`)
       return

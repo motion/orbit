@@ -49,6 +49,7 @@ export function loader(this: any, content: string, inputSourceMap: Object) {
       filename: this.resourcePath,
       inputSourceMap: inputSourceMap != null ? inputSourceMap : undefined,
       outputFilename,
+      // @ts-ignore
       pluginOptions: rest,
       preprocessor,
     })

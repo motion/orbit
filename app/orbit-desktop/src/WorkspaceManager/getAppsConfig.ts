@@ -94,7 +94,7 @@ export async function getAppsConfig(
   const webpackConfigs: { [key: string]: webpack.Configuration } = {}
 
   // add base dll config
-  const baseDllParams = await getBaseDllParams(directory)
+  const baseDllParams = await getBaseDllParams(directory, mode)
   if (isInMonoRepo) {
     baseDllParams.mode = mode
     baseDllParams.watch = watch
@@ -267,7 +267,10 @@ export function getAppParams(props: WebpackParams): WebpackParams {
   }
 }
 
-export async function getBaseDllParams(directory: string): Promise<WebpackParams> {
+export async function getBaseDllParams(
+  directory: string,
+  mode: 'production' | 'development',
+): Promise<WebpackParams> {
   const outputDir = join(directory, 'dist')
   const basePackages = [
     '@o/kit',
@@ -296,13 +299,17 @@ export async function getBaseDllParams(directory: string): Promise<WebpackParams
   // the sub-packages of @o/ui and @o/kit, not sure why that happened
   let allPackages = [...basePackages]
   for (const pkg of basePackages) {
-    const path = require.resolve(`${pkg}/package.json`)
-    const pkgJson = await readJSON(path)
-    const deps = [
-      ...Object.keys(pkgJson.dependencies || {}),
-      ...Object.keys(pkgJson.peerDependencies || {}),
-    ]
-    allPackages = [...allPackages, ...deps]
+    try {
+      const path = require.resolve(`${pkg}/package.json`)
+      const pkgJson = await readJSON(path)
+      const deps = [
+        ...Object.keys(pkgJson.dependencies || {}),
+        ...Object.keys(pkgJson.peerDependencies || {}),
+      ]
+      allPackages = [...allPackages, ...deps]
+    } catch {
+      // for example @o/ui/config/package.json isnt here
+    }
   }
   // ignore electron things
   // TODO make this a bit more... viable
@@ -322,7 +329,7 @@ export async function getBaseDllParams(directory: string): Promise<WebpackParams
     entry: [...new Set(allPackages)],
     ignore: ['electron-log', 'configstore', 'typeorm'],
     context: directory,
-    mode: 'development',
+    mode,
     watch: false,
     target: 'web',
     publicPath: '/',

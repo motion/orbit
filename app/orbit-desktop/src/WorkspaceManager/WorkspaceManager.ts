@@ -30,6 +30,7 @@ export class WorkspaceManager {
   workspaceVersion = 0
   options: CommandWsOptions = {
     build: false,
+    dev: false,
     workspaceRoot: '',
   }
   appsManager = new AppsManager()
@@ -54,6 +55,15 @@ export class WorkspaceManager {
     })
   }
 
+  async updateWorkspace(opts: CommandWsOptions) {
+    log.info(`updateWorkspace ${JSON.stringify(opts)}`)
+    if (!this.startOpts.singleUseMode) {
+      await this.graphServer.start()
+    }
+    this.options = opts
+    this.started = true
+  }
+
   /**
    * Combines active workspaces apps + any apps in dev mode
    */
@@ -75,14 +85,15 @@ export class WorkspaceManager {
     () => [this.activeApps, this.options],
     async ([activeApps], { sleep }) => {
       ensure('directory', !!this.options.workspaceRoot)
+      ensure('not in single build mode', !this.options.build)
       await sleep(100)
       const identifiers = Object.keys(activeApps)
       const space = await getActiveSpace()
       const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
       this.graphServer.setupGraph(apps)
       const packageIds = identifiers.map(this.appsManager.getIdentifierToPackageId)
-      // this is the main build action
-      await this.updateBuild()
+      // this is the main build action, no need to await here
+      this.updateBuild()
       Desktop.setState({
         workspaceState: {
           workspaceRoot: this.options.workspaceRoot,
@@ -109,14 +120,14 @@ export class WorkspaceManager {
       }
       const { webpackConfigs, nameToAppMeta } = res
       if (options.build) {
-        const configs = Object.keys(webpackConfigs).map(key => webpackConfigs[key])
+        const { base, ...rest } = webpackConfigs
+        const configs = Object.keys(rest).map(key => rest[key])
         log.info(`Building ${Object.keys(webpackConfigs).join(', ')}...`)
-        const [base, ...rest] = configs
         // build base dll first to ensure it feeds into rest
         await webpackPromise([base], {
           loud: true,
         })
-        await webpackPromise(rest, {
+        await webpackPromise(configs, {
           loud: true,
         })
         log.info(`Build complete`)
@@ -126,20 +137,6 @@ export class WorkspaceManager {
     } catch (err) {
       log.error(`Error running workspace: ${err.message}\n${err.stack}`)
     }
-  }
-
-  get directory() {
-    if (!this.options) return ''
-    return this.options.workspaceRoot
-  }
-
-  async setWorkspace(opts: CommandWsOptions) {
-    log.info(`setWorkspace ${JSON.stringify(opts)}`)
-    if (!this.startOpts.singleUseMode) {
-      await this.graphServer.start()
-    }
-    this.options = opts
-    this.started = true
   }
 
   /**
@@ -184,7 +181,8 @@ export class WorkspaceManager {
           await remove(join(workspaceRoot, 'dist'))
         }
         await loadWorkspace(workspaceRoot)
-        await this.setWorkspace(options)
+        await this.updateWorkspace(options)
+        await this.updateBuild()
         return true
       }),
       resolveAppInstallCommand,

@@ -205,11 +205,16 @@ function main() {
       },
     )
     .command(
-      'ws [workspace]',
+      'ws [action] [path]',
       'Run an Orbit workspace',
       p => {
         return p
-          .positional('workspace', {
+          .positional('action', {
+            type: 'string',
+            default: 'run',
+            describe: 'Options: run, build. Defaults to run.',
+          })
+          .positional('path', {
             type: 'string',
             default: '.',
             describe: 'the workspace to run',
@@ -224,20 +229,15 @@ function main() {
             default: false,
             describe: 'whether to start all apps in dev mode',
           })
-          .option('build', {
-            type: 'boolean',
-            default: false,
-            describe: 'Debug use only, helpful to more quickly debug workspace build issues',
-          })
       },
       async argv => {
         setVerbose(argv.logLevel)
         reporter.verbose(`argv ${JSON.stringify(argv)}`)
-        let workspaceRoot = resolve(cwd, argv.workspace)
+        let workspaceRoot = resolve(cwd, argv.path)
         await commandWs({
           workspaceRoot,
           clean: !!argv.clean,
-          build: !!argv.build,
+          build: argv.action === 'build',
           dev: !!argv.dev,
         })
       },

@@ -25,10 +25,11 @@ export class AppMiddleware {
   configs = null
   state: WebpackAppsDesc[] = []
   apps: AppMeta[] = []
-  buildStatus = new Map<string, 'compiling' | 'error' | 'success'>()
   appBuildStatusListeners = new Set<AppBuildStatusListener>()
+
+  private buildStatus = new Map<string, 'compiling' | 'error' | 'success'>()
+  private completeFirstBuild: () => void
   completedFirstBuild: Promise<boolean>
-  completeFirstBuild: () => void
 
   constructor(private appsManager: AppsManager) {
     this.completedFirstBuild = new Promise(res => {

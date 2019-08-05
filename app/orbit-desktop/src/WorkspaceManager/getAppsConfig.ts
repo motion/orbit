@@ -192,7 +192,7 @@ export async function getAppsConfig(
       {
         name: 'main',
         outputFile: 'main.js',
-        outputDir,
+        outputDir: join(outputDir, 'orbit-app'),
         mode,
         context: directory,
         entry: [entry],

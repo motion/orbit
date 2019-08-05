@@ -1,7 +1,7 @@
 import { commandNew } from '@o/cli'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
-import { AppCreateNewCommand, AppCreateNewOptions, Space } from '@o/models'
+import { AppCreateNewCommand, AppCreateNewOptions, Space, StatusReply } from '@o/models'
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
 import sanitize from 'sanitize-filename'
@@ -9,7 +9,7 @@ import sanitize from 'sanitize-filename'
 import { getCurrentWorkspace } from '../helpers/getCurrentWorkspace'
 import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
 import { statusReplyCommand } from '../WorkspaceManager/commandHelpers'
-import { loadWorkspace } from '../WorkspaceManager/commandWs'
+import { loadWorkspace } from '../WorkspaceManager/loadWorkspace'
 
 const log = new Logger('AppCreateNewCommand')
 
@@ -31,7 +31,10 @@ export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
     }),
   )
 
-  async function createNewWorkspaceApp(space: Space, opts: AppCreateNewOptions) {
+  async function createNewWorkspaceApp(
+    space: Space,
+    opts: AppCreateNewOptions,
+  ): Promise<StatusReply> {
     const appsDir = join(space.directory, 'apps')
     const name = await findValidDirectoryName(appsDir, opts.identifier)
     let res = await commandNew({
@@ -45,7 +48,11 @@ export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
       return res
     }
     // ensure we update the workspace with new package id
-    return await orbitDesktop.workspaceManager.buildWorkspace()
+    await orbitDesktop.workspaceManager.updateBuild()
+    return {
+      type: 'success',
+      message: `Starting workspace`,
+    }
   }
 }
 

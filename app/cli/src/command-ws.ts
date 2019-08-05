@@ -4,7 +4,7 @@ import { getOrbitDesktop } from './getDesktop'
 import { reporter } from './reporter'
 
 export async function commandWs(options: CommandWsOptions) {
-  reporter.info(`Running command ws mode ${options.mode}`)
+  reporter.info(`Running command ws mode${options.dev ? ' in dev mode' : ''}`)
   const { mediator } = await getOrbitDesktop({
     singleUseMode: options.build,
   })

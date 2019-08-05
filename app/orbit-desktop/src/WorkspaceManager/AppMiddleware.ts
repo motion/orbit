@@ -1,6 +1,7 @@
 import { AppMetaDict, AppsManager, getPackageId } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppMeta, AppStatusMessage } from '@o/models'
+import { stringToIdentifier } from '@o/ui'
 import historyAPIFallback from 'connect-history-api-fallback'
 import { Handler } from 'express'
 import { parse } from 'url'
@@ -23,18 +24,82 @@ export type AppBuildStatusListener = (status: AppStatusMessage) => any
 export class AppMiddleware {
   configs = null
   state: WebpackAppsDesc[] = []
+  apps: AppMeta[] = []
   statusListeners = new Set<AppBuildStatusListener>()
 
   constructor(private appsManager: AppsManager) {}
 
-  update(
-    configs: { [key: string]: webpack.Configuration },
-    nameToAppMeta: AppMetaDict,
-  ): WebpackAppsDesc[] {
+  update(configs: { [key: string]: webpack.Configuration }, nameToAppMeta: AppMetaDict) {
     log.info(`update ${Object.keys(configs).join(', ')}`, configs)
     this.configs = configs
+    this.apps = Object.keys(nameToAppMeta).map(k => nameToAppMeta[k])
     this.state = this.getAppMiddlewares(configs, nameToAppMeta)
-    return this.state
+  }
+
+  /**
+   * Resolves all requests if they are valid down the the proper app middleware
+   */
+  middleware: Handler = async (req, res, next) => {
+    const sendIndex = async () => {
+      res.send(await this.getIndex())
+    }
+    // hacky way to just serve our own index.html for now
+    if (req.path[1] !== '_' && req.path.indexOf('.') === -1) {
+      return await sendIndex()
+    }
+    let fin
+    for (const { middleware } of this.state) {
+      fin = null
+      await middleware(req, res, err => {
+        fin = err || true
+      })
+      if (fin === null) {
+        return
+      }
+    }
+    log.verbose('no match', req.path)
+    return next()
+  }
+
+  async getIndex() {
+    return `<!DOCTYPE html>
+    <html lang="en">.
+      <head>
+        <script>
+          console.time('splash')
+        </script>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="shortcut icon" type="image/png" href="./favicon.png" />
+        <title>Orbit</title>
+        <script>
+          if (typeof require !== 'undefined') {
+            window.electronRequire = require
+          } else {
+            window.notInElectron = true
+            window.electronRequire = module => {
+              return {}
+            }
+          }
+        </script>
+      </head>
+
+      <body>
+        <div id="app"></div>
+        <script>
+          if (window.notInElectron) {
+            // easier to see what would be transparent in dev mode in browser
+            document.body.style.background = '#eee'
+          }
+        </script>
+        <script src="/base.dll.js"></script>
+    ${this.apps
+      .map(app => `    <script src="/${stringToIdentifier(app.packageId)}.dll.js"></script>`)
+      .join('\n')}
+        <script src="/workspaceEntry.js"></script>
+        <script src="/main.js"></script>
+      </body>
+    </html>`
   }
 
   onStatus(callback: AppBuildStatusListener) {

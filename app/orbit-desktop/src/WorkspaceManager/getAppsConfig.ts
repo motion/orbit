@@ -31,12 +31,13 @@ export async function getAppsConfig(
     return null
   }
 
+  const isInMonoRepo = await getIsInMonorepo()
+  const mode = options.dev ? 'development' : 'production'
   const directory = options.workspaceRoot
   const outputDir = join(directory, 'dist')
   const watch = !options.build // watch mode by default (if not building)
-  const isInMonoRepo = await getIsInMonorepo()
 
-  log.info(`mode ${options.mode} watch ${watch} ${directory}, apps ${apps.length}`, options)
+  log.info(`dev ${options.dev} watch ${watch} ${directory}, apps ${apps.length}`, options)
 
   // link local apps into local node_modules
   await ensureDir(join(directory, 'node_modules'))
@@ -55,52 +56,6 @@ export async function getAppsConfig(
         log.info(`Ensuring symlink from ${app.directory} to ${where}`)
         await ensureSymlink(app.directory, where)
       }),
-  )
-
-  /**
-   * Create index.html
-   */
-  const indexFile = join(directory, 'dist', 'index.html')
-  await writeFile(
-    indexFile,
-    `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <script>
-      console.time('splash')
-    </script>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" type="image/png" href="./favicon.png" />
-    <title>Orbit</title>
-    <script>
-      if (typeof require !== 'undefined') {
-        window.electronRequire = require
-      } else {
-        window.notInElectron = true
-        window.electronRequire = module => {
-          return {}
-        }
-      }
-    </script>
-  </head>
-
-  <body>
-    <div id="app"></div>
-    <script>
-      if (window.notInElectron) {
-        // easier to see what would be transparent in dev mode in browser
-        document.body.style.background = '#eee'
-      }
-    </script>
-    <script src="/base.dll.js"></script>
-${apps
-  .map(app => `    <script src="/${stringToIdentifier(app.packageId)}.dll.js"></script>`)
-  .join('\n')}
-    <script src="/workspaceEntry.js"></script>
-    <script src="/main.js"></script>
-  </body>
-</html>`,
   )
 
   let dllReferences: DLLReferenceDesc[] = []
@@ -138,7 +93,7 @@ ${apps
   // add base dll config
   const baseDllParams = await getBaseDllParams(directory)
   if (isInMonoRepo) {
-    baseDllParams.mode = options.mode
+    baseDllParams.mode = mode
     baseDllParams.watch = watch
     webpackConfigs.base = await addDLL(baseDllParams)
   }
@@ -159,7 +114,7 @@ ${apps
         name: `app_${cleanName}`,
         entry: [appEntry],
         context: directory,
-        mode: options.mode,
+        mode,
         target: 'web',
         publicPath: '/',
         outputFile: `${cleanName}.dll.js`,
@@ -214,7 +169,7 @@ ${apps
       for (const name in others) {
         webpackConfigs[name] = await makeWebpackConfig(
           {
-            mode: options.mode,
+            mode,
             name,
             outputFile: `${name}.js`,
             outputDir,
@@ -235,7 +190,7 @@ ${apps
         name: 'main',
         outputFile: 'main.js',
         outputDir,
-        mode: options.mode,
+        mode,
         context: directory,
         entry: [entry],
         ignore: ['electron-log', 'configstore', '@o/worker-kit'],
@@ -268,7 +223,7 @@ export default function getApps() {
     name: 'workspaceEntry',
     outputFile: 'workspaceEntry.js',
     outputDir,
-    mode: options.mode,
+    mode,
     context: directory,
     entry: [workspaceEntry],
     target: 'web',

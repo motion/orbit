@@ -1,40 +1,12 @@
 import { Logger } from '@o/logger'
-import { CommandWsOptions, Space, SpaceEntity, UserEntity } from '@o/models'
-import { Desktop } from '@o/stores'
-import { readJSON, remove } from 'fs-extra'
+import { Space, SpaceEntity, UserEntity } from '@o/models'
+import { readJSON } from 'fs-extra'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
 import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
-import { WorkspaceManager } from './WorkspaceManager'
 
-const log = new Logger('commandWs')
-
-/**
- * This sets the current active workspace.
- */
-export async function commandWs(options: CommandWsOptions, workspaceManager: WorkspaceManager) {
-  const { workspaceRoot } = options
-  log.info(`${workspaceRoot}`)
-
-  Desktop.setState({
-    workspaceState: {
-      workspaceRoot,
-    },
-  })
-
-  if (options.clean) {
-    log.info(`Cleaning workspace dist directory`)
-    await remove(join(workspaceRoot, 'dist'))
-  }
-
-  await loadWorkspace(workspaceRoot)
-
-  // update workspace
-  await workspaceManager.setWorkspace(options)
-
-  return true
-}
+const log = new Logger('loadWorkspace')
 
 export async function loadWorkspace(directory: string): Promise<Space> {
   const identifier = (await readJSON(join(directory, 'package.json'))).name

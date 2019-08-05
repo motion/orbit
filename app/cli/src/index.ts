@@ -208,7 +208,7 @@ function main() {
       'ws [workspace]',
       'Run an Orbit workspace',
       p => {
-        let options = p
+        return p
           .positional('workspace', {
             type: 'string',
             default: '.',
@@ -219,26 +219,16 @@ function main() {
             default: false,
             describe: 'clean and re-run the workspace build',
           })
-          .option('mode', {
-            type: 'string',
-            default: 'development',
-            describe: 'default mode to start apps in',
+          .option('dev', {
+            type: 'boolean',
+            default: false,
+            describe: 'whether to start all apps in dev mode',
           })
           .option('build', {
             type: 'boolean',
             default: false,
             describe: 'Debug use only, helpful to more quickly debug workspace build issues',
           })
-
-        // enables developing orbit itself
-        if (process.env.ORBIT_DEVELOPER) {
-          options = options.option('dev', {
-            type: 'boolean',
-            default: false,
-          })
-        }
-
-        return options
       },
       async argv => {
         setVerbose(argv.logLevel)
@@ -247,9 +237,7 @@ function main() {
         await commandWs({
           workspaceRoot,
           clean: !!argv.clean,
-          mode: argv.mode as 'development' | 'production',
           build: !!argv.build,
-          // @ts-ignore
           dev: !!argv.dev,
         })
       },

@@ -5,6 +5,7 @@ import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEn
 import { Desktop, Electron } from '@o/stores'
 import { decorate, react } from '@o/use-store'
 import { Handler } from 'express'
+import { pathExists } from 'fs-extra'
 import { remove } from 'lodash'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
@@ -110,16 +111,21 @@ export class WorkspaceManager {
   }
 
   middleware: Handler = async (req, res, next) => {
-    const sendIndex = () => {
+    const sendIndex = async () => {
       if (!this.activeApps.length) {
-        res.send({ fourohfour: 'ok' })
+        res.send({ error: `noactiveapps` })
       } else {
-        res.sendFile(join(this.directory, 'dist', 'index.html'))
+        const indexPath = join(this.directory, 'dist', 'index.html')
+        if (await pathExists(indexPath)) {
+          res.sendFile(join(this.directory, 'dist', 'index.html'))
+        } else {
+          res.send({ error: `noindex` })
+        }
       }
     }
     // hacky way to just serve our own index.html for now
     if (req.path[1] !== '_' && req.path.indexOf('.') === -1) {
-      return sendIndex()
+      return await sendIndex()
     }
     let fin
     for (const middleware of this.middlewares) {

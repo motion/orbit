@@ -1,6 +1,6 @@
 import { isOrbitApp } from '@o/libs-node'
 import { Logger } from '@o/logger'
-import { pathExists, readFile } from 'fs-extra'
+import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
 
 const log = new Logger('findPackage')
@@ -19,15 +19,16 @@ export async function findPackage({
   directory: string
 }) {
   // check if current directory is an orbit app already with packageId
+  const pkgPath = join(directory, 'package.json')
   try {
-    if ((await pathExists(join(directory, 'package.json'))) && (await isOrbitApp(directory))) {
-      const pkgInfo = JSON.parse(await readFile(join(directory, 'package.json')).toString())
+    if ((await pathExists(pkgPath)) && (await isOrbitApp(directory))) {
+      const pkgInfo = await readJSON(pkgPath)
       if (pkgInfo.name === packageId) {
         return directory
       }
     }
   } catch (err) {
-    console.log('err', err)
+    log.error(`Error parsing package.json at ${pkgPath} ${err.message} ${err.stack}`, err)
   }
 
   let cur = directory

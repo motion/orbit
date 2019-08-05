@@ -23,9 +23,7 @@ export class GraphServer {
   started = false
 
   start() {
-    if (this.started) {
-      return
-    }
+    if (this.started) return
     this.started = true
     this.server = express()
     this.server.use(require('cors')())

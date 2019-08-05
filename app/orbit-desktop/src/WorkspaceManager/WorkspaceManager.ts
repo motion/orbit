@@ -1,9 +1,9 @@
-import { AppMetaDict, AppsManager, getAppMeta } from '@o/apps-manager'
+import { AppsManager, getAppMeta } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
 import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
-import { decorate, ensure, react } from '@o/use-store'
+import { decorate, react } from '@o/use-store'
 import { Handler } from 'express'
 import { remove } from 'lodash'
 import { join } from 'path'
@@ -38,23 +38,55 @@ export class WorkspaceManager {
   constructor(
     private mediatorServer: MediatorServer,
     private startOpts: { singleUseMode: boolean },
-  ) {
-    this.appsManager.onUpdatedAppMeta(async (appMeta: AppMetaDict) => {
-      log.verbose('appsManager updating app meta', appMeta)
-      const identifiers = Object.keys(appMeta)
+  ) {}
+
+  async start() {
+    await this.appsManager.start({
+      singleUseMode: this.startOpts.singleUseMode,
+    })
+    /**
+     * Sends messages between webpack and client apps so we can display status messages
+     */
+    this.appMiddleware.onStatus(status => {
+      appStatusManager.sendMessage(status)
+    })
+  }
+
+  /**
+   * Combines active workspaces apps + any apps in dev mode
+   */
+  get activeApps(): AppMeta[] {
+    const wsAppsMeta = this.appsManager.appMeta
+    return [
+      // workspace apps
+      ...Object.keys(wsAppsMeta).map(k => wsAppsMeta[k]),
+      // one-off developing apps
+      ...this.developingApps,
+    ]
+  }
+
+  /**
+   * The main logic of WorkspaceManager,
+   * watches options and apps and updates the webpack/graph.
+   */
+  update = react(
+    () => [this.activeApps, this.options],
+    async ([activeApps, options]) => {
+      const identifiers = Object.keys(activeApps)
       const space = await getActiveSpace()
       const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
       this.graphServer.setupGraph(apps)
       const packageIds = identifiers.map(this.appsManager.getIdentifierToPackageId)
+      this.middlewares = await watchBuildApps(options, activeApps, this.appMiddleware)
       Desktop.setState({
         workspaceState: {
-          appMeta,
+          appMeta: activeApps,
           packageIds,
           identifiers,
         },
       })
-    })
-  }
+    },
+  )
 
   get directory() {
     if (!this.options) return ''
@@ -63,22 +95,10 @@ export class WorkspaceManager {
 
   async setWorkspace(opts: CommandWsOptions) {
     log.info(`setWorkspace ${JSON.stringify(opts)}`)
-    this.options = opts
-
-    await this.appsManager.start({
-      singleUseMode: this.startOpts.singleUseMode,
-    })
-    await this.buildWorkspace()
-
     if (!this.startOpts.singleUseMode) {
       await this.graphServer.start()
-      /**
-       * Sends messages between webpack and client apps so we can display status messages
-       */
-      this.appMiddleware.onStatus(status => {
-        appStatusManager.sendMessage(status)
-      })
     }
+    this.options = opts
     this.started = true
   }
 
@@ -106,60 +126,6 @@ export class WorkspaceManager {
     }
     log.verbose('no match', req.path)
     return next()
-  }
-
-  updateWorkspace = () => {
-    this.workspaceVersion = (this.workspaceVersion + 1) % Number.MAX_SAFE_INTEGER
-  }
-
-  onNewWorkspaceVersion = react(
-    () => this.workspaceVersion,
-    async (_, { sleep }) => {
-      ensure('this.started', this.started)
-      ensure('not in single build mode', !this.options.build)
-      ensure('directory', !!this.directory)
-      await sleep()
-      this.buildWorkspace()
-    },
-  )
-
-  /**
-   * Combines active workspaces apps + any apps in dev mode
-   */
-  get activeApps(): AppMeta[] {
-    const wsAppsMeta = this.appsManager.appMeta
-    return [...Object.keys(wsAppsMeta).map(k => wsAppsMeta[k])]
-  }
-
-  async buildWorkspace() {
-    log.info(`Start building workspace...`, this.options.build, this.activeApps)
-    try {
-      const res = await getAppsConfig(this.activeApps, this.options)
-      if (!res) {
-        log.error('No config')
-        return
-      }
-      const { webpackConfigs, nameToAppMeta } = res
-      if (this.options.build) {
-        const configs = Object.keys(webpackConfigs).map(key => webpackConfigs[key])
-        log.info(`Building ${Object.keys(webpackConfigs).join(', ')}...`)
-        const [base, ...rest] = configs
-        // build base dll first to ensure it feeds into rest
-        await webpackPromise([base], {
-          loud: true,
-        })
-        await webpackPromise(rest, {
-          loud: true,
-        })
-        log.info(`Build complete`)
-      } else {
-        this.middlewares = this.appMiddleware
-          .update(webpackConfigs, nameToAppMeta)
-          .map(x => x.middleware)
-      }
-    } catch (err) {
-      log.error(`Error running workspace: ${err.message}\n${err.stack}`)
-    }
   }
 
   /**
@@ -248,5 +214,40 @@ export class WorkspaceManager {
         return await Promise.resolve(api[method](...args))
       }),
     ]
+  }
+}
+
+// made this pure enforce good practice,
+// you should pass in all arguments reactively
+async function watchBuildApps(
+  options: CommandWsOptions,
+  activeApps: AppMeta[],
+  appMiddleware: AppMiddleware,
+): Promise<Handler[]> {
+  log.info(`Start building workspace...`, options.build, activeApps)
+  try {
+    const res = await getAppsConfig(activeApps, options)
+    if (!res) {
+      log.error('No config')
+      return
+    }
+    const { webpackConfigs, nameToAppMeta } = res
+    if (options.build) {
+      const configs = Object.keys(webpackConfigs).map(key => webpackConfigs[key])
+      log.info(`Building ${Object.keys(webpackConfigs).join(', ')}...`)
+      const [base, ...rest] = configs
+      // build base dll first to ensure it feeds into rest
+      await webpackPromise([base], {
+        loud: true,
+      })
+      await webpackPromise(rest, {
+        loud: true,
+      })
+      log.info(`Build complete`)
+    } else {
+      return appMiddleware.update(webpackConfigs, nameToAppMeta).map(x => x.middleware)
+    }
+  } catch (err) {
+    log.error(`Error running workspace: ${err.message}\n${err.stack}`)
   }
 }

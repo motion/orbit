@@ -35,6 +35,7 @@ export type NormalItem = {
 
 const normalizers = {
   bit: (bit: Bit): NormalItem => {
+    console.log('normalizing', bit, Config.getIconForBit(bit))
     return {
       type: 'bit',
       id: `${bit.id}`,

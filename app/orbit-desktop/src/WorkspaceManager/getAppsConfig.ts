@@ -37,7 +37,10 @@ export async function getAppsConfig(
   const outputDir = join(directory, 'dist')
   const watch = !options.build // watch mode by default (if not building)
 
-  log.info(`dev ${options.dev} watch ${watch} ${directory}, apps ${apps.length}`, options)
+  log.info(
+    `dev ${options.dev} watch ${watch} ${directory}, apps ${apps.length} ${isInMonoRepo}`,
+    options,
+  )
 
   // link local apps into local node_modules
   await ensureDir(join(directory, 'node_modules'))
@@ -183,6 +186,7 @@ export async function getAppsConfig(
         log.info(`extra entry: ${name}`)
       }
     }
+
     // main bundle
     webpackConfigs.main = await makeWebpackConfig(
       {
@@ -268,6 +272,7 @@ export async function getBaseDllParams(directory: string): Promise<WebpackParams
   const basePackages = [
     '@o/kit',
     '@o/ui',
+    '@o/ui/config',
     '@o/utils',
     '@o/bridge',
     '@o/logger',

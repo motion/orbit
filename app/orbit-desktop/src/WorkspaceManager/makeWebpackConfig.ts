@@ -300,13 +300,17 @@ require('@o/kit').createHotHandler({
     },
     plugins: [
       new HardSourceWebpackPlugin({
-        cacheDirectory: 'node_modules/.cache/hard-source/[confighash]',
+        cacheDirectory: '.cache/hard-source/[confighash]',
         environmentHash: {
           root: process.cwd(),
         },
         info: {
           mode: 'none',
           level: 'error', // warn to debug if its slow
+        },
+        cachePrune: {
+          maxAge: 10 * 24 * 60 * 60 * 1000,
+          sizeThreshold: 50 * 1024 * 1024,
         },
       }),
 

@@ -219,7 +219,7 @@ export class AppMiddleware {
 
   private async getIndex() {
     return `<!DOCTYPE html>
-    <html lang="en">.
+    <html lang="en">
       <head>
         <script>
           console.time('splash')

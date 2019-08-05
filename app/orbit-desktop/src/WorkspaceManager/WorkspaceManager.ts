@@ -71,13 +71,13 @@ export class WorkspaceManager {
    */
   update = react(
     () => [this.activeApps, this.options],
-    async ([activeApps, options]) => {
+    async ([activeApps]) => {
       const identifiers = Object.keys(activeApps)
       const space = await getActiveSpace()
       const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
       this.graphServer.setupGraph(apps)
       const packageIds = identifiers.map(this.appsManager.getIdentifierToPackageId)
-      this.middlewares = await watchBuildApps(options, activeApps, this.appMiddleware)
+      this.middlewares = await this.buildWorkspace()
       Desktop.setState({
         workspaceState: {
           appMeta: activeApps,
@@ -87,6 +87,10 @@ export class WorkspaceManager {
       })
     },
   )
+
+  async buildWorkspace() {
+    return await watchBuildApps(this.options, this.activeApps, this.appMiddleware)
+  }
 
   get directory() {
     if (!this.options) return ''

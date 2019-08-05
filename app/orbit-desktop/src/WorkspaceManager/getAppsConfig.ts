@@ -98,13 +98,10 @@ export async function getAppsConfig(
     webpackConfigs.base = await addDLL(baseDllParams)
   }
 
-  const nameToAppMeta: AppMetaDict = {}
-
   // add app dll configs
   const appParams: WebpackParams[] = await Promise.all(
     apps.map(async app => {
       const cleanName = stringToIdentifier(app.packageId)
-      nameToAppMeta[cleanName] = app
       const dllFile = join(outputDir, `manifest-${cleanName}.json`)
       const appEntry = join(
         app.directory,
@@ -135,9 +132,11 @@ export async function getAppsConfig(
       return params
     }),
   )
+  const nameToAppMeta: AppMetaDict = {}
   await Promise.all(
-    appParams.map(async params => {
+    appParams.map(async (params, index) => {
       const config = await addDLL(getAppParams(params))
+      nameToAppMeta[params.name] = apps[index]
       webpackConfigs[params.name] = config
     }),
   )

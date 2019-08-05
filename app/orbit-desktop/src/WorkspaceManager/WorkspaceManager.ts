@@ -3,7 +3,7 @@ import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
 import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
-import { decorate, react } from '@o/use-store'
+import { decorate, ensure, react } from '@o/use-store'
 import { remove } from 'lodash'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
@@ -73,7 +73,9 @@ export class WorkspaceManager {
    */
   update = react(
     () => [this.activeApps, this.options],
-    async ([activeApps]) => {
+    async ([activeApps], { sleep }) => {
+      ensure('directory', !!this.options.workspaceRoot)
+      await sleep(100)
       const identifiers = Object.keys(activeApps)
       const space = await getActiveSpace()
       const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })

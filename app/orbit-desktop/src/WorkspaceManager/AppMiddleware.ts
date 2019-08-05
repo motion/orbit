@@ -25,9 +25,16 @@ export class AppMiddleware {
   configs = null
   state: WebpackAppsDesc[] = []
   apps: AppMeta[] = []
-  statusListeners = new Set<AppBuildStatusListener>()
+  buildStatus = new Map<string, 'compiling' | 'error' | 'success'>()
+  appBuildStatusListeners = new Set<AppBuildStatusListener>()
+  completedFirstBuild: Promise<boolean>
+  completeFirstBuild: () => void
 
-  constructor(private appsManager: AppsManager) {}
+  constructor(private appsManager: AppsManager) {
+    this.completedFirstBuild = new Promise(res => {
+      this.completeFirstBuild = () => res(true)
+    })
+  }
 
   update(configs: { [key: string]: webpack.Configuration }, nameToAppMeta: AppMetaDict) {
     log.info(`update ${Object.keys(configs).join(', ')}`, configs)
@@ -36,11 +43,24 @@ export class AppMiddleware {
     this.state = this.getAppMiddlewares(configs, nameToAppMeta)
   }
 
+  updateCompletedFirstBuild = async (name: string, status: 'compiling' | 'error' | 'success') => {
+    this.buildStatus.set(name, status)
+    if (this.buildStatus.size === 0) {
+      return
+    }
+    const statuses = [...this.buildStatus].map(x => x[1])
+    if (statuses.every(status => status === 'success')) {
+      log.verbose(`Completed initial build`)
+      this.completeFirstBuild()
+    }
+  }
+
   /**
    * Resolves all requests if they are valid down the the proper app middleware
    */
   middleware: Handler = async (req, res, next) => {
     const sendIndex = async () => {
+      await this.completedFirstBuild
       res.send(await this.getIndex())
     }
     // hacky way to just serve our own index.html for now
@@ -61,7 +81,143 @@ export class AppMiddleware {
     return next()
   }
 
-  async getIndex() {
+  onStatus(callback: AppBuildStatusListener) {
+    this.appBuildStatusListeners.add(callback)
+    return () => {
+      this.appBuildStatusListeners.delete(callback)
+    }
+  }
+
+  private getAppMiddlewares(
+    configs: WebpackConfigObj,
+    nameToAppMeta: AppMetaDict,
+  ): WebpackAppsDesc[] {
+    log.info(`configs ${Object.keys(configs).join(', ')}`, configs)
+
+    const { main, ...rest } = configs
+    const res: WebpackAppsDesc[] = []
+    // you have to do it this janky ass way because webpack just isnt really great at
+    // doing multi-config hmr, and this makes sure the 404 hot-update bug if fixed (google)
+    for (const name in rest) {
+      const config = rest[name]
+      const { devMiddleware, compiler } = this.getMiddleware(config, name, nameToAppMeta[name])
+      res.push({
+        middleware: resolveIfExists(devMiddleware, [config.output.path]),
+        compiler,
+        config,
+      })
+    }
+
+    /**
+     * One HMR server for everything because EventStream's don't support >5 in Chrome
+     */
+    const appsHotMiddleware = WebpackHotMiddleware(res.map(x => x.compiler), {
+      path: '/__webpack_hmr',
+      log: console.log,
+      heartBeat: 10 * 1000,
+    })
+    res.push({
+      middleware: resolveIfExists(appsHotMiddleware, res.map(x => x.config.output.path), [
+        '/__webpack_hmr',
+      ]),
+    })
+
+    // falls back to the main entry middleware
+    if (main) {
+      const { devMiddleware, compiler } = this.getMiddleware(main, 'main')
+      const mainHotMiddleware = WebpackHotMiddleware([compiler], {
+        path: '/__webpack_hmr_main',
+        log: console.log,
+        heartBeat: 10 * 1000,
+      })
+      res.push({
+        middleware: resolveIfExists(mainHotMiddleware, [main.output.path], ['/__webpack_hmr_main']),
+      })
+      res.push({
+        middleware: devMiddleware,
+      })
+      // need to have another devMiddleware  after historyAPIFallback, see:
+      // https://github.com/webpack/webpack-dev-middleware/issues/88#issuecomment-252048006
+      res.push({
+        middleware: historyAPIFallback(),
+      })
+      res.push({
+        middleware: devMiddleware,
+      })
+    }
+
+    return res
+  }
+
+  private getMiddleware = (config: any, name: string, appMeta?: AppMeta) => {
+    const compiler = Webpack(config)
+    const publicPath = config.output.publicPath
+    const devMiddleware = WebpackDevMiddleware(compiler, {
+      publicPath,
+      reporter: this.createReporterForApp(name, appMeta),
+    })
+    return { devMiddleware, compiler }
+  }
+
+  private createReporterForApp(name: string, appMeta?: AppMeta) {
+    // start in compiling mode
+    this.updateCompletedFirstBuild(name, 'compiling')
+
+    return (middlewareOptions, options) => {
+      // run the usual webpack reporter, outputs to console
+      // https://github.com/webpack/webpack-dev-middleware/blob/master/lib/reporter.js
+      webpackDevReporter(middlewareOptions, options)
+
+      const { state, stats } = options
+      const status = !state ? 'compiling' : stats.hasErrors() ? 'error' : 'success'
+
+      // keep internal track of status of builds
+      this.updateCompletedFirstBuild(name, status)
+
+      // report to appStatus bus
+      if (appMeta) {
+        if (!state) {
+          this.updateAppStatus(appMeta, { type: 'info', message: `Compiling...` })
+          return
+        }
+        if (stats.hasErrors()) {
+          this.updateAppStatus(appMeta, {
+            type: 'error',
+            message: stats.toString(middlewareOptions.stats),
+          })
+          return
+        }
+        this.updateAppStatus(appMeta, {
+          type: 'success',
+          message: stats.toString(middlewareOptions.stats),
+        })
+      }
+    }
+  }
+
+  private updateAppStatus = async (
+    appMeta: AppMeta,
+    message: Pick<AppStatusMessage, 'type' | 'message'>,
+  ) => {
+    // we have to map in a tricky way to each appId
+    for (const app of this.appsManager.apps) {
+      const packageId = await getPackageId(app.identifier)
+      if (packageId === appMeta.packageId) {
+        this.sendAppBuildStatusUpdate({ appId: app.id, ...message })
+      }
+    }
+  }
+
+  private sendAppBuildStatusUpdate(message: Pick<AppStatusMessage, 'type' | 'message' | 'appId'>) {
+    this.appBuildStatusListeners.forEach(listener => {
+      listener({
+        id: `${message.appId}-build-status`,
+        ...message,
+      })
+    })
+  }
+
+  private async getIndex() {
     return `<!DOCTYPE html>
     <html lang="en">.
       <head>
@@ -100,123 +256,6 @@ export class AppMiddleware {
         <script src="/main.js"></script>
       </body>
     </html>`
-  }
-
-  onStatus(callback: AppBuildStatusListener) {
-    this.statusListeners.add(callback)
-    return () => {
-      this.statusListeners.delete(callback)
-    }
-  }
-
-  private getAppMiddlewares(
-    configs: WebpackConfigObj,
-    nameToAppMeta: AppMetaDict,
-  ): WebpackAppsDesc[] {
-    log.info(`configs ${Object.keys(configs).join(', ')}`, configs)
-
-    const { main, ...rest } = configs
-    const res: WebpackAppsDesc[] = []
-    // you have to do it this janky ass way because webpack just isnt really great at
-    // doing multi-config hmr, and this makes sure the 404 hot-update bug if fixed (google)
-    for (const name in rest) {
-      const config = rest[name]
-      const { devMiddleware, compiler } = this.getMiddleware(config, nameToAppMeta[name])
-      res.push({
-        middleware: resolveIfExists(devMiddleware, [config.output.path]),
-        compiler,
-        config,
-      })
-    }
-
-    /**
-     * One HMR server for everything because EventStream's don't support >5 in Chrome
-     */
-    const appsHotMiddleware = WebpackHotMiddleware(res.map(x => x.compiler), {
-      path: '/__webpack_hmr',
-      log: console.log,
-      heartBeat: 10 * 1000,
-    })
-    res.push({
-      middleware: resolveIfExists(appsHotMiddleware, res.map(x => x.config.output.path), [
-        '/__webpack_hmr',
-      ]),
-    })
-
-    // falls back to the main entry middleware
-    if (main) {
-      const { devMiddleware, compiler } = this.getMiddleware(main)
-      const mainHotMiddleware = WebpackHotMiddleware([compiler], {
-        path: '/__webpack_hmr_main',
-        log: console.log,
-        heartBeat: 10 * 1000,
-      })
-      res.push({
-        middleware: resolveIfExists(mainHotMiddleware, [main.output.path], ['/__webpack_hmr_main']),
-      })
-      res.push({
-        middleware: devMiddleware,
-      })
-      // need to have another devMiddleware  after historyAPIFallback, see:
-      // https://github.com/webpack/webpack-dev-middleware/issues/88#issuecomment-252048006
-      res.push({
-        middleware: historyAPIFallback(),
-      })
-      res.push({
-        middleware: devMiddleware,
-      })
-    }
-
-    return res
-  }
-
-  private getMiddleware = (config: any, appMeta?: AppMeta) => {
-    const compiler = Webpack(config)
-    const publicPath = config.output.publicPath
-    const devMiddleware = WebpackDevMiddleware(compiler, {
-      publicPath,
-      ...(appMeta && {
-        reporter: this.createReporterForApp(appMeta),
-      }),
-    })
-    return { devMiddleware, compiler }
-  }
-
-  private createReporterForApp(appMeta: AppMeta) {
-    const send = async (message: Pick<AppStatusMessage, 'type' | 'message'>) => {
-      // we have to map in a tricky way to each appId
-      for (const app of this.appsManager.apps) {
-        const packageId = await getPackageId(app.identifier)
-        if (packageId === appMeta.packageId) {
-          this.sendStatus({ appId: app.id, ...message })
-        }
-      }
-    }
-    return (middlewareOptions, options) => {
-      // run the usual webpack reporter
-      // https://github.com/webpack/webpack-dev-middleware/blob/master/lib/reporter.js
-      webpackDevReporter(middlewareOptions, options)
-      // report our own errors
-      const { state, stats } = options
-      if (!state) {
-        send({ type: 'info', message: `Compiling...` })
-        return
-      }
-      if (stats.hasErrors()) {
-        send({ type: 'error', message: stats.toString(middlewareOptions.stats) })
-        return
-      }
-      send({ type: 'success', message: stats.toString(middlewareOptions.stats) })
-    }
-  }
-
-  private sendStatus(message: Pick<AppStatusMessage, 'type' | 'message' | 'appId'>) {
-    this.statusListeners.forEach(listener => {
-      listener({
-        id: `${message.appId}-build-status`,
-        ...message,
-      })
-    })
   }
 }
 
@@ -264,7 +303,6 @@ function webpackDevReporter(middlewareOptions, options) {
     const displayStats = middlewareOptions.stats !== false
 
     if (displayStats) {
-      console.log('showing stats')
       if (stats.hasErrors()) {
         log.error(stats.toString(middlewareOptions.stats))
       } else if (stats.hasWarnings()) {

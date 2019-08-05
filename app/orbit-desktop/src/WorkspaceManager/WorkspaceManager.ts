@@ -4,8 +4,8 @@ import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
 import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppStatusModel, AppWorkspaceCommand, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
-import { unlink } from 'fs-extra'
-import { remove } from 'lodash'
+import { remove } from 'fs-extra'
+import _ from 'lodash'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 import Observable from 'zen-observable'
@@ -54,10 +54,10 @@ export class WorkspaceManager {
   async updateWorkspace(opts: CommandWsOptions) {
     log.info(`updateWorkspace ${JSON.stringify(opts)}`)
     await loadWorkspace(opts.workspaceRoot)
+    await this.appsManager.start({
+      singleUseMode: this.startOpts.singleUseMode,
+    })
     if (!this.startOpts.singleUseMode) {
-      await this.appsManager.start({
-        singleUseMode: this.startOpts.singleUseMode,
-      })
       await this.graphServer.start()
     }
     this.options = opts
@@ -188,7 +188,7 @@ export class WorkspaceManager {
         if (options.clean) {
           log.info(`Cleaning workspace dist directory`)
           try {
-            await unlink(join(workspaceRoot, 'dist'))
+            await remove(join(workspaceRoot, 'dist'))
           } catch (err) {
             log.info(`Error cleaning ${err.message}`, err)
           }
@@ -224,7 +224,7 @@ export class WorkspaceManager {
       }),
       resolveCommand(AppDevCloseCommand, async ({ appId }) => {
         log.info('Removing build process', appId)
-        this.developingApps = remove(this.developingApps, x => x.appId === appId)
+        this.developingApps = _.remove(this.developingApps, x => x.appId === appId)
         log.info('Removing process', appId)
         await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
         log.info('Closed app', appId)

@@ -64,10 +64,11 @@ export class AppsManager {
     }
     // wait for apps/appsMeta to come down
     await new Promise(res => {
-      const dispose = autorun(() => {
+      const temp = { dispose: () => {} }
+      temp.dispose = autorun(() => {
         if (this.resolvedApps && this.fetchedAppsMeta) {
-          dispose()
           res()
+          temp.dispose()
         }
       })
     })

@@ -69,7 +69,7 @@ export const finishAuth = async (type: string, values: OauthValues) => {
       types: ['node'],
     })
 
-    if (required.type === 'error') {
+    if (required.type !== 'success') {
       throw new Error(`Couldn't load app definition: ${required.message}`)
     }
 

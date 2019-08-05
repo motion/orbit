@@ -1,5 +1,5 @@
 import { Logger } from '@o/logger'
-import { AppDefinition } from '@o/models'
+import { AppDefinition, StatusReply } from '@o/models'
 
 import { findPackage } from './findPackage'
 import { setIdentifierToPackageId } from './getPackageId'
@@ -15,19 +15,18 @@ export async function requireAppDefinition({
   directory: string
   packageId: string
   types: ('node' | 'web' | 'appInfo')[]
-}) {
+}): Promise<StatusReply<AppDefinition>> {
   if (!directory || !packageId) {
     return {
-      type: 'error' as const,
+      type: 'error',
       message: `No directory/packageId given`,
     }
   }
 
   const packageRoot = await findPackage({ packageId, directory })
-
   if (!packageRoot) {
     return {
-      type: 'error' as const,
+      type: 'error',
       message: `No package found (packageId: ${packageId}, directory: ${directory})`,
     }
   }
@@ -47,12 +46,13 @@ export async function requireAppDefinition({
     setIdentifierToPackageId(definition.id, packageId)
     return {
       type: 'success',
+      message: 'Found definition',
       value: definition,
-    } as const
+    }
   }
 
   return {
     type: 'error',
     message: 'No definition found',
-  } as const
+  }
 }

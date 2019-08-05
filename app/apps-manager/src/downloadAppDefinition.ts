@@ -66,11 +66,9 @@ export async function downloadAppDefinition(options: { directory: string; packag
       ...options,
       types: ['appInfo'],
     })
-
-    if (loadedDef.type === 'error') {
+    if (loadedDef.type !== 'success') {
       return loadedDef
     }
-
     return {
       type: 'success',
       identifier: loadedDef.value.id,

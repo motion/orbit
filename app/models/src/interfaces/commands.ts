@@ -4,14 +4,13 @@ import { ApiInfo } from '../ApiInfo'
 import { AppBit } from './AppBit'
 import { Space } from './SpaceInterface'
 
-export type StatusReply =
+export type StatusReply<A = string> =
   | {
       type: 'error'
       message: string
       errors?: Object[]
     }
-  | { type: 'success'; message: string; value?: string }
-  | { type: 'progress'; message: string; percent?: number }
+  | { type: 'success'; message: string; value?: A }
 
 export const NewFallbackServerPortCommand = new Command<number, void>('new-fallback-server-port')
 export const AppRemoveCommand = new Command<StatusReply, { appId: number }>('app-remove')

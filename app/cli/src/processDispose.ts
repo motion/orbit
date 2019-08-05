@@ -10,12 +10,12 @@ process.on('SIGQUIT', createDispose('SIGQUIT'))
 
 // log errors
 process.on('uncaughtException', err => {
-  console.error('uncaughtException', err.message, err.stack)
-  process.exit(1)
+  console.error('cli uncaughtException', err.message, err.stack)
+  // process.exit(1)
 })
 process.on('unhandledRejection', err => {
-  console.error('unhandledRejection', err)
-  process.exit(1)
+  console.error('cli unhandledRejection', err)
+  // process.exit(1)
 })
 
 type Disposable = Function | { action: string; dispose: Function }

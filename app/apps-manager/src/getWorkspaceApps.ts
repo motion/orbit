@@ -64,7 +64,7 @@ export async function getAppMeta(directory: string, isLocal: boolean = false): P
       isLocal,
     }
   } else {
-    console.error('Not an orbit app!')
+    log.error(`Not an orbit app! ${directory}`)
     return null
   }
 }

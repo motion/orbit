@@ -57,49 +57,45 @@ function resolveAppSetupVerify() {
 
     const loadDef = await getAppDefinitionOrDownloadTemporary(identifier)
 
-    if (loadDef.type === 'error') {
+    if (loadDef.type !== 'success') {
       return loadDef
     }
 
     const definition = loadDef.value
-
     if (!definition.setupValidate) {
       return {
         type: 'success',
         message: 'Success, no validation defined',
-      } as const
+      }
     }
 
     let res
-
     try {
       res = await definition.setupValidate(app)
     } catch (err) {
-      console.log('error running validate', err)
+      log.error('error running validate', err)
       return {
         type: 'error',
         message: `${err}`,
-      } as const
+      }
     }
 
     if (typeof res === 'string') {
       return {
         type: 'success',
         message: res,
-      } as const
+      }
     }
-
     if (res === undefined || res === true) {
       return {
         type: 'success',
         message: 'Success',
-      } as const
+      }
     }
-
     return {
       type: 'error',
       message: res,
-    } as const
+    }
   })
 }
 

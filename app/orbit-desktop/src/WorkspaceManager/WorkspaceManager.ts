@@ -2,7 +2,7 @@ import { AppsManager, getAppMeta, requireAppDefinition } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
 import { AppCloseWindowCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppWorkspaceCommand, CallAppBitApiMethodCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
-import { Desktop } from '@o/stores'
+import { Desktop, Electron } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { remove } from 'fs-extra'
 import _, { uniqBy } from 'lodash'
@@ -307,18 +307,16 @@ export class WorkspaceManager {
 
       resolveCommand(AppDevCloseCommand, async ({ identifier }) => {
         log.info('Stopping development', identifier)
-        // ⚠️
-        const appMeta = this.developingApps.find(x => x.packageId === '')
-        // this.developingApps = _.remove(
-        //   this.developingApps,
-        //   x => x.directory === this.appIdToPackageJson[windowId],
-        // )
-        // delete this.appIdToPackageJson[windowId]
+        const packageId = this.appsManager.identifierToPackageId(identifier)
+        const appMeta = this.developingApps.find(x => x.packageId === packageId)
+        this.developingApps = _.remove(this.developingApps, x => x.packageId === packageId)
         this.setBuildMode(appMeta.packageId, 'production')
         // ⚠️
         const windowId = -1
-        log.verbose('Close window', windowId)
-        await this.mediatorServer.sendRemoteCommand(AppCloseWindowCommand, { windowId })
+        if (Electron.state.appWindows[windowId]) {
+          log.verbose('Close window', windowId)
+          await this.mediatorServer.sendRemoteCommand(AppCloseWindowCommand, { windowId })
+        }
         return {
           type: 'success',
           message: `Stopped development of ${identifier}`,

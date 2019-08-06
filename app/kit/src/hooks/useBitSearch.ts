@@ -24,7 +24,7 @@ export function useBitSearch({
   excludeData,
   ...args
 }: UseBitsProps = {}) {
-  const listProps = useListProps()
+  const listProps = useListProps() || { searchable: false }
   const searchable = typeof args.searchable === 'undefined' ? listProps.searchable : args.searchable
   const activeQuery = useActiveQuery({ delay })
   const query = searchable ? activeQuery : args.query

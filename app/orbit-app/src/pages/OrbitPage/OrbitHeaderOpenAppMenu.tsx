@@ -1,5 +1,5 @@
 import { command, useStore } from '@o/kit'
-import { AppDevOpenCommand } from '@o/models'
+import { AppDevCloseCommand, AppDevOpenCommand } from '@o/models'
 import { App } from '@o/stores'
 import { Icon, MenuButton, Row, Toggle } from '@o/ui'
 import React, { memo, useState } from 'react'
@@ -69,12 +69,18 @@ export const OrbitHeaderOpenAppMenu = memo(
                   onClick: e => {
                     e.stopPropagation()
                     // toggle
+                    if (isDeveloping) {
+                      command(AppDevOpenCommand, {
+                        type: 'workspace',
+                        appId: appsCarousel.focusedApp.id!,
+                        identifier: appsCarousel.focusedApp.identifier!,
+                      })
+                    } else {
+                      command(AppDevCloseCommand, {
+                        identifier: appsCarousel.focusedApp.identifier!,
+                      })
+                    }
                     setIsDeveloping(x => !x)
-                    command(AppDevOpenCommand, {
-                      type: 'workspace',
-                      appId: appsCarousel.focusedApp.id!,
-                      identifier: appsCarousel.focusedApp.identifier!,
-                    })
                   },
                   after: (
                     <Row space>

@@ -24,21 +24,27 @@ export async function commandDev(options: CommandDevOptions) {
   }
 
   try {
-    const reply = await mediator.command(AppDevOpenCommand, options, {
+    let reply = await mediator.command(AppDevOpenCommand, options, {
       onMessage: reporter.info,
     })
     if (reply.type !== 'success') {
       reporter.panic(reply.message)
       return
     }
-    const windowId = +reply.value
-    await mediator.command(AppOpenWindowCommand, {
-      windowId,
+    const { appId } = reply.value
+    reply = await mediator.command(AppOpenWindowCommand, {
+      appId,
       isEditing: true,
     })
+    if (reply.type !== 'success') {
+      reporter.panic(reply.message)
+      return
+    }
+    const { windowId } = reply.value
     addProcessDispose(async () => {
       logStatusReply(
         await mediator.command(AppDevCloseCommand, {
+          appId,
           windowId,
         }),
       )

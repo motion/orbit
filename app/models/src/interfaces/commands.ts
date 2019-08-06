@@ -93,9 +93,11 @@ export const AppMetaCommand = new Command<
 >('AppMetaCommand')
 
 export const AppOpenWindowCommand = new Command<
-  boolean,
-  {
+  StatusReply<{
     windowId: number
+  }>,
+  {
+    appId: number
     isEditing?: boolean
   }
 >('AppOpenWindowCommand')
@@ -141,7 +143,12 @@ export type CommandDevOptions =
       type: 'workspace'
       identifier: string
     }
-export const AppDevOpenCommand = new Command<StatusReply, CommandDevOptions>('AppDevOpenCommand')
+export const AppDevOpenCommand = new Command<
+  StatusReply<{
+    appId: number
+  }>,
+  CommandDevOptions
+>('AppDevOpenCommand')
 
 // workspace
 

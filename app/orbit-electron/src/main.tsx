@@ -3,7 +3,7 @@ import 'raf/polyfill'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
-import { AppOpenWindowCommand, NewFallbackServerPortCommand, SendClientDataCommand, ToggleOrbitMainCommand } from '@o/models'
+import { NewFallbackServerPortCommand, SendClientDataCommand, ToggleOrbitMainCommand } from '@o/models'
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'
 import electronDebug from 'electron-debug'
@@ -12,9 +12,9 @@ import waitOn from 'wait-on'
 
 import { IS_MAIN_ORBIT } from './constants'
 import ElectronRoot from './ElectronRoot'
-import { forkAndStartOrbitApp } from './helpers/forkAndStartOrbitApp'
 import MenuWindow from './menus/MenuWindow'
 import { OrbitRoot } from './OrbitRoot'
+import { AppOpenWindowResolver } from './resolver/AppOpenWindowResolver'
 import { CloseAppResolver } from './resolver/CloseAppResolver'
 import { RestartAppResolver } from './resolver/RestartAppResolver'
 import { TearAppResolver } from './resolver/TearAppResolver'
@@ -64,29 +64,7 @@ export async function main() {
       models: [],
       transport: new WebSocketServerTransport({ port }),
       resolvers: [
-        resolveCommand(AppOpenWindowCommand, async ({ windowId, isEditing }) => {
-          console.log('got open window command, opening...', windowId)
-          Electron.setState({
-            appWindows: {
-              [windowId]: {
-                type: 'app',
-                windowId,
-                isEditing,
-                isTorn: true,
-              },
-            },
-          })
-          // setTimeout so command doesnt take forever to run
-          setTimeout(() => {
-            forkAndStartOrbitApp(
-              { windowId },
-              {
-                WAIT_FOR_ORBIT: 'false',
-              },
-            )
-          })
-          return true
-        }),
+        AppOpenWindowResolver,
         TearAppResolver,
         CloseAppResolver,
         RestartAppResolver,

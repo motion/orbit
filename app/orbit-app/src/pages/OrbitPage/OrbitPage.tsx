@@ -132,12 +132,10 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
   if (isEditing) {
     const bundleUrl = `${App.bundleUrl}?cacheKey=${Math.random()}`
-
     console.log(
       `%cEditing app id: ${App.appConf.windowId} at url ${bundleUrl}`,
       'color: green; background: lightgreen; font-weight: bold;',
     )
-
     contentArea = (
       <Suspense fallback={<Loading message={`Loading app ${App.appConf.windowId}`} />}>
         <LoadApp RenderApp={RenderDevApp} bundleURL={bundleUrl} />

@@ -2,7 +2,7 @@ import { AppsManager, getAppMeta } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
 import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppStatusModel, AppWorkspaceCommand, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
-import { Desktop, Electron } from '@o/stores'
+import { Desktop } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { remove } from 'fs-extra'
 import _, { uniqBy } from 'lodash'
@@ -190,6 +190,13 @@ export class WorkspaceManager {
     return observable
   }
 
+  private setBuildMode(packageId: string, status: 'development' | 'production') {
+    this.buildMode = {
+      ...this.buildMode,
+      [packageId]: status,
+    }
+  }
+
   /**
    * For external commands, this lets the CLI call various commands in here,
    * as well as the client apps if need be.
@@ -232,26 +239,20 @@ export class WorkspaceManager {
         let appMeta: AppMeta
         if (options.type === 'independent') {
           // launch new app
-          const windowId = Object.keys(Electron.state.appWindows).length
-          Electron.setState({
-            appWindows: {
-              ...Electron.state.appWindows,
-              [windowId]: {
-                windowId,
-                appRole: 'editing',
-              },
-            },
-          })
           appMeta = await getAppMeta(options.projectRoot)
           this.windowIdToDirectory[windowId] = appMeta.directory
-          this.developingApps.push(appMeta)
-          return {
-            type: 'success',
-            message: 'Got app id',
-            value: `${windowId}`,
-          } as const
         } else {
         }
+
+        // always do this:
+        this.developingApps.push(appMeta)
+        this.setBuildMode(appMeta.packageId, 'development')
+
+        return {
+          type: 'success',
+          message: 'Got app id',
+          value: `${windowId}`,
+        } as const
       }),
 
       resolveCommand(AppDevCloseCommand, async ({ windowId }) => {
@@ -261,6 +262,7 @@ export class WorkspaceManager {
           x => x.directory === this.windowIdToDirectory[windowId],
         )
         delete this.windowIdToDirectory[windowId]
+        this.setBuildMode(appMeta.packageId, 'production')
         log.info('Removing process', windowId)
         await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { windowId })
         log.info('Closed app', windowId)

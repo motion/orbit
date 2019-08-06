@@ -7,9 +7,8 @@ export let Electron = null as ElectronStore
 
 export type AppWindow = {
   windowId: number
+  appId?: number
   appRole: 'main' | 'editing' | 'torn'
-  path?: string
-  bundleURL?: string
 }
 
 @decorate

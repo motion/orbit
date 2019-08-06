@@ -1,10 +1,10 @@
 import { AppIcon, useStore } from '@o/kit'
-import { App, Electron } from '@o/stores'
-import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
-import { createUsableStore, ensure, react } from '@o/use-store'
+import { App, Desktop, Electron } from '@o/stores'
+import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, SurfacePassProps, View } from '@o/ui'
+import { createUsableStore, ensure, react, useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useMemo } from 'react'
 import { createRef, useRef } from 'react'
+import React, { forwardRef, memo, useMemo, useState } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
@@ -113,9 +113,30 @@ export const OrbitHeader = memo(() => {
   const isOnTearablePane = !useIsOnStaticApp()
   const { appRole } = useStore(App)
 
-  const isEditing = appRole === 'editing'
+  // TODO we should move all this state to the datbase and out of Desktop.workspaceState.developingApps etc
+  // that gives us a few things:
+  //  1. it will have optimistic updating in the UI here for the toggling with no duplicate logic
+  //  2. it will be a nicer way to sync state between the frontend/backend
+  //  3. it persists the state across startups (we could easily clear it too), which may not be desirable, but at least it's an option
+  // const { isOnOpenableApp, focusedApp } = useAppsCarousel()
+  // const [menuState, setMenuState] = useAppState(orbitAppStateId(focusedApp.id), {
+  //   isDeveloping
+  // })
+  const [isDeveloping, setIsDeveloping] = useState(false)
+  useReaction(
+    () => [
+      appsCarouselStore.focusedApp.identifier!,
+      Desktop.state.workspaceState.developingAppIdentifiers,
+    ],
+    ([identifier, developingAppIdentifiers]) => {
+      console.log('update toggle', developingAppIdentifiers, identifier)
+      // @ts-ignore why is typescript not passing types down here... see ReactVal (it works with react())
+      setIsDeveloping(developingAppIdentifiers.some(x => x === identifier))
+    },
+  )
+
   const isTorn = appRole === 'torn'
-  const slim = isEditing || isTorn
+  const slim = isTorn
 
   const homeButtonElement = useMemo(
     () =>
@@ -134,12 +155,12 @@ export const OrbitHeader = memo(() => {
   return (
     <OrbitHeaderContainer
       ref={containerRef}
-      isEditing={isEditing}
+      isDeveloping={isDeveloping}
       className="draggable"
       onMouseUp={headerStore.handleMouseUp}
       background={appCarousel.zoomedIn ? undefined : 'transparent'}
     >
-      <OrbitHeaderEditingBg isActive={isEditing} />
+      <OrbitHeaderEditingBg isActive={isDeveloping} />
 
       <HeaderTop height={slim ? 46 : 56}>
         <HeaderButtonPassProps>
@@ -149,7 +170,7 @@ export const OrbitHeader = memo(() => {
           </HeaderSide>
         </HeaderButtonPassProps>
 
-        <HeaderContain space spaceAround isActive={false} isEditing={isEditing}>
+        <HeaderContain space spaceAround isActive={false} isDeveloping={isDeveloping}>
           <OrbitHeaderInput fontSize={slim ? 16 : 18} />
 
           <Row
@@ -176,22 +197,11 @@ export const OrbitHeader = memo(() => {
               }}
               onClick={om.actions.router.toggleSetupAppPage}
             />
-            <OrbitHeaderOpenAppMenu />
+            <OrbitHeaderOpenAppMenu isDeveloping={isDeveloping} setIsDeveloping={setIsDeveloping} />
           </Row>
         </HeaderContain>
 
         <HeaderSide space="sm" spaceAround="md" justifyContent="flex-start" slim={slim}>
-          {isEditing && (
-            <SurfacePassProps size={0.9} alt="flat" iconSize={14}>
-              <>
-                <Button circular icon="edit" tooltip="Open in VSCode" />
-                <Space size="sm" />
-                <Button tooltip="Deploy to space">Publish</Button>
-                <Space size="sm" />
-              </>
-            </SurfacePassProps>
-          )}
-
           <View flex={1} />
           <OrbitDockOpenButton />
         </HeaderSide>
@@ -199,7 +209,7 @@ export const OrbitHeader = memo(() => {
 
       {/* this stays slightly below the active tab and looks nice */}
       <BorderBottom
-        borderColor={(isEditing && theme.headerBorderBottom) || theme.borderColor}
+        borderColor={(isDeveloping && theme.headerBorderBottom) || theme.borderColor}
         zIndex={0}
         opacity={0.5}
       />
@@ -334,7 +344,7 @@ const OrbitHeaderContainer = gloss<any>(View, {
 }).theme((props, theme) => ({
   background:
     props.background ||
-    (props.isEditing && theme.headerBackgroundOpaque) ||
+    (props.isDeveloping && theme.headerBackgroundOpaque) ||
     theme.headerBackground ||
     theme.background,
 }))
@@ -356,18 +366,14 @@ const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
 }))
 
-const HeaderContain = gloss<RowProps & { isActive?: boolean; isEditing: boolean }>(Row, {
+const HeaderContain = gloss<RowProps & { isActive?: boolean; isDeveloping: boolean }>(Row, {
   margin: ['auto', 0],
   alignItems: 'center',
   flex: 20,
   maxWidth: 900,
   borderRadius: 100,
-}).theme(({ isActive, isEditing }, theme) => ({
-  background: isEditing
-    ? theme.orbitInputBackgroundEditing
-    : isActive
-    ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075]
-    : 'none',
+}).theme(({ isActive }, theme) => ({
+  background: isActive ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075] : 'none',
 }))
 
 const HeaderTop = gloss(View, {

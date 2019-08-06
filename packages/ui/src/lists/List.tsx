@@ -9,6 +9,7 @@ import { createContextualProps } from '../helpers/createContextualProps'
 import { ProvideHighlight } from '../Highlight'
 import { useFilter, UseFilterProps } from '../hooks/useFilter'
 import { useGet, useGetFn } from '../hooks/useGet'
+import { ListSeparator } from '../ListSeparator'
 import { Section, SectionProps, SectionSpecificProps } from '../Section'
 import { useShareStore } from '../Share'
 import { useShortcutStore } from '../Shortcut'
@@ -105,7 +106,7 @@ export const List = memo(
       droppable,
       onDrop,
       onDelete,
-      Separator,
+      Separator = ListSeparator,
       ...restProps
     } = props
     const shareStore = useShareStore()

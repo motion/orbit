@@ -32,7 +32,7 @@ export const AppOpenWindowResolver = resolveCommand(
     return {
       type: 'success',
       message: `Opened new window for ${appId}`,
-      value: windowId,
-    }
+      value: { windowId },
+    } as const
   },
 )

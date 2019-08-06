@@ -1,4 +1,4 @@
-import { AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand, CommandDevOptions } from '@o/models'
+import { AppCloseWindowCommand, AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand, CommandDevOptions } from '@o/models'
 
 import { getOrbitDesktop } from './getDesktop'
 import { logStatusReply } from './logStatusReply'
@@ -31,7 +31,7 @@ export async function commandDev(options: CommandDevOptions) {
       reporter.panic(devOpenReply.message)
       return
     }
-    const { appId } = devOpenReply.value
+    const { appId, identifier } = devOpenReply.value
     const openWindowReply = await mediator.command(AppOpenWindowCommand, {
       appId,
       isEditing: true,
@@ -44,7 +44,11 @@ export async function commandDev(options: CommandDevOptions) {
     addProcessDispose(async () => {
       logStatusReply(
         await mediator.command(AppDevCloseCommand, {
-          appId,
+          identifier,
+        }),
+      )
+      logStatusReply(
+        await mediator.command(AppCloseWindowCommand, {
           windowId,
         }),
       )

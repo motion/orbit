@@ -1,7 +1,7 @@
 import { AppsManager, getAppMeta } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppStatusModel, AppWorkspaceCommand, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
+import { AppCloseWindowCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppStatusModel, AppWorkspaceCommand, CallAppBitApiMethodCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { remove } from 'fs-extra'
@@ -271,9 +271,10 @@ export class WorkspaceManager {
         // )
         // delete this.appIdToPackageJson[windowId]
         this.setBuildMode(appMeta.packageId, 'production')
-        log.info('Removing process', windowId)
-        await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { windowId })
-        log.info('Closed app', windowId)
+        // ⚠️
+        const windowId = -1
+        log.verbose('Close window', windowId)
+        await this.mediatorServer.sendRemoteCommand(AppCloseWindowCommand, { windowId })
         return {
           type: 'success',
           message: `Stopped development of ${identifier}`,

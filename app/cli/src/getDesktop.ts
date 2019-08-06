@@ -1,5 +1,5 @@
-import { OrbitProcessStdOutModel } from '@o/models'
 import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
+import { OrbitProcessStdOutModel } from '@o/models'
 import { OR_TIMED_OUT, orTimeout, randomString } from '@o/utils'
 import bonjour from 'bonjour'
 import { ChildProcess } from 'child_process'
@@ -75,7 +75,7 @@ export async function getOrbitDesktop(
     } else {
       // in dev mode connect to orbit process and pipe logs here for easy debug
       const model = mediator.observeOne(OrbitProcessStdOutModel, undefined).subscribe(msg => {
-        reporter.verbose('desktop:', msg)
+        reporter.verbose(`> ${msg}`)
       })
       addProcessDispose(() => model.unsubscribe())
     }

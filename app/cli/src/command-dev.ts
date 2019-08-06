@@ -32,10 +32,16 @@ export async function commandDev(options: CommandDevOptions) {
       return
     }
     const { appId, identifier } = devOpenReply.value
-    const openWindowReply = await mediator.command(AppOpenWindowCommand, {
-      appId,
-      isEditing: true,
-    })
+    const openWindowReply = await mediator.command(
+      AppOpenWindowCommand,
+      {
+        appId,
+        isEditing: true,
+      },
+      {
+        onMessage: reporter.info,
+      },
+    )
     if (openWindowReply.type !== 'success') {
       reporter.panic(openWindowReply.message)
       return
@@ -43,14 +49,26 @@ export async function commandDev(options: CommandDevOptions) {
     const { windowId } = openWindowReply.value
     addProcessDispose(async () => {
       logStatusReply(
-        await mediator.command(AppDevCloseCommand, {
-          identifier,
-        }),
+        await mediator.command(
+          AppDevCloseCommand,
+          {
+            identifier,
+          },
+          {
+            onMessage: reporter.info,
+          },
+        ),
       )
       logStatusReply(
-        await mediator.command(AppCloseWindowCommand, {
-          windowId,
-        }),
+        await mediator.command(
+          AppCloseWindowCommand,
+          {
+            windowId,
+          },
+          {
+            onMessage: reporter.info,
+          },
+        ),
       )
     })
   } catch (err) {

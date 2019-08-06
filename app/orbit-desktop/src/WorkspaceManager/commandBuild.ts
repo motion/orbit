@@ -247,7 +247,6 @@ async function getAppInfoConfig(
         rules: [
           {
             test: x => {
-              console.log(x, entry)
               return x !== entry
             },
             use: 'ignore-loader',

@@ -1,7 +1,6 @@
-// @ts-ignore
-import Electron from 'electron'
+import { screen } from 'electron'
 
 export function getScreenSize() {
-  const { width, height } = Electron.screen.getPrimaryDisplay().workAreaSize
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize
   return [width, height]
 }

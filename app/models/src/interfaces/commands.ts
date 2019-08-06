@@ -35,7 +35,6 @@ export const ToggleOrbitMainCommand = new Command<undefined, boolean | undefined
 )
 
 export const TearAppCommand = new Command<void, { appType: string; windowId: number }>('tear-app')
-export const CloseAppCommand = new Command<void, { windowId: number }>('close-app')
 export const RestartAppCommand = new Command<void, void>('restart-app')
 export const ResetDataCommand = new Command<void, void>('reset-data')
 export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'light' }>(

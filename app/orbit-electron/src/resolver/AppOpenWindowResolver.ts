@@ -18,6 +18,7 @@ export const AppOpenWindowResolver = resolveCommand(
         },
       },
     })
+
     // setTimeout so command doesnt take forever to run
     setTimeout(() => {
       forkAndStartOrbitApp(
@@ -27,6 +28,11 @@ export const AppOpenWindowResolver = resolveCommand(
         },
       )
     })
-    return windowId
+
+    return {
+      type: 'success',
+      message: `Opened new window for ${appId}`,
+      value: windowId,
+    }
   },
 )

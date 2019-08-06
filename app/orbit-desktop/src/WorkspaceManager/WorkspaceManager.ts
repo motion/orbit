@@ -261,8 +261,8 @@ export class WorkspaceManager {
         } as const
       }),
 
-      resolveCommand(AppDevCloseCommand, async ({ windowId }) => {
-        log.info('Removing build process', windowId)
+      resolveCommand(AppDevCloseCommand, async ({ identifier }) => {
+        log.info('Stopping development', identifier)
         // ⚠️
         const appMeta = this.developingApps.find(x => x.packageId === '')
         // this.developingApps = _.remove(
@@ -274,6 +274,10 @@ export class WorkspaceManager {
         log.info('Removing process', windowId)
         await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { windowId })
         log.info('Closed app', windowId)
+        return {
+          type: 'success',
+          message: `Stopped development of ${identifier}`,
+        }
       }),
 
       // are both doing similar things but in different ways

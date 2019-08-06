@@ -1,6 +1,6 @@
 import { command, useModel } from '@o/bridge'
 import { AppDefinition, ProvideStores, showConfirmDialog, useStore } from '@o/kit'
-import { AppStatusModel, CloseAppCommand } from '@o/models'
+import { AppCloseWindowCommand, AppDevCloseCommand, AppStatusModel } from '@o/models'
 import { App } from '@o/stores'
 import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
@@ -74,7 +74,10 @@ const OrbitPageInner = memo(function OrbitPageInner() {
         if (App.isMainApp === false) {
           if (shouldCloseApp || shouldCloseTab) {
             e.returnValue = false
-            command(CloseAppCommand, { windowId: App.appConf.windowId })
+            command(AppCloseWindowCommand, { windowId: App.appConf.windowId })
+            if (App.isEditing) {
+              command(AppDevCloseCommand, { identifier: App.appConf.identifier })
+            }
             return
           }
         } else {

@@ -160,8 +160,8 @@ function getAppInfo(appRoot: string): AppDefinition | null {
 const monoRoot = join(__dirname, '..', '..', '..', '..')
 const defaultBaseDll = {
   // default base dll
-  manifest: join(monoRoot, 'example-workspace', 'dist', 'manifest-base.json'),
-  filepath: join(monoRoot, 'example-workspace', 'dist', 'base.dll.js'),
+  manifest: join(monoRoot, 'example-workspace', 'dist', 'production', 'manifest-base.json'),
+  filepath: join(monoRoot, 'example-workspace', 'dist', 'production', 'base.dll.js'),
 }
 if (process.env.NODE_ENV === 'production') {
   throw new Error(`Yo need to make this production ^^`)
@@ -229,8 +229,8 @@ async function getAppInfoConfig(
       entry: [entry],
       target: 'node',
       mode: 'development',
+      devtool: 'inline-source-map',
       minify: false,
-      noChunking: true,
       outputFile: 'appInfo.js',
       watch: options.watch || false,
       output: {
@@ -246,7 +246,10 @@ async function getAppInfoConfig(
         // ignore *everything* outside entry
         rules: [
           {
-            test: x => x !== entry,
+            test: x => {
+              console.log(x, entry)
+              return x !== entry
+            },
             use: 'ignore-loader',
           },
         ],

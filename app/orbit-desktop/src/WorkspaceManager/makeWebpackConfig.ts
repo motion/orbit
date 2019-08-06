@@ -28,7 +28,7 @@ export type WebpackParams = {
   injectHot?: boolean | string
   hot?: boolean
   minify?: boolean
-  noChunking?: boolean
+  devtool?: webpack.Configuration['devtool']
 }
 
 export function makeWebpackConfig(
@@ -53,7 +53,7 @@ export function makeWebpackConfig(
     dllReferences,
     hot,
     name,
-    noChunking,
+    devtool,
     injectHot,
   } = params
 
@@ -88,9 +88,6 @@ export function makeWebpackConfig(
       sideEffects: false,
       concatenateModules: true,
       splitChunks: false,
-      ...((target === 'node' || noChunking) && {
-        splitChunks: false,
-      }),
     },
     development: {
       minimize: minify,
@@ -150,7 +147,8 @@ export function makeWebpackConfig(
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
     },
-    devtool: mode === 'production' || target === 'node' ? 'source-map' : 'eval-source-map',
+    devtool:
+      devtool || (mode === 'production' || target === 'node' ? 'source-map' : 'eval-source-map'),
     externals: [
       {
         electron: '{}',

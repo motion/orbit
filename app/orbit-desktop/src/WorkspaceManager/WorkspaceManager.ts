@@ -1,20 +1,7 @@
 import { AppsManager, getAppMeta, requireAppDefinition } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import {
-  AppCloseWindowCommand,
-  AppCreateWorkspaceCommand,
-  AppDevCloseCommand,
-  AppDevOpenCommand,
-  AppEntity,
-  AppMeta,
-  AppMetaCommand,
-  AppWorkspaceCommand,
-  CallAppBitApiMethodCommand,
-  CommandWsOptions,
-  WorkspaceInfo,
-  WorkspaceInfoModel,
-} from '@o/models'
+import { AppCloseWindowCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppWorkspaceCommand, CallAppBitApiMethodCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { remove } from 'fs-extra'
@@ -284,6 +271,8 @@ export class WorkspaceManager {
 
         const identifier = appInfoRes.value.id
         log.info(`Loaded app with identifier: ${identifier}`)
+
+        console.log('finish toggling dev mode')
 
         // ⚠️ finish refactor
         if (options.type === 'independent') {

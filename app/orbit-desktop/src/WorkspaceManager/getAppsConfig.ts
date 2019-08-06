@@ -32,6 +32,7 @@ export async function getAppsConfig(
   }
 
   const isInMonoRepo = await getIsInMonorepo()
+  // the mode used for base.dll, main
   const mode = options.dev ? 'development' : 'production'
   const directory = options.workspaceRoot
   const outputDir = join(directory, 'dist', mode)
@@ -85,9 +86,9 @@ export async function getAppsConfig(
       await webpackPromise([buildOnceConfig], { loud: true })
     }
     return await makeWebpackConfig({
-      ...params,
       hot: true,
       watch,
+      ...params,
     })
   }
 
@@ -114,7 +115,7 @@ export async function getAppsConfig(
         name: `app_${cleanName}`,
         entry: [appEntry],
         context: directory,
-        mode,
+        mode: app.buildMode || 'production',
         target: 'web',
         publicPath: '/',
         outputFile: `${cleanName}.dll.js`,
@@ -138,8 +139,13 @@ export async function getAppsConfig(
   const nameToAppMeta: AppMetaDict = {}
   await Promise.all(
     appParams.map(async (params, index) => {
-      const config = await addDLL(getAppParams(params))
-      nameToAppMeta[params.name] = apps[index]
+      const appMeta = apps[index]
+      const config = await addDLL({
+        ...getAppParams(params),
+        // only watch apps for updates in development mode
+        watch: appMeta.buildMode === 'development',
+      })
+      nameToAppMeta[params.name] = appMeta
       webpackConfigs[params.name] = config
     }),
   )

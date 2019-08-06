@@ -14,7 +14,6 @@ this lets it be configurable easily, see <Flow />.
 
 ---
 
-
 Lists:
 
 - Content type chooser:
@@ -67,10 +66,6 @@ table with a variety of filters easily defined
 next
 
 ---
-
-July
-
-"Make demo apps work better, esp with adding sources and showing data"
 
 Aug
 

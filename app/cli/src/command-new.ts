@@ -70,12 +70,11 @@ export async function copyTemplate(
     }
   }
 
-  const pkjPath = join(appRoot, `package.json`)
-  if (pathExistsSync(pkjPath)) {
-    trackError(`NEW_PROJECT_IS_NPM_PROJECT`)
+  if (pathExistsSync(appRoot)) {
+    trackError(`NEW_PROJECT_EXISTS`)
     return {
       type: 'error',
-      message: `Directory ${appRoot} is already an npm project`,
+      message: `Directory ${appRoot} already exists.`,
     }
   }
 

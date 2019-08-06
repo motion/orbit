@@ -7,15 +7,13 @@ import { getOrbitDesktop } from './getDesktop'
 import { reporter } from './reporter'
 
 export async function commandWs(options: CommandWsOptions) {
-  if (!(await isInWorkspace(options.workspaceRoot))) {
-    reporter.panic(
-      `Not in an orbit workspace, be sure package.json has "config": { "orbitWorkspace": true }`,
-    )
-  }
-  reporter.info(`Running command ws mode${options.dev ? ' in dev mode' : ''}`)
+  const isInOrbitWorkspace = await isInWorkspace(options.workspaceRoot)
 
   // orbit ws new [name]
   if (options.action === 'new') {
+    if (isInOrbitWorkspace) {
+      reporter.panic(`Already in a workspace, you probably want to run this command one level up.`)
+    }
     // since we are handling multiple commands, we transform the path into a name here
     const name = basename(options.workspaceRoot) || 'new-workspace'
     const projectRoot = join(options.workspaceRoot, '..')
@@ -36,6 +34,13 @@ export async function commandWs(options: CommandWsOptions) {
       },
     )
   }
+
+  if (!isInOrbitWorkspace) {
+    reporter.panic(
+      `Not in an orbit workspace, be sure package.json has "config": { "orbitWorkspace": true }`,
+    )
+  }
+  reporter.info(`Running command ws mode${options.dev ? ' in dev mode' : ''}`)
 
   const shouldBuild = options.action === 'build'
   const { mediator } = await getOrbitDesktop({

@@ -8,7 +8,11 @@
   "workspaces": [
     "apps"
   ],
+  "scripts": {
+    "start": "orbit ws"
+  },
   "dependencies": {
+    "@o/cli": "2.6.0",
     "@babel/runtime": "^7.4.5"
   }
 }

@@ -1,5 +1,5 @@
 import { AppBit, createUsableStore, getAppDefinition } from '@o/kit'
-import { Button, Card, FullScreen, useNodeSize } from '@o/ui'
+import { Button, Card, FullScreen, useNodeSize, useTheme } from '@o/ui'
 import React, { memo, useEffect, useRef } from 'react'
 import { useSpring } from 'react-spring'
 
@@ -34,6 +34,7 @@ export const appsDrawerStore = createUsableStore(AppsDrawerStore)
 window['appsDrawerStore'] = appsDrawerStore
 
 export const OrbitAppsDrawer = memo(() => {
+  const theme = useTheme()
   const { state } = useOm()
   const apps = state.apps.activeSettingsApps
   const paneManager = usePaneManagerStore()
@@ -65,14 +66,14 @@ export const OrbitAppsDrawer = memo(() => {
   const renderApp = useRef({})
 
   return (
-    <FullScreen pointerEvents="none" className="orbit-apps-drawer" zIndex={1000}>
+    <FullScreen pointerEvents="none" className="orbit-apps-drawer" zIndex={1000} right={5} left={5}>
       <Card
         ref={frameRef}
-        background={theme => theme.backgroundStronger}
+        background={theme.backgroundStronger}
         boxShadow={[
           {
             blur: boxShadowSize,
-            color: [0, 0, 0, 0.5],
+            color: [0, 0, 10, theme.background.isDark() ? 0.75 : 0.5],
           },
         ]}
         sizeRadius={2}

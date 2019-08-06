@@ -135,6 +135,7 @@ export type CommandDevOptions =
 export const AppDevOpenCommand = new Command<
   StatusReply<{
     appId: number
+    identifier: string
   }>,
   CommandDevOptions
 >('AppDevOpenCommand')

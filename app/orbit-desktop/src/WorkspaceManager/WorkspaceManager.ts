@@ -235,6 +235,7 @@ export class WorkspaceManager {
        * This handles developing a new app independently
        */
       resolveCommand(AppDevOpenCommand, async options => {
+        // ⚠️
         let appMeta: AppMeta
         if (options.type === 'independent') {
           // launch new app
@@ -243,6 +244,7 @@ export class WorkspaceManager {
         }
 
         const appId = -1
+        const identifier = ''
 
         if (options.type === 'independent') {
           // this.appIdToPackageJson[windowId] = appMeta.directory
@@ -257,6 +259,7 @@ export class WorkspaceManager {
           message: 'Got app id',
           value: {
             appId,
+            identifier,
           },
         } as const
       }),

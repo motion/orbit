@@ -21,7 +21,7 @@ const log = new Logger('getAppsConfig')
  */
 
 export async function getAppsConfig(
-  apps: AppMeta[],
+  apps: (AppMeta & { buildMode: 'development' | 'production' })[],
   options: CommandWsOptions,
 ): Promise<{
   webpackConfigs: { [name: string]: webpack.Configuration }

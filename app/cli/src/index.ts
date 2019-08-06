@@ -93,7 +93,10 @@ function main() {
       async argv => {
         setVerbose(argv.logLevel)
         let projectRoot = resolve(cwd, argv.appName)
-        await commandDev({ projectRoot })
+        await commandDev({
+          type: 'independent',
+          projectRoot,
+        })
       },
     )
     .command(

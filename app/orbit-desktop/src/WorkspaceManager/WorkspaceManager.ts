@@ -5,7 +5,7 @@ import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEn
 import { Desktop, Electron } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { remove } from 'fs-extra'
-import _ from 'lodash'
+import _, { uniqBy } from 'lodash'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 import Observable from 'zen-observable'
@@ -41,7 +41,7 @@ export class WorkspaceManager {
   middleware = this.appMiddleware.middleware
 
   // use this to toggle between modes for the various apps
-  appMode: { [name: string]: 'development' | 'production' } = {}
+  buildMode: { [name: string]: 'development' | 'production' } = {}
 
   // this tracks open windowId <=> packageId (in developingApps)
   windowIdToDirectory: { [key: number]: string } = {}
@@ -76,12 +76,15 @@ export class WorkspaceManager {
    */
   get activeApps(): AppMeta[] {
     const wsAppsMeta = this.appsManager.appMeta
-    return [
-      // developing apps
-      ...this.developingApps,
-      // workspace apps
-      ...Object.keys(wsAppsMeta).map(k => wsAppsMeta[k]),
-    ]
+    return uniqBy(
+      [
+        // developing apps
+        ...this.developingApps,
+        // workspace apps
+        ...Object.keys(wsAppsMeta).map(k => wsAppsMeta[k]),
+      ],
+      x => x.packageId,
+    )
   }
 
   /**
@@ -89,7 +92,7 @@ export class WorkspaceManager {
    * watches options and apps and updates the webpack/graph.
    */
   update = react(
-    () => [this.started, this.activeApps, this.options, this.appMode],
+    () => [this.started, this.activeApps, this.options, this.buildMode],
     async ([started, activeApps], { sleep }) => {
       ensure('started', started)
       ensure('directory', !!this.options.workspaceRoot)
@@ -120,7 +123,7 @@ export class WorkspaceManager {
    */
   lastBuildConfig = ''
   async updateBuild() {
-    const { options, activeApps } = this
+    const { options, activeApps, buildMode } = this
     log.info(`Start building workspace, building ${activeApps.length} apps...`, options, activeApps)
     if (!activeApps.length) {
       log.error(`Must have more than one app, workspace didn't detect any.`)
@@ -128,7 +131,7 @@ export class WorkspaceManager {
     }
 
     // avoid costly rebuilds
-    const nextBuildConfig = JSON.stringify({ options, activeApps })
+    const nextBuildConfig = JSON.stringify({ options, activeApps, buildMode })
     if (this.lastBuildConfig === nextBuildConfig) {
       log.verbose(`Same build config, avoiding rebuild`)
       return
@@ -137,7 +140,13 @@ export class WorkspaceManager {
     }
 
     try {
-      const res = await getAppsConfig(activeApps, options)
+      const res = await getAppsConfig(
+        activeApps.map(appMeta => ({
+          ...appMeta,
+          buildMode: this.buildMode[appMeta.packageId],
+        })),
+        options,
+      )
       if (!res) {
         log.error('No config')
         return
@@ -219,10 +228,11 @@ export class WorkspaceManager {
       /**
        * This handles developing a new app independently
        */
-      resolveCommand(AppDevOpenCommand, async ({ projectRoot, openWindow }) => {
-        const windowId = Object.keys(Electron.state.appWindows).length
-        if (openWindow) {
+      resolveCommand(AppDevOpenCommand, async options => {
+        let appMeta: AppMeta
+        if (options.type === 'independent') {
           // launch new app
+          const windowId = Object.keys(Electron.state.appWindows).length
           Electron.setState({
             appWindows: {
               ...Electron.state.appWindows,
@@ -232,15 +242,16 @@ export class WorkspaceManager {
               },
             },
           })
+          appMeta = await getAppMeta(options.projectRoot)
+          this.windowIdToDirectory[windowId] = appMeta.directory
+          this.developingApps.push(appMeta)
+          return {
+            type: 'success',
+            message: 'Got app id',
+            value: `${windowId}`,
+          } as const
+        } else {
         }
-        const appMeta = await getAppMeta(projectRoot)
-        this.windowIdToDirectory[windowId] = appMeta.directory
-        this.developingApps.push(appMeta)
-        return {
-          type: 'success',
-          message: 'Got app id',
-          value: `${windowId}`,
-        } as const
       }),
 
       resolveCommand(AppDevCloseCommand, async ({ windowId }) => {

@@ -132,14 +132,16 @@ export const AppGenTypesCommand = new Command<StatusReply, CommandGenTypesOption
   'AppGenTypesCommand',
 )
 
-export type CommandDevOptions = { projectRoot: string }
-export const AppDevOpenCommand = new Command<
-  StatusReply,
-  {
-    projectRoot: string
-    openWindow: boolean
-  }
->('AppDevOpenCommand')
+export type CommandDevOptions =
+  | {
+      type: 'independent'
+      projectRoot: string
+    }
+  | {
+      type: 'workspace'
+      identifier: string
+    }
+export const AppDevOpenCommand = new Command<StatusReply, CommandDevOptions>('AppDevOpenCommand')
 
 // workspace
 

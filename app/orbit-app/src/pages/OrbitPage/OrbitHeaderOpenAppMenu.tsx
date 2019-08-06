@@ -1,4 +1,5 @@
-import { useStore } from '@o/kit'
+import { command, useStore } from '@o/kit'
+import { AppDevOpenCommand } from '@o/models'
 import { App } from '@o/stores'
 import { MenuButton } from '@o/ui'
 import React, { memo } from 'react'
@@ -25,7 +26,8 @@ export const OrbitHeaderOpenAppMenu = memo(() => {
     },
   ]
 
-  const { isOnOpenableApp } = useAppsCarousel()
+  const appsCarousel = useAppsCarousel()
+  const { isOnOpenableApp } = appsCarousel
 
   if (appRole === 'editing') {
     return (
@@ -62,9 +64,10 @@ export const OrbitHeaderOpenAppMenu = memo(() => {
                 title: 'Edit',
                 icon: 'edit',
                 onClick: () => {
-                  console.warn(
-                    'see AppDevOpenCommand, we need to fix it up to support editing here',
-                  )
+                  command(AppDevOpenCommand, {
+                    type: 'workspace',
+                    identifier: appsCarousel.focusedApp.identifier!,
+                  })
                 },
               },
               {

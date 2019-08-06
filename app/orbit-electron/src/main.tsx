@@ -14,8 +14,8 @@ import { IS_MAIN_ORBIT } from './constants'
 import ElectronRoot from './ElectronRoot'
 import MenuWindow from './menus/MenuWindow'
 import { OrbitRoot } from './OrbitRoot'
+import { AppCloseWindowResolver } from './resolver/AppCloseWindowResolver'
 import { AppOpenWindowResolver } from './resolver/AppOpenWindowResolver'
-import { CloseAppResolver } from './resolver/CloseAppResolver'
 import { RestartAppResolver } from './resolver/RestartAppResolver'
 import { TearAppResolver } from './resolver/TearAppResolver'
 
@@ -65,8 +65,8 @@ export async function main() {
       transport: new WebSocketServerTransport({ port }),
       resolvers: [
         AppOpenWindowResolver,
+        AppCloseWindowResolver,
         TearAppResolver,
-        CloseAppResolver,
         RestartAppResolver,
 
         resolveCommand(ToggleOrbitMainCommand, async next => {

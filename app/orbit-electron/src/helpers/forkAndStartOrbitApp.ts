@@ -1,7 +1,7 @@
 import { Logger } from '@o/logger'
 import { forkProcess } from '@o/orbit-fork-process'
 
-import { addAppProcess } from '../resolver/CloseAppResolver'
+import { addAppProcess } from '../resolver/AppCloseWindowResovler'
 
 const log = new Logger('forkAndStartOrbitApp')
 const lastUsedInspectPort = 9003

@@ -43,8 +43,7 @@ export class WorkspaceManager {
   // use this to toggle between modes for the various apps
   buildMode: { [name: string]: 'development' | 'production' } = {}
 
-  // this tracks open windowId <=> packageId (in developingApps)
-  windowIdToDirectory: { [key: number]: string } = {}
+  appIdToPackageJson: { [key: number]: string } = {}
 
   constructor(
     private mediatorServer: MediatorServer,
@@ -240,8 +239,13 @@ export class WorkspaceManager {
         if (options.type === 'independent') {
           // launch new app
           appMeta = await getAppMeta(options.projectRoot)
-          this.windowIdToDirectory[windowId] = appMeta.directory
         } else {
+        }
+
+        const appId = -1
+
+        if (options.type === 'independent') {
+          // this.appIdToPackageJson[windowId] = appMeta.directory
         }
 
         // always do this:
@@ -251,17 +255,21 @@ export class WorkspaceManager {
         return {
           type: 'success',
           message: 'Got app id',
-          value: `${windowId}`,
+          value: {
+            appId,
+          },
         } as const
       }),
 
       resolveCommand(AppDevCloseCommand, async ({ windowId }) => {
         log.info('Removing build process', windowId)
-        this.developingApps = _.remove(
-          this.developingApps,
-          x => x.directory === this.windowIdToDirectory[windowId],
-        )
-        delete this.windowIdToDirectory[windowId]
+        // ⚠️
+        const appMeta = this.developingApps.find(x => x.packageId === '')
+        // this.developingApps = _.remove(
+        //   this.developingApps,
+        //   x => x.directory === this.appIdToPackageJson[windowId],
+        // )
+        // delete this.appIdToPackageJson[windowId]
         this.setBuildMode(appMeta.packageId, 'production')
         log.info('Removing process', windowId)
         await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { windowId })

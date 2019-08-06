@@ -92,16 +92,6 @@ export const AppMetaCommand = new Command<
   }
 >('AppMetaCommand')
 
-export const AppOpenWindowCommand = new Command<
-  StatusReply<{
-    windowId: number
-  }>,
-  {
-    appId: number
-    isEditing?: boolean
-  }
->('AppOpenWindowCommand')
-
 // CLI Options
 
 export type CommandInstallOptions = {
@@ -150,6 +140,27 @@ export const AppDevOpenCommand = new Command<
   CommandDevOptions
 >('AppDevOpenCommand')
 
+export const AppDevCloseCommand = new Command<StatusReply<boolean>, { identifier: string }>(
+  'app-dev-close',
+)
+
+export const AppCloseWindowCommand = new Command<
+  StatusReply,
+  {
+    windowId: number
+  }
+>('AppOpenWindowCommand')
+
+export const AppOpenWindowCommand = new Command<
+  StatusReply<{
+    windowId: number
+  }>,
+  {
+    appId: number
+    isEditing?: boolean
+  }
+>('AppOpenWindowCommand')
+
 // workspace
 
 export const AppCreateWorkspaceCommand = new Command<boolean, Partial<Space>>(
@@ -174,8 +185,6 @@ export const AppWorkspaceCommand = new Command<
     packageIds?: string[]
   }
 >('AppWorkspaceCommand')
-
-export const AppDevCloseCommand = new Command<undefined, { windowId: number }>('app-dev-close')
 
 export const SendClientDataCommand = new Command<
   void,

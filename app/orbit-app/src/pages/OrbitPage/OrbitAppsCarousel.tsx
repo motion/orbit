@@ -35,6 +35,13 @@ class OrbitAppsCarouselStore {
     return !this.state.zoomedOut
   }
 
+  get isOnOpenableApp() {
+    return (
+      this.focusedApp &&
+      (this.focusedApp.tabDisplay === 'plain' || this.focusedApp.tabDisplay === 'pinned')
+    )
+  }
+
   zoomIntoNextApp = false
   nextFocusedIndex = -1
   focusedIndex = 0
@@ -156,10 +163,7 @@ class OrbitAppsCarouselStore {
   )
 
   setFocused(next: number, forceScroll = false) {
-    if (!this.apps[next]) {
-      console.warn('no app at index', next)
-      return
-    }
+    if (!this.apps[next]) return
     if (next !== this.focusedIndex) {
       this.focusedIndex = next
       // update url

@@ -1,4 +1,4 @@
-import { AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand, CommandDevOptions } from '@o/models'
+import { AppCloseWindowCommand, AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand, CommandDevOptions } from '@o/models'
 
 import { getOrbitDesktop } from './getDesktop'
 import { logStatusReply } from './logStatusReply'
@@ -24,23 +24,51 @@ export async function commandDev(options: CommandDevOptions) {
   }
 
   try {
-    const reply = await mediator.command(AppDevOpenCommand, options, {
+    const devOpenReply = await mediator.command(AppDevOpenCommand, options, {
       onMessage: reporter.info,
     })
-    if (reply.type !== 'success') {
-      reporter.panic(reply.message)
+    if (devOpenReply.type !== 'success') {
+      reporter.panic(devOpenReply.message)
       return
     }
-    const appId = +reply.value
-    await mediator.command(AppOpenWindowCommand, {
-      appId,
-      isEditing: true,
-    })
+    const { appId, identifier } = devOpenReply.value
+    const openWindowReply = await mediator.command(
+      AppOpenWindowCommand,
+      {
+        appId,
+        isEditing: true,
+      },
+      {
+        onMessage: reporter.info,
+      },
+    )
+    if (openWindowReply.type !== 'success') {
+      reporter.panic(openWindowReply.message)
+      return
+    }
+    const { windowId } = openWindowReply.value
     addProcessDispose(async () => {
       logStatusReply(
-        await mediator.command(AppDevCloseCommand, {
-          appId,
-        }),
+        await mediator.command(
+          AppDevCloseCommand,
+          {
+            identifier,
+          },
+          {
+            onMessage: reporter.info,
+          },
+        ),
+      )
+      logStatusReply(
+        await mediator.command(
+          AppCloseWindowCommand,
+          {
+            windowId,
+          },
+          {
+            onMessage: reporter.info,
+          },
+        ),
       )
     })
   } catch (err) {

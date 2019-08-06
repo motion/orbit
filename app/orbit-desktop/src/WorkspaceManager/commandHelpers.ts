@@ -28,7 +28,7 @@ export function statusReplyCommand<A extends Function>(cb: A): A {
     } catch (error) {
       return {
         type: 'error',
-        message: `${error.message}`,
+        message: `${error.message}\n${error.stack}`,
       }
     }
   }

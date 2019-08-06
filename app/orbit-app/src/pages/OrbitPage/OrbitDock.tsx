@@ -170,8 +170,8 @@ export const OrbitDock = memo(() => {
           borderRadius={100}
           boxShadow={[
             {
-              spread: 10,
-              blur: 160,
+              spread: 50,
+              blur: 180,
               color: theme.background.isDark() ? [0, 0, 0] : [0, 0, 0, 0.25],
             },
           ]}

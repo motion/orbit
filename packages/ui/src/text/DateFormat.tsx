@@ -42,10 +42,16 @@ export function DateFormat({
   } else if (differenceInCalendarDays(date, Date.now()) < 7) {
     finalOptions.weekday = 'short'
   }
-  const formatted = date
-    .toLocaleDateString(locale, finalOptions)
-    .replace(/,.*,/, ',')
-    .replace(/\//g, '·')
+  let formatted
+  if (date.toLocaleDateString) {
+    formatted = date
+      .toLocaleDateString(locale, finalOptions)
+      .replace(/,.*,/, ',')
+      .replace(/\//g, '·')
+  } else {
+    console.warn('invalid date', date)
+    formatted = `${date}`
+  }
   // TODO wait for https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20544 to fix type
   return formatted as any
 }

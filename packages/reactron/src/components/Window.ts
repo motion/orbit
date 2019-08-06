@@ -32,6 +32,7 @@ export class Window extends BaseComponent {
   options = null
   window = null
   propHandlers = null
+  lastProps: any = {}
 
   updateSize = () => configureSize.call(this, this.props)
   updatePosition = () => configurePosition.call(this, this.props)
@@ -226,8 +227,12 @@ function configurePosition(
       rawHandler(nextPosition)
     })
     if (!position && defaultPosition) {
-      this.window.setPosition(...defaultPosition)
-      this.window.setMovable(true)
+      // only update defaults if changed
+      if (!isEqual(this.lastProps.defaultPosition, defaultPosition)) {
+        this.lastProps.defaultPosition = defaultPosition
+        this.window.setPosition(...defaultPosition)
+        this.window.setMovable(true)
+      }
       return
     }
     if (!position && !defaultPosition) {

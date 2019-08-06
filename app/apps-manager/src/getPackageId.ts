@@ -27,20 +27,16 @@ export async function getPackageId(
   if (options.rescanWorkspacePath) {
     await updateWorkspacePackageIds(options.rescanWorkspacePath)
   }
-
   const info = JSON.stringify(identifierToPackageId, null, 2)
-  log.verbose(`getPackageId ${identifier}, checking loaded app identifiers: ${info}`)
-
+  log.verbose(`getPackageId ${identifier}, checking loaded app identifiers`, info)
   if (identifierToPackageId[identifier]) {
     return identifierToPackageId[identifier]
   }
-
   if (options.search) {
     log.verbose(`Fetching package info from registry ${identifier}`)
     const searchApp: ApiSearchItem = await fetch(`${apiUrl}/apps/${identifier}`).then(x => x.json())
     return searchApp.packageId || null
   }
-
   return null
 }
 

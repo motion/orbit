@@ -34,8 +34,7 @@ export const ToggleOrbitMainCommand = new Command<undefined, boolean | undefined
   'ToggleOrbitMainCommand',
 )
 
-export const TearAppCommand = new Command<void, { appType: string; appId: number }>('tear-app')
-export const CloseAppCommand = new Command<void, { appId: number }>('close-app')
+export const TearAppCommand = new Command<void, { appType: string; windowId: number }>('tear-app')
 export const RestartAppCommand = new Command<void, void>('restart-app')
 export const ResetDataCommand = new Command<void, void>('reset-data')
 export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'light' }>(
@@ -92,14 +91,6 @@ export const AppMetaCommand = new Command<
   }
 >('AppMetaCommand')
 
-export const AppOpenWindowCommand = new Command<
-  boolean,
-  {
-    appId: number
-    isEditing?: boolean
-  }
->('AppOpenWindowCommand')
-
 // CLI Options
 
 export type CommandInstallOptions = {
@@ -132,13 +123,44 @@ export const AppGenTypesCommand = new Command<StatusReply, CommandGenTypesOption
   'AppGenTypesCommand',
 )
 
-export type CommandDevOptions = { projectRoot: string }
+export type CommandDevOptions =
+  | {
+      type: 'independent'
+      projectRoot: string
+    }
+  | {
+      type: 'workspace'
+      identifier: string
+      appId: number
+    }
 export const AppDevOpenCommand = new Command<
+  StatusReply<{
+    appId: number
+    identifier: string
+  }>,
+  CommandDevOptions
+>('AppDevOpenCommand')
+
+export const AppDevCloseCommand = new Command<StatusReply<boolean>, { identifier: string }>(
+  'AppDevCloseCommand',
+)
+
+export const AppCloseWindowCommand = new Command<
   StatusReply,
   {
-    projectRoot: string
+    windowId: number
   }
->('AppDevOpenCommand')
+>('AppOpenWindowCommand')
+
+export const AppOpenWindowCommand = new Command<
+  StatusReply<{
+    windowId: number
+  }>,
+  {
+    appId: number
+    isEditing?: boolean
+  }
+>('AppOpenWindowCommand')
 
 // workspace
 
@@ -148,24 +170,20 @@ export const AppCreateWorkspaceCommand = new Command<boolean, Partial<Space>>(
 
 export type CommandWsOptions = {
   workspaceRoot: string
-  // default mode to run in
-  mode?: 'development' | 'production'
+  action: 'new' | 'build' | 'run'
   // reset and rebuild before running
   clean?: boolean
   // develop on orbit itself
   dev?: boolean
-  build?: boolean
 }
 
-export const AppOpenWorkspaceCommand = new Command<
+export const AppWorkspaceCommand = new Command<
   boolean,
   CommandWsOptions & {
     // Path to the workspace project in dev
     packageIds?: string[]
   }
->('AppOpenWorkspaceCommand')
-
-export const AppDevCloseCommand = new Command<undefined, { appId: number }>('app-dev-close')
+>('AppWorkspaceCommand')
 
 export const SendClientDataCommand = new Command<
   void,

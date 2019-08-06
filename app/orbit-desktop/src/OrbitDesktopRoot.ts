@@ -43,7 +43,7 @@ import {
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
 import { writeJSONSync } from 'fs-extra'
-import root from 'global'
+import global from 'global'
 import open from 'open'
 import * as Path from 'path'
 import ReconnectingWebSocket from 'reconnecting-websocket'
@@ -74,6 +74,7 @@ import { createAppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { WorkspaceManager } from './WorkspaceManager/WorkspaceManager'
 import { orTimeout, OR_TIMED_OUT } from '@o/utils'
 import { interceptStdOut } from './helpers/interceptStdOut'
+import { appStatusManager, AppStatusManager } from './managers/AppStatusManager'
 
 const log = new Logger('OrbitDesktopRoot')
 const Config = getGlobalConfig()
@@ -126,6 +127,9 @@ export class OrbitDesktopRoot {
   generalSettingManager: GeneralSettingManager
   topicsManager: TopicsManager
   operatingSystemManager: OperatingSystemManager
+
+  // attaching here for debugging
+  appStatusManager: AppStatusManager = appStatusManager
 
   start = async () => {
     // this is if we are running a CLI command that exits on finish
@@ -281,11 +285,11 @@ export class OrbitDesktopRoot {
    * Used for the development purposes.
    */
   private registerREPLGlobals() {
-    root.typeorm = typeorm
-    root.Root = this
-    root.restart = this.restart
-    root.Logger = Logger
-    root.mediatorServer = this.mediatorServer
+    global.typeorm = typeorm
+    global.Root = this
+    global.restart = this.restart
+    global.Logger = Logger
+    global.mediatorServer = this.mediatorServer
   }
 
   /**
@@ -335,14 +339,18 @@ export class OrbitDesktopRoot {
           { entity: StateEntity, models: [StateModel] },
         ]),
 
+        // this is a generic bus that routes all our Logger output out
         resolveObserveOne(OrbitProcessStdOutModel, () => {
           return new Observable<string>(observer => {
-            // start with empty
-            observer.next(null)
             interceptStdOut(message => {
               observer.next(message)
             })
           })
+        }),
+
+        // this is a generic bus that lets us send explicit message events out
+        resolveObserveOne(AppStatusModel, args => {
+          return appStatusManager.observe(args.appId)
         }),
 
         ...loadAppDefinitionResolvers(),
@@ -373,7 +381,7 @@ export class OrbitDesktopRoot {
             }
             const port = Config.ports.electronMediators[lastUsed]
             lastUsed++
-            const server = root.mediatorServer as MediatorServer
+            const server = global.mediatorServer as MediatorServer
             // mutate, bad for now but we'd need to refactor MediatorServer
             server.options.fallbackClient.options.transports.push(
               new WebSocketClientTransport(
@@ -439,7 +447,7 @@ export class OrbitDesktopRoot {
     this.mediatorServer.bootstrap()
 
     // TODO see NewFallbackServerPortResolver
-    root.mediatorServer = this.mediatorServer
+    global.mediatorServer = this.mediatorServer
 
     log.info(`mediatorServer listening at ${mediatorServerPort}`)
 

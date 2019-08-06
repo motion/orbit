@@ -1,12 +1,12 @@
-import { command, useModel } from '@o/bridge'
+import { command, useModel, observeOne } from '@o/bridge'
 import { AppDefinition, ProvideStores, showConfirmDialog, useStore } from '@o/kit'
-import { AppStatusModel, CloseAppCommand } from '@o/models'
+import { AppCloseWindowCommand, AppDevCloseCommand, AppStatusModel } from '@o/models'
 import { App } from '@o/stores'
 import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { APP_ID, IS_ELECTRON } from '../../constants'
+import { IS_ELECTRON, WINDOW_ID } from '../../constants'
 import { useOm } from '../../om/om'
 import { Stores, useThemeStore } from '../../om/stores'
 import { SearchStore } from '../../stores/SearchStore'
@@ -39,17 +39,23 @@ export const OrbitPage = memo(function OrbitPage() {
 
 const OrbitStatusMessages = memo(() => {
   const banner = useBanner()
-  const [statusMessage] = useModel(AppStatusModel, {
-    appId: APP_ID,
-  })
 
   useEffect(() => {
-    if (!statusMessage) return
-    banner.set({
-      type: statusMessage.type,
-      message: statusMessage.message,
+    observeOne(AppStatusModel, {
+      args: {
+        appId: WINDOW_ID,
+      },
+    }).subscribe(message => {
+      console.log('message', message)
+      banner.set({
+        type: message.type,
+        title: message.title,
+        message: message.message,
+        timeout: message.timeout,
+        loading: message.loading,
+      })
     })
-  }, [statusMessage])
+  }, [])
 
   return null
 })
@@ -74,7 +80,10 @@ const OrbitPageInner = memo(function OrbitPageInner() {
         if (App.isMainApp === false) {
           if (shouldCloseApp || shouldCloseTab) {
             e.returnValue = false
-            command(CloseAppCommand, { appId: App.appConf.appId })
+            command(AppCloseWindowCommand, { windowId: App.appConf.windowId })
+            if (App.isEditing) {
+              command(AppDevCloseCommand, { identifier: App.appConf.identifier })
+            }
             return
           }
         } else {
@@ -132,14 +141,12 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
   if (isEditing) {
     const bundleUrl = `${App.bundleUrl}?cacheKey=${Math.random()}`
-
     console.log(
-      `%cEditing app id: ${App.appConf.appId} at url ${bundleUrl}`,
+      `%cEditing app id: ${App.appConf.windowId} at url ${bundleUrl}`,
       'color: green; background: lightgreen; font-weight: bold;',
     )
-
     contentArea = (
-      <Suspense fallback={<Loading message={`Loading app ${App.appConf.appId}`} />}>
+      <Suspense fallback={<Loading message={`Loading app ${App.appConf.windowId}`} />}>
         <LoadApp RenderApp={RenderDevApp} bundleURL={bundleUrl} />
       </Suspense>
     )
@@ -176,7 +183,9 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 })
 
 let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
-  return <OrbitApp appDef={appDef} id={App.appConf.appId} identifier={appDef.id} shouldRenderApp />
+  return (
+    <OrbitApp appDef={appDef} id={App.appConf.windowId} identifier={appDef.id} shouldRenderApp />
+  )
 }
 
 const OrbitContentArea = gloss(Box, {

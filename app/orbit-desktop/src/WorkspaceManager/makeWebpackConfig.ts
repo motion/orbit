@@ -28,7 +28,7 @@ export type WebpackParams = {
   injectHot?: boolean | string
   hot?: boolean
   minify?: boolean
-  noChunking?: boolean
+  devtool?: webpack.Configuration['devtool']
 }
 
 export function makeWebpackConfig(
@@ -53,7 +53,7 @@ export function makeWebpackConfig(
     dllReferences,
     hot,
     name,
-    noChunking,
+    devtool,
     injectHot,
   } = params
 
@@ -87,14 +87,7 @@ export function makeWebpackConfig(
       // but also were an app platform, we dont care about file size so much for now
       sideEffects: false,
       concatenateModules: true,
-      // this helps runtime/loadtime
-      splitChunks: {
-        chunks: 'async',
-        name: false,
-      },
-      ...((target === 'node' || noChunking) && {
-        splitChunks: false,
-      }),
+      splitChunks: false,
     },
     development: {
       minimize: minify,
@@ -154,7 +147,7 @@ export function makeWebpackConfig(
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
     },
-    devtool: mode === 'production' || target === 'node' ? 'source-map' : 'eval-source-map',
+    devtool: devtool || (mode === 'production' || target === 'node' ? 'source-map' : 'source-map'), //'cheap-module-eval-source-map'
     externals: [
       {
         electron: '{}',
@@ -169,7 +162,7 @@ export function makeWebpackConfig(
           : ['ts:main', 'module', 'browser', 'main'],
       alias: {
         // disable until fixed bug in rhl
-        'react-dom': mode === 'production' ? 'react-dom' : '@hot-loader/react-dom',
+        'react-dom': mode === 'production' ? '@hot-loader/react-dom' : '@hot-loader/react-dom',
         'react-native': 'react-native-web',
       },
       modules,
@@ -300,13 +293,17 @@ require('@o/kit').createHotHandler({
     },
     plugins: [
       new HardSourceWebpackPlugin({
-        cacheDirectory: 'node_modules/.cache/hard-source/[confighash]',
+        cacheDirectory: '.cache/hard-source/[confighash]',
         environmentHash: {
           root: process.cwd(),
         },
         info: {
           mode: 'none',
           level: 'error', // warn to debug if its slow
+        },
+        cachePrune: {
+          maxAge: 10 * 24 * 60 * 60 * 1000,
+          sizeThreshold: 50 * 1024 * 1024,
         },
       }),
 

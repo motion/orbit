@@ -93,7 +93,10 @@ function main() {
       async argv => {
         setVerbose(argv.logLevel)
         let projectRoot = resolve(cwd, argv.appName)
-        await commandDev({ projectRoot })
+        await commandDev({
+          type: 'independent',
+          projectRoot,
+        })
       },
     )
     .command(
@@ -205,11 +208,16 @@ function main() {
       },
     )
     .command(
-      'ws [workspace]',
+      'ws [action] [path]',
       'Run an Orbit workspace',
       p => {
-        let options = p
-          .positional('workspace', {
+        return p
+          .positional('action', {
+            type: 'string',
+            default: 'run',
+            describe: 'Options: run, build, new. Defaults to run.',
+          })
+          .positional('path', {
             type: 'string',
             default: '.',
             describe: 'the workspace to run',
@@ -219,37 +227,29 @@ function main() {
             default: false,
             describe: 'clean and re-run the workspace build',
           })
-          .option('mode', {
-            type: 'string',
-            default: 'development',
-            describe: 'default mode to start apps in',
-          })
-          .option('build', {
+          .option('dev', {
             type: 'boolean',
             default: false,
-            describe: 'Debug use only, helpful to more quickly debug workspace build issues',
+            describe: 'whether to start all apps in dev mode',
           })
-
-        // enables developing orbit itself
-        if (process.env.ORBIT_DEVELOPER) {
-          options = options.option('dev', {
-            type: 'boolean',
-            default: false,
-          })
-        }
-
-        return options
       },
       async argv => {
+        const actions = {
+          run: 'run',
+          build: 'build',
+          new: 'new',
+        }
         setVerbose(argv.logLevel)
         reporter.verbose(`argv ${JSON.stringify(argv)}`)
-        let workspaceRoot = resolve(cwd, argv.workspace)
+        let workspaceRoot = resolve(cwd, argv.path)
         await commandWs({
           workspaceRoot,
           clean: !!argv.clean,
-          mode: argv.mode as 'development' | 'production',
-          build: !!argv.build,
-          // @ts-ignore
+          action:
+            actions[argv.action || 'run'] ||
+            (() => {
+              throw new Error(`Must pick a valid action`)
+            })(),
           dev: !!argv.dev,
         })
       },

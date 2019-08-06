@@ -1,8 +1,8 @@
 import { updateBuildInfo } from '@o/apps-manager'
 import { isOrbitApp, readPackageJson } from '@o/libs-node'
 import { Logger } from '@o/logger'
-import { resolveCommand } from '@o/mediator'
-import { AppBuildCommand, AppDefinition, CommandBuildOptions } from '@o/models'
+import { CommandOpts, resolveCommand } from '@o/mediator'
+import { AppBuildCommand, AppDefinition, CommandBuildOptions, StatusReply } from '@o/models'
 import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
 import webpack = require('webpack')
@@ -17,63 +17,102 @@ const log = new Logger('resolveAppBuildCommand')
 
 export const resolveAppBuildCommand = resolveCommand(
   AppBuildCommand,
-  statusReplyCommand(async (props, options) => {
-    attachLogToCommand(log, options)
+  statusReplyCommand(commandBuild),
+)
 
-    log.info(`Running build in ${props.projectRoot}`)
+export async function commandBuild(
+  props: CommandBuildOptions,
+  options?: CommandOpts,
+): Promise<StatusReply> {
+  attachLogToCommand(log, options)
 
-    if (!(await isOrbitApp(props.projectRoot))) {
-      return {
-        type: 'error',
-        message: `\nNot inside an orbit app, add "config": { "orbitApp": true } } to the package.json`,
-      }
+  log.info(`Running build in ${props.projectRoot}`)
+
+  if (!(await isOrbitApp(props.projectRoot))) {
+    return {
+      type: 'error',
+      message: `\nNot inside an orbit app, add "config": { "orbitApp": true } } to the package.json`,
     }
+  }
 
-    const pkg = await readPackageJson(props.projectRoot)
+  const pkg = await readPackageJson(props.projectRoot)
+  if (!pkg) {
+    return {
+      type: 'error',
+      message: 'No package found!',
+    }
+  }
+
+  const entry = await getAppEntry(props.projectRoot)
+  if (!entry || !(await pathExists(entry))) {
+    return {
+      type: 'error',
+      message: `Make sure your package.json "entry" specifies the full filename with extension, ie: main.tsx`,
+    }
+  }
+
+  await Promise.all([
+    bundleApp(props),
+    commandGenTypes(
+      {
+        projectRoot: props.projectRoot,
+        projectEntry: entry,
+        out: join(props.projectRoot, 'dist', 'api.json'),
+      },
+      options,
+    ),
+  ])
+
+  return {
+    type: 'success',
+    message: 'Built app',
+  }
+}
+
+export async function buildAppInfo(
+  options: CommandBuildOptions = {
+    projectRoot: '',
+    watch: false,
+  },
+): Promise<StatusReply> {
+  try {
+    const directory = options.projectRoot
+    const entry = await getAppEntry(options.projectRoot)
+    const pkg = await readPackageJson(directory)
     if (!pkg) {
       return {
         type: 'error',
-        message: 'No package found!',
+        message: `No package.json at ${directory}`,
       }
     }
-
-    const entry = await getAppEntry(props.projectRoot)
-    if (!entry || !(await pathExists(entry))) {
-      return {
-        type: 'error',
-        message: `Make sure your package.json "entry" specifies the full filename with extension, ie: main.tsx`,
-      }
-    }
-
-    await Promise.all([
-      bundleApp(entry, props),
-      commandGenTypes(
-        {
-          projectRoot: props.projectRoot,
-          projectEntry: entry,
-          out: join(props.projectRoot, 'dist', 'api.json'),
-        },
-        options,
-      ),
-    ])
-
+    // build appInfo first, we can then use it to determine if we need to build web/node
+    const appInfoConf = await getAppInfoConfig(entry, pkg.name, options)
+    log.info(`Building appInfo...`, appInfoConf)
+    await webpackPromise([appInfoConf], {
+      loud: true,
+    })
     return {
       type: 'success',
-      message: 'Built app',
+      message: `Built successfully`,
     }
-  }),
-)
+  } catch (err) {
+    return {
+      type: 'error',
+      message: err.message,
+      errors: [err],
+    }
+  }
+}
 
-export async function bundleApp(entry: string, options: CommandBuildOptions) {
-  const verbose = true
+export async function bundleApp(options: CommandBuildOptions) {
+  const verbose = true // !
+  const entry = await getAppEntry(options.projectRoot)
   const pkg = await readPackageJson(options.projectRoot)
 
-  // build appInfo first, we can then use it to determine if we need to build web/node
-  const appInfoConf = await getAppInfoConfig(entry, pkg.name, options)
-  log.info(`Building appInfo...`, appInfoConf)
-  await webpackPromise([appInfoConf], {
-    loud: verbose,
-  })
+  const appInfoRes = await buildAppInfo(options)
+  if (appInfoRes.type !== 'success') {
+    throw appInfoRes.errors ? appInfoRes.errors[0] : appInfoRes.message
+  }
 
   const appInfo = await getAppInfo(options.projectRoot)
   log.info(`appInfo`, appInfo)
@@ -121,8 +160,8 @@ function getAppInfo(appRoot: string): AppDefinition | null {
 const monoRoot = join(__dirname, '..', '..', '..', '..')
 const defaultBaseDll = {
   // default base dll
-  manifest: join(monoRoot, 'example-workspace', 'dist', 'manifest-base.json'),
-  filepath: join(monoRoot, 'example-workspace', 'dist', 'base.dll.js'),
+  manifest: join(monoRoot, 'example-workspace', 'dist', 'production', 'manifest-base.json'),
+  filepath: join(monoRoot, 'example-workspace', 'dist', 'production', 'base.dll.js'),
 }
 if (process.env.NODE_ENV === 'production') {
   throw new Error(`Yo need to make this production ^^`)
@@ -178,7 +217,11 @@ async function getNodeAppConfig(entry: string, name: any, options: CommandBuildO
 }
 
 // used just to get the information like id/name from the entry file
-async function getAppInfoConfig(entry: string, name: string, options: CommandBuildOptions) {
+async function getAppInfoConfig(
+  entry: string,
+  name: string,
+  options: Pick<CommandBuildOptions, 'projectRoot' | 'watch'>,
+) {
   return await makeWebpackConfig(
     {
       name,
@@ -186,10 +229,10 @@ async function getAppInfoConfig(entry: string, name: string, options: CommandBui
       entry: [entry],
       target: 'node',
       mode: 'development',
+      devtool: 'inline-source-map',
       minify: false,
-      noChunking: true,
       outputFile: 'appInfo.js',
-      watch: options.watch,
+      watch: options.watch || false,
       output: {
         library: '[name]',
         libraryTarget: 'umd',
@@ -203,7 +246,9 @@ async function getAppInfoConfig(entry: string, name: string, options: CommandBui
         // ignore *everything* outside entry
         rules: [
           {
-            test: x => x !== entry,
+            test: x => {
+              return x !== entry
+            },
             use: 'ignore-loader',
           },
         ],

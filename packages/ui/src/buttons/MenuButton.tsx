@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 
 import { BorderLeft } from '../Border'
 import { Icon } from '../Icon'
@@ -16,8 +16,10 @@ export type MenuButtonProps = ButtonProps & {
 
 export const MenuButton = ({ items, scrollable, children, ...rest }: MenuButtonProps) => {
   const height = useSurfaceHeight(rest.size)
+  // using the same group ensures the tooltip closes when the menu opens
+  const group = useRef(`${Math.random()}`).current
   return (
-    <Button sizePadding={0} space="sm" {...rest}>
+    <Button tooltipProps={{ group }} sizePadding={0} space="sm" {...rest}>
       {!!children && (
         <>
           <Space size="sm" />
@@ -27,6 +29,7 @@ export const MenuButton = ({ items, scrollable, children, ...rest }: MenuButtonP
       <Menu
         items={items}
         scrollable={scrollable}
+        group={group}
         target={
           <View
             height={height}

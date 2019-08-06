@@ -62,7 +62,7 @@ let hasSet = false
 
 export let Config: ConfigureUIProps = {
   useIcon: null,
-  getIconForBit: _ => _,
+  getIconForBit: bit => bit.appIdentifier,
   defaultProps: {},
   customItems: {},
 

@@ -2,7 +2,7 @@ import { AppMetaDict } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppMeta, CommandWsOptions } from '@o/models'
 import { stringToIdentifier } from '@o/utils'
-import { ensureDir, ensureSymlink, pathExists, readJSON, writeFile } from 'fs-extra'
+import { ensureDir, ensureSymlink, pathExists, readFile, readJSON, writeFile } from 'fs-extra'
 import { join } from 'path'
 import webpack from 'webpack'
 
@@ -21,7 +21,7 @@ const log = new Logger('getAppsConfig')
  */
 
 export async function getAppsConfig(
-  apps: AppMeta[],
+  apps: (AppMeta & { buildMode: 'development' | 'production' })[],
   options: CommandWsOptions,
 ): Promise<{
   webpackConfigs: { [name: string]: webpack.Configuration }
@@ -31,12 +31,17 @@ export async function getAppsConfig(
     return null
   }
 
-  const directory = options.workspaceRoot
-  const outputDir = join(directory, 'dist')
-  const watch = !options.build // watch mode by default (if not building)
   const isInMonoRepo = await getIsInMonorepo()
+  // the mode used for base.dll, main
+  const mode = options.dev ? 'development' : 'production'
+  const directory = options.workspaceRoot
+  const outputDir = join(directory, 'dist', mode)
+  const watch = options.action === 'run'
 
-  log.info(`mode ${options.mode} watch ${watch} ${directory}, apps ${apps.length}`, options)
+  log.info(
+    `dev ${options.dev} watch ${watch} ${directory}, apps ${apps.length} ${isInMonoRepo}`,
+    options,
+  )
 
   // link local apps into local node_modules
   await ensureDir(join(directory, 'node_modules'))
@@ -55,52 +60,6 @@ export async function getAppsConfig(
         log.info(`Ensuring symlink from ${app.directory} to ${where}`)
         await ensureSymlink(app.directory, where)
       }),
-  )
-
-  /**
-   * Create index.html
-   */
-  const indexFile = join(directory, 'dist', 'index.html')
-  await writeFile(
-    indexFile,
-    `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <script>
-      console.time('splash')
-    </script>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" type="image/png" href="./favicon.png" />
-    <title>Orbit</title>
-    <script>
-      if (typeof require !== 'undefined') {
-        window.electronRequire = require
-      } else {
-        window.notInElectron = true
-        window.electronRequire = module => {
-          return {}
-        }
-      }
-    </script>
-  </head>
-
-  <body>
-    <div id="app"></div>
-    <script>
-      if (window.notInElectron) {
-        // easier to see what would be transparent in dev mode in browser
-        document.body.style.background = '#eee'
-      }
-    </script>
-    <script src="/base.dll.js"></script>
-${apps
-  .map(app => `    <script src="/${stringToIdentifier(app.packageId)}.dll.js"></script>`)
-  .join('\n')}
-    <script src="/workspaceEntry.js"></script>
-    <script src="/main.js"></script>
-  </body>
-</html>`,
   )
 
   let dllReferences: DLLReferenceDesc[] = []
@@ -127,29 +86,58 @@ ${apps
       await webpackPromise([buildOnceConfig], { loud: true })
     }
     return await makeWebpackConfig({
-      ...params,
       hot: true,
       watch,
+      ...params,
     })
   }
 
   const webpackConfigs: { [key: string]: webpack.Configuration } = {}
 
+  // add foundation dll config
+  // testing to see if we can leave react-hot-loader in development mode
+  // even when other things are in production mode
+  const foundationParams: WebpackParams = {
+    name: `foundation`,
+    entry: ['react-hot-loader', 'react', 'react-dom'],
+    watch: false,
+    target: 'web',
+    mode: 'development',
+    context: directory,
+    outputDir,
+    publicPath: '/',
+    outputFile: 'foundation.dll.js',
+    output: {
+      library: 'foundation',
+    },
+    dll: join(outputDir, 'manifest-foundation.json'),
+  }
+  const foundationConfig = await addDLL(foundationParams)
+  webpackConfigs.foundation = foundationConfig
+
   // add base dll config
-  const baseDllParams = await getBaseDllParams(directory)
+  const baseDllParams = await getBaseDllParams({
+    outputDir,
+    context: directory,
+    mode,
+    // reference foundation
+    dllReferences: [
+      {
+        manifest: foundationParams.dll,
+        filepath: join(outputDir, foundationParams.outputFile),
+      },
+    ],
+  })
   if (isInMonoRepo) {
-    baseDllParams.mode = options.mode
+    baseDllParams.mode = mode
     baseDllParams.watch = watch
     webpackConfigs.base = await addDLL(baseDllParams)
   }
-
-  const nameToAppMeta: AppMetaDict = {}
 
   // add app dll configs
   const appParams: WebpackParams[] = await Promise.all(
     apps.map(async app => {
       const cleanName = stringToIdentifier(app.packageId)
-      nameToAppMeta[cleanName] = app
       const dllFile = join(outputDir, `manifest-${cleanName}.json`)
       const appEntry = join(
         app.directory,
@@ -159,7 +147,7 @@ ${apps
         name: `app_${cleanName}`,
         entry: [appEntry],
         context: directory,
-        mode: options.mode,
+        mode: app.buildMode || 'production',
         target: 'web',
         publicPath: '/',
         outputFile: `${cleanName}.dll.js`,
@@ -180,9 +168,16 @@ ${apps
       return params
     }),
   )
+  const nameToAppMeta: AppMetaDict = {}
   await Promise.all(
-    appParams.map(async params => {
-      const config = await addDLL(getAppParams(params))
+    appParams.map(async (params, index) => {
+      const appMeta = apps[index]
+      const config = await addDLL({
+        ...getAppParams(params),
+        // only watch apps for updates in development mode
+        watch: appMeta.buildMode === 'development',
+      })
+      nameToAppMeta[params.name] = appMeta
       webpackConfigs[params.name] = config
     }),
   )
@@ -214,7 +209,7 @@ ${apps
       for (const name in others) {
         webpackConfigs[name] = await makeWebpackConfig(
           {
-            mode: options.mode,
+            mode,
             name,
             outputFile: `${name}.js`,
             outputDir,
@@ -229,13 +224,14 @@ ${apps
         log.info(`extra entry: ${name}`)
       }
     }
+
     // main bundle
     webpackConfigs.main = await makeWebpackConfig(
       {
         name: 'main',
         outputFile: 'main.js',
-        outputDir,
-        mode: options.mode,
+        outputDir: join(outputDir, 'orbit-app'),
+        mode,
         context: directory,
         entry: [entry],
         ignore: ['electron-log', 'configstore', '@o/worker-kit'],
@@ -251,14 +247,17 @@ ${apps
   /**
    * Create the apps import
    */
-  const appDefinitionsSrc = `// all apps
+  const next = `// all apps
 export default function getApps() {
   return [${apps.map(app => `require('${app.packageId}')`).join(',')}]
 }`
   // const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
-  const workspaceEntry = join(directory, 'dist', 'workspace-entry.js')
+  const workspaceEntry = join(outputDir, 'workspaceEntryIn.js')
   log.info(`workspaceEntry ${workspaceEntry}`)
-  await writeFile(workspaceEntry, appDefinitionsSrc)
+  const current = (await pathExists(workspaceEntry)) ? await readFile(workspaceEntry) : ''
+  if (current !== next) {
+    await writeFile(workspaceEntry, next)
+  }
 
   /**
    * Workspace config, this hopefully gives us some more control/ease with managing hmr/apps.
@@ -268,7 +267,7 @@ export default function getApps() {
     name: 'workspaceEntry',
     outputFile: 'workspaceEntry.js',
     outputDir,
-    mode: options.mode,
+    mode,
     context: directory,
     entry: [workspaceEntry],
     target: 'web',
@@ -309,8 +308,7 @@ export function getAppParams(props: WebpackParams): WebpackParams {
   }
 }
 
-export async function getBaseDllParams(directory: string): Promise<WebpackParams> {
-  const outputDir = join(directory, 'dist')
+async function getBaseDllParams(params: WebpackParams): Promise<WebpackParams> {
   const basePackages = [
     '@o/kit',
     '@o/ui',
@@ -327,9 +325,9 @@ export async function getBaseDllParams(directory: string): Promise<WebpackParams
     '@o/use-store',
     '@babel/runtime',
     'node-libs-browser',
-    'react-hot-loader',
-    'react',
-    'react-dom',
+    // 'react-hot-loader',
+    // 'react',
+    // 'react-dom',
   ]
 
   // gather all packages we want included in base dll
@@ -337,13 +335,18 @@ export async function getBaseDllParams(directory: string): Promise<WebpackParams
   // the sub-packages of @o/ui and @o/kit, not sure why that happened
   let allPackages = [...basePackages]
   for (const pkg of basePackages) {
-    const path = require.resolve(`${pkg}/package.json`)
-    const pkgJson = await readJSON(path)
-    const deps = [
-      ...Object.keys(pkgJson.dependencies || {}),
-      ...Object.keys(pkgJson.peerDependencies || {}),
-    ]
-    allPackages = [...allPackages, ...deps]
+    try {
+      const path = require.resolve(`${pkg}/package.json`)
+      const pkgJson = await readJSON(path)
+      const deps = [
+        ...Object.keys(pkgJson.dependencies || {}),
+        ...Object.keys(pkgJson.peerDependencies || {}),
+      ]
+      allPackages = [...allPackages, ...deps]
+    } catch (err) {
+      // for example @o/ui/config/package.json isnt here
+      log.verbose(`Possible error resolving ${pkg}`, err)
+    }
   }
   // ignore electron things
   // TODO make this a bit more... viable
@@ -362,16 +365,14 @@ export async function getBaseDllParams(directory: string): Promise<WebpackParams
     injectHot: join(require.resolve('@o/kit'), '..', '..', 'src', 'index.ts'),
     entry: [...new Set(allPackages)],
     ignore: ['electron-log', 'configstore', 'typeorm'],
-    context: directory,
-    mode: 'development',
     watch: false,
     target: 'web',
     publicPath: '/',
     outputFile: 'base.dll.js',
-    outputDir,
     output: {
       library: 'base',
     },
-    dll: join(outputDir, 'manifest-base.json'),
+    dll: join(params.outputDir, 'manifest-base.json'),
+    ...params,
   }
 }

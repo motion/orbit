@@ -9,8 +9,6 @@ export type OSThemes = 'dark' | 'light'
 
 @decorate
 class DesktopStore {
-  appState: DesktopStore['state']['appState']
-
   bridge = Bridge
   setState = Bridge.setState
   sendMessage = Bridge.sendMessage
@@ -22,13 +20,7 @@ class DesktopStore {
       path: '',
       packageIds: [] as string[],
       appMeta: {} as { [identifier: string]: AppMeta },
-    },
-    appState: {
-      id: '',
-      name: '',
-      title: '',
-      offset: [0, 0],
-      bounds: [0, 0],
+      developingAppIdentifiers: [] as string[],
     },
     errorState: {
       title: '',

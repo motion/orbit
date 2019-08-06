@@ -48,9 +48,13 @@ export const SearchResultModel = new Model<Bit, SearchQuery>('SearchResult')
 export type AppStatusMessage = {
   // id per-message to determine if it changes
   id: string
+  appId?: number
+  // copied from Banner, TODO merge definitions
   type: 'error' | 'warn' | 'success' | 'info'
   message: string
-  appId?: number
+  title?: string
+  timeout?: number
+  loading?: boolean
 }
 
 export const AppStatusModel = new Model<AppStatusMessage, { appId: number }>('AppStatusModel')

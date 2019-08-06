@@ -103,6 +103,7 @@ export class MediatorClient {
             console.error('notFound response', response.error)
           }
         } else {
+          log.verbose(`Response ${command['name']}`, response)
           return response.result
         }
       } catch (err) {

@@ -2,6 +2,11 @@
 
 set +e
 
+# hard source clear
+rm -r ./example-workspace/dist/node_modules/.cache
+rm -r ./example-workspace/dist/.cache
+rm -r ./apps/*/dist/node_modules/.cache
+
 rm -r app/*/tsconfig.tsbuildinfo || true
 rm -r apps/*/tsconfig.tsbuildinfo || true
 rm -r packages/*/tsconfig.tsbuildinfo || true

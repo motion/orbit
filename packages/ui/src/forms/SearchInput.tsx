@@ -81,17 +81,17 @@ export const ClearButton = gloss<ButtonProps & { invisible?: boolean }>(Button, 
     opacity: 0,
     pointerEvents: 'auto',
   },
+}).withConfig({
+  defaultProps: {
+    icon: 'cross',
+    circular: true,
+    size: 0.65,
+    sizeIcon: 1.5,
+    alt: 'flat',
+    glint: false,
+    glintBottom: false,
+  },
 })
-
-ClearButton.defaultProps = {
-  icon: 'cross',
-  circular: true,
-  size: 0.65,
-  sizeIcon: 1.2,
-  alt: 'flat',
-  glint: false,
-  glintBottom: false,
-}
 
 const Actions = gloss(Row, {
   marginLeft: 8,

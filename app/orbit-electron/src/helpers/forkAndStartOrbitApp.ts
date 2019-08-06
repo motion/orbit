@@ -1,7 +1,7 @@
 import { Logger } from '@o/logger'
 import { forkProcess } from '@o/orbit-fork-process'
 
-import { addAppProcess } from '../resolver/CloseAppResolver'
+import { addAppProcess } from '../resolver/AppCloseWindowResolver'
 
 const log = new Logger('forkAndStartOrbitApp')
 const lastUsedInspectPort = 9003
@@ -10,18 +10,19 @@ const lastUsedInspectPort = 9003
  * TODO theres some duplication here with startChildProcess
  */
 
-export function forkAndStartOrbitApp({ appId }: { appId: number }, environmentVariables = null) {
-  if (typeof appId !== 'number') {
-    throw new Error('No appId given')
+export function forkAndStartOrbitApp(
+  { windowId }: { windowId: number },
+  environmentVariables = null,
+) {
+  if (typeof windowId !== 'number') {
+    throw new Error('No windowId given')
   }
-
-  const inspectPort = lastUsedInspectPort + appId
-  const inspectPortRemote = lastUsedInspectPort + appId + 1
-
-  log.info(`inpsectPort`, inspectPort, inspectPortRemote)
+  const inspectPort = lastUsedInspectPort + windowId
+  const inspectPortRemote = lastUsedInspectPort + windowId + 1
+  log.info(`inspectPorts`, inspectPort, inspectPortRemote)
 
   let proc = forkProcess({
-    name: `orbit-app-${appId}`,
+    name: `orbit-app-${windowId}`,
     env: {
       ORBIT_CONFIG: process.env.ORBIT_CONFIG,
       _: process.env._,
@@ -31,14 +32,14 @@ export function forkAndStartOrbitApp({ appId }: { appId: number }, environmentVa
       NODE_ENV: process.env.NODE_ENV,
       SINGLE_USE_MODE: process.env.SINGLE_USE_MODE,
       ...environmentVariables,
-      APP_ID: appId,
+      WINDOW_ID: windowId,
     },
     inspectPort,
     inspectPortRemote,
   })
 
   addAppProcess({
-    appId,
+    windowId,
     process: proc,
   })
 }

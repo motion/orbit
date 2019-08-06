@@ -10,7 +10,7 @@ export function startDevelopment(appRoot: OrbitDesktopRoot) {
   Error.stackTraceLimit = Infinity
   log.info(`$ NODE_ENV=${process.env.NODE_ENV} run desktop`)
 
-  // require('source-map-support/register')
+  require('source-map-support/register')
   require('./installGlobals').installGlobals(appRoot)
 
   if (process.env.RESET_COSAL === 'true') {

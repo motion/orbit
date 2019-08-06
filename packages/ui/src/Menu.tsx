@@ -12,7 +12,7 @@ export type MenuProps = PopoverProps & {
 
 export const Menu = forwardRef(
   (
-    { items, borderRadius = 8, maxHeight = 250, scrollable = 'y', children, ...props }: MenuProps,
+    { items, borderRadius = 8, maxHeight = 450, scrollable = 'y', children, ...props }: MenuProps,
     ref,
   ) => {
     return (

@@ -20,6 +20,7 @@
     { "path": "../../packages/mediator" },
     { "path": "../../packages/constants" },
     { "path": "../../packages/logger" },
+    { "path": "../../packages/cosal" },
     { "path": "../../packages/electron-sudo" },
     { "path": "../../packages/devcert" },
     { "path": "../../packages/orbit-fork-process" }

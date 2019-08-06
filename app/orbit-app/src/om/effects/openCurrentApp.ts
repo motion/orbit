@@ -7,17 +7,16 @@ import { appsDrawerStore } from '../../pages/OrbitPage/OrbitAppsDrawer'
 import { paneManagerStore } from '../stores'
 
 export async function openCurrentApp() {
-  if (appsCarouselStore.zoomedIn === false) {
-    return
-  }
   if (appsDrawerStore.isOpen) {
     return
   }
-
+  if (appsCarouselStore.zoomedIn === false) {
+    appsCarouselStore.zoomIntoCurrentApp()
+  }
   const { type } = paneManagerStore.activePane
   const nextId = Object.keys(Electron.state.appWindows).length
   await command(TearAppCommand, {
     appType: type,
-    appId: nextId,
+    windowId: nextId,
   })
 }

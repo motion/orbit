@@ -3,6 +3,7 @@ import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, Us
 import { decorate, ensure, react, shallow } from '@o/use-store'
 import { watch } from 'chokidar'
 import { isEqual } from 'lodash'
+import { autorun } from 'mobx'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
@@ -43,12 +44,10 @@ export class AppsManager {
   appMeta: AppMetaDict = shallow({})
   apps: AppBit[] = []
 
-  private finishStarting = null
   private packageJsonUpdate = 0
   private updatePackagesVersion = 0
-
-  // for easier debugging
-  getIdentifierToPackageId = getIdentifierToPackageId
+  private fetchedAppsMeta = false
+  private resolvedApps = false
 
   async start(opts: { singleUseMode?: boolean } = {}) {
     if (this.started) return
@@ -60,6 +59,28 @@ export class AppsManager {
       this.observeModels()
       this.started = true
     }
+    // wait for apps/appsMeta to come down
+    await new Promise(res => {
+      const temp = { dispose: () => {} }
+      temp.dispose = autorun(() => {
+        if (this.resolvedApps && this.fetchedAppsMeta) {
+          res()
+          temp.dispose()
+        }
+      })
+    })
+  }
+
+  // for easier debugging
+  identifierToPackageId = getIdentifierToPackageId
+  packageIdToIdentifier(packageId: string) {
+    for (const identifier of Object.keys(this.appMeta)) {
+      const meta = this.appMeta[identifier]
+      if (meta.packageId === packageId) {
+        return identifier
+      }
+    }
+    throw new Error(`No packageId found for identifer`)
   }
 
   get activeSpace() {
@@ -104,6 +125,7 @@ export class AppsManager {
           })
           .subscribe(next => {
             this.apps = next as AppBit[]
+            this.resolvedApps = true
           })
         return () => {
           subsription.unsubscribe()
@@ -152,24 +174,25 @@ export class AppsManager {
 
   updateAppMeta = async () => {
     if (!this.activeSpace) return
+
     await Promise.all([
       this.updateNodeDefinitions(this.activeSpace),
       // have cli update its cache of packageId => identifier for use installing
       updateWorkspacePackageIds(this.activeSpace.directory || ''),
     ])
-    const apps = await getWorkspaceApps(this.activeSpace.directory || '')
-    if (!apps) return
-    log.verbose(`got apps ${apps.map(x => x.packageId).join(',')}`)
 
+    const appsMeta = await getWorkspaceApps(this.activeSpace.directory || '')
+    if (!appsMeta) return
+    log.verbose(`got apps ${appsMeta.map(x => x.packageId).join(',')}`)
     let updated = false
-    for (const appInfo of apps) {
-      const identifier = getIdentifierFromPackageId(appInfo.packageId)
-      log.verbose(`setting apps meta ${appInfo.packageId} => ${identifier}`)
+    for (const appMeta of appsMeta) {
+      const identifier = getIdentifierFromPackageId(appMeta.packageId)
+      log.verbose(`setting apps meta ${appMeta.packageId} => ${identifier}`)
       if (identifier !== null) {
-        this.appMeta[identifier] = appInfo
+        this.appMeta[identifier] = appMeta
         updated = true
       } else {
-        log.warning(`no identifier found for ${appInfo.packageId}`)
+        log.warning(`no identifier found for ${appMeta.packageId}`)
       }
     }
 
@@ -180,10 +203,7 @@ export class AppsManager {
     }
 
     // dont finish starting appsManager until we've run this once
-    if (this.finishStarting) {
-      this.finishStarting()
-      this.finishStarting = null
-    }
+    this.fetchedAppsMeta = true
   }
 
   private updateNodeDefinitions = async (space: Space) => {

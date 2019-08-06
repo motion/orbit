@@ -151,17 +151,17 @@ export class Logger {
   }
 
   private shouldLogAll(type: LogType) {
-    const level = process.env.LOG_LEVEL ? +process.env.LOG_LEVEL : 2
+    const level = process.env.LOG_LEVEL ? +process.env.LOG_LEVEL : 1
     if (type === 'error') {
       return true
     }
     if (type === 'info') {
-      return level > 3
+      return level > 2
     }
     if (type === 'verbose') {
-      return level > 4
+      return level > 3
     }
-    return level > 5
+    return level > 4
   }
 
   /**
@@ -261,7 +261,7 @@ export class Logger {
       )
     } else if (level === 'verbose') {
       this.flush(
-        logLevel > 2,
+        logLevel > 1,
         'debug',
         ...colored(this.namespace, `color: ${color}; font-weight: bold`),
         ...messages,

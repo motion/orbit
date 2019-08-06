@@ -233,6 +233,8 @@ export class WorkspaceManager {
        * Handle developing a new app independently or from within workspace
        */
       resolveCommand(AppDevOpenCommand, async options => {
+        log.info(`Start developing app`, options)
+
         let appMeta: AppMeta
         let appId: number
 
@@ -308,7 +310,7 @@ export class WorkspaceManager {
       }),
 
       resolveCommand(AppDevCloseCommand, async ({ identifier }) => {
-        log.info('Stopping development', identifier)
+        log.info(`Stopping development ${identifier}`)
         const packageId = this.appsManager.identifierToPackageId(identifier)
         if (!packageId) {
           return {

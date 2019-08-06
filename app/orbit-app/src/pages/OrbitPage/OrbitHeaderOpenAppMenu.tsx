@@ -69,6 +69,7 @@ export const OrbitHeaderOpenAppMenu = memo(
                   onClick: e => {
                     e.stopPropagation()
                     // toggle
+                    console.log('clcik even', isDeveloping)
                     if (isDeveloping) {
                       command(AppDevOpenCommand, {
                         type: 'workspace',

@@ -8,6 +8,7 @@ export let Electron = null as ElectronStore
 export type AppWindow = {
   windowId: number
   appId?: number
+  identifier: string
   appRole: 'main' | 'editing' | 'torn'
 }
 
@@ -33,6 +34,7 @@ class ElectronStore {
       // starts with orbit main window
       [0]: {
         windowId: 0,
+        identifier: '',
         appRole: 'main',
       },
     } as { [id: number]: AppWindow },

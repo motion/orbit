@@ -165,24 +165,25 @@ export class AppsManager {
 
   updateAppMeta = async () => {
     if (!this.activeSpace) return
+
     await Promise.all([
       this.updateNodeDefinitions(this.activeSpace),
       // have cli update its cache of packageId => identifier for use installing
       updateWorkspacePackageIds(this.activeSpace.directory || ''),
     ])
-    const apps = await getWorkspaceApps(this.activeSpace.directory || '')
-    if (!apps) return
-    log.verbose(`got apps ${apps.map(x => x.packageId).join(',')}`)
 
+    const appsMeta = await getWorkspaceApps(this.activeSpace.directory || '')
+    if (!appsMeta) return
+    log.verbose(`got apps ${appsMeta.map(x => x.packageId).join(',')}`)
     let updated = false
-    for (const appInfo of apps) {
-      const identifier = getIdentifierFromPackageId(appInfo.packageId)
-      log.verbose(`setting apps meta ${appInfo.packageId} => ${identifier}`)
+    for (const appMeta of appsMeta) {
+      const identifier = getIdentifierFromPackageId(appMeta.packageId)
+      log.verbose(`setting apps meta ${appMeta.packageId} => ${identifier}`)
       if (identifier !== null) {
-        this.appMeta[identifier] = appInfo
+        this.appMeta[identifier] = appMeta
         updated = true
       } else {
-        log.warning(`no identifier found for ${appInfo.packageId}`)
+        log.warning(`no identifier found for ${appMeta.packageId}`)
       }
     }
 

@@ -15,7 +15,7 @@ import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 import { getActiveSpace } from '../helpers/getActiveSpace'
 import { appStatusManager } from '../managers/AppStatusManager'
 import { AppMiddleware } from './AppMiddleware'
-import { commandBuild, resolveAppBuildCommand } from './commandBuild'
+import { buildAppInfo, resolveAppBuildCommand } from './commandBuild'
 import { resolveAppGenTypesCommand } from './commandGenTypes'
 import { resolveAppInstallCommand } from './commandInstall'
 import { getAppsConfig } from './getAppsConfig'
@@ -232,27 +232,30 @@ export class WorkspaceManager {
       resolveAppGenTypesCommand,
 
       /**
-       * This handles developing a new app independently
+       * Handle developing a new app independently or from within workspace
        */
       resolveCommand(AppDevOpenCommand, async options => {
-        // ⚠️
         let appMeta: AppMeta
         let appId: number
+
         if (options.type === 'independent') {
           // launch new app
           appMeta = await getAppMeta(options.projectRoot)
-        } else {
-          console.warn('TODO this is wrong, identifier isnt the key:')
-          appMeta = this.appsManager.appMeta[options.identifier]
-          console.warn('TODO this should be provided in options?')
           appId = -1
+        } else {
+          appId = options.appId
+          appMeta = this.appsManager.appMeta[options.identifier]
+          if (!appMeta) {
+            return {
+              type: 'error',
+              message: `No appMeta found in active apps for identiifer ${options.identifier}`,
+            } as const
+          }
         }
 
         // ensure built so we can load appInfo
-        log.info(`Building app...`, appMeta)
-        const buildRes = await commandBuild({
-          projectRoot: appMeta.directory,
-        })
+        log.info(`Building app info...`, appMeta)
+        const buildRes = await buildAppInfo(appMeta.directory)
         if (buildRes.type !== 'success') {
           return buildRes
         }

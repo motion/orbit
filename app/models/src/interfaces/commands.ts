@@ -131,6 +131,7 @@ export type CommandDevOptions =
   | {
       type: 'workspace'
       identifier: string
+      appId: number
     }
 export const AppDevOpenCommand = new Command<
   StatusReply<{

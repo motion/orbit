@@ -87,6 +87,7 @@ class AppStore {
       Electron.state.appWindows[this.windowId] || {
         windowId: this.windowId,
         appRole: 'main',
+        identifier: '',
       }
     )
   }

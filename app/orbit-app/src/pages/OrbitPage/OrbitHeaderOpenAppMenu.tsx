@@ -66,6 +66,7 @@ export const OrbitHeaderOpenAppMenu = memo(() => {
                 onClick: () => {
                   command(AppDevOpenCommand, {
                     type: 'workspace',
+                    appId: appsCarousel.focusedApp.id!,
                     identifier: appsCarousel.focusedApp.identifier!,
                   })
                 },

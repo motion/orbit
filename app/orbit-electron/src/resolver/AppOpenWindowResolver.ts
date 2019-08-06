@@ -1,13 +1,16 @@
+import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { AppOpenWindowCommand } from '@o/models'
 import { Electron } from '@o/stores'
 
 import { forkAndStartOrbitApp } from '../helpers/forkAndStartOrbitApp'
 
+const log = new Logger('AppOpenWindowResolver')
+
 export const AppOpenWindowResolver = resolveCommand(
   AppOpenWindowCommand,
   async ({ appId, isEditing }) => {
-    console.log('got open window command, opening...', appId)
+    log.info('got open window command, opening...', appId)
     const windowId = Object.keys(Electron.state.appWindows).length
     Electron.setState({
       appWindows: {

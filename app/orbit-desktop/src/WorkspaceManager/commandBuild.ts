@@ -69,16 +69,42 @@ export async function commandBuild(
   }
 }
 
+export async function buildAppInfo(
+  directory: string,
+  options: CommandBuildOptions = {
+    projectRoot: directory,
+    watch: false,
+  },
+): Promise<StatusReply> {
+  try {
+    const pkg = await readPackageJson(directory)
+    // build appInfo first, we can then use it to determine if we need to build web/node
+    const appInfoConf = await getAppInfoConfig(directory, pkg.name, options)
+    log.info(`Building appInfo...`, appInfoConf)
+    await webpackPromise([appInfoConf], {
+      loud: true,
+    })
+    return {
+      type: 'success',
+      message: `Built successfully`,
+    }
+  } catch (err) {
+    return {
+      type: 'error',
+      message: err.message,
+      errors: [err],
+    }
+  }
+}
+
 export async function bundleApp(entry: string, options: CommandBuildOptions) {
   const verbose = true
   const pkg = await readPackageJson(options.projectRoot)
 
-  // build appInfo first, we can then use it to determine if we need to build web/node
-  const appInfoConf = await getAppInfoConfig(entry, pkg.name, options)
-  log.info(`Building appInfo...`, appInfoConf)
-  await webpackPromise([appInfoConf], {
-    loud: verbose,
-  })
+  const appInfoRes = await buildAppInfo(entry, options)
+  if (appInfoRes.type !== 'success') {
+    throw appInfoRes.errors[0]
+  }
 
   const appInfo = await getAppInfo(options.projectRoot)
   log.info(`appInfo`, appInfo)
@@ -183,7 +209,11 @@ async function getNodeAppConfig(entry: string, name: any, options: CommandBuildO
 }
 
 // used just to get the information like id/name from the entry file
-async function getAppInfoConfig(entry: string, name: string, options: CommandBuildOptions) {
+async function getAppInfoConfig(
+  entry: string,
+  name: string,
+  options: Pick<CommandBuildOptions, 'projectRoot' | 'watch'>,
+) {
   return await makeWebpackConfig(
     {
       name,

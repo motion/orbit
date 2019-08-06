@@ -1,8 +1,8 @@
 import { AppsManager, getAppMeta, requireAppDefinition } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import { AppCloseWindowCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppWorkspaceCommand, CallAppBitApiMethodCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
-import { Desktop, Electron } from '@o/stores'
+import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppWorkspaceCommand, CallAppBitApiMethodCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
+import { Desktop } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { remove } from 'fs-extra'
 import _, { uniqBy } from 'lodash'
@@ -48,7 +48,9 @@ export class WorkspaceManager {
   constructor(
     private mediatorServer: MediatorServer,
     private startOpts: { singleUseMode: boolean },
-  ) {}
+  ) {
+    this.mediatorServer // to prevent unused
+  }
 
   async start() {
     // Sends messages between webpack and client apps so we can display status messages
@@ -308,15 +310,28 @@ export class WorkspaceManager {
       resolveCommand(AppDevCloseCommand, async ({ identifier }) => {
         log.info('Stopping development', identifier)
         const packageId = this.appsManager.identifierToPackageId(identifier)
+        if (!packageId) {
+          return {
+            type: 'error',
+            message: `No packageId found for identifier ${identifier}`,
+          }
+        }
         const appMeta = this.developingApps.find(x => x.packageId === packageId)
+        if (!appMeta) {
+          return {
+            type: 'error',
+            message: `No developing app found for packageId ${packageId}`,
+          }
+        }
         this.developingApps = _.remove(this.developingApps, x => x.packageId === packageId)
         this.setBuildMode(appMeta.packageId, 'production')
-        // ⚠️
-        const windowId = -1
-        if (Electron.state.appWindows[windowId]) {
-          log.verbose('Close window', windowId)
-          await this.mediatorServer.sendRemoteCommand(AppCloseWindowCommand, { windowId })
-        }
+        // TODO
+        // // ⚠️
+        // const windowId = -1
+        // if (Electron.state.appWindows[windowId]) {
+        //   log.verbose('Close window', windowId)
+        //   await this.mediatorServer.sendRemoteCommand(AppCloseWindowCommand, { windowId })
+        // }
         return {
           type: 'success',
           message: `Stopped development of ${identifier}`,

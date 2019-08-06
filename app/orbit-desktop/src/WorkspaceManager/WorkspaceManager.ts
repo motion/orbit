@@ -1,4 +1,4 @@
-import { AppsManager, getAppMeta } from '@o/apps-manager'
+import { AppsManager, getAppMeta, requireAppDefinition } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
 import { AppCloseWindowCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppStatusModel, AppWorkspaceCommand, CallAppBitApiMethodCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
@@ -15,7 +15,7 @@ import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 import { getActiveSpace } from '../helpers/getActiveSpace'
 import { appStatusManager } from '../managers/AppStatusManager'
 import { AppMiddleware } from './AppMiddleware'
-import { resolveAppBuildCommand } from './commandBuild'
+import { commandBuild, resolveAppBuildCommand } from './commandBuild'
 import { resolveAppGenTypesCommand } from './commandGenTypes'
 import { resolveAppInstallCommand } from './commandInstall'
 import { getAppsConfig } from './getAppsConfig'
@@ -237,19 +237,42 @@ export class WorkspaceManager {
       resolveCommand(AppDevOpenCommand, async options => {
         // ⚠️
         let appMeta: AppMeta
+        let appId: number
         if (options.type === 'independent') {
           // launch new app
           appMeta = await getAppMeta(options.projectRoot)
         } else {
+          console.warn('TODO this is wrong, identifier isnt the key:')
+          appMeta = this.appsManager.appMeta[options.identifier]
+          console.warn('TODO this should be provided in options?')
+          appId = -1
         }
 
-        const appId = -1
-        const identifier = ''
+        // ensure built so we can load appInfo
+        log.info(`Building app...`, appMeta)
+        const buildRes = await commandBuild({
+          projectRoot: appMeta.directory,
+        })
+        if (buildRes.type !== 'success') {
+          return buildRes
+        }
+
+        // load appInfo to get identifier
+        const appInfoRes = await requireAppDefinition({
+          directory: appMeta.directory,
+          packageId: appMeta.packageId,
+          types: ['appInfo'],
+        })
+        if (appInfoRes.type !== 'success') {
+          return appInfoRes
+        }
+
+        const identifier = appInfoRes.value.id
+        log.info(`Loaded app with identifier: ${identifier}`)
 
         if (options.type === 'independent') {
           // this.appIdToPackageJson[windowId] = appMeta.directory
         }
-
         // always do this:
         this.developingApps.push(appMeta)
         this.setBuildMode(appMeta.packageId, 'development')

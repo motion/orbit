@@ -1,8 +1,8 @@
 import { updateBuildInfo } from '@o/apps-manager'
 import { isOrbitApp, readPackageJson } from '@o/libs-node'
 import { Logger } from '@o/logger'
-import { resolveCommand } from '@o/mediator'
-import { AppBuildCommand, AppDefinition, CommandBuildOptions } from '@o/models'
+import { CommandOpts, resolveCommand } from '@o/mediator'
+import { AppBuildCommand, AppDefinition, CommandBuildOptions, StatusReply } from '@o/models'
 import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
 import webpack = require('webpack')
@@ -17,52 +17,57 @@ const log = new Logger('resolveAppBuildCommand')
 
 export const resolveAppBuildCommand = resolveCommand(
   AppBuildCommand,
-  statusReplyCommand(async (props, options) => {
-    attachLogToCommand(log, options)
-
-    log.info(`Running build in ${props.projectRoot}`)
-
-    if (!(await isOrbitApp(props.projectRoot))) {
-      return {
-        type: 'error',
-        message: `\nNot inside an orbit app, add "config": { "orbitApp": true } } to the package.json`,
-      }
-    }
-
-    const pkg = await readPackageJson(props.projectRoot)
-    if (!pkg) {
-      return {
-        type: 'error',
-        message: 'No package found!',
-      }
-    }
-
-    const entry = await getAppEntry(props.projectRoot)
-    if (!entry || !(await pathExists(entry))) {
-      return {
-        type: 'error',
-        message: `Make sure your package.json "entry" specifies the full filename with extension, ie: main.tsx`,
-      }
-    }
-
-    await Promise.all([
-      bundleApp(entry, props),
-      commandGenTypes(
-        {
-          projectRoot: props.projectRoot,
-          projectEntry: entry,
-          out: join(props.projectRoot, 'dist', 'api.json'),
-        },
-        options,
-      ),
-    ])
-
-    return {
-      type: 'success',
-      message: 'Built app',
-    }
-  }),
+  statusReplyCommand(commandBuild),
 )
+
+export async function commandBuild(
+  props: CommandBuildOptions,
+  options?: CommandOpts,
+): Promise<StatusReply> {
+  attachLogToCommand(log, options)
+
+  log.info(`Running build in ${props.projectRoot}`)
+
+  if (!(await isOrbitApp(props.projectRoot))) {
+    return {
+      type: 'error',
+      message: `\nNot inside an orbit app, add "config": { "orbitApp": true } } to the package.json`,
+    }
+  }
+
+  const pkg = await readPackageJson(props.projectRoot)
+  if (!pkg) {
+    return {
+      type: 'error',
+      message: 'No package found!',
+    }
+  }
+
+  const entry = await getAppEntry(props.projectRoot)
+  if (!entry || !(await pathExists(entry))) {
+    return {
+      type: 'error',
+      message: `Make sure your package.json "entry" specifies the full filename with extension, ie: main.tsx`,
+    }
+  }
+
+  await Promise.all([
+    bundleApp(entry, props),
+    commandGenTypes(
+      {
+        projectRoot: props.projectRoot,
+        projectEntry: entry,
+        out: join(props.projectRoot, 'dist', 'api.json'),
+      },
+      options,
+    ),
+  ])
+
+  return {
+    type: 'success',
+    message: 'Built app',
+  }
+}
 
 export async function bundleApp(entry: string, options: CommandBuildOptions) {
   const verbose = true

@@ -142,7 +142,7 @@ export const AppDevOpenCommand = new Command<
 >('AppDevOpenCommand')
 
 export const AppDevCloseCommand = new Command<StatusReply<boolean>, { identifier: string }>(
-  'app-dev-close',
+  'AppDevCloseCommand',
 )
 
 export const AppCloseWindowCommand = new Command<

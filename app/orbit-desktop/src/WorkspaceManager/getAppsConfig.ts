@@ -35,7 +35,7 @@ export async function getAppsConfig(
   const mode = options.dev ? 'development' : 'production'
   const directory = options.workspaceRoot
   const outputDir = join(directory, 'dist', mode)
-  const watch = !options.build // watch mode by default (if not building)
+  const watch = options.action === 'run'
 
   log.info(
     `dev ${options.dev} watch ${watch} ${directory}, apps ${apps.length} ${isInMonoRepo}`,

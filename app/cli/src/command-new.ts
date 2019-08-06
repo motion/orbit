@@ -39,17 +39,30 @@ export async function commandNew(options: AppCreateNewOptions): Promise<StatusRe
     process.exit(0)
   }
 
-  const appRoot = join(options.projectRoot || process.cwd(), options.name)
+  return await copyTemplate(options, {
+    async preInstall({ path }) {
+      await replaceInFile({
+        files: join(path, '**'),
+        from: ['$ID', '$NAME', '$ICON'],
+        to: [options.identifier, options.name, options.icon],
+      })
+    },
+  })
+}
 
+export async function copyTemplate(
+  options: { name: string; projectRoot?: string; template: string },
+  { preInstall }: { preInstall?: (opts: { path: string }) => void },
+): Promise<StatusReply> {
+  const appRoot = join(options.projectRoot || process.cwd(), options.name)
   const urlObject = url.parse(appRoot)
   if (urlObject.protocol && urlObject.host) {
     trackError(`NEW_PROJECT_NAME_MISSING`)
     return {
       type: 'error',
-      message: `It looks like you forgot to add a name for your new project. Try running instead "orbit new new-orbit-project ${appRoot}"`,
+      message: `It looks like you forgot to add a name for your new project.`,
     }
   }
-
   if (!isValid(appRoot)) {
     return {
       type: 'error',
@@ -67,9 +80,7 @@ export async function commandNew(options: AppCreateNewOptions): Promise<StatusRe
   }
 
   const hostedInfo = hostedGitInfo.fromUrl(options.template)
-
   trackCli(`NEW_PROJECT`, { templateName: options.template })
-
   try {
     if (hostedInfo) {
       reporter.info(`Cloning from git ${JSON.stringify(hostedInfo)}`)
@@ -85,12 +96,9 @@ export async function commandNew(options: AppCreateNewOptions): Promise<StatusRe
       await copy(templatePath, appRoot)
     }
 
-    await replaceInFile({
-      files: join(appRoot, '**'),
-      from: ['$ID', '$NAME', '$ICON'],
-      to: [options.identifier, options.name, options.icon],
+    await preInstall({
+      path: appRoot,
     })
-
     await install(appRoot)
 
     return {

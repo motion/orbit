@@ -215,7 +215,7 @@ function main() {
           .positional('action', {
             type: 'string',
             default: 'run',
-            describe: 'Options: run, build. Defaults to run.',
+            describe: 'Options: run, build, new. Defaults to run.',
           })
           .positional('path', {
             type: 'string',
@@ -234,13 +234,22 @@ function main() {
           })
       },
       async argv => {
+        const actions = {
+          run: 'run',
+          build: 'build',
+          new: 'new',
+        }
         setVerbose(argv.logLevel)
         reporter.verbose(`argv ${JSON.stringify(argv)}`)
         let workspaceRoot = resolve(cwd, argv.path)
         await commandWs({
           workspaceRoot,
           clean: !!argv.clean,
-          build: argv.action === 'build',
+          action:
+            actions[argv.action || 'run'] ||
+            (() => {
+              throw new Error(`Must pick a valid action`)
+            })(),
           dev: !!argv.dev,
         })
       },

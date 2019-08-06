@@ -1,0 +1,14 @@
+{
+  "name": "$WORKSPACE_NAME",
+  "version": "1.0.0",
+  "private": true,
+  "config": {
+    "orbitWorkspace": true
+  },
+  "workspaces": [
+    "apps"
+  ],
+  "dependencies": {
+    "@babel/runtime": "^7.4.5"
+  }
+}

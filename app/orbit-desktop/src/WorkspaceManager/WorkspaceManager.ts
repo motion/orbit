@@ -31,7 +31,7 @@ export class WorkspaceManager {
   started = false
   workspaceVersion = 0
   options: CommandWsOptions = {
-    build: false,
+    action: 'run',
     dev: false,
     workspaceRoot: '',
   }
@@ -95,7 +95,7 @@ export class WorkspaceManager {
     async ([started, activeApps], { sleep }) => {
       ensure('started', started)
       ensure('directory', !!this.options.workspaceRoot)
-      ensure('not in single build mode', !this.options.build)
+      ensure('not in single build mode', this.options.action !== 'build')
       await sleep(100)
       log.verbose(`update`)
       const identifiers = Object.keys(activeApps)
@@ -151,7 +151,7 @@ export class WorkspaceManager {
         return
       }
       const { webpackConfigs, nameToAppMeta } = res
-      if (options.build) {
+      if (options.action === 'build') {
         const { base, ...rest } = webpackConfigs
         const configs = Object.keys(rest).map(key => rest[key])
         log.info(`Building ${Object.keys(webpackConfigs).join(', ')}...`)

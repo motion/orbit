@@ -94,8 +94,40 @@ export async function getAppsConfig(
 
   const webpackConfigs: { [key: string]: webpack.Configuration } = {}
 
+  // add foundation dll config
+  // testing to see if we can leave react-hot-loader in development mode
+  // even when other things are in production mode
+  const foundationParams: WebpackParams = {
+    name: `foundation`,
+    entry: ['react-hot-loader', 'react', 'react-dom'],
+    watch: false,
+    target: 'web',
+    mode: 'development',
+    context: directory,
+    outputDir,
+    publicPath: '/',
+    outputFile: 'foundation.dll.js',
+    output: {
+      library: 'foundation',
+    },
+    dll: join(outputDir, 'manifest-foundation.json'),
+  }
+  const foundationConfig = await addDLL(foundationParams)
+  webpackConfigs.foundation = foundationConfig
+
   // add base dll config
-  const baseDllParams = await getBaseDllParams(outputDir, directory, mode)
+  const baseDllParams = await getBaseDllParams({
+    outputDir,
+    context: directory,
+    mode,
+    // reference foundation
+    dllReferences: [
+      {
+        manifest: foundationParams.dll,
+        filepath: join(outputDir, foundationParams.outputFile),
+      },
+    ],
+  })
   if (isInMonoRepo) {
     baseDllParams.mode = mode
     baseDllParams.watch = watch
@@ -276,11 +308,7 @@ export function getAppParams(props: WebpackParams): WebpackParams {
   }
 }
 
-export async function getBaseDllParams(
-  outputDir: string,
-  directory: string,
-  mode: 'production' | 'development',
-): Promise<WebpackParams> {
+async function getBaseDllParams(params: WebpackParams): Promise<WebpackParams> {
   const basePackages = [
     '@o/kit',
     '@o/ui',
@@ -297,9 +325,9 @@ export async function getBaseDllParams(
     '@o/use-store',
     '@babel/runtime',
     'node-libs-browser',
-    'react-hot-loader',
-    'react',
-    'react-dom',
+    // 'react-hot-loader',
+    // 'react',
+    // 'react-dom',
   ]
 
   // gather all packages we want included in base dll
@@ -337,16 +365,14 @@ export async function getBaseDllParams(
     injectHot: join(require.resolve('@o/kit'), '..', '..', 'src', 'index.ts'),
     entry: [...new Set(allPackages)],
     ignore: ['electron-log', 'configstore', 'typeorm'],
-    context: directory,
-    mode,
     watch: false,
     target: 'web',
     publicPath: '/',
     outputFile: 'base.dll.js',
-    outputDir,
     output: {
       library: 'base',
     },
-    dll: join(outputDir, 'manifest-base.json'),
+    dll: join(params.outputDir, 'manifest-base.json'),
+    ...params,
   }
 }

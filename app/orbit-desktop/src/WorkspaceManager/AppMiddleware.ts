@@ -303,6 +303,7 @@ export class AppMiddleware {
             document.body.style.background = '#eee'
           }
         </script>
+        <script src="/foundation.dll.js"></script>
         <script src="/base.dll.js"></script>
     ${this.apps
       .map(app => `    <script src="/${stringToIdentifier(app.packageId)}.dll.js"></script>`)

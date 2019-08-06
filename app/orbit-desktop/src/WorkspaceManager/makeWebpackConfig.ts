@@ -147,8 +147,7 @@ export function makeWebpackConfig(
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
     },
-    devtool:
-      devtool || (mode === 'production' || target === 'node' ? 'source-map' : 'eval-source-map'),
+    devtool: devtool || (mode === 'production' || target === 'node' ? 'source-map' : 'source-map'), //'cheap-module-eval-source-map'
     externals: [
       {
         electron: '{}',
@@ -163,7 +162,7 @@ export function makeWebpackConfig(
           : ['ts:main', 'module', 'browser', 'main'],
       alias: {
         // disable until fixed bug in rhl
-        'react-dom': mode === 'production' ? 'react-dom' : '@hot-loader/react-dom',
+        'react-dom': mode === 'production' ? '@hot-loader/react-dom' : '@hot-loader/react-dom',
         'react-native': 'react-native-web',
       },
       modules,

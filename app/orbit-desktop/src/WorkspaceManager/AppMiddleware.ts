@@ -1,4 +1,4 @@
-import { AppMetaDict, AppsManager, getPackageId } from '@o/apps-manager'
+import { AppMetaDict, AppsManager } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppMeta, AppStatusMessage } from '@o/models'
 import { stringToIdentifier } from '@o/ui'
@@ -202,7 +202,7 @@ export class AppMiddleware {
   ) => {
     // we have to map in a tricky way to each appId
     for (const app of this.appsManager.apps) {
-      const packageId = await getPackageId(app.identifier)
+      const packageId = this.appsManager.identifierToPackageId(app.identifier)
       if (packageId === appMeta.packageId) {
         this.sendAppBuildStatusUpdate({ appId: app.id, ...message })
       }

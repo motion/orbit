@@ -87,11 +87,7 @@ export function makeWebpackConfig(
       // but also were an app platform, we dont care about file size so much for now
       sideEffects: false,
       concatenateModules: true,
-      // this helps runtime/loadtime
-      splitChunks: {
-        chunks: 'async',
-        name: false,
-      },
+      splitChunks: false,
       ...((target === 'node' || noChunking) && {
         splitChunks: false,
       }),

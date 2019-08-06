@@ -52,7 +52,7 @@ export async function commandBuild(
   }
 
   await Promise.all([
-    bundleApp(entry, props),
+    bundleApp(props),
     commandGenTypes(
       {
         projectRoot: props.projectRoot,
@@ -70,16 +70,23 @@ export async function commandBuild(
 }
 
 export async function buildAppInfo(
-  directory: string,
   options: CommandBuildOptions = {
-    projectRoot: directory,
+    projectRoot: '',
     watch: false,
   },
 ): Promise<StatusReply> {
   try {
+    const directory = options.projectRoot
+    const entry = await getAppEntry(options.projectRoot)
     const pkg = await readPackageJson(directory)
+    if (!pkg) {
+      return {
+        type: 'error',
+        message: `No package.json at ${directory}`,
+      }
+    }
     // build appInfo first, we can then use it to determine if we need to build web/node
-    const appInfoConf = await getAppInfoConfig(directory, pkg.name, options)
+    const appInfoConf = await getAppInfoConfig(entry, pkg.name, options)
     log.info(`Building appInfo...`, appInfoConf)
     await webpackPromise([appInfoConf], {
       loud: true,
@@ -97,13 +104,14 @@ export async function buildAppInfo(
   }
 }
 
-export async function bundleApp(entry: string, options: CommandBuildOptions) {
-  const verbose = true
+export async function bundleApp(options: CommandBuildOptions) {
+  const verbose = true // !
+  const entry = await getAppEntry(options.projectRoot)
   const pkg = await readPackageJson(options.projectRoot)
 
-  const appInfoRes = await buildAppInfo(entry, options)
+  const appInfoRes = await buildAppInfo(options)
   if (appInfoRes.type !== 'success') {
-    throw appInfoRes.errors[0]
+    throw appInfoRes.errors ? appInfoRes.errors[0] : appInfoRes.message
   }
 
   const appInfo = await getAppInfo(options.projectRoot)
@@ -224,7 +232,7 @@ async function getAppInfoConfig(
       minify: false,
       noChunking: true,
       outputFile: 'appInfo.js',
-      watch: options.watch,
+      watch: options.watch || false,
       output: {
         library: '[name]',
         libraryTarget: 'umd',

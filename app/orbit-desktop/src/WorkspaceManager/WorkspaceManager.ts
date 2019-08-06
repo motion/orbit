@@ -227,6 +227,7 @@ export class WorkspaceManager {
         await this.updateBuild()
         return true
       }),
+
       resolveAppInstallCommand,
       resolveAppBuildCommand,
       resolveAppGenTypesCommand,
@@ -255,12 +256,15 @@ export class WorkspaceManager {
 
         // ensure built so we can load appInfo
         log.info(`Building app info...`, appMeta)
-        const buildRes = await buildAppInfo(appMeta.directory)
+        const buildRes = await buildAppInfo({
+          projectRoot: appMeta.directory,
+        })
         if (buildRes.type !== 'success') {
           return buildRes
         }
 
         // load appInfo to get identifier
+        log.info(`Reading app definition...`)
         const appInfoRes = await requireAppDefinition({
           directory: appMeta.directory,
           packageId: appMeta.packageId,
@@ -282,11 +286,15 @@ export class WorkspaceManager {
         this.developingApps.push(appMeta)
         this.setBuildMode(appMeta.packageId, 'development')
 
+        const developingAppIdentifiers = this.developingApps.map(x =>
+          this.appsManager.packageIdToIdentifier(x.packageId),
+        )
+        if (developingAppIdentifiers.some(x => !x)) {
+          log.warning(`Missing identifier`)
+        }
         Desktop.setState({
           workspaceState: {
-            developingAppIdentifiers: this.developingApps.map(x =>
-              this.appsManager.packageIdToIdentifier(x.packageId),
-            ),
+            developingAppIdentifiers,
           },
         })
 

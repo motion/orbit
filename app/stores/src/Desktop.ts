@@ -20,6 +20,7 @@ class DesktopStore {
       path: '',
       packageIds: [] as string[],
       appMeta: {} as { [identifier: string]: AppMeta },
+      developingAppIdentifiers: [] as string[],
     },
     errorState: {
       title: '',

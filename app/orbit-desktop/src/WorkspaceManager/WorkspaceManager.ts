@@ -102,7 +102,7 @@ export class WorkspaceManager {
       const space = await getActiveSpace()
       const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
       this.graphServer.setupGraph(apps)
-      const packageIds = identifiers.map(this.appsManager.getIdentifierToPackageId)
+      const packageIds = identifiers.map(this.appsManager.identifierToPackageId)
       // this is the main build action, no need to await here
       this.updateBuild()
       Desktop.setState({
@@ -273,12 +273,22 @@ export class WorkspaceManager {
         const identifier = appInfoRes.value.id
         log.info(`Loaded app with identifier: ${identifier}`)
 
+        // ⚠️ finish refactor
         if (options.type === 'independent') {
           // this.appIdToPackageJson[windowId] = appMeta.directory
         }
+
         // always do this:
         this.developingApps.push(appMeta)
         this.setBuildMode(appMeta.packageId, 'development')
+
+        Desktop.setState({
+          workspaceState: {
+            developingAppIdentifiers: this.developingApps.map(x =>
+              this.appsManager.packageIdToIdentifier(x.packageId),
+            ),
+          },
+        })
 
         return {
           type: 'success',

@@ -63,7 +63,8 @@ export const OrbitHeaderOpenAppMenu = memo(() => {
               {
                 title: 'Edit',
                 icon: 'edit',
-                onClick: () => {
+                onClick: e => {
+                  e.stopPropagation()
                   command(AppDevOpenCommand, {
                     type: 'workspace',
                     appId: appsCarousel.focusedApp.id!,

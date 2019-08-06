@@ -49,9 +49,6 @@ export class AppsManager {
   private fetchedAppsMeta = false
   private resolvedApps = false
 
-  // for easier debugging
-  getIdentifierToPackageId = getIdentifierToPackageId
-
   async start(opts: { singleUseMode?: boolean } = {}) {
     if (this.started) return
     log.verbose('Starting...')
@@ -72,6 +69,18 @@ export class AppsManager {
         }
       })
     })
+  }
+
+  // for easier debugging
+  identifierToPackageId = getIdentifierToPackageId
+  packageIdToIdentifier(packageId: string) {
+    for (const identifier of Object.keys(this.appMeta)) {
+      const meta = this.appMeta[identifier]
+      if (meta.packageId === packageId) {
+        return identifier
+      }
+    }
+    throw new Error(`No packageId found for identifer`)
   }
 
   get activeSpace() {

@@ -82,10 +82,10 @@ async function main() {
   }
 
   // start cross-process stores
-  console.time('loadStores')
+  // console.time('loadStores')
   const { App } = require('@o/stores')
   await App.start()
-  console.timeEnd('loadStores')
+  // console.timeEnd('loadStores')
 
   // install dev tools
   require('./helpers/installDevelopmentHelpers')
@@ -95,15 +95,13 @@ async function main() {
   document.documentElement.style.overflow = 'hidden'
 
   // start om first so it inits before showing
-  console.time('loadOm')
+  // console.time('loadOm')
   const { om } = require('./om/om')
   await om.initialized
-  console.timeEnd('loadOm')
+  // console.timeEnd('loadOm')
 
   // now run app..
-  console.time('startApp')
   startApp()
-  console.timeEnd('startApp')
 }
 
 const React = require('react')

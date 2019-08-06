@@ -111,7 +111,8 @@
     "webpack-node-externals": "^1.7.2",
     "workerize-loader": "^1.0.4",
     "ws": "^7.0.0",
-    "zen-observable": "0.8.13"
+    "zen-observable": "0.8.13",
+    "node-object-hash": "^1.4.2"
   },
   "peerDependencies": {
     "mobx": "*"

@@ -4,26 +4,28 @@ import { AppMeta, AppStatusMessage } from '@o/models'
 import { stringToIdentifier } from '@o/ui'
 import historyAPIFallback from 'connect-history-api-fallback'
 import { Handler } from 'express'
+import hashObject from 'node-object-hash'
 import { parse } from 'url'
 import Webpack from 'webpack'
-import webpack = require('webpack')
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 
 const log = new Logger('getAppMiddlewares')
 
 type WebpackConfigObj = {
-  [key: string]: webpack.Configuration
+  [key: string]: Webpack.Configuration
 }
 type WebpackAppsDesc = {
+  name: string
+  hash?: string
   middleware: Handler
-  compiler?: webpack.Compiler
-  config?: webpack.Configuration
+  compiler?: Webpack.Compiler
+  config?: Webpack.Configuration
 }
 export type AppBuildStatusListener = (status: AppStatusMessage) => any
 
 export class AppMiddleware {
   configs = null
-  state: WebpackAppsDesc[] = []
+  running: WebpackAppsDesc[] = []
   apps: AppMeta[] = []
   appBuildStatusListeners = new Set<AppBuildStatusListener>()
 
@@ -37,11 +39,11 @@ export class AppMiddleware {
     })
   }
 
-  update(configs: { [key: string]: webpack.Configuration }, nameToAppMeta: AppMetaDict) {
+  update(configs: { [key: string]: Webpack.Configuration }, nameToAppMeta: AppMetaDict) {
     log.verbose(`update ${Object.keys(configs).join(', ')}`, configs)
     this.configs = configs
     this.apps = Object.keys(nameToAppMeta).map(k => nameToAppMeta[k])
-    this.state = this.getAppMiddlewares(configs, nameToAppMeta)
+    this.running = this.getAppMiddlewares(configs, nameToAppMeta)
   }
 
   updateCompletedFirstBuild = async (name: string, status: 'compiling' | 'error' | 'success') => {
@@ -69,7 +71,7 @@ export class AppMiddleware {
       return await sendIndex()
     }
     let fin
-    for (const { middleware } of this.state) {
+    for (const { middleware } of this.running) {
       fin = null
       await middleware(req, res, err => {
         fin = err || true
@@ -96,17 +98,27 @@ export class AppMiddleware {
     log.verbose(`configs ${Object.keys(configs).join(', ')}`, configs)
 
     const { main, ...rest } = configs
-    const res: WebpackAppsDesc[] = []
+    let res: WebpackAppsDesc[] = []
+
     // you have to do it this janky ass way because webpack just isnt really great at
     // doing multi-config hmr, and this makes sure the 404 hot-update bug if fixed (google)
     for (const name in rest) {
       const config = rest[name]
-      const { devMiddleware, compiler } = this.getMiddleware(config, name, nameToAppMeta[name])
-      res.push({
-        middleware: resolveIfExists(devMiddleware, [config.output.path]),
-        compiler,
-        config,
-      })
+      const devName = `${name}-dev`
+      const middleware = this.getMiddleware(config, name, nameToAppMeta[name], devName)
+      if (middleware === true) {
+        // use last one
+        res.push(this.running.find(x => x.name === devName))
+      } else {
+        const { hash, devMiddleware, compiler } = middleware
+        res.push({
+          name: devName,
+          hash,
+          middleware: resolveIfExists(devMiddleware, [config.output.path]),
+          compiler,
+          config,
+        })
+      }
     }
 
     /**
@@ -118,6 +130,7 @@ export class AppMiddleware {
       heartBeat: 10 * 1000,
     })
     res.push({
+      name: 'apps-hot',
       middleware: resolveIfExists(appsHotMiddleware, res.map(x => x.config.output.path), [
         '/__webpack_hmr',
       ]),
@@ -125,39 +138,80 @@ export class AppMiddleware {
 
     // falls back to the main entry middleware
     if (main) {
-      const { devMiddleware, compiler } = this.getMiddleware(main, 'main')
-      const mainHotMiddleware = WebpackHotMiddleware([compiler], {
-        path: '/__webpack_hmr_main',
-        log: console.log,
-        heartBeat: 10 * 1000,
-      })
-      res.push({
-        middleware: resolveIfExists(mainHotMiddleware, [main.output.path], ['/__webpack_hmr_main']),
-      })
-      res.push({
-        middleware: devMiddleware,
-      })
-      // need to have another devMiddleware  after historyAPIFallback, see:
-      // https://github.com/webpack/webpack-dev-middleware/issues/88#issuecomment-252048006
-      res.push({
-        middleware: historyAPIFallback(),
-      })
-      res.push({
-        middleware: devMiddleware,
-      })
+      const name = 'main'
+      const middleware = this.getMiddleware(main, name, undefined, name)
+      if (middleware === true) {
+        res = [...res, ...this.running.filter(x => x.name === name)]
+      } else {
+        const { hash, devMiddleware, compiler } = middleware
+        const mainHotMiddleware = WebpackHotMiddleware([compiler], {
+          path: '/__webpack_hmr_main',
+          log: console.log,
+          heartBeat: 10 * 1000,
+        })
+        res = [
+          ...res,
+          {
+            name,
+            hash,
+            middleware: resolveIfExists(
+              mainHotMiddleware,
+              [main.output.path],
+              ['/__webpack_hmr_main'],
+            ),
+          },
+          {
+            name,
+            hash,
+            middleware: devMiddleware,
+          },
+          // need to have another devMiddleware  after historyAPIFallback, see:
+          // https://github.com/webpack/webpack-dev-middleware/issues/88#issuecomment-252048006
+          {
+            name,
+            hash,
+            middleware: historyAPIFallback(),
+          },
+          {
+            name,
+            hash,
+            middleware: devMiddleware,
+          },
+        ]
+      }
     }
 
     return res
   }
 
-  private getMiddleware = (config: any, name: string, appMeta?: AppMeta) => {
+  private getMiddleware = (
+    config: Webpack.Configuration,
+    name: string,
+    appMeta?: AppMeta,
+    runningName?: string,
+  ) => {
     const compiler = Webpack(config)
     const publicPath = config.output.publicPath
+
+    // cache if it hasn't changed to avoid rebuilds
+    const hash = hashObject({ sort: false }).hash(config)
+    if (runningName) {
+      const running = this.running.find(x => x.name === runningName)
+      if (running) {
+        if (hash === running.hash) {
+          log.verbose(`${name} config hasnt changed! dont re-run this one just return the old one`)
+          return true
+        } else {
+          log.verbose(`${name}config has changed!`)
+        }
+      }
+    }
+
     const devMiddleware = WebpackDevMiddleware(compiler, {
       publicPath,
       reporter: this.createReporterForApp(name, appMeta),
     })
-    return { devMiddleware, compiler }
+    return { devMiddleware, compiler, name, hash }
   }
 
   private createReporterForApp(name: string, appMeta?: AppMeta) {
@@ -331,7 +385,7 @@ function webpackDevReporter(middlewareOptions, options) {
  * so it can be modified to support putting multiple compilers under one EventStream
  */
 
-function WebpackHotMiddleware(compilers: webpack.Compiler[], opts) {
+function WebpackHotMiddleware(compilers: Webpack.Compiler[], opts) {
   opts = opts || {}
   opts.log = typeof opts.log == 'undefined' ? console.log.bind(console) : opts.log
   opts.path = opts.path || '/__webpack_hmr'

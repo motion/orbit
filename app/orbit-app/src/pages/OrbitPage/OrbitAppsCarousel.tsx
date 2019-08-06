@@ -163,10 +163,7 @@ class OrbitAppsCarouselStore {
   )
 
   setFocused(next: number, forceScroll = false) {
-    if (!this.apps[next]) {
-      console.warn('no app at index', next)
-      return
-    }
+    if (!this.apps[next]) return
     if (next !== this.focusedIndex) {
       this.focusedIndex = next
       // update url

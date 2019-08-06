@@ -74,6 +74,7 @@ import { createAppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { WorkspaceManager } from './WorkspaceManager/WorkspaceManager'
 import { orTimeout, OR_TIMED_OUT } from '@o/utils'
 import { interceptStdOut } from './helpers/interceptStdOut'
+import { appStatusManager, AppStatusManager } from './managers/AppStatusManager'
 
 const log = new Logger('OrbitDesktopRoot')
 const Config = getGlobalConfig()
@@ -126,6 +127,9 @@ export class OrbitDesktopRoot {
   generalSettingManager: GeneralSettingManager
   topicsManager: TopicsManager
   operatingSystemManager: OperatingSystemManager
+
+  // attaching here for debugging
+  appStatusManager: AppStatusManager = appStatusManager
 
   start = async () => {
     // this is if we are running a CLI command that exits on finish
@@ -335,14 +339,18 @@ export class OrbitDesktopRoot {
           { entity: StateEntity, models: [StateModel] },
         ]),
 
+        // this is a generic bus that routes all our Logger output out
         resolveObserveOne(OrbitProcessStdOutModel, () => {
           return new Observable<string>(observer => {
-            // start with empty
-            observer.next(null)
             interceptStdOut(message => {
               observer.next(message)
             })
           })
+        }),
+
+        // this is a generic bus that lets us send explicit message events out
+        resolveObserveOne(AppStatusModel, args => {
+          return appStatusManager.observe(args.appId)
         }),
 
         ...loadAppDefinitionResolvers(),

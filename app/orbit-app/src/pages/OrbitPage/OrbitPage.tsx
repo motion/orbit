@@ -1,4 +1,4 @@
-import { command, useModel } from '@o/bridge'
+import { command, useModel, observeOne } from '@o/bridge'
 import { AppDefinition, ProvideStores, showConfirmDialog, useStore } from '@o/kit'
 import { AppCloseWindowCommand, AppDevCloseCommand, AppStatusModel } from '@o/models'
 import { App } from '@o/stores'
@@ -39,17 +39,23 @@ export const OrbitPage = memo(function OrbitPage() {
 
 const OrbitStatusMessages = memo(() => {
   const banner = useBanner()
-  const [statusMessage] = useModel(AppStatusModel, {
-    appId: WINDOW_ID,
-  })
 
   useEffect(() => {
-    if (!statusMessage) return
-    banner.set({
-      type: statusMessage.type,
-      message: statusMessage.message,
+    observeOne(AppStatusModel, {
+      args: {
+        appId: WINDOW_ID,
+      },
+    }).subscribe(message => {
+      console.log('message', message)
+      banner.set({
+        type: message.type,
+        title: message.title,
+        message: message.message,
+        timeout: message.timeout,
+        loading: message.loading,
+      })
     })
-  }, [statusMessage])
+  }, [])
 
   return null
 })

@@ -1,7 +1,20 @@
 import { AppsManager, getAppMeta, requireAppDefinition } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import { AppCloseWindowCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppStatusModel, AppWorkspaceCommand, CallAppBitApiMethodCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
+import {
+  AppCloseWindowCommand,
+  AppCreateWorkspaceCommand,
+  AppDevCloseCommand,
+  AppDevOpenCommand,
+  AppEntity,
+  AppMeta,
+  AppMetaCommand,
+  AppWorkspaceCommand,
+  CallAppBitApiMethodCommand,
+  CommandWsOptions,
+  WorkspaceInfo,
+  WorkspaceInfoModel,
+} from '@o/models'
 import { Desktop } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { remove } from 'fs-extra'
@@ -183,8 +196,6 @@ export class WorkspaceManager {
         },
         observable,
       })
-      // start with empty
-      observer.next(null)
     })
     return observable
   }
@@ -204,9 +215,6 @@ export class WorkspaceManager {
     return [
       resolveObserveOne(WorkspaceInfoModel, () => {
         return this.observe()
-      }),
-      resolveObserveOne(AppStatusModel, args => {
-        return appStatusManager.observe(args.appId)
       }),
       resolveCommand(AppCreateWorkspaceCommand, async props => {
         await findOrCreateWorkspace(props)

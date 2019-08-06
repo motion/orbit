@@ -2,7 +2,7 @@ import { AppStatusMessage } from '@o/models'
 import { isDefined } from '@o/ui'
 import Observable from 'zen-observable'
 
-class AppStatusManager {
+export class AppStatusManager {
   update = new Map<
     number,
     { update: (next: any) => void; observable: Observable<AppStatusMessage> }
@@ -13,24 +13,19 @@ class AppStatusManager {
       return this.update.get(appId).observable
     }
     const observable = new Observable<AppStatusMessage>(observer => {
-      const update = (status: AppStatusMessage) => {
-        if (status.appId === appId) {
-          observer.next(status)
-        }
-      }
       this.update.set(appId, {
-        update,
+        update: (status: AppStatusMessage) => {
+          observer.next(status)
+        },
         observable,
       })
-      // start with empty
-      observer.next(null)
     })
     return observable
   }
 
-  sendMessage(message: AppStatusMessage, appId?: number) {
+  sendMessage(message: AppStatusMessage) {
     for (const [updateAppId, callback] of this.update) {
-      if (isDefined(appId) && appId !== updateAppId) {
+      if (isDefined(message.appId) && message.appId !== updateAppId) {
         continue
       }
       callback.update(message)

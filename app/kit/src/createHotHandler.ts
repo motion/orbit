@@ -1,6 +1,6 @@
 import { remove } from 'lodash'
 
-let source
+let source: EventSourceManager
 let hotHandlers: HotHandler[] = []
 
 type HotHandlerProps = {
@@ -59,7 +59,7 @@ class HotHandler {
     this.props.module.hot.accept()
 
     const url = '/__webpack_hmr'
-    source = source || createEventSource(url)
+    source = source || new EventSourceManager(url)
     source.addMessageListener(this.handleMessage)
     window.addEventListener('beforeunload', this.dispose)
   }
@@ -93,11 +93,7 @@ class HotHandler {
         break
       case 'built':
         console.log(
-          '[HMR] bundle ' +
-            (obj.name ? "'" + obj.name + "' " : '') +
-            'rebuilt in ' +
-            obj.time +
-            'ms',
+          '[HMR] rebuilt ' + (obj.name ? "'" + obj.name + "' " : '') + ' in ' + obj.time + 'ms',
         )
 
       // fall through
@@ -239,52 +235,50 @@ class HotHandler {
   }
 }
 
-function createEventSource(url: string) {
-  let source: EventSource
-  let listeners: any[] = []
+class EventSourceManager {
+  source: EventSource
+  listeners: any[] = []
 
-  init()
-
-  function init() {
-    source = new EventSource(url)
-    source.onopen = handleOnline
-    source.onerror = handleDisconnect
-    source.onmessage = handleMessage
+  constructor(private url: string) {
+    this.start()
   }
 
-  function handleOnline() {
+  start = () => {
+    this.source = new EventSource(this.url)
+    this.source.onopen = this.handleOnline
+    this.source.onerror = this.handleDisconnect
+    this.source.onmessage = this.handleMessage
+  }
+
+  private handleOnline() {
     console.debug('[HMR] connected')
   }
 
-  function handleMessage(event) {
-    for (var i = 0; i < listeners.length; i++) {
-      console.log('got message', event)
-      listeners[i](event)
+  private handleMessage(event) {
+    for (var i = 0; i < this.listeners.length; i++) {
+      this.listeners[i](event)
     }
   }
 
-  function handleDisconnect() {
+  private handleDisconnect() {
     console.log('[HMR] disconnected')
     source.close()
-    setTimeout(init, 1000)
+    setTimeout(this.start, 1000)
   }
 
-  return {
-    addMessageListener(fn) {
-      console.log('adding listener', fn)
-      listeners.push(fn)
-    },
-    removeListener(fn) {
-      const index = listeners.findIndex(x => x === fn)
-      debugger
-      listeners.splice(index, 1)
-    },
-    removeAllListeners() {
-      listeners = []
-    },
-    close() {
-      debugger
-      source.close()
-    },
+  addMessageListener(fn) {
+    this.listeners.push(fn)
+  }
+  removeListener(fn) {
+    const index = this.listeners.findIndex(x => x === fn)
+    debugger
+    this.listeners.splice(index, 1)
+  }
+  removeAllListeners() {
+    this.listeners = []
+  }
+  close() {
+    debugger
+    source.close()
   }
 }

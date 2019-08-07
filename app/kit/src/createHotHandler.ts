@@ -28,8 +28,15 @@ export function removeHotHandler(name: string) {
   hotHandlers = remove(hotHandlers, x => x.props.name === name)
 }
 
+export function removeAllHotHandlers() {
+  hotHandlers = []
+  source.close()
+}
+
 class HotHandler {
   props: HotHandlerProps
+  source = source || new EventSourceManager('/__webpack_hmr')
+
   private lastHash = ''
   private failureStatuses = { abort: 1, fail: 1 }
   private applyOptions = {
@@ -58,14 +65,12 @@ class HotHandler {
     // accept this (this should be created only at root)
     this.props.module.hot.accept()
 
-    const url = '/__webpack_hmr'
-    source = source || new EventSourceManager(url)
-    source.addMessageListener(this.handleMessage)
+    this.source.addMessageListener(this.handleMessage)
     window.addEventListener('beforeunload', this.dispose)
   }
 
   dispose = () => {
-    source.removeListener(this.handleMessage)
+    this.source.removeListener(this.handleMessage)
   }
 
   private handleMessage = event => {

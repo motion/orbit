@@ -1,3 +1,6 @@
+import { Desktop } from '@o/stores'
+import { difference } from 'lodash'
+import { reaction } from 'mobx'
 import { Config, IContext, OnInitialize } from 'overmind'
 
 import { getAllAppDefinitions, startAppLoadWatch } from '../apps/orbitApps'
@@ -32,6 +35,18 @@ export const onInitialize: OnInitialize = async om => {
   await actions.router.start()
 
   handleMediatorMessages()
+
+  let lastDeveloping: string[] = []
+  reaction(
+    () => Desktop.state.workspaceState.developingAppIdentifiers,
+    identifiers => {
+      const toAdd = difference(lastDeveloping, identifiers)
+      console.log('should add to dev more', toAdd)
+    },
+    {
+      fireImmediately: true,
+    },
+  )
 
   goToInitialApp(om)
 }

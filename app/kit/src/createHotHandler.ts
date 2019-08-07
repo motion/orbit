@@ -1,7 +1,18 @@
-import { remove } from 'lodash'
+import { Logger } from '@o/logger'
 
-let source: EventSourceManager
-let hotHandlers: HotHandler[] = []
+import { EventSourceManager } from './EventSourceManager'
+
+const log = new Logger('createHotHandler')
+
+// singletons
+export const source = new EventSourceManager('/__webpack_hmr')
+const hotHandlers = new Set<HotHandler>()
+
+// for debugging
+window['__orbit_hot'] = {
+  source,
+  hotHandlers,
+}
 
 type HotHandlerProps = {
   name: string
@@ -14,8 +25,9 @@ type HotHandlerProps = {
 }
 
 export function createHotHandler(props: HotHandlerProps) {
+  log.verbose(`createHotHandler`, props)
   const handler = new HotHandler(props)
-  hotHandlers.push(handler)
+  hotHandlers.add(handler)
   return handler
 }
 
@@ -24,18 +36,24 @@ export function getHotHandlers() {
 }
 
 export function removeHotHandler(name: string) {
-  hotHandlers.find(x => x.dispose())
-  hotHandlers = remove(hotHandlers, x => x.props.name === name)
+  log.verbose(`removeHotHandler ${name}`)
+  hotHandlers.forEach(handler => {
+    if (handler.props.name === name) {
+      handler.dispose()
+      hotHandlers.delete(handler)
+    }
+  })
 }
 
 export function removeAllHotHandlers() {
-  hotHandlers = []
+  log.verbose(`removeAllHotHandlers`)
+  hotHandlers.clear()
   source.close()
 }
 
 class HotHandler {
   props: HotHandlerProps
-  source = source || new EventSourceManager('/__webpack_hmr')
+  source = source
 
   private lastHash = ''
   private failureStatuses = { abort: 1, fail: 1 }
@@ -70,6 +88,7 @@ class HotHandler {
   }
 
   dispose = () => {
+    console.log('dispsing')
     this.source.removeListener(this.handleMessage)
   }
 
@@ -237,53 +256,5 @@ class HotHandler {
         console.debug('[HMR] App is up to date.')
       }
     }
-  }
-}
-
-class EventSourceManager {
-  source: EventSource
-  listeners: any[] = []
-
-  constructor(private url: string) {
-    this.start()
-  }
-
-  start = () => {
-    this.source = new EventSource(this.url)
-    this.source.onopen = this.handleOnline
-    this.source.onerror = this.handleDisconnect
-    this.source.onmessage = this.handleMessage
-  }
-
-  private handleOnline() {
-    console.debug('[HMR] connected')
-  }
-
-  private handleMessage(event) {
-    for (var i = 0; i < this.listeners.length; i++) {
-      this.listeners[i](event)
-    }
-  }
-
-  private handleDisconnect() {
-    console.log('[HMR] disconnected')
-    source.close()
-    setTimeout(this.start, 1000)
-  }
-
-  addMessageListener(fn) {
-    this.listeners.push(fn)
-  }
-  removeListener(fn) {
-    const index = this.listeners.findIndex(x => x === fn)
-    debugger
-    this.listeners.splice(index, 1)
-  }
-  removeAllListeners() {
-    this.listeners = []
-  }
-  close() {
-    debugger
-    source.close()
   }
 }

@@ -303,8 +303,9 @@ export class AppMiddleware {
             document.body.style.background = '#eee'
           }
         </script>
-        <script src="/foundation.dll.js"></script>
-        <script src="/base.dll.js"></script>
+        <script src="/base0.dll.js"></script>
+        <script src="/base1.dll.js"></script>
+        <script src="/base2.dll.js"></script>
     ${this.apps
       .map(app => `    <script src="/${stringToIdentifier(app.packageId)}.dll.js"></script>`)
       .join('\n')}

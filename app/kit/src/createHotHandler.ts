@@ -167,18 +167,18 @@ export function createHotHandler(props: {
         return
       }
 
-      if (options.log) {
+      if (true) {
         if (!renewedModules || renewedModules.length === 0) {
-          console.log('[HMR] Nothing hot updated.')
+          console.debug('[HMR] Nothing hot updated.')
         } else {
-          console.log('[HMR] Updated modules:')
+          console.debug('[HMR] Updated modules:')
           renewedModules.forEach(function(moduleId) {
-            console.log('[HMR]  - ' + (moduleMap[moduleId] || moduleId))
+            console.debug('[HMR]  - ' + (moduleMap[moduleId] || moduleId))
           })
         }
 
         if (upToDate()) {
-          console.log('[HMR] App is up to date.')
+          console.debug('[HMR] App is up to date.')
         }
       }
     }

@@ -94,44 +94,69 @@ export async function getAppsConfig(
 
   const webpackConfigs: { [key: string]: webpack.Configuration } = {}
 
-  // add foundation dll config
-  // testing to see if we can leave react-hot-loader in development mode
-  // even when other things are in production mode
-  const foundationParams: WebpackParams = {
-    name: `foundation`,
-    entry: ['react-hot-loader', 'react', 'react-dom'],
+  // contains react-dom/react, always in production
+  const base0Params: WebpackParams = {
+    name: `base0`,
+    entry: ['react', 'react-dom'],
+    watch: false,
+    target: 'web',
+    mode: 'production',
+    context: directory,
+    outputDir,
+    publicPath: '/',
+    outputFile: 'base0.dll.js',
+    output: {
+      library: 'base0',
+    },
+    dll: join(outputDir, 'manifest-base0.json'),
+  }
+  const base0Config = await addDLL(base0Params)
+  webpackConfigs.base0 = base0Config
+  const base0DllReference = {
+    manifest: base0Params.dll,
+    filepath: join(outputDir, base0Params.outputFile),
+  }
+
+  // contains react-hot-loader, always in development
+  const base1Params: WebpackParams = {
+    name: `base1`,
+    entry: ['react-hot-loader'],
     watch: false,
     target: 'web',
     mode: 'development',
     context: directory,
     outputDir,
     publicPath: '/',
-    outputFile: 'foundation.dll.js',
+    outputFile: 'base1.dll.js',
     output: {
-      library: 'foundation',
+      library: 'base1',
     },
-    dll: join(outputDir, 'manifest-foundation.json'),
+    dll: join(outputDir, 'manifest-base1.json'),
+    dllReferences: [base0DllReference],
   }
-  const foundationConfig = await addDLL(foundationParams)
-  webpackConfigs.foundation = foundationConfig
+  const base1Config = await addDLL(base1Params)
+  webpackConfigs.base1 = base1Config
+  const base1DllReference = {
+    manifest: base1Params.dll,
+    filepath: join(outputDir, base1Params.outputFile),
+  }
 
-  // add base dll config
-  const baseDllParams = await getBaseDllParams({
+  // contains most dependencies
+  const base2Params = await getBaseDllParams({
     outputDir,
     context: directory,
     mode,
     // reference foundation
-    dllReferences: [
-      {
-        manifest: foundationParams.dll,
-        filepath: join(outputDir, foundationParams.outputFile),
-      },
-    ],
+    dllReferences: [base0DllReference, base1DllReference],
   })
   if (isInMonoRepo) {
-    baseDllParams.mode = mode
-    baseDllParams.watch = watch
-    webpackConfigs.base = await addDLL(baseDllParams)
+    base2Params.mode = mode
+    base2Params.watch = watch
+    webpackConfigs.base = await addDLL(base2Params)
+  }
+  const base2DllReference = {
+    manifest: base2Params.dll,
+    filepath: join(outputDir, base2Params.outputFile),
   }
 
   // add app dll configs
@@ -158,12 +183,7 @@ export async function getAppsConfig(
         },
         dll: dllFile,
         // apps use the base dll
-        dllReferences: [
-          {
-            manifest: baseDllParams.dll,
-            filepath: join(outputDir, baseDllParams.outputFile),
-          },
-        ],
+        dllReferences: [base2DllReference],
       }
       return params
     }),
@@ -325,9 +345,6 @@ async function getBaseDllParams(params: WebpackParams): Promise<WebpackParams> {
     '@o/use-store',
     '@babel/runtime',
     'node-libs-browser',
-    // 'react-hot-loader',
-    // 'react',
-    // 'react-dom',
   ]
 
   // gather all packages we want included in base dll
@@ -361,16 +378,16 @@ async function getBaseDllParams(params: WebpackParams): Promise<WebpackParams> {
 
   // base dll with shared libraries
   return {
-    name: `base`,
+    name: `base2`,
     injectHot: join(require.resolve('@o/kit'), '..', '..', 'src', 'index.ts'),
     entry: [...new Set(allPackages)],
     ignore: ['electron-log', 'configstore', 'typeorm'],
     watch: false,
     target: 'web',
     publicPath: '/',
-    outputFile: 'base.dll.js',
+    outputFile: 'base2.dll.js',
     output: {
-      library: 'base',
+      library: 'base2',
     },
     dll: join(params.outputDir, 'manifest-base.json'),
     ...params,

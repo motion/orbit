@@ -2,7 +2,7 @@ import { ColorLike } from '@o/color'
 import { isEqual } from '@o/fast-compare'
 import { on } from '@o/utils'
 import { gloss, Theme, ThemeContext } from 'gloss'
-import { debounce, isNumber, last, pick } from 'lodash'
+import { Cancelable, debounce, isNumber, last, pick } from 'lodash'
 import * as React from 'react'
 import { animated, AnimatedProps } from 'react-spring'
 
@@ -139,7 +139,7 @@ const defaultProps = {
 
 type PopoverPropsWithDefaults = PopoverProps & typeof defaultProps
 
-type DebouncedFn = any & (() => void)
+type DebouncedFn = Function & Cancelable
 type PopoverDirection = 'top' | 'bottom' | 'left' | 'right' | 'auto'
 type PositionStateX = { arrowLeft: number; left: number }
 type PositionStateY = { arrowTop: number; top: number; maxHeight: number }
@@ -603,6 +603,9 @@ export class Popover extends React.Component<PopoverProps, State> {
   }
 
   forceClose = async () => {
+    // clear any pending hovers that will eventually open a competing menu
+    this.delayOpenIfHover.target &&  this.delayOpenIfHover.target.cancel()
+    this.delayOpenIfHover.menu &&  this.delayOpenIfHover.menu.cancel()
     this.stopListeningUntilNextMouseEnter()
     await this.startClosing()
     this.setState({ closing: false, isPinnedOpen: 0, showPopover: false })
@@ -779,7 +782,7 @@ export class Popover extends React.Component<PopoverProps, State> {
     }
   }
 
-  addHoverListeners(name: string, node: HTMLElement) {
+  addHoverListeners(name: 'target' | 'menu', node: HTMLElement) {
     if (!(node instanceof HTMLElement)) {
       console.log('no node!', name)
       return null

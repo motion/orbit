@@ -1,6 +1,3 @@
-import { Desktop } from '@o/stores'
-import { difference } from 'lodash'
-import { reaction } from 'mobx'
 import { Config, IContext, OnInitialize } from 'overmind'
 
 import { getAllAppDefinitions, startAppLoadWatch } from '../apps/orbitApps'
@@ -34,26 +31,9 @@ export const onInitialize: OnInitialize = async om => {
 
   await actions.router.start()
 
-  handleMediatorMessages()
+  actions.develop.start()
 
-  let lastDeveloping: string[] = []
-  reaction(
-    () => Desktop.state.workspaceState.developingAppIdentifiers,
-    identifiers => {
-      const addIdentifiers = difference(identifiers, lastDeveloping)
-      addIdentifiers.forEach(identifier => {
-        actions.develop.changeAppDevelopmentMode({ identifier, mode: 'development' })
-      })
-      const removeIentifiers = difference(lastDeveloping, identifiers)
-      removeIentifiers.forEach(identifier => {
-        actions.develop.changeAppDevelopmentMode({ identifier, mode: 'production' })
-      })
-      lastDeveloping = identifiers
-    },
-    {
-      fireImmediately: true,
-    },
-  )
+  handleMediatorMessages()
 
   goToInitialApp(om)
 }

@@ -1,7 +1,30 @@
 import { removeHotHandler } from '@o/kit'
 import { Desktop } from '@o/stores'
 import { stringToIdentifier } from '@o/ui'
-import { AsyncAction } from 'overmind'
+import { difference } from 'lodash'
+import { reaction } from 'mobx'
+import { Action, AsyncAction } from 'overmind'
+
+const start: Action = om => {
+  let lastDeveloping: string[] = []
+  reaction(
+    () => Desktop.state.workspaceState.developingAppIdentifiers,
+    identifiers => {
+      const addIdentifiers = difference(identifiers, lastDeveloping)
+      addIdentifiers.forEach(identifier => {
+        om.actions.develop.changeAppDevelopmentMode({ identifier, mode: 'development' })
+      })
+      const removeIentifiers = difference(lastDeveloping, identifiers)
+      removeIentifiers.forEach(identifier => {
+        om.actions.develop.changeAppDevelopmentMode({ identifier, mode: 'production' })
+      })
+      lastDeveloping = identifiers
+    },
+    {
+      fireImmediately: true,
+    },
+  )
+}
 
 const changeAppDevelopmentMode: AsyncAction<{
   identifier: string
@@ -37,5 +60,6 @@ export const state = {
 }
 
 export const actions = {
+  start,
   changeAppDevelopmentMode,
 }

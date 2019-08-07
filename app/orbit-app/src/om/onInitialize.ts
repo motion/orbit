@@ -40,8 +40,15 @@ export const onInitialize: OnInitialize = async om => {
   reaction(
     () => Desktop.state.workspaceState.developingAppIdentifiers,
     identifiers => {
-      const toAdd = difference(lastDeveloping, identifiers)
-      console.log('should add to dev more', toAdd)
+      const addIdentifiers = difference(identifiers, lastDeveloping)
+      addIdentifiers.forEach(identifier => {
+        actions.develop.changeAppDevelopmentMode({ identifier, mode: 'development' })
+      })
+      const removeIentifiers = difference(lastDeveloping, identifiers)
+      removeIentifiers.forEach(identifier => {
+        actions.develop.changeAppDevelopmentMode({ identifier, mode: 'production' })
+      })
+      lastDeveloping = identifiers
     },
     {
       fireImmediately: true,

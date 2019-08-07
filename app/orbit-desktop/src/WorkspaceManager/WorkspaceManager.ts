@@ -117,6 +117,10 @@ export class WorkspaceManager {
           appMeta: activeApps,
           packageIds,
           identifiers,
+          identifierToPackageId: identifiers.reduce((acc, identifier) => {
+            acc[identifier] = this.appsManager.identifierToPackageId(identifier)
+            return acc
+          }, {}),
         },
       })
     },

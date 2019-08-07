@@ -19,6 +19,7 @@ class DesktopStore {
     workspaceState: {
       path: '',
       packageIds: [] as string[],
+      identifierToPackageId: {},
       appMeta: {} as { [identifier: string]: AppMeta },
       developingAppIdentifiers: [] as string[],
     },

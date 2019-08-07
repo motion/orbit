@@ -4,6 +4,7 @@ import { merge, namespaced } from 'overmind/config'
 
 import * as actions from './actions'
 import * as apps from './apps'
+import * as develop from './develop'
 import * as effects from './effects'
 import { onInitialize } from './onInitialize'
 import * as router from './router'
@@ -20,6 +21,7 @@ const config = merge(
     effects,
   },
   namespaced({
+    develop,
     router,
     apps,
     spaces,

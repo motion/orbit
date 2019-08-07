@@ -1,6 +1,6 @@
 import { loadOne, save } from '@o/bridge'
 import { UserModel } from '@o/models'
-import { filterCleanObject, stringToIdentifier } from '@o/ui'
+import { filterCleanObject } from '@o/ui'
 import * as firebase from 'firebase/app'
 import { Action, AsyncAction } from 'overmind'
 
@@ -43,28 +43,4 @@ export const finishAuthorization: AsyncAction<{ path: string }> = async (_, { pa
       throw error // not sure how do we handle this error in the UI
     }
   }
-}
-
-export const changeAppDevelopmentMode: AsyncAction<{
-  packageId: string
-  mode: 'development' | 'production'
-}> = async (_, { packageId, mode }) => {
-  const name = stringToIdentifier(packageId)
-  return
-  loadAppDLL(name, mode)
-  // close old hot event listener
-  window['__hot_handlers'][`app_${name}`].close()
-}
-
-function loadAppDLL(name: string, mode: 'development' | 'production') {
-  const id = `app_script_${name}`
-  const tag = document.getElementById(id)
-  if (!tag) return
-  tag.parentNode!.removeChild(tag)
-  const body = document.getElementsByTagName('body')[0]
-  const script = document.createElement('script')
-  script.id = id
-  script.src = `/${name}.${mode}.dll.js`
-  script.type = 'text/javascript'
-  body.appendChild(script)
 }

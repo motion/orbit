@@ -1,6 +1,5 @@
-import { AppMetaDict } from '@o/apps-manager'
 import { Logger } from '@o/logger'
-import { AppMeta, CommandWsOptions } from '@o/models'
+import { CommandWsOptions } from '@o/models'
 import { stringToIdentifier } from '@o/utils'
 import { ensureDir, ensureSymlink, pathExists, readFile, readJSON, writeFile } from 'fs-extra'
 import { join } from 'path'
@@ -9,6 +8,7 @@ import webpack from 'webpack'
 import { getIsInMonorepo } from './getIsInMonorepo'
 import { DLLReferenceDesc, makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
 import { webpackPromise } from './webpackPromise'
+import { AppMetaWithBuildInfo } from './WorkspaceManager'
 
 const log = new Logger('getAppsConfig')
 
@@ -21,11 +21,11 @@ const log = new Logger('getAppsConfig')
  */
 
 export async function getAppsConfig(
-  apps: (AppMeta & { buildMode: 'development' | 'production' })[],
+  apps: AppMetaWithBuildInfo[],
   options: CommandWsOptions,
 ): Promise<{
   webpackConfigs: { [name: string]: webpack.Configuration }
-  nameToAppMeta: AppMetaDict
+  nameToAppMeta: { [name: string]: AppMetaWithBuildInfo }
 } | null> {
   if (!apps.length) {
     return null
@@ -168,14 +168,15 @@ export async function getAppsConfig(
         app.directory,
         (await readJSON(join(app.directory, 'package.json'))).main,
       )
+      const appMode = app.buildMode || 'production'
       const params: WebpackParams = {
         name: `app_${cleanName}`,
         entry: [appEntry],
         context: directory,
-        mode: app.buildMode || 'production',
+        mode: appMode,
         target: 'web',
         publicPath: '/',
-        outputFile: `${cleanName}.dll.js`,
+        outputFile: `${cleanName}.${appMode}.dll.js`,
         outputDir,
         injectHot: true,
         output: {
@@ -188,7 +189,7 @@ export async function getAppsConfig(
       return params
     }),
   )
-  const nameToAppMeta: AppMetaDict = {}
+  const nameToAppMeta: { [name: string]: AppMetaWithBuildInfo } = {}
   await Promise.all(
     appParams.map(async (params, index) => {
       const appMeta = apps[index]

@@ -89,6 +89,14 @@ Dec
 
 "Launch"
 
+First, need to talk to a few startup people to get some feedback:
+
+- Webflow CEO
+- Framer cofounders
+- Zeit/Expo cofounders
+- Retool?
+- ... add a few more
+
 Goal #2: Syncing configuration and other information p2p
 
 1. App config and space config should sync through hyperswarm

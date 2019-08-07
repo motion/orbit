@@ -1,7 +1,6 @@
 import AddAssetHtmlPlugin from 'add-asset-html-webpack-plugin'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
 import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
 import * as Path from 'path'
 import TerserPlugin from 'terser-webpack-plugin'
 import TimeFixPlugin from 'time-fix-plugin'
@@ -310,14 +309,6 @@ require('@o/kit').createHotHandler({
       new TimeFixPlugin(),
 
       new webpack.DefinePlugin(defines),
-
-      !dll &&
-        target !== 'node' &&
-        new HtmlWebpackPlugin({
-          template: Path.join(__dirname, '..', '..', 'index.html'),
-          inject: true,
-          externals: ['apps.js'],
-        }),
 
       ((mode === 'production' && minify !== false) || minify === true) &&
         new TerserPlugin({

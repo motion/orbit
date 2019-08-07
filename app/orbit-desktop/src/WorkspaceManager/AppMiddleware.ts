@@ -9,6 +9,8 @@ import { parse } from 'url'
 import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 
+import { AppMetaWithBuildInfo } from './WorkspaceManager'
+
 const log = new Logger('getAppMiddlewares')
 
 type WebpackConfigObj = {
@@ -26,7 +28,7 @@ export type AppBuildStatusListener = (status: AppStatusMessage) => any
 export class AppMiddleware {
   configs = null
   running: WebpackAppsDesc[] = []
-  apps: AppMeta[] = []
+  apps: AppMetaWithBuildInfo[] = []
   appBuildStatusListeners = new Set<AppBuildStatusListener>()
 
   private buildStatus = new Map<string, 'compiling' | 'error' | 'success'>()
@@ -39,7 +41,10 @@ export class AppMiddleware {
     })
   }
 
-  update(configs: { [key: string]: Webpack.Configuration }, nameToAppMeta: AppMetaDict) {
+  update(
+    configs: { [key: string]: Webpack.Configuration },
+    nameToAppMeta: { [name: string]: AppMetaWithBuildInfo },
+  ) {
     log.verbose(`update ${Object.keys(configs).join(', ')}`, configs)
     this.configs = configs
     this.apps = Object.keys(nameToAppMeta).map(k => nameToAppMeta[k])
@@ -307,7 +312,12 @@ export class AppMiddleware {
         <script src="/base1.dll.js"></script>
         <script src="/base2.dll.js"></script>
     ${this.apps
-      .map(app => `    <script src="/${stringToIdentifier(app.packageId)}.dll.js"></script>`)
+      .map(
+        app =>
+          `    <script id="app_script_${stringToIdentifier(
+            app.packageId,
+          )}" src="/${stringToIdentifier(app.packageId)}.${app.buildMode}.dll.js"></script>`,
+      )
       .join('\n')}
         <script src="/workspaceEntry.js"></script>
         <script src="/main.js"></script>

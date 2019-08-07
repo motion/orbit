@@ -24,6 +24,10 @@ import { webpackPromise } from './webpackPromise'
 
 const log = new Logger('WorkspaceManager')
 
+export type AppMetaWithBuildInfo = AppMeta & {
+  buildMode: 'development' | 'production'
+}
+
 @decorate
 export class WorkspaceManager {
   // the apps we've toggled into development mode
@@ -144,7 +148,7 @@ export class WorkspaceManager {
       const res = await getAppsConfig(
         activeApps.map(appMeta => ({
           ...appMeta,
-          buildMode: this.buildMode[appMeta.packageId],
+          buildMode: this.buildMode[appMeta.packageId] || 'production',
         })),
         options,
       )

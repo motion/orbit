@@ -1,7 +1,7 @@
 import { command, observeOne } from '@o/bridge'
-import { AppDefinition, ProvideStores, removeAllHotHandlers, showConfirmDialog, useStore } from '@o/kit'
+import { AppDefinition, ProvideStores, removeAllHotHandlers, showConfirmDialog, useReaction, useStore } from '@o/kit'
 import { AppCloseWindowCommand, AppDevCloseCommand, AppStatusModel } from '@o/models'
-import { App } from '@o/stores'
+import { App, Desktop } from '@o/stores'
 import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
@@ -30,11 +30,24 @@ export const OrbitPage = memo(function OrbitPage() {
           {/* TODO: this wont load or will hit suspense/fallback if no messages are in queue i think */}
           <Suspense fallback={null}>
             <OrbitStatusMessages />
+            <OrbitDevelopingMessages />
           </Suspense>
         </AppWrapper>
       </SearchStore.Provider>
     </ProvideStores>
   )
+})
+
+const OrbitDevelopingMessages = memo(() => {
+  const om = useOm()
+  const banner = useBanner()
+  useReaction(
+    () => Desktop.state.workspaceState.developingAppIdentifiers,
+    identifiers => {
+      om.actions.develop.updateDeveloping({ identifiers, banner })
+    },
+  )
+  return null
 })
 
 const OrbitStatusMessages = memo(() => {

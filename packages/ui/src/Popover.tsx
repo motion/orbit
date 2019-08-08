@@ -149,7 +149,7 @@ class PopoverManager {
   state = new Set<Popover>()
   closeTm = {}
   closeGroup(group: string, ignore: any) {
-    clearTimeout(this.closeTm[group])
+    if (this.closeTm[group]) return
     this.closeTm[group] = setTimeout(() => {
       this.state.forEach(item => {
         if (item === ignore) return
@@ -454,6 +454,8 @@ export class Popover extends React.Component<PopoverProps, State> {
   }
 
   componentDidMount() {
+    PopoverState.state.add(this)
+
     const { openOnClick, closeOnClick, closeOnClickAway, closeOnEsc, open, target } = this.props
 
     if (openOnClick || closeOnClick || closeOnClickAway) {
@@ -518,10 +520,7 @@ export class Popover extends React.Component<PopoverProps, State> {
       }
     }
     if (this.showPopover) {
-      PopoverState.state.add(this)
       this.closeOthersWithinGroup()
-    } else {
-      PopoverState.state.delete(this)
     }
     if (this.props.onDidOpen) {
       if (this.showPopover) {

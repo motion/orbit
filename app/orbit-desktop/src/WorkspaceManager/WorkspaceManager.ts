@@ -104,7 +104,7 @@ export class WorkspaceManager {
       ensure('not in single build mode', this.options.action !== 'build')
       await sleep(100)
       log.verbose(`update`)
-      const identifiers = Object.keys(activeApps)
+      const identifiers = this.appsManager.apps.map(x => x.identifier)
       const space = await getActiveSpace()
       const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
       this.graphServer.setupGraph(apps)

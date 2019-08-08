@@ -147,13 +147,17 @@ type Bounds = { top: number; left: number; width: number; height: number }
 
 class PopoverManager {
   state = new Set<Popover>()
+  closeTm = {}
   closeGroup(group: string, ignore: any) {
-    for (const item of [...this.state]) {
-      if (item === ignore) continue
-      if (item.props.group === group) {
-        item.forceClose()
-      }
-    }
+    clearTimeout(this.closeTm[group])
+    this.closeTm[group] = setTimeout(() => {
+      this.state.forEach(item => {
+        if (item === ignore) return
+        if (item.props.group === group) {
+          item.forceClose()
+        }
+      })
+    }, 30)
   }
   closeLast() {
     last([...this.state]).forceClose()
@@ -604,8 +608,8 @@ export class Popover extends React.Component<PopoverProps, State> {
 
   forceClose = async () => {
     // clear any pending hovers that will eventually open a competing menu
-    this.delayOpenIfHover.target &&  this.delayOpenIfHover.target.cancel()
-    this.delayOpenIfHover.menu &&  this.delayOpenIfHover.menu.cancel()
+    this.delayOpenIfHover.target && this.delayOpenIfHover.target.cancel()
+    this.delayOpenIfHover.menu && this.delayOpenIfHover.menu.cancel()
     this.stopListeningUntilNextMouseEnter()
     await this.startClosing()
     this.setState({ closing: false, isPinnedOpen: 0, showPopover: false })

@@ -53,7 +53,7 @@ const updateDeveloping: AsyncAction<{ identifiers: string[]; banner?: BannerHand
 
   // no re-run everything
   console.log('TODO make it run the bundle now')
-  om.actions.rerenderApp()
+  // om.actions.rerenderApp()
 
   // and print out the message
   banner &&

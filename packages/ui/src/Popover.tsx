@@ -154,16 +154,18 @@ class PopoverManager {
       this.state.forEach(item => {
         if (item === ignore) return
         if (item.props.group === group) {
-          item.forceClose()
+          console.log('closing item from group', item.props)
+          item.forceClose({ animate: false })
         }
       })
+      delete this.closeTm[group]
     }, 30)
   }
   closeLast() {
-    last([...this.state]).forceClose()
+    last([...this.state]).forceClose({ animate: false })
   }
   closeAll() {
-    this.state.forEach(x => x.forceClose())
+    this.state.forEach(x => x.forceClose({ animate: false }))
   }
 }
 
@@ -519,9 +521,6 @@ export class Popover extends React.Component<PopoverProps, State> {
         this.props.onChangeVisibility(this.state.showPopover)
       }
     }
-    if (this.showPopover) {
-      this.closeOthersWithinGroup()
-    }
     if (this.props.onDidOpen) {
       if (this.showPopover) {
         this.props.onDidOpen()
@@ -545,11 +544,15 @@ export class Popover extends React.Component<PopoverProps, State> {
     }
   }
 
+  // make sure you do it through here
+  setShowPopover = (state: Partial<PopoverState>, cb?: Function) => {
+    this.closeOthersWithinGroup()
+    this.setState({ ...state, showPopover: true }, cb)
+  }
+
   updateMeasure() {
     if (this.state.measureState === 'shouldMeasure') {
-      this.setPosition(() => {
-        this.setState({ showPopover: true })
-      })
+      this.setPosition(this.setShowPopover)
     }
   }
 
@@ -605,13 +608,19 @@ export class Popover extends React.Component<PopoverProps, State> {
     }
   }
 
-  forceClose = async () => {
+  forceClose = async ({ animate = true } = {}) => {
     // clear any pending hovers that will eventually open a competing menu
-    this.delayOpenIfHover.target && this.delayOpenIfHover.target.cancel()
-    this.delayOpenIfHover.menu && this.delayOpenIfHover.menu.cancel()
+    this.cancelIfWillOpen()
     this.stopListeningUntilNextMouseEnter()
-    await this.startClosing()
-    this.setState({ closing: false, isPinnedOpen: 0, showPopover: false })
+    if (animate) {
+      await this.startClosing()
+    }
+    this.setState({
+      closing: false,
+      isPinnedOpen: 0,
+      showPopover: false,
+      measureState: 'done',
+    })
   }
 
   toggleOpen = () => {
@@ -623,7 +632,7 @@ export class Popover extends React.Component<PopoverProps, State> {
   }
 
   open = () => {
-    this.setState({ showPopover: true }, () => {
+    this.setShowPopover(null, () => {
       if (this.props.onOpen) {
         this.props.onOpen()
       }

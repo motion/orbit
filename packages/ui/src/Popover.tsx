@@ -540,7 +540,7 @@ export class Popover extends React.Component<PopoverProps, State> {
   }
 
   // make sure you do it through here
-  setShowPopover = (state: Partial<PopoverState>, cb?: Function) => {
+  setShowPopover = (state: Partial<PopoverState>, cb?: any) => {
     this.closeOthersWithinGroup()
     this.setState({ ...state, showPopover: true }, cb)
   }

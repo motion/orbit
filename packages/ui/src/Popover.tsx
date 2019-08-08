@@ -543,8 +543,14 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
   // make sure you do it through here
   setShowPopover = (state: Partial<PopoverState>, cb?: any) => {
     this.closeOthersWithinGroup()
-    Popovers.state.add(this)
+    this.addToOpenPopoversList()
     this.setState({ ...state, showPopover: true } as any, cb)
+  }
+
+  addToOpenPopoversList() {
+    if (typeof this.props.open === 'undefined') {
+      Popovers.state.add(this)
+    }
   }
 
   updateMeasure() {
@@ -673,7 +679,6 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
   }
 
   handleClickOpen = e => {
-    console.log('CLICK OPEN')
     this.closeOthersWithinGroup()
     e.stopPropagation()
     if (this.state.isPinnedOpen) {
@@ -821,7 +826,6 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
 
     this.cancelIfWillOpen()
     this.delayOpenIfHover[name] = debounce(openIfOver, isTarget ? delay : 0)
-    Popovers.state.add(this) // so we cancel pending hovers too
     let retryOutTm: any = null
 
     const unhover = () => {
@@ -852,6 +856,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
       if (isTarget && this.state.menuHovered) {
         openIfOver()
       } else {
+        this.addToOpenPopoversList() // so we cancel pending hovers too
         this.delayOpenIfHover[name]()
       }
     }

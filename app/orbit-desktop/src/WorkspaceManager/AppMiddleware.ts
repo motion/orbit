@@ -318,12 +318,12 @@ export class AppMiddleware {
             document.body.style.background = '#eee'
           }
         </script>
-        <script src="/${isProd ? 'baseProd' : 'baseDev'}.dll.js"></script>
-        <script src="/shared.dll.js"></script>
+        <script id="script_base" src="/${isProd ? 'baseProd' : 'baseDev'}.dll.js"></script>
+        <script id="script_shared" src="/shared.dll.js"></script>
     ${this.apps
       .map(
         app =>
-          `    <script id="app_script_${stringToIdentifier(
+          `    <script id="script_app_${stringToIdentifier(
             app.packageId,
           )}" src="/${stringToIdentifier(app.packageId)}.${app.buildMode}.dll.js"></script>`,
       )

@@ -197,11 +197,27 @@ export class WorkspaceManager {
     return observable
   }
 
-  private setBuildMode(packageId: string, status: 'development' | 'production') {
+  private setBuildMode(appMeta: AppMeta, status: 'development' | 'production') {
+    this.developingApps.push(appMeta)
+    this.updateDevelopingAppIdentifiers()
     this.buildMode = {
       ...this.buildMode,
-      [packageId]: status,
+      [appMeta.packageId]: status,
     }
+  }
+
+  private updateDevelopingAppIdentifiers() {
+    const developingAppIdentifiers = this.developingApps.map(x =>
+      this.appsManager.packageIdToIdentifier(x.packageId),
+    )
+    if (developingAppIdentifiers.some(x => !x)) {
+      log.warning(`Missing identifier`)
+    }
+    Desktop.setState({
+      workspaceState: {
+        developingAppIdentifiers,
+      },
+    })
   }
 
   /**
@@ -284,28 +300,13 @@ export class WorkspaceManager {
         const identifier = appInfoRes.value.id
         log.info(`Loaded app with identifier: ${identifier}`)
 
-        console.log('finish toggling dev mode')
-
         // ⚠️ finish refactor
         if (options.type === 'independent') {
+          console.warn('TODO')
           // this.appIdToPackageJson[windowId] = appMeta.directory
         }
 
-        // always do this:
-        this.developingApps.push(appMeta)
-        this.setBuildMode(appMeta.packageId, 'development')
-
-        const developingAppIdentifiers = this.developingApps.map(x =>
-          this.appsManager.packageIdToIdentifier(x.packageId),
-        )
-        if (developingAppIdentifiers.some(x => !x)) {
-          log.warning(`Missing identifier`)
-        }
-        Desktop.setState({
-          workspaceState: {
-            developingAppIdentifiers,
-          },
-        })
+        this.setBuildMode(appMeta, 'development')
 
         return {
           type: 'success',
@@ -333,15 +334,7 @@ export class WorkspaceManager {
             message: `No developing app found for packageId ${packageId}`,
           }
         }
-        this.developingApps = _.remove(this.developingApps, x => x.packageId === packageId)
-        this.setBuildMode(appMeta.packageId, 'production')
-        // TODO
-        // // ⚠️
-        // const windowId = -1
-        // if (Electron.state.appWindows[windowId]) {
-        //   log.verbose('Close window', windowId)
-        //   await this.mediatorServer.sendRemoteCommand(AppCloseWindowCommand, { windowId })
-        // }
+        this.setBuildMode(appMeta, 'production')
         return {
           type: 'success',
           message: `Stopped development of ${identifier}`,

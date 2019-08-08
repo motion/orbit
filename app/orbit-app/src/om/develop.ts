@@ -2,26 +2,39 @@ import { removeHotHandler } from '@o/kit'
 import { Desktop } from '@o/stores'
 import { BannerHandle, stringToIdentifier } from '@o/ui'
 import { difference } from 'lodash'
-import { Action, AsyncAction } from 'overmind'
+import { Action, AsyncAction, Derive } from 'overmind'
+
+type DevMode = 'development' | 'production'
+type DevelopState = {
+  developingIdentifiers: string[]
+  mode: Derive<DevelopState, DevMode>
+}
+
+export const state: DevelopState = {
+  developingIdentifiers: [],
+  // if any apps in dev mode, we move everything into dev mode
+  mode: ({ developingIdentifiers }) =>
+    !!developingIdentifiers.length ? 'development' : 'production',
+}
 
 const start: Action = om => {
-  om.state.develop.lastDeveloping = Desktop.state.workspaceState.developingAppIdentifiers
+  om.state.develop.developingIdentifiers = Desktop.state.workspaceState.developingAppIdentifiers
 }
 
 const updateDeveloping: Action<{ identifiers: string[]; banner?: BannerHandle }> = (
   om,
   { identifiers, banner },
 ) => {
-  const lastDeveloping = om.state.develop.lastDeveloping
-  const addIdentifiers = difference(identifiers, lastDeveloping)
+  const { developingIdentifiers } = om.state.develop
+  const addIdentifiers = difference(identifiers, developingIdentifiers)
   addIdentifiers.forEach(identifier => {
     om.actions.develop.changeAppDevelopmentMode({ banner, identifier, mode: 'development' })
   })
-  const removeIentifiers = difference(lastDeveloping, identifiers)
+  const removeIentifiers = difference(developingIdentifiers, identifiers)
   removeIentifiers.forEach(identifier => {
     om.actions.develop.changeAppDevelopmentMode({ banner, identifier, mode: 'production' })
   })
-  om.state.develop.lastDeveloping = identifiers
+  om.state.develop.developingIdentifiers = identifiers
 }
 
 const changeAppDevelopmentMode: AsyncAction<{
@@ -74,7 +87,7 @@ const changeAppDevelopmentMode: AsyncAction<{
   // close old hot event listener
   removeHotHandler(`app_${name}`)
   // load the new script
-  loadAppDLL(name, mode)
+  om.actions.develop.loadAppDLL({ name, mode })
   // trigger the script to run
   console.log('TODO make it run the bundle now')
   om.actions.rerenderApp()
@@ -87,26 +100,30 @@ const changeAppDevelopmentMode: AsyncAction<{
     })
 }
 
-function loadAppDLL(name: string, mode: 'development' | 'production') {
-  const id = `app_script_${name}`
+function replaceScript(id: string, src: string) {
   const tag = document.getElementById(id)
   if (!tag) return
   tag.parentNode!.removeChild(tag)
   const body = document.getElementsByTagName('body')[0]
   const script = document.createElement('script')
   script.id = id
-  script.src = `/${name}.${mode}.dll.js`
+  script.src = src
   script.type = 'text/javascript'
   body.appendChild(script)
 }
 
-export const state = {
-  // TODO add some status messages
-  lastDeveloping: [] as string[],
+const loadAppDLL: Action<{ name: string; mode: DevMode }> = (_, { name, mode }) => {
+  replaceScript(`script_app_${name}`, `/${name}.${mode}.dll.js`)
+}
+
+const setBaseDllMode: Action<{ mode: DevMode }> = (_, { mode }) => {
+  replaceScript('script_base', mode === 'development' ? '/baseDev.dll.js' : 'baseProd.dll.js')
 }
 
 export const actions = {
   start,
   updateDeveloping,
   changeAppDevelopmentMode,
+  setBaseDllMode,
+  loadAppDLL,
 }

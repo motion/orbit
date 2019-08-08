@@ -5,7 +5,7 @@ import { EventSourceManager } from './EventSourceManager'
 const log = new Logger('createHotHandler')
 
 // singletons
-export const source = new EventSourceManager('/__webpack_hmr')
+let source: EventSourceManager
 const hotHandlers = new Set<HotHandler>()
 
 // for debugging
@@ -26,6 +26,8 @@ type HotHandlerProps = {
 
 export function createHotHandler(props: HotHandlerProps) {
   log.verbose(`createHotHandler`, props)
+  // singleton
+  source = source || new EventSourceManager('/__webpack_hmr')
   const handler = new HotHandler(props)
   hotHandlers.add(handler)
   return handler

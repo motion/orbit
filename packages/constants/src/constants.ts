@@ -1,3 +1,4 @@
+export const IS_WEB = typeof window !== 'undefined'
 export const MAC_TOPBAR_HEIGHT = 23
 export const ORBIT_WIDTH =
   typeof window !== 'undefined' && window.location && window.location.pathname === '/chrome'

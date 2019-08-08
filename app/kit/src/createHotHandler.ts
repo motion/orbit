@@ -9,9 +9,11 @@ let source: EventSourceManager
 const hotHandlers = new Set<HotHandler>()
 
 // for debugging
-window['__orbit_hot'] = {
-  source,
-  hotHandlers,
+if (typeof window !== 'undefined') {
+  window['__orbit_hot'] = {
+    source,
+    hotHandlers,
+  }
 }
 
 type HotHandlerProps = {
@@ -77,13 +79,17 @@ class HotHandler {
     },
   }
 
+  get module() {
+    return this.props.module
+  }
+
   constructor(props: HotHandlerProps) {
     this.props = props
-    if (!this.props.module.hot) {
+    if (!this.module.hot) {
       throw new Error('[HMR] Hot Module Replacement is disabled.')
     }
     // accept this (this should be created only at root)
-    this.props.module.hot.accept()
+    this.module.hot.accept()
 
     this.source.addMessageListener(this.handleMessage)
     window.addEventListener('beforeunload', this.dispose)
@@ -110,6 +116,7 @@ class HotHandler {
   }
 
   private processMessage(obj) {
+    console.log(obj, this.props)
     if (obj.name !== this.props.name) {
       return
     }
@@ -151,7 +158,8 @@ class HotHandler {
   }
 
   private async processUpdate(hash, moduleMap, options) {
-    if (!this.upToDate(hash) && module.hot.status() == 'idle') {
+    console.log(this.upToDate(hash), this.module.hot.status())
+    if (!this.upToDate(hash) && this.module.hot.status() == 'idle') {
       if (options.log) console.log('[HMR] Checking for updates on the server...')
       this.check(moduleMap)
     }
@@ -181,8 +189,7 @@ class HotHandler {
         this.logUpdates(moduleMap, updatedModules, renewedModules)
       }
 
-      var applyResult = module.hot.apply(this.applyOptions, applyCallback) as any
-      console.log('applyResult', applyResult)
+      var applyResult = this.module.hot.apply(this.applyOptions, applyCallback) as any
       // webpack 2 promise
       if (applyResult && applyResult.then) {
         // HotModuleReplacement.runtime.js refers to the result as `outdatedModules`
@@ -195,7 +202,7 @@ class HotHandler {
       }
     }
 
-    const result = module.hot.check(false, cb) as any
+    const result = this.module.hot.check(false, cb) as any
     // webpack 2 promise
     if (result && result.then) {
       result.then(function(updatedModules) {
@@ -206,7 +213,7 @@ class HotHandler {
   }
 
   private handleError(err) {
-    if (module.hot.status() in this.failureStatuses) {
+    if (this.module.hot.status() in this.failureStatuses) {
       if (this.props.warn) {
         console.warn('[HMR] Cannot check for update (Full reload needed)')
         console.warn('[HMR] ' + (err.stack || err.message))

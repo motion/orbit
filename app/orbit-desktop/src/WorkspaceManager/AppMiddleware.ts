@@ -111,19 +111,24 @@ export class AppMiddleware {
     for (const name in rest) {
       const config = rest[name]
       const devName = `${name}-dev`
-      const middleware = this.getMiddleware(config, name, nameToAppMeta[name], devName)
       const current = this.running.find(x => x.name === devName)
+      const middleware = this.getMiddleware(config, name, nameToAppMeta[name], devName)
       if (middleware === true) {
         // use last one
         res.push(current)
       } else {
-        current.close && current.close()
+        if (current && current.close) {
+          current.close()
+        }
         const { hash, devMiddleware, compiler } = middleware
         res.push({
           name: devName,
           hash,
           middleware: resolveIfExists(devMiddleware, [config.output.path]),
-          close: () => devMiddleware.close(),
+          close: () => {
+            console.log('closing', name)
+            devMiddleware.close()
+          },
           compiler,
           config,
         })

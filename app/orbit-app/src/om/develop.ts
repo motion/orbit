@@ -4,8 +4,8 @@ import { BannerHandle, stringToIdentifier } from '@o/ui'
 import { difference } from 'lodash'
 import { Action, AsyncAction } from 'overmind'
 
-const start: Action = () => {
-  // nada
+const start: Action = om => {
+  om.state.develop.lastDeveloping = Desktop.state.workspaceState.developingAppIdentifiers
 }
 
 const updateDeveloping: Action<{ identifiers: string[]; banner?: BannerHandle }> = (

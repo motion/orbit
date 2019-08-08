@@ -36,7 +36,9 @@ export async function getAppsConfig(
   const mode = options.dev ? 'development' : 'production'
   const directory = options.workspaceRoot
   const outputDir = join(directory, 'dist', mode)
-  const watch = options.action === 'run'
+
+  // used for non-app packages
+  const watch = options.dev && options.action === 'run'
 
   log.info(
     `dev ${options.dev} watch ${watch} ${directory}, apps ${apps.length} ${isInMonoRepo}`,
@@ -87,7 +89,6 @@ export async function getAppsConfig(
     }
     return await makeWebpackConfig({
       hot: true,
-      watch,
       ...params,
     })
   }
@@ -98,7 +99,7 @@ export async function getAppsConfig(
   const baseProdParams: WebpackParams = {
     name: `baseProd`,
     entry: ['react', 'react-dom', 'react-hot-loader'],
-    watch: false,
+    watch,
     target: 'web',
     mode: 'production',
     context: directory,
@@ -117,7 +118,7 @@ export async function getAppsConfig(
   const baseDevParams: WebpackParams = {
     name: `baseDev`,
     entry: ['react', 'react-dom', 'react-hot-loader'],
-    watch: false,
+    watch,
     target: 'web',
     mode: 'development',
     context: directory,

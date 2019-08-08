@@ -96,7 +96,6 @@ class HotHandler {
   }
 
   dispose = () => {
-    console.log('dispsing')
     this.source.removeListener(this.handleMessage)
   }
 
@@ -116,7 +115,6 @@ class HotHandler {
   }
 
   private processMessage(obj) {
-    console.log(obj, this.props)
     if (obj.name !== this.props.name) {
       return
     }
@@ -158,7 +156,6 @@ class HotHandler {
   }
 
   private async processUpdate(hash, moduleMap, options) {
-    console.log(this.upToDate(hash), this.module.hot.status())
     if (!this.upToDate(hash) && this.module.hot.status() == 'idle') {
       if (options.log) console.log('[HMR] Checking for updates on the server...')
       this.check(moduleMap)

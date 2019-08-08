@@ -149,17 +149,12 @@ class PopoverManager {
   state = new Set<Popover>()
   closeTm = {}
   closeGroup(group: string, ignore: any) {
-    if (this.closeTm[group]) return
-    this.closeTm[group] = setTimeout(() => {
-      this.state.forEach(item => {
-        if (item === ignore) return
-        if (item.props.group === group) {
-          console.log('closing item from group', item.props)
-          item.forceClose({ animate: false })
-        }
-      })
-      delete this.closeTm[group]
-    }, 30)
+    this.state.forEach(item => {
+      if (item === ignore) return
+      if (item.props.group === group) {
+        item.forceClose({ animate: false })
+      }
+    })
   }
   closeLast() {
     last([...this.state]).forceClose({ animate: false })
@@ -672,18 +667,22 @@ export class Popover extends React.Component<PopoverProps, State> {
       this.targetClickOff()
     }
     // click away to close
-    this.targetClickOff = on(this, this.target, 'click', e => {
-      e.stopPropagation()
-      if (this.state.isPinnedOpen) {
-        if (this.state.targetHovered && this.props.openOnHover) {
-          // avoid closing when clicking while hovering + openOnHover
-          return
-        }
-        this.forceClose()
-      } else {
-        this.setState({ isPinnedOpen: Date.now() })
+    this.targetClickOff = on(this, this.target, 'click', this.handleClickOpen)
+  }
+
+  handleClickOpen = e => {
+    console.log('CLICK OPEN')
+    this.closeOthersWithinGroup()
+    e.stopPropagation()
+    if (this.state.isPinnedOpen) {
+      if (this.state.targetHovered && this.props.openOnHover) {
+        // avoid closing when clicking while hovering + openOnHover
+        return
       }
-    })
+      this.forceClose()
+    } else {
+      this.setState({ isPinnedOpen: Date.now() })
+    }
   }
 
   get wasJustClicked() {

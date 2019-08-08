@@ -278,6 +278,7 @@ export class AppMiddleware {
   }
 
   private async getIndex() {
+    const isProd = this.apps.every(x => x.buildMode === 'production')
     return `<!DOCTYPE html>
     <html lang="en">
       <head>
@@ -308,9 +309,8 @@ export class AppMiddleware {
             document.body.style.background = '#eee'
           }
         </script>
-        <script src="/base0.dll.js"></script>
-        <script src="/base1.dll.js"></script>
-        <script src="/base2.dll.js"></script>
+        <script src="/${isProd ? 'baseProd' : 'baseDev'}.dll.js"></script>
+        <script src="/shared.dll.js"></script>
     ${this.apps
       .map(
         app =>

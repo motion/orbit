@@ -46,25 +46,26 @@ const changeAppDevelopmentMode: AsyncAction<{
   await new Promise(res => {
     let tries = 0
     let tm = setInterval(() => {
+      tries++
+      if (tries > 50) {
+        const errorMessage = 'Tried 50 times, no success loading production bundle...'
+        if (banner) {
+          banner.set({
+            type: 'error',
+            message: errorMessage,
+          })
+        } else {
+          console.error(errorMessage)
+        }
+        clearInterval(tm)
+      }
       fetch(`/${name}.${mode}.dll.js`)
         .then(res)
         .catch(() => {
-          tries++
           // not loaded yet
-          if (tries > 50) {
-            const errorMessage = 'Tried 50 times, no success loading production bundle...'
-            if (banner) {
-              banner.set({
-                type: 'error',
-                message: errorMessage,
-              })
-            } else {
-              console.error(errorMessage)
-            }
-            clearInterval(tm)
-          }
+          console.log('ok')
         })
-    }, 50)
+    }, 150)
   })
 
   // close old hot event listener

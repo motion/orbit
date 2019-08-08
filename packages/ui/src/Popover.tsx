@@ -164,7 +164,7 @@ class PopoverManager {
   }
 }
 
-export const PopoverState = new PopoverManager()
+export const Popovers = new PopoverManager()
 
 const getIsManuallyPositioned = ({ top, left }: { top?: number; left?: number }) => {
   return isNumber(top) && isNumber(left)
@@ -369,14 +369,14 @@ const initialState = {
   measureState: 'done' as 'done' | 'shouldMeasure',
 }
 
-type State = typeof initialState & {
+type PopoverState = typeof initialState & {
   // TODO make these types real
   targetBounds: any
   popoverBounds: any
   maxHeight: any
 }
 
-const isHovered = (props: PopoverProps, state: State) => {
+const isHovered = (props: PopoverProps, state: PopoverState) => {
   const { targetHovered, menuHovered } = state
   if (props.noHoverOnChildren) {
     return targetHovered
@@ -384,7 +384,7 @@ const isHovered = (props: PopoverProps, state: State) => {
   return targetHovered || menuHovered
 }
 
-const shouldShowPopover = (props: PopoverProps, state: State) => {
+const shouldShowPopover = (props: PopoverProps, state: PopoverState) => {
   const { isPinnedOpen } = state
   const { openOnHover, open } = props
   if (open || isPinnedOpen) {
@@ -396,7 +396,7 @@ const shouldShowPopover = (props: PopoverProps, state: State) => {
   return false
 }
 
-export class Popover extends React.Component<PopoverProps, State> {
+export class Popover extends React.Component<PopoverProps, PopoverState> {
   static defaultProps = defaultProps
   static contextType = ThemeContext
 
@@ -408,8 +408,8 @@ export class Popover extends React.Component<PopoverProps, State> {
     return this.targetRef.current
   }
 
-  static getDerivedStateFromProps(props: PopoverPropsWithDefaults, state: State) {
-    let nextState: Partial<State> = {}
+  static getDerivedStateFromProps(props: PopoverPropsWithDefaults, state: PopoverState) {
+    let nextState: Partial<PopoverState> = {}
     const isManuallyPositioned = getIsManuallyPositioned(props)
 
     if (isManuallyPositioned) {
@@ -451,7 +451,7 @@ export class Popover extends React.Component<PopoverProps, State> {
   }
 
   componentDidMount() {
-    PopoverState.state.add(this)
+    Popovers.state.add(this)
 
     const { openOnClick, closeOnClick, closeOnClickAway, closeOnEsc, open, target } = this.props
 
@@ -505,7 +505,7 @@ export class Popover extends React.Component<PopoverProps, State> {
   unmounted = false
 
   componentWillUnmount() {
-    PopoverState.state.delete(this)
+    Popovers.state.delete(this)
     this.unmounted = true
   }
 
@@ -542,7 +542,7 @@ export class Popover extends React.Component<PopoverProps, State> {
   // make sure you do it through here
   setShowPopover = (state: Partial<PopoverState>, cb?: any) => {
     this.closeOthersWithinGroup()
-    this.setState({ ...state, showPopover: true }, cb)
+    this.setState({ ...state, showPopover: true } as any, cb)
   }
 
   updateMeasure() {
@@ -953,7 +953,7 @@ export class Popover extends React.Component<PopoverProps, State> {
   }
 
   closeOthersWithinGroup() {
-    PopoverState.closeGroup(this.props.group, this)
+    Popovers.closeGroup(this.props.group, this)
   }
 
   get isMeasuring() {

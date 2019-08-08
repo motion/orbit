@@ -20,6 +20,7 @@ type WebpackAppsDesc = {
   name: string
   hash?: string
   middleware: Handler
+  close?: Function
   compiler?: Webpack.Compiler
   config?: Webpack.Configuration
 }
@@ -48,7 +49,7 @@ export class AppMiddleware {
     log.verbose(`update ${Object.keys(configs).join(', ')}`, configs)
     this.configs = configs
     this.apps = Object.keys(nameToAppMeta).map(k => nameToAppMeta[k])
-    this.running = this.getAppMiddlewares(configs, nameToAppMeta)
+    this.running = this.updateAppMiddlewares(configs, nameToAppMeta)
   }
 
   updateCompletedFirstBuild = async (name: string, status: 'compiling' | 'error' | 'success') => {
@@ -96,7 +97,7 @@ export class AppMiddleware {
     }
   }
 
-  private getAppMiddlewares(
+  private updateAppMiddlewares(
     configs: WebpackConfigObj,
     nameToAppMeta: AppMetaDict,
   ): WebpackAppsDesc[] {
@@ -111,15 +112,18 @@ export class AppMiddleware {
       const config = rest[name]
       const devName = `${name}-dev`
       const middleware = this.getMiddleware(config, name, nameToAppMeta[name], devName)
+      const current = this.running.find(x => x.name === devName)
       if (middleware === true) {
         // use last one
-        res.push(this.running.find(x => x.name === devName))
+        res.push(current)
       } else {
+        current.close && current.close()
         const { hash, devMiddleware, compiler } = middleware
         res.push({
           name: devName,
           hash,
           middleware: resolveIfExists(devMiddleware, [config.output.path]),
+          close: () => devMiddleware.close(),
           compiler,
           config,
         })

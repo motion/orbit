@@ -1,7 +1,7 @@
 import { command } from '@o/kit'
 import { ToggleOrbitMainCommand } from '@o/models'
 import { Electron } from '@o/stores'
-import { Direction, GlobalHotKeys, PopoverState, useShortcutStore } from '@o/ui'
+import { Direction, GlobalHotKeys, Popovers, useShortcutStore } from '@o/ui'
 import React, { memo, useMemo } from 'react'
 
 import { useStores } from '../hooks/useStores'
@@ -70,8 +70,8 @@ export default memo(function MainShortcutHandler(props: {
       },
       ESCAPE: () => {
         // close any open popovers
-        if (PopoverState.state.size > 0) {
-          PopoverState.closeLast()
+        if (Popovers.state.size > 0) {
+          Popovers.closeLast()
           return
         }
         // close dock if open

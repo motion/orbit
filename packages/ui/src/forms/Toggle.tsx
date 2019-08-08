@@ -55,7 +55,7 @@ function toggleTheme(theme: ThemeObject) {
     boxShadow: undefined,
     offColor: (theme.backgroundStrongest || theme.background).toHexString(),
     onColor: (theme.backgroundStrongest || theme.background).toHexString(),
-    offHandleColor: theme.backgroundActive.toHexString(),
-    onHandleColor: theme.backgroundActive.toHexString(),
+    offHandleColor: theme.backgroundHighlight.toHexString(),
+    onHandleColor: theme.backgroundHighlight.toHexString(),
   }
 }

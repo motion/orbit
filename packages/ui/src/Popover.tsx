@@ -451,8 +451,6 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
   }
 
   componentDidMount() {
-    Popovers.state.add(this)
-
     const { openOnClick, closeOnClick, closeOnClickAway, closeOnEsc, open, target } = this.props
 
     if (openOnClick || closeOnClick || closeOnClickAway) {
@@ -510,6 +508,9 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
   }
 
   componentDidUpdate(_prevProps, prevState) {
+    if (!this.showPopover) {
+      Popovers.state.delete(this)
+    }
     this.updateMeasure()
     if (this.props.onChangeVisibility) {
       if (prevState.showPopover !== this.state.showPopover) {
@@ -542,6 +543,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
   // make sure you do it through here
   setShowPopover = (state: Partial<PopoverState>, cb?: any) => {
     this.closeOthersWithinGroup()
+    Popovers.state.add(this)
     this.setState({ ...state, showPopover: true } as any, cb)
   }
 

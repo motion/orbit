@@ -60,7 +60,10 @@ const changeAppDevelopmentMode: AsyncAction<{
         clearInterval(tm)
       }
       fetch(`/${name}.${mode}.dll.js`)
-        .then(res)
+        .then(() => {
+          clearInterval(tm)
+          res()
+        })
         .catch(() => {
           // not loaded yet
           console.log('ok')

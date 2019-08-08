@@ -53,9 +53,9 @@ export function Toggle({ defaultChecked, size, ...props }: ToggleProps) {
 function toggleTheme(theme: ThemeObject) {
   return {
     boxShadow: undefined,
-    offColor: (theme.backgroundStrongest || theme.background).toHex().toString(),
-    onColor: (theme.backgroundStrongest || theme.background).toHex().toString(),
-    offHandleColor: theme.backgroundActive.toHex().toString(),
-    onHandleColor: theme.backgroundActive.toHex().toString(),
+    offColor: (theme.backgroundStrongest || theme.background).toHexString(),
+    onColor: (theme.backgroundStrongest || theme.background).toHexString(),
+    offHandleColor: theme.backgroundActive.toHexString(),
+    onHandleColor: theme.backgroundActive.toHexString(),
   }
 }

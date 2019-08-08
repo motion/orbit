@@ -8,7 +8,7 @@ import { config } from './configure'
 import { debugEmit } from './debugUseStore'
 import { dehydrate, hydrate, HydrationState } from './hydration'
 import { GET_STORE } from './mobxProxyWorm'
-import { queueUpdate } from './queueUpdate'
+import { queueUpdate, removeUpdate } from './queueUpdate'
 import { useTrackableStore } from './setupTrackableStore'
 import { ReactiveStore } from './Store'
 
@@ -35,6 +35,7 @@ export { syncFromProp, syncToProp } from './syncProps'
 // TODO could possible move queueUpdate into automagical? it's lower level so makes sense
 configureAutomagical({
   queueUpdate,
+  clearQueuedUpdate: removeUpdate,
 })
 
 export interface UseStore<A extends ReactiveStore<any> | any> {
@@ -293,6 +294,7 @@ export function useStore<A extends ReactiveStore<any> | any>(
 ): A {
   const component = useCurrentComponent()
   const rerender = useForceUpdate()
+  rerender['component'] = component
   const shouldReact = !options || options.react !== false
   const isInstantiated = Store && Store['constructor'].name !== 'Function'
   const state = useRef({

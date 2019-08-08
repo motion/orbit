@@ -13,28 +13,55 @@ type DevelopState = {
 export const state: DevelopState = {
   developingIdentifiers: [],
   // if any apps in dev mode, we move everything into dev mode
-  mode: ({ developingIdentifiers }) =>
-    !!developingIdentifiers.length ? 'development' : 'production',
+  mode: state => getMode(state.developingIdentifiers),
 }
 
 const start: Action = om => {
   om.state.develop.developingIdentifiers = Desktop.state.workspaceState.developingAppIdentifiers
 }
 
-const updateDeveloping: Action<{ identifiers: string[]; banner?: BannerHandle }> = (
+function getMode(developingIdentifiers: string[]) {
+  return !!developingIdentifiers.length ? 'development' : 'production'
+}
+
+const updateDeveloping: AsyncAction<{ identifiers: string[]; banner?: BannerHandle }> = async (
   om,
   { identifiers, banner },
 ) => {
   const { developingIdentifiers } = om.state.develop
+
+  // load new app scripts
   const addIdentifiers = difference(identifiers, developingIdentifiers)
-  addIdentifiers.forEach(identifier => {
-    om.actions.develop.changeAppDevelopmentMode({ banner, identifier, mode: 'development' })
-  })
   const removeIentifiers = difference(developingIdentifiers, identifiers)
-  removeIentifiers.forEach(identifier => {
-    om.actions.develop.changeAppDevelopmentMode({ banner, identifier, mode: 'production' })
-  })
+  await Promise.all([
+    ...addIdentifiers.map(identifier => {
+      return om.actions.develop.changeAppDevelopmentMode({
+        banner,
+        identifier,
+        mode: 'development',
+      })
+    }),
+    ...removeIentifiers.map(identifier => {
+      om.actions.develop.changeAppDevelopmentMode({ banner, identifier, mode: 'production' })
+    }),
+  ])
+
   om.state.develop.developingIdentifiers = identifiers
+
+  // load the proper development base bundle
+  await om.actions.develop.setBaseDllMode({ mode: getMode(identifiers) })
+
+  // no re-run everything
+  console.log('TODO make it run the bundle now')
+  om.actions.rerenderApp()
+
+  // and print out the message
+  banner &&
+    banner.set({
+      type: 'success',
+      message: `Success!`,
+      timeout: 2,
+    })
 }
 
 const changeAppDevelopmentMode: AsyncAction<{
@@ -86,38 +113,32 @@ const changeAppDevelopmentMode: AsyncAction<{
 
   // close old hot event listener
   removeHotHandler(`app_${name}`)
-  // load the new script
-  om.actions.develop.loadAppDLL({ name, mode })
-  // trigger the script to run
-  console.log('TODO make it run the bundle now')
-  om.actions.rerenderApp()
 
-  banner &&
-    banner.set({
-      type: 'success',
-      message: `Success!`,
-      timeout: 2,
-    })
+  // load the new script
+  await om.actions.develop.loadAppDLL({ name, mode })
 }
 
 function replaceScript(id: string, src: string) {
   const tag = document.getElementById(id)
-  if (!tag) return
-  tag.parentNode!.removeChild(tag)
-  const body = document.getElementsByTagName('body')[0]
-  const script = document.createElement('script')
-  script.id = id
-  script.src = src
-  script.type = 'text/javascript'
-  body.appendChild(script)
+  if (!tag) return null
+  return new Promise(res => {
+    tag.parentNode!.removeChild(tag)
+    const body = document.getElementsByTagName('body')[0]
+    const script = document.createElement('script')
+    script.id = id
+    script.src = src
+    script.type = 'text/javascript'
+    script.addEventListener('load', () => res())
+    body.appendChild(script)
+  })
 }
 
-const loadAppDLL: Action<{ name: string; mode: DevMode }> = (_, { name, mode }) => {
-  replaceScript(`script_app_${name}`, `/${name}.${mode}.dll.js`)
+const loadAppDLL: AsyncAction<{ name: string; mode: DevMode }> = async (_, { name, mode }) => {
+  await replaceScript(`script_app_${name}`, `/${name}.${mode}.dll.js`)
 }
 
-const setBaseDllMode: Action<{ mode: DevMode }> = (_, { mode }) => {
-  replaceScript('script_base', mode === 'development' ? '/baseDev.dll.js' : 'baseProd.dll.js')
+const setBaseDllMode: AsyncAction<{ mode: DevMode }> = async (_, { mode }) => {
+  await replaceScript('script_base', mode === 'development' ? '/baseDev.dll.js' : 'baseProd.dll.js')
 }
 
 export const actions = {

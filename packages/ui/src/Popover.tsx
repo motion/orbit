@@ -821,6 +821,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
 
     this.cancelIfWillOpen()
     this.delayOpenIfHover[name] = debounce(openIfOver, isTarget ? delay : 0)
+    Popovers.state.add(this) // so we cancel pending hovers too
     let retryOutTm: any = null
 
     const unhover = () => {

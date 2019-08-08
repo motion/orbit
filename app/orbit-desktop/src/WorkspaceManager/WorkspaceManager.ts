@@ -316,7 +316,7 @@ export class WorkspaceManager {
 
         return {
           type: 'success',
-          message: 'Got app id',
+          message: `Developing app ${appMeta.packageId}`,
           value: {
             appId,
             identifier,

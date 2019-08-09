@@ -3,39 +3,31 @@ import { BuildStatus, BuildStatusModel } from '@o/models'
 import { Desktop } from '@o/stores'
 import { BannerHandle, stringToIdentifier } from '@o/ui'
 import { difference } from 'lodash'
-import { Action, AsyncAction, Derive } from 'overmind'
+import { Action, AsyncAction } from 'overmind'
 
 export type DevMode = 'development' | 'production'
 export type DevelopState = {
   buildStatus: BuildStatus[]
-  developingIdentifiers: string[]
-  mode: Derive<DevelopState, DevMode>
 }
 
 export const state: DevelopState = {
   buildStatus: [],
-  developingIdentifiers: [],
-  // if any apps in dev mode, we move everything into dev mode
-  mode: state => getMode(state.developingIdentifiers),
 }
 
 const start: Action = om => {
-  om.state.develop.developingIdentifiers = Desktop.state.workspaceState.developingAppIdentifiers
-
   observeMany(BuildStatusModel).subscribe(status => {
     om.state.develop.buildStatus = status
   })
-}
-
-function getMode(developingIdentifiers: string[]) {
-  return !!developingIdentifiers.length ? 'development' : 'production'
 }
 
 const updateDeveloping: AsyncAction<{ identifiers: string[]; banner?: BannerHandle }> = async (
   om,
   { identifiers, banner },
 ) => {
-  const { developingIdentifiers } = om.state.develop
+  const developingIdentifiers = om.state.develop.buildStatus
+    .filter(x => x.mode === 'development')
+    .map(x => x.identifier)
+  const mode: DevMode = !!developingIdentifiers.length ? 'development' : 'production'
 
   // load new app scripts
   const addIdentifiers = difference(identifiers, developingIdentifiers)
@@ -53,22 +45,20 @@ const updateDeveloping: AsyncAction<{ identifiers: string[]; banner?: BannerHand
     }),
   ])
 
-  om.state.develop.developingIdentifiers = identifiers
-
   // load the proper development base bundle
-  await om.actions.develop.setBaseDllMode({ mode: getMode(identifiers) })
+  await om.actions.develop.setBaseDllMode({ mode })
 
   // no re-run everything
   console.log('TODO make it run the bundle now')
   // om.actions.rerenderApp()
 
   // and print out the message
-  banner &&
-    banner.set({
-      type: 'success',
-      message: `Success!`,
-      timeout: 2,
-    })
+  // banner &&
+  //   banner.set({
+  //     type: 'success',
+  //     message: `Success!`,
+  //     timeout: 2,
+  //   })
 }
 
 const changeAppDevelopmentMode: AsyncAction<{
@@ -91,31 +81,16 @@ const changeAppDevelopmentMode: AsyncAction<{
 
   // wait until new bundle loaded
   await new Promise(res => {
-    let tries = 0
-    let tm = setInterval(() => {
-      tries++
-      if (tries > 50) {
-        const errorMessage = 'Tried 50 times, no success loading production bundle...'
-        if (banner) {
-          banner.set({
-            type: 'error',
-            message: errorMessage,
-          })
-        } else {
-          console.error(errorMessage)
-        }
-        clearInterval(tm)
+    const observer = observeMany(BuildStatusModel).subscribe(next => {
+      if (
+        next.some(x => {
+          return x.status === 'complete' && x.mode === mode && x.identifier === identifier
+        })
+      ) {
+        observer.unsubscribe()
+        res()
       }
-      fetch(`/${name}.${mode}.dll.js`)
-        .then(() => {
-          clearInterval(tm)
-          res()
-        })
-        .catch(() => {
-          // not loaded yet
-          console.log('ok')
-        })
-    }, 150)
+    })
   })
 
   // close old hot event listener
@@ -123,6 +98,13 @@ const changeAppDevelopmentMode: AsyncAction<{
 
   // load the new script
   await om.actions.develop.loadAppDLL({ name, mode })
+
+  banner &&
+    banner.set({
+      type: 'success',
+      message:
+        mode === 'development' ? `Started app in development!` : `Switched back to production.`,
+    })
 }
 
 function replaceScript(id: string, src: string) {

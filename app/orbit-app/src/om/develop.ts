@@ -47,6 +47,11 @@ const updateDeveloping: AsyncAction<{
   // load new app scripts
   const toAdd = difference(next, current)
   const toRemove = difference(current, next)
+
+  if (!toAdd.length && !toRemove.length) {
+    return
+  }
+
   await Promise.all([
     ...toAdd.map(identifier => {
       return om.actions.develop.changeAppDevelopmentMode({

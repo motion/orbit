@@ -197,10 +197,11 @@ export class WorkspaceManager {
     return observable
   }
 
-  private setBuildMode(appMeta: AppMeta, status: 'development' | 'production') {
+  private setBuildMode(appMeta: AppMeta, mode: 'development' | 'production') {
+    log.verbose(`setBuildMode ${appMeta.packageId} ${mode}`)
     // TODO this is here because we'll have "external" app you can build
     // so we'll need to track otuside of this.buildMode
-    if (status === 'development') {
+    if (mode === 'development') {
       this.developingApps.push(appMeta)
     } else {
       this.developingApps = _.remove(this.developingApps, x => x.packageId === appMeta.packageId)
@@ -208,7 +209,7 @@ export class WorkspaceManager {
     this.updateDevelopingAppIdentifiers()
     this.buildMode = {
       ...this.buildMode,
-      [appMeta.packageId]: status,
+      [appMeta.packageId]: mode,
     }
   }
 

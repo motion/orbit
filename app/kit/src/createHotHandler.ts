@@ -1,6 +1,8 @@
 import { Logger } from '@o/logger'
 
 import { EventSourceManager } from './EventSourceManager'
+import { setCreateAppHotHandler } from './helpers/createApp'
+import { hot } from 'react-hot-loader'
 
 const log = new Logger('createHotHandler')
 
@@ -28,6 +30,12 @@ type HotHandlerProps = {
 
 export function createHotHandler(props: HotHandlerProps) {
   log.verbose(`createHotHandler`, props)
+  setCreateAppHotHandler(app => {
+    if (app.app) {
+      // see react-hot-loader docs on hot(module)(app)
+      hot(module)(app.app)
+    }
+  })
   // singleton
   source = source || new EventSourceManager('/__webpack_hmr')
   const handler = new HotHandler(props)
@@ -109,30 +117,30 @@ class HotHandler {
           this.props.actions[msg.action](msg)
         }
       }
-    } catch (ex) {
-      console.warn('Invalid HMR message: ' + event.data + '\n' + ex)
+    } catch (error) {
+      console.error('[HMR] error', error.message, error.stack, event.data)
     }
   }
 
-  private processMessage(obj) {
-    if (obj.name !== this.props.name) {
+  private processMessage({ action, name, hash, modules, errors, warnings, time }) {
+    if (name !== this.props.name) {
       return
     }
-    const name = obj.name ? `'${obj.name}' ` : ''
-    switch (obj.action) {
+    const logName = name ? `'${name}' ` : ''
+    switch (action) {
       case 'building':
-        // console.log('[HMR] bundle ' + (obj.name ? "'" + obj.name + "' " : '') + 'rebuilding')
+        // console.log('[HMR] bundle ' + logName + 'rebuilding')
         break
       case 'built':
-        console.log(`[HMR] rebuilt ${name}in ${obj.time}ms`)
+        console.log(`[HMR] rebuilt ${logName}in ${time}ms`)
       // fall through
       case 'sync':
         var applyUpdate = true
-        if (obj.errors.length > 0) {
+        if (errors.length > 0) {
           // if (reporter) reporter.problems('errors', obj)
           applyUpdate = false
-        } else if (obj.warnings.length > 0) {
-          // console.warn(obj.warnings)
+        } else if (warnings.length > 0) {
+          // console.warn(warnings)
         } else {
           // if (reporter) {
           //   reporter.cleanProblemsCache()
@@ -140,24 +148,26 @@ class HotHandler {
           // }
         }
         if (applyUpdate) {
-          if (!this.upToDate(obj.hash) && this.module.hot.status() == 'idle') {
+          if (!this.upToDate(hash) && this.module.hot.status() == 'idle') {
             if (this.props.log) console.log('[HMR] Checking for updates on the server...')
-            this.check(obj.modules)
+            this.syncNewUpdate(modules)
           }
         }
         break
     }
   }
 
-  private upToDate(hash?) {
+  private upToDate(hash?: string) {
     if (hash) {
       this.lastHash = hash
     }
     return this.lastHash == this.props.getHash()
   }
 
-  /** The main logic for updating javascript modules */
-  private async check(moduleMap) {
+  /**
+   * The main logic for updating javascript via HMR
+   */
+  private async syncNewUpdate(moduleMap) {
     try {
       // first check
       const updatedModules = await this.module.hot.check(false)
@@ -169,11 +179,10 @@ class HotHandler {
       // then apply
       const renewedModules = this.module.hot.apply(this.applyOptions)
       if (!this.upToDate()) {
-        this.check(moduleMap)
+        this.syncNewUpdate(moduleMap)
+      } else {
+        this.logUpdates(moduleMap, updatedModules, renewedModules)
       }
-      this.logUpdates(moduleMap, updatedModules, renewedModules)
-      // render after hmr
-      window['rerender'](false)
     } catch (err) {
       return this.handleError(err)
     }

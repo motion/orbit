@@ -1,6 +1,30 @@
-import { always, AppDefinition, AppIcon, createUsableStore, ensure, getAppDefinition, react, shallow, Templates, useReaction, useStore } from '@o/kit'
+import {
+  always,
+  AppDefinition,
+  AppIcon,
+  createUsableStore,
+  ensure,
+  getAppDefinition,
+  react,
+  shallow,
+  Templates,
+  useReaction,
+  useStore,
+  useForceUpdate,
+} from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, idFn, Row, SimpleText, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
+import {
+  Card,
+  CardProps,
+  idFn,
+  Row,
+  SimpleText,
+  useIntersectionObserver,
+  useNodeSize,
+  useParentNodeSize,
+  useTheme,
+  View,
+} from '@o/ui'
 import { numberBounder, numberScaler, sleep } from '@o/utils'
 import { debounce } from 'lodash'
 import React, { createRef, memo, useEffect, useLayoutEffect, useRef, useState } from 'react'

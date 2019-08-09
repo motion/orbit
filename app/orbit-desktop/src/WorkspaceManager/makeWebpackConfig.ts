@@ -230,13 +230,17 @@ export function makeWebpackConfig(
           use: {
             loader: `add-source-loader`,
             options: {
-              postfix: `
-// inject hot loading
+              // prefix, createHotHandler captures the app you create with createApp()
+              prefix: `
 require('@o/kit').createHotHandler({
   name: '${name}',
   getHash: __webpack_require__.h,
   module,
 });
+`,
+              // postfix clears the createApp hot handler
+              postfix: `
+require('@o/kit').setCreateAppHotHandler(null)
 `,
             },
           },

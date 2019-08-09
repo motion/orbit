@@ -47,7 +47,7 @@ export function startAuthProxy() {
       .then(proc => {
         let p = proc as any
         p.stdout.on('data', x => console.log(`OrbitProxy: ${x}`))
-        // TODO we should report this up to app using AppStatusModel
+        // TODO we should report this up to app using WindowMessageModel
         // in fact we should probably just report all errors up automatically through logger?
         // DONT resolve or fail here, for some reason sometimes stdout comes as stderr
         // but thats fine, we have a fail timeout anyways...

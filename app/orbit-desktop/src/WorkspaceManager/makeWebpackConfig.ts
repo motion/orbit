@@ -1,3 +1,4 @@
+import { isDefined } from '@o/ui'
 import AddAssetHtmlPlugin from 'add-asset-html-webpack-plugin'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
 import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
@@ -126,7 +127,7 @@ export function makeWebpackConfig(
   }
 
   const hotEntry = `webpack-hot-middleware/client?name=${name}&path=/__webpack_hmr_${name}`
-  const main = hot && !injectHot ? [hotEntry, ...entry] : entry
+  const main = hot && !isDefined(injectHot) ? [hotEntry, ...entry] : entry
 
   let config: webpack.Configuration = {
     name,

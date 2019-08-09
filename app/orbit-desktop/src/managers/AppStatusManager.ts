@@ -1,20 +1,17 @@
-import { AppStatusMessage } from '@o/models'
+import { WindowMessage } from '@o/models'
 import { isDefined } from '@o/ui'
 import Observable from 'zen-observable'
 
 export class AppStatusManager {
-  update = new Map<
-    number,
-    { update: (next: any) => void; observable: Observable<AppStatusMessage> }
-  >()
+  update = new Map<number, { update: (next: any) => void; observable: Observable<WindowMessage> }>()
 
-  observe(appId?: number) {
-    if (this.update.has(appId)) {
-      return this.update.get(appId).observable
+  observe(windowId?: number) {
+    if (this.update.has(windowId)) {
+      return this.update.get(windowId).observable
     }
-    const observable = new Observable<AppStatusMessage>(observer => {
-      this.update.set(appId, {
-        update: (status: AppStatusMessage) => {
+    const observable = new Observable<WindowMessage>(observer => {
+      this.update.set(windowId, {
+        update: (status: WindowMessage) => {
           observer.next(status)
         },
         observable,
@@ -23,9 +20,9 @@ export class AppStatusManager {
     return observable
   }
 
-  sendMessage(message: AppStatusMessage) {
-    for (const [updateAppId, callback] of this.update) {
-      if (isDefined(message.appId) && message.appId !== updateAppId) {
+  sendMessage(message: WindowMessage) {
+    for (const [updateWindowId, callback] of this.update) {
+      if (isDefined(message.windowId) && message.windowId !== updateWindowId) {
         continue
       }
       callback.update(message)

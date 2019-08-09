@@ -57,18 +57,20 @@ export const BuildStatusModel = new Model<BuildStatus, { identifier?: string }>(
  * For communicating directly to a specific window: note we should rename this to `WindowBannerModel` or similar
  * and appId should become windowId, what it really is
  */
-export type AppStatusMessage = {
+export type WindowMessage = {
   // id per-message to determine if it changes
   id: string
-  appId?: number
+  windowId?: number
   type: 'error' | 'warn' | 'success' | 'info'
   message: string
   title?: string
   timeout?: number
   loading?: boolean
 }
-export const AppStatusModel = new Model<AppStatusMessage, { appId: number }>('AppStatusModel')
-export const AppStatusId = {
+export const WindowMessageModel = new Model<WindowMessage, { windowId: number }>(
+  'WindowMessageModel',
+)
+export const WindowMessageId = {
   install: (identifier: string) => `install-${identifier}`,
 }
 

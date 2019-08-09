@@ -1,6 +1,6 @@
 import { command, observeOne } from '@o/bridge'
 import { AppDefinition, ProvideStores, removeAllHotHandlers, showConfirmDialog, useReaction, useStore } from '@o/kit'
-import { AppCloseWindowCommand, AppDevCloseCommand, AppStatusModel } from '@o/models'
+import { AppCloseWindowCommand, AppDevCloseCommand, WindowMessageModel } from '@o/models'
 import { App, Desktop } from '@o/stores'
 import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
@@ -54,9 +54,9 @@ const OrbitStatusMessages = memo(() => {
   const banner = useBanner()
 
   useEffect(() => {
-    observeOne(AppStatusModel, {
+    observeOne(WindowMessageModel, {
       args: {
-        appId: WINDOW_ID,
+        windowId: WINDOW_ID,
       },
     }).subscribe(message => {
       console.log('message', message)

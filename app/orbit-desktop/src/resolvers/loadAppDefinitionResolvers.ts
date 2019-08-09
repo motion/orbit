@@ -2,7 +2,7 @@ import { getPackageId, requireAppDefinition, updateWorkspacePackageIds } from '@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
-import { AppDefinitionSetupVerifyCommand, AppInstallToWorkspaceCommand, AppStatusId, GetAppStoreAppDefinitionCommand, SpaceEntity, UserEntity } from '@o/models'
+import { AppDefinitionSetupVerifyCommand, AppInstallToWorkspaceCommand, GetAppStoreAppDefinitionCommand, SpaceEntity, UserEntity, WindowMessageId } from '@o/models'
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
@@ -35,7 +35,7 @@ async function getWorkspaceDirectory() {
 
 function resolveInstallAppToWorkspace() {
   return resolveCommand(AppInstallToWorkspaceCommand, async ({ identifier }) => {
-    appStatus.info(AppStatusId.install(identifier), `Installing ${identifier}`)
+    appStatus.info(WindowMessageId.install(identifier), `Installing ${identifier}`)
 
     const directory = await getWorkspaceDirectory()
     const res = await commandInstall({ identifier, directory })

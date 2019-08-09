@@ -300,7 +300,8 @@ require('@o/kit/src/createHotHandler').createHotHandler({
     entry: [workspaceEntry],
     target: 'web',
     watch,
-    injectHot: true,
+    hot: true,
+    injectHot: false,
     dllReferences,
     output: {
       library: `window['__orbit_workspace']`,

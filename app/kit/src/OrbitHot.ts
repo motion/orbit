@@ -40,7 +40,9 @@ export const OrbitHot = {
   },
   fileEnter(props: OrbitHotProps) {
     log.verbose(`createHotHandler`, props)
-    appHandler = entry => hot(module)(entry)
+    appHandler = entry => {
+      return hot(props.module)(entry)
+    }
     // singleton
     source = source || new EventSourceManager('/__webpack_hmr')
     const handler = new HotHandler(props)

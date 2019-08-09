@@ -1,6 +1,6 @@
 import { AppMetaDict, AppsManager } from '@o/apps-manager'
 import { Logger } from '@o/logger'
-import { AppMeta, AppStatusMessage } from '@o/models'
+import { AppMeta, BuildStatus } from '@o/models'
 import { stringToIdentifier } from '@o/ui'
 import historyAPIFallback from 'connect-history-api-fallback'
 import { Handler } from 'express'
@@ -8,8 +8,9 @@ import hashObject from 'node-object-hash'
 import { parse } from 'url'
 import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
+import Observable from 'zen-observable'
 
-import { AppMetaWithBuildInfo } from './WorkspaceManager'
+import { AppBuildModeDict, AppMetaWithBuildInfo } from './WorkspaceManager'
 
 const log = new Logger('getAppMiddlewares')
 
@@ -24,19 +25,17 @@ type WebpackAppsDesc = {
   compiler?: Webpack.Compiler
   config?: Webpack.Configuration
 }
-export type AppBuildStatusListener = (status: AppStatusMessage) => any
 
-export class AppMiddleware {
+export class AppBuilder {
   configs = null
   running: WebpackAppsDesc[] = []
   apps: AppMetaWithBuildInfo[] = []
-  appBuildStatusListeners = new Set<AppBuildStatusListener>()
 
   private buildStatus = new Map<string, 'compiling' | 'error' | 'success'>()
   private completeFirstBuild: () => void
   completedFirstBuild: Promise<boolean>
 
-  constructor(private appsManager: AppsManager) {
+  constructor(private appsManager: AppsManager, private buildMode: AppBuildModeDict) {
     this.completedFirstBuild = new Promise(res => {
       this.completeFirstBuild = () => res(true)
     })
@@ -90,11 +89,33 @@ export class AppMiddleware {
     return next()
   }
 
-  onStatus(callback: AppBuildStatusListener) {
-    this.appBuildStatusListeners.add(callback)
-    return () => {
-      this.appBuildStatusListeners.delete(callback)
+  /**
+   * Returns Observable for the current workspace information
+   */
+  observables = new Set<{ update: (next: any) => void; observable: Observable<BuildStatus[]> }>()
+  observeBuildStatus() {
+    const observable = new Observable<BuildStatus[]>(observer => {
+      this.observables.add({
+        update: (status: BuildStatus[]) => {
+          observer.next(status)
+        },
+        observable,
+      })
+    })
+    return observable
+  }
+
+  buildStatuses: BuildStatus[] = []
+  private setBuildStatus = async (status: BuildStatus) => {
+    const existing = this.buildStatuses.findIndex(x => x.identifier === status.identifier)
+    if (existing > -1) {
+      this.buildStatuses = this.buildStatuses.map((x, i) => (i === existing ? status : x))
+    } else {
+      this.buildStatuses.push(status)
     }
+    this.observables.forEach(({ update }) => {
+      update(this.buildStatuses)
+    })
   }
 
   private updateAppMiddlewares(
@@ -107,7 +128,7 @@ export class AppMiddleware {
     let res: WebpackAppsDesc[] = []
 
     // you have to do it this janky ass way because webpack just isnt really great at
-    // doing multi-config hmr, and this makes sure the 404 hot-update bug if fixed (google)
+    // doing multi-config hmr, and this makes sure the 404 hot-update bug is fixed (google)
     for (const name in rest) {
       const config = rest[name]
       const devName = `${name}-dev`
@@ -213,7 +234,7 @@ export class AppMiddleware {
       const running = this.running.find(x => x.name === runningName)
       if (running) {
         if (hash === running.hash) {
-          log.verbose(`${name} config hasnt changed! dont re-run this one just return the old one`)
+          // log.verbose(`${name} config hasnt changed! dont re-run this one just return the old one`)
           return true
         } else {
           log.verbose(`${name}config has changed!`)
@@ -244,46 +265,29 @@ export class AppMiddleware {
       this.updateCompletedFirstBuild(name, status)
 
       // report to appStatus bus
-      if (appMeta) {
-        if (!state) {
-          this.updateAppStatus(appMeta, { type: 'info', message: `Compiling...` })
-          return
-        }
-        if (stats.hasErrors()) {
-          this.updateAppStatus(appMeta, {
-            type: 'error',
-            message: stats.toString(middlewareOptions.stats),
-          })
-          return
-        }
-        this.updateAppStatus(appMeta, {
-          type: 'success',
+      const identifier = appMeta ? this.appsManager.identifierToPackageId(appMeta.packageId) : name
+      const mode = this.buildMode[identifier]
+      console.log('TODO!!!!', mode, identifier, name, Object.keys(this.buildMode))
+      if (!state) {
+        this.setBuildStatus({ identifier, status: 'building', mode })
+        return
+      }
+      if (stats.hasErrors()) {
+        this.setBuildStatus({
+          mode,
+          identifier,
+          status: 'error',
           message: stats.toString(middlewareOptions.stats),
         })
+        return
       }
-    }
-  }
-
-  private updateAppStatus = async (
-    appMeta: AppMeta,
-    message: Pick<AppStatusMessage, 'type' | 'message'>,
-  ) => {
-    // we have to map in a tricky way to each appId
-    for (const app of this.appsManager.apps) {
-      const packageId = this.appsManager.identifierToPackageId(app.identifier)
-      if (packageId === appMeta.packageId) {
-        this.sendAppBuildStatusUpdate({ appId: app.id, ...message })
-      }
-    }
-  }
-
-  private sendAppBuildStatusUpdate(message: Pick<AppStatusMessage, 'type' | 'message' | 'appId'>) {
-    this.appBuildStatusListeners.forEach(listener => {
-      listener({
-        id: `${message.appId}-build-status`,
-        ...message,
+      this.setBuildStatus({
+        mode,
+        identifier,
+        status: 'complete',
+        message: stats.toString(middlewareOptions.stats),
       })
-    })
+    }
   }
 
   private async getIndex() {

@@ -11,6 +11,8 @@ import { LoggerSettings } from './LoggerSettings'
  *   4: + verbose objects
  *   6: + timer objects
  *
+ * Could be better in many ways. Could allow you to choose these levels with descriptive terms...
+ *
  */
 
 type LogType = 'verbose' | 'info' | 'warning' | 'error' | 'timer' | 'vtimer'

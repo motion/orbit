@@ -264,16 +264,23 @@ export async function getAppsConfig(
   /**
    * Create the apps import
    */
-  const next = `// all apps
+  const workspaceEntrySrc = `// all apps
 export default function getApps() {
   return [${apps.map(app => `require('${app.packageId}')`).join(',')}]
-}`
+}
+// testing hot handling in workspaceEntry
+require('@o/kit').createHotHandler({
+  name: 'workspaceEntry',
+  getHash: __webpack_require__.h,
+  module,
+})
+`
   // const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
   const workspaceEntry = join(outputDir, 'workspaceEntryIn.js')
   log.info(`workspaceEntry ${workspaceEntry}`)
   const current = (await pathExists(workspaceEntry)) ? await readFile(workspaceEntry) : ''
-  if (current !== next) {
-    await writeFile(workspaceEntry, next)
+  if (current !== workspaceEntrySrc) {
+    await writeFile(workspaceEntry, workspaceEntrySrc)
   }
 
   /**

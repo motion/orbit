@@ -1,7 +1,7 @@
 import { AppsManager, getAppMeta, requireAppDefinition } from '@o/apps-manager'
 import { Logger } from '@o/logger'
-import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppWorkspaceCommand, CallAppBitApiMethodCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
+import { MediatorServer, resolveCommand, resolveObserveMany, resolveObserveOne } from '@o/mediator'
+import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppWorkspaceCommand, BuildStatusModel, CallAppBitApiMethodCommand, CommandWsOptions, Space, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { remove } from 'fs-extra'
@@ -13,8 +13,7 @@ import Observable from 'zen-observable'
 import { GraphServer } from '../GraphServer'
 import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 import { getActiveSpace } from '../helpers/getActiveSpace'
-import { appStatusManager } from '../managers/AppStatusManager'
-import { AppMiddleware } from './AppMiddleware'
+import { AppBuilder } from './AppBuilder'
 import { buildAppInfo, resolveAppBuildCommand } from './commandBuild'
 import { resolveAppGenTypesCommand } from './commandGenTypes'
 import { resolveAppInstallCommand } from './commandInstall'
@@ -28,6 +27,8 @@ export type AppMetaWithBuildInfo = AppMeta & {
   buildMode: 'development' | 'production'
 }
 
+export type AppBuildModeDict = { [name: string]: 'development' | 'production' }
+
 @decorate
 export class WorkspaceManager {
   // the apps we've toggled into development mode
@@ -39,13 +40,13 @@ export class WorkspaceManager {
     dev: false,
     workspaceRoot: '',
   }
+  // use this to toggle between modes for the various apps
+  buildMode: AppBuildModeDict = {}
+
   appsManager = new AppsManager()
-  appMiddleware = new AppMiddleware(this.appsManager)
+  appMiddleware = new AppBuilder(this.appsManager, this.buildMode)
   graphServer = new GraphServer()
   middleware = this.appMiddleware.middleware
-
-  // use this to toggle between modes for the various apps
-  buildMode: { [name: string]: 'development' | 'production' } = {}
 
   appIdToPackageJson: { [key: number]: string } = {}
 
@@ -57,10 +58,7 @@ export class WorkspaceManager {
   }
 
   async start() {
-    // Sends messages between webpack and client apps so we can display status messages
-    this.appMiddleware.onStatus(status => {
-      appStatusManager.sendMessage(status)
-    })
+    //
   }
 
   async updateWorkspace(opts: CommandWsOptions) {
@@ -185,7 +183,7 @@ export class WorkspaceManager {
    * Returns Observable for the current workspace information
    */
   observables = new Set<{ update: (next: any) => void; observable: Observable<WorkspaceInfo> }>()
-  observe() {
+  observeWorkspaceInfo() {
     const observable = new Observable<WorkspaceInfo>(observer => {
       this.observables.add({
         update: (status: WorkspaceInfo) => {
@@ -227,19 +225,30 @@ export class WorkspaceManager {
     })
   }
 
+  async createWorkspace(space: Partial<Space>) {
+    await findOrCreateWorkspace(space)
+    return true
+  }
+
   /**
    * For external commands, this lets the CLI call various commands in here,
    * as well as the client apps if need be.
    */
+
+  // TODO move all these into functions inside here
+  // and move the resolvers up to root so we have them all in one place
+  // i *think* this is more clear rather than having resolvers all over
   getResolvers() {
     return [
+      resolveObserveMany(BuildStatusModel, () => {
+        return this.appMiddleware.observeBuildStatus()
+      }),
+
       resolveObserveOne(WorkspaceInfoModel, () => {
-        return this.observe()
+        return this.observeWorkspaceInfo()
       }),
-      resolveCommand(AppCreateWorkspaceCommand, async props => {
-        await findOrCreateWorkspace(props)
-        return true
-      }),
+
+      resolveCommand(AppCreateWorkspaceCommand, this.createWorkspace),
       resolveCommand(AppWorkspaceCommand, async options => {
         const { workspaceRoot } = options
         log.info(`AppOpenWorkspaceCommand ${workspaceRoot}`)

@@ -1,3 +1,5 @@
+import { observeOne } from '@o/kit'
+import { AppStatusModel, WorkspaceInfoModel } from '@o/models'
 import { Config, IContext, OnInitialize } from 'overmind'
 
 import { getAllAppDefinitions, startAppLoadWatch } from '../apps/orbitApps'
@@ -34,6 +36,13 @@ export const onInitialize: OnInitialize = async om => {
   actions.develop.start()
 
   handleMediatorMessages()
+
+  observeOne(WorkspaceInfoModel).subscribe(message => {
+    console.log('workspace info', message)
+  })
+  observeOne(AppStatusModel).subscribe(message => {
+    console.log('app status', message)
+  })
 
   goToInitialApp(om)
 }

@@ -13,11 +13,8 @@ export function setIdentifierToPackageId(identifier: string, packageId: string) 
   identifierToPackageId[identifier] = packageId
 }
 
-export function getIdentifierToPackageId(identifier?: string) {
-  if (identifier) {
-    return identifierToPackageId[identifier]
-  }
-  return { ...identifierToPackageId }
+export function getIdentifierToPackageId(identifier: string) {
+  return identifierToPackageId[identifier] || ''
 }
 
 export async function getPackageId(

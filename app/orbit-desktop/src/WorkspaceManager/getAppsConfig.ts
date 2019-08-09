@@ -260,6 +260,9 @@ export async function getAppsConfig(
         watch,
         hot: true,
         dllReferences,
+        output: {
+          library: '__orbit_main',
+        },
       },
       extraMainConfig,
     )

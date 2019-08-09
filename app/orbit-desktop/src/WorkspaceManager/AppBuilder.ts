@@ -12,7 +12,7 @@ import Observable from 'zen-observable'
 
 import { AppBuildModeDict } from './WorkspaceManager'
 
-const log = new Logger('getAppMiddlewares')
+const log = new Logger('AppBuilder')
 
 type WebpackConfigObj = {
   [key: string]: Webpack.Configuration
@@ -44,7 +44,6 @@ export class AppBuilder {
       this.completeFirstBuild = () => res(true)
     })
     this.buildModeObservable.subscribe(next => {
-      console.log('got', next)
       if (next) {
         this.buildMode = next
       }
@@ -261,7 +260,7 @@ export class AppBuilder {
     return { devMiddleware, compiler, name, hash }
   }
 
-  private createReporterForApp(name: string, appMeta?: AppMeta) {
+  private createReporterForApp = (name: string, appMeta?: AppMeta) => {
     // start in compiling mode
     this.updateCompletedFirstBuild(name, 'compiling')
 
@@ -278,7 +277,8 @@ export class AppBuilder {
 
       // report to appStatus bus
       const identifier = appMeta ? this.appsManager.packageIdToIdentifier(appMeta.packageId) : name
-      const mode = this.buildMode[appMeta.packageId]
+      const mode = this.buildMode[appMeta ? appMeta.packageId : 'main']
+
       if (!state) {
         this.setBuildStatus({ identifier, status: 'building', mode })
         return

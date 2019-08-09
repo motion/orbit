@@ -118,15 +118,13 @@ class HotHandler {
     if (obj.name !== this.props.name) {
       return
     }
+    const name = obj.name ? `'${obj.name}' ` : ''
     switch (obj.action) {
       case 'building':
         // console.log('[HMR] bundle ' + (obj.name ? "'" + obj.name + "' " : '') + 'rebuilding')
         break
       case 'built':
-        console.log(
-          '[HMR] rebuilt ' + (obj.name ? "'" + obj.name + "' " : '') + ' in ' + obj.time + 'ms',
-        )
-
+        console.log(`[HMR] rebuilt ${name}in ${obj.time}ms`)
       // fall through
       case 'sync':
         var applyUpdate = true
@@ -142,7 +140,10 @@ class HotHandler {
           // }
         }
         if (applyUpdate) {
-          this.processUpdate(obj.hash, obj.modules, { reload: true })
+          if (!this.upToDate(obj.hash) && this.module.hot.status() == 'idle') {
+            if (this.props.log) console.log('[HMR] Checking for updates on the server...')
+            this.check(obj.modules)
+          }
         }
         break
     }
@@ -155,79 +156,44 @@ class HotHandler {
     return this.lastHash == this.props.getHash()
   }
 
-  private async processUpdate(hash, moduleMap, options) {
-    if (!this.upToDate(hash) && this.module.hot.status() == 'idle') {
-      if (options.log) console.log('[HMR] Checking for updates on the server...')
-      this.check(moduleMap)
-    }
-  }
-
-  private check(moduleMap) {
-    const cb = (err, updatedModules) => {
-      if (err) {
-        return this.handleError(err)
-      }
-
+  /** The main logic for updating javascript modules */
+  private async check(moduleMap) {
+    try {
+      // first check
+      const updatedModules = await this.module.hot.check(false)
       if (!updatedModules) {
-        if (this.props.warn) {
-          console.warn('[HMR] Cannot find update (Full reload needed)')
-        }
+        if (this.props.warn) console.warn('[HMR] Cannot find update, full reload needed')
         this.performReload()
         return null
       }
-
-      const applyCallback = (applyErr, renewedModules) => {
-        if (applyErr) {
-          return this.handleError(applyErr)
-        }
-        if (!this.upToDate()) {
-          this.check(moduleMap)
-        }
-        this.logUpdates(moduleMap, updatedModules, renewedModules)
+      // then apply
+      const renewedModules = this.module.hot.apply(this.applyOptions)
+      if (!this.upToDate()) {
+        this.check(moduleMap)
       }
-
-      var applyResult = this.module.hot.apply(this.applyOptions, applyCallback) as any
-      // webpack 2 promise
-      if (applyResult && applyResult.then) {
-        // HotModuleReplacement.runtime.js refers to the result as `outdatedModules`
-        applyResult.then(function(outdatedModules) {
-          applyCallback(null, outdatedModules)
-          // render after hmr
-          window['rerender'](false)
-        })
-        applyResult.catch(applyCallback)
-      }
-    }
-
-    const result = this.module.hot.check(false, cb) as any
-    // webpack 2 promise
-    if (result && result.then) {
-      result.then(function(updatedModules) {
-        cb(null, updatedModules)
-      })
-      result.catch(cb)
+      this.logUpdates(moduleMap, updatedModules, renewedModules)
+      // render after hmr
+      window['rerender'](false)
+    } catch (err) {
+      return this.handleError(err)
     }
   }
 
-  private handleError(err) {
+  private handleError(err: Error) {
     if (this.module.hot.status() in this.failureStatuses) {
       if (this.props.warn) {
-        console.warn('[HMR] Cannot check for update (Full reload needed)')
-        console.warn('[HMR] ' + (err.stack || err.message))
+        console.warn('[HMR] Cannot check for update, full reload needed', err.message, err.stack)
       }
       this.performReload()
       return
     }
     if (this.props.warn) {
-      console.warn('[HMR] Update check failed: ' + (err.stack || err.message))
+      console.warn('[HMR] Update check failed: ', err.message, err.stack)
     }
   }
 
   private performReload() {
     if (this.props.reload) {
-      if (this.props.warn) {
-        console.warn('[HMR] Reloading page')
-      }
       // window.location.reload()
     }
   }
@@ -236,7 +202,6 @@ class HotHandler {
     const unacceptedModules = updatedModules.filter(moduleId => {
       return renewedModules && renewedModules.indexOf(moduleId) < 0
     })
-
     if (unacceptedModules.length > 0) {
       if (this.props.warn) {
         console.warn("[HMR] The following modules couldn't be hot updated: (Full reload needed)")
@@ -247,7 +212,6 @@ class HotHandler {
       this.performReload()
       return
     }
-
     if (this.props.log) {
       if (!renewedModules || renewedModules.length === 0) {
         console.debug('[HMR] Nothing hot updated.')
@@ -257,7 +221,6 @@ class HotHandler {
           console.debug('[HMR]  - ' + (moduleMap[moduleId] || moduleId))
         })
       }
-
       if (this.upToDate()) {
         console.debug('[HMR] App is up to date.')
       }

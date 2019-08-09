@@ -21,6 +21,7 @@ type WebpackAppsDesc = {
   name: string
   hash?: string
   middleware: Handler
+  devMiddleware?: Handler
   close?: Function
   compiler?: Webpack.Compiler
   config?: Webpack.Configuration
@@ -28,7 +29,7 @@ type WebpackAppsDesc = {
 
 export class AppBuilder {
   configs = null
-  running: WebpackAppsDesc[] = []
+  state: WebpackAppsDesc[] = []
   apps: AppMeta[] = []
 
   private buildStatus = new Map<string, 'compiling' | 'error' | 'success'>()
@@ -57,7 +58,7 @@ export class AppBuilder {
     log.verbose(`update ${Object.keys(configs).join(', ')}`, configs)
     this.configs = configs
     this.apps = Object.keys(buildNameToAppMeta).map(k => buildNameToAppMeta[k])
-    this.running = this.updateAppMiddlewares(configs, buildNameToAppMeta)
+    this.state = this.updateAppMiddlewares(configs, buildNameToAppMeta)
   }
 
   updateCompletedFirstBuild = async (name: string, status: 'compiling' | 'error' | 'success') => {
@@ -85,7 +86,7 @@ export class AppBuilder {
       return await sendIndex()
     }
     let fin
-    for (const { middleware } of this.running) {
+    for (const { middleware } of this.state) {
       fin = null
       await middleware(req, res, err => {
         fin = err || true
@@ -143,7 +144,7 @@ export class AppBuilder {
     for (const name in rest) {
       const config = rest[name]
       const devName = `${name}-dev`
-      const current = this.running.find(x => x.name === devName)
+      const current = this.state.find(x => x.name === devName)
       const middleware = this.getMiddleware(config, name, nameToAppMeta[name], devName)
       if (middleware === true) {
         // use last one
@@ -156,9 +157,10 @@ export class AppBuilder {
         res.push({
           name: devName,
           hash,
+          devMiddleware,
           middleware: resolveIfExists(devMiddleware, [config.output.path]),
           close: () => {
-            console.log('closing', name)
+            log.info(`closing middleware ${name}`)
             devMiddleware.close()
           },
           compiler,
@@ -187,7 +189,7 @@ export class AppBuilder {
       const name = 'main'
       const middleware = this.getMiddleware(main, name, undefined, name)
       if (middleware === true) {
-        res = [...res, ...this.running.filter(x => x.name === name)]
+        res = [...res, ...this.state.filter(x => x.name === name)]
       } else {
         const { hash, devMiddleware, compiler } = middleware
         const mainHotMiddleware = this.getHotMiddleware([compiler], {
@@ -209,6 +211,7 @@ export class AppBuilder {
           {
             name,
             hash,
+            devMiddleware,
             middleware: devMiddleware,
           },
           // need to have another devMiddleware  after historyAPIFallback, see:
@@ -221,6 +224,7 @@ export class AppBuilder {
           {
             name,
             hash,
+            devMiddleware,
             middleware: devMiddleware,
           },
         ]
@@ -242,7 +246,7 @@ export class AppBuilder {
     // cache if it hasn't changed to avoid rebuilds
     const hash = hashObject({ sort: false }).hash(config)
     if (runningName) {
-      const running = this.running.find(x => x.name === runningName)
+      const running = this.state.find(x => x.name === runningName)
       if (running) {
         if (hash === running.hash) {
           // log.verbose(`${name} config hasnt changed! dont re-run this one just return the old one`)

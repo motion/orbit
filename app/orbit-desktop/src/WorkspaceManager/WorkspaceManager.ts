@@ -42,7 +42,7 @@ export class WorkspaceManager {
   // handles watching disk for apps and updating AppMeta
   appsManager = new AppsManager()
   // takes a list of apps in and starts webpack, provides web middleware
-  appBuilder = new AppBuilder(this.appsManager, this.buildMode)
+  appBuilder = new AppBuilder(this.appsManager, () => this.buildMode)
   // shorthand to middleware
   middleware = this.appBuilder.middleware
   // starts the graphql server, can update based on app definitinos
@@ -245,7 +245,6 @@ export class WorkspaceManager {
   getResolvers() {
     return [
       resolveObserveMany(BuildStatusModel, () => {
-        console.log('observing build status model')
         return this.appBuilder.observeBuildStatus()
       }),
 

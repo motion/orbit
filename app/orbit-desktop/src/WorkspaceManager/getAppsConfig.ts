@@ -1,5 +1,5 @@
 import { Logger } from '@o/logger'
-import { CommandWsOptions } from '@o/models'
+import { AppMeta, CommandWsOptions } from '@o/models'
 import { stringToIdentifier } from '@o/utils'
 import { ensureDir, ensureSymlink, pathExists, readFile, readJSON, writeFile } from 'fs-extra'
 import { join } from 'path'
@@ -8,7 +8,7 @@ import webpack from 'webpack'
 import { getIsInMonorepo } from './getIsInMonorepo'
 import { DLLReferenceDesc, makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
 import { webpackPromise } from './webpackPromise'
-import { AppMetaWithBuildInfo } from './WorkspaceManager'
+import { AppBuildModeDict } from './WorkspaceManager'
 
 const log = new Logger('getAppsConfig')
 
@@ -21,19 +21,20 @@ const log = new Logger('getAppsConfig')
  */
 
 export async function getAppsConfig(
-  apps: AppMetaWithBuildInfo[],
+  apps: AppMeta[],
+  buildMode: AppBuildModeDict,
   options: CommandWsOptions,
 ): Promise<{
   webpackConfigs: { [name: string]: webpack.Configuration }
-  nameToAppMeta: { [name: string]: AppMetaWithBuildInfo }
+  buildNameToAppMeta: { [name: string]: AppMeta }
 } | null> {
   if (!apps.length) {
     return null
   }
 
   const isInMonoRepo = await getIsInMonorepo()
-  // the mode used for base.dll, main
-  const mode = options.dev ? 'development' : 'production'
+  // the mode used for base.dll, main, etc
+  const mode = buildMode.main
   const directory = options.workspaceRoot
   const outputDir = join(directory, 'dist', mode)
 
@@ -164,7 +165,10 @@ export async function getAppsConfig(
         app.directory,
         (await readJSON(join(app.directory, 'package.json'))).main,
       )
-      const appMode = app.buildMode || 'production'
+      const appMode = buildMode[app.packageId]
+      if (!appMode) {
+        throw new Error(`No buildMode set for app ${app.packageId} ${JSON.stringify(buildMode)}`)
+      }
       const params: WebpackParams = {
         name: `app_${cleanName}`,
         entry: [appEntry],
@@ -180,21 +184,21 @@ export async function getAppsConfig(
         },
         dll: dllFile,
         // apps use the base dll
-        dllReferences: [sharedDllReference],
+        dllReferences: [baseDevDllReference, sharedDllReference],
       }
       return params
     }),
   )
-  const nameToAppMeta: { [name: string]: AppMetaWithBuildInfo } = {}
+  const buildNameToAppMeta: { [name: string]: AppMeta } = {}
   await Promise.all(
     appParams.map(async (params, index) => {
       const appMeta = apps[index]
       const config = await addDLL({
         ...getAppParams(params),
         // only watch apps for updates in development mode
-        watch: appMeta.buildMode === 'development',
+        watch: buildMode[appMeta.packageId] === 'development',
       })
-      nameToAppMeta[params.name] = appMeta
+      buildNameToAppMeta[params.name] = appMeta
       webpackConfigs[params.name] = config
     }),
   )
@@ -269,7 +273,7 @@ export default function getApps() {
   return [${apps.map(app => `require('${app.packageId}')`).join(',')}]
 }
 // testing hot handling in workspaceEntry
-require('@o/kit').createHotHandler({
+require('@o/kit/src/createHotHandler').createHotHandler({
   name: 'workspaceEntry',
   getHash: __webpack_require__.h,
   module,
@@ -296,7 +300,7 @@ require('@o/kit').createHotHandler({
     entry: [workspaceEntry],
     target: 'web',
     watch,
-    hot: false,
+    hot: true,
     dllReferences,
     output: {
       library: `window['__orbit_workspace']`,
@@ -307,7 +311,7 @@ require('@o/kit').createHotHandler({
 
   return {
     webpackConfigs,
-    nameToAppMeta,
+    buildNameToAppMeta,
   }
 }
 

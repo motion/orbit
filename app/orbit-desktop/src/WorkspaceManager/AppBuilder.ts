@@ -10,7 +10,7 @@ import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 import Observable from 'zen-observable'
 
-import { AppBuildModeDict, AppMetaWithBuildInfo } from './WorkspaceManager'
+import { AppBuildModeDict } from './WorkspaceManager'
 
 const log = new Logger('getAppMiddlewares')
 
@@ -29,7 +29,7 @@ type WebpackAppsDesc = {
 export class AppBuilder {
   configs = null
   running: WebpackAppsDesc[] = []
-  apps: AppMetaWithBuildInfo[] = []
+  apps: AppMeta[] = []
 
   private buildStatus = new Map<string, 'compiling' | 'error' | 'success'>()
   private completeFirstBuild: () => void
@@ -42,13 +42,13 @@ export class AppBuilder {
   }
 
   update(
-    configs: { [key: string]: Webpack.Configuration },
-    nameToAppMeta: { [name: string]: AppMetaWithBuildInfo },
+    configs: { [name: string]: Webpack.Configuration },
+    buildNameToAppMeta: { [name: string]: AppMeta },
   ) {
     log.verbose(`update ${Object.keys(configs).join(', ')}`, configs)
     this.configs = configs
-    this.apps = Object.keys(nameToAppMeta).map(k => nameToAppMeta[k])
-    this.running = this.updateAppMiddlewares(configs, nameToAppMeta)
+    this.apps = Object.keys(buildNameToAppMeta).map(k => buildNameToAppMeta[k])
+    this.running = this.updateAppMiddlewares(configs, buildNameToAppMeta)
   }
 
   updateCompletedFirstBuild = async (name: string, status: 'compiling' | 'error' | 'success') => {
@@ -267,7 +267,7 @@ export class AppBuilder {
       // report to appStatus bus
       const identifier = appMeta ? this.appsManager.identifierToPackageId(appMeta.packageId) : name
       const mode = this.buildMode[identifier]
-      console.log('TODO!!!!', mode, identifier, name, Object.keys(this.buildMode))
+      console.log('TODO!!!!', !!stats, mode, identifier, name, Object.keys(this.buildMode))
       if (!state) {
         this.setBuildStatus({ identifier, status: 'building', mode })
         return
@@ -291,7 +291,7 @@ export class AppBuilder {
   }
 
   private async getIndex() {
-    const isProd = this.apps.every(x => x.buildMode === 'production')
+    const isProd = Object.keys(this.buildMode).every(x => this.buildMode[x] === 'production')
     return `<!DOCTYPE html>
     <html lang="en">
       <head>
@@ -329,7 +329,9 @@ export class AppBuilder {
         app =>
           `    <script id="script_app_${stringToIdentifier(
             app.packageId,
-          )}" src="/${stringToIdentifier(app.packageId)}.${app.buildMode}.dll.js"></script>`,
+          )}" src="/${stringToIdentifier(app.packageId)}.${
+            this.buildMode[app.packageId]
+          }.dll.js"></script>`,
       )
       .join('\n')}
         <script src="/workspaceEntry.js"></script>

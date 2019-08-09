@@ -23,10 +23,6 @@ import { webpackPromise } from './webpackPromise'
 
 const log = new Logger('WorkspaceManager')
 
-export type AppMetaWithBuildInfo = AppMeta & {
-  buildMode: 'development' | 'production'
-}
-
 export type AppBuildModeDict = { [name: string]: 'development' | 'production' }
 
 @decorate
@@ -43,10 +39,14 @@ export class WorkspaceManager {
   // use this to toggle between modes for the various apps
   buildMode: AppBuildModeDict = {}
 
+  // handles watching disk for apps and updating AppMeta
   appsManager = new AppsManager()
-  appMiddleware = new AppBuilder(this.appsManager, this.buildMode)
+  // takes a list of apps in and starts webpack, provides web middleware
+  appBuilder = new AppBuilder(this.appsManager, this.buildMode)
+  // shorthand to middleware
+  middleware = this.appBuilder.middleware
+  // starts the graphql server, can update based on app definitinos
   graphServer = new GraphServer()
-  middleware = this.appMiddleware.middleware
 
   appIdToPackageJson: { [key: number]: string } = {}
 
@@ -58,7 +58,7 @@ export class WorkspaceManager {
   }
 
   async start() {
-    //
+    this.updateBuildMode()
   }
 
   async updateWorkspace(opts: CommandWsOptions) {
@@ -124,6 +124,15 @@ export class WorkspaceManager {
     },
   )
 
+  private updateBuildMode() {
+    // update buildMode first
+    this.buildMode.main = this.options.dev ? 'development' : 'production'
+    for (const app of this.activeApps) {
+      // apps always default to production mode
+      this.buildMode[app.packageId] = this.buildMode[app.packageId] || 'production'
+    }
+  }
+
   /**
    * Handles all webpack related things, taking the app configurations, generating
    * a webpack configuration, and updating AppsMiddlware
@@ -147,18 +156,13 @@ export class WorkspaceManager {
     }
 
     try {
-      const res = await getAppsConfig(
-        activeApps.map(appMeta => ({
-          ...appMeta,
-          buildMode: this.buildMode[appMeta.packageId] || 'production',
-        })),
-        options,
-      )
+      this.updateBuildMode()
+      const res = await getAppsConfig(activeApps, this.buildMode, options)
       if (!res) {
         log.error('No config')
         return
       }
-      const { webpackConfigs, nameToAppMeta } = res
+      const { webpackConfigs, buildNameToAppMeta } = res
       if (options.action === 'build') {
         const { base, ...rest } = webpackConfigs
         const configs = Object.keys(rest).map(key => rest[key])
@@ -172,7 +176,7 @@ export class WorkspaceManager {
         })
         log.info(`Build complete!`)
       } else {
-        this.appMiddleware.update(webpackConfigs, nameToAppMeta)
+        this.appBuilder.update(webpackConfigs, buildNameToAppMeta)
       }
     } catch (err) {
       log.error(`Error running workspace: ${err.message}\n${err.stack}`)
@@ -241,7 +245,7 @@ export class WorkspaceManager {
   getResolvers() {
     return [
       resolveObserveMany(BuildStatusModel, () => {
-        return this.appMiddleware.observeBuildStatus()
+        return this.appBuilder.observeBuildStatus()
       }),
 
       resolveObserveOne(WorkspaceInfoModel, () => {

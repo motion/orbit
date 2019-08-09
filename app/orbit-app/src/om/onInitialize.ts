@@ -1,5 +1,5 @@
-import { observeOne } from '@o/kit'
-import { AppStatusModel, WorkspaceInfoModel } from '@o/models'
+import { observeMany, observeOne } from '@o/kit'
+import { AppStatusModel, BuildStatusModel, WorkspaceInfoModel } from '@o/models'
 import { Config, IContext, OnInitialize } from 'overmind'
 
 import { getAllAppDefinitions, startAppLoadWatch } from '../apps/orbitApps'
@@ -42,6 +42,9 @@ export const onInitialize: OnInitialize = async om => {
   })
   observeOne(AppStatusModel).subscribe(message => {
     console.log('app status', message)
+  })
+  observeMany(BuildStatusModel).subscribe(message => {
+    console.log('build status', message)
   })
 
   goToInitialApp(om)

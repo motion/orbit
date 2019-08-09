@@ -4,8 +4,8 @@ import { BannerHandle, stringToIdentifier } from '@o/ui'
 import { difference } from 'lodash'
 import { Action, AsyncAction, Derive } from 'overmind'
 
-type DevMode = 'development' | 'production'
-type DevelopState = {
+export type DevMode = 'development' | 'production'
+export type DevelopState = {
   developingIdentifiers: string[]
   mode: Derive<DevelopState, DevMode>
 }

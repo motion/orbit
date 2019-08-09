@@ -182,7 +182,7 @@ class HotHandler {
         return null
       }
       // then apply
-      const renewedModules = this.module.hot.apply(this.applyOptions)
+      const renewedModules = await this.module.hot.apply(this.applyOptions)
       if (!this.upToDate()) {
         this.syncNewUpdate(moduleMap)
       } else {

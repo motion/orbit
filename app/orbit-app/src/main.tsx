@@ -104,11 +104,10 @@ async function main() {
   startApp()
 }
 
-const React = require('react')
-const ReactDOM = require('react-dom')
-
 // render app
 async function startApp(forceRefresh = false) {
+  const React = require('react')
+  const ReactDOM = require('react-dom')
   const RootNode = document.querySelector('#app')
 
   if (forceRefresh) {

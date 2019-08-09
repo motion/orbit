@@ -33,11 +33,18 @@ export class AppBuilder {
 
   private buildStatus = new Map<string, 'compiling' | 'error' | 'success'>()
   private completeFirstBuild: () => void
+  private buildMode: AppBuildModeDict = {}
   completedFirstBuild: Promise<boolean>
 
-  constructor(private appsManager: AppsManager, private getBuildMode: () => AppBuildModeDict) {
+  constructor(
+    private appsManager: AppsManager,
+    private buildModeObservable: Observable<AppBuildModeDict>,
+  ) {
     this.completedFirstBuild = new Promise(res => {
       this.completeFirstBuild = () => res(true)
+    })
+    this.buildModeObservable.subscribe(next => {
+      this.buildMode = next
     })
   }
 
@@ -268,8 +275,7 @@ export class AppBuilder {
 
       // report to appStatus bus
       const identifier = appMeta ? this.appsManager.packageIdToIdentifier(appMeta.packageId) : name
-      const buildMode = this.getBuildMode()
-      const mode = buildMode[appMeta.packageId]
+      const mode = this.buildMode[appMeta.packageId]
       if (!state) {
         this.setBuildStatus({ identifier, status: 'building', mode })
         return
@@ -293,8 +299,7 @@ export class AppBuilder {
   }
 
   private async getIndex() {
-    const buildMode = this.getBuildMode()
-    const isProd = Object.keys(buildMode).every(x => buildMode[x] === 'production')
+    const isProd = Object.keys(this.buildMode).every(x => this.buildMode[x] === 'production')
     return `<!DOCTYPE html>
     <html lang="en">
       <head>
@@ -333,7 +338,7 @@ export class AppBuilder {
           `    <script id="script_app_${stringToIdentifier(
             app.packageId,
           )}" src="/${stringToIdentifier(app.packageId)}.${
-            buildMode[app.packageId]
+            this.buildMode[app.packageId]
           }.dll.js"></script>`,
       )
       .join('\n')}

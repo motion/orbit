@@ -38,11 +38,16 @@ export class WorkspaceManager {
   }
   // use this to toggle between modes for the various apps
   buildMode: AppBuildModeDict = {}
+  // to send updates to children (AppBuilder)
+  buildModePush = null
+  buildModeObservable = new Observable<AppBuildModeDict>(observer => {
+    this.buildModePush = x => observer.next(x)
+  })
 
   // handles watching disk for apps and updating AppMeta
   appsManager = new AppsManager()
   // takes a list of apps in and starts webpack, provides web middleware
-  appBuilder = new AppBuilder(this.appsManager, () => this.buildMode)
+  appBuilder = new AppBuilder(this.appsManager, this.buildModeObservable)
   // shorthand to middleware
   middleware = this.appBuilder.middleware
   // starts the graphql server, can update based on app definitinos
@@ -131,6 +136,7 @@ export class WorkspaceManager {
       // apps always default to production mode
       this.buildMode[app.packageId] = this.buildMode[app.packageId] || 'production'
     }
+    this.buildModePush(this.buildMode)
   }
 
   /**
@@ -213,6 +219,7 @@ export class WorkspaceManager {
       ...this.buildMode,
       [appMeta.packageId]: mode,
     }
+    this.buildModePush(this.buildMode)
   }
 
   private updateDevelopingAppIdentifiers() {

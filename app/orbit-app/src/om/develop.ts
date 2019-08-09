@@ -1,4 +1,5 @@
-import { removeHotHandler } from '@o/kit'
+import { observeMany, removeHotHandler } from '@o/kit'
+import { BuildStatus, BuildStatusModel } from '@o/models'
 import { Desktop } from '@o/stores'
 import { BannerHandle, stringToIdentifier } from '@o/ui'
 import { difference } from 'lodash'
@@ -6,11 +7,13 @@ import { Action, AsyncAction, Derive } from 'overmind'
 
 export type DevMode = 'development' | 'production'
 export type DevelopState = {
+  buildStatus: BuildStatus[]
   developingIdentifiers: string[]
   mode: Derive<DevelopState, DevMode>
 }
 
 export const state: DevelopState = {
+  buildStatus: [],
   developingIdentifiers: [],
   // if any apps in dev mode, we move everything into dev mode
   mode: state => getMode(state.developingIdentifiers),
@@ -18,6 +21,10 @@ export const state: DevelopState = {
 
 const start: Action = om => {
   om.state.develop.developingIdentifiers = Desktop.state.workspaceState.developingAppIdentifiers
+
+  observeMany(BuildStatusModel).subscribe(status => {
+    om.state.develop.buildStatus = status
+  })
 }
 
 function getMode(developingIdentifiers: string[]) {

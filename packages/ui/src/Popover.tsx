@@ -8,6 +8,7 @@ import { animated, AnimatedProps } from 'react-spring'
 
 import { Arrow } from './Arrow'
 import { BreadcrumbReset } from './Breadcrumbs'
+import { zIndex } from './constants'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
@@ -134,7 +135,7 @@ const defaultProps = {
   adjust: [0, 0],
   delay: 16,
   group: 'global',
-  zIndex: 100000000000,
+  zIndex: zIndex.Popover,
 }
 
 type PopoverPropsWithDefaults = PopoverProps & typeof defaultProps

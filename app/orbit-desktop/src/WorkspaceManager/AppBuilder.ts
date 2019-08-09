@@ -44,7 +44,10 @@ export class AppBuilder {
       this.completeFirstBuild = () => res(true)
     })
     this.buildModeObservable.subscribe(next => {
-      this.buildMode = next
+      console.log('got', next)
+      if (next) {
+        this.buildMode = next
+      }
     })
   }
 

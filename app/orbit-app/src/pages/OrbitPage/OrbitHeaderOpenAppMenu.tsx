@@ -2,7 +2,7 @@ import { command, useStore } from '@o/kit'
 import { AppDevCloseCommand, AppDevOpenCommand } from '@o/models'
 import { App } from '@o/stores'
 import { Icon, MenuButton, Row, Toggle, useBanner } from '@o/ui'
-import React, { memo, useState } from 'react'
+import React, { memo } from 'react'
 
 import { om, useOm } from '../../om/om'
 import { paneManagerStore } from '../../om/stores'
@@ -73,7 +73,7 @@ export const OrbitHeaderOpenAppMenu = memo(
                     banner.set({
                       type: 'info',
                       message: `Updating...`,
-                      timeout: 1.5
+                      timeout: 1.5,
                     })
                     let reply: any = null
                     if (isDeveloping === false) {

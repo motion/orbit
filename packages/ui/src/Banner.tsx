@@ -5,6 +5,7 @@ import { filter } from 'lodash'
 import React, { FunctionComponent, memo, useCallback, useEffect, useRef } from 'react'
 
 import { Button } from './buttons/Button'
+import { zIndex } from './constants'
 import { FlipAnimate, FlipAnimateItem } from './FlipAnimate'
 import { Portal } from './helpers/portal'
 import { useOnUnmount } from './hooks/useOnUnmount'
@@ -99,7 +100,7 @@ export const ProvideBanner = memo(
             position="fixed"
             pointerEvents="none"
             top="auto"
-            zIndex={1000000000}
+            zIndex={zIndex.Banner}
             alignItems="flex-end"
           >
             <FlipAnimate>

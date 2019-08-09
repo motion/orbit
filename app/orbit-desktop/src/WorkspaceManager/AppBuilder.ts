@@ -170,7 +170,7 @@ export class AppBuilder {
     /**
      * One HMR server for everything because EventStream's don't support >5 in Chrome
      */
-    const appsHotMiddleware = WebpackHotMiddleware(res.map(x => x.compiler), {
+    const appsHotMiddleware = this.getHotMiddleware(res.map(x => x.compiler), {
       path: '/__webpack_hmr',
       log: console.log,
       heartBeat: 10 * 1000,
@@ -190,7 +190,7 @@ export class AppBuilder {
         res = [...res, ...this.running.filter(x => x.name === name)]
       } else {
         const { hash, devMiddleware, compiler } = middleware
-        const mainHotMiddleware = WebpackHotMiddleware([compiler], {
+        const mainHotMiddleware = this.getHotMiddleware([compiler], {
           path: '/__webpack_hmr_main',
           log: console.log,
           heartBeat: 10 * 1000,
@@ -350,6 +350,72 @@ export class AppBuilder {
       </body>
     </html>`
   }
+
+  /**
+   * This is a lightly modified webpack-hot-middleware for our sakes imported here,
+   * so it can be modified to support putting multiple compilers under one EventStream.
+   */
+  eventStreams = {}
+  getHotMiddleware(
+    compilers: Webpack.Compiler[],
+    opts: { path: string; log: Function; heartBeat: number },
+  ) {
+    opts.log = typeof opts.log == 'undefined' ? console.log.bind(console) : opts.log
+    opts.path = opts.path || '/__webpack_hmr'
+    // re-use existing event stream even if we re-run getHotMiddleware
+    this.eventStreams[opts.path] =
+      this.eventStreams[opts.path] || createEventStream(opts.heartBeat || 10 * 1000)
+    const eventStream = this.eventStreams[opts.path]
+
+    let latestStats = null
+    let closed = false
+
+    for (const compiler of compilers) {
+      if (compiler.hooks) {
+        compiler.hooks.invalid.tap('webpack-hot-middleware', onInvalid)
+        compiler.hooks.done.tap('webpack-hot-middleware', onDone)
+      } else {
+        compiler.plugin('invalid', onInvalid)
+        compiler.plugin('done', onDone)
+      }
+      function onInvalid() {
+        if (closed) return
+        latestStats = null
+        if (opts.log) opts.log('webpack building...')
+        eventStream.publish({ action: 'building' })
+      }
+      function onDone(statsResult) {
+        if (closed) return
+        // Keep hold of latest stats so they can be propagated to new clients
+        latestStats = statsResult
+        publishStats('built', latestStats, eventStream, opts.log)
+      }
+    }
+
+    function middleware(req, res, next) {
+      if (closed) return next()
+      if (!pathMatch(req.url, opts.path)) return next()
+      eventStream.handler(req, res)
+      if (latestStats) {
+        publishStats('sync', latestStats, eventStream, opts.log)
+      }
+    }
+
+    middleware.publish = payload => {
+      if (closed) return
+      eventStream.publish(payload)
+    }
+
+    middleware.close = () => {
+      if (closed) return
+      log.info(`Closing hot middleware... shouldnt happen`)
+      closed = true
+      eventStream.close()
+      delete this.eventStreams[opts.path]
+    }
+
+    return middleware
+  }
 }
 
 const existsInCache = (middleware, path: string) => {
@@ -416,67 +482,6 @@ function webpackDevReporter(middlewareOptions, options) {
   } else {
     log.info('App compiling...')
   }
-}
-
-/**
- * This is a lightly modified webpack-hot-middleware for our sakes imported here,
- * so it can be modified to support putting multiple compilers under one EventStream
- */
-
-function WebpackHotMiddleware(compilers: Webpack.Compiler[], opts) {
-  opts = opts || {}
-  opts.log = typeof opts.log == 'undefined' ? console.log.bind(console) : opts.log
-  opts.path = opts.path || '/__webpack_hmr'
-  opts.heartbeat = opts.heartbeat || 10 * 1000
-
-  let eventStream = createEventStream(opts.heartbeat)
-  let latestStats = null
-  let closed = false
-
-  for (const compiler of compilers) {
-    if (compiler.hooks) {
-      compiler.hooks.invalid.tap('webpack-hot-middleware', onInvalid)
-      compiler.hooks.done.tap('webpack-hot-middleware', onDone)
-    } else {
-      compiler.plugin('invalid', onInvalid)
-      compiler.plugin('done', onDone)
-    }
-    function onInvalid() {
-      if (closed) return
-      latestStats = null
-      if (opts.log) opts.log('webpack building...')
-      eventStream.publish({ action: 'building' })
-    }
-    function onDone(statsResult) {
-      if (closed) return
-      // Keep hold of latest stats so they can be propagated to new clients
-      latestStats = statsResult
-      publishStats('built', latestStats, eventStream, opts.log)
-    }
-  }
-
-  function middleware(req, res, next) {
-    if (closed) return next()
-    if (!pathMatch(req.url, opts.path)) return next()
-    eventStream.handler(req, res)
-    if (latestStats) {
-      publishStats('sync', latestStats, eventStream, opts.log)
-    }
-  }
-
-  middleware.publish = function(payload) {
-    if (closed) return
-    eventStream.publish(payload)
-  }
-
-  middleware.close = function() {
-    if (closed) return
-    closed = true
-    eventStream.close()
-    eventStream = null
-  }
-
-  return middleware
 }
 
 function createEventStream(heartbeat: number) {

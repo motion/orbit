@@ -179,6 +179,7 @@ export async function getAppsConfig(
         outputFile: `${cleanName}.${appMode}.dll.js`,
         outputDir,
         injectHot: true,
+        hotType: 'app',
         output: {
           library: cleanName,
         },

@@ -26,6 +26,7 @@ export type WebpackParams = {
   dll?: string
   dllReferences?: DLLReferenceDesc[]
   injectHot?: boolean | string
+  hotType?: 'app'
   hot?: boolean
   minify?: boolean
   devtool?: webpack.Configuration['devtool']
@@ -50,6 +51,7 @@ export function makeWebpackConfig(
     // + way harder to debug in general, lets leave it off until someone yells about it
     minify = false,
     dll,
+    hotType,
     dllReferences,
     hot,
     name,
@@ -219,32 +221,40 @@ export function makeWebpackConfig(
           use: 'ignore-loader',
         },
 
-        injectHot && {
-          test: x => {
-            if (typeof injectHot === 'string') {
-              return x === injectHot
-            }
-            if (x === entry[0]) return true
-            return false
-          },
-          use: {
-            loader: `add-source-loader`,
-            options: {
-              // prefix, createHotHandler captures the app you create with createApp()
-              prefix: `
-require('@o/kit').createHotHandler({
+        injectHot &&
+          (() => {
+            const hotInjection = `
+require('@o/kit').OrbitHot.fileEnter({
   name: '${name}',
   getHash: __webpack_require__.h,
   module,
-})
-`,
-              // postfix clears the createApp hot handler
-              postfix: `
-require('@o/kit').createHotHandlerLeave()
-`,
-            },
-          },
-        },
+});
+`
+            return {
+              test: x => {
+                if (typeof injectHot === 'string') {
+                  return x === injectHot
+                }
+                if (x === entry[0]) return true
+                return false
+              },
+              use: {
+                loader: `add-source-loader`,
+                options:
+                  // app style means we want to "capture" the app entry point
+                  hotType === 'app'
+                    ? {
+                        // prefix, OrbitHot captures the app you create with createApp()
+                        prefix: hotInjection,
+                        // postfix clears the createApp hot handler
+                        postfix: `\nrequire('@o/kit').OrbitHot.fileLeave();`,
+                      }
+                    : {
+                        postfix: hotInjection,
+                      },
+              },
+            }
+          })(),
         {
           test: /\.tsx?$/,
           use: [

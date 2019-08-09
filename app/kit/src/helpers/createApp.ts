@@ -1,11 +1,12 @@
 import { AppDefinition } from '@o/models'
 
-import { createAppHotHandler } from '../createHotHandler'
+import { OrbitHot } from '../OrbitHot'
 import { createApi } from './createApi'
 
 export function createApp<T extends any>(app: AppDefinition<T>): AppDefinition<T> {
-  if (createAppHotHandler && app.app) {
-    createAppHotHandler(app.app)
+  const hotHandler = OrbitHot.getCurrentHandler()
+  if (hotHandler && app.app) {
+    hotHandler(app.app)
   }
   if (typeof window !== 'undefined' && Object.keys(app).some(x => x === 'api')) {
     return {

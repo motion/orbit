@@ -1,5 +1,5 @@
 import { command, observeOne } from '@o/bridge'
-import { AppDefinition, ProvideStores, removeAllHotHandlers, showConfirmDialog, useStore } from '@o/kit'
+import { AppDefinition, OrbitHot, ProvideStores, showConfirmDialog, useStore } from '@o/kit'
 import { AppCloseWindowCommand, AppDevCloseCommand, WindowMessageModel } from '@o/models'
 import { App } from '@o/stores'
 import { BannerHandle, ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
@@ -75,7 +75,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   useEffect(() => {
     // prevent close on the main window
     window.addEventListener('beforeunload', e => {
-      removeAllHotHandlers()
+      OrbitHot.removeAllHotHandlers()
       const { closeTab, closeApp } = shortcutState.current
       const shouldCloseTab = Date.now() - closeTab < 60
       const shouldCloseApp = Date.now() - closeApp < 60

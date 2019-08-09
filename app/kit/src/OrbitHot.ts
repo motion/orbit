@@ -9,7 +9,8 @@ const log = new Logger('createHotHandler')
 let source: EventSourceManager
 const hotHandlers = new Set<HotHandler>()
 
-export let createAppHotHandler = null
+// for wrapping app entry points
+export let appHandler = null
 
 // for debugging
 if (typeof window !== 'undefined') {
@@ -19,7 +20,7 @@ if (typeof window !== 'undefined') {
   }
 }
 
-type HotHandlerProps = {
+type OrbitHotProps = {
   name: string
   getHash: Function
   module: any
@@ -29,42 +30,44 @@ type HotHandlerProps = {
   log?: boolean
 }
 
-export function createHotHandlerLeave() {
-  createAppHotHandler = null
-}
-
-export function createHotHandler(props: HotHandlerProps) {
-  log.verbose(`createHotHandler`, props)
-  createAppHotHandler = entry => hot(module)(entry)
-  // singleton
-  source = source || new EventSourceManager('/__webpack_hmr')
-  const handler = new HotHandler(props)
-  hotHandlers.add(handler)
-  return handler
-}
-
-export function getHotHandlers() {
-  return hotHandlers
-}
-
-export function removeHotHandler(name: string) {
-  log.verbose(`removeHotHandler ${name}`)
-  hotHandlers.forEach(handler => {
-    if (handler.props.name === name) {
-      handler.dispose()
-      hotHandlers.delete(handler)
-    }
-  })
-}
-
-export function removeAllHotHandlers() {
-  log.verbose(`removeAllHotHandlers`)
-  hotHandlers.clear()
-  source.close()
+// singleton
+export const OrbitHot = {
+  getCurrentHandler() {
+    return appHandler
+  },
+  fileLeave() {
+    appHandler = null
+  },
+  fileEnter(props: OrbitHotProps) {
+    log.verbose(`createHotHandler`, props)
+    appHandler = entry => hot(module)(entry)
+    // singleton
+    source = source || new EventSourceManager('/__webpack_hmr')
+    const handler = new HotHandler(props)
+    hotHandlers.add(handler)
+    return handler
+  },
+  getHotHandlers() {
+    return hotHandlers
+  },
+  removeHotHandler(name: string) {
+    log.verbose(`removeHotHandler ${name}`)
+    hotHandlers.forEach(handler => {
+      if (handler.props.name === name) {
+        handler.dispose()
+        hotHandlers.delete(handler)
+      }
+    })
+  },
+  removeAllHotHandlers() {
+    log.verbose(`removeAllHotHandlers`)
+    hotHandlers.clear()
+    source.close()
+  },
 }
 
 class HotHandler {
-  props: HotHandlerProps
+  props: OrbitHotProps
   source = source
 
   private lastHash = ''
@@ -91,7 +94,7 @@ class HotHandler {
     return this.props.module
   }
 
-  constructor(props: HotHandlerProps) {
+  constructor(props: OrbitHotProps) {
     this.props = props
     if (!this.module.hot) {
       throw new Error('[HMR] Hot Module Replacement is disabled.')

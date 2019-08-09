@@ -1,4 +1,4 @@
-import { observeMany, removeHotHandler } from '@o/kit'
+import { observeMany, OrbitHot } from '@o/kit'
 import { BuildStatus, BuildStatusModel } from '@o/models'
 import { Desktop } from '@o/stores'
 import { BannerHandle, stringToIdentifier } from '@o/ui'
@@ -114,7 +114,7 @@ const changeAppDevelopmentMode: AsyncAction<{
   })
 
   // close old hot event listener
-  removeHotHandler(`app_${name}`)
+  OrbitHot.removeHotHandler(`app_${name}`)
 
   // load the new script
   await om.actions.develop.loadAppDLL({ name, mode })

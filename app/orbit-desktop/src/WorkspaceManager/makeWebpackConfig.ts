@@ -1,7 +1,7 @@
+import { isDefined } from '@o/ui'
 import AddAssetHtmlPlugin from 'add-asset-html-webpack-plugin'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
 import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
 import * as Path from 'path'
 import TerserPlugin from 'terser-webpack-plugin'
 import TimeFixPlugin from 'time-fix-plugin'
@@ -26,6 +26,7 @@ export type WebpackParams = {
   dll?: string
   dllReferences?: DLLReferenceDesc[]
   injectHot?: boolean | string
+  hotType?: 'app'
   hot?: boolean
   minify?: boolean
   devtool?: webpack.Configuration['devtool']
@@ -50,6 +51,7 @@ export function makeWebpackConfig(
     // + way harder to debug in general, lets leave it off until someone yells about it
     minify = false,
     dll,
+    hotType,
     dllReferences,
     hot,
     name,
@@ -127,7 +129,7 @@ export function makeWebpackConfig(
   }
 
   const hotEntry = `webpack-hot-middleware/client?name=${name}&path=/__webpack_hmr_${name}`
-  const main = hot && !injectHot ? [hotEntry, ...entry] : entry
+  const main = hot && !isDefined(injectHot) ? [hotEntry, ...entry] : entry
 
   let config: webpack.Configuration = {
     name,
@@ -147,7 +149,9 @@ export function makeWebpackConfig(
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
     },
-    devtool: devtool || (mode === 'production' || target === 'node' ? 'source-map' : 'source-map'), //'cheap-module-eval-source-map'
+    devtool:
+      devtool ||
+      (mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-source-map'),
     externals: [
       {
         electron: '{}',
@@ -217,28 +221,40 @@ export function makeWebpackConfig(
           use: 'ignore-loader',
         },
 
-        injectHot && {
-          test: x => {
-            if (typeof injectHot === 'string') {
-              return x === injectHot
-            }
-            if (x === entry[0]) return true
-            return false
-          },
-          use: {
-            loader: `add-source-loader`,
-            options: {
-              postfix: `
-// inject hot loading
-require('@o/kit').createHotHandler({
+        injectHot &&
+          (() => {
+            const hotInjection = `
+require('@o/kit').OrbitHot.fileEnter({
   name: '${name}',
   getHash: __webpack_require__.h,
   module,
 });
-`,
-            },
-          },
-        },
+`
+            return {
+              test: x => {
+                if (typeof injectHot === 'string') {
+                  return x === injectHot
+                }
+                if (x === entry[0]) return true
+                return false
+              },
+              use: {
+                loader: `add-source-loader`,
+                options:
+                  // app style means we want to "capture" the app entry point
+                  hotType === 'app'
+                    ? {
+                        // prefix, OrbitHot captures the app you create with createApp()
+                        prefix: hotInjection,
+                        // postfix clears the createApp hot handler
+                        postfix: `\nrequire('@o/kit').OrbitHot.fileLeave();`,
+                      }
+                    : {
+                        postfix: hotInjection,
+                      },
+              },
+            }
+          })(),
         {
           test: /\.tsx?$/,
           use: [
@@ -311,14 +327,6 @@ require('@o/kit').createHotHandler({
 
       new webpack.DefinePlugin(defines),
 
-      !dll &&
-        target !== 'node' &&
-        new HtmlWebpackPlugin({
-          template: Path.join(__dirname, '..', '..', 'index.html'),
-          inject: true,
-          externals: ['apps.js'],
-        }),
-
       ((mode === 'production' && minify !== false) || minify === true) &&
         new TerserPlugin({
           sourceMap: true,
@@ -377,7 +385,10 @@ require('@o/kit').createHotHandler({
         )) ||
         []),
 
-      hot && new webpack.HotModuleReplacementPlugin(),
+      hot &&
+        new webpack.HotModuleReplacementPlugin({
+          // multiStep: true,
+        }),
 
       // new (require('bundle-analyzer-plugin').default)({
       //   analyzerMode: 'static',

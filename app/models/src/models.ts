@@ -42,23 +42,35 @@ export type SearchQuery = {
 export const SearchResultModel = new Model<Bit, SearchQuery>('SearchResult')
 
 /**
- * For communicating things like: build status, startup status, upgrading, etc
- * Allows for observeOne() which should give us a streaming bus of status messages
+ * For current build status of apps
  */
-export type AppStatusMessage = {
+export type BuildStatus = {
+  // id per-message to determine if it changes
+  identifier: string
+  status: 'complete' | 'building' | 'error'
+  mode: 'production' | 'development'
+  message?: string
+}
+export const BuildStatusModel = new Model<BuildStatus, { identifier?: string }>('BuildStatusModel')
+
+/**
+ * For communicating directly to a specific window: note we should rename this to `WindowBannerModel` or similar
+ * and appId should become windowId, what it really is
+ */
+export type WindowMessage = {
   // id per-message to determine if it changes
   id: string
-  appId?: number
-  // copied from Banner, TODO merge definitions
+  windowId?: number
   type: 'error' | 'warn' | 'success' | 'info'
   message: string
   title?: string
   timeout?: number
   loading?: boolean
 }
-
-export const AppStatusModel = new Model<AppStatusMessage, { appId: number }>('AppStatusModel')
-export const AppStatusId = {
+export const WindowMessageModel = new Model<WindowMessage, { windowId: number }>(
+  'WindowMessageModel',
+)
+export const WindowMessageId = {
   install: (identifier: string) => `install-${identifier}`,
 }
 

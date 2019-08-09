@@ -1,8 +1,8 @@
-import { command, useModel, observeOne } from '@o/bridge'
-import { AppDefinition, ProvideStores, showConfirmDialog, useStore } from '@o/kit'
-import { AppCloseWindowCommand, AppDevCloseCommand, AppStatusModel } from '@o/models'
+import { command, observeOne } from '@o/bridge'
+import { AppDefinition, OrbitHot, ProvideStores, showConfirmDialog, useStore } from '@o/kit'
+import { AppCloseWindowCommand, AppDevCloseCommand, WindowMessageModel } from '@o/models'
 import { App } from '@o/stores'
-import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
+import { BannerHandle, ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 
@@ -20,8 +20,11 @@ import { OrbitDock } from './OrbitDock'
 import { OrbitDraggableOverlay } from './OrbitDraggableOverlay'
 import { OrbitHeader } from './OrbitHeader'
 
+export let GlobalBanner: BannerHandle | null = null
+
 export const OrbitPage = memo(function OrbitPage() {
   const themeStore = useThemeStore()
+  GlobalBanner = useBanner()
   return (
     <ProvideStores stores={Stores}>
       <SearchStore.Provider>
@@ -41,9 +44,9 @@ const OrbitStatusMessages = memo(() => {
   const banner = useBanner()
 
   useEffect(() => {
-    observeOne(AppStatusModel, {
+    observeOne(WindowMessageModel, {
       args: {
-        appId: WINDOW_ID,
+        windowId: WINDOW_ID,
       },
     }).subscribe(message => {
       console.log('message', message)
@@ -71,7 +74,8 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
   useEffect(() => {
     // prevent close on the main window
-    window.onbeforeunload = function(e) {
+    window.addEventListener('beforeunload', e => {
+      OrbitHot.removeAllHotHandlers()
       const { closeTab, closeApp } = shortcutState.current
       const shouldCloseTab = Date.now() - closeTab < 60
       const shouldCloseApp = Date.now() - closeApp < 60
@@ -108,7 +112,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
           }
         }
       }
-    }
+    })
   }, [])
 
   const handlers = useMemo(() => {

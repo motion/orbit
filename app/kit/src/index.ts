@@ -28,7 +28,7 @@ export * from '@o/use-store'
 export * from '@o/utils'
 export { isEqual } from '@o/fast-compare'
 
-export * from './createHotHandler'
+export * from './OrbitHot'
 
 export * from './AppLoadContext'
 export * from './bit/Readability'

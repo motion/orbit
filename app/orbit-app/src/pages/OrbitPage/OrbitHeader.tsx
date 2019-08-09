@@ -1,10 +1,11 @@
-import { AppIcon, useStore } from '@o/kit'
-import { App, Desktop, Electron } from '@o/stores'
+import { AppIcon, useModels, useStore } from '@o/kit'
+import { BuildStatusModel } from '@o/models'
+import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, SurfacePassProps, View } from '@o/ui'
-import { createUsableStore, ensure, react, useReaction } from '@o/use-store'
+import { createUsableStore, ensure, react } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
+import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 import { createRef, useRef } from 'react'
-import React, { forwardRef, memo, useMemo, useState } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
@@ -113,27 +114,16 @@ export const OrbitHeader = memo(() => {
   const isOnTearablePane = !useIsOnStaticApp()
   const { appRole } = useStore(App)
 
-  // TODO we should move all this state to the datbase and out of Desktop.workspaceState.developingApps etc
-  // that gives us a few things:
-  //  1. it will have optimistic updating in the UI here for the toggling with no duplicate logic
-  //  2. it will be a nicer way to sync state between the frontend/backend
-  //  3. it persists the state across startups (we could easily clear it too), which may not be desirable, but at least it's an option
-  // const { isOnOpenableApp, focusedApp } = useAppsCarousel()
-  // const [menuState, setMenuState] = useAppState(orbitAppStateId(focusedApp.id), {
-  //   isDeveloping
-  // })
+  // TODO this model isn't database backed so no optimistic updating,
+  // perhaps we can have a generic react hook/pattern here to handle the optimistic updates
+  const [buildStatus] = useModels(BuildStatusModel)
   const [isDeveloping, setIsDeveloping] = useState(false)
-  useReaction(
-    () => [
-      appsCarouselStore.focusedApp.identifier!,
-      Desktop.state.workspaceState.developingAppIdentifiers,
-    ],
-    ([identifier, developingAppIdentifiers]) => {
-      console.log('update toggle', developingAppIdentifiers, identifier)
-      // @ts-ignore why is typescript not passing types down here... see ReactVal (it works with react())
-      setIsDeveloping(developingAppIdentifiers.some(x => x === identifier))
-    },
+  const serverIsDeveloping = buildStatus.some(
+    s => s.identifier === appCarousel.focusedApp.identifier! && s.mode === 'development',
   )
+  useEffect(() => {
+    setIsDeveloping(serverIsDeveloping)
+  }, [serverIsDeveloping])
 
   const isTorn = appRole === 'torn'
   const slim = isTorn

@@ -1,4 +1,3 @@
-import { AppMetaDict } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppMeta, CommandWsOptions } from '@o/models'
 import { stringToIdentifier } from '@o/utils'
@@ -9,6 +8,7 @@ import webpack from 'webpack'
 import { getIsInMonorepo } from './getIsInMonorepo'
 import { DLLReferenceDesc, makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
 import { webpackPromise } from './webpackPromise'
+import { AppBuildModeDict } from './WorkspaceManager'
 
 const log = new Logger('getAppsConfig')
 
@@ -21,22 +21,25 @@ const log = new Logger('getAppsConfig')
  */
 
 export async function getAppsConfig(
-  apps: (AppMeta & { buildMode: 'development' | 'production' })[],
+  apps: AppMeta[],
+  buildMode: AppBuildModeDict,
   options: CommandWsOptions,
 ): Promise<{
   webpackConfigs: { [name: string]: webpack.Configuration }
-  nameToAppMeta: AppMetaDict
+  buildNameToAppMeta: { [name: string]: AppMeta }
 } | null> {
   if (!apps.length) {
     return null
   }
 
   const isInMonoRepo = await getIsInMonorepo()
-  // the mode used for base.dll, main
-  const mode = options.dev ? 'development' : 'production'
+  // the mode used for base.dll, main, etc
+  const mode = buildMode.main
   const directory = options.workspaceRoot
   const outputDir = join(directory, 'dist', mode)
-  const watch = options.action === 'run'
+
+  // used for non-app packages
+  const watch = options.dev && options.action === 'run'
 
   log.info(
     `dev ${options.dev} watch ${watch} ${directory}, apps ${apps.length} ${isInMonoRepo}`,
@@ -87,51 +90,70 @@ export async function getAppsConfig(
     }
     return await makeWebpackConfig({
       hot: true,
-      watch,
       ...params,
     })
   }
 
   const webpackConfigs: { [key: string]: webpack.Configuration } = {}
 
-  // add foundation dll config
-  // testing to see if we can leave react-hot-loader in development mode
-  // even when other things are in production mode
-  const foundationParams: WebpackParams = {
-    name: `foundation`,
-    entry: ['react-hot-loader', 'react', 'react-dom'],
-    watch: false,
+  // contains react-dom/react, always in production
+  const baseProdParams: WebpackParams = {
+    name: `baseProd`,
+    entry: ['react', 'react-dom', 'react-hot-loader'],
+    watch,
+    target: 'web',
+    mode: 'production',
+    context: directory,
+    outputDir,
+    publicPath: '/',
+    outputFile: 'baseProd.dll.js',
+    output: {
+      library: 'base',
+    },
+    dll: join(outputDir, 'manifest-baseProd.json'),
+  }
+  const baseProdConfig = await addDLL(baseProdParams)
+  webpackConfigs.baseProd = baseProdConfig
+
+  // contains react-hot-loader, always in development
+  const baseDevParams: WebpackParams = {
+    name: `baseDev`,
+    entry: ['react', 'react-dom', 'react-hot-loader'],
+    watch,
     target: 'web',
     mode: 'development',
     context: directory,
     outputDir,
     publicPath: '/',
-    outputFile: 'foundation.dll.js',
+    outputFile: 'baseDev.dll.js',
     output: {
-      library: 'foundation',
+      library: 'base',
     },
-    dll: join(outputDir, 'manifest-foundation.json'),
+    dll: join(outputDir, 'manifest-baseDev.json'),
   }
-  const foundationConfig = await addDLL(foundationParams)
-  webpackConfigs.foundation = foundationConfig
+  const baseDevConfig = await addDLL(baseDevParams)
+  webpackConfigs.baseDev = baseDevConfig
+  const baseDevDllReference = {
+    manifest: baseDevParams.dll,
+    filepath: join(outputDir, baseDevParams.outputFile),
+  }
 
-  // add base dll config
-  const baseDllParams = await getBaseDllParams({
+  // contains most dependencies
+  const sharedParams = await getBaseDllParams({
     outputDir,
     context: directory,
     mode,
-    // reference foundation
-    dllReferences: [
-      {
-        manifest: foundationParams.dll,
-        filepath: join(outputDir, foundationParams.outputFile),
-      },
-    ],
+    dllReferences: [baseDevDllReference],
   })
+
   if (isInMonoRepo) {
-    baseDllParams.mode = mode
-    baseDllParams.watch = watch
-    webpackConfigs.base = await addDLL(baseDllParams)
+    sharedParams.mode = mode
+    sharedParams.watch = watch
+    webpackConfigs.base = await addDLL(sharedParams)
+  }
+  const sharedDllReference = {
+    manifest: sharedParams.dll,
+    filepath: join(outputDir, sharedParams.outputFile),
   }
 
   // add app dll configs
@@ -143,41 +165,41 @@ export async function getAppsConfig(
         app.directory,
         (await readJSON(join(app.directory, 'package.json'))).main,
       )
+      const appMode = buildMode[app.packageId]
+      if (!appMode) {
+        throw new Error(`No buildMode set for app ${app.packageId} ${JSON.stringify(buildMode)}`)
+      }
       const params: WebpackParams = {
         name: `app_${cleanName}`,
         entry: [appEntry],
         context: directory,
-        mode: app.buildMode || 'production',
+        mode: appMode,
         target: 'web',
         publicPath: '/',
-        outputFile: `${cleanName}.dll.js`,
+        outputFile: `${cleanName}.${appMode}.dll.js`,
         outputDir,
         injectHot: true,
+        hotType: 'app',
         output: {
           library: cleanName,
         },
         dll: dllFile,
         // apps use the base dll
-        dllReferences: [
-          {
-            manifest: baseDllParams.dll,
-            filepath: join(outputDir, baseDllParams.outputFile),
-          },
-        ],
+        dllReferences: [baseDevDllReference, sharedDllReference],
       }
       return params
     }),
   )
-  const nameToAppMeta: AppMetaDict = {}
+  const buildNameToAppMeta: { [name: string]: AppMeta } = {}
   await Promise.all(
     appParams.map(async (params, index) => {
       const appMeta = apps[index]
       const config = await addDLL({
         ...getAppParams(params),
         // only watch apps for updates in development mode
-        watch: appMeta.buildMode === 'development',
+        watch: buildMode[appMeta.packageId] === 'development',
       })
-      nameToAppMeta[params.name] = appMeta
+      buildNameToAppMeta[params.name] = appMeta
       webpackConfigs[params.name] = config
     }),
   )
@@ -239,6 +261,9 @@ export async function getAppsConfig(
         watch,
         hot: true,
         dllReferences,
+        output: {
+          library: '__orbit_main',
+        },
       },
       extraMainConfig,
     )
@@ -247,16 +272,17 @@ export async function getAppsConfig(
   /**
    * Create the apps import
    */
-  const next = `// all apps
+  const workspaceEntrySrc = `// all apps
 export default function getApps() {
   return [${apps.map(app => `require('${app.packageId}')`).join(',')}]
-}`
+}
+`
   // const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
   const workspaceEntry = join(outputDir, 'workspaceEntryIn.js')
   log.info(`workspaceEntry ${workspaceEntry}`)
   const current = (await pathExists(workspaceEntry)) ? await readFile(workspaceEntry) : ''
-  if (current !== next) {
-    await writeFile(workspaceEntry, next)
+  if (current !== workspaceEntrySrc) {
+    await writeFile(workspaceEntry, workspaceEntrySrc)
   }
 
   /**
@@ -272,7 +298,6 @@ export default function getApps() {
     entry: [workspaceEntry],
     target: 'web',
     watch,
-    hot: false,
     dllReferences,
     output: {
       library: `window['__orbit_workspace']`,
@@ -283,7 +308,7 @@ export default function getApps() {
 
   return {
     webpackConfigs,
-    nameToAppMeta,
+    buildNameToAppMeta,
   }
 }
 
@@ -325,9 +350,6 @@ async function getBaseDllParams(params: WebpackParams): Promise<WebpackParams> {
     '@o/use-store',
     '@babel/runtime',
     'node-libs-browser',
-    // 'react-hot-loader',
-    // 'react',
-    // 'react-dom',
   ]
 
   // gather all packages we want included in base dll
@@ -361,16 +383,16 @@ async function getBaseDllParams(params: WebpackParams): Promise<WebpackParams> {
 
   // base dll with shared libraries
   return {
-    name: `base`,
+    name: `shared`,
     injectHot: join(require.resolve('@o/kit'), '..', '..', 'src', 'index.ts'),
     entry: [...new Set(allPackages)],
     ignore: ['electron-log', 'configstore', 'typeorm'],
     watch: false,
     target: 'web',
     publicPath: '/',
-    outputFile: 'base.dll.js',
+    outputFile: 'shared.dll.js',
     output: {
-      library: 'base',
+      library: 'shared',
     },
     dll: join(params.outputDir, 'manifest-base.json'),
     ...params,

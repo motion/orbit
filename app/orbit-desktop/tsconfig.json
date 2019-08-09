@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "module": "CommonJS",
+    "strictFunctionTypes": true,
     "composite": true,
     "outDir": "_",
     "rootDir": "src"

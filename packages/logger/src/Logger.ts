@@ -1,30 +1,19 @@
 import { LOGGER_COLOR_WHEEL } from './constants'
 import { LoggerSettings } from './LoggerSettings'
 
-// const voidfn = (...args: any[]) => args
-// let log = (level: string, namespace: string, ...messages: string[]) => {
-// }
-// {
-//   info: voidfn,
-//   debug: voidfn,
-//   warn: voidfn,
-//   error: voidfn,
-// }
-// // disable in renderer for now because were avoiding compiling it to electron
-// if (typeof window === 'undefined') {
-//   try {
-//     const electronLog = require('electron-log')
-//     if (electronLog) {
-//       // just use it for its simple/nice file log writing
-//       log = electronLog
-//       // disable console output from electron-log
-//       // @ts-ignore
-//       log.transports.console = () => {}
-//     }
-//   } catch {
-//     console.debug('no electron-log in this env')
-//   }
-// }
+/**
+ * The goal is here to be able to view log at a variety of granularities
+ *
+ *   0: errors
+ *   1: info, warning (no objects)
+ *   2: + verbose (no objects)
+ *   3: + info objects
+ *   4: + verbose objects
+ *   6: + timer objects
+ *
+ * Could be better in many ways. Could allow you to choose these levels with descriptive terms...
+ *
+ */
 
 type LogType = 'verbose' | 'info' | 'warning' | 'error' | 'timer' | 'vtimer'
 
@@ -156,12 +145,12 @@ export class Logger {
       return true
     }
     if (type === 'info') {
-      return level > 2
-    }
-    if (type === 'verbose') {
       return level > 3
     }
-    return level > 4
+    if (type === 'verbose') {
+      return level > 4
+    }
+    return level > 5
   }
 
   /**
@@ -327,3 +316,30 @@ const isNode =
 const colored = (ns: string, style: string): [string, string] | [string] => {
   return isNode === false ? [`%c${ns}`, style] : [ns]
 }
+
+// if you want electron logging
+
+// const voidfn = (...args: any[]) => args
+// let log = (level: string, namespace: string, ...messages: string[]) => {
+// }
+// {
+//   info: voidfn,
+//   debug: voidfn,
+//   warn: voidfn,
+//   error: voidfn,
+// }
+// // disable in renderer for now because were avoiding compiling it to electron
+// if (typeof window === 'undefined') {
+//   try {
+//     const electronLog = require('electron-log')
+//     if (electronLog) {
+//       // just use it for its simple/nice file log writing
+//       log = electronLog
+//       // disable console output from electron-log
+//       // @ts-ignore
+//       log.transports.console = () => {}
+//     }
+//   } catch {
+//     console.debug('no electron-log in this env')
+//   }
+// }

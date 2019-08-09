@@ -36,9 +36,11 @@ import {
   StateEntity,
   RemoveAllAppDataCommand,
   OrbitProcessStdOutModel,
-  AppStatusModel,
+  WindowMessageModel,
   ResetDataCommand,
   NewFallbackServerPortCommand,
+  BuildStatusModel,
+  WorkspaceInfoModel,
 } from '@o/models'
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
@@ -323,8 +325,10 @@ export class OrbitDesktopRoot {
         CosalTopicsModel,
         CosalSaliencyModel,
         CosalTopWordsModel,
-        AppStatusModel,
+        WindowMessageModel,
         OrbitProcessStdOutModel,
+        BuildStatusModel,
+        WorkspaceInfoModel,
       ],
       transport: new WebSocketServerTransport({
         port: mediatorServerPort,
@@ -349,8 +353,8 @@ export class OrbitDesktopRoot {
         }),
 
         // this is a generic bus that lets us send explicit message events out
-        resolveObserveOne(AppStatusModel, args => {
-          return appStatusManager.observe(args.appId)
+        resolveObserveOne(WindowMessageModel, args => {
+          return appStatusManager.observe(args.windowId)
         }),
 
         ...loadAppDefinitionResolvers(),

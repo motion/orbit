@@ -5,10 +5,12 @@ import { filter } from 'lodash'
 import React, { FunctionComponent, memo, useCallback, useEffect, useRef } from 'react'
 
 import { Button } from './buttons/Button'
+import { zIndex } from './constants'
 import { FlipAnimate, FlipAnimateItem } from './FlipAnimate'
 import { Portal } from './helpers/portal'
 import { useOnUnmount } from './hooks/useOnUnmount'
 import { useWindowSize } from './hooks/useWindowSize'
+import { Space } from './Space'
 import { Spinner } from './Spinner'
 import { Message, MessageProps } from './text/Message'
 import { SimpleText } from './text/SimpleText'
@@ -99,7 +101,7 @@ export const ProvideBanner = memo(
             position="fixed"
             pointerEvents="none"
             top="auto"
-            zIndex={1000000000}
+            zIndex={zIndex.Banner}
             alignItems="flex-end"
           >
             <FlipAnimate>
@@ -217,8 +219,13 @@ export const Banner = (props: BannerViewProps) => {
       background={useCallback(theme => theme.background, [])}
       {...rest}
     >
-      <Row flex={1} justifyContent="space-between" alignItems="center" afterSpace>
-        {!!loading && <Spinner />}
+      <Row flex={1} justifyContent="space-between" alignItems="center" afterSpace beforeSpace>
+        {!!loading && (
+          <>
+            <Spinner />
+            <Space size="xs" />
+          </>
+        )}
         <Col flex={1} space="xs">
           <Message.Title>{title}</Message.Title>
           <SimpleText whiteSpace="pre">{message}</SimpleText>

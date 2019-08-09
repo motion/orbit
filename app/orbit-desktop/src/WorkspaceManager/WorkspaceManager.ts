@@ -1,7 +1,7 @@
 import { AppsManager, getAppMeta, requireAppDefinition } from '@o/apps-manager'
 import { Logger } from '@o/logger'
-import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppWorkspaceCommand, CallAppBitApiMethodCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
+import { MediatorServer, resolveCommand, resolveObserveMany, resolveObserveOne } from '@o/mediator'
+import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppWorkspaceCommand, BuildStatusModel, CallAppBitApiMethodCommand, CommandWsOptions, Space, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { remove } from 'fs-extra'
@@ -13,8 +13,7 @@ import Observable from 'zen-observable'
 import { GraphServer } from '../GraphServer'
 import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 import { getActiveSpace } from '../helpers/getActiveSpace'
-import { appStatusManager } from '../managers/AppStatusManager'
-import { AppMiddleware } from './AppMiddleware'
+import { AppBuilder } from './AppBuilder'
 import { buildAppInfo, resolveAppBuildCommand } from './commandBuild'
 import { resolveAppGenTypesCommand } from './commandGenTypes'
 import { resolveAppInstallCommand } from './commandInstall'
@@ -23,6 +22,8 @@ import { loadWorkspace } from './loadWorkspace'
 import { webpackPromise } from './webpackPromise'
 
 const log = new Logger('WorkspaceManager')
+
+export type AppBuildModeDict = { [name: string]: 'development' | 'production' }
 
 @decorate
 export class WorkspaceManager {
@@ -35,13 +36,22 @@ export class WorkspaceManager {
     dev: false,
     workspaceRoot: '',
   }
-  appsManager = new AppsManager()
-  appMiddleware = new AppMiddleware(this.appsManager)
-  graphServer = new GraphServer()
-  middleware = this.appMiddleware.middleware
-
   // use this to toggle between modes for the various apps
-  buildMode: { [name: string]: 'development' | 'production' } = {}
+  buildMode: AppBuildModeDict = {}
+  // to send updates to children (AppBuilder)
+  buildModePush = null
+  buildModeObservable = new Observable<AppBuildModeDict>(observer => {
+    this.buildModePush = x => observer.next(x)
+  })
+
+  // handles watching disk for apps and updating AppMeta
+  appsManager = new AppsManager()
+  // takes a list of apps in and starts webpack, provides web middleware
+  appBuilder = new AppBuilder(this.appsManager, this.buildModeObservable)
+  // shorthand to middleware
+  middleware = this.appBuilder.middleware
+  // starts the graphql server, can update based on app definitinos
+  graphServer = new GraphServer()
 
   appIdToPackageJson: { [key: number]: string } = {}
 
@@ -53,10 +63,7 @@ export class WorkspaceManager {
   }
 
   async start() {
-    // Sends messages between webpack and client apps so we can display status messages
-    this.appMiddleware.onStatus(status => {
-      appStatusManager.sendMessage(status)
-    })
+    this.updateBuildMode()
   }
 
   async updateWorkspace(opts: CommandWsOptions) {
@@ -100,7 +107,7 @@ export class WorkspaceManager {
       ensure('not in single build mode', this.options.action !== 'build')
       await sleep(100)
       log.verbose(`update`)
-      const identifiers = Object.keys(activeApps)
+      const identifiers = this.appsManager.apps.map(x => x.identifier)
       const space = await getActiveSpace()
       const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
       this.graphServer.setupGraph(apps)
@@ -113,10 +120,24 @@ export class WorkspaceManager {
           appMeta: activeApps,
           packageIds,
           identifiers,
+          identifierToPackageId: identifiers.reduce((acc, identifier) => {
+            acc[identifier] = this.appsManager.identifierToPackageId(identifier)
+            return acc
+          }, {}),
         },
       })
     },
   )
+
+  private updateBuildMode() {
+    // update buildMode first
+    this.buildMode.main = this.options.dev ? 'development' : 'production'
+    for (const app of this.activeApps) {
+      // apps always default to production mode
+      this.buildMode[app.packageId] = this.buildMode[app.packageId] || 'production'
+    }
+    this.buildModePush(this.buildMode)
+  }
 
   /**
    * Handles all webpack related things, taking the app configurations, generating
@@ -141,18 +162,13 @@ export class WorkspaceManager {
     }
 
     try {
-      const res = await getAppsConfig(
-        activeApps.map(appMeta => ({
-          ...appMeta,
-          buildMode: this.buildMode[appMeta.packageId],
-        })),
-        options,
-      )
+      this.updateBuildMode()
+      const res = await getAppsConfig(activeApps, this.buildMode, options)
       if (!res) {
         log.error('No config')
         return
       }
-      const { webpackConfigs, nameToAppMeta } = res
+      const { webpackConfigs, buildNameToAppMeta } = res
       if (options.action === 'build') {
         const { base, ...rest } = webpackConfigs
         const configs = Object.keys(rest).map(key => rest[key])
@@ -166,7 +182,7 @@ export class WorkspaceManager {
         })
         log.info(`Build complete!`)
       } else {
-        this.appMiddleware.update(webpackConfigs, nameToAppMeta)
+        this.appBuilder.update(webpackConfigs, buildNameToAppMeta)
       }
     } catch (err) {
       log.error(`Error running workspace: ${err.message}\n${err.stack}`)
@@ -177,7 +193,7 @@ export class WorkspaceManager {
    * Returns Observable for the current workspace information
    */
   observables = new Set<{ update: (next: any) => void; observable: Observable<WorkspaceInfo> }>()
-  observe() {
+  observeWorkspaceInfo() {
     const observable = new Observable<WorkspaceInfo>(observer => {
       this.observables.add({
         update: (status: WorkspaceInfo) => {
@@ -189,26 +205,61 @@ export class WorkspaceManager {
     return observable
   }
 
-  private setBuildMode(packageId: string, status: 'development' | 'production') {
+  private setBuildMode(appMeta: AppMeta, mode: 'development' | 'production') {
+    log.verbose(`setBuildMode ${appMeta.packageId} ${mode}`)
+    // TODO this is here because we'll have "external" app you can build
+    // so we'll need to track otuside of this.buildMode
+    if (mode === 'development') {
+      this.developingApps.push(appMeta)
+    } else {
+      this.developingApps = _.remove(this.developingApps, x => x.packageId === appMeta.packageId)
+    }
+    this.updateDevelopingAppIdentifiers()
     this.buildMode = {
       ...this.buildMode,
-      [packageId]: status,
+      [appMeta.packageId]: mode,
     }
+    this.buildModePush(this.buildMode)
+  }
+
+  private updateDevelopingAppIdentifiers() {
+    const developingAppIdentifiers = this.developingApps.map(x =>
+      this.appsManager.packageIdToIdentifier(x.packageId),
+    )
+    if (developingAppIdentifiers.some(x => !x)) {
+      log.warning(`Missing identifier`)
+    }
+    Desktop.setState({
+      workspaceState: {
+        developingAppIdentifiers,
+      },
+    })
+  }
+
+  async createWorkspace(space: Partial<Space>) {
+    await findOrCreateWorkspace(space)
+    return true
   }
 
   /**
    * For external commands, this lets the CLI call various commands in here,
    * as well as the client apps if need be.
    */
+
+  // TODO move all these into functions inside here
+  // and move the resolvers up to root so we have them all in one place
+  // i *think* this is more clear rather than having resolvers all over
   getResolvers() {
     return [
+      resolveObserveMany(BuildStatusModel, () => {
+        return this.appBuilder.observeBuildStatus()
+      }),
+
       resolveObserveOne(WorkspaceInfoModel, () => {
-        return this.observe()
+        return this.observeWorkspaceInfo()
       }),
-      resolveCommand(AppCreateWorkspaceCommand, async props => {
-        await findOrCreateWorkspace(props)
-        return true
-      }),
+
+      resolveCommand(AppCreateWorkspaceCommand, this.createWorkspace),
       resolveCommand(AppWorkspaceCommand, async options => {
         const { workspaceRoot } = options
         log.info(`AppOpenWorkspaceCommand ${workspaceRoot}`)
@@ -276,32 +327,17 @@ export class WorkspaceManager {
         const identifier = appInfoRes.value.id
         log.info(`Loaded app with identifier: ${identifier}`)
 
-        console.log('finish toggling dev mode')
-
         // ⚠️ finish refactor
         if (options.type === 'independent') {
+          console.warn('TODO')
           // this.appIdToPackageJson[windowId] = appMeta.directory
         }
 
-        // always do this:
-        this.developingApps.push(appMeta)
-        this.setBuildMode(appMeta.packageId, 'development')
-
-        const developingAppIdentifiers = this.developingApps.map(x =>
-          this.appsManager.packageIdToIdentifier(x.packageId),
-        )
-        if (developingAppIdentifiers.some(x => !x)) {
-          log.warning(`Missing identifier`)
-        }
-        Desktop.setState({
-          workspaceState: {
-            developingAppIdentifiers,
-          },
-        })
+        this.setBuildMode(appMeta, 'development')
 
         return {
           type: 'success',
-          message: 'Got app id',
+          message: `Developing app ${appMeta.packageId}`,
           value: {
             appId,
             identifier,
@@ -325,15 +361,7 @@ export class WorkspaceManager {
             message: `No developing app found for packageId ${packageId}`,
           }
         }
-        this.developingApps = _.remove(this.developingApps, x => x.packageId === packageId)
-        this.setBuildMode(appMeta.packageId, 'production')
-        // TODO
-        // // ⚠️
-        // const windowId = -1
-        // if (Electron.state.appWindows[windowId]) {
-        //   log.verbose('Close window', windowId)
-        //   await this.mediatorServer.sendRemoteCommand(AppCloseWindowCommand, { windowId })
-        // }
+        this.setBuildMode(appMeta, 'production')
         return {
           type: 'success',
           message: `Stopped development of ${identifier}`,
@@ -347,7 +375,16 @@ export class WorkspaceManager {
 
       resolveCommand(CallAppBitApiMethodCommand, async ({ appId, appIdentifier, method, args }) => {
         const app = await getRepository(AppEntity).findOneOrFail(appId)
-        const api = this.appsManager.nodeAppDefinitions.find(x => x.id === appIdentifier).api(app)
+        const definition = this.appsManager.nodeAppDefinitions.find(x => x.id === appIdentifier)
+        if (!definition) {
+          log.error('No definition found')
+          return null
+        }
+        if (!definition) {
+          log.error('No definition.api found')
+          return null
+        }
+        const api = definition.api(app)
         if (!api) throw new Error(`API for app "${appId}" is invalid`)
         if (!api[method]) throw new Error(`No method "${method}" was found in the ${appId}" app`)
         log.info(

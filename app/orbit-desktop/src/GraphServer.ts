@@ -65,9 +65,9 @@ export class GraphServer {
       .filter(x => x.type === 'success')
       .map(x => x.type === 'success' && x.value)
 
+    // TODO THIS IS BAD, its not an error its just that the app doesn't have a definition
     if (errors.length) {
-      // TODO should have a build process here where we automatically build un-built things, but requires work
-      log.error(
+      log.verbose(
         `errors in app definitions ${errors.map(x => x.type === 'error' && x.message).join('\n')}`,
       )
     }

@@ -4,7 +4,7 @@ import { CosalSaliencyModel, CosalTopicsModel, CosalTopWordsModel, SearchByTopic
 
 export type ModelParams<T extends Model<any, any>> = T extends Model<any, infer U> ? U : never
 
-class NLPStore {
+export class NLP {
   searchBits(args: ModelParams<typeof SearchByTopicModel>) {
     return loadMany(SearchByTopicModel, { args })
   }
@@ -21,5 +21,3 @@ class NLPStore {
     return loadMany(CosalTopicsModel, { args })
   }
 }
-
-export const NLP = new NLPStore()

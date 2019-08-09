@@ -2,12 +2,13 @@ import { ColorLike } from '@o/color'
 import { isEqual } from '@o/fast-compare'
 import { on } from '@o/utils'
 import { gloss, Theme, ThemeContext } from 'gloss'
-import { debounce, isNumber, last, pick } from 'lodash'
+import { Cancelable, debounce, isNumber, last, pick } from 'lodash'
 import * as React from 'react'
 import { animated, AnimatedProps } from 'react-spring'
 
 import { Arrow } from './Arrow'
 import { BreadcrumbReset } from './Breadcrumbs'
+import { zIndex } from './constants'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
@@ -134,12 +135,12 @@ const defaultProps = {
   adjust: [0, 0],
   delay: 16,
   group: 'global',
-  zIndex: 100000000000,
+  zIndex: zIndex.Popover,
 }
 
 type PopoverPropsWithDefaults = PopoverProps & typeof defaultProps
 
-type DebouncedFn = any & (() => void)
+type DebouncedFn = Function & Cancelable
 type PopoverDirection = 'top' | 'bottom' | 'left' | 'right' | 'auto'
 type PositionStateX = { arrowLeft: number; left: number }
 type PositionStateY = { arrowTop: number; top: number; maxHeight: number }
@@ -147,23 +148,24 @@ type Bounds = { top: number; left: number; width: number; height: number }
 
 class PopoverManager {
   state = new Set<Popover>()
+  closeTm = {}
   closeGroup(group: string, ignore: any) {
-    for (const item of [...this.state]) {
-      if (item === ignore) continue
+    this.state.forEach(item => {
+      if (item === ignore) return
       if (item.props.group === group) {
-        item.forceClose()
+        item.forceClose({ animate: false })
       }
-    }
+    })
   }
   closeLast() {
-    last([...this.state]).forceClose()
+    last([...this.state]).forceClose({ animate: false })
   }
   closeAll() {
-    this.state.forEach(x => x.forceClose())
+    this.state.forEach(x => x.forceClose({ animate: false }))
   }
 }
 
-export const PopoverState = new PopoverManager()
+export const Popovers = new PopoverManager()
 
 const getIsManuallyPositioned = ({ top, left }: { top?: number; left?: number }) => {
   return isNumber(top) && isNumber(left)
@@ -368,14 +370,14 @@ const initialState = {
   measureState: 'done' as 'done' | 'shouldMeasure',
 }
 
-type State = typeof initialState & {
+type PopoverState = typeof initialState & {
   // TODO make these types real
   targetBounds: any
   popoverBounds: any
   maxHeight: any
 }
 
-const isHovered = (props: PopoverProps, state: State) => {
+const isHovered = (props: PopoverProps, state: PopoverState) => {
   const { targetHovered, menuHovered } = state
   if (props.noHoverOnChildren) {
     return targetHovered
@@ -383,7 +385,7 @@ const isHovered = (props: PopoverProps, state: State) => {
   return targetHovered || menuHovered
 }
 
-const shouldShowPopover = (props: PopoverProps, state: State) => {
+const shouldShowPopover = (props: PopoverProps, state: PopoverState) => {
   const { isPinnedOpen } = state
   const { openOnHover, open } = props
   if (open || isPinnedOpen) {
@@ -395,7 +397,7 @@ const shouldShowPopover = (props: PopoverProps, state: State) => {
   return false
 }
 
-export class Popover extends React.Component<PopoverProps, State> {
+export class Popover extends React.Component<PopoverProps, PopoverState> {
   static defaultProps = defaultProps
   static contextType = ThemeContext
 
@@ -407,8 +409,8 @@ export class Popover extends React.Component<PopoverProps, State> {
     return this.targetRef.current
   }
 
-  static getDerivedStateFromProps(props: PopoverPropsWithDefaults, state: State) {
-    let nextState: Partial<State> = {}
+  static getDerivedStateFromProps(props: PopoverPropsWithDefaults, state: PopoverState) {
+    let nextState: Partial<PopoverState> = {}
     const isManuallyPositioned = getIsManuallyPositioned(props)
 
     if (isManuallyPositioned) {
@@ -502,22 +504,19 @@ export class Popover extends React.Component<PopoverProps, State> {
   unmounted = false
 
   componentWillUnmount() {
-    PopoverState.state.delete(this)
+    Popovers.state.delete(this)
     this.unmounted = true
   }
 
   componentDidUpdate(_prevProps, prevState) {
+    if (!this.showPopover) {
+      Popovers.state.delete(this)
+    }
     this.updateMeasure()
     if (this.props.onChangeVisibility) {
       if (prevState.showPopover !== this.state.showPopover) {
         this.props.onChangeVisibility(this.state.showPopover)
       }
-    }
-    if (this.showPopover) {
-      PopoverState.state.add(this)
-      this.closeOthersWithinGroup()
-    } else {
-      PopoverState.state.delete(this)
     }
     if (this.props.onDidOpen) {
       if (this.showPopover) {
@@ -542,11 +541,22 @@ export class Popover extends React.Component<PopoverProps, State> {
     }
   }
 
+  // make sure you do it through here
+  setShowPopover = (state: Partial<PopoverState>, cb?: any) => {
+    this.closeOthersWithinGroup()
+    this.addToOpenPopoversList()
+    this.setState({ ...state, showPopover: true } as any, cb)
+  }
+
+  addToOpenPopoversList() {
+    if (typeof this.props.open === 'undefined') {
+      Popovers.state.add(this)
+    }
+  }
+
   updateMeasure() {
     if (this.state.measureState === 'shouldMeasure') {
-      this.setPosition(() => {
-        this.setState({ showPopover: true })
-      })
+      this.setPosition(this.setShowPopover)
     }
   }
 
@@ -602,10 +612,19 @@ export class Popover extends React.Component<PopoverProps, State> {
     }
   }
 
-  forceClose = async () => {
+  forceClose = async ({ animate = true } = {}) => {
+    // clear any pending hovers that will eventually open a competing menu
+    this.cancelIfWillOpen()
     this.stopListeningUntilNextMouseEnter()
-    await this.startClosing()
-    this.setState({ closing: false, isPinnedOpen: 0, showPopover: false })
+    if (animate) {
+      await this.startClosing()
+    }
+    this.setState({
+      closing: false,
+      isPinnedOpen: 0,
+      showPopover: false,
+      measureState: 'done',
+    })
   }
 
   toggleOpen = () => {
@@ -617,7 +636,7 @@ export class Popover extends React.Component<PopoverProps, State> {
   }
 
   open = () => {
-    this.setState({ showPopover: true }, () => {
+    this.setShowPopover(null, () => {
       if (this.props.onOpen) {
         this.props.onOpen()
       }
@@ -657,18 +676,21 @@ export class Popover extends React.Component<PopoverProps, State> {
       this.targetClickOff()
     }
     // click away to close
-    this.targetClickOff = on(this, this.target, 'click', e => {
-      e.stopPropagation()
-      if (this.state.isPinnedOpen) {
-        if (this.state.targetHovered && this.props.openOnHover) {
-          // avoid closing when clicking while hovering + openOnHover
-          return
-        }
-        this.forceClose()
-      } else {
-        this.setState({ isPinnedOpen: Date.now() })
+    this.targetClickOff = on(this, this.target, 'click', this.handleClickOpen)
+  }
+
+  handleClickOpen = e => {
+    this.closeOthersWithinGroup()
+    e.stopPropagation()
+    if (this.state.isPinnedOpen) {
+      if (this.state.targetHovered && this.props.openOnHover) {
+        // avoid closing when clicking while hovering + openOnHover
+        return
       }
-    })
+      this.forceClose()
+    } else {
+      this.setState({ isPinnedOpen: Date.now() })
+    }
   }
 
   get wasJustClicked() {
@@ -779,7 +801,7 @@ export class Popover extends React.Component<PopoverProps, State> {
     }
   }
 
-  addHoverListeners(name: string, node: HTMLElement) {
+  addHoverListeners(name: 'target' | 'menu', node: HTMLElement) {
     if (!(node instanceof HTMLElement)) {
       console.log('no node!', name)
       return null
@@ -835,6 +857,7 @@ export class Popover extends React.Component<PopoverProps, State> {
       if (isTarget && this.state.menuHovered) {
         openIfOver()
       } else {
+        this.addToOpenPopoversList() // so we cancel pending hovers too
         this.delayOpenIfHover[name]()
       }
     }
@@ -939,7 +962,7 @@ export class Popover extends React.Component<PopoverProps, State> {
   }
 
   closeOthersWithinGroup() {
-    PopoverState.closeGroup(this.props.group, this)
+    Popovers.closeGroup(this.props.group, this)
   }
 
   get isMeasuring() {

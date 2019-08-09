@@ -3,7 +3,10 @@ import { NLP } from '@o/kit'
 import { getSearchableText, SearchByTopicModel } from '@o/models'
 import { react, useStore } from '@o/use-store'
 import * as React from 'react'
+
 import CosalSaliency from './CosalSaliency'
+
+const nlp = new NLP()
 
 class SearchStore {
   query = 'blast me off'
@@ -22,13 +25,13 @@ class SearchStore {
 
   topics = react(
     () => this.results.map(x => `${x.title}${x.body}`).join(' '),
-    query => NLP.getTopics({ query, count: 10 }),
+    query => nlp.getTopics({ query, count: 10 }),
     {
       defaultValue: [],
     },
   )
 
-  topWords = react(() => this.query, text => NLP.getMostSalientWords({ text }), {
+  topWords = react(() => this.query, text => nlp.getMostSalientWords({ text }), {
     defaultValue: [],
   })
 }

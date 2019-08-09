@@ -22,7 +22,9 @@ export function queueUpdate(fn: Function) {
     }
     Updates.clear()
     unstable_batchedUpdates(() => {
-      next.forEach(cb => cb())
+      for (const cb of next) {
+        cb()
+      }
     })
   })
 }

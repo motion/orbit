@@ -1,3 +1,5 @@
+
+
 useState hooks:
 
 instead of useUserState / useAppState:
@@ -13,7 +15,6 @@ this lets it be configurable easily, see <Flow />.
 <Flow persistStep="user" persistData="app" />
 
 ---
-
 
 Lists:
 
@@ -68,10 +69,6 @@ next
 
 ---
 
-July
-
-"Make demo apps work better, esp with adding sources and showing data"
-
 Aug
 
 hire......... so someone can do "Really be able to develop an app"
@@ -93,6 +90,14 @@ Nov
 Dec
 
 "Launch"
+
+First, need to talk to a few startup people to get some feedback:
+
+- Webflow CEO
+- Framer cofounders
+- Zeit/Expo cofounders
+- Retool?
+- ... add a few more
 
 Goal #2: Syncing configuration and other information p2p
 

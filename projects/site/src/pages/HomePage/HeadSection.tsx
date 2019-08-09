@@ -17,23 +17,23 @@ let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'Easy and powerful apps for work',
-  medium: 'Easy and powerful apps for work',
-  small: 'Easy and powerful apps',
+  large: 'The Data-driven App Studio',
+  medium: 'The Data-driven App Studio',
+  small: 'Data-driven App Studio',
 }
 
 let allTexts = {
   large: [
-    `Develop your intranet using apps that feel and run like native.`,
-    `The open source, decentralized app platform with an open app store.`,
+    `Plug in data, build queries, write code to output powerful apps.`,
+    `An all-in-one app platform that gives you control over all your data.`,
   ],
   medium: [
-    `Develop your intranet using apps that feel and run like native.`,
-    `The open source, decentralized app platform with an open app store.`,
+    `Plug in data, build queries, write code to output powerful apps.`,
+    `An all-in-one app platform that gives you control over all your data.`,
   ],
   small: [
     `Create intranet apps easily.`,
-    `The open source, decentralized app platform with an open app store.`,
+    `An all-in-one app platform that gives you control over all your data.`,
   ],
 }
 

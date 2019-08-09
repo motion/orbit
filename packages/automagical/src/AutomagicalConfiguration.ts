@@ -1,6 +1,7 @@
 export type AutomagicalConfiguration = {
   isSubscribable?: (val: any) => boolean
-  queueUpdate?: Function
+  queueUpdate?: (cb: Function) => void
+  clearQueuedUpdate?: (cb: Function) => void
 }
 
 export let automagicConfig: AutomagicalConfiguration = {

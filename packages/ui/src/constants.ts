@@ -9,3 +9,10 @@ export const isWebkit =
   typeof document !== 'undefined' && 'webkitLineBreak' in document.documentElement.style
 
 export const defaultSortPressDelay = 350
+
+// sort these from highest to lowest
+// TODO this be done nicer
+export const zIndex = {
+  Banner: 1000000000000,
+  Popover: 100000000000,
+}

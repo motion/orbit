@@ -6,12 +6,12 @@
 import { Mediator } from '@o/bridge'
 import { toColor } from '@o/color'
 import { getGlobalConfig } from '@o/config'
-import { themes } from '@o/kit'
+import * as Kit from '@o/kit'
 import { isEqualDebug } from '@o/libs'
 import { LoggerSettings } from '@o/logger'
 import * as Models from '@o/models'
 import { App, Desktop, Electron } from '@o/stores'
-import { PopoverState } from '@o/ui'
+import * as UI from '@o/ui'
 import * as dateFns from 'date-fns'
 import global from 'global'
 import { css } from 'gloss'
@@ -52,7 +52,8 @@ global.page = page
 global.css = css
 global.ReconnectingWebSocket = ReconnectingWebSocket
 global.Mediator = Mediator
-global.PopoverState = PopoverState
+global.UI = UI
+global.Kit = Kit
 global.React = React
 global.Constants = Constants
 global.Mobx = Mobx
@@ -68,7 +69,6 @@ global.LoggerSettings = LoggerSettings
 global.toJS = toJS
 global.stringify = JSON.stringify.bind(JSON)
 global.Models = Models
-global.Themes = themes
 global.OrbitApps = OrbitApps
 global.GlossTheme = GlossTheme
 global.isEqualDebug = isEqualDebug

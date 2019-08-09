@@ -245,6 +245,7 @@ export class WorkspaceManager {
   getResolvers() {
     return [
       resolveObserveMany(BuildStatusModel, () => {
+        console.log('observing build status model')
         return this.appBuilder.observeBuildStatus()
       }),
 

@@ -101,6 +101,8 @@ export class AppBuilder {
         },
         observable,
       })
+      // send initial status
+      observer.next(this.buildStatuses)
     })
     return observable
   }

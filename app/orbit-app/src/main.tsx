@@ -65,6 +65,7 @@ async function main() {
 
   if (window.location.search.indexOf('why') > -1) {
     const whyDidYouRender = require('@welldone-software/why-did-you-render').default
+    const React = require('react')
     whyDidYouRender(React, {
       // turn on to log ONLY when things rendered without needing to
       // logOnDifferentValues: true,
@@ -105,10 +106,19 @@ async function main() {
 }
 
 // render app
-async function startApp(forceRefresh = false) {
+async function startApp(forceRefresh: boolean | 'mode' = false) {
   const React = require('react')
   const ReactDOM = require('react-dom')
-  const RootNode = document.querySelector('#app')
+
+  let RootNode = document.querySelector('#app')
+
+  if (forceRefresh === 'mode') {
+    document.body.removeChild(RootNode!)
+    const div = document.createElement('div')
+    div.id = 'app'
+    document.body.appendChild(div)
+    RootNode = document.querySelector('#app')
+  }
 
   if (forceRefresh) {
     ReactDOM.render(<div />, RootNode)

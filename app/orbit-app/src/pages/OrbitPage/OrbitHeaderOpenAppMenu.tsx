@@ -76,6 +76,7 @@ export const OrbitHeaderOpenAppMenu = memo(
                       timeout: 1.5,
                     })
                     let reply: any = null
+                    setIsDeveloping(x => !x)
                     if (isDeveloping === false) {
                       reply = await command(AppDevOpenCommand, {
                         type: 'workspace',
@@ -92,7 +93,6 @@ export const OrbitHeaderOpenAppMenu = memo(
                       message: reply.message,
                       timeout: 1.5,
                     })
-                    setIsDeveloping(x => !x)
                   },
                   after: (
                     <Row space>

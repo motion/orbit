@@ -102,6 +102,8 @@ const changeAppDevelopmentMode: AsyncAction<{
   banner &&
     banner.set({
       type: 'success',
+      loading: false,
+      timeout: 1,
       message:
         mode === 'development' ? `Started app in development!` : `Switched back to production.`,
     })

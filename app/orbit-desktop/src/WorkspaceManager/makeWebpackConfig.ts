@@ -149,7 +149,7 @@ export function makeWebpackConfig(
     },
     devtool:
       devtool ||
-      (mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-eval-source-map'),
+      (mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-source-map'),
     externals: [
       {
         electron: '{}',

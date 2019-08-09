@@ -17,8 +17,9 @@ export let config: ConfigureOpts = {
 
 export function configureKit(opts: ConfigureOpts) {
   Object.assign(config, opts)
+  // kit is always in prod mode but still needs hmr support, so just allow unlimited setting
   // for HMR we need to update views as they change
-  if (process.env.NODE_ENV !== 'development') {
-    Object.freeze(config)
-  }
+  // if (process.env.NODE_ENV !== 'development') {
+  //   Object.freeze(config)
+  // }
 }

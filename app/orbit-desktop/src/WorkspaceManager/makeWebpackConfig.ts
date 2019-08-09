@@ -373,7 +373,7 @@ require('@o/kit').createHotHandler({
 
       hot &&
         new webpack.HotModuleReplacementPlugin({
-          multiStep: true,
+          // multiStep: true,
         }),
 
       // new (require('bundle-analyzer-plugin').default)({

@@ -5,42 +5,57 @@ import { BannerHandle, stringToIdentifier } from '@o/ui'
 import { difference } from 'lodash'
 import { Action, AsyncAction } from 'overmind'
 
+import { GlobalBanner } from '../pages/OrbitPage/OrbitPage'
+
 export type DevMode = 'development' | 'production'
 export type DevelopState = {
+  started: boolean
   buildStatus: BuildStatus[]
 }
 
 export const state: DevelopState = {
+  started: false,
   buildStatus: [],
 }
 
 const start: Action = om => {
   observeMany(BuildStatusModel).subscribe(status => {
-    om.state.develop.buildStatus = status
+    om.actions.develop.updateDeveloping({ status, banner: GlobalBanner })
   })
 }
 
-const updateDeveloping: AsyncAction<{ identifiers: string[]; banner?: BannerHandle }> = async (
-  om,
-  { identifiers, banner },
-) => {
-  const developingIdentifiers = om.state.develop.buildStatus
-    .filter(x => x.mode === 'development')
-    .map(x => x.identifier)
-  const mode: DevMode = !!developingIdentifiers.length ? 'development' : 'production'
+const getDevelopingIdentifiers = (x: BuildStatus[]) =>
+  x.filter(x => x.mode === 'development').map(x => x.identifier)
 
+const updateDeveloping: AsyncAction<{
+  status: BuildStatus[]
+  banner: BannerHandle | null
+}> = async (om, { status, banner }) => {
+  if (!om.state.develop.started) {
+    om.state.develop.started = true
+    // avoid running update on inital load, we serve it in proper state already
+    return
+  }
+
+  const current = getDevelopingIdentifiers(om.state.develop.buildStatus)
+  const next = getDevelopingIdentifiers(status)
+
+  // update state
+  om.state.develop.buildStatus = status
+
+  const mode: DevMode = !!next.length ? 'development' : 'production'
   // load new app scripts
-  const addIdentifiers = difference(identifiers, developingIdentifiers)
-  const removeIentifiers = difference(developingIdentifiers, identifiers)
+  const toAdd = difference(next, current)
+  const toRemove = difference(current, next)
   await Promise.all([
-    ...addIdentifiers.map(identifier => {
+    ...toAdd.map(identifier => {
       return om.actions.develop.changeAppDevelopmentMode({
         banner,
         identifier,
         mode: 'development',
       })
     }),
-    ...removeIentifiers.map(identifier => {
+    ...toRemove.map(identifier => {
       om.actions.develop.changeAppDevelopmentMode({ banner, identifier, mode: 'production' })
     }),
   ])
@@ -64,7 +79,7 @@ const updateDeveloping: AsyncAction<{ identifiers: string[]; banner?: BannerHand
 const changeAppDevelopmentMode: AsyncAction<{
   identifier: string
   mode: 'development' | 'production'
-  banner?: BannerHandle
+  banner?: BannerHandle | null
 }> = async (om, { identifier, mode, banner }) => {
   const packageId = Desktop.state.workspaceState.identifierToPackageId[identifier]
   const name = stringToIdentifier(packageId)

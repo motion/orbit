@@ -236,11 +236,11 @@ require('@o/kit').createHotHandler({
   name: '${name}',
   getHash: __webpack_require__.h,
   module,
-});
+})
 `,
               // postfix clears the createApp hot handler
               postfix: `
-require('@o/kit').setCreateAppHotHandler(null)
+require('@o/kit').createHotHandlerLeave()
 `,
             },
           },

@@ -1,14 +1,15 @@
 import { Logger } from '@o/logger'
+import { hot } from 'react-hot-loader'
 
 import { EventSourceManager } from './EventSourceManager'
-import { setCreateAppHotHandler } from './helpers/createApp'
-import { hot } from 'react-hot-loader'
 
 const log = new Logger('createHotHandler')
 
 // singletons
 let source: EventSourceManager
 const hotHandlers = new Set<HotHandler>()
+
+export let createAppHotHandler = null
 
 // for debugging
 if (typeof window !== 'undefined') {
@@ -28,14 +29,13 @@ type HotHandlerProps = {
   log?: boolean
 }
 
+export function createHotHandlerLeave() {
+  createAppHotHandler = null
+}
+
 export function createHotHandler(props: HotHandlerProps) {
   log.verbose(`createHotHandler`, props)
-  setCreateAppHotHandler(app => {
-    if (app.app) {
-      // see react-hot-loader docs on hot(module)(app)
-      hot(module)(app.app)
-    }
-  })
+  createAppHotHandler = entry => hot(module)(entry)
   // singleton
   source = source || new EventSourceManager('/__webpack_hmr')
   const handler = new HotHandler(props)

@@ -275,12 +275,6 @@ export async function getAppsConfig(
 export default function getApps() {
   return [${apps.map(app => `require('${app.packageId}')`).join(',')}]
 }
-// testing hot handling in workspaceEntry
-require('@o/kit/src/createHotHandler').createHotHandler({
-  name: 'workspaceEntry',
-  getHash: __webpack_require__.h,
-  module,
-})
 `
   // const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
   const workspaceEntry = join(outputDir, 'workspaceEntryIn.js')
@@ -303,8 +297,6 @@ require('@o/kit/src/createHotHandler').createHotHandler({
     entry: [workspaceEntry],
     target: 'web',
     watch,
-    hot: true,
-    // injectHot: false,
     dllReferences,
     output: {
       library: `window['__orbit_workspace']`,

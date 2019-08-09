@@ -5,7 +5,6 @@ import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
 
 import { IS_ELECTRON } from './constants'
 import { sleep } from './helpers'
-import { AppContainer } from 'react-hot-loader'
 
 /**
  * Warning: I ran into a bug importing @/kit or @/ui here (or anything from the base DLL)
@@ -119,11 +118,7 @@ async function startApp(forceRefresh = false) {
   // re-require for hmr to capture new value
   const { OrbitRoot } = require('./OrbitRoot')
 
-  let elements = (
-    <AppContainer>
-      <OrbitRoot />
-    </AppContainer>
-  )
+  let elements = <OrbitRoot />
 
   if (window.location.search.indexOf('react.profile') > 0) {
     elements = (

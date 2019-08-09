@@ -8,7 +8,8 @@ export function useNLPTopics(args: ModelParams<typeof CosalTopicsModel>): string
 
   useEffect(() => {
     let off = false
-    NLP.getTopics(args).then(x => {
+    const nlpStore = new NLP()
+    nlpStore.getTopics(args).then(x => {
       !off && setState(x)
     })
     return () => {

@@ -308,11 +308,11 @@ export class AppBuilder {
   }
 
   private async getIndex() {
-    const isProd = Object.keys(this.buildMode).every(x => this.buildMode[x] === 'production')
+    // const isProd = Object.keys(this.buildMode).every(x => this.buildMode[x] === 'production')
     const desktopRoot = join(require.resolve('@o/orbit-desktop'), '..', '..')
     const index = await readFile(join(desktopRoot, 'index.html'), 'utf8')
     const scripts = `
-    <script id="script_base" src="/${isProd ? 'baseProd' : 'baseDev'}.dll.js"></script>
+    <script id="script_base" src="/baseDev.dll.js"></script>
     <script id="script_shared" src="/shared.dll.js"></script>
 ${this.apps
   .map(

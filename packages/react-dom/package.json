@@ -1,0 +1,5 @@
+{
+	"name": "@o/react-dom",
+	"main": "index.js",
+	"version": "2.6.0"
+}

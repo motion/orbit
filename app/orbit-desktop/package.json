@@ -1,7 +1,7 @@
 {
   "name": "@o/orbit-desktop",
   "version": "2.6.0",
-  "main": "./_/main.js",
+  "main": "_/main.js",
   "private": true,
   "scripts": {
     "build": "tsc -b",
@@ -11,6 +11,8 @@
   "dependencies": {
     "@babel/runtime": "^7.4.5",
     "@hot-loader/react-dom": "16.8.6",
+    "@o/react": "*",
+    "@o/react-dom": "*",
     "@o/apps-manager": "^2.6.0",
     "@o/cli": "^2.6.0",
     "@o/config": "^2.6.0",

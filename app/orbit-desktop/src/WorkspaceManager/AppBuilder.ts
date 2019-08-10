@@ -4,7 +4,9 @@ import { AppMeta, BuildStatus } from '@o/models'
 import { stringToIdentifier } from '@o/ui'
 import historyAPIFallback from 'connect-history-api-fallback'
 import { Handler } from 'express'
+import { readFile } from 'fs-extra'
 import hashObject from 'node-object-hash'
+import { join } from 'path'
 import { parse } from 'url'
 import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
@@ -307,36 +309,9 @@ export class AppBuilder {
 
   private async getIndex() {
     const isProd = Object.keys(this.buildMode).every(x => this.buildMode[x] === 'production')
-    return `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <script>
-      console.time('splash')
-    </script>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" type="image/png" href="./favicon.png" />
-    <title>Orbit</title>
-    <script>
-      if (typeof require !== 'undefined') {
-        window.electronRequire = require
-      } else {
-        window.notInElectron = true
-        window.electronRequire = module => {
-          return {}
-        }
-      }
-    </script>
-  </head>
-
-  <body>
-    <div id="app"></div>
-    <script>
-      if (window.notInElectron) {
-        // easier to see what would be transparent in dev mode in browser
-        document.body.style.background = '#eee'
-      }
-    </script>
+    const desktopRoot = join(require.resolve('@o/orbit-desktop'), '..', '..')
+    const index = await readFile(join(desktopRoot, 'index.html'), 'utf8')
+    const scripts = `
     <script id="script_base" src="/${isProd ? 'baseProd' : 'baseDev'}.dll.js"></script>
     <script id="script_shared" src="/shared.dll.js"></script>
 ${this.apps
@@ -349,8 +324,8 @@ ${this.apps
   .join('\n')}
     <script src="/workspaceEntry.js"></script>
     <script src="/main.js"></script>
-  </body>
-</html>`
+`
+    return index.replace('<!-- orbit-scripts -->', scripts)
   }
 
   /**

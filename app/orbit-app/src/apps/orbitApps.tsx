@@ -14,6 +14,11 @@ import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './SpacesApp'
 
+export function setupApps() {
+  window['o_confluence_app']('../apps/confluence-app/index.tsx')
+  window['o_demo_app_api_grid']('../apps/demo-api-grid-app/index.tsx')
+}
+
 const LoadingApp = createApp({
   name: 'Loading...',
   icon: '',

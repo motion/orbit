@@ -287,11 +287,11 @@ export function getAppParams(props: WebpackParams): WebpackParams {
     },
     ignore: ['electron-log', '@o/worker-kit', 'configstore'],
     ...props,
-    // output: {
-    //   library: '__orbit_apps.[name]',
-    //   libraryTarget: 'var',
-    //   ...props.output,
-    // },
+    output: {
+      library: '[name]',
+      libraryTarget: 'umd',
+      ...props.output,
+    },
   }
 }
 

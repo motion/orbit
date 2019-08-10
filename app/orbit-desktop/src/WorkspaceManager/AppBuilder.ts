@@ -314,9 +314,6 @@ export class AppBuilder {
     const scripts = `
     <script id="script_base" src="/${isProd ? 'baseProd' : 'baseDev'}.dll.js"></script>
     <script id="script_shared" src="/shared.dll.js"></script>
-    <script>
-      window['__orbit_apps'] = {}
-    </script>
 ${this.apps
   .map(
     app =>
@@ -325,7 +322,6 @@ ${this.apps
       )}.${this.buildMode[app.packageId]}.dll.js"></script>`,
   )
   .join('\n')}
-    <script src="/workspaceEntry.js"></script>
     <script src="/main.js"></script>
 `
     return index.replace('<!-- orbit-scripts -->', scripts)

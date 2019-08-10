@@ -10,6 +10,7 @@ let updateListeners = new Set<Function>()
 let updateTm = null
 
 export function createApp<T extends any>(app: AppDefinition<T>): AppDefinition<T> {
+  console.log('create app', app)
   clearTimeout(updateTm)
   const appWrapped = setupApp(app)
   apps.push(appWrapped)

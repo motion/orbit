@@ -27,9 +27,10 @@ export type AppBuildModeDict = { [name: string]: 'development' | 'production' }
 
 @decorate
 export class WorkspaceManager {
+  started = false
   // the apps we've toggled into development mode
   developingApps: AppMeta[] = []
-  started = false
+  buildNameToAppMeta: { [name: string]: AppMeta } = {}
   workspaceVersion = 0
   options: CommandWsOptions = {
     action: 'run',
@@ -107,23 +108,19 @@ export class WorkspaceManager {
       ensure('not in single build mode', this.options.action !== 'build')
       await sleep(100)
       log.verbose(`update`)
-      const identifiers = this.appsManager.apps.map(x => x.identifier)
       const space = await getActiveSpace()
       const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
       this.graphServer.setupGraph(apps)
-      const packageIds = identifiers.map(this.appsManager.identifierToPackageId)
       // this is the main build action, no need to await here
       this.updateBuild()
       Desktop.setState({
         workspaceState: {
-          workspaceRoot: this.options.workspaceRoot,
           appMeta: activeApps,
-          packageIds,
-          identifiers,
-          identifierToPackageId: identifiers.reduce((acc, identifier) => {
-            acc[identifier] = this.appsManager.identifierToPackageId(identifier)
-            return acc
-          }, {}),
+          nameRegistry: Object.keys(this.buildNameToAppMeta).map(buildName => {
+            const { packageId } = this.buildNameToAppMeta[buildName]
+            const identifier = this.appsManager.packageIdToIdentifier(packageId)
+            return { buildName, packageId, identifier }
+          }),
         },
       })
     },
@@ -169,6 +166,7 @@ export class WorkspaceManager {
         return
       }
       const { webpackConfigs, buildNameToAppMeta } = res
+      this.buildNameToAppMeta = buildNameToAppMeta
       if (options.action === 'build') {
         const { base, ...rest } = webpackConfigs
         const configs = Object.keys(rest).map(key => rest[key])

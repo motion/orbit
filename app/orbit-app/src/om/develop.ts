@@ -43,7 +43,7 @@ const updateDeveloping: AsyncAction<{
   // update state
   om.state.develop.buildStatus = status
 
-  const mode: DevMode = !!next.length ? 'development' : 'production'
+  // const mode: DevMode = !!next.length ? 'development' : 'production'
   // load new app scripts
   const toAdd = difference(next, current)
   const toRemove = difference(current, next)

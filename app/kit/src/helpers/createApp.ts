@@ -23,10 +23,6 @@ export function getApps() {
   return apps
 }
 
-export function onUpdatedApps(cb: (apps: AppDefinition[]) => void) {
-  updateListeners.add(cb)
-}
-
 function setupApp(app: AppDefinition): AppDefinition {
   const hotHandler = OrbitHot.getCurrentHandler()
   if (hotHandler && app.app) {

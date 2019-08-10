@@ -1,4 +1,5 @@
 import { AppDefinition, configureKit, createApp, getApps, useAppDefinitions } from '@o/kit'
+import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
 import React from 'react'
 
@@ -14,8 +15,28 @@ import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './SpacesApp'
 
-export function setupApps() {
-  window['__orbit_workspace']().map(x => x.default)
+export async function setupApps() {
+  // writing our own little System loader
+  const nameRegistry = Desktop.state.workspaceState.nameRegistry
+  const appModules = await Promise.all(
+    nameRegistry.map(({ buildName }) => {
+      return setupSystemModule(buildName, window)
+    }),
+  )
+  const workspace = await setupSystemModule('workspace', appModules)
+  console.log('got', workspace, appModules)
+}
+
+async function setupSystemModule(name: string, modules: any) {
+  return new Promise(res => {
+    const { args, init } = window['System'].registry[name]
+    const { setters, execute } = init(res)
+    // adds the dependencies
+    for (const [index, arg] of args.entries()) {
+      setters[index](modules[arg])
+    }
+    execute()
+  })
 }
 
 const LoadingApp = createApp({

@@ -169,7 +169,7 @@ export async function getAppsConfig(
         throw new Error(`No buildMode set for app ${app.packageId} ${JSON.stringify(buildMode)}`)
       }
       const params: WebpackParams = {
-        name: `app_${cleanName}`,
+        name: `${cleanName}`,
         entry: [appEntry],
         context: directory,
         mode: appMode,
@@ -322,8 +322,7 @@ export function getAppParams(props: WebpackParams): WebpackParams {
     ignore: ['electron-log', '@o/worker-kit', 'configstore'],
     ...props,
     output: {
-      library: '[name]',
-      libraryTarget: 'umd',
+      libraryTarget: 'system',
       ...props.output,
     },
   }

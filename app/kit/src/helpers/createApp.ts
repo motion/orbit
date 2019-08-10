@@ -12,6 +12,10 @@ let updateTm = null
 export function createApp<T extends any>(app: AppDefinition<T>): AppDefinition<T> {
   clearTimeout(updateTm)
   const appWrapped = setupApp(app)
+  // remove old one first (HMR)
+  if (apps.find(x => x.id === app.id)) {
+    apps = apps.filter(x => x.id !== app.id)
+  }
   apps.push(appWrapped)
   updateTm = setTimeout(() => {
     updateListeners.forEach(x => x(apps))

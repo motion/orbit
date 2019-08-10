@@ -222,7 +222,7 @@ export class WorkspaceManager {
     if (mode === 'development') {
       this.developingApps.push(appMeta)
     } else {
-      this.developingApps = _.remove(this.developingApps, x => x.packageId === appMeta.packageId)
+      this.developingApps = _.filter(this.developingApps, x => x.packageId === appMeta.packageId)
     }
     this.updateDevelopingAppIdentifiers()
     this.buildMode = {

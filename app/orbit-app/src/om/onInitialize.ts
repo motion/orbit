@@ -2,15 +2,12 @@ import { observeOne } from '@o/kit'
 import { WindowMessageModel, WorkspaceInfoModel } from '@o/models'
 import { Config, IContext, OnInitialize } from 'overmind'
 
-import { setupApps } from '../apps/orbitApps'
 import { runConfigurations } from '../configurations'
 import { handleMediatorMessages } from './initialize/handleMediatorMessages'
 import { urls } from './router'
 
 export const onInitialize: OnInitialize = async om => {
   const { actions } = om
-
-  setupApps()
 
   runConfigurations()
 
@@ -30,7 +27,7 @@ export const onInitialize: OnInitialize = async om => {
 
   await actions.router.start()
 
-  actions.develop.start()
+  await actions.develop.start()
 
   handleMediatorMessages()
 

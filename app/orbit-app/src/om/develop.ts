@@ -3,7 +3,7 @@ import { AppDefinition, BuildStatus, BuildStatusModel } from '@o/models'
 import { Desktop } from '@o/stores'
 import { BannerHandle, stringToIdentifier } from '@o/ui'
 import { difference } from 'lodash'
-import { Action, AsyncAction } from 'overmind'
+import { AsyncAction } from 'overmind'
 
 import { GlobalBanner } from '../pages/OrbitPage/OrbitPage'
 
@@ -20,7 +20,11 @@ export const state: DevelopState = {
   buildStatus: [],
 }
 
-const start: Action = om => {
+const start: AsyncAction = async om => {
+  // setup apps
+  await om.actions.develop.reloadAppModules()
+
+  // observe changes
   observeMany(BuildStatusModel).subscribe(status => {
     om.actions.develop.updateStatus({ status, banner: GlobalBanner })
   })

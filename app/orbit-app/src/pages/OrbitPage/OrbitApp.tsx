@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, RenderAppFn, useAppBit } from '@o/kit'
+import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getApps, ProvideStores, RenderAppFn, useAppBit } from '@o/kit'
 import { ErrorBoundary, gloss, isDefined, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
@@ -214,6 +214,8 @@ const useIsAppWrapped = (appDef: AppDefinition) => {
       // to avoid suspense running here from child view
       setTimeout(() => {
         try {
+          // NOTE OF HACKINESS
+          // this will upset react because its "outside" the render
           const appView = appDef && appDef.app && appDef.app
           if (!appView || typeof appView !== 'function') {
             return finish(false)
@@ -226,7 +228,7 @@ const useIsAppWrapped = (appDef: AppDefinition) => {
             /// what should we do by default here?
             return finish(true)
           } else {
-            console.error(err)
+            console.debug(err)
           }
         }
         return finish(false)
@@ -243,11 +245,11 @@ function getAppProps(props: ListItemProps): AppViewProps {
   const { item } = props
   if (item) {
     if (item.target === 'bit') {
-      const appDef = getAppDefinitions().find(x => x.id === item.appIdentifier)
+      const appDef = getApps().find(x => x.id === item.appIdentifier)
       return getSourceAppProps(appDef, item)
     }
     if (item.target === 'person-bit') {
-      const appDef = getAppDefinitions().find(x => x.id === 'people')
+      const appDef = getApps().find(x => x.id === 'people')
       return getSourceAppProps(appDef, item)
     }
   }

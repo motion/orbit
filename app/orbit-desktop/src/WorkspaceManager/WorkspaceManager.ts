@@ -6,7 +6,7 @@ import { Desktop } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { remove } from 'fs-extra'
 import _, { uniqBy } from 'lodash'
-import { join } from 'path'
+import { join, relative } from 'path'
 import { getRepository } from 'typeorm'
 import Observable from 'zen-observable'
 
@@ -27,9 +27,10 @@ export type AppBuildModeDict = { [name: string]: 'development' | 'production' }
 
 @decorate
 export class WorkspaceManager {
+  started = false
   // the apps we've toggled into development mode
   developingApps: AppMeta[] = []
-  started = false
+  buildNameToAppMeta: { [name: string]: AppMeta } = {}
   workspaceVersion = 0
   options: CommandWsOptions = {
     action: 'run',
@@ -101,33 +102,41 @@ export class WorkspaceManager {
    */
   update = react(
     () => [this.started, this.activeApps, this.options, this.buildMode],
-    async ([started, activeApps], { sleep }) => {
+    async ([started], { sleep }) => {
       ensure('started', started)
       ensure('directory', !!this.options.workspaceRoot)
       ensure('not in single build mode', this.options.action !== 'build')
       await sleep(100)
-      log.verbose(`update`)
-      const identifiers = this.appsManager.apps.map(x => x.identifier)
+      log.info(`updating workspace build`)
       const space = await getActiveSpace()
       const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
       this.graphServer.setupGraph(apps)
-      const packageIds = identifiers.map(this.appsManager.identifierToPackageId)
       // this is the main build action, no need to await here
-      this.updateBuild()
-      Desktop.setState({
-        workspaceState: {
-          workspaceRoot: this.options.workspaceRoot,
-          appMeta: activeApps,
-          packageIds,
-          identifiers,
-          identifierToPackageId: identifiers.reduce((acc, identifier) => {
-            acc[identifier] = this.appsManager.identifierToPackageId(identifier)
-            return acc
-          }, {}),
-        },
-      })
+      this.updateAppBuilder()
+      this.updateDesktopState()
     },
   )
+
+  updateDesktopState() {
+    const identifiers = this.appsManager.apps.map(x => x.identifier)
+    Desktop.setState({
+      workspaceState: {
+        appMeta: this.activeApps,
+        identifierToPackageId: identifiers.reduce((acc, identifier) => {
+          acc[identifier] = this.appsManager.identifierToPackageId(identifier)
+          return acc
+        }, {}),
+        nameRegistry: Object.keys(this.buildNameToAppMeta).map(buildName => {
+          const appMeta = this.buildNameToAppMeta[buildName]
+          const { packageId } = appMeta
+          const identifier = this.appsManager.packageIdToIdentifier(appMeta.packageId)
+          const entryPath = join(appMeta.directory, appMeta.packageJson.main)
+          const entryPathRelative = relative(this.options.workspaceRoot, entryPath)
+          return { buildName, packageId, identifier, entryPath, entryPathRelative }
+        }),
+      },
+    })
+  }
 
   private updateBuildMode() {
     // update buildMode first
@@ -144,7 +153,7 @@ export class WorkspaceManager {
    * a webpack configuration, and updating AppsMiddlware
    */
   lastBuildConfig = ''
-  async updateBuild() {
+  async updateAppBuilder() {
     const { options, activeApps, buildMode } = this
     log.info(`Start building workspace, building ${activeApps.length} apps...`, options, activeApps)
     if (!activeApps.length) {
@@ -169,6 +178,7 @@ export class WorkspaceManager {
         return
       }
       const { webpackConfigs, buildNameToAppMeta } = res
+      this.buildNameToAppMeta = buildNameToAppMeta
       if (options.action === 'build') {
         const { base, ...rest } = webpackConfigs
         const configs = Object.keys(rest).map(key => rest[key])
@@ -212,7 +222,7 @@ export class WorkspaceManager {
     if (mode === 'development') {
       this.developingApps.push(appMeta)
     } else {
-      this.developingApps = _.remove(this.developingApps, x => x.packageId === appMeta.packageId)
+      this.developingApps = _.filter(this.developingApps, x => x.packageId === appMeta.packageId)
     }
     this.updateDevelopingAppIdentifiers()
     this.buildMode = {
@@ -272,7 +282,7 @@ export class WorkspaceManager {
           }
         }
         await this.updateWorkspace(options)
-        await this.updateBuild()
+        await this.updateAppBuilder()
         return true
       }),
 

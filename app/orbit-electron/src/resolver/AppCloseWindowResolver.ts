@@ -4,7 +4,7 @@ import { AppCloseWindowCommand } from '@o/models'
 import { forceKillProcess } from '@o/orbit-fork-process'
 import { Electron } from '@o/stores'
 import { ChildProcess } from 'child_process'
-import { remove } from 'lodash'
+import { filter } from 'lodash'
 
 const log = new Logger('AppCloseWindowCommand')
 
@@ -39,7 +39,7 @@ export function addAppProcess(info: AppProcess) {
 function killAppProcess(windowId: number) {
   log.info('got close app', appProcesses, windowId)
   const app = appProcesses.find(x => x.windowId === windowId)
-  appProcesses = remove(appProcesses, x => x.windowId === windowId)
+  appProcesses = filter(appProcesses, x => x.windowId === windowId)
   if (!app) {
     console.error('No process found for id', windowId)
     return

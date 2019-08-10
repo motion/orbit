@@ -70,8 +70,9 @@ export const AppDefinitionSetupVerifyCommand = new Command<
 export const GetPIDCommand = new Command<number>('get-pid')
 
 export type PackageJson = {
-  name?: string
-  version?: string
+  name: string
+  main: string
+  version: string
   dependencies?: any
 }
 

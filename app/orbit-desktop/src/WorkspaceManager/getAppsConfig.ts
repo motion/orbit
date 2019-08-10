@@ -1,10 +1,11 @@
 import { Logger } from '@o/logger'
 import { AppMeta, CommandWsOptions } from '@o/models'
 import { stringToIdentifier } from '@o/utils'
-import { ensureDir, ensureSymlink, pathExists, readFile, readJSON, writeFile } from 'fs-extra'
+import { ensureDir, ensureSymlink, pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
 import webpack from 'webpack'
 
+import { getAppEntry } from './commandBuild'
 import { getIsInMonorepo } from './getIsInMonorepo'
 import { DLLReferenceDesc, makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
 import { webpackPromise } from './webpackPromise'
@@ -16,7 +17,6 @@ const log = new Logger('getAppsConfig')
  * This returns the configuration object for everything:
  *   1. a base.dll.js that includes the big shared libraries
  *   2. each app as it's own dll
- *   3. the workspaceEntry which imports app DLLs and concats them
  *   3. the "main" entry point with orbit-app
  */
 
@@ -161,16 +161,13 @@ export async function getAppsConfig(
     apps.map(async app => {
       const cleanName = stringToIdentifier(app.packageId)
       const dllFile = join(outputDir, `manifest-${cleanName}.json`)
-      const appEntry = join(
-        app.directory,
-        (await readJSON(join(app.directory, 'package.json'))).main,
-      )
+      const appEntry = await getAppEntry(app.directory, app.packageJson)
       const appMode = buildMode[app.packageId]
       if (!appMode) {
         throw new Error(`No buildMode set for app ${app.packageId} ${JSON.stringify(buildMode)}`)
       }
       const params: WebpackParams = {
-        name: `app_${cleanName}`,
+        name: `${cleanName}`,
         entry: [appEntry],
         context: directory,
         mode: appMode,
@@ -269,43 +266,6 @@ export async function getAppsConfig(
     )
   }
 
-  /**
-   * Create the apps import
-   */
-  const workspaceEntrySrc = `// all apps
-export default function getApps() {
-  return [${apps.map(app => `require('${app.packageId}')`).join(',')}]
-}
-`
-  // const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
-  const workspaceEntry = join(outputDir, 'workspaceEntryIn.js')
-  log.info(`workspaceEntry ${workspaceEntry}`)
-  const current = (await pathExists(workspaceEntry)) ? await readFile(workspaceEntry) : ''
-  if (current !== workspaceEntrySrc) {
-    await writeFile(workspaceEntry, workspaceEntrySrc)
-  }
-
-  /**
-   * Workspace config, this hopefully gives us some more control/ease with managing hmr/apps.
-   * Having this ordered *last* is important, though we should fix it in useWebpackMiddleware
-   */
-  webpackConfigs.workspace = await makeWebpackConfig({
-    name: 'workspaceEntry',
-    outputFile: 'workspaceEntry.js',
-    outputDir,
-    mode,
-    context: directory,
-    entry: [workspaceEntry],
-    target: 'web',
-    watch,
-    dllReferences,
-    output: {
-      library: `window['__orbit_workspace']`,
-      libraryTarget: 'assign',
-      libraryExport: 'default',
-    },
-  })
-
   return {
     webpackConfigs,
     buildNameToAppMeta,
@@ -326,8 +286,7 @@ export function getAppParams(props: WebpackParams): WebpackParams {
     ignore: ['electron-log', '@o/worker-kit', 'configstore'],
     ...props,
     output: {
-      library: '[name]',
-      libraryTarget: 'umd',
+      libraryTarget: 'system',
       ...props.output,
     },
   }

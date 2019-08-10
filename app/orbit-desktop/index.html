@@ -18,18 +18,25 @@
         }
       }
     </script>
-    <!-- chunk-import format:css -->
   </head>
 
   <body>
     <div id="app"></div>
-    <!-- chunk-import format:js -->
-
     <script>
       if (window.notInElectron) {
         // easier to see what would be transparent in dev mode in browser
         document.body.style.background = '#eee'
       }
+
+      window.__DEV__ = false
+
+      System = {
+        registry: {},
+        register: function(name, args, init) {
+          System.registry[name] = { name, args, init }
+        },
+      }
     </script>
+    <!-- orbit-scripts -->
   </body>
 </html>

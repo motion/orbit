@@ -17,11 +17,15 @@ class DesktopStore {
 
   state = deep({
     workspaceState: {
-      path: '',
-      packageIds: [] as string[],
-      identifierToPackageId: {},
       appMeta: {} as { [identifier: string]: AppMeta },
-      developingAppIdentifiers: [] as string[],
+      identifierToPackageId: {} as { [identifier: string]: string },
+      nameRegistry: [] as {
+        buildName: string
+        packageId: string
+        identifier: string
+        entryPath: string
+        entryPathRelative: string
+      }[],
     },
     errorState: {
       title: '',

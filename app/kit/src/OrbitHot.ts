@@ -22,7 +22,7 @@ if (typeof window !== 'undefined') {
 
 type OrbitHotProps = {
   name: string
-  getHash: Function
+  __webpack_require__: { h(): string; id: string }
   module: any
   actions?: any
   reload?: boolean
@@ -96,6 +96,10 @@ class HotHandler {
     return this.props.module
   }
 
+  get entry() {
+    return this.props.__webpack_require__.id
+  }
+
   constructor(props: OrbitHotProps) {
     this.props = props
     if (!this.module.hot) {
@@ -162,11 +166,15 @@ class HotHandler {
     }
   }
 
+  private getHash() {
+    return this.props.__webpack_require__.h()
+  }
+
   private upToDate(hash?: string) {
     if (hash) {
       this.lastHash = hash
     }
-    return this.lastHash == this.props.getHash()
+    return this.lastHash == this.getHash()
   }
 
   /**
@@ -182,7 +190,7 @@ class HotHandler {
         return null
       }
       // then apply
-      const renewedModules = this.module.hot.apply(this.applyOptions)
+      const renewedModules = await this.module.hot.apply(this.applyOptions)
       if (!this.upToDate()) {
         this.syncNewUpdate(moduleMap)
       } else {

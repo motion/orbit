@@ -1,7 +1,5 @@
-import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, useAppDefinitions } from '@o/kit'
-import { Desktop } from '@o/stores'
+import { AppDefinition, configureKit, createApp, getApps, useAppDefinitions } from '@o/kit'
 import { Loading } from '@o/ui'
-import { reaction } from 'mobx'
 import React from 'react'
 
 import { StoreContext } from '../StoreContext'
@@ -15,29 +13,6 @@ import SearchResultsApp from './SearchResultsApp'
 import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './SpacesApp'
-
-// let causes a instantiation bug...
-var dynamicApps: AppDefinition[] = []
-// debugging
-window['__dynamicApps'] = dynamicApps
-
-updateDefinitions()
-
-export function updateDefinitions() {
-  dynamicApps = window['__orbit_workspace']().map(x => x.default)
-}
-
-export async function startAppLoadWatch() {
-  await updateDefinitions()
-  // watch for updates
-  reaction(
-    () => Desktop.state.workspaceState.packageIds,
-    async () => {
-      await updateDefinitions()
-      __SERIOUSLY_SECRET.reloadAppDefinitions()
-    },
-  )
-}
 
 const LoadingApp = createApp({
   name: 'Loading...',
@@ -65,11 +40,11 @@ export const orbitStaticApps: AppDefinition[] = [
 ]
 
 export const getAllAppDefinitions = (): AppDefinition[] => {
-  return [...orbitStaticApps, ...dynamicApps]
+  return [...orbitStaticApps, ...getApps()]
 }
 
 export function getUserAppDefinitions(): AppDefinition[] {
-  return dynamicApps
+  return getApps()
 }
 
 export function useStaticAppDefinitions() {
@@ -96,10 +71,10 @@ if (module['hot']) {
     const iframe = document.querySelector('body > iframe')
     iframe && iframe.remove()
 
+    // TODO may not be necessary anymore, check if HMR works without it
     if (status === 'apply') {
       configureKit({
         StoreContext,
-        getLoadedApps: getAllAppDefinitions,
       })
     }
   })

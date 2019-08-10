@@ -1,9 +1,9 @@
 import { observeMany, OrbitHot } from '@o/kit'
-import { BuildStatus, BuildStatusModel } from '@o/models'
+import { AppDefinition, BuildStatus, BuildStatusModel } from '@o/models'
 import { Desktop } from '@o/stores'
 import { BannerHandle, stringToIdentifier } from '@o/ui'
 import { difference } from 'lodash'
-import { Action, AsyncAction } from 'overmind'
+import { AsyncAction } from 'overmind'
 
 import { GlobalBanner } from '../pages/OrbitPage/OrbitPage'
 
@@ -11,23 +11,29 @@ export type DevMode = 'development' | 'production'
 export type DevelopState = {
   started: boolean
   buildStatus: BuildStatus[]
+  appModules: AppDefinition[]
 }
 
 export const state: DevelopState = {
   started: false,
+  appModules: [],
   buildStatus: [],
 }
 
-const start: Action = om => {
+const start: AsyncAction = async om => {
+  // setup apps
+  await om.actions.develop.loadApps()
+
+  // observe changes
   observeMany(BuildStatusModel).subscribe(status => {
-    om.actions.develop.updateDeveloping({ status, banner: GlobalBanner })
+    om.actions.develop.updateStatus({ status, banner: GlobalBanner })
   })
 }
 
 const getDevelopingIdentifiers = (x: BuildStatus[]) =>
   x.filter(x => x.mode === 'development').map(x => x.identifier)
 
-const updateDeveloping: AsyncAction<{
+const updateStatus: AsyncAction<{
   status: BuildStatus[]
   banner: BannerHandle | null
 }> = async (om, { status, banner }) => {
@@ -43,7 +49,7 @@ const updateDeveloping: AsyncAction<{
   // update state
   om.state.develop.buildStatus = status
 
-  const mode: DevMode = !!next.length ? 'development' : 'production'
+  // const mode: DevMode = !!next.length ? 'development' : 'production'
   // load new app scripts
   const toAdd = difference(next, current)
   const toRemove = difference(current, next)
@@ -65,8 +71,11 @@ const updateDeveloping: AsyncAction<{
     }),
   ])
 
+  // we have an update
+  await om.actions.develop.loadApps()
+
   // load the proper development base bundle
-  await om.actions.develop.setBaseDllMode({ mode })
+  // await om.actions.develop.setBaseDllMode({ mode })
 
   // no re-run everything
   console.log('TODO make it run the bundle now')
@@ -114,7 +123,7 @@ const changeAppDevelopmentMode: AsyncAction<{
   })
 
   // close old hot event listener
-  OrbitHot.removeHotHandler(`app_${name}`)
+  OrbitHot.removeHotHandler(name)
 
   // load the new script
   await om.actions.develop.loadAppDLL({ name, mode })
@@ -152,10 +161,34 @@ const setBaseDllMode: AsyncAction<{ mode: DevMode }> = async (_, { mode }) => {
   await replaceScript('script_base', mode === 'development' ? '/baseDev.dll.js' : 'baseProd.dll.js')
 }
 
+export const loadApps: AsyncAction = async om => {
+  // writing our own little System loader
+  const nameRegistry = Desktop.state.workspaceState.nameRegistry
+  om.state.develop.appModules = await Promise.all(
+    nameRegistry.map(async ({ buildName, entryPathRelative }) => {
+      const appModule = await loadSystemModule(buildName, window)
+      return appModule(entryPathRelative)
+    }),
+  )
+}
+
+async function loadSystemModule(name: string, modules: any): Promise<(path: string) => any> {
+  return new Promise(res => {
+    const { args, init } = window['System'].registry[name]
+    const { setters, execute } = init(res)
+    // adds the dependencies
+    for (const [index, arg] of args.entries()) {
+      setters[index](modules[arg])
+    }
+    execute()
+  })
+}
+
 export const actions = {
   start,
-  updateDeveloping,
+  updateStatus,
   changeAppDevelopmentMode,
   setBaseDllMode,
   loadAppDLL,
+  loadApps,
 }

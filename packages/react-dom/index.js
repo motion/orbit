@@ -12127,7 +12127,7 @@ function ChildReconciler(shouldTrackSideEffects) {
   }
 
   function updateElement(returnFiber, current$$1, element, expirationTime) {
-    if (current$$1 !== null && current$$1.elementType === element.type) {
+    if (current$$1 !== null && hotCompareElements(current$$1.elementType, element.type, hotUpdateChild(current$$1),current$$1.type)) {
       // Move based on index
       var existing = useFiber(current$$1, element.props, expirationTime);
       existing.ref = coerceRef(returnFiber, current$$1, element);
@@ -12669,7 +12669,7 @@ function ChildReconciler(shouldTrackSideEffects) {
       // TODO: If key === null and child.key === null, then this only applies to
       // the first item in the list.
       if (child.key === key) {
-        if (child.tag === Fragment ? element.type === REACT_FRAGMENT_TYPE : child.elementType === element.type) {
+        if (child.tag === Fragment ? element.type === REACT_FRAGMENT_TYPE : hotCompareElements(child.elementType, element.type, hotUpdateChild(child), child.type)) {
           deleteRemainingChildren(returnFiber, child.sibling);
           var existing = useFiber(child, element.type === REACT_FRAGMENT_TYPE ? element.props.children : element.props, expirationTime);
           existing.ref = coerceRef(returnFiber, child, element);
@@ -21375,7 +21375,49 @@ function createPortal$$1(children, container) {
   return createPortal$1(children, container, null, key);
 }
 
+var hotUpdateChild = function (child) {
+  return function (newType) {
+    child.type = newType;
+    if (child.alternate) {
+      child.alternate.type = newType;
+    }
+  }
+};
+var hotCompareElements = function (oldType, newType) {
+  return oldType === newType
+};
+var hotCleanupHooks = function () {
+  if (typeof resetHooks !== 'undefined') {
+     resetHooks();
+  }
+}
 var ReactDOM = {
+  evalInReactContext: function (injection) {
+    return eval(injection);
+  },
+  hotCleanup: hotCleanupHooks,
+  hotRenderWithHooks: function (current, render) {       
+    hotCleanupHooks();
+    
+    if (typeof nextCurrentHook !== 'undefined' && typeof ReactCurrentDispatcher$1 !== 'undefined') {    
+      nextCurrentHook = current !== null ? current.memoizedState : null;
+      if(typeof firstCurrentHook !== 'undefined') {
+        firstCurrentHook = nextCurrentHook;
+      }
+      
+      ReactCurrentDispatcher$1.current = nextCurrentHook === null ? HooksDispatcherOnMountInDEV : HooksDispatcherOnUpdateInDEV;
+    }
+    
+    var rendered = render();
+    
+    hotCleanupHooks();
+    
+    return rendered;
+  },
+  setHotElementComparator: function (newComparator) {
+    hotCompareElements = newComparator
+  },
+
   createPortal: createPortal$$1,
 
   findDOMNode: function (componentOrElement) {

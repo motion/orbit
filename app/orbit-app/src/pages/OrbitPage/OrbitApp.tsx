@@ -214,6 +214,8 @@ const useIsAppWrapped = (appDef: AppDefinition) => {
       // to avoid suspense running here from child view
       setTimeout(() => {
         try {
+          // NOTE OF HACKINESS
+          // this will upset react because its "outside" the render
           const appView = appDef && appDef.app && appDef.app
           if (!appView || typeof appView !== 'function') {
             return finish(false)
@@ -226,7 +228,7 @@ const useIsAppWrapped = (appDef: AppDefinition) => {
             /// what should we do by default here?
             return finish(true)
           } else {
-            console.error(err)
+            console.debug(err)
           }
         }
         return finish(false)

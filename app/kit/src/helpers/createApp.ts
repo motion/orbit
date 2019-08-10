@@ -7,20 +7,25 @@ import { createApi } from './createApi'
 
 let apps: AppDefinition[] = []
 let updateListeners = new Set<Function>()
-let updateTm = null
 
 export function createApp<T extends any>(app: AppDefinition<T>): AppDefinition<T> {
-  clearTimeout(updateTm)
   const appWrapped = setupApp(app)
   // remove old one first (HMR)
   if (apps.find(x => x.id === app.id)) {
     apps = apps.filter(x => x.id !== app.id)
   }
   apps.push(appWrapped)
+  notifyAppsUpdated()
+  return appWrapped
+}
+
+let updateTm = null
+function notifyAppsUpdated() {
+  // notify update listeners
+  clearTimeout(updateTm)
   updateTm = setTimeout(() => {
     updateListeners.forEach(x => x(apps))
   })
-  return appWrapped
 }
 
 export function getApps() {

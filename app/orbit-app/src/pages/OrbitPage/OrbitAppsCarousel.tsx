@@ -1,30 +1,6 @@
-import {
-  always,
-  AppDefinition,
-  AppIcon,
-  createUsableStore,
-  ensure,
-  getAppDefinition,
-  react,
-  shallow,
-  Templates,
-  useReaction,
-  useStore,
-  useForceUpdate,
-} from '@o/kit'
+import { always, AppDefinition, AppIcon, createUsableStore, ensure, react, shallow, Templates, useAppDefinition, useReaction, useStore } from '@o/kit'
 import { AppBit } from '@o/models'
-import {
-  Card,
-  CardProps,
-  idFn,
-  Row,
-  SimpleText,
-  useIntersectionObserver,
-  useNodeSize,
-  useParentNodeSize,
-  useTheme,
-  View,
-} from '@o/ui'
+import { Card, CardProps, idFn, Row, SimpleText, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
 import { numberBounder, numberScaler, sleep } from '@o/utils'
 import { debounce } from 'lodash'
 import React, { createRef, memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
@@ -451,8 +427,8 @@ export const OrbitAppsCarousel = memo(() => {
             key={app.id}
             index={index}
             app={app}
-            definition={getAppDefinition(app.identifier!)}
             disableInteraction={disableInteraction}
+            identifier={app.identifier!}
             width={frameSize.width}
             height={frameSize.height}
             springs={springs}
@@ -468,11 +444,11 @@ export const OrbitAppsCarousel = memo(() => {
  */
 
 type OrbitAppCardProps = CardProps & {
+  identifier: string
   disableInteraction: boolean
   springs: any
   index: number
   app: AppBit
-  definition: AppDefinition
 }
 
 class AppCardStore {
@@ -497,7 +473,8 @@ class AppCardStore {
 }
 
 const OrbitAppCard = memo(
-  ({ app, definition, index, disableInteraction, springs, ...cardProps }: OrbitAppCardProps) => {
+  ({ app, identifier, index, disableInteraction, springs, ...cardProps }: OrbitAppCardProps) => {
+    const definition = useAppDefinition(identifier)
     const store = useStore(AppCardStore)
     const spring = springs[index]
     const theme = useTheme()

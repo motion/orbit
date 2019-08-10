@@ -1,4 +1,6 @@
 import { AppDefinition } from '@o/models'
+import { useForceUpdate } from '@o/use-store'
+import { useEffect } from 'react'
 
 import { OrbitHot } from '../OrbitHot'
 import { createApi } from './createApi'
@@ -37,4 +39,14 @@ function setupApp(app: AppDefinition): AppDefinition {
     }
   }
   return app
+}
+
+export function useReloadAppDefinitions() {
+  const forceUpdate = useForceUpdate()
+  useEffect(() => {
+    updateListeners.add(forceUpdate)
+    return () => {
+      updateListeners.delete(forceUpdate)
+    }
+  }, [])
 }

@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, RenderAppFn, useAppBit } from '@o/kit'
+import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getApps, ProvideStores, RenderAppFn, useAppBit } from '@o/kit'
 import { ErrorBoundary, gloss, isDefined, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
@@ -243,11 +243,11 @@ function getAppProps(props: ListItemProps): AppViewProps {
   const { item } = props
   if (item) {
     if (item.target === 'bit') {
-      const appDef = getAppDefinitions().find(x => x.id === item.appIdentifier)
+      const appDef = getApps().find(x => x.id === item.appIdentifier)
       return getSourceAppProps(appDef, item)
     }
     if (item.target === 'person-bit') {
-      const appDef = getAppDefinitions().find(x => x.id === 'people')
+      const appDef = getApps().find(x => x.id === 'people')
       return getSourceAppProps(appDef, item)
     }
   }

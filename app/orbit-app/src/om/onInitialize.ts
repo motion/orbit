@@ -2,7 +2,7 @@ import { observeOne } from '@o/kit'
 import { WindowMessageModel, WorkspaceInfoModel } from '@o/models'
 import { Config, IContext, OnInitialize } from 'overmind'
 
-import { getAllAppDefinitions, startAppLoadWatch } from '../apps/orbitApps'
+import { startAppLoadWatch } from '../apps/orbitApps'
 import { runConfigurations } from '../configurations'
 import { handleMediatorMessages } from './initialize/handleMediatorMessages'
 import { urls } from './router'
@@ -13,9 +13,7 @@ export const onInitialize: OnInitialize = async om => {
   // start watching for updated app ids
   startAppLoadWatch()
 
-  runConfigurations({
-    getLoadedApps: getAllAppDefinitions,
-  })
+  runConfigurations()
 
   actions.router.routeListen({ url: urls.home, action: 'showHomePage' })
   actions.router.routeListen({ url: urls.app, action: 'showAppPage' })

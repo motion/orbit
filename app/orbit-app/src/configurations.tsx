@@ -1,4 +1,4 @@
-import { AppDefinition, AppIcon, Bit, configureKit, customItems, getAppDefinition, useAppState, useUserState } from '@o/kit'
+import { AppIcon, Bit, configureKit, customItems, getAppDefinition, useAppState, useUserState } from '@o/kit'
 import { configureUseStore } from '@o/use-store'
 import { configure as configureMobx } from 'mobx'
 import page from 'page'
@@ -7,13 +7,12 @@ import React from 'react'
 import { om } from './om/om'
 import { StoreContext } from './StoreContext'
 
-export function runConfigurations(opts: { getLoadedApps: () => AppDefinition[] }) {
+export function runConfigurations() {
   // stuff here will be re-run every save in development
   // so be sure it wants to run over and over
 
   configureKit({
     StoreContext,
-    getLoadedApps: opts.getLoadedApps,
     handleLink: path => {
       console.log('showing', path)
       page.show(path)

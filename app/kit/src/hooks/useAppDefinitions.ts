@@ -1,7 +1,6 @@
-import { config } from '../configureKit'
-import { useReloadAppDefinitions } from './useReloadAppDefinitions'
+import { getApps, useReloadAppDefinitions } from '../helpers/createApp'
 
 export function useAppDefinitions() {
   useReloadAppDefinitions()
-  return config.getLoadedApps()
+  return getApps()
 }

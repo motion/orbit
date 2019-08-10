@@ -3,8 +3,8 @@ import { ApiSearchItem, AppDefinition, GetAppStoreAppDefinitionCommand } from '@
 import { isDefined } from '@o/utils'
 import { useEffect, useRef, useState } from 'react'
 
+import { useReloadAppDefinitions } from '../helpers/createApp'
 import { getAppDefinition } from '../helpers/getAppDefinition'
-import { useReloadAppDefinitions } from './useReloadAppDefinitions'
 import { useStores } from './useStores'
 
 function createResource(fetch: any) {

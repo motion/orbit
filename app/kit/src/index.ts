@@ -1,6 +1,3 @@
-import { getApps, onUpdatedApps } from './helpers/createApp'
-import { reloadAppDefinitions } from './hooks/useReloadAppDefinitions'
-
 // accept hmrs
 module['hot'] && module['hot'].accept()
 
@@ -36,10 +33,9 @@ export * from './bit/Readability'
 export { configureKit } from './configureKit'
 export * from './helpers/appDefinesClient'
 export * from './helpers/createApi'
-export { createApp } from './helpers/createApp'
+export { createApp, getApps } from './helpers/createApp'
 export * from './helpers/getAppDefinition'
 export * from './helpers/appToListItem'
-export * from './helpers/getAppDefinitions'
 export * from './helpers/getItemName'
 export * from './helpers/getTargetValue'
 export * from './helpers/getRelativeDate'
@@ -109,9 +105,3 @@ export * from './views/AppNavigator'
 export * from './views/AppStatusBar'
 export * from './views/AppToolBar'
 export * from './views/AppContentView'
-
-export const __SERIOUSLY_SECRET = {
-  reloadAppDefinitions,
-  onUpdatedApps,
-  getApps,
-}

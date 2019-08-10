@@ -1,4 +1,4 @@
-import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, useAppDefinitions } from '@o/kit'
+import { AppDefinition, configureKit, createApp, getApps, useAppDefinitions } from '@o/kit'
 import { Loading } from '@o/ui'
 import React from 'react'
 
@@ -13,23 +13,6 @@ import SearchResultsApp from './SearchResultsApp'
 import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './SpacesApp'
-
-// let causes a instantiation bug...
-var dynamicApps: AppDefinition[] = []
-
-updateDefinitions()
-
-export function updateDefinitions() {
-  dynamicApps = __SERIOUSLY_SECRET.getApps()
-}
-
-export function startAppLoadWatch() {
-  updateDefinitions()
-  __SERIOUSLY_SECRET.onUpdatedApps(() => {
-    updateDefinitions()
-    __SERIOUSLY_SECRET.reloadAppDefinitions()
-  })
-}
 
 const LoadingApp = createApp({
   name: 'Loading...',
@@ -57,11 +40,11 @@ export const orbitStaticApps: AppDefinition[] = [
 ]
 
 export const getAllAppDefinitions = (): AppDefinition[] => {
-  return [...orbitStaticApps, ...dynamicApps]
+  return [...orbitStaticApps, ...getApps()]
 }
 
 export function getUserAppDefinitions(): AppDefinition[] {
-  return dynamicApps
+  return getApps()
 }
 
 export function useStaticAppDefinitions() {

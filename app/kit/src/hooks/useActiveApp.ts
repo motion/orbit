@@ -1,6 +1,6 @@
 import { AppBit, AppDefinition } from '@o/models'
 
-import { config } from '../configureKit'
+import { getApps } from '../helpers/createApp'
 import { useActiveApps } from './useActiveApps'
 import { useStores } from './useStores'
 
@@ -14,6 +14,6 @@ export function useActiveApp(): AppBit | null {
 
 export function useActiveAppDefinition(): AppDefinition | null {
   const app = useActiveApp() || { identifier: 'loading' }
-  const loadedApps = config.getLoadedApps!()
+  const loadedApps = getApps()
   return (loadedApps && loadedApps.find(x => x.id === app.identifier)) || null
 }

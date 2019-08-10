@@ -22,7 +22,7 @@ export const state: DevelopState = {
 
 const start: AsyncAction = async om => {
   // setup apps
-  await om.actions.develop.reloadAppModules()
+  await om.actions.develop.loadApps()
 
   // observe changes
   observeMany(BuildStatusModel).subscribe(status => {
@@ -72,7 +72,7 @@ const updateStatus: AsyncAction<{
   ])
 
   // we have an update
-  await om.actions.develop.reloadAppModules()
+  await om.actions.develop.loadApps()
 
   // load the proper development base bundle
   // await om.actions.develop.setBaseDllMode({ mode })
@@ -161,7 +161,7 @@ const setBaseDllMode: AsyncAction<{ mode: DevMode }> = async (_, { mode }) => {
   await replaceScript('script_base', mode === 'development' ? '/baseDev.dll.js' : 'baseProd.dll.js')
 }
 
-export const reloadAppModules: AsyncAction = async om => {
+export const loadApps: AsyncAction = async om => {
   // writing our own little System loader
   const nameRegistry = Desktop.state.workspaceState.nameRegistry
   om.state.develop.appModules = await Promise.all(
@@ -190,5 +190,5 @@ export const actions = {
   changeAppDevelopmentMode,
   setBaseDllMode,
   loadAppDLL,
-  reloadAppModules,
+  loadApps,
 }

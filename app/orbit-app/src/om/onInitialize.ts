@@ -9,6 +9,8 @@ import { urls } from './router'
 export const onInitialize: OnInitialize = async om => {
   const { actions } = om
 
+  await actions.develop.start()
+
   runConfigurations()
 
   actions.router.routeListen({ url: urls.home, action: 'showHomePage' })
@@ -26,8 +28,6 @@ export const onInitialize: OnInitialize = async om => {
   await actions.apps.start()
 
   await actions.router.start()
-
-  await actions.develop.start()
 
   handleMediatorMessages()
 

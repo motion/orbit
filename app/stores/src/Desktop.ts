@@ -17,7 +17,6 @@ class DesktopStore {
 
   state = deep({
     workspaceState: {
-      path: '',
       packageIds: [] as string[],
       identifierToPackageId: {},
       appMeta: {} as { [identifier: string]: AppMeta },

@@ -11,7 +11,7 @@ export const onInitialize: OnInitialize = async om => {
   const { actions } = om
 
   // start watching for updated app ids
-  await startAppLoadWatch()
+  startAppLoadWatch()
 
   runConfigurations({
     getLoadedApps: getAllAppDefinitions,

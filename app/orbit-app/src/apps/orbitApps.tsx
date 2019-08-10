@@ -1,7 +1,5 @@
 import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, useAppDefinitions } from '@o/kit'
-import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
-import { reaction } from 'mobx'
 import React from 'react'
 
 import { StoreContext } from '../StoreContext'
@@ -18,25 +16,19 @@ import SpacesApp from './SpacesApp'
 
 // let causes a instantiation bug...
 var dynamicApps: AppDefinition[] = []
-// debugging
-window['__dynamicApps'] = dynamicApps
 
 updateDefinitions()
 
 export function updateDefinitions() {
-  dynamicApps = window['__orbit_workspace']().map(x => x.default)
+  dynamicApps = __SERIOUSLY_SECRET.getApps()
 }
 
-export async function startAppLoadWatch() {
-  await updateDefinitions()
-  // watch for updates
-  reaction(
-    () => Desktop.state.workspaceState.packageIds,
-    async () => {
-      await updateDefinitions()
-      __SERIOUSLY_SECRET.reloadAppDefinitions()
-    },
-  )
+export function startAppLoadWatch() {
+  updateDefinitions()
+  __SERIOUSLY_SECRET.onUpdatedApps(() => {
+    updateDefinitions()
+    __SERIOUSLY_SECRET.reloadAppDefinitions()
+  })
 }
 
 const LoadingApp = createApp({

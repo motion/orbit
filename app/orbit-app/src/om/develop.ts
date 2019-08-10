@@ -66,7 +66,7 @@ const updateDeveloping: AsyncAction<{
   ])
 
   // load the proper development base bundle
-  await om.actions.develop.setBaseDllMode({ mode })
+  // await om.actions.develop.setBaseDllMode({ mode })
 
   // no re-run everything
   console.log('TODO make it run the bundle now')

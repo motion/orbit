@@ -1,3 +1,4 @@
+import { getApps, onUpdatedApps } from './helpers/createApp'
 import { reloadAppDefinitions } from './hooks/useReloadAppDefinitions'
 
 // accept hmrs
@@ -35,7 +36,7 @@ export * from './bit/Readability'
 export { configureKit } from './configureKit'
 export * from './helpers/appDefinesClient'
 export * from './helpers/createApi'
-export * from './helpers/createApp'
+export { createApp } from './helpers/createApp'
 export * from './helpers/getAppDefinition'
 export * from './helpers/appToListItem'
 export * from './helpers/getAppDefinitions'
@@ -111,4 +112,6 @@ export * from './views/AppContentView'
 
 export const __SERIOUSLY_SECRET = {
   reloadAppDefinitions,
+  onUpdatedApps,
+  getApps,
 }

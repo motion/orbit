@@ -1,5 +1,4 @@
 import { AppDefinition, configureKit, createApp, getApps, useAppDefinitions } from '@o/kit'
-import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
 import React from 'react'
 
@@ -14,30 +13,6 @@ import SearchResultsApp from './SearchResultsApp'
 import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './SpacesApp'
-
-export async function setupApps() {
-  // writing our own little System loader
-  const nameRegistry = Desktop.state.workspaceState.nameRegistry
-  const appModules = await Promise.all(
-    nameRegistry.map(async ({ buildName, entryPathRelative }) => {
-      const appModule = await loadSystemModule(buildName, window)
-      return appModule(entryPathRelative)
-    }),
-  )
-  console.log('got', appModules)
-}
-
-async function loadSystemModule(name: string, modules: any): Promise<(path: string) => any> {
-  return new Promise(res => {
-    const { args, init } = window['System'].registry[name]
-    const { setters, execute } = init(res)
-    // adds the dependencies
-    for (const [index, arg] of args.entries()) {
-      setters[index](modules[arg])
-    }
-    execute()
-  })
-}
 
 const LoadingApp = createApp({
   name: 'Loading...',
@@ -96,10 +71,10 @@ if (module['hot']) {
     const iframe = document.querySelector('body > iframe')
     iframe && iframe.remove()
 
+    // TODO may not be necessary anymore, check if HMR works without it
     if (status === 'apply') {
       configureKit({
         StoreContext,
-        getLoadedApps: getAllAppDefinitions,
       })
     }
   })

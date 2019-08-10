@@ -46,7 +46,6 @@ async function fetchInitialConfig() {
 
 // helper for force-rerender
 window['rerender'] = (force = true) => {
-  require('./apps/orbitApps').updateDefinitions()
   startApp(force)
 }
 

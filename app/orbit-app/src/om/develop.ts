@@ -1,21 +1,22 @@
 import { observeMany, OrbitHot } from '@o/kit'
-import { BuildStatus, BuildStatusModel } from '@o/models'
+import { AppDefinition, BuildStatus, BuildStatusModel } from '@o/models'
 import { Desktop } from '@o/stores'
 import { BannerHandle, stringToIdentifier } from '@o/ui'
 import { difference } from 'lodash'
 import { Action, AsyncAction } from 'overmind'
 
-import { setupApps } from '../apps/orbitApps'
 import { GlobalBanner } from '../pages/OrbitPage/OrbitPage'
 
 export type DevMode = 'development' | 'production'
 export type DevelopState = {
   started: boolean
   buildStatus: BuildStatus[]
+  appModules: AppDefinition[]
 }
 
 export const state: DevelopState = {
   started: false,
+  appModules: [],
   buildStatus: [],
 }
 
@@ -67,7 +68,7 @@ const updateStatus: AsyncAction<{
   ])
 
   // we have an update
-  await setupApps()
+  await om.actions.develop.reloadAppModules()
 
   // load the proper development base bundle
   // await om.actions.develop.setBaseDllMode({ mode })
@@ -118,7 +119,7 @@ const changeAppDevelopmentMode: AsyncAction<{
   })
 
   // close old hot event listener
-  OrbitHot.removeHotHandler(`app_${name}`)
+  OrbitHot.removeHotHandler(name)
 
   // load the new script
   await om.actions.develop.loadAppDLL({ name, mode })
@@ -156,10 +157,34 @@ const setBaseDllMode: AsyncAction<{ mode: DevMode }> = async (_, { mode }) => {
   await replaceScript('script_base', mode === 'development' ? '/baseDev.dll.js' : 'baseProd.dll.js')
 }
 
+export const reloadAppModules: AsyncAction = async om => {
+  // writing our own little System loader
+  const nameRegistry = Desktop.state.workspaceState.nameRegistry
+  om.state.develop.appModules = await Promise.all(
+    nameRegistry.map(async ({ buildName, entryPathRelative }) => {
+      const appModule = await loadSystemModule(buildName, window)
+      return appModule(entryPathRelative)
+    }),
+  )
+}
+
+async function loadSystemModule(name: string, modules: any): Promise<(path: string) => any> {
+  return new Promise(res => {
+    const { args, init } = window['System'].registry[name]
+    const { setters, execute } = init(res)
+    // adds the dependencies
+    for (const [index, arg] of args.entries()) {
+      setters[index](modules[arg])
+    }
+    execute()
+  })
+}
+
 export const actions = {
   start,
   updateStatus,
   changeAppDevelopmentMode,
   setBaseDllMode,
   loadAppDLL,
+  reloadAppModules,
 }

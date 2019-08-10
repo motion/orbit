@@ -19,15 +19,15 @@ export async function setupApps() {
   // writing our own little System loader
   const nameRegistry = Desktop.state.workspaceState.nameRegistry
   const appModules = await Promise.all(
-    nameRegistry.map(({ buildName }) => {
-      return setupSystemModule(buildName, window)
+    nameRegistry.map(async ({ buildName, entryPathRelative }) => {
+      const appModule = await loadSystemModule(buildName, window)
+      return appModule(entryPathRelative)
     }),
   )
-  const workspace = await setupSystemModule('workspace', appModules)
-  console.log('got', workspace, appModules)
+  console.log('got', appModules)
 }
 
-async function setupSystemModule(name: string, modules: any) {
+async function loadSystemModule(name: string, modules: any): Promise<(path: string) => any> {
   return new Promise(res => {
     const { args, init } = window['System'].registry[name]
     const { setters, execute } = init(res)

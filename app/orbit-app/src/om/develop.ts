@@ -5,6 +5,7 @@ import { BannerHandle, stringToIdentifier } from '@o/ui'
 import { difference } from 'lodash'
 import { Action, AsyncAction } from 'overmind'
 
+import { setupApps } from '../apps/orbitApps'
 import { GlobalBanner } from '../pages/OrbitPage/OrbitPage'
 
 export type DevMode = 'development' | 'production'
@@ -20,14 +21,14 @@ export const state: DevelopState = {
 
 const start: Action = om => {
   observeMany(BuildStatusModel).subscribe(status => {
-    om.actions.develop.updateDeveloping({ status, banner: GlobalBanner })
+    om.actions.develop.updateStatus({ status, banner: GlobalBanner })
   })
 }
 
 const getDevelopingIdentifiers = (x: BuildStatus[]) =>
   x.filter(x => x.mode === 'development').map(x => x.identifier)
 
-const updateDeveloping: AsyncAction<{
+const updateStatus: AsyncAction<{
   status: BuildStatus[]
   banner: BannerHandle | null
 }> = async (om, { status, banner }) => {
@@ -64,6 +65,9 @@ const updateDeveloping: AsyncAction<{
       om.actions.develop.changeAppDevelopmentMode({ banner, identifier, mode: 'production' })
     }),
   ])
+
+  // we have an update
+  await setupApps()
 
   // load the proper development base bundle
   // await om.actions.develop.setBaseDllMode({ mode })
@@ -154,7 +158,7 @@ const setBaseDllMode: AsyncAction<{ mode: DevMode }> = async (_, { mode }) => {
 
 export const actions = {
   start,
-  updateDeveloping,
+  updateStatus,
   changeAppDevelopmentMode,
   setBaseDllMode,
   loadAppDLL,

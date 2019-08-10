@@ -322,7 +322,6 @@ ${this.apps
       )}.${this.buildMode[app.packageId]}.dll.js"></script>`,
   )
   .join('\n')}
-    <script src="/workspaceEntry.js"></script>
     <script src="/main.js"></script>
 `
     return index.replace('<!-- orbit-scripts -->', scripts)

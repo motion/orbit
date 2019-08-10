@@ -257,7 +257,7 @@ async function getAppInfoConfig(
   )
 }
 
-export async function getAppEntry(appRoot: string) {
-  const pkg = await readJSON(join(appRoot, 'package.json'))
+export async function getAppEntry(appRoot: string, packageJson?: any) {
+  const pkg = packageJson || (await readJSON(join(appRoot, 'package.json')))
   return join(appRoot, `${pkg.main}`)
 }

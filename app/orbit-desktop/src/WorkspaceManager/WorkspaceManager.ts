@@ -6,7 +6,7 @@ import { Desktop } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { remove } from 'fs-extra'
 import _, { uniqBy } from 'lodash'
-import { join } from 'path'
+import { join, relative } from 'path'
 import { getRepository } from 'typeorm'
 import Observable from 'zen-observable'
 
@@ -102,29 +102,36 @@ export class WorkspaceManager {
    */
   update = react(
     () => [this.started, this.activeApps, this.options, this.buildMode],
-    async ([started, activeApps], { sleep }) => {
+    async ([started], { sleep }) => {
       ensure('started', started)
       ensure('directory', !!this.options.workspaceRoot)
       ensure('not in single build mode', this.options.action !== 'build')
       await sleep(100)
-      log.verbose(`update`)
+      log.info(`updating workspace build`)
       const space = await getActiveSpace()
       const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
       this.graphServer.setupGraph(apps)
       // this is the main build action, no need to await here
-      this.updateBuild()
-      Desktop.setState({
-        workspaceState: {
-          appMeta: activeApps,
-          nameRegistry: Object.keys(this.buildNameToAppMeta).map(buildName => {
-            const { packageId } = this.buildNameToAppMeta[buildName]
-            const identifier = this.appsManager.packageIdToIdentifier(packageId)
-            return { buildName, packageId, identifier }
-          }),
-        },
-      })
+      this.updateAppBuilder()
+      this.updateDesktopState()
     },
   )
+
+  updateDesktopState() {
+    Desktop.setState({
+      workspaceState: {
+        appMeta: this.activeApps,
+        nameRegistry: Object.keys(this.buildNameToAppMeta).map(buildName => {
+          const appMeta = this.buildNameToAppMeta[buildName]
+          const { packageId } = appMeta
+          const identifier = this.appsManager.packageIdToIdentifier(appMeta.packageId)
+          const entryPath = join(appMeta.directory, appMeta.packageJson.main)
+          const entryPathRelative = relative(this.options.workspaceRoot, entryPath)
+          return { buildName, packageId, identifier, entryPath, entryPathRelative }
+        }),
+      },
+    })
+  }
 
   private updateBuildMode() {
     // update buildMode first
@@ -141,7 +148,7 @@ export class WorkspaceManager {
    * a webpack configuration, and updating AppsMiddlware
    */
   lastBuildConfig = ''
-  async updateBuild() {
+  async updateAppBuilder() {
     const { options, activeApps, buildMode } = this
     log.info(`Start building workspace, building ${activeApps.length} apps...`, options, activeApps)
     if (!activeApps.length) {
@@ -270,7 +277,7 @@ export class WorkspaceManager {
           }
         }
         await this.updateWorkspace(options)
-        await this.updateBuild()
+        await this.updateAppBuilder()
         return true
       }),
 

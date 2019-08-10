@@ -23,6 +23,7 @@ class DesktopStore {
         packageId: string
         identifier: string
         entryPath: string
+        entryPathRelative: string
       }[],
     },
     errorState: {

@@ -1,7 +1,7 @@
 import { Logger } from '@o/logger'
 import { AppMeta, CommandWsOptions } from '@o/models'
 import { stringToIdentifier } from '@o/utils'
-import { ensureDir, ensureSymlink, pathExists, readJSON } from 'fs-extra'
+import { ensureDir, ensureSymlink, pathExists, readFile, readJSON, writeFile } from 'fs-extra'
 import { join } from 'path'
 import webpack from 'webpack'
 
@@ -267,6 +267,40 @@ export async function getAppsConfig(
       extraMainConfig,
     )
   }
+
+  /**
+   * Create the apps import
+   */
+  const workspaceEntrySrc = `// all apps
+export default function getApps() {
+  return [${apps.map(app => `require('${app.packageId}')`).join(',')}]
+};`
+  // const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
+  const workspaceEntry = join(outputDir, 'workspaceEntryIn.js')
+  log.info(`workspaceEntry ${workspaceEntry}`)
+  const current = (await pathExists(workspaceEntry)) ? await readFile(workspaceEntry) : ''
+  if (current !== workspaceEntrySrc) {
+    await writeFile(workspaceEntry, workspaceEntrySrc)
+  }
+  /**
+   * Workspace config, this hopefully gives us some more control/ease with managing hmr/apps.
+   * Having this ordered *last* is important, though we should fix it in useWebpackMiddleware
+   */
+  webpackConfigs.workspace = await makeWebpackConfig({
+    name: 'workspaceEntry',
+    outputFile: 'workspaceEntry.js',
+    outputDir,
+    mode,
+    context: directory,
+    entry: [workspaceEntry],
+    target: 'web',
+    watch,
+    dllReferences,
+    output: {
+      library: `workspace`,
+      libraryTarget: 'system',
+    },
+  })
 
   return {
     webpackConfigs,

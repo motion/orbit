@@ -29,6 +29,13 @@
       }
 
       window.__DEV__ = false
+
+      window['systemLibraries'] = {}
+      System = {
+        register: function(name, args, init) {
+          systemLibraries[name] = init
+        },
+      }
     </script>
     <!-- orbit-scripts -->
   </body>

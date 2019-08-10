@@ -226,7 +226,7 @@ export function makeWebpackConfig(
             const hotInjection = `
 require('@o/kit').OrbitHot.fileEnter({
   name: '${name}',
-  getHash: __webpack_require__.h,
+  __webpack_require__: __webpack_require__,
   module,
 });
 `
@@ -247,7 +247,9 @@ require('@o/kit').OrbitHot.fileEnter({
                         // prefix, OrbitHot captures the app you create with createApp()
                         prefix: hotInjection,
                         // postfix clears the createApp hot handler
-                        postfix: `\nrequire('@o/kit').OrbitHot.fileLeave();`,
+                        postfix: `
+require('@o/kit').OrbitHot.fileLeave();
+`,
                       }
                     : {
                         postfix: hotInjection,

@@ -15,8 +15,7 @@ import SetupAppApp from './SetupAppApp'
 import SpacesApp from './SpacesApp'
 
 export function setupApps() {
-  window['o_confluence_app']('../apps/confluence-app/index.tsx')
-  window['o_demo_app_api_grid']('../apps/demo-api-grid-app/index.tsx')
+  window['__orbit_workspace']().map(x => x.default)
 }
 
 const LoadingApp = createApp({

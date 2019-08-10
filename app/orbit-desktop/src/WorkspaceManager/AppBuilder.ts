@@ -308,51 +308,49 @@ export class AppBuilder {
   private async getIndex() {
     const isProd = Object.keys(this.buildMode).every(x => this.buildMode[x] === 'production')
     return `<!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <script>
-          console.time('splash')
-        </script>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="shortcut icon" type="image/png" href="./favicon.png" />
-        <title>Orbit</title>
-        <script>
-          if (typeof require !== 'undefined') {
-            window.electronRequire = require
-          } else {
-            window.notInElectron = true
-            window.electronRequire = module => {
-              return {}
-            }
-          }
-        </script>
-      </head>
+<html lang="en">
+  <head>
+    <script>
+      console.time('splash')
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" type="image/png" href="./favicon.png" />
+    <title>Orbit</title>
+    <script>
+      if (typeof require !== 'undefined') {
+        window.electronRequire = require
+      } else {
+        window.notInElectron = true
+        window.electronRequire = module => {
+          return {}
+        }
+      }
+    </script>
+  </head>
 
-      <body>
-        <div id="app"></div>
-        <script>
-          if (window.notInElectron) {
-            // easier to see what would be transparent in dev mode in browser
-            document.body.style.background = '#eee'
-          }
-        </script>
-        <script id="script_base" src="/${isProd ? 'baseProd' : 'baseDev'}.dll.js"></script>
-        <script id="script_shared" src="/shared.dll.js"></script>
-    ${this.apps
-      .map(
-        app =>
-          `    <script id="script_app_${stringToIdentifier(
-            app.packageId,
-          )}" src="/${stringToIdentifier(app.packageId)}.${
-            this.buildMode[app.packageId]
-          }.dll.js"></script>`,
-      )
-      .join('\n')}
-        <script src="/workspaceEntry.js"></script>
-        <script src="/main.js"></script>
-      </body>
-    </html>`
+  <body>
+    <div id="app"></div>
+    <script>
+      if (window.notInElectron) {
+        // easier to see what would be transparent in dev mode in browser
+        document.body.style.background = '#eee'
+      }
+    </script>
+    <script id="script_base" src="/${isProd ? 'baseProd' : 'baseDev'}.dll.js"></script>
+    <script id="script_shared" src="/shared.dll.js"></script>
+${this.apps
+  .map(
+    app =>
+      `    <script id="script_app_${stringToIdentifier(app.packageId)}" src="/${stringToIdentifier(
+        app.packageId,
+      )}.${this.buildMode[app.packageId]}.dll.js"></script>`,
+  )
+  .join('\n')}
+    <script src="/workspaceEntry.js"></script>
+    <script src="/main.js"></script>
+  </body>
+</html>`
   }
 
   /**

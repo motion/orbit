@@ -10,9 +10,8 @@ import * as Fixtures from './developmentFixtures'
 console.warn('To run development fixtures, use Fixtures.*')
 window['Fixtures'] = Fixtures
 
+let spyOff: any = null
 window['enableLog'] = false
-
-let spyOff = null
 function debug(level?: number) {
   let next = 0
   if (typeof level === 'number') {
@@ -38,7 +37,7 @@ function debug(level?: number) {
 window['debug'] = debug
 
 if (localStorage.getItem('enableLog')) {
-  debug(+localStorage.getItem('enableLog'))
+  debug(+localStorage.getItem('enableLog')! || 0)
 }
 
 function lightLog(val: any) {

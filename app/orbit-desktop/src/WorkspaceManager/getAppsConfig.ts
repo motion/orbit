@@ -80,7 +80,7 @@ export async function getAppsConfig(
     })
     // ensure built
     if (options.clean || !(await pathExists(params.dll))) {
-      log.info(`Ensuring config built once: ${params.name}`, params.dll)
+      log.info(`Ensuring config built once: ${params.name} at ${params.dll}`)
       const buildOnceConfig = await makeWebpackConfig({
         ...params,
         hot: true,
@@ -96,24 +96,25 @@ export async function getAppsConfig(
 
   const webpackConfigs: { [key: string]: webpack.Configuration } = {}
 
-  // contains react-dom/react, always in production
-  const baseProdParams: WebpackParams = {
-    name: `baseProd`,
-    entry: ['react', 'react-dom', 'react-hot-loader'],
-    watch,
-    target: 'web',
-    mode: 'production',
-    context: directory,
-    outputDir,
-    publicPath: '/',
-    outputFile: 'baseProd.dll.js',
-    output: {
-      library: 'base',
-    },
-    dll: join(outputDir, 'manifest-baseProd.json'),
-  }
-  const baseProdConfig = await addDLL(baseProdParams)
-  webpackConfigs.baseProd = baseProdConfig
+  // may not need with dynamic mode react/react-dom
+  // // contains react-dom/react, always in production
+  // const baseProdParams: WebpackParams = {
+  //   name: `baseProd`,
+  //   entry: ['react', 'react-dom', 'react-hot-loader'],
+  //   watch,
+  //   target: 'web',
+  //   mode: 'production',
+  //   context: directory,
+  //   outputDir,
+  //   publicPath: '/',
+  //   outputFile: 'baseProd.dll.js',
+  //   output: {
+  //     library: 'base',
+  //   },
+  //   dll: join(outputDir, 'manifest-baseProd.json'),
+  // }
+  // const baseProdConfig = await addDLL(baseProdParams)
+  // webpackConfigs.baseProd = baseProdConfig
 
   // contains react-hot-loader, always in development
   const baseDevParams: WebpackParams = {

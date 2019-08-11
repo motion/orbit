@@ -3,7 +3,7 @@ import { AppBit } from '@o/models'
 import { Card, CardProps, idFn, Row, SimpleText, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
 import { numberBounder, numberScaler, sleep } from '@o/utils'
 import { debounce } from 'lodash'
-import React, { createRef, memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { createRef, memo, useEffect, useLayoutEffect, useRef } from 'react'
 import { to, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
@@ -146,14 +146,14 @@ class OrbitAppsCarouselStore {
     this.zoomIntoNextApp = true
   }
 
-  ensureScrollToPane = react(
-    () => this.isAnimating,
-    () => {
-      ensure('not animating', !this.isAnimating)
-      ensure('zoomed out', !this.zoomedIn)
-      this.finishScroll()
-    },
-  )
+  // ensureScrollToPane = react(
+  //   () => this.isAnimating,
+  //   () => {
+  //     ensure('not animating', !this.isAnimating)
+  //     ensure('zoomed out', !this.zoomedIn)
+  //     this.finishScroll()
+  //   },
+  // )
 
   undoShouldZoomOnZoomChange = react(
     () => this.state.zoomedOut,
@@ -474,7 +474,7 @@ class AppCardStore {
 
 const OrbitAppCard = memo(
   ({ app, identifier, index, disableInteraction, springs, ...cardProps }: OrbitAppCardProps) => {
-    const definition = useAppDefinition(identifier)
+    const definition = useAppDefinition(identifier)!
     const store = useStore(AppCardStore)
     const spring = springs[index]
     const theme = useTheme()

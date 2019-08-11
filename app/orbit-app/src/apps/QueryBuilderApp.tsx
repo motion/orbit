@@ -170,6 +170,7 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
       backgrounded
       title={props.title || 'No title'}
       subTitle="Select data app."
+      scrollable="y"
       afterTitle={
         <>
           <Button

@@ -2,7 +2,6 @@ import { always, AppDefinition, AppIcon, createUsableStore, ensure, react, shall
 import { AppBit } from '@o/models'
 import { Card, CardProps, idFn, Row, SimpleText, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
 import { numberBounder, numberScaler, sleep } from '@o/utils'
-import { debounce } from 'lodash'
 import React, { createRef, memo, useEffect, useLayoutEffect, useRef } from 'react'
 import { to, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
@@ -122,6 +121,7 @@ class OrbitAppsCarouselStore {
   // listen for pane movement
   // doing it with nextPane allows us to load in apps later
   scrollToIndex = (index: number, shouldZoomIn?: boolean) => {
+    console.log('scroll to index')
     this.zoomIntoNextApp = !!shouldZoomIn
     if (index !== this.nextFocusedIndex) {
       this.nextFocusedIndex = index
@@ -174,6 +174,7 @@ class OrbitAppsCarouselStore {
       })
     }
     if (forceScroll) {
+      console.log('setfocused index')
       this.animateAndScrollTo(this.focusedIndex)
     }
   }
@@ -213,6 +214,7 @@ class OrbitAppsCarouselStore {
     }
     const x = this.props.rowWidth * index
     if (this.rowNode.scrollLeft !== this.state.index * this.props.rowWidth) {
+      console.log('animateAndScrollTo', index)
       this.updateScrollPositionToIndex()
       // TODO this sleep is necessary and a bug in react-spring
       await sleep(20)
@@ -233,9 +235,9 @@ class OrbitAppsCarouselStore {
     this.setFocused(next, true)
   }
 
-  finishWheel = debounce(() => {
-    this.finishScroll()
-  }, 100)
+  // finishWheel = debounce(() => {
+  //   this.finishScroll()
+  // }, 100)
 
   updateScrollPositionToIndex = (index: number = this.state.index) => {
     this.props.setScrollSpring({
@@ -372,6 +374,7 @@ export const OrbitAppsCarousel = memo(() => {
       return next
     },
     {
+      name: `render.getScrollableAndDisabledStatus`,
       defaultValue: [false, true],
     },
   )
@@ -414,13 +417,15 @@ export const OrbitAppsCarousel = memo(() => {
           if (appsCarouselStore.state.zoomedOut) {
             appsCarouselStore.animateTo(rowRef.current!.scrollLeft / rowWidth)
           }
-          appsCarouselStore.finishWheel()
         }}
         scrollLeft={scrollSpring.x}
         animated
         ref={appsCarouselStore.setRowNode}
         perspective="1000px"
         {...bind()}
+        style={{
+          'scroll-snap-type': 'x mandatory',
+        }}
       >
         {apps.map((app, index) => (
           <OrbitAppCard
@@ -519,6 +524,9 @@ const OrbitAppCard = memo(
         data-is="OrbitAppCard-Container"
         zIndex={1000 - index}
         marginRight={`-${stackMarginLessPct * 100}%`}
+        style={{
+          'scroll-snap-align': 'start',
+        }}
       >
         <View
           animated

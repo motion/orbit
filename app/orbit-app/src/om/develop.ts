@@ -33,6 +33,10 @@ const start: AsyncAction = async om => {
 const getDevelopingIdentifiers = (x: BuildStatus[]) =>
   x.filter(x => x.mode === 'development').map(x => x.identifier)
 
+const isAppIdentifier = (id: string) => {
+  return !!Desktop.state.workspaceState.identifierToPackageId[id]
+}
+
 const updateStatus: AsyncAction<{
   status: BuildStatus[]
   banner: BannerHandle | null
@@ -51,8 +55,8 @@ const updateStatus: AsyncAction<{
 
   // const mode: DevMode = !!next.length ? 'development' : 'production'
   // load new app scripts
-  const toAdd = difference(next, current)
-  const toRemove = difference(current, next)
+  const toAdd = difference(next, current).filter(isAppIdentifier)
+  const toRemove = difference(current, next).filter(isAppIdentifier)
 
   if (!toAdd.length && !toRemove.length) {
     return
@@ -74,13 +78,6 @@ const updateStatus: AsyncAction<{
   // we have an update
   await om.actions.develop.loadApps()
 
-  // load the proper development base bundle
-  // await om.actions.develop.setBaseDllMode({ mode })
-
-  // no re-run everything
-  console.log('TODO make it run the bundle now')
-  // om.actions.rerenderApp()
-
   // and print out the message
   // banner &&
   //   banner.set({
@@ -96,6 +93,9 @@ const changeAppDevelopmentMode: AsyncAction<{
   banner?: BannerHandle | null
 }> = async (om, { identifier, mode, banner }) => {
   const packageId = Desktop.state.workspaceState.identifierToPackageId[identifier]
+  if (!packageId) {
+    return
+  }
   const name = stringToIdentifier(packageId)
 
   banner &&
@@ -157,10 +157,6 @@ const loadAppDLL: AsyncAction<{ name: string; mode: DevMode }> = async (_, { nam
   await replaceScript(`script_app_${name}`, `/${name}.${mode}.dll.js`)
 }
 
-const setBaseDllMode: AsyncAction<{ mode: DevMode }> = async (_, { mode }) => {
-  await replaceScript('script_base', mode === 'development' ? '/baseDev.dll.js' : 'baseProd.dll.js')
-}
-
 export const loadApps: AsyncAction = async om => {
   // writing our own little System loader
   const nameRegistry = Desktop.state.workspaceState.nameRegistry
@@ -188,7 +184,6 @@ export const actions = {
   start,
   updateStatus,
   changeAppDevelopmentMode,
-  setBaseDllMode,
   loadAppDLL,
   loadApps,
 }

@@ -34,7 +34,7 @@ export function AppGrid() {
   const [layout, setLayout] = useUserState('grid-layout', null)
   return (
     <GridLayout layout={layout} onChangeLayout={setLayout}>
-      <AppCard key="slack" title="Slack Messages" appType={Slack} onChange={setApp}>
+      <AppCard key="slack" title="Rooms" appType={Slack} onChange={setApp}>
         {({ api }) => {
           const res = api.channelsList()
           return (
@@ -47,11 +47,11 @@ export function AppGrid() {
           )
         }}
       </AppCard>
-      <AppCard key="slack2" title="Room Messages" appType={Slack} app={app}>
+      <AppCard key="slack2" title="Messages" appType={Slack} app={app}>
         {({ api }) => (
           <Tabs scrollable defaultActive="0">
             {rooms.map((room, index) => (
-              <Tab key={room.id} id={`${index}`} label={room.name + '12322'} scrollable="y">
+              <Tab key={room.id} id={`${index}`} label={room.name} padding scrollable="y">
                 {() => {
                   const res = api.channelsHistory({ channel: room.id })
                   return <SlackConversation messages={res.messages || []} />

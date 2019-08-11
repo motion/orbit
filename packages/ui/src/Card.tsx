@@ -125,10 +125,12 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
             space={!!space && getSpaceSizeNum(space) * getSize(size)}
             padding={padding}
             flex={1}
-            maxHeight={maxHeight}
             // using this caused a bug with animations inside, they would not position properly
             // specifically the OrbitAppsDrawer would show apps not aligned, not setting hidden fixed it
             // overflow="hidden"
+            // but.... if you dont use flex + overflow hidden, scrollables inside wont work...
+            overflow="hidden"
+            maxHeight={maxHeight}
             useCollapse={toggle}
             // this fixed a super super chrome bug where doing any transform/animation
             // caused this inner node to not size as it should, this fixes it!

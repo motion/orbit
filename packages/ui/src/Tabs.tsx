@@ -229,7 +229,9 @@ function TabsControlled({
 }
 
 const TabContainer = gloss(Box, {
+  // if dont have flex + overflow hidden, scrollables wont work inside
   flex: 1,
+  overflow: 'hidden',
   // minHeight: 'max-content',
 })
 

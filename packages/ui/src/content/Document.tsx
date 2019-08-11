@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 
 import { HighlightText } from '../Highlight'
 import { Title } from '../text/Title'
+import { Col } from '../View/Col'
 import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
 
 export type DocumentProps = Partial<ItemsPropsContextType> & {
@@ -19,9 +20,11 @@ export function Document(rawProps: DocumentProps) {
     return <HighlightText ellipse>{body.slice(0, 200)}</HighlightText>
   }
   return (
-    <>
+    <Col space>
       <Title>{title}</Title>
-      <HighlightText whiteSpace="pre-line">{body}</HighlightText>
-    </>
+      <HighlightText size={1.2} whiteSpace="pre-line">
+        {body}
+      </HighlightText>
+    </Col>
   )
 }

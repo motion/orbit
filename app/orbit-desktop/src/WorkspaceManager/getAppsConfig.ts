@@ -32,14 +32,13 @@ export async function getAppsConfig(
     return null
   }
 
-  const isInMonoRepo = await getIsInMonorepo()
-  // the mode used for base.dll, main, etc
+  // the mode/watch used for non-apps packages
   const mode = buildMode.main
+  const watch = options.dev && options.action === 'run'
+
+  const isInMonoRepo = await getIsInMonorepo()
   const directory = options.workspaceRoot
   const outputDir = join(directory, 'dist', mode)
-
-  // used for non-app packages
-  const watch = options.dev && options.action === 'run'
 
   log.info(
     `dev ${options.dev} watch ${watch} ${directory}, apps ${apps.length} ${isInMonoRepo}`,
@@ -177,6 +176,7 @@ export async function getAppsConfig(
         outputFile: `${cleanName}.${appMode}.dll.js`,
         outputDir,
         injectHot: true,
+        watch: appMode === 'development',
         hotType: 'app',
         output: {
           library: cleanName,

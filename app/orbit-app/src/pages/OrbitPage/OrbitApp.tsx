@@ -1,6 +1,6 @@
 import { isEqual } from '@o/fast-compare'
 import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getApps, ProvideStores, RenderAppFn, useAppBit } from '@o/kit'
-import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
+import { ErrorBoundary, gloss, ListItemProps, ProvideShare, ProvideVisibility, ScopedState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
 import React, { memo, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react'
@@ -89,9 +89,9 @@ const OrbitAppRender = memo((props: OrbitAppProps) => {
     return null
   }
   return (
-    <Suspense fallback={<Loading />}>
-      <OrbitAppRenderOfDefinition appDef={appDef} {...props} />
-    </Suspense>
+    // <Suspense fallback={<Loading />}>
+    <OrbitAppRenderOfDefinition appDef={appDef} {...props} />
+    // </Suspense>
   )
 })
 
@@ -132,14 +132,13 @@ export const OrbitAppRenderOfDefinition = ({
     }
   }, [])
 
-  let AppApp = appDef.app!
-
+  const AppDefinitionAppView = appDef.app!
   const appElement = useMemo(
     () =>
       shouldRenderApp && (
         <FadeIn>
           <App>
-            <AppApp
+            <AppDefinitionAppView
               {...activeItem}
               identifier={(activeItem && activeItem!.identifier) || identifier}
               id={`${(activeItem && activeItem!.id) || id}`}
@@ -170,9 +169,9 @@ export const OrbitAppRenderOfDefinition = ({
       <AppLoadContext.Provider value={appLoadContext}>
         <AppViewsContext.Provider value={viewsContext}>
           <ErrorBoundary name={`OrbitApp: ${identifier}`} displayInline>
-            <Suspense fallback={<Loading />} {...{ delayMs: 400 }}>
-              {appElement}
-            </Suspense>
+            {/* <Suspense fallback={<Loading />} {...{ delayMs: 400 }}> */}
+            {appElement}
+            {/* </Suspense> */}
           </ErrorBoundary>
         </AppViewsContext.Provider>
       </AppLoadContext.Provider>

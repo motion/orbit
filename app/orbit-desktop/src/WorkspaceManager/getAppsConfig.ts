@@ -177,7 +177,6 @@ export async function getAppsConfig(
         outputDir,
         injectHot: true,
         watch: appMode === 'development',
-        hotType: 'app',
         output: {
           library: cleanName,
         },

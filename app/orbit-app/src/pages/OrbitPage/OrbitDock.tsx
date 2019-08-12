@@ -171,8 +171,8 @@ export const OrbitDock = memo(() => {
           boxShadow={[
             {
               spread: 50,
-              blur: 180,
-              color: theme.background.isDark() ? [0, 0, 0] : [0, 0, 0, 0.25],
+              blur: 100,
+              color: theme.background.isDark() ? [0, 0, 0, 0.8] : [0, 0, 0, 0.25],
             },
           ]}
           zIndex={-1}
@@ -269,7 +269,7 @@ const FloatingAppWindow = memo(({ showMenu, buttonRect, app, definition, index }
       }}
       maxHeight={windowHeight - 80}
       padding={0}
-      zIndex={10000000}
+      zIndex={10000000000000}
       visible={showMenu}
       pointerEvents={showMenu ? 'auto' : 'none'}
       onMouseEnter={() => {

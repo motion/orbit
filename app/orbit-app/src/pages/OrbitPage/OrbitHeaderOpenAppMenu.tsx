@@ -59,7 +59,8 @@ export const OrbitHeaderOpenAppMenu = memo(
         sizeRadius={1.6}
         tooltip="Open to desktop (⌘ + ⏎)"
         onClick={effects.openCurrentApp}
-        elevation={8}
+        elevation={3}
+        elevationShadowOpacity={0.2}
         items={[
           ...(isOnOpenableApp
             ? [

@@ -32,24 +32,16 @@ export const OrbitHeaderOpenAppMenu = memo(
     const appsCarousel = useAppsCarousel()
     const { isOnOpenableApp } = appsCarousel
 
-    if (appRole === 'editing') {
+    if (appRole === 'torn' || appRole === 'editing') {
       return (
         <MenuButton
           alt="action"
           size={1}
           sizeRadius={1.6}
-          onClick={() => {
-            console.warn('Should send orbit build command, then run it in production')
-          }}
-          items={[...constantMenuItems]}
-        >
-          Preview
-        </MenuButton>
+          elevation={3}
+          items={constantMenuItems}
+        />
       )
-    }
-
-    if (appRole === 'torn') {
-      return <MenuButton size={1} sizeRadius={1.6} items={constantMenuItems} />
     }
 
     return (

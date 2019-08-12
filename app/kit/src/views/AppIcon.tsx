@@ -21,9 +21,9 @@ export const AppIcon = memo(
     let icon = props.icon || props.identifier || ''
     let iconLight = ''
     const colors =
-      props.colors || (props.app && props.app.colors) || theme.background.isDark()
-        ? ['#111', '#000']
-        : ['#fff', '#f9f9f9']
+      props.colors ||
+      (props.app && props.app.colors) ||
+      (theme.background.isDark() ? ['#111', '#000'] : ['#fff', '#f9f9f9'])
     const identifier = props.identifier || (props.app && props.app.identifier) || ''
     const definition = useAppDefinition(identifier)
 

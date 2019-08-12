@@ -37,7 +37,7 @@ const ClipboardAppIndex = memo(() => {
       return shareItem && om.state.apps.activeDockApps.some(app => shareItem.id === app.id) !== true
     })
     .map(key => {
-      const { id, identifier, name, items = [] } = om.state.share[key]
+      const { id, name, items = [] } = om.state.share[key]
       const app = om.state.apps.activeApps.find(x => x.id === id)
       const subTitle = items.length ? `Selected: ${summarize(items)}` : 'Nothing selected'
       return {

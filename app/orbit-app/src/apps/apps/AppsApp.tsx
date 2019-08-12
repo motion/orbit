@@ -3,7 +3,6 @@ import { ApiSearchItem } from '@o/models'
 import { Button, Col, Icon, List, ListItemProps, Section, SubSection, SubTitle, useAsyncFn, useBanner } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 
-import { GraphExplorer } from '../../views/GraphExplorer'
 import { ManageApps } from '../../views/ManageApps'
 import { useUserAppDefinitions } from '../orbitApps'
 import { AppSetupForm } from './AppSetupForm'
@@ -135,18 +134,11 @@ export function AppsIndex() {
       }}
       items={[
         {
-          title: 'Installed Apps',
+          title: 'Manage Apps',
           icon: 'apps',
           subTitle: 'View, organize installed apps',
           subType: 'manage-apps',
         },
-        {
-          title: 'Graph',
-          icon: 'Graph',
-          subTitle: 'Explore all GraphQL app APIs',
-          subType: 'explorer-graph',
-        },
-
         {
           selectable: false,
           padding: false,
@@ -183,11 +175,6 @@ export function AppsIndex() {
 }
 
 export function AppsMain(props: AppViewProps) {
-  console.log('rendering appsmain')
-  if (props.subType === 'explorer-graph') {
-    return <GraphExplorer />
-  }
-
   if (props.subType === 'manage-apps') {
     return <ManageApps />
   }

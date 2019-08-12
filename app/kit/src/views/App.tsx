@@ -1,4 +1,5 @@
 import { isEqual } from '@o/fast-compare'
+import { createStoreContext } from '@o/use-store'
 import React, { createContext, useContext, useEffect } from 'react'
 
 import { useStoresSimple } from '../hooks/useStores'
@@ -70,7 +71,22 @@ export type AppProps = {
 
 const IDView = props => props.children
 
+class ParentAppStore {
+  didMountChild = false
+}
+const ParentApp = createStoreContext(ParentAppStore)
+
 export const App = (props: AppProps) => {
+  // this helps us detect if we are a child <App /> of <App />
+  const parentApp = ParentApp.useStore()
+  // else we are the parent
+  const currentApp = parentApp || ParentApp.useCreateStore()
+  useEffect(() => {
+    if (parentApp) {
+      parentApp.didMountChild = true
+    }
+  }, [parentApp])
+
   for (const key in props) {
     if (!validAppProps.find(x => x === key)) {
       throw new Error(`Invalid prop passed ${key}`)
@@ -100,6 +116,10 @@ export const App = (props: AppProps) => {
   }
 
   useEffect(() => {
+    if (currentApp.didMountChild) {
+      // dont do anything if we are the parent, the child will do this...
+      return
+    }
     if (!isEqual(props.menuItems, appStore!.menuItems)) {
       appStore!.setMenuItems(props.menuItems!)
     }
@@ -109,7 +129,7 @@ export const App = (props: AppProps) => {
   }, [props.menuItems])
 
   return (
-    <>
+    <ParentApp.SimpleProvider value={parentApp || currentApp}>
       {renderApp({
         statusbar: hasStatusbar && <Statusbar {...hasProps}>{props.statusBar}</Statusbar>,
         main: hasMain && <Main {...hasProps}>{props.children}</Main>,
@@ -117,7 +137,7 @@ export const App = (props: AppProps) => {
         toolbar: hasToolbar && <Toolbar {...hasProps}>{props.toolBar}</Toolbar>,
         actions: hasActions && <Actions {...hasProps}>{props.actions}</Actions>,
       })}
-    </>
+    </ParentApp.SimpleProvider>
   )
 }
 

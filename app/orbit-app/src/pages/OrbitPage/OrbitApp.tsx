@@ -1,6 +1,6 @@
 import { isEqual } from '@o/fast-compare'
 import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getApps, ProvideStores, RenderAppFn, useAppBit } from '@o/kit'
-import { ErrorBoundary, gloss, isDefined, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
+import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
 import React, { memo, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react'
@@ -132,32 +132,19 @@ export const OrbitAppRenderOfDefinition = ({
     }
   }, [])
 
-  let AppDefMain = appDef.app!
-
-  // test to see if they wrapped with <App>
-  const isAppWrapped = useIsAppWrapped(appDef)
-
-  // must memo to avoid remounting
-  const FinalAppView = useMemo(() => {
-    if (isAppWrapped) {
-      return AppDefMain
-    }
-    return props => (
-      <App>
-        <AppDefMain {...props} />
-      </App>
-    )
-  }, [isAppWrapped, AppDefMain])
+  let AppApp = appDef.app!
 
   const appElement = useMemo(
     () =>
       shouldRenderApp && (
         <FadeIn>
-          <FinalAppView
-            {...activeItem}
-            identifier={(activeItem && activeItem!.identifier) || identifier}
-            id={`${(activeItem && activeItem!.id) || id}`}
-          />
+          <App>
+            <AppApp
+              {...activeItem}
+              identifier={(activeItem && activeItem!.identifier) || identifier}
+              id={`${(activeItem && activeItem!.id) || id}`}
+            />
+          </App>
         </FadeIn>
       ),
     [shouldRenderApp, activeItem, id, identifier],
@@ -191,51 +178,6 @@ export const OrbitAppRenderOfDefinition = ({
       </AppLoadContext.Provider>
     </ProvideShare>
   )
-}
-
-let isWrappedCache = {}
-
-const useIsAppWrapped = (appDef: AppDefinition) => {
-  let cache = isWrappedCache[appDef.id]
-  if (cache) {
-    if (isDefined(cache.res)) {
-      return cache.res
-    }
-    throw cache.promise
-  }
-  cache = isWrappedCache[appDef.id] = {
-    res: undefined,
-    promise: new Promise(res => {
-      const finish = (val: boolean = false) => {
-        cache.res = val
-        res(val)
-      }
-
-      // to avoid suspense running here from child view
-      setTimeout(() => {
-        try {
-          // NOTE OF HACKINESS
-          // this will upset react because its "outside" the render
-          const appView = appDef && appDef.app && appDef.app
-          if (!appView || typeof appView !== 'function') {
-            return finish(false)
-          }
-          const appChildEl = appView({})
-          return finish(!!(appChildEl && appChildEl.type && appChildEl.type['isApp']))
-        } catch (err) {
-          if (err.message.indexOf('Invalid hook call') > -1) {
-            // ignore
-            /// what should we do by default here?
-            return finish(true)
-          } else {
-            console.debug(err)
-          }
-        }
-        return finish(false)
-      })
-    }),
-  }
-  throw isWrappedCache[appDef.id].promise
 }
 
 function getAppProps(props: ListItemProps): AppViewProps {

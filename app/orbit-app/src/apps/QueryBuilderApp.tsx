@@ -458,7 +458,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   return (
     <Layout type="row">
       <Pane flex={2} resizable>
-        <Layout type="col">
+        <Layout type="column">
           <Pane flex={2} resizable>
             <Col padding space>
               <Row justifyContent="space-between">

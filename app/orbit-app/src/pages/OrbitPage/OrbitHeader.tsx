@@ -382,7 +382,7 @@ const BackButton = memo(() => {
       tooltipProps={{
         delay: 800,
       }}
-      disabled={!appsCarousel.zoomedIn && state.router.historyIndex <= 0}
+      disabled={!appsDrawerStore.isOpen && !appsCarousel.zoomedIn && state.router.historyIndex <= 0}
       iconSize={18}
       onClick={() => {
         if (appsDrawerStore.isOpen) {

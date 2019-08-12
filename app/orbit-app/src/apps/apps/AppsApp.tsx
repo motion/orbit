@@ -36,7 +36,7 @@ export function useDataAppDefinitions() {
   return useAppDefinitions().filter(x => isDataDefinition(x))
 }
 
-export const appDefToListItem = (def: AppDefinition): ListItemProps => {
+export const setupAppListItem = (def: AppDefinition): ListItemProps => {
   return {
     key: `install-${def.id}`,
     groupName: 'Setup (Local)',
@@ -52,7 +52,7 @@ export const appDefToListItem = (def: AppDefinition): ListItemProps => {
 
 const appSearchToListItem = (item: ApiSearchItem): ListItemProps => ({
   title: item.name,
-  subTitle: item.description.slice(0, 300),
+  subTitle: item.description.slice(0, 300) || 'No description',
   icon: <AppIcon icon={item.icon} />,
   groupName: 'Search (App Store)',
   after: item.features.some(x => x === 'graph' || x === 'sync' || x === 'api') ? sourceIcon : null,
@@ -126,7 +126,6 @@ export function AppsIndex() {
 
   return (
     <List
-      title="Apps"
       alwaysSelected
       onQueryChange={search}
       itemProps={{
@@ -166,7 +165,7 @@ export function AppsIndex() {
             </Col>
           ),
         },
-        ...localApps.map(appDefToListItem),
+        ...localApps.map(setupAppListItem),
         ...topApps,
         ...searchItems,
       ]}

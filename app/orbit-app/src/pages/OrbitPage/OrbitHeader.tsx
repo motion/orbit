@@ -175,6 +175,9 @@ export const OrbitHeader = memo(() => {
             <Button
               circular
               tooltip="Add app to workspace"
+              tooltipProps={{
+                distance: 16
+              }}
               alt="flat"
               icon="plus"
               size="sm"

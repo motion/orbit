@@ -45,8 +45,13 @@ export const getAllAppDefinitions = (): AppDefinition[] => {
   return [...orbitStaticApps, ...getApps()]
 }
 
+const staticAppIdentifiers = orbitStaticApps.reduce((acc, cur) => {
+  acc[cur.id] = true
+  return acc
+}, {})
+
 export function getUserAppDefinitions(): AppDefinition[] {
-  return getApps()
+  return getApps().filter(x => !staticAppIdentifiers[x.id])
 }
 
 export function useStaticAppDefinitions() {

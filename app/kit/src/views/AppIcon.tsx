@@ -1,3 +1,4 @@
+import { AppBit } from '@o/models'
 import { IconShape, IconShapeProps, SVG, toColor, useTheme } from '@o/ui'
 import { ThemeObject } from 'gloss'
 import React, { forwardRef, memo } from 'react'
@@ -5,6 +6,9 @@ import React, { forwardRef, memo } from 'react'
 import { useAppDefinition } from '../hooks/useAppDefinition'
 
 export type AppIconProps = Omit<IconShapeProps, 'color' | 'gradient'> & {
+  // use either the appBit
+  app?: AppBit
+  // or identifier + icon + colors (can use to override app too)
   identifier?: string
   icon?: string
   colors?: string[]
@@ -13,12 +17,14 @@ export type AppIconProps = Omit<IconShapeProps, 'color' | 'gradient'> & {
 export const AppIcon = memo(
   forwardRef((props: AppIconProps, ref) => {
     const theme = useTheme({ ignoreAlternate: true })
+    const { app, ...rest } = props
     let icon = props.icon || props.identifier || ''
     let iconLight = ''
-    let colors =
-      props.colors || (theme.background.isDark() ? ['#111', '#000'] : ['#fff', '#f9f9f9'])
-
-    const identifier = typeof props.identifier === 'string' ? props.identifier : false
+    const colors =
+      props.colors || (props.app && props.app.colors) || theme.background.isDark()
+        ? ['#111', '#000']
+        : ['#fff', '#f9f9f9']
+    const identifier = props.identifier || (props.app && props.app.identifier) || ''
     const definition = useAppDefinition(identifier)
 
     if (identifier && definition) {
@@ -27,7 +33,7 @@ export const AppIcon = memo(
     }
 
     if (!icon) {
-      console.debug('no icon for', props)
+      console.debug('no icon for', rest)
       icon = 'home'
     }
 
@@ -40,7 +46,7 @@ export const AppIcon = memo(
 
     if (isSVGIcon) {
       const iconSrc = theme.background.isDark() ? iconLight || icon : icon
-      return <SVG fill={color} svg={iconSrc} width={`${props.size}px`} height={`${props.size}px`} />
+      return <SVG fill={color} svg={iconSrc} width={`${rest.size}px`} height={`${rest.size}px`} />
     }
 
     if (typeof icon !== 'string') {
@@ -48,7 +54,7 @@ export const AppIcon = memo(
     }
 
     return (
-      <IconShape ref={ref} gradient={colors} size={48} shape="squircle" name={icon} {...props} />
+      <IconShape ref={ref} gradient={colors} size={48} shape="squircle" name={icon} {...rest} />
     )
   }),
 )

@@ -221,8 +221,8 @@ const OrbitDockOpenButton = memo(() => {
           margin={[0, 20, 0, 0]}
           width={30}
           height={30}
-          icon="ring"
-          iconSize={20}
+          icon="selection"
+          iconSize={18}
           iconProps={{
             transform: {
               rotate: '90deg',

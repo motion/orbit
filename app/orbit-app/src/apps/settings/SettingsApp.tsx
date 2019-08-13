@@ -19,7 +19,6 @@ export default createApp({
 export function SettingsAppIndex() {
   return (
     <List
-      title="Settings"
       alwaysSelected
       items={[
         {

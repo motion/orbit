@@ -92,7 +92,6 @@ function QueryBuilderIndex({
   return (
     <>
       <TreeList
-        title="Queries"
         alwaysSelected
         use={treeList}
         onSelect={items => {

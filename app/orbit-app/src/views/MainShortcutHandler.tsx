@@ -130,25 +130,19 @@ export default memo(function MainShortcutHandler(props: {
         }
         shortcutStore.emit(Direction.right)
       },
-    }
-
-    if (paneManagerStore) {
-      res = {
-        ...res,
-        BACK: () => actions.router.back(),
-        FORWARD: () => actions.router.forward(),
-        RIGHT_TAB: () => paneManagerStore.move(Direction.right),
-        LEFT_TAB: () => paneManagerStore.move(Direction.left),
-        COMMAND_1: () => paneManagerStore.setNextPaneKeyableIndex(0),
-        COMMAND_2: () => paneManagerStore.setNextPaneKeyableIndex(1),
-        COMMAND_3: () => paneManagerStore.setNextPaneKeyableIndex(2),
-        COMMAND_4: () => paneManagerStore.setNextPaneKeyableIndex(3),
-        COMMAND_5: () => paneManagerStore.setNextPaneKeyableIndex(4),
-        COMMAND_6: () => paneManagerStore.setNextPaneKeyableIndex(5),
-        COMMAND_7: () => paneManagerStore.setNextPaneKeyableIndex(6),
-        COMMAND_8: () => paneManagerStore.setNextPaneKeyableIndex(7),
-        COMMAND_9: () => paneManagerStore.setNextPaneKeyableIndex(8),
-      }
+      BACK: () => actions.router.back(),
+      FORWARD: () => actions.router.forward(),
+      RIGHT_TAB: () => appsCarouselStore.right(),
+      LEFT_TAB: () => appsCarouselStore.left(),
+      COMMAND_1: () => appsCarouselStore.setFocused(0, true),
+      COMMAND_2: () => appsCarouselStore.setFocused(1, true),
+      COMMAND_3: () => appsCarouselStore.setFocused(2, true),
+      COMMAND_4: () => appsCarouselStore.setFocused(3, true),
+      COMMAND_5: () => appsCarouselStore.setFocused(4, true),
+      COMMAND_6: () => appsCarouselStore.setFocused(5, true),
+      COMMAND_7: () => appsCarouselStore.setFocused(6, true),
+      COMMAND_8: () => appsCarouselStore.setFocused(7, true),
+      COMMAND_9: () => appsCarouselStore.setFocused(8, true),
     }
 
     return {

@@ -7,6 +7,7 @@
     "test-built-app": "./dist/mac/Orbit.app/Contents/MacOS/Orbit",
     "build-app": "./scripts/build.sh",
     "build-app-resume": "./scripts/build.sh --resume",
+    "build-app-resume-nosign": "./scripts/build.sh --resume --no-sign",
     "zip-app": "./scripts/zip-app.sh",
     "publish": "./scripts/publish.sh"
   },

@@ -198,5 +198,10 @@ mv stage-app/node_modules/sqlite3/lib/binding/electron-v4.0-darwin-x64 stage-app
 
 # see stage-app/package.json for options
 echo "electron-builder..."
-(cd stage-app && npx electron-builder -p always)
+if [[ "$FLAGS" =~ "--no-sign" ]]; then
+  cd stage-app
+  CSC_IDENTITY_AUTO_DISCOVERY=false npx electron-builder
+else
+  cd stage-app npx electron-builder -p always
+fi
 

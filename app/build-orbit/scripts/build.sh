@@ -202,6 +202,7 @@ if [[ "$FLAGS" =~ "--no-sign" ]]; then
   cd stage-app
   CSC_IDENTITY_AUTO_DISCOVERY=false npx electron-builder
 else
-  cd stage-app npx electron-builder -p always
+  cd stage-app
+  npx electron-builder -p always
 fi
 

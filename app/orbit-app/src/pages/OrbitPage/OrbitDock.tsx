@@ -127,7 +127,6 @@ export const OrbitDock = memo(() => {
   const theme = useTheme()
   const { appRole } = useStore(App)
   const isTorn = appRole === 'torn'
-  console.log('isTorn', isTorn)
   const activeDockApps = state.apps.activeDockApps.filter(x =>
     isTorn ? x.identifier !== 'apps' : true,
   )
@@ -148,7 +147,7 @@ export const OrbitDock = memo(() => {
         onMouseLeave={store.hoverLeave}
         top={56}
         right={0}
-        padding={[25, 15, 0, 0]}
+        padding={[25, 20, 0, 0]}
         transform={
           store.isOpen
             ? {
@@ -170,14 +169,16 @@ export const OrbitDock = memo(() => {
           data-is="DockShadow"
           top={20}
           bottom={20}
+          left="50%"
+          right="50%"
           transform={{
-            x: '100%',
+            x: 0,
           }}
           borderRadius={100}
           boxShadow={[
             {
-              spread: 50,
-              blur: 50,
+              spread: 40,
+              blur: 80,
               color: theme.background.isDark() ? [30, 30, 30, 0.68] : [0, 0, 0, 0.25],
             },
           ]}

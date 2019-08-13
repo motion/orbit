@@ -15,7 +15,9 @@ export const themes: { [key: string]: ThemeObject } = {
     backgroundHover: 'rgba(28,28,28,0.94)',
     backgroundStronger: 'rgba(30,30,30)',
     backgroundStrongest: 'rgba(40,40,40)',
+    borderColor: 'rgba(40,40,40)',
     color: '#fff',
     backgroundHighlight: toColor('#363165'),
+    separatorBackground: 'rgba(30,30,30)',
   }),
 }

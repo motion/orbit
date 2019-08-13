@@ -48,6 +48,9 @@ export const OrbitHeaderOpenAppMenu = memo(
         onClick={effects.openCurrentApp}
         elevation={3}
         elevationShadowOpacity={0.2}
+        openIconProps={{
+          name: 'chevron-down',
+        }}
         items={[
           ...(isOnOpenableApp
             ? [

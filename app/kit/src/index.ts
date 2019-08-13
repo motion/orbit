@@ -1,6 +1,3 @@
-// accept hmrs
-module['hot'] && module['hot'].accept()
-
 export { Templates } from './templates/all'
 export { produce } from './helpers/produce'
 export * from '@o/bridge'

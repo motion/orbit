@@ -221,8 +221,8 @@ const OrbitDockOpenButton = memo(() => {
           margin={[0, 20, 0, 0]}
           width={30}
           height={30}
-          icon="group-objects"
-          iconSize={22}
+          icon="ring"
+          iconSize={20}
           iconProps={{
             transform: {
               rotate: '90deg',
@@ -232,7 +232,9 @@ const OrbitDockOpenButton = memo(() => {
           onMouseEnter={orbitDock.hoverEnter}
           onMouseLeave={orbitDock.hoverLeave}
           onClick={orbitDock.togglePinned}
-          active={orbitDock.state === 'pinned'}
+          {...orbitDock.state === 'pinned' && {
+            background: [0, 0, 0, 0.3],
+          }}
           zIndex={2}
         />
       </HeaderButtonPassProps>
@@ -377,7 +379,7 @@ const HeaderTop = gloss(View, {
   position: 'relative',
 })
 
-const BackButton = memo(({ isTorn }) => {
+const BackButton = memo(({ isTorn }: { isTorn: boolean }) => {
   const { state, actions } = useOm()
   const appsCarousel = useAppsCarousel()
   const appsDrawer = useStore(appsDrawerStore)

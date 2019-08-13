@@ -93,7 +93,14 @@ function publish-packages() {
 
   # register/login
   curl -s -H "Accept: application/json" -H "Content-Type:application/json" -X PUT --data '{"name": "orbit", "password": "i_love_orbit123"}' http://localhost:4343/-/user/org.couchdb.user:username
-  { echo "orbit"; sleep 1; echo "i_love_orbit123"; sleep 1; echo "orbit@tryorbit.com" } | npm login --registry http://localhost:4343
+  {
+    echo "orbit"
+    sleep 1
+    echo "i_love_orbit123"
+    sleep 1
+    echo "orbit@tryorbit.com"
+  } | npm login --registry http://localhost:4343
+
 
   # publish packages
   (cd ../.. && \

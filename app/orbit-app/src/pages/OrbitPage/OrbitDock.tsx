@@ -147,7 +147,7 @@ export const OrbitDock = memo(() => {
         onMouseLeave={store.hoverLeave}
         top={56}
         right={0}
-        padding={[25, 20, 0, 0]}
+        padding={[25, 32, 0, 0]}
         transform={
           store.isOpen
             ? {
@@ -172,7 +172,7 @@ export const OrbitDock = memo(() => {
           left="50%"
           right="50%"
           transform={{
-            x: 0,
+            x: 50,
           }}
           borderRadius={100}
           boxShadow={[

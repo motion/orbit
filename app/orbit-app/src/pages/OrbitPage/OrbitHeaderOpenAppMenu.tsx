@@ -7,6 +7,7 @@ import React, { memo } from 'react'
 import { om, useOm } from '../../om/om'
 import { paneManagerStore } from '../../om/stores'
 import { useAppsCarousel } from './OrbitAppsCarousel'
+import { headerButtonProps } from './OrbitHeader'
 
 export const OrbitHeaderOpenAppMenu = memo(
   ({ isDeveloping, setIsDeveloping }: { isDeveloping: boolean; setIsDeveloping: any }) => {
@@ -34,13 +35,7 @@ export const OrbitHeaderOpenAppMenu = memo(
 
     if (appRole === 'torn' || appRole === 'editing') {
       return (
-        <MenuButton
-          alt="action"
-          size={1}
-          sizeRadius={1.6}
-          elevation={3}
-          items={constantMenuItems}
-        />
+        <MenuButton {...headerButtonProps} size={1} sizeRadius={1.6} items={constantMenuItems} />
       )
     }
 

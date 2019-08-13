@@ -1,6 +1,6 @@
 import { command } from '@o/kit'
 import { ToggleOrbitMainCommand } from '@o/models'
-import { Electron } from '@o/stores'
+import { App, Electron } from '@o/stores'
 import { Direction, GlobalHotKeys, Popovers, useShortcutStore } from '@o/ui'
 import React, { memo, useMemo } from 'react'
 
@@ -89,19 +89,17 @@ export default memo(function MainShortcutHandler(props: {
           appsDrawerStore.closeDrawer()
           return
         }
-        // zoom out
-        if (appsCarouselStore.zoomedIn) {
-          appsCarouselStore.setZoomedOut()
-          return
-        }
-        // go to first app
-        if (appsCarouselStore.focusedIndex > 0) {
-          actions.router.showHomePage({ avoidZoom: true })
-          return
-        }
-        // clear orbit query
-        if (queryStore) {
-          return queryStore.setQuery('')
+        if (App.appRole === 'main') {
+          // zoom out
+          if (appsCarouselStore.zoomedIn) {
+            appsCarouselStore.setZoomedOut()
+            return
+          }
+          // go to first app
+          if (appsCarouselStore.focusedIndex > 0) {
+            actions.router.showHomePage({ avoidZoom: true })
+            return
+          }
         }
         // close orbit itself
         if (Electron.state.showOrbitMain) {

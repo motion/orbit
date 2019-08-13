@@ -4,8 +4,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 import { createRef, useRef } from 'react'
+import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
@@ -155,7 +155,7 @@ export const OrbitHeader = memo(() => {
       <HeaderTop height={slim ? 46 : 56}>
         <HeaderButtonPassProps>
           <HeaderSide space="sm" slim={slim}>
-            {!slim && <BackButton />}
+            <BackButton isTorn={isTorn} />
             {homeButtonElement}
           </HeaderSide>
         </HeaderButtonPassProps>
@@ -172,24 +172,26 @@ export const OrbitHeader = memo(() => {
             <SurfacePassProps sizeRadius={1.5} sizeHeight={0.9} sizeIcon={1.1} sizePadding={1.2}>
               {orbitStore.activeActions}
             </SurfacePassProps>
-            <Button
-              circular
-              tooltip="Add app to workspace"
-              tooltipProps={{
-                distance: 16
-              }}
-              alt="flat"
-              icon="plus"
-              size="sm"
-              sizeIcon={1.6}
-              glint={false}
-              glintBottom={false}
-              opacity={0.5}
-              hoverStyle={{
-                opacity: 0.75,
-              }}
-              onClick={om.actions.router.toggleSetupAppPage}
-            />
+            {!isTorn && (
+              <Button
+                circular
+                tooltip="Add app to workspace"
+                tooltipProps={{
+                  distance: 16,
+                }}
+                alt="flat"
+                icon="plus"
+                size="sm"
+                sizeIcon={1.6}
+                glint={false}
+                glintBottom={false}
+                opacity={0.5}
+                hoverStyle={{
+                  opacity: 0.75,
+                }}
+                onClick={om.actions.router.toggleSetupAppPage}
+              />
+            )}
             <OrbitHeaderOpenAppMenu isDeveloping={isDeveloping} setIsDeveloping={setIsDeveloping} />
           </Row>
         </HeaderContain>
@@ -219,7 +221,8 @@ const OrbitDockOpenButton = memo(() => {
           margin={[0, 20, 0, 0]}
           width={30}
           height={30}
-          icon="more"
+          icon="group-objects"
+          iconSize={22}
           iconProps={{
             transform: {
               rotate: '90deg',
@@ -374,10 +377,13 @@ const HeaderTop = gloss(View, {
   position: 'relative',
 })
 
-const BackButton = memo(() => {
+const BackButton = memo(({ isTorn }) => {
   const { state, actions } = useOm()
   const appsCarousel = useAppsCarousel()
   const appsDrawer = useStore(appsDrawerStore)
+  if (isTorn && !appsDrawer.isOpen) {
+    return null
+  }
   return (
     <Button
       icon={appsDrawer.isOpen ? 'cross' : 'chevron-left'}

@@ -74,7 +74,7 @@ export const DockButton = forwardRef((props: DockButtonProps, ref) => {
         position="relative"
         alignItems="center"
         justifyContent="center"
-        space={10}
+        space={7}
       >
         <Button
           ref={ref}

@@ -1,4 +1,5 @@
-import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction } from '@o/kit'
+import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction, useStore } from '@o/kit'
+import { App } from '@o/stores'
 import { ActiveDraggables, Dock, DockButton, DockButtonPassProps, FloatingCard, ListPassProps, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { memo, useContext, useMemo, useRef } from 'react'
@@ -124,7 +125,12 @@ window['orbitDockStore'] = orbitDockStore
 export const OrbitDock = memo(() => {
   const { state } = useOm()
   const theme = useTheme()
-  const activeDockApps = state.apps.activeDockApps
+  const { appRole } = useStore(App)
+  const isTorn = appRole === 'torn'
+  console.log('isTorn', isTorn)
+  const activeDockApps = state.apps.activeDockApps.filter(x =>
+    isTorn ? x.identifier !== 'apps' : true,
+  )
   const store = orbitDockStore.useStore()
   const dockRef = useRef<HTMLElement>(null)
   const size = useNodeSize({
@@ -171,8 +177,8 @@ export const OrbitDock = memo(() => {
           boxShadow={[
             {
               spread: 50,
-              blur: 100,
-              color: theme.background.isDark() ? [0, 0, 0, 0.8] : [0, 0, 0, 0.25],
+              blur: 50,
+              color: theme.background.isDark() ? [30, 30, 30, 0.68] : [0, 0, 0, 0.25],
             },
           ]}
           zIndex={-1}
@@ -216,6 +222,7 @@ const OrbitDockButton = memo(function OrbitDockButton({
         ref={buttonRef}
         labelProps={{
           transition: 'all ease 300ms',
+          elevation: 1,
         }}
         onMouseMove={() => {
           if (appsDrawerStore.isOpen) return

@@ -1,7 +1,7 @@
 {
   "name": "@o/orbit-main",
   "main": "_/main.js",
-  "private": false,
+  "private": true,
   "productName": "Orbit",
   "version": "2.6.0",
   "scripts": {

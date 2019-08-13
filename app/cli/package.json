@@ -1,7 +1,7 @@
 {
   "name": "@o/cli",
   "version": "2.6.0",
-  "private": false,
+  "private": true,
   "main": "_/index.js",
   "bin": {
     "orbit": "_/index.js"

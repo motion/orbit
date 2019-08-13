@@ -2,7 +2,7 @@
   "name": "@o/orbit-workers",
   "version": "2.6.0",
   "main": "_/main.js",
-  "private": false,
+  "private": true,
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput"

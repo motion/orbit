@@ -3,7 +3,7 @@
   "version": "2.6.0",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
-  "private": false,
+  "private": true,
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc --preserveWatchOutput --watch"

@@ -2,7 +2,7 @@
   "name": "@o/apps-manager",
   "version": "2.6.0",
   "main": "_/AppsManager.js",
-  "private": false,
+  "private": true,
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput"

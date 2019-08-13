@@ -2,7 +2,7 @@
   "name": "@o/debug-apps",
   "main": "_/index.js",
   "sideEffects": false,
-  "private": false,
+  "private": true,
   "version": "2.6.0",
   "bin": {
     "debug-apps": "./_/index.js"

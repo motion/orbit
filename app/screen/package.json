@@ -2,7 +2,7 @@
   "name": "@o/screen",
   "version": "2.6.0",
   "main": "./_/Screen.js",
-  "private": false,
+  "private": true,
   "scripts": {
     "build": "./build.sh --if-empty && npx tsc || true",
     "watch": "tsc -b --watch --preserveWatchOutput",

@@ -1,6 +1,6 @@
 {
   "name": "@o/cosal-test",
-  "private": false,
+  "private": true,
   "version": "2.6.0",
   "scripts": {
     "start": "mcro-build --port 3003",

@@ -2,7 +2,7 @@
   "name": "@o/orbit-registry",
   "version": "2.6.0",
   "main": "./_/main.js",
-  "private": false,
+  "private": true,
   "scripts": {
     "start": "eval $(docker-machine env -u) && docker-compose -f docker-compose.yml -f docker-compose.dev.yml up",
     "start:prod": "eval $(docker-machine env orbit-registry) && docker-compose up -d",

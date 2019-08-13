@@ -1,6 +1,6 @@
 {
   "name": "orbit-monorepo",
-  "private": false,
+  "private": true,
   "workspaces": [
     "app/*",
     "packages/*",

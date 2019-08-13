@@ -1,7 +1,7 @@
 {
   "name": "$WORKSPACE_NAME",
   "version": "1.0.0",
-  "private": false,
+  "private": true,
   "config": {
     "orbitWorkspace": true
   },

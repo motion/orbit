@@ -1,7 +1,7 @@
 {
   "name": "@o/site",
   "version": "2.6.0",
-  "private": false,
+  "private": true,
   "main": "./src/index.tsx",
   "scripts": {
     "start": "mcro-build --port 5000 --target web",

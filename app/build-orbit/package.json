@@ -1,7 +1,7 @@
 {
   "name": "@o/build-orbit",
-  "version": "2.6.15",
-  "private": false,
+  "version": "2.6.18",
+  "private": true,
   "scripts": {
     "start": "./scripts/build.sh --resume",
     "test-built-app": "./dist/mac/Orbit.app/Contents/MacOS/Orbit",

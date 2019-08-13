@@ -68,17 +68,17 @@ echo -n "--no-version " >> ./scripts/.lastbuild
 #
 # bundle
 #
-if [[ "$FLAGS" =~ "--no-build-app" ]]; then
-  echo "not bundling..."
-else
-  echo "bundling..."
-  cd ../orbit-app
-  # remove old app dir so we dont have old files there
-  rm -r dist || true
-  npm run build-app
-  cd -
-fi
-echo -n "--no-build-app " >> ./scripts/.lastbuild
+# if [[ "$FLAGS" =~ "--no-build-app" ]]; then
+#   echo "not bundling..."
+# else
+#   echo "bundling..."
+#   cd ../orbit-app
+#   # remove old app dir so we dont have old files there
+#   rm -r dist || true
+#   npm run build:app
+#   cd -
+# fi
+# echo -n "--no-build-app " >> ./scripts/.lastbuild
 
 function publish-packages() {
   # modify private stuff so we can publish
@@ -91,16 +91,20 @@ function publish-packages() {
   ./scripts/start-verdaccio-publish.sh &
   while ! nc -z localhost 4343; do sleep 0.1; done
 
+  # register/login
+  curl -s -H "Accept: application/json" -H "Content-Type:application/json" -X PUT --data '{"name": "orbit", "password": "i_love_orbit123"}' http://localhost:4343/-/user/org.couchdb.user:username
+  curl -s -H "Accept: application/json" -H "Content-Type:application/json" -X PUT --data '{"name": "orbit", "password": "i_love_orbit123"}' --user orbit:i_love_orbit123 http://localhost:4343/-/user/org.couchdb.user:username
+
   # publish packages
   (cd ../.. && \
-    npx lerna exec \
+    npx lerna exec --stream \
       --ignore "orbit" \
       --ignore "@o/build" \
       --ignore "@o/orbit-main" \
       --ignore "@o/playground" \
       --ignore "@o/site" \
       --ignore "@o/babel-preset-motion" \
-      --ignore "@o/blog" \
+      --ignore "@o/site" \
       --ignore "@o/cosal-test" \
       -- npm publish --force --registry http://localhost:4343)
   # then publish main app with all packages

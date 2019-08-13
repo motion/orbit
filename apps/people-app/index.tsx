@@ -21,6 +21,7 @@ function PeopleAppIndex(props: NavigatorProps) {
   })
   return (
     <List
+      title="People"
       shareable
       alwaysSelected
       selectable="multi"

@@ -1,7 +1,7 @@
 import { command, useStore } from '@o/kit'
 import { AppDevCloseCommand, AppDevOpenCommand } from '@o/models'
 import { App } from '@o/stores'
-import { Icon, MenuButton, Row, Toggle, useBanner } from '@o/ui'
+import { Icon, ListSeparator, MenuButton, Row, Toggle, useBanner } from '@o/ui'
 import React, { memo } from 'react'
 
 import { om, useOm } from '../../om/om'
@@ -16,8 +16,8 @@ export const OrbitHeaderOpenAppMenu = memo(
     const banner = useBanner()
 
     const constantMenuItems = [
-      {
-        separator: 'App',
+      <ListSeparator key={0}>App</ListSeparator>,
+      state.router.urlString !== 'orbit://' && {
         title: 'Permalink',
         subTitle: state.router.urlString,
         icon: 'link',
@@ -28,7 +28,7 @@ export const OrbitHeaderOpenAppMenu = memo(
         icon: 'cog',
         onClick: goToAppSettings,
       },
-    ]
+    ].filter(Boolean)
 
     const appsCarousel = useAppsCarousel()
     const { isOnOpenableApp } = appsCarousel
@@ -54,10 +54,10 @@ export const OrbitHeaderOpenAppMenu = memo(
         items={[
           ...(isOnOpenableApp
             ? [
+                <ListSeparator key={1}>Develop</ListSeparator>,
                 {
                   title: 'Edit',
                   icon: 'edit',
-                  separator: 'Develop',
                   onClick: async e => {
                     e.stopPropagation()
                     // toggle

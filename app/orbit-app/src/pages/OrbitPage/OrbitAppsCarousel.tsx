@@ -244,7 +244,7 @@ class OrbitAppsCarouselStore {
     })
   }
 
-  outScaler = numberScaler(0, 1, 0.5, 0.55)
+  outScaler = numberScaler(0, 1, 0.6, 0.65)
   inScaler = numberScaler(0, 1, 0.9, 1)
   opacityScaler = numberScaler(1, 0, 1.2, 0)
   boundRotation = numberBounder(-10, 10)

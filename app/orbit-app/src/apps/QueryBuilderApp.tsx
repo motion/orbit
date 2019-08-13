@@ -66,8 +66,10 @@ function QueryBuilderApp() {
     },
   })
   const treeList = useTreeList(treeId)
-  const [bits, actions] = useAppBits()
 
+  // TODO
+  // want to persist queries to bits
+  const [bits, actions] = useAppBits()
   useEffect(() => {
     for (const id of Object.keys(treeList.state!.items!)) {
       const item = treeList.state!.items![id]

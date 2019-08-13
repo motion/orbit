@@ -6,6 +6,9 @@ set -e
 # start in root of this package
 cd $(dirname $0)/..
 
+# kill any old stuck verdaccio
+kill $(lsof -t -i:4343) || true
+
 # --resume
 FLAGS=$@
 if [ "$1" = "--resume" ]; then
@@ -113,6 +116,25 @@ function publish-packages() {
       --ignore "@o/babel-preset-motion" \
       --ignore "@o/site" \
       --ignore "@o/cosal-test" \
+      --ignore "@o/build-orbit" \
+      --ignore "@o/example-workspace" \
+      --ignore "@o/orbit-api" \
+      --ignore "@o/orbit-registry" \
+      --ignore "@o/demo-app-api-grid" \
+      --ignore "@o/website-app" \
+      --ignore "@o/search-app" \
+      --ignore "@o/slack-app" \
+      --ignore "@o/gmail-app" \
+      --ignore "@o/postgres-app" \
+      --ignore "@o/lists-app" \
+      --ignore "@o/people-app" \
+      --ignore "@o/demo-app-layout" \
+      --ignore "@o/demo-app-flow" \
+      --ignore "@o/confluence-app" \
+      --ignore "@o/jira-app" \
+      --ignore "@o/github-app" \
+      --ignore "@o/orbit-dotapp" \
+      --ignore "@o/orbit-repl" \
       -- npm publish --force --registry http://localhost:4343)
   # then publish main app with all packages
   (cd ../orbit && npm publish --registry http://localhost:4343 --force)

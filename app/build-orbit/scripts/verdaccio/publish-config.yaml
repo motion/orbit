@@ -1,5 +1,6 @@
 storage: /tmp/.verdaccio-storage
 plugins: ./plugins
+max_body_size: 1000mb
 
 web:
   title: Verdaccio
@@ -26,5 +27,3 @@ middlewares:
 
 logs:
   - { type: stdout, format: pretty, level: warn }
-
-max_body_size: 100mb

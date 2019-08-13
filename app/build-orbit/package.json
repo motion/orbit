@@ -1,6 +1,6 @@
 {
   "name": "@o/build-orbit",
-  "version": "2.6.18",
+  "version": "2.6.20",
   "private": true,
   "scripts": {
     "start": "./scripts/build.sh --resume",

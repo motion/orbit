@@ -110,7 +110,6 @@ function publish-packages() {
     npx lerna exec --stream \
       --ignore "orbit" \
       --ignore "@o/build" \
-      --ignore "@o/orbit-main" \
       --ignore "@o/playground" \
       --ignore "@o/site" \
       --ignore "@o/babel-preset-motion" \

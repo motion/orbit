@@ -3,7 +3,7 @@
   "productName": "Orbit",
   "author": "Orbit",
   "description": "Orbit",
-  "version": "2.2.417",
+  "version": "2.2.419",
   "dependencies": {
     "@o/orbit-main": "*"
   },
@@ -13,7 +13,7 @@
   "build": {
     "appId": "com.o.orbit",
     "productName": "Orbit",
-    "asar": true,
+    "asar": false,
     "asarUnpack": [
       "**/*.py"
     ],
@@ -21,7 +21,7 @@
     "mac": {
       "darkModeSupport": true,
       "target": "zip",
-      "icon": "../resources/icon.icns",
+      "icon": "../resources/appicon.icns",
       "provisioningProfile": "../build-resources/orbit.provisionprofile",
       "extendInfo": {
         "LSUIElement": 1

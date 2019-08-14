@@ -174,129 +174,139 @@ export function makeWebpackConfig(
     },
     module: {
       rules: [
-        // fixed graphql errors https://github.com/graphql/graphiql/issues/617
-        { test: /\.flow$/, loader: 'ignore-loader' },
-        target !== 'node' && {
-          test: /.worker\.[jt]sx?$/,
-          use: ['workerize-loader'],
-          exclude: /node_modules/,
-        },
-        // ignore .node.js modules in web modes
-        target !== 'node' && {
-          test: /\.node.[jt]sx?/,
-          use: 'ignore-loader',
-        },
-        !!ignore.length && {
-          use: 'ignore-loader',
-          test: x => {
-            // explicit ignores from options
-            if (ignore.some(z => z.indexOf(x) > -1)) {
-              return true
-            }
-            return false
-          },
-        },
-        // ignore non-.node.js modules in node mode
-        // target === 'node' && {
-        //   test: path => {
-        //     // dont ignore if is entry file
-        //     if (path === entry[0]) {
-        //       return false
-        //     }
-        //     // dont ignore if outside of this app source
-        //     if (path.indexOf(entryDir) !== 0) {
-        //       return false
-        //     }
-        //     // ignore if inside this apps src, and not matching our .node pattern (or entry):
-        //     const isValidNodeFile = entry === path || path.indexOf('.node.ts') > -1
-        //     return !isValidNodeFile
-        //   },
-        //   use: 'ignore-loader',
-        // },
-        // ignore .electron.js modules if in web mode
-        target !== 'electron-renderer' && {
-          test: /\.electron.[jt]sx?/,
-          use: 'ignore-loader',
-        },
-
-        injectHot &&
-          (() => {
-            return {
+        {
+          // these first loaders "short-circuit", so the rest wont load if one matches
+          oneOf: [
+            // fixed graphql errors https://github.com/graphql/graphiql/issues/617
+            { test: /\.flow$/, loader: 'ignore-loader' },
+            target !== 'node' && {
+              test: /.worker\.[jt]sx?$/,
+              use: ['workerize-loader'],
+              exclude: /node_modules/,
+            },
+            // ignore .node.js modules in web modes
+            target !== 'node' && {
+              test: /\.node.[jt]sx?/,
+              use: 'ignore-loader',
+            },
+            !!ignore.length && {
+              use: 'ignore-loader',
               test: x => {
-                if (typeof injectHot === 'string') {
-                  return x === injectHot
+                // explicit ignores from options
+                if (ignore.some(z => z.indexOf(x) > -1)) {
+                  return true
                 }
-                if (x === entry[0]) return true
                 return false
               },
-              use: {
-                loader: `add-source-loader`,
-                options: {
-                  // prefix, OrbitHot captures the app you create with createApp()
-                  prefix: `
+            },
+            // ignore non-.node.js modules in node mode
+            // target === 'node' && {
+            //   test: path => {
+            //     // dont ignore if is entry file
+            //     if (path === entry[0]) {
+            //       return false
+            //     }
+            //     // dont ignore if outside of this app source
+            //     if (path.indexOf(entryDir) !== 0) {
+            //       return false
+            //     }
+            //     // ignore if inside this apps src, and not matching our .node pattern (or entry):
+            //     const isValidNodeFile = entry === path || path.indexOf('.node.ts') > -1
+            //     return !isValidNodeFile
+            //   },
+            //   use: 'ignore-loader',
+            // },
+            // ignore .electron.js modules if in web mode
+            target !== 'electron-renderer' && {
+              test: /\.electron.[jt]sx?/,
+              use: 'ignore-loader',
+            },
+
+            // if doesnt match one of the above, fallback to the regular loaders
+            {
+              rules: [
+                injectHot &&
+                  (() => {
+                    return {
+                      test: x => {
+                        if (typeof injectHot === 'string') {
+                          return x === injectHot
+                        }
+                        if (x === entry[0]) return true
+                        return false
+                      },
+                      use: {
+                        loader: `add-source-loader`,
+                        options: {
+                          // prefix, OrbitHot captures the app you create with createApp()
+                          prefix: `
 require('@o/kit').OrbitHot.fileEnter({
   name: '${name}',
   __webpack_require__: __webpack_require__,
   module,
 });
 `,
-                  // postfix clears the createApp hot handler
-                  postfix: `
+                          // postfix clears the createApp hot handler
+                          postfix: `
 require('@o/kit').OrbitHot.fileLeave();
 `,
-                },
-              },
-            }
-          })(),
-        {
-          test: /\.tsx?$/,
-          use: [
-            'thread-loader',
-            {
-              loader: 'babel-loader',
-              options: {
-                presets: [
-                  [
-                    require.resolve('@o/babel-preset-motion'),
+                        },
+                      },
+                    }
+                  })(),
+                {
+                  test: /\.tsx?$/,
+                  use: [
+                    'thread-loader',
                     {
-                      disable: target === 'node' ? ['react-hot-loader/babel'] : [],
+                      loader: 'babel-loader',
+                      options: {
+                        presets: [
+                          [
+                            require.resolve('@o/babel-preset-motion'),
+                            {
+                              disable: target === 'node' ? ['react-hot-loader/babel'] : [],
+                            },
+                          ],
+                        ],
+                      },
+                    },
+                  ].filter(Boolean),
+                },
+                {
+                  test: /\.css$/,
+                  use: ['style-loader', 'css-loader'],
+                },
+                {
+                  test: /\.(ttf|eot|woff|woff2)$/,
+                  use: [
+                    {
+                      loader: 'file-loader',
+                      options: {
+                        name: 'fonts/[name].[ext]',
+                      },
                     },
                   ],
-                ],
-              },
+                },
+                {
+                  test: /\.(gif|png|jpe?g|svg)$/,
+                  use: [
+                    'file-loader',
+                    {
+                      loader: 'image-webpack-loader',
+                      options: {
+                        bypassOnDebug: true,
+                      },
+                    },
+                  ],
+                },
+                {
+                  test: /\.(md)$/,
+                  use: 'raw-loader',
+                },
+              ].filter(Boolean),
             },
           ].filter(Boolean),
-        },
-        {
-          test: /\.css$/,
-          use: ['style-loader', 'css-loader'],
-        },
-        {
-          test: /\.(ttf|eot|woff|woff2)$/,
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
-                name: 'fonts/[name].[ext]',
-              },
-            },
-          ],
-        },
-        {
-          test: /\.(gif|png|jpe?g|svg)$/,
-          use: [
-            'file-loader',
-            {
-              loader: 'image-webpack-loader',
-              options: {
-                bypassOnDebug: true,
-              },
-            },
-          ],
-        },
-        {
-          test: /\.(md)$/,
-          use: 'raw-loader',
         },
       ].filter(Boolean),
     },

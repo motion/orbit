@@ -19,7 +19,6 @@ class AppsDrawerStore {
   }
 
   get isOpen() {
-    console.log('paneManagerStore.activePane', paneManagerStore.activePane)
     if (paneManagerStore.activePane) {
       return this.isDrawerPage(paneManagerStore.activePane.id)
     }

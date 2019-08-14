@@ -1,4 +1,4 @@
-import killPort from 'kill-port'
+import killPort from 'clear-port'
 import { Server } from 'ws'
 
 type Props = {
@@ -41,7 +41,7 @@ export class ScreenBridge {
     })
   }
 
-  start = async (cb: ((handlers: BridgeHandlers) => void)) => {
+  start = async (cb: (handlers: BridgeHandlers) => void) => {
     this.server = await this.getServer(this.port)
     this.setupSocket()
     cb({

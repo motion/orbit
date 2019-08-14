@@ -57,9 +57,11 @@ export async function main() {
     // 🐛 for some reason you'll get "directv-tick" consistently on a port
     // EVEN IF port was found to be empty.... killing again helps
     const ports = Object.values(config.ports)
-    log.info('Ensuring all ports clear...', ports.join(','))
-    const killPort = require('kill-port')
-    await Promise.all(ports.map(port => killPort(port).catch(err => err)))
+    if (!process.env.NO_KILL_PORTS) {
+      log.info('Ensuring all ports clear...', ports.join(','))
+      const killPort = require('clear-port')
+      await Promise.all(ports.map(port => killPort(port).catch(err => err)))
+    }
   }
 
   // if we are in a forked sub-process, we go off and run them

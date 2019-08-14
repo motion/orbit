@@ -75,6 +75,7 @@ export class Join extends React.Component<any> {
             size={1.5}
             sizeRadius={5}
             sizePadding={1.5}
+            defaultValue=""
             {...inputProps}
           />
           <Button

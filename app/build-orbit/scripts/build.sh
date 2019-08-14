@@ -1,13 +1,15 @@
 #!/bin/bash
 
+# kill any old stuck verdaccio
+kill $(lsof -t -i:4343) 2> /dev/null || true
+
 # fail on exit, allow for exiting from verdaccio login
 set -e
 
-# start in root of this package
-cd $(dirname $0)/..
+THIS_DIR=$(realpath $(dirname $0))
 
-# kill any old stuck verdaccio
-kill $(lsof -t -i:4343) || true
+# start in root of this package
+cd $THIS_DIR/..
 
 # --resume
 FLAGS=$@
@@ -23,11 +25,11 @@ echo -n "" > ./scripts/.lastbuild
 #
 
 # get package.jsons to modify
-cd $(dirname $0)/../../..
+cd $THIS_DIR/../../..
 FILES=($(rg --files-with-matches -g "package.json" "private"))
 cd -
 function publicize-package-jsons() {
-  cd $(dirname $0)/../../..
+  cd $THIS_DIR/../../..
   for file in "${FILES[@]}"; do
     cp $file "$file.bak"
     sed -i '' '/"private": true/s/true/false/' $file
@@ -35,18 +37,22 @@ function publicize-package-jsons() {
   cd -
 }
 function undo-package-jsons() {
-  cd $(dirname $0)/../../..
+  cd $THIS_DIR/../../..
   for file in "${FILES[@]}"; do
-    rm $file && mv "$file.bak" $file || echo "failed $file"
-    sed -i '' '/"private": false/s/false/true/' $file # why is this necessary..
+    if [ -f "$file.bak" ]; then
+      rm $file && mv "$file.bak" $file || echo "failed $file"
+      sed -i '' '/"private": false/s/false/true/' $file # why is this necessary..
+    fi
   done
   cd -
 }
+
 function handle-exit() {
   trap - EXIT
   undo-package-jsons
   exit 0
 }
+trap handle-exit EXIT
 
 #
 # BUILD
@@ -149,7 +155,6 @@ if [[ "$FLAGS" =~ "--no-publish" ]]; then
   echo "not publishing..."
 else
   echo "publishing packages..."
-  trap handle-exit EXIT
   publicize-package-jsons
   publish-packages
 fi
@@ -191,18 +196,35 @@ rm -r dist/mac/Orbit.app || true
 #
 # fix sqlite
 #
-(cd stage-app && ../node_modules/.bin/electron-rebuild)
-# so desktop node subprocess can use it
-rm -r stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64 || true
-mv stage-app/node_modules/sqlite3/lib/binding/electron-v4.0-darwin-x64 stage-app/node_modules/sqlite3/lib/binding/node-v69-darwin-x64 || echo "didnt copy sqlite: ok on rebuild, error on first build"
+if [[ "$FLAGS" =~ "--no-rebuild" ]]; then
+  echo "not rebuilding"
+else
+  (cd stage-app && ../node_modules/.bin/electron-rebuild)
+  # so desktop node subprocess can use it
+  rm -r stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64 || true
+  mv stage-app/node_modules/sqlite3/lib/binding/electron-v4.0-darwin-x64 stage-app/node_modules/sqlite3/lib/binding/node-v69-darwin-x64 || echo "didnt copy sqlite: ok on rebuild, error on first build"
+fi
+
+#
+# ensure base dlls present (where should this actually go?? a watcher at build time + rebuild on build?)
+#
+function ensure-dlls() {
+  echo "ensuring dlls..."
+  cd ../orbit-desktop
+    mkdir dist || true
+    rm dist/manifest-base.json || true
+    rm dist/baseDev.dll.js || true
+    cp ../../example-workspace/dist/production/manifest-base.json dist/manifest-base.json
+    cp ../../example-workspace/dist/production/baseDev.dll.js dist/baseDev.dll.js
+  cd -
+}
+ensure-dlls
 
 # see stage-app/package.json for options
 echo "electron-builder..."
 if [[ "$FLAGS" =~ "--no-sign" ]]; then
-  cd stage-app
-  CSC_IDENTITY_AUTO_DISCOVERY=false npx electron-builder
+  (cd stage-app && CSC_IDENTITY_AUTO_DISCOVERY=false npx electron-builder)
 else
-  cd stage-app
-  npx electron-builder -p always
+  (cd stage-app && npx electron-builder -p always)
 fi
 

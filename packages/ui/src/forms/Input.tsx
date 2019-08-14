@@ -1,3 +1,4 @@
+import { isDefined } from '@o/utils'
 import { gloss, ThemeFn } from 'gloss'
 import React, { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react'
 
@@ -57,7 +58,9 @@ export const Input = React.forwardRef(function Input(
   )
 
   useEffect(() => {
-    innerRef.current.value = `${props.defaultValue}`
+    if (isDefined(props.defaultValue)) {
+      innerRef.current.value = `${props.defaultValue || ''}`
+    }
   }, [props.defaultValue])
 
   return (

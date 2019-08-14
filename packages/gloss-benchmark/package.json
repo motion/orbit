@@ -45,7 +45,7 @@
     "css-loader": "^1.0.0",
     "style-loader": "^0.22.1",
     "url-loader": "^1.0.1",
-    "webpack": "^4.37.0",
+    "webpack": "4.39.2",
     "webpack-bundle-analyzer": "^2.11.1",
     "webpack-cli": "^3.3.6"
   },

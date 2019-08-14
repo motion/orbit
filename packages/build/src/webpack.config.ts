@@ -349,6 +349,28 @@ async function makeConfig() {
           useTypescriptIncrementalApi: true,
         }),
 
+      target !== 'node' &&
+        new HtmlWebpackPlugin({
+          favicon: 'public/favicon.png',
+          template: 'public/index.html',
+          // chunksSortMode: 'manual',
+          ...(isProd &&
+            !NO_OPTIMIZE && {
+              minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true,
+              },
+            }),
+        }),
+
       // WARNING: this may or may not work wiht code splitting
       // i was seeing all the chunks loaded inline in HTML
       // this was causing bad perf metrics in testing, and also slower rendering as you first

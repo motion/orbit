@@ -1,8 +1,7 @@
-import { Col, Row, Scale, SimpleText, Space, SurfacePassProps, Theme, View } from '@o/ui'
+import { Col, Scale, Space, SurfacePassProps, Theme, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
-import { colors } from '../../constants'
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
 import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
@@ -17,24 +16,21 @@ let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'The Data-driven App Studio',
-  medium: 'The Data-driven App Studio',
-  small: 'Data-driven App Studio',
+  large: 'Lets rethink how we build apps',
+  medium: 'Lets rethink how we build apps',
+  small: 'The data-driven app platform',
 }
 
 let allTexts = {
   large: [
-    `Plug in data, build queries, write code to output powerful apps.`,
-    `An all-in-one app platform that gives you control over all your data.`,
+    `A new type of app platform that separates app from data.`,
+    `Orbit lets you code amazing apps with incredible ease.`,
   ],
   medium: [
-    `Plug in data, build queries, write code to output powerful apps.`,
-    `An all-in-one app platform that gives you control over all your data.`,
+    `A new type of app platform that separates app from data.`,
+    `Orbit lets you code amazing apps with incredible ease.`,
   ],
-  small: [
-    `Create intranet apps easily.`,
-    `An all-in-one app platform that gives you control over all your data.`,
-  ],
+  small: [`Create intranet apps easily.`, `Orbit internal apps, with all new abilities.`],
 }
 
 const HeadContent = memo(() => {
@@ -203,7 +199,7 @@ export function HeadSection() {
   const Fade = useFadePage({
     threshold: 0,
   })
-  const size = useScreenSize()
+  // const size = useScreenSize()
 
   return (
     <Fade.FadeProvide>
@@ -218,34 +214,6 @@ export function HeadSection() {
           <Col ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
             <HeadContent />
           </Col>
-          <Space size={40} />
-          <Row
-            space="xl"
-            padding={[0, 'xl']}
-            scrollable="x"
-            maxWidth="100vw"
-            justifyContent="space-between"
-            display={size === 'small' ? 'none' : 'flex'}
-          >
-            <SubSection index={0} title="Easy" titleColor={colors.orange}>
-              Everything needed for managing data, syncing from many sources, all in a few lines of
-              code.
-            </SubSection>
-
-            <SubSection index={2} title="Powerful" titleColor={colors.red}>
-              A complete toolkit designed for managing large data, workflows and common patterns.
-            </SubSection>
-
-            <SubSection index={1} title="Controlled" titleColor={colors.purple}>
-              Share a single repo with your team to collaborate on many apps w/o configuration or
-              servers.
-            </SubSection>
-
-            <SubSection index={3} title="Secure" titleColor={colors.orange}>
-              Everything runs behind the firewall, so plugging in a database is secure. Sync using
-              p2p.
-            </SubSection>
-          </Row>
           <Space size="xxxl" />
           <View flex={1} />
           <HeadJoin />
@@ -255,28 +223,28 @@ export function HeadSection() {
   )
 }
 
-const SubSection = memo(({ title, children, index, titleColor }: any) => {
-  return (
-    <Col flex={1} minWidth={160} maxWidth={220}>
-      <FadeChild {...fadeUpProps} delay={200 + index * 200}>
-        <Paragraph
-          textAlign="center"
-          textTransform="uppercase"
-          alpha={0.65}
-          color={titleColor}
-          size={1}
-          fontWeight={600}
-        >
-          {title}
-        </Paragraph>
-        <Space size="sm" />
-        <SimpleText textAlign="center" selectable alpha={0.75} size={1} sizeLineHeight={1.1}>
-          {children}
-        </SimpleText>
-      </FadeChild>
-    </Col>
-  )
-})
+// const SubSection = memo(({ title, children, index, titleColor }: any) => {
+//   return (
+//     <Col flex={1} minWidth={160} maxWidth={220}>
+//       <FadeChild {...fadeUpProps} delay={200 + index * 200}>
+//         <Paragraph
+//           textAlign="center"
+//           textTransform="uppercase"
+//           alpha={0.65}
+//           color={titleColor}
+//           size={1}
+//           fontWeight={600}
+//         >
+//           {title}
+//         </Paragraph>
+//         <Space size="sm" />
+//         <SimpleText textAlign="center" selectable alpha={0.75} size={1} sizeLineHeight={1.1}>
+//           {children}
+//         </SimpleText>
+//       </FadeChild>
+//     </Col>
+//   )
+// })
 
 // {false && (
 //   <Page.Parallax zIndex={1} speed={0}>

@@ -1,7 +1,7 @@
 import { AppBit, ensure, HighlightActiveQuery, react, SearchState, useReaction, useSearchState, useStore } from '@o/kit'
 import { FullScreen, FullScreenProps, linearGradient, List, ListItemProps, ProvideVisibility, Row, SelectableStore, SubTitle, Theme, useTheme, View } from '@o/ui'
 import { ThemeObject } from 'gloss'
-import React, { memo, useCallback, useMemo, useRef } from 'react'
+import React, { memo, Suspense, useCallback, useMemo, useRef } from 'react'
 
 import { SearchResultsApp } from '../../apps/SearchResultsApp'
 import { om } from '../../om/om'
@@ -47,8 +47,9 @@ class SearchResultsStore {
       const item = rows[0]
       if (!item) return
       // lets not be super greedy here
-      await sleep(150)
+      await sleep(100)
       if (item.extraData && item.extraData.app) {
+        appsCarouselStore.setHidden(false)
         // onSelect App
         const app: AppBit = item.extraData.app
         const carouselIndex = appsCarouselStore.apps.findIndex(x => x.id === app.id)
@@ -156,8 +157,10 @@ export const OrbitSearchResults = memo(() => {
 
   // sync from carousel to list
   useReaction(
-    () => appsCarouselStore.apps[appsCarouselStore.focusedIndex],
-    async (app, { sleep }) => {
+    () => appsCarouselStore.focusedIndex,
+    async (index, { sleep }) => {
+      console.log('focused index is now', index)
+      const app = appsCarouselStore.apps[index]
       ensure('app', !!app)
       const listIndex = searchStore.results.findIndex(
         x => x.extraData && x.extraData.app && x.extraData.app.id === app.id,
@@ -174,7 +177,7 @@ export const OrbitSearchResults = memo(() => {
 
   return (
     <ProvideVisibility visible={isActive}>
-      <Row flex={1}>
+      <Row width="100%" height="100%">
         <View
           className="orbit-search-results"
           perspective="1000px"
@@ -215,7 +218,9 @@ export const OrbitSearchResults = memo(() => {
         </View>
 
         <View flex={1}>
-          <SearchResultsApp />
+          <Suspense fallback={null}>
+            <SearchResultsApp />
+          </Suspense>
         </View>
       </Row>
     </ProvideVisibility>

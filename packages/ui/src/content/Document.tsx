@@ -22,7 +22,7 @@ export function Document(rawProps: DocumentProps) {
   return (
     <Col space>
       <Title>{title}</Title>
-      <HighlightText size={1.2} whiteSpace="pre-line">
+      <HighlightText size={1.2} whiteSpace="pre-line" selectable>
         {body}
       </HighlightText>
     </Col>

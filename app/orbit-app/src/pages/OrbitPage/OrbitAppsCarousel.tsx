@@ -29,7 +29,6 @@ class OrbitAppsCarouselStore {
     index: 0,
     zoomedOut: true,
     isDragging: false,
-    hidden: false,
   })
 
   get zoomedIn() {
@@ -43,6 +42,7 @@ class OrbitAppsCarouselStore {
     )
   }
 
+  hidden = false
   zoomIntoNextApp = false
   nextFocusedIndex = -1
   focusedIndex = 0
@@ -53,13 +53,14 @@ class OrbitAppsCarouselStore {
   rowRef = createRef<HTMLElement>()
 
   setRowNode = (next: HTMLElement) => {
+    if (!next) return
     this.rowNode = next
     // @ts-ignore
     this.rowRef.current = next
   }
 
-  setHidden() {
-    this.state.hidden = true
+  setHidden(val = true) {
+    this.hidden = val
   }
 
   get isAnimating() {
@@ -325,6 +326,8 @@ export const appsCarouselStore = createUsableStore(OrbitAppsCarouselStore)
 export const useAppsCarousel = appsCarouselStore.useStore
 window['appsCarousel'] = appsCarouselStore
 
+let lastHiddenVal = false
+
 export const OrbitAppsCarousel = memo(() => {
   const { state } = useOm()
   const rowRef = appsCarouselStore.rowRef
@@ -366,17 +369,14 @@ export const OrbitAppsCarousel = memo(() => {
   /**
    * Use this to update state after animations finish
    */
-  const [scrollable, disableInteraction, hidden] = useReaction(
-    () => [
-      appsCarouselStore.isScrolling || appsCarouselStore.zoomedIn ? false : ('x' as const),
-      appsCarouselStore.zoomedIn === false,
-      appsCarouselStore.state.hidden,
-    ],
+  const hidden = useReaction(() => appsCarouselStore.hidden)
+  const [scrollable, disableInteraction] = useReaction(
+    () =>
+      [
+        appsCarouselStore.isScrolling || appsCarouselStore.zoomedIn ? false : 'x',
+        appsCarouselStore.zoomedIn === false,
+      ] as const,
     async (next, { when, sleep }) => {
-      const [, , hidden] = next
-      if (hidden) {
-        return next
-      }
       await when(() => !appsCarouselStore.isAnimating)
       await sleep(100)
       return next
@@ -387,27 +387,27 @@ export const OrbitAppsCarousel = memo(() => {
   )
 
   useLayoutEffect(() => {
-    console.log('setting left scroll')
     rowRef.current!.scrollLeft = scrollSpring.x.getValue()
   }, [scrollable])
 
+  // comented out: was causing really crazy bugs
   // this is literally just to fix a stupid hmr bug where when on setupApp
   // you'd find it scrolled weirdly, i tried mutationObserver/addEventListener('scroll'),
   // neither pick it up because the event is removed
-  useEffect(() => {
-    if (rowRef.current) {
-      const curLeft = Math.round(rowRef.current.scrollLeft)
-      const index = appsCarouselStore.focusedIndex
-      const expectedLeft = Math.floor(index * rowWidth)
-      if (curLeft !== expectedLeft) {
-        appsCarouselStore.animateAndScrollTo(0)
-        sleep(100).then(() => {
-          appsCarouselStore.animateAndScrollTo(index)
-        })
-        console.warn('mismatched scroll spring / scrollLeft', curLeft, expectedLeft)
-      }
-    }
-  })
+  // useEffect(() => {
+  //   if (rowRef.current) {
+  //     const curLeft = Math.round(rowRef.current.scrollLeft)
+  //     const index = appsCarouselStore.focusedIndex
+  //     const expectedLeft = Math.floor(index * rowWidth)
+  //     if (curLeft !== expectedLeft) {
+  //       appsCarouselStore.animateAndScrollTo(0)
+  //       sleep(100).then(() => {
+  //         appsCarouselStore.animateAndScrollTo(index)
+  //       })
+  //       console.warn('mismatched scroll spring / scrollLeft', curLeft, expectedLeft)
+  //     }
+  //   }
+  // })
 
   return (
     <View data-is="OrbitAppsCarousel" width="100%" height="100%">

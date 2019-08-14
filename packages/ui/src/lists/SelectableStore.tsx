@@ -129,7 +129,6 @@ export class SelectableStore {
   }
 
   private setActive(next: (string | number)[]) {
-    console.log('this', this, this.rows[0])
     // check for disabled rows
     const nextFiltered = this.removeUnselectable(next)
 

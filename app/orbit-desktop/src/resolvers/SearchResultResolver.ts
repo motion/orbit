@@ -3,6 +3,7 @@ import { Logger } from '@o/logger'
 import { AppEntity, Bit, SearchQuery } from '@o/models'
 import { uniqBy } from 'lodash'
 import { getRepository } from 'typeorm'
+
 import { SearchQueryExecutor } from '../search/SearchQueryExecutor'
 
 /**
@@ -93,6 +94,10 @@ export class SearchResultResolver {
     // we order into beginning (since they are kinda treated as most accurate)
     const [matchedBits, restBits]: [Bit[], Bit[]] = [[], []]
     for (const ftsBit of ftsBits) {
+      if (ftsBit.type === 'person') {
+        matchedBits.push(ftsBit)
+        continue
+      }
       if (cosalBits.findIndex(x => x.id === ftsBit.id) > -1) {
         matchedBits.push(ftsBit)
       } else {

@@ -46,6 +46,9 @@ export type ListProps = SectionSpecificProps &
     /** Item to show when list has no elements passed in */
     placeholder?: React.ReactNode
 
+    /** Change the default placeholders text */
+    placeholderText?: string
+
     /** On selection, automatically update Share with selection */
     shareable?: boolean | string
 
@@ -273,7 +276,7 @@ function ListPlaceholder(props: ListProps) {
     <View flex={1} minHeight={200} position="relative">
       <Center alignItems="center">
         <View>
-          <SubTitle>No results</SubTitle>
+          <SubTitle>{props.placeholderText || 'No results'}</SubTitle>
           {!!props.query && (
             <Text ellipse size={0.95} alpha={0.6}>
               "{props.query}"

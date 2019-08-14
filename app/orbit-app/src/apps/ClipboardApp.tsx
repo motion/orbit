@@ -85,6 +85,7 @@ const ClipboardAppMain = memo((props: AppViewProps) => {
           draggable: true,
         }}
         selectable="multi"
+        placeholderText="Nothing selected, yet."
         items={items ? listItemNiceNormalize(items) : null}
       />
     </Section>

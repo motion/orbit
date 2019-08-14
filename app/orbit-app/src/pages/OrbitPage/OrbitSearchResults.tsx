@@ -1,5 +1,5 @@
-import { AppBit, ensure, HighlightActiveQuery, react, SearchState, useReaction, useSearchState, useStore } from '@o/kit'
-import { FullScreen, FullScreenProps, linearGradient, List, ListItemProps, ProvideVisibility, Row, SelectableStore, SubTitle, Theme, useTheme, View } from '@o/ui'
+import { AppBit, createUsableStore, ensure, HighlightActiveQuery, openItem, react, SearchState, useReaction, useSearchState } from '@o/kit'
+import { FullScreen, FullScreenProps, linearGradient, List, ListItemProps, normalizeItem, ProvideVisibility, Row, SelectableStore, SubTitle, Theme, useTheme, View } from '@o/ui'
 import { ThemeObject } from 'gloss'
 import React, { memo, Suspense, useCallback, useMemo, useRef } from 'react'
 
@@ -9,7 +9,7 @@ import { SearchStore, SearchStoreStore } from '../../stores/SearchStore'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarousel'
 import { appsDrawerStore } from './OrbitAppsDrawer'
 
-class SearchResultsStore {
+class OrbitSearchResultsStore {
   // @ts-ignore
   props: {
     searchStore: SearchStoreStore
@@ -35,14 +35,41 @@ class SearchResultsStore {
     return !appsCarouselStore.zoomedIn && !appsDrawerStore.isOpen
   }
 
-  rows: ListItemProps[] = []
-
+  selectedRows: ListItemProps[] = []
   setRows(rows: ListItemProps[]) {
-    this.rows = rows
+    this.selectedRows = rows
+  }
+
+  isApp(row: ListItemProps) {
+    return row.extraData && row.extraData.app
+  }
+
+  // handlers for actions
+  get shouldHandleEnter() {
+    if (!this.isActive) return false
+    if (!this.selectedRows.length) return false
+    return true
+  }
+  handleEnter() {
+    const row = this.selectedRows[0]
+    if (!row) return
+    if (this.isApp(row)) {
+      appsCarouselStore.zoomIntoCurrentApp()
+    } else {
+      const item = row.item
+      if (!item) return
+      const normalized = normalizeItem(item)
+      if (normalized.locationLink) {
+        openItem(normalized.locationLink)
+      } else {
+        // we should show a banner here
+        console.warn('item doesnt have a location link!')
+      }
+    }
   }
 
   reactToItem = react(
-    () => this.rows,
+    () => this.selectedRows,
     async (rows, { sleep }) => {
       const item = rows[0]
       if (!item) return
@@ -83,11 +110,13 @@ class SearchResultsStore {
     },
   )
 }
+export const orbitSearchResultsStore = createUsableStore(OrbitSearchResultsStore)
 
 export const OrbitSearchResults = memo(() => {
   const theme = useTheme()
   const searchStore = SearchStore.useStore()!
-  const searchResultsStore = useStore(SearchResultsStore, { searchStore })
+  const searchResultsStore = orbitSearchResultsStore.useStore()
+  orbitSearchResultsStore.setProps({ searchStore })
   const isActive = searchResultsStore.isActive
   const carousel = useAppsCarousel()
   const listRef = useRef<SelectableStore>(null)

@@ -247,7 +247,9 @@ function useReactiveStore<A extends any>(
     state.current = next
     if (process.env.NODE_ENV === 'development') {
       // set initial state for hmr purposes
-      window['requestIdleCallback'](() => {
+      const requestIdleCallback =
+        typeof window !== 'undefined' ? window['requestIdleCallback'] : setTimeout
+      requestIdleCallback(() => {
         state.current = {
           ...state.current,
           initialState: dehydrate(next.store),

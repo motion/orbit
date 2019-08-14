@@ -37,8 +37,10 @@ function publicize-package-jsons() {
 function undo-package-jsons() {
   cd $(dirname $0)/../../..
   for file in "${FILES[@]}"; do
-    rm $file && mv "$file.bak" $file || echo "failed $file"
-    sed -i '' '/"private": false/s/false/true/' $file # why is this necessary..
+    if [ -f "$file.bak" ]; then
+      rm $file && mv "$file.bak" $file || echo "failed $file"
+      sed -i '' '/"private": false/s/false/true/' $file # why is this necessary..
+    fi
   done
   cd -
 }

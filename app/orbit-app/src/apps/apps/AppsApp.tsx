@@ -1,7 +1,7 @@
 import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, CurrentAppBitContext, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem } from '@o/models'
-import { Button, Col, Icon, List, ListItemProps, Section, SubSection, SubTitle, useAsyncFn, useBanner } from '@o/ui'
-import React, { useEffect, useState } from 'react'
+import { Button, Card, Col, Icon, List, ListItemProps, Section, SubTitle, useAsyncFn, useBanner } from '@o/ui'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { ManageApps } from '../../views/ManageApps'
 import { useUserAppDefinitions } from '../orbitApps'
@@ -112,6 +112,7 @@ export function AppsIndex() {
   const dataApps = useActiveDataAppsWithDefinition()
   const topApps = useTopAppStoreApps()
   const [searchItems, search] = useSearchAppStoreApps()
+  const [hasSearch, setHasSearch] = useState(false)
 
   const myApps = [
     ...clientApps.map(getAppListItem).map(x => ({ ...x, subType: 'settings' })),
@@ -127,7 +128,10 @@ export function AppsIndex() {
   return (
     <List
       alwaysSelected
-      onQueryChange={search}
+      onQueryChange={useCallback(query => {
+        setHasSearch(!!query)
+        search(query)
+      }, [])}
       itemProps={{
         iconBefore: true,
       }}
@@ -166,7 +170,7 @@ export function AppsIndex() {
           ),
         },
         ...localApps.map(setupAppListItem),
-        ...topApps,
+        ...(hasSearch ? [] : topApps),
         ...searchItems,
       ]}
     />
@@ -222,18 +226,22 @@ function AppSettings(props: { appId: number }) {
         )
       }
     >
-      {!!definition.app && <AppsMainNew customizeColor app={app} />}
+      {!!definition.app && (
+        <Card title="Customize" padding>
+          <AppsMainNew customizeColor app={app} />
+        </Card>
+      )}
 
       {!!definition.settings && (
-        <SubSection flex={1} title="Settings" paddingInner={0}>
+        <Card minHeight={400} title="Data Settings">
           <AppMainView identifier={definition.id} viewType="settings" />
-        </SubSection>
+        </Card>
       )}
 
       {!!definition.setup && (
-        <SubSection title="App Settings">
+        <Card title="App Settings" padding>
           <AppSetupForm id={app ? app.id : false} def={definition} />
-        </SubSection>
+        </Card>
       )}
     </Section>
   )

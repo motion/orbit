@@ -384,6 +384,7 @@ export const OrbitAppsCarousel = memo(() => {
     },
     {
       defaultValue: [false, true],
+      name: 'OrbitAppsCarousel.render',
     },
   )
 

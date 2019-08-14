@@ -188,9 +188,9 @@ export const OrbitSearchResults = memo(() => {
   useReaction(
     () => appsCarouselStore.focusedIndex,
     async (index, { sleep }) => {
-      console.log('focused index is now', index)
       const app = appsCarouselStore.apps[index]
       ensure('app', !!app)
+      ensure('not hidden', !appsCarouselStore.hidden)
       const listIndex = searchStore.results.findIndex(
         x => x.extraData && x.extraData.app && x.extraData.app.id === app.id,
       )

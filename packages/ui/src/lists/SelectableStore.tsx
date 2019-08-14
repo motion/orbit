@@ -140,6 +140,7 @@ export class SelectableStore {
       return
     }
 
+    console.log('SETTING ACTIVE', nextActive)
     this.active = nextActive
     this.updateActiveAndKeyToIndex(next, false)
   }

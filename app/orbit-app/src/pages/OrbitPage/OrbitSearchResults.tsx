@@ -117,6 +117,7 @@ class OrbitSearchResultsStore {
   )
 }
 export const orbitSearchResultsStore = createUsableStore(OrbitSearchResultsStore)
+window['orbitSearchResultsStore'] = orbitSearchResultsStore
 
 export const OrbitSearchResults = memo(() => {
   const theme = useTheme()

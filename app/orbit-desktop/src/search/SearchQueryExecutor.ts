@@ -1,5 +1,5 @@
 import { Logger } from '@o/logger'
-import { Bit, BitContentTypes, SearchQuery } from '@o/models'
+import { Bit, BitContentType, SearchQuery } from '@o/models'
 import { getConnection } from 'typeorm'
 import { SqliteDriver } from 'typeorm/driver/sqlite/SqliteDriver'
 
@@ -91,15 +91,14 @@ export class SearchQueryExecutor {
       conditions.push(`"bit"."appId" IN (${args.appIds.join(', ')})`)
     }
 
+    // const peopleFilters = args.peopleFilters
     // if (peopleFilters && peopleFilters.length) {
     //   joins.push(`INNER JOIN "app" "app" ON "app"."spaceId" = ?`)
-    //   joinParameters.push(appId)
-    //
+    //   joinParameters.push(args.appId)
     //   conditions.push("(" + peopleFilters.map(name => {
     //     conditionParameters.push(name)
     //     return `"bit"."locationName" = ?`
     //   }).join(" OR ") + ")")
-    //
     //   // essentially, find at least one person
     //   for (const name of peopleFilters) {
     //     (findOptions.where as FindOptionsWhereCondition<Bit>[]).push({
@@ -208,7 +207,7 @@ export class SearchQueryExecutor {
         },
         appId: rawBit.appId,
         title: rawBit.title,
-        type: BitContentTypes[rawBit.type],
+        type: rawBit.type as BitContentType,
         updatedAt: new Date(rawBit.updatedAt),
         webLink: rawBit.webLink,
       }

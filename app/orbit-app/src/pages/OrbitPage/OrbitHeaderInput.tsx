@@ -23,6 +23,9 @@ createUsableStore(
     updateQueryPrefix = react(
       () => [appsCarouselStore.state.zoomedOut, queryStore.hasQuery, appsDrawerStore.isOpen],
       ([zoomedOut, hasQuery, drawerOpen]) => {
+        if (orbitSearchResultsStore.isSelectingContent) {
+          return
+        }
         if (drawerOpen) {
           queryStore.setPrefixFirstWord(false)
           return
@@ -52,6 +55,9 @@ const handleKeyDown = async e => {
 
   switch (keyCode) {
     case Keys.space:
+      if (orbitSearchResultsStore.isSelectingContent) {
+        return
+      }
       if (queryStore.prefixFirstWord) {
         if (
           !appsCarouselStore.focusedApp ||

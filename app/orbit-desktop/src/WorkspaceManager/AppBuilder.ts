@@ -148,26 +148,28 @@ export class AppBuilder {
       const devName = `${name}-dev`
       const current = this.state.find(x => x.name === devName)
       const middleware = this.getMiddleware(config, name, nameToAppMeta[name], devName)
-      if (middleware === true) {
-        // use last one
-        res.push(current)
-      } else {
-        if (current && current.close) {
-          current.close()
+      if (middleware) {
+        if (middleware === true) {
+          // use last one
+          res.push(current)
+        } else {
+          if (current && current.close) {
+            current.close()
+          }
+          const { hash, devMiddleware, compiler } = middleware
+          res.push({
+            name: devName,
+            hash,
+            devMiddleware,
+            middleware: resolveIfExists(devMiddleware, [config.output.path]),
+            close: () => {
+              log.info(`closing middleware ${name}`)
+              devMiddleware.close()
+            },
+            compiler,
+            config,
+          })
         }
-        const { hash, devMiddleware, compiler } = middleware
-        res.push({
-          name: devName,
-          hash,
-          devMiddleware,
-          middleware: resolveIfExists(devMiddleware, [config.output.path]),
-          close: () => {
-            log.info(`closing middleware ${name}`)
-            devMiddleware.close()
-          },
-          compiler,
-          config,
-        })
       }
     }
 
@@ -190,46 +192,48 @@ export class AppBuilder {
     if (main) {
       const name = 'main'
       const middleware = this.getMiddleware(main, name, undefined, name)
-      if (middleware === true) {
-        res = [...res, ...this.state.filter(x => x.name === name)]
-      } else {
-        const { hash, devMiddleware, compiler } = middleware
-        const mainHotMiddleware = this.getHotMiddleware([compiler], {
-          path: '/__webpack_hmr_main',
-          log: console.log,
-          heartBeat: 10 * 1000,
-        })
-        res = [
-          ...res,
-          {
-            name,
-            hash,
-            middleware: resolveIfExists(
-              mainHotMiddleware,
-              [main.output.path],
-              ['/__webpack_hmr_main'],
-            ),
-          },
-          {
-            name,
-            hash,
-            devMiddleware,
-            middleware: devMiddleware,
-          },
-          // need to have another devMiddleware  after historyAPIFallback, see:
-          // https://github.com/webpack/webpack-dev-middleware/issues/88#issuecomment-252048006
-          {
-            name,
-            hash,
-            middleware: historyAPIFallback(),
-          },
-          {
-            name,
-            hash,
-            devMiddleware,
-            middleware: devMiddleware,
-          },
-        ]
+      if (middleware) {
+        if (middleware === true) {
+          res = [...res, ...this.state.filter(x => x.name === name)]
+        } else {
+          const { hash, devMiddleware, compiler } = middleware
+          const mainHotMiddleware = this.getHotMiddleware([compiler], {
+            path: '/__webpack_hmr_main',
+            log: console.log,
+            heartBeat: 10 * 1000,
+          })
+          res = [
+            ...res,
+            {
+              name,
+              hash,
+              middleware: resolveIfExists(
+                mainHotMiddleware,
+                [main.output.path],
+                ['/__webpack_hmr_main'],
+              ),
+            },
+            {
+              name,
+              hash,
+              devMiddleware,
+              middleware: devMiddleware,
+            },
+            // need to have another devMiddleware  after historyAPIFallback, see:
+            // https://github.com/webpack/webpack-dev-middleware/issues/88#issuecomment-252048006
+            {
+              name,
+              hash,
+              middleware: historyAPIFallback(),
+            },
+            {
+              name,
+              hash,
+              devMiddleware,
+              middleware: devMiddleware,
+            },
+          ]
+        }
       }
     }
 
@@ -242,28 +246,35 @@ export class AppBuilder {
     appMeta?: AppMeta,
     runningName?: string,
   ) => {
-    const compiler = Webpack(config)
-    const publicPath = config.output.publicPath
+    try {
+      const compiler = Webpack(config)
+      const publicPath = config.output.publicPath
 
-    // cache if it hasn't changed to avoid rebuilds
-    const hash = hashObject({ sort: false }).hash(config)
-    if (runningName) {
-      const running = this.state.find(x => x.name === runningName)
-      if (running) {
-        if (hash === running.hash) {
-          // log.verbose(`${name} config hasnt changed! dont re-run this one just return the old one`)
-          return true
-        } else {
-          log.verbose(`${name}config has changed!`)
+      // cache if it hasn't changed to avoid rebuilds
+      const hash = hashObject({ sort: false }).hash(config)
+      if (runningName) {
+        const running = this.state.find(x => x.name === runningName)
+        if (running) {
+          if (hash === running.hash) {
+            // log.verbose(`${name} config hasnt changed! dont re-run this one just return the old one`)
+            return true
+          } else {
+            log.verbose(`${name}config has changed!`)
+          }
         }
       }
-    }
 
-    const devMiddleware = WebpackDevMiddleware(compiler, {
-      publicPath,
-      reporter: this.createReporterForApp(name, appMeta),
-    })
-    return { devMiddleware, compiler, name, hash }
+      const devMiddleware = WebpackDevMiddleware(compiler, {
+        publicPath,
+        reporter: this.createReporterForApp(name, appMeta),
+      })
+      return { devMiddleware, compiler, name, hash }
+    } catch (err) {
+      log.error(
+        `${err.message}\n${err.stack}\n\nWebpackConfig:\n${JSON.stringify(config, null, 2)}`,
+      )
+      return null
+    }
   }
 
   private createReporterForApp = (name: string, appMeta?: AppMeta) => {

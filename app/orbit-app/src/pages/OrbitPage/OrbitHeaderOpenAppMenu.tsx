@@ -1,4 +1,4 @@
-import { command, useStore } from '@o/kit'
+import { command, openItem, useStore } from '@o/kit'
 import { AppDevCloseCommand, AppDevOpenCommand } from '@o/models'
 import { App } from '@o/stores'
 import { Icon, ListSeparator, MenuButton, Row, Toggle, useBanner } from '@o/ui'
@@ -16,7 +16,7 @@ export const OrbitHeaderOpenAppMenu = memo(
     const banner = useBanner()
 
     const constantMenuItems = [
-      <ListSeparator key={0}>App</ListSeparator>,
+      <ListSeparator key={1000}>App</ListSeparator>,
       state.router.urlString !== 'orbit://' && {
         title: 'Permalink',
         subTitle: state.router.urlString,
@@ -49,12 +49,12 @@ export const OrbitHeaderOpenAppMenu = memo(
         elevation={3}
         elevationShadowOpacity={0.2}
         openIconProps={{
-          name: 'chevron-down',
+          name: isDeveloping ? 'edit' : 'chevron-down',
         }}
         items={[
           ...(isOnOpenableApp
             ? [
-                <ListSeparator key={1}>Develop</ListSeparator>,
+                <ListSeparator key={100}>Develop</ListSeparator>,
                 {
                   title: 'Edit',
                   icon: 'edit',
@@ -88,7 +88,14 @@ export const OrbitHeaderOpenAppMenu = memo(
                   after: (
                     <Row space>
                       <Toggle checked={isDeveloping} />
-                      <Icon name="open" tooltip="Open in VSCode" />
+                      <Icon
+                        onClick={e => {
+                          e.stopPropagation()
+                          openItem(`file://Users/nw/motion/orbit`)
+                        }}
+                        name="code"
+                        tooltip="Open in VSCode"
+                      />
                     </Row>
                   ),
                 },

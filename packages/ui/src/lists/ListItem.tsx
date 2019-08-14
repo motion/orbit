@@ -49,10 +49,22 @@ export type ListItemProps = ListItemSimpleProps &
 
     /** Specify the item you are dragging */
     draggableItem?: any
+
+    /** Show the full content of the bit, if given, inline */
+    showFullContent?: boolean
   }
 
 export const ListItem = forwardRef((props: ListItemProps, ref) => {
-  const { item, itemViewProps, people, hidePeople, alt, draggable, ...rest } = props
+  const {
+    item,
+    itemViewProps,
+    people,
+    hidePeople,
+    alt,
+    draggable,
+    showFullContent,
+    ...rest
+  } = props
   const selectableStore = useSelectableStore()
   const visStore = useVisibilityStore()
   const [isEditing, setIsEditing] = useState(false)
@@ -99,11 +111,11 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
   }, [])
 
   const showPeople = !!(!hidePeople && people && people.length && people[0].data['profile'])
-  const showChildren = (isBit && ItemView) || showPeople
+  const showChildren = (showFullContent && isBit && ItemView) || showPeople
   const childrenProps = showChildren && {
     children: (
       <>
-        {<ItemView item={item} normalizedItem={normalized} {...itemViewProps} />}
+        {showFullContent && <ItemView item={item} normalizedItem={normalized} {...itemViewProps} />}
         {showPeople && (
           <Bottom>
             <PersonRow people={people} />

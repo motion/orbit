@@ -4,12 +4,13 @@ import { decorate, ensure, react } from '@o/use-store'
 
 import { NLPResponse } from '../../types/NLPResponse'
 import { QueryStore } from '../QueryStore'
-import { parseSearchQuery, setUserNames } from './nlpQuery'
+import initNlp from './nlpQuery.worker'
+
+// import { parseSearchQuery, setUserNames } from './nlpQuery'
 
 // to run in web worker
-// import initNlp from './nlpQuery.worker'
-// const { parseSearchQuery, setUserNames } = initNlp()
-// console.log('initNlp', initNlp, initNlp())
+const { parseSearchQuery, setUserNames } = initNlp()
+console.log('initNlp', initNlp, initNlp())
 
 // to run it on thread
 @decorate
@@ -30,7 +31,7 @@ export class NLPStore {
       where: {
         type: 'person',
       },
-      take: 100,
+      take: 5000,
     },
   }).subscribe(bits => {
     this.peopleNames = bits.map(bit => bit.title || '').filter(x => x.trim().length > 1)

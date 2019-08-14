@@ -15,6 +15,8 @@
 	(global.ReactDOM = factory(global.React));
 }(this, (function (React$1) { 'use strict';
 
+const __DEV__ = window['__DEV__'] || true
+
 /**
  * Use invariant() to assert state which your program assumes to be true.
  *

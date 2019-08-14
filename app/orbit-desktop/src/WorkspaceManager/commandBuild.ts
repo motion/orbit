@@ -1,4 +1,5 @@
 import { updateBuildInfo } from '@o/apps-manager'
+import { getGlobalConfig } from '@o/config'
 import { isOrbitApp, readPackageJson } from '@o/libs-node'
 import { Logger } from '@o/logger'
 import { CommandOpts, resolveCommand } from '@o/mediator'
@@ -157,14 +158,20 @@ function getAppInfo(appRoot: string): AppDefinition | null {
   }
 }
 
-const monoRoot = join(__dirname, '..', '..', '..', '..')
-const defaultBaseDll = {
-  // default base dll
-  manifest: join(monoRoot, 'example-workspace', 'dist', 'production', 'manifest-base.json'),
-  filepath: join(monoRoot, 'example-workspace', 'dist', 'production', 'base.dll.js'),
-}
+// default base dll
+let defaultBaseDll
 if (process.env.NODE_ENV === 'production') {
-  throw new Error(`Yo need to make this production ^^`)
+  const Config = getGlobalConfig()
+  defaultBaseDll = {
+    manifest: join(Config.paths.desktopRoot, 'dist', 'manifest-base.json'),
+    filepath: join(Config.paths.desktopRoot, 'dist', 'baseDev.dll.js'),
+  }
+} else {
+  const monoRoot = join(__dirname, '..', '..', '..', '..')
+  defaultBaseDll = {
+    manifest: join(monoRoot, 'example-workspace', 'dist', 'production', 'manifest-base.json'),
+    filepath: join(monoRoot, 'example-workspace', 'dist', 'production', 'baseDev.dll.js'),
+  }
 }
 
 async function getWebAppConfig(entry: string, name: string, options: CommandBuildOptions) {

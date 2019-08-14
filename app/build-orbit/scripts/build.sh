@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# kill any old stuck verdaccio
+kill $(lsof -t -i:4343) || true
+
 # fail on exit, allow for exiting from verdaccio login
 set -e
 
@@ -198,6 +201,21 @@ rm -r dist/mac/Orbit.app || true
 # so desktop node subprocess can use it
 rm -r stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64 || true
 mv stage-app/node_modules/sqlite3/lib/binding/electron-v4.0-darwin-x64 stage-app/node_modules/sqlite3/lib/binding/node-v69-darwin-x64 || echo "didnt copy sqlite: ok on rebuild, error on first build"
+
+#
+# ensure base dlls present (where should this actually go?? a watcher at build time + rebuild on build?)
+#
+function ensure-dlls() {
+  echo "ensuring dlls..."
+  cd ../orbit-desktop
+    mkdir dist || true
+    rm dist/manifest-base.json || true
+    rm dist/baseDev.dll.js || true
+    cp ../../example-workspace/dist/production/manifest-base.json dist/manifest-base.json
+    cp ../../example-workspace/dist/production/baseDev.dll.js dist/baseDev.dll.js
+  cd -
+}
+ensure-dlls
 
 # see stage-app/package.json for options
 echo "electron-builder..."

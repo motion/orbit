@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "./scripts/build.sh --resume",
-    "test:built:app": "./dist/mac/Orbit.app/Contents/MacOS/Orbit",
+    "test:built:app": "LOG_LEVEL=3 ./dist/mac/Orbit.app/Contents/MacOS/Orbit",
     "build:app": "./scripts/build.sh",
     "build:app:resume": "./scripts/build.sh --resume",
     "build:app:resume:nosign": "./scripts/build.sh --resume --no-sign",
@@ -17,7 +17,7 @@
     "electron-rebuild": "1.8.5",
     "execa": "^2.0.3",
     "fs-extra": "^7.0.0",
-    "node-abi": "2.7.1",
+    "node-abi": "2.11.0",
     "rimraf": "^2.6.2",
     "verdaccio": "4.2.1"
   }

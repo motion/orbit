@@ -234,6 +234,7 @@ export const OrbitSearchResults = memo(() => {
                     () => ({
                       iconBefore: true,
                       iconSize: 42,
+                      activeStyle: false,
                     }),
                     [],
                   )}

@@ -1,6 +1,6 @@
 import { AppBit, createUsableStore, ensure, HighlightActiveQuery, openItem, react, SearchState, useReaction, useSearchState } from '@o/kit'
 import { FullScreen, FullScreenProps, linearGradient, List, ListItemProps, normalizeItem, ProvideVisibility, Row, SelectableStore, SubTitle, Theme, useTheme, View } from '@o/ui'
-import { ThemeObject } from 'gloss'
+import { Box, BoxProps, gloss, ThemeObject } from 'gloss'
 import React, { memo, Suspense, useCallback, useMemo, useRef } from 'react'
 
 import { SearchResultsApp } from '../../apps/SearchResultsApp'
@@ -66,6 +66,12 @@ class OrbitSearchResultsStore {
         console.warn('item doesnt have a location link!')
       }
     }
+  }
+
+  get isSelectingContent() {
+    if (!this.isActive) return false
+    if (!this.selectedRows.length) return false
+    return !this.isApp(this.selectedRows[0])
   }
 
   reactToItem = react(
@@ -206,16 +212,22 @@ export const OrbitSearchResults = memo(() => {
 
   return (
     <ProvideVisibility visible={isActive}>
-      <Row width="100%" height="100%">
+      <Row
+        data-is="OrbitSearchResults"
+        width="100%"
+        height="100%"
+        perspective="1000px"
+        pointerEvents="none"
+      >
         <View
-          className="orbit-search-results"
-          perspective="1000px"
+          data-is="OrbitSearchResults-Index"
           zIndex={200}
           width="39%"
           transition="all ease 300ms"
           background="linear-gradient(to right, rgba(0,0,0,0.3) 15%, transparent 90%)"
           opacity={carousel.zoomedIn ? 0 : 1}
           pointerEvents={isActive ? 'auto' : 'none'}
+          perspective="1000px"
         >
           <FullScreen
             transition="all ease 300ms"
@@ -247,14 +259,35 @@ export const OrbitSearchResults = memo(() => {
           </FullScreen>
         </View>
 
-        <View flex={1}>
+        <OrbitSearchedItem visible={searchResultsStore.isSelectingContent}>
           <Suspense fallback={null}>
             <SearchResultsApp />
           </Suspense>
-        </View>
+        </OrbitSearchedItem>
       </Row>
     </ProvideVisibility>
   )
+})
+
+const OrbitSearchedItem = gloss<BoxProps & { visible: boolean }>(Box, {
+  flex: 1,
+  opacity: 0,
+  transition: 'all ease 300ms',
+  pointerEvents: 'none',
+  transform: {
+    rotateY: '10deg',
+    scale: 0.95,
+    x: 100,
+  },
+  visible: {
+    pointerEvents: 'auto',
+    opacity: 1,
+    transform: {
+      rotateY: '0deg',
+      scale: 1,
+      x: 0,
+    },
+  },
 })
 
 function ListSeparatorLarge(props: { children: string }) {

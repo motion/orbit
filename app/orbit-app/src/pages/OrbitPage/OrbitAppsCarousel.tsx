@@ -413,7 +413,7 @@ export const OrbitAppsCarousel = memo(() => {
 
   return (
     <View data-is="OrbitAppsCarousel" width="100%" height="100%">
-      <FullScreen>
+      <FullScreen pointerEvents="none" zIndex={3}>
         <OrbitSearchResults />
       </FullScreen>
       <View

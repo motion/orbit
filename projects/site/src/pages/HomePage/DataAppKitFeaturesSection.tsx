@@ -140,7 +140,7 @@ export default memo(function DataAppKitFeaturesSection() {
                   </FadeChild>
                   <TitleTextSub>
                     <FadeChild delay={200}>
-                      Orbit makes building common types of apps easy.
+                      The vertically integrated workspace for work apps.
                     </FadeChild>
                   </TitleTextSub>
                 </>
@@ -218,15 +218,6 @@ export default memo(function DataAppKitFeaturesSection() {
             </Grid>
 
             <View flex={useScreenVal(0, 1, 2)} />
-
-            {screen === 'large' && height !== 'short' && (
-              <>
-                <Space size="xxl" />
-                <BodyButton {...linkProps('/docs')} margin={[10, 'auto']} size="xl">
-                  Read the feature overview
-                </BodyButton>
-              </>
-            )}
 
             <Space size="xl" />
           </Fade.FadeProvide>

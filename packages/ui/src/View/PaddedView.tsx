@@ -5,8 +5,8 @@ import { Base, gloss } from 'gloss'
 import { useScale } from '../Scale'
 import { Sizes } from '../Space'
 import { getSizableValue } from './getSizableValue'
-import { ScrollableViewProps, wrappingSpaceTheme } from './ScrollableView'
-import { SizesObject, ViewProps } from './types'
+import { ScrollableViewProps, SizesObject, ViewProps } from './types'
+import { wrappingSpaceTheme } from './wrappingSpaceTheme'
 
 export type PaddingProps = {
   padding?: Sizes | SizesObject | GlossPropertySet['padding']

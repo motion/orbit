@@ -1,23 +1,13 @@
 import { isDefined } from '@o/utils'
 import { gloss } from 'gloss'
 import React, { forwardRef } from 'react'
-import { SpringValue } from 'react-spring'
 
-import { getSpaceSize, Size } from '../Space'
 import { PaddedView } from './PaddedView'
-import { ViewProps } from './types'
+import { ScrollableViewProps } from './types'
 import { View } from './View'
+import { wrappingSpaceTheme } from './wrappingSpaceTheme'
 
 // dont allow flexFlow so we force props down through flexDirection
-
-export type ScrollableViewProps = Omit<ViewProps, 'flexFlow'> & {
-  hideScrollbars?: boolean
-  scrollable?: boolean | 'x' | 'y'
-  parentSpacing?: Size
-  animated?: boolean
-  scrollLeft?: SpringValue<number> // TODO | number requires a custom hook
-  scrollTop?: SpringValue<number>
-}
 
 const isOnlyChildrenDefined = props => {
   for (const key in props) {
@@ -97,18 +87,3 @@ const ScrollableChrome = gloss<ScrollableViewProps>(View, {
   ...(props.scrollable === true && { overflow: 'auto' }),
   ...(!props.scrollable && wrappingSpaceTheme(props)),
 }))
-
-/**
- * This can only be used on the innermost element to space its children, css-specific
- */
-export function wrappingSpaceTheme(props) {
-  if (props.isWrapped) {
-    const space = getSpaceSize(props.parentSpacing)
-    return {
-      marginBottom: -space,
-      '& > *': {
-        marginBottom: `${space}px !important`,
-      },
-    }
-  }
-}

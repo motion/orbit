@@ -89,3 +89,12 @@ export type ViewProps = ViewBaseProps &
 export type ViewThemeProps = ViewBaseProps & GlossPropertySet
 
 export type ViewCSSProps = GlossPropertySet
+
+export type ScrollableViewProps = Omit<ViewProps, 'flexFlow'> & {
+  hideScrollbars?: boolean
+  scrollable?: boolean | 'x' | 'y'
+  parentSpacing?: Size
+  animated?: boolean
+  scrollLeft?: SpringValue<number> // TODO | number requires a custom hook
+  scrollTop?: SpringValue<number>
+}

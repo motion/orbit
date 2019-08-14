@@ -24,7 +24,7 @@ export let GlobalBanner: BannerHandle | null = null
 
 export const OrbitPage = memo(function OrbitPage() {
   const themeStore = useThemeStore()
-  GlobalBanner = useBanner()
+  window['GlobalBanner'] = GlobalBanner = useBanner()
   return (
     <ProvideStores stores={Stores}>
       <SearchStore.Provider>

@@ -9,13 +9,7 @@ import { findContiguousPorts } from './helpers/findContiguousPorts'
 
 const log = new Logger('getInitialConfig')
 
-export async function getInitialConfig({
-  appEntry,
-  cli,
-}: {
-  appEntry: string
-  cli: string
-}): Promise<GlobalConfig> {
+export async function getInitialConfig({ appEntry }: { appEntry: string }): Promise<GlobalConfig> {
   const isProd = process.env.NODE_ENV !== 'development'
   log.verbose(`Get config isProd ${isProd}`)
 
@@ -59,7 +53,6 @@ export async function getInitialConfig({
   config = {
     isProd,
     paths: {
-      cli,
       appEntry,
       orbitConfig: Path.join(userData, 'orbit.json'),
       desktopRoot,

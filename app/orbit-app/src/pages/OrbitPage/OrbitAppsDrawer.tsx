@@ -64,16 +64,17 @@ export const OrbitAppsDrawer = memo(() => {
   useEffect(updateSpring, [height, appsDrawer.isOpen])
 
   const renderApp = useRef({})
+  const hasDarkBackground = theme.background.isDark()
 
   return (
-    <FullScreen pointerEvents="none" className="orbit-apps-drawer" zIndex={1000} right={5} left={5}>
+    <FullScreen pointerEvents="none" className="orbit-apps-drawer" zIndex={1000}>
       <Card
         ref={frameRef}
         background={theme.backgroundStronger}
         boxShadow={[
           {
             blur: boxShadowSize,
-            color: [0, 0, 10, theme.background.isDark() ? 0.75 : 0.5],
+            color: [0, 0, 10, hasDarkBackground ? 0.5 : 0.5],
           },
         ]}
         sizeRadius={2}

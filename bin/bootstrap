@@ -6,9 +6,6 @@ cd $ROOT
 # dont allow errors
 set -e
 
-file-exists ".env"
-source .env
-
 xcode-select --install 2> /dev/null || true
 # this on in sync before running brew checks
 ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"

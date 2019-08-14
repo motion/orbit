@@ -1,8 +1,9 @@
-import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, react, Templates, TreeList, TreeListStore, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useHooks, useTreeList } from '@o/kit'
-import { ApiArgType, AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
+import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, react, save, Templates, TreeList, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple, useTreeList } from '@o/kit'
+import { ApiArgType, AppMetaCommand, Bit, BitModel, CallAppBitApiMethodCommand } from '@o/models'
 import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TitleRow, Toggle, useGet } from '@o/ui'
 import { capitalize } from 'lodash'
-import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { FindOptions } from 'typeorm'
 
 import { useOm } from '../om/om'
 import { MonacoEditor } from '../views/MonacoEditor'
@@ -12,11 +13,38 @@ import { NavigatorProps, StackNavigator, StackNavigatorStore, useCreateStackNavi
 export default createApp({
   id: 'query-builder',
   name: 'Query Builder',
-  icon: 'layers',
+  icon: 'code-block',
   app: QueryBuilderApp,
 })
 
 const treeId = 'query-builder4'
+
+// TODO
+
+class AppBitsStore {
+  create(bit: Partial<Bit> & Pick<Bit, 'id'>) {
+    return save(BitModel, bit)
+  }
+  update(bit: Partial<Bit>) {
+    return save(BitModel, bit)
+  }
+  createOrUpdate(bit: Partial<Bit> & Pick<Bit, 'id'>) {
+    return save(BitModel, bit)
+  }
+}
+
+function useAppBits(args?: FindOptions<Bit>) {
+  const app = useApp()
+  const [bits] = useModels(BitModel, {
+    ...args,
+    where: {
+      ...((args && args.where) || null),
+      appId: app.id,
+    },
+  })
+  const store = useStoreSimple(AppBitsStore)
+  return [bits, store] as const
+}
 
 function QueryBuilderApp() {
   const om = useOm()
@@ -38,6 +66,16 @@ function QueryBuilderApp() {
     },
   })
   const treeList = useTreeList(treeId)
+
+  // TODO
+  // want to persist queries to bits
+  const [bits, actions] = useAppBits()
+  useEffect(() => {
+    for (const id of Object.keys(treeList.state!.items!)) {
+      const item = treeList.state!.items![id]
+      actions.createOrUpdate({})
+    }
+  }, [treeList.state.items])
 
   useEffect(() => {
     if (!navigator.currentItem) return
@@ -92,7 +130,6 @@ function QueryBuilderIndex({
   return (
     <>
       <TreeList
-        title="Queries"
         alwaysSelected
         use={treeList}
         onSelect={items => {
@@ -170,6 +207,7 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
       backgrounded
       title={props.title || 'No title'}
       subTitle="Select data app."
+      scrollable="y"
       afterTitle={
         <>
           <Button
@@ -457,7 +495,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   return (
     <Layout type="row">
       <Pane flex={2} resizable>
-        <Layout type="col">
+        <Layout type="column">
           <Pane flex={2} resizable>
             <Col padding space>
               <Row justifyContent="space-between">

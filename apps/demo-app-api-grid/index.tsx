@@ -30,11 +30,11 @@ export function DemoGridApp() {
           )
         }}
       </AppCard>
-      <AppCard key="slack2" title="Room Messages" appType={Slack} app={app}>
+      <AppCard key="slack2" title="Room Messages" appType={Slack} app={app} padding="sm">
         {({ api }) => (
           <Tabs scrollable defaultActive="0">
             {rooms.map((room, index) => (
-              <Tab key={room.id} id={`${index}`} label={room.name} padding scrollable="y">
+              <Tab key={room.id} id={`${index}`} label={room.name} padding="sm" scrollable="y">
                 {() => {
                   const res = api.channelsHistory({ channel: room.id })
                   return <SlackConversation messages={res.messages || []} />

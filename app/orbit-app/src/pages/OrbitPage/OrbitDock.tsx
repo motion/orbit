@@ -1,4 +1,5 @@
-import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction } from '@o/kit'
+import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction, useStore } from '@o/kit'
+import { App } from '@o/stores'
 import { ActiveDraggables, Dock, DockButton, DockButtonPassProps, FloatingCard, ListPassProps, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { memo, useContext, useMemo, useRef } from 'react'
@@ -124,7 +125,11 @@ window['orbitDockStore'] = orbitDockStore
 export const OrbitDock = memo(() => {
   const { state } = useOm()
   const theme = useTheme()
-  const activeDockApps = state.apps.activeDockApps
+  const { appRole } = useStore(App)
+  const isTorn = appRole === 'torn'
+  const activeDockApps = state.apps.activeDockApps.filter(x =>
+    isTorn ? x.identifier !== 'apps' : true,
+  )
   const store = orbitDockStore.useStore()
   const dockRef = useRef<HTMLElement>(null)
   const size = useNodeSize({
@@ -142,7 +147,7 @@ export const OrbitDock = memo(() => {
         onMouseLeave={store.hoverLeave}
         top={56}
         right={0}
-        padding={[25, 15, 0, 0]}
+        padding={[25, 30, 0, 0]}
         transform={
           store.isOpen
             ? {
@@ -164,15 +169,17 @@ export const OrbitDock = memo(() => {
           data-is="DockShadow"
           top={20}
           bottom={20}
+          left="50%"
+          right="50%"
           transform={{
-            x: '100%',
+            x: 50,
           }}
           borderRadius={100}
           boxShadow={[
             {
-              spread: 50,
-              blur: 180,
-              color: theme.background.isDark() ? [0, 0, 0] : [0, 0, 0, 0.25],
+              spread: 40,
+              blur: 80,
+              color: theme.background.isDark() ? [30, 30, 30, 0.68] : [0, 0, 0, 0.25],
             },
           ]}
           zIndex={-1}
@@ -216,6 +223,7 @@ const OrbitDockButton = memo(function OrbitDockButton({
         ref={buttonRef}
         labelProps={{
           transition: 'all ease 300ms',
+          elevation: 1,
         }}
         onMouseMove={() => {
           if (appsDrawerStore.isOpen) return
@@ -269,7 +277,7 @@ const FloatingAppWindow = memo(({ showMenu, buttonRect, app, definition, index }
       }}
       maxHeight={windowHeight - 80}
       padding={0}
-      zIndex={10000000}
+      zIndex={10000000000000}
       visible={showMenu}
       pointerEvents={showMenu ? 'auto' : 'none'}
       onMouseEnter={() => {

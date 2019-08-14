@@ -26,15 +26,13 @@
  * will remain to ensure logic does not differ in production.
  */
 
-var validateFormat = function () {};
-
-if (__DEV__) {
-  validateFormat = function (format) {
+var validateFormat = function (format) {
+  if (__DEV__) {
     if (format === undefined) {
       throw new Error('invariant requires an error message argument');
     }
-  };
-}
+  }
+};
 
 function invariant(condition, format, a, b, c, d, e, f) {
   validateFormat(format);
@@ -548,9 +546,8 @@ function setComponentTree(getFiberCurrentPropsFromNodeImpl, getInstanceFromNodeI
   }
 }
 
-var validateEventDispatches = void 0;
-if (__DEV__) {
-  validateEventDispatches = function (event) {
+function validateEventDispatches (event) {
+  if (__DEV__) {
     var dispatchListeners = event._dispatchListeners;
     var dispatchInstances = event._dispatchInstances;
 
@@ -561,8 +558,8 @@ if (__DEV__) {
     var instancesLen = instancesIsArr ? dispatchInstances.length : dispatchInstances ? 1 : 0;
 
     __DEV__ ? !(instancesIsArr === listenersIsArr && instancesLen === listenersLen) ? warningWithoutStack$1(false, 'EventPluginUtils: Invalid `event`.') : void 0 : void 0;
-  };
-}
+  }
+};
 
 /**
  * Dispatch the event to the listener.

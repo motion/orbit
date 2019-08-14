@@ -43,17 +43,10 @@ export async function main() {
   if (SUB_PROCESS) {
     setGlobalConfig(JSON.parse(ORBIT_CONFIG))
   } else {
-    if (!process.env.CLI_PATH) {
-      throw new Error(
-        `No CLI_PATH, are you running directly from app? We need to implement this...`,
-      )
-    }
-
     // first process, set up initial configuration
     setGlobalConfig(
       await getInitialConfig({
         appEntry: join(__dirname, '..', '_', 'main.js'),
-        cli: process.env.CLI_PATH,
       }),
     )
   }

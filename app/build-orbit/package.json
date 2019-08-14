@@ -1,12 +1,13 @@
 {
   "name": "@o/build-orbit",
-  "version": "2.6.0",
+  "version": "2.6.37",
   "private": true,
   "scripts": {
     "start": "./scripts/build.sh --resume",
     "test-built-app": "./dist/mac/Orbit.app/Contents/MacOS/Orbit",
     "build-app": "./scripts/build.sh",
     "build-app-resume": "./scripts/build.sh --resume",
+    "build-app-resume-nosign": "./scripts/build.sh --resume --no-sign",
     "zip-app": "./scripts/zip-app.sh",
     "publish": "./scripts/publish.sh"
   },
@@ -18,6 +19,6 @@
     "fs-extra": "^7.0.0",
     "node-abi": "2.7.1",
     "rimraf": "^2.6.2",
-    "verdaccio": "3.6.0"
+    "verdaccio": "4.2.1"
   }
 }

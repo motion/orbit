@@ -1,12 +1,13 @@
 import { command, useStore } from '@o/kit'
 import { AppDevCloseCommand, AppDevOpenCommand } from '@o/models'
 import { App } from '@o/stores'
-import { Icon, MenuButton, Row, Toggle, useBanner } from '@o/ui'
+import { Icon, ListSeparator, MenuButton, Row, Toggle, useBanner } from '@o/ui'
 import React, { memo } from 'react'
 
 import { om, useOm } from '../../om/om'
 import { paneManagerStore } from '../../om/stores'
 import { useAppsCarousel } from './OrbitAppsCarousel'
+import { headerButtonProps } from './OrbitHeader'
 
 export const OrbitHeaderOpenAppMenu = memo(
   ({ isDeveloping, setIsDeveloping }: { isDeveloping: boolean; setIsDeveloping: any }) => {
@@ -15,8 +16,8 @@ export const OrbitHeaderOpenAppMenu = memo(
     const banner = useBanner()
 
     const constantMenuItems = [
-      {
-        separator: 'App',
+      <ListSeparator key={0}>App</ListSeparator>,
+      state.router.urlString !== 'orbit://' && {
         title: 'Permalink',
         subTitle: state.router.urlString,
         icon: 'link',
@@ -27,29 +28,15 @@ export const OrbitHeaderOpenAppMenu = memo(
         icon: 'cog',
         onClick: goToAppSettings,
       },
-    ]
+    ].filter(Boolean)
 
     const appsCarousel = useAppsCarousel()
     const { isOnOpenableApp } = appsCarousel
 
-    if (appRole === 'editing') {
+    if (appRole === 'torn' || appRole === 'editing') {
       return (
-        <MenuButton
-          alt="action"
-          size={1}
-          sizeRadius={1.6}
-          onClick={() => {
-            console.warn('Should send orbit build command, then run it in production')
-          }}
-          items={[...constantMenuItems]}
-        >
-          Preview
-        </MenuButton>
+        <MenuButton {...headerButtonProps} size={1} sizeRadius={1.6} items={constantMenuItems} />
       )
-    }
-
-    if (appRole === 'torn') {
-      return <MenuButton size={1} sizeRadius={1.6} items={constantMenuItems} />
     }
 
     return (
@@ -59,14 +46,18 @@ export const OrbitHeaderOpenAppMenu = memo(
         sizeRadius={1.6}
         tooltip="Open to desktop (⌘ + ⏎)"
         onClick={effects.openCurrentApp}
-        elevation={8}
+        elevation={3}
+        elevationShadowOpacity={0.2}
+        openIconProps={{
+          name: 'chevron-down',
+        }}
         items={[
           ...(isOnOpenableApp
             ? [
+                <ListSeparator key={1}>Develop</ListSeparator>,
                 {
                   title: 'Edit',
                   icon: 'edit',
-                  separator: 'Develop',
                   onClick: async e => {
                     e.stopPropagation()
                     // toggle

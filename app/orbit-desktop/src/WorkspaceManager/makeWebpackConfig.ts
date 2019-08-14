@@ -26,7 +26,6 @@ export type WebpackParams = {
   dll?: string
   dllReferences?: DLLReferenceDesc[]
   injectHot?: boolean | string
-  hotType?: 'app'
   hot?: boolean
   minify?: boolean
   devtool?: webpack.Configuration['devtool']
@@ -51,7 +50,6 @@ export function makeWebpackConfig(
     // + way harder to debug in general, lets leave it off until someone yells about it
     minify = false,
     dll,
-    hotType,
     dllReferences,
     hot,
     name,
@@ -223,13 +221,6 @@ export function makeWebpackConfig(
 
         injectHot &&
           (() => {
-            const hotInjection = `
-require('@o/kit').OrbitHot.fileEnter({
-  name: '${name}',
-  __webpack_require__: __webpack_require__,
-  module,
-});
-`
             return {
               test: x => {
                 if (typeof injectHot === 'string') {
@@ -240,20 +231,20 @@ require('@o/kit').OrbitHot.fileEnter({
               },
               use: {
                 loader: `add-source-loader`,
-                options:
-                  // app style means we want to "capture" the app entry point
-                  hotType === 'app'
-                    ? {
-                        // prefix, OrbitHot captures the app you create with createApp()
-                        prefix: hotInjection,
-                        // postfix clears the createApp hot handler
-                        postfix: `
+                options: {
+                  // prefix, OrbitHot captures the app you create with createApp()
+                  prefix: `
+require('@o/kit').OrbitHot.fileEnter({
+  name: '${name}',
+  __webpack_require__: __webpack_require__,
+  module,
+});
+`,
+                  // postfix clears the createApp hot handler
+                  postfix: `
 require('@o/kit').OrbitHot.fileLeave();
 `,
-                      }
-                    : {
-                        postfix: hotInjection,
-                      },
+                },
               },
             }
           })(),

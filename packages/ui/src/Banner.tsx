@@ -212,14 +212,21 @@ export const Banner = (props: BannerViewProps) => {
       margin="md"
       marginTop={0}
       overflow="hidden"
-      elevation={3}
+      elevation={2}
       alignSelf="flex-end"
       maxWidth={width - 80}
       maxHeight={height - 80}
       background={useCallback(theme => theme.background, [])}
       {...rest}
     >
-      <Row flex={1} justifyContent="space-between" alignItems="center" afterSpace beforeSpace>
+      <Row
+        flex={1}
+        justifyContent="space-between"
+        alignItems="center"
+        afterSpace
+        beforeSpace
+        space="sm"
+      >
         {!!loading && (
           <>
             <Spinner />
@@ -230,7 +237,14 @@ export const Banner = (props: BannerViewProps) => {
           <Message.Title>{title}</Message.Title>
           <SimpleText whiteSpace="pre">{message}</SimpleText>
         </Col>
-        <Button alignSelf="flex-start" chromeless icon="cross" iconSize={14} onClick={close} />
+        <Button
+          size="xxs"
+          alignSelf="flex-start"
+          chromeless
+          icon="cross"
+          iconSize={12}
+          onClick={close}
+        />
       </Row>
     </Message>
   )

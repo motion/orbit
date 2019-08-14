@@ -1,9 +1,15 @@
+import { ColorLike } from '@o/color'
 import { CSSPropertySetResolved, ThemeObject } from '@o/css'
 
 import { weakKey } from '../helpers/weakKey'
 
 export type ElevatableProps = {
+  /** Height of the shadow */
   elevation?: number
+  /** Override the color of the elevation shadow */
+  elevationShadowColor?: ColorLike
+  /** Override the opacity of the elevation shadow */
+  elevationShadowOpacity?: number
   boxShadow?: CSSPropertySetResolved['boxShadow']
 }
 
@@ -14,18 +20,26 @@ const smoother = (base: number, amt = 1) =>
 /**
  * Accounts for darkness of background by default, but you can ovverride in Theme
  */
-const elevatedShadow = (x: number, theme: ThemeObject) => {
+const elevatedShadow = (props: ElevatableProps, theme: ThemeObject) => {
+  const el = props.elevation
   return [
     // x
     0,
     // y
-    theme.elevatedShadowY ? theme.elevatedShadowY(x) : smoother(x, 1),
+    theme.elevatedShadowY ? theme.elevatedShadowY(el) : smoother(el, 1),
     // spread
-    theme.elevatedShadowSpread ? theme.elevatedShadowSpread(x) : smoother(x, 2.5),
+    theme.elevatedShadowSpread ? theme.elevatedShadowSpread(el) : smoother(el, 2.5),
     // color
-    theme.elevatedShadowColor
-      ? theme.elevatedShadowColor(x)
-      : [0, 0, 0, round(0.015 * smoother(x)) + (theme.boxShadowOpacity || 0)],
+    props.elevationShadowColor ||
+      (theme.elevatedShadowColor
+        ? theme.elevatedShadowColor(el)
+        : [
+            0,
+            0,
+            0,
+            props.elevationShadowOpacity ||
+              round(0.1 * smoother(el)) + (theme.boxShadowOpacity || 0),
+          ]),
   ]
 }
 
@@ -40,7 +54,7 @@ export const getElevation = (props: ElevatableProps, theme: ThemeObject) => {
       }
       return {
         boxShadow: [
-          elevatedShadow(props.elevation, theme),
+          elevatedShadow(props, theme),
           ...(Array.isArray(props.boxShadow) ? props.boxShadow : []),
         ],
       }

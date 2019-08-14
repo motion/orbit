@@ -3,7 +3,6 @@ import { ApiSearchItem } from '@o/models'
 import { Button, Col, Icon, List, ListItemProps, Section, SubSection, SubTitle, useAsyncFn, useBanner } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 
-import { GraphExplorer } from '../../views/GraphExplorer'
 import { ManageApps } from '../../views/ManageApps'
 import { useUserAppDefinitions } from '../orbitApps'
 import { AppSetupForm } from './AppSetupForm'
@@ -37,7 +36,7 @@ export function useDataAppDefinitions() {
   return useAppDefinitions().filter(x => isDataDefinition(x))
 }
 
-export const appDefToListItem = (def: AppDefinition): ListItemProps => {
+export const setupAppListItem = (def: AppDefinition): ListItemProps => {
   return {
     key: `install-${def.id}`,
     groupName: 'Setup (Local)',
@@ -53,7 +52,7 @@ export const appDefToListItem = (def: AppDefinition): ListItemProps => {
 
 const appSearchToListItem = (item: ApiSearchItem): ListItemProps => ({
   title: item.name,
-  subTitle: item.description.slice(0, 300),
+  subTitle: item.description.slice(0, 300) || 'No description',
   icon: <AppIcon icon={item.icon} />,
   groupName: 'Search (App Store)',
   after: item.features.some(x => x === 'graph' || x === 'sync' || x === 'api') ? sourceIcon : null,
@@ -127,7 +126,6 @@ export function AppsIndex() {
 
   return (
     <List
-      title="Apps"
       alwaysSelected
       onQueryChange={search}
       itemProps={{
@@ -135,18 +133,11 @@ export function AppsIndex() {
       }}
       items={[
         {
-          title: 'Installed Apps',
+          title: 'Manage Apps',
           icon: 'apps',
           subTitle: 'View, organize installed apps',
           subType: 'manage-apps',
         },
-        {
-          title: 'Graph',
-          icon: 'Graph',
-          subTitle: 'Explore all GraphQL app APIs',
-          subType: 'explorer-graph',
-        },
-
         {
           selectable: false,
           padding: false,
@@ -174,7 +165,7 @@ export function AppsIndex() {
             </Col>
           ),
         },
-        ...localApps.map(appDefToListItem),
+        ...localApps.map(setupAppListItem),
         ...topApps,
         ...searchItems,
       ]}
@@ -183,11 +174,6 @@ export function AppsIndex() {
 }
 
 export function AppsMain(props: AppViewProps) {
-  console.log('rendering appsmain')
-  if (props.subType === 'explorer-graph') {
-    return <GraphExplorer />
-  }
-
   if (props.subType === 'manage-apps') {
     return <ManageApps />
   }

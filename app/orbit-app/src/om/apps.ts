@@ -25,10 +25,10 @@ const isClientApp = (app: AppBit) => {
 
 const dockAppIdentifiers = [
   // pins certain apps into dock (hardcoded for now)
-  'quickFind',
+  'apps',
   'clipboard',
   'query-builder',
-  'apps',
+  'graph',
   'settings',
 ]
 

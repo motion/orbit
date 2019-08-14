@@ -3,7 +3,7 @@ import { AppBit } from '@o/models'
 import { Card, CardProps, idFn, Row, SimpleText, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
 import { numberBounder, numberScaler, sleep } from '@o/utils'
 import { debounce } from 'lodash'
-import React, { createRef, memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { createRef, memo, useEffect, useLayoutEffect, useRef } from 'react'
 import { to, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
@@ -314,7 +314,7 @@ class OrbitAppsCarouselStore {
   }
 }
 
-const stackMarginLessPct = 0.4
+const stackMarginLessPct = 0.3
 
 export const appsCarouselStore = createUsableStore(OrbitAppsCarouselStore)
 export const useAppsCarousel = appsCarouselStore.useStore

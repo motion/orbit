@@ -41,6 +41,9 @@ export type VirtualListProps<A = any> = SelectableProps &
 
     /** Custom separator element */
     Separator?: FunctionComponent<{ children: string }>
+
+    /** Pass props to the separator */
+    separatorProps?: any
   }
 
 const SortableList = SortableContainer(SelectableDynamicList, { withRef: true })
@@ -79,7 +82,7 @@ const ListRow = memo(
         onClick={useCallback(e => onSelect(index, e), [])}
         onDoubleClick={useCallback(e => onOpen(index, e), [])}
         disabled={!sortable}
-        {...getSeparatorProps(listProps.Separator, items, item, index)}
+        {...getSeparatorProps(listProps, items, item, index)}
         // base props
         {...itemProps}
         {...item}
@@ -187,18 +190,14 @@ const isRightClick = e =>
   (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
-const getSeparatorProps = (
-  Separator: VirtualListProps['Separator'],
-  items: any[],
-  item: any,
-  index: number,
-) => {
+const getSeparatorProps = (props: VirtualListProps, items: any[], item: any, index: number) => {
   if (!item || !item.groupName) {
     return null
   }
+  const Separator = props.Separator
   if (index === 0 || item.groupName !== items[index - 1].groupName) {
     const name = `${item.groupName}`
-    return { separator: Separator ? <Separator>{name}</Separator> : name }
+    return { separator: Separator ? <Separator {...props.separatorProps}>{name}</Separator> : name }
   }
   return null
 }

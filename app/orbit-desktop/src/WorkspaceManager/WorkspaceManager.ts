@@ -117,8 +117,15 @@ export class WorkspaceManager {
     },
   )
 
+  // temp fix, i was seeing these not update
+  updateDesktopStateOnNewApps = react(() => this.appsManager.apps, this.updateDesktopState)
+
   updateDesktopState() {
     const identifiers = this.appsManager.apps.map(x => x.identifier)
+    if (!identifiers.length) {
+      log.info(`No apps to update...`)
+      return
+    }
     Desktop.setState({
       workspaceState: {
         appMeta: this.activeApps,

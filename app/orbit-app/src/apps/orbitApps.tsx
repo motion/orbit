@@ -6,6 +6,7 @@ import { StoreContext } from '../StoreContext'
 import AppsApp from './apps/AppsApp'
 import BitApp from './BitApp'
 import ClipboardApp from './ClipboardApp'
+import GraphApp from './GraphApp'
 import MessageApp from './MessageApp'
 import OnboardApp from './OnboardApp'
 import QueryBuilderApp from './QueryBuilderApp'
@@ -26,6 +27,7 @@ const LoadingApp = createApp({
 // apps we use internally in orbit
 
 export const orbitStaticApps: AppDefinition[] = [
+  GraphApp,
   QueryBuilderApp,
   SettingsApp,
   SpacesApp,
@@ -43,8 +45,13 @@ export const getAllAppDefinitions = (): AppDefinition[] => {
   return [...orbitStaticApps, ...getApps()]
 }
 
+const staticAppIdentifiers = orbitStaticApps.reduce((acc, cur) => {
+  acc[cur.id] = true
+  return acc
+}, {})
+
 export function getUserAppDefinitions(): AppDefinition[] {
-  return getApps()
+  return getApps().filter(x => !staticAppIdentifiers[x.id])
 }
 
 export function useStaticAppDefinitions() {

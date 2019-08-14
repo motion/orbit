@@ -153,15 +153,13 @@ var objectAssign = shouldUseNative() ? Object.assign : function (target, source)
  * will remain to ensure logic does not differ in production.
  */
 
-var validateFormat = function () {};
-
-if (__DEV__) {
-  validateFormat = function (format) {
+var validateFormat = function (format) {
+  if (__DEV__) {
     if (format === undefined) {
       throw new Error('invariant requires an error message argument');
     }
-  };
-}
+  }
+};
 
 function invariant(condition, format, a, b, c, d, e, f) {
   validateFormat(format);
@@ -2748,13 +2746,10 @@ var ReactPropTypesSecret_1 = ReactPropTypesSecret$1;
 
 
 
-var printWarning$1 = function() {};
-
-{
-  var ReactPropTypesSecret = ReactPropTypesSecret_1;
-  var loggedTypeFailures = {};
-
-  printWarning$1 = function(text) {
+var ReactPropTypesSecret = ReactPropTypesSecret_1;
+var loggedTypeFailures = {};
+var printWarning$1 = function(text) {
+  if (__DEV__) {
     var message = 'Warning: ' + text;
     if (typeof console !== 'undefined') {
       console.error(message);
@@ -2765,8 +2760,9 @@ var printWarning$1 = function() {};
       // to find the callsite that caused this warning to fire.
       throw new Error(message);
     } catch (x) {}
-  };
-}
+  }
+};
+
 
 /**
  * Assert that the values match with the type specs.
@@ -2780,7 +2776,7 @@ var printWarning$1 = function() {};
  * @private
  */
 function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
-  {
+  if (__DEV__) {
     for (var typeSpecName in typeSpecs) {
       if (typeSpecs.hasOwnProperty(typeSpecName)) {
         var error;

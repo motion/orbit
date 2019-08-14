@@ -119,7 +119,9 @@ export const OrbitHeader = memo(() => {
   const [buildStatus] = useModels(BuildStatusModel)
   const [isDeveloping, setIsDeveloping] = useState(false)
   const serverIsDeveloping = buildStatus.some(
-    s => s.identifier === appCarousel.focusedApp.identifier! && s.mode === 'development',
+    s =>
+      s.identifier === (appCarousel.focusedApp ? appCarousel.focusedApp.identifier! : '') &&
+      s.mode === 'development',
   )
   useEffect(() => {
     setIsDeveloping(serverIsDeveloping)
@@ -155,7 +157,7 @@ export const OrbitHeader = memo(() => {
       <HeaderTop height={slim ? 46 : 56}>
         <HeaderButtonPassProps>
           <HeaderSide space="sm" slim={slim}>
-            {!slim && <BackButton />}
+            <BackButton isTorn={isTorn} />
             {homeButtonElement}
           </HeaderSide>
         </HeaderButtonPassProps>
@@ -172,21 +174,26 @@ export const OrbitHeader = memo(() => {
             <SurfacePassProps sizeRadius={1.5} sizeHeight={0.9} sizeIcon={1.1} sizePadding={1.2}>
               {orbitStore.activeActions}
             </SurfacePassProps>
-            <Button
-              circular
-              tooltip="Add app to workspace"
-              alt="flat"
-              icon="plus"
-              size="sm"
-              sizeIcon={1.6}
-              glint={false}
-              glintBottom={false}
-              opacity={0.5}
-              hoverStyle={{
-                opacity: 0.75,
-              }}
-              onClick={om.actions.router.toggleSetupAppPage}
-            />
+            {!isTorn && (
+              <Button
+                circular
+                tooltip="Add app to workspace"
+                tooltipProps={{
+                  distance: 16,
+                }}
+                alt="flat"
+                icon="plus"
+                size="sm"
+                sizeIcon={1.6}
+                glint={false}
+                glintBottom={false}
+                opacity={0.5}
+                hoverStyle={{
+                  opacity: 0.75,
+                }}
+                onClick={om.actions.router.toggleSetupAppPage}
+              />
+            )}
             <OrbitHeaderOpenAppMenu isDeveloping={isDeveloping} setIsDeveloping={setIsDeveloping} />
           </Row>
         </HeaderContain>
@@ -216,7 +223,8 @@ const OrbitDockOpenButton = memo(() => {
           margin={[0, 20, 0, 0]}
           width={30}
           height={30}
-          icon="more"
+          icon="selection"
+          iconSize={18}
           iconProps={{
             transform: {
               rotate: '90deg',
@@ -226,7 +234,9 @@ const OrbitDockOpenButton = memo(() => {
           onMouseEnter={orbitDock.hoverEnter}
           onMouseLeave={orbitDock.hoverLeave}
           onClick={orbitDock.togglePinned}
-          active={orbitDock.state === 'pinned'}
+          {...orbitDock.state === 'pinned' && {
+            background: [0, 0, 0, 0.3],
+          }}
           zIndex={2}
         />
       </HeaderButtonPassProps>
@@ -371,10 +381,13 @@ const HeaderTop = gloss(View, {
   position: 'relative',
 })
 
-const BackButton = memo(() => {
+const BackButton = memo(({ isTorn }: { isTorn: boolean }) => {
   const { state, actions } = useOm()
   const appsCarousel = useAppsCarousel()
   const appsDrawer = useStore(appsDrawerStore)
+  if (isTorn && !appsDrawer.isOpen) {
+    return null
+  }
   return (
     <Button
       icon={appsDrawer.isOpen ? 'cross' : 'chevron-left'}
@@ -382,7 +395,7 @@ const BackButton = memo(() => {
       tooltipProps={{
         delay: 800,
       }}
-      disabled={!appsCarousel.zoomedIn && state.router.historyIndex <= 0}
+      disabled={!appsDrawerStore.isOpen && !appsCarousel.zoomedIn && state.router.historyIndex <= 0}
       iconSize={18}
       onClick={() => {
         if (appsDrawerStore.isOpen) {

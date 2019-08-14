@@ -3,7 +3,6 @@
 export type GlobalConfig = {
   isProd: boolean
   paths: {
-    cli: string
     appEntry: string
     orbitConfig: string
     desktopRoot: string

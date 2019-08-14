@@ -115,6 +115,10 @@ export const PaddedView = gloss<
   // otherwise it "shrinks to fit" vertically and overflow will cut off
   minWidth: '100%',
   minHeight: '100%',
+  // testing! this fixed <AppCard /> in api-grid demo where scrollable stops working
+  // if you show messages in a room that has a lot, it wont scroll. my hope is this fixes it
+  // without needing to do stupid things like add a prop to control PaddedView inside
+  maxHeight: '-webkit-fill-available',
 }).theme(
   props => ({
     ...(!props.scrollable && { maxWidth: '100%' }),

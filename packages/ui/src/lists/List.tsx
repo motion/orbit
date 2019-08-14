@@ -107,6 +107,7 @@ export const List = memo(
       onDrop,
       onDelete,
       Separator = ListSeparator,
+      separatorProps,
       ...restProps
     } = props
     const shareStore = useShareStore()
@@ -223,6 +224,7 @@ export const List = memo(
               getItemProps={getItemPropsInner}
               onOpen={onOpenInner}
               selectableStore={selectableStore}
+              separatorProps={separatorProps}
             />
           )}
           {showPlaceholder && (placeholder || <ListPlaceholder {...allProps} />)}

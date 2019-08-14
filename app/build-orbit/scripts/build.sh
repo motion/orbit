@@ -6,6 +6,9 @@ set -e
 # start in root of this package
 cd $(dirname $0)/..
 
+# kill any old stuck verdaccio
+kill $(lsof -t -i:4343) || true
+
 # --resume
 FLAGS=$@
 if [ "$1" = "--resume" ]; then
@@ -68,17 +71,17 @@ echo -n "--no-version " >> ./scripts/.lastbuild
 #
 # bundle
 #
-if [[ "$FLAGS" =~ "--no-build-app" ]]; then
-  echo "not bundling..."
-else
-  echo "bundling..."
-  cd ../orbit-app
-  # remove old app dir so we dont have old files there
-  rm -r dist || true
-  npm run build-app
-  cd -
-fi
-echo -n "--no-build-app " >> ./scripts/.lastbuild
+# if [[ "$FLAGS" =~ "--no-build-app" ]]; then
+#   echo "not bundling..."
+# else
+#   echo "bundling..."
+#   cd ../orbit-app
+#   # remove old app dir so we dont have old files there
+#   rm -r dist || true
+#   npm run build:app
+#   cd -
+# fi
+# echo -n "--no-build-app " >> ./scripts/.lastbuild
 
 function publish-packages() {
   # modify private stuff so we can publish
@@ -91,17 +94,46 @@ function publish-packages() {
   ./scripts/start-verdaccio-publish.sh &
   while ! nc -z localhost 4343; do sleep 0.1; done
 
+  # register/login
+  curl -s -H "Accept: application/json" -H "Content-Type:application/json" -X PUT --data '{"name": "orbit", "password": "i_love_orbit123"}' http://localhost:4343/-/user/org.couchdb.user:username
+  {
+    echo "orbit"
+    sleep 1
+    echo "i_love_orbit123"
+    sleep 1
+    echo "orbit@tryorbit.com"
+  } | npm login --registry http://localhost:4343
+
+
   # publish packages
   (cd ../.. && \
-    npx lerna exec \
+    npx lerna exec --stream \
       --ignore "orbit" \
       --ignore "@o/build" \
-      --ignore "@o/orbit-main" \
       --ignore "@o/playground" \
       --ignore "@o/site" \
       --ignore "@o/babel-preset-motion" \
-      --ignore "@o/blog" \
+      --ignore "@o/site" \
       --ignore "@o/cosal-test" \
+      --ignore "@o/build-orbit" \
+      --ignore "@o/example-workspace" \
+      --ignore "@o/orbit-api" \
+      --ignore "@o/orbit-registry" \
+      --ignore "@o/demo-app-api-grid" \
+      --ignore "@o/website-app" \
+      --ignore "@o/search-app" \
+      --ignore "@o/slack-app" \
+      --ignore "@o/gmail-app" \
+      --ignore "@o/postgres-app" \
+      --ignore "@o/lists-app" \
+      --ignore "@o/people-app" \
+      --ignore "@o/demo-app-layout" \
+      --ignore "@o/demo-app-flow" \
+      --ignore "@o/confluence-app" \
+      --ignore "@o/jira-app" \
+      --ignore "@o/github-app" \
+      --ignore "@o/orbit-dotapp" \
+      --ignore "@o/orbit-repl" \
       -- npm publish --force --registry http://localhost:4343)
   # then publish main app with all packages
   (cd ../orbit && npm publish --registry http://localhost:4343 --force)
@@ -166,5 +198,11 @@ mv stage-app/node_modules/sqlite3/lib/binding/electron-v4.0-darwin-x64 stage-app
 
 # see stage-app/package.json for options
 echo "electron-builder..."
-(cd stage-app && npx electron-builder -p always)
+if [[ "$FLAGS" =~ "--no-sign" ]]; then
+  cd stage-app
+  CSC_IDENTITY_AUTO_DISCOVERY=false npx electron-builder
+else
+  cd stage-app
+  npx electron-builder -p always
+fi
 

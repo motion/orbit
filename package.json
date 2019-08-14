@@ -23,7 +23,8 @@
     "start:devtools": "overmind-devtools & (cd app/orbit-repl && yarn start)",
     "start:site": "cd projects/site && yarn start",
     "fix-permissions": "chmod ug+x app/cli/_/index.js",
-    "build": "./bin/build",
+    "build": "tsc -b",
+    "build:watch": "tsc -b -w",
     "build:example-workspace": "(cd example-workspace && orbit ws --build --logLevel 1)",
     "build:app": "cd app/build-orbit && yarn run build-app",
     "build:app:resume": "cd app/build-orbit && yarn run build-app-resume",
@@ -121,7 +122,6 @@
     "prettier": "1.17.0",
     "sb-promisify": "^2.0.2",
     "ts-jest": "24.0.0",
-    "typescript": "3.5.3",
-    "verdaccio": "3.10.1"
+    "typescript": "3.5.3"
   }
 }

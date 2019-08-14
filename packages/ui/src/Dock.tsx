@@ -8,7 +8,6 @@ import { Arrow } from './Arrow'
 import { Button, ButtonProps } from './buttons/Button'
 import { createContextualProps } from './helpers/createContextualProps'
 import { Tag, TagProps } from './Tag'
-import { Col } from './View/Col'
 import { Row, RowProps } from './View/Row'
 import { View } from './View/View'
 
@@ -67,13 +66,13 @@ export const DockButton = forwardRef((props: DockButtonProps, ref) => {
 
   return (
     <Flipped flipId={id}>
-      <Col
+      <Row
         pointerEvents="none"
         // TODO do it based on attachment
-        flexDirection="column"
+        flexDirection="row-reverse"
         position="relative"
         alignItems="center"
-        justifyContent="center"
+        justifyContent="flex-start"
         space={12}
       >
         <Button
@@ -83,7 +82,7 @@ export const DockButton = forwardRef((props: DockButtonProps, ref) => {
           height={40}
           circular
           iconSize={16}
-          elevation={4}
+          elevation={2}
           borderWidth={0}
           badgeProps={{
             background: '#333',
@@ -96,12 +95,12 @@ export const DockButton = forwardRef((props: DockButtonProps, ref) => {
         />
         {!!props.label && (
           <Theme name="tooltip">
-            <TagLabel towards="top" size="xxs" {...labelProps}>
+            <TagLabel towards="right" size="xxs" {...labelProps}>
               {props.label}
             </TagLabel>
           </Theme>
         )}
-      </Col>
+      </Row>
     </Flipped>
   )
 })

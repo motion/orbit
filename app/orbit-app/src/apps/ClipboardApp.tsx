@@ -1,4 +1,4 @@
-import { App, AppViewProps, createApp, getAppDefinition, useAppBit } from '@o/kit'
+import { App, AppIcon, AppViewProps, createApp, useAppBit } from '@o/kit'
 import { CenteredText, Circle, isDefined, List, ListItemProps, memoizeWeak, pluralize, Section } from '@o/ui'
 import React, { memo } from 'react'
 
@@ -37,13 +37,15 @@ const ClipboardAppIndex = memo(() => {
       return shareItem && om.state.apps.activeDockApps.some(app => shareItem.id === app.id) !== true
     })
     .map(key => {
-      const { id, identifier, name, items = [] } = om.state.share[key]
+      const { id, name, items = [] } = om.state.share[key]
+      const app = om.state.apps.activeApps.find(x => x.id === id)
       const subTitle = items.length ? `Selected: ${summarize(items)}` : 'Nothing selected'
       return {
         id: key,
         title: name,
         subTitle,
-        icon: getAppDefinition(identifier).icon,
+        icon: <AppIcon app={app} />,
+        iconBefore: true,
         after: <Circle>{items.length}</Circle>,
         draggableItem: items,
         extraProps: {
@@ -54,7 +56,6 @@ const ClipboardAppIndex = memo(() => {
   return (
     <List
       alwaysSelected
-      title="Clipboard"
       selectable
       itemProps={{
         draggable: true,

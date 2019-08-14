@@ -103,7 +103,7 @@ Object.assign(
     headerBorderBottom: '#151515',
     headerBackground: linearGradient([0, 0, 0, 0.1], [0, 0, 0, 0.2]),
     headerBackgroundOpaque: linearGradient('#3f3f3f', '#353535'),
-    orbitHeaderBackgroundEditing: linearGradient('#163278', '#192B5C'),
+    orbitHeaderBackgroundEditing: linearGradient(selectedColor, selectedColor.darken(0.1)),
     orbitInputBackgroundEditing: [0, 0, 0, 0.2],
     headerFadeBackground: linearGradient(
       'to right',

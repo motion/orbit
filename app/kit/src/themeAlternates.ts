@@ -149,6 +149,20 @@ export const alternates: ThemeSet = {
       colorThemes.blue.background,
     ),
   },
+  // looks bad...
+  inverseAction: parent => {
+    const isDark = parent.background.isDark()
+    const background = isDark ? '#fff' : '#050505'
+    const backgroundHover = isDark ? '#fff' : '#080808'
+    return {
+      ...colorize({
+        background,
+        backgroundHover: backgroundHover,
+        backgroundActive: backgroundHover,
+      }),
+      color: colorThemes.blue.background,
+    }
+  },
   selected: {
     ...colorThemes.blue,
     // dont make selected things hover/active, they're active already

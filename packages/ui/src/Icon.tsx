@@ -8,6 +8,7 @@ import React, { createContext, forwardRef, memo, useContext } from 'react'
 import { Config } from './helpers/configureUI'
 import { useScale } from './Scale'
 import { SVG } from './SVG'
+import { Tooltip } from './Tooltip'
 import { ViewProps } from './View/types'
 import { View } from './View/View'
 
@@ -60,88 +61,103 @@ Icon.acceptsProps = {
 const SIZE_STANDARD = 16
 const SIZE_LARGE = 20
 
-export const PlainIcon = forwardRef(({ style, ignoreColor, svg, ...props }: IconProps, ref) => {
-  const theme = useTheme(props)
-  const size = snapToSizes(props.size) * useScale()
-  let color = props.color || (theme.color ? theme.color.toString() : '#fff')
-  let opacity
+export const PlainIcon = forwardRef(
+  ({ style, ignoreColor, svg, tooltip, tooltipProps, ...props }: IconProps, ref) => {
+    const theme = useTheme(props)
+    const size = snapToSizes(props.size) * useScale()
+    let color = props.color || (theme.color ? theme.color.toString() : '#fff')
+    let opacity
 
-  if (isDefined(props.opacity)) {
-    if (color === 'inherit') {
-      opacity = props.opacity
-    } else {
-      try {
-        color = toColor(color as any)
-          .setAlpha(typeof props.opacity === 'number' ? props.opacity : 1)
-          .toString()
-      } catch {
-        console.debug('couldnt interpret color', color)
+    if (isDefined(props.opacity)) {
+      if (color === 'inherit') {
         opacity = props.opacity
+      } else {
+        try {
+          color = toColor(color as any)
+            .setAlpha(typeof props.opacity === 'number' ? props.opacity : 1)
+            .toString()
+        } catch {
+          console.debug('couldnt interpret color', color)
+          opacity = props.opacity
+        }
       }
     }
-  }
 
-  if (typeof props.name === 'string') {
-    const nameTrim = props.name.trim()
-    if (nameTrim.indexOf('<svg') === 0) {
-      svg = props.name
+    if (typeof props.name === 'string') {
+      const nameTrim = props.name.trim()
+      if (nameTrim.indexOf('<svg') === 0) {
+        svg = props.name
+      }
     }
-  }
 
-  if (isDefined(svg)) {
-    return (
-      <View
-        ref={ref}
-        width={size}
-        height={size}
-        data-name={props.name}
-        className={`ui-icon ${props.className || ''}`}
-        color={color}
-        opacity={opacity}
-        {...props}
-      >
-        <SVG
-          svg={svg}
-          width={`${size}px`}
-          height={`${size}px`}
-          style={{
-            fill: 'currentColor',
-            alignItems: 'center',
-            justifyContent: 'center',
-            display: 'flex',
-            width: size,
-            height: size,
-            ...style,
-          }}
-          cleanup={[ignoreColor ? null : 'fill', 'title', 'desc', 'width', 'height'].filter(
-            Boolean,
-          )}
-        />
-      </View>
-    )
-  }
+    let contents = null
 
-  // choose which pixel grid is most appropriate for given icon size
-  const pixelGridSize = size >= SIZE_LARGE ? SIZE_LARGE : SIZE_STANDARD
-  // render path elements, or nothing if icon name is unknown.
-  const iconName = findName(props.name)
-  const paths = renderSvgPaths(pixelGridSize, iconName)
-  const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
+    if (isDefined(svg)) {
+      contents = (
+        <View
+          ref={ref}
+          width={size}
+          height={size}
+          data-name={props.name}
+          className={`ui-icon ${props.className || ''}`}
+          color={color}
+          opacity={opacity}
+          {...props}
+        >
+          <SVG
+            svg={svg}
+            width={`${size}px`}
+            height={`${size}px`}
+            style={{
+              fill: 'currentColor',
+              alignItems: 'center',
+              justifyContent: 'center',
+              display: 'flex',
+              width: size,
+              height: size,
+              ...style,
+            }}
+            cleanup={[ignoreColor ? null : 'fill', 'title', 'desc', 'width', 'height'].filter(
+              Boolean,
+            )}
+          />
+        </View>
+      )
+    } else {
+      // choose which pixel grid is most appropriate for given icon size
+      const pixelGridSize = size >= SIZE_LARGE ? SIZE_LARGE : SIZE_STANDARD
+      // render path elements, or nothing if icon name is unknown.
+      const iconName = findName(props.name)
+      const paths = renderSvgPaths(pixelGridSize, iconName)
+      const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
 
-  return (
-    <View width={size} height={size} {...props}>
-      <svg
-        style={{ color: `${color}`, ...style }}
-        data-icon={iconName}
-        width={`${size}px`}
-        height={`${size}px`}
-        viewBox={viewBox}
-      >
-        {paths}
-      </svg>
-    </View>
-  )
-})
+      contents = (
+        <View width={size} height={size} {...props}>
+          <svg
+            style={{ color: `${color}`, ...style }}
+            data-icon={iconName}
+            width={`${size}px`}
+            height={`${size}px`}
+            viewBox={viewBox}
+          >
+            {paths}
+          </svg>
+        </View>
+      )
+    }
+
+    // add tooltip only if defined
+    if (tooltip || tooltipProps) {
+      return (
+        <Tooltip label={tooltip} {...tooltipProps}>
+          {contents}
+        </Tooltip>
+      )
+    }
+
+    return contents
+  },
+)
 
 // @ts-ignore
 PlainIcon.acceptsProps = {

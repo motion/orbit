@@ -1,4 +1,4 @@
-import { command, useStore } from '@o/kit'
+import { command, openItem, useStore } from '@o/kit'
 import { AppDevCloseCommand, AppDevOpenCommand } from '@o/models'
 import { App } from '@o/stores'
 import { Icon, ListSeparator, MenuButton, Row, Toggle, useBanner } from '@o/ui'
@@ -49,7 +49,7 @@ export const OrbitHeaderOpenAppMenu = memo(
         elevation={3}
         elevationShadowOpacity={0.2}
         openIconProps={{
-          name: 'chevron-down',
+          name: isDeveloping ? 'edit' : 'chevron-down',
         }}
         items={[
           ...(isOnOpenableApp
@@ -88,7 +88,14 @@ export const OrbitHeaderOpenAppMenu = memo(
                   after: (
                     <Row space>
                       <Toggle checked={isDeveloping} />
-                      <Icon name="open" tooltip="Open in VSCode" />
+                      <Icon
+                        onClick={e => {
+                          e.stopPropagation()
+                          openItem(`file://Users/nw/motion/orbit`)
+                        }}
+                        name="code"
+                        tooltip="Open in VSCode"
+                      />
                     </Row>
                   ),
                 },

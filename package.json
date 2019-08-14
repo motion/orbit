@@ -24,7 +24,7 @@
     "start:site": "cd projects/site && yarn start",
     "fix-permissions": "chmod ug+x app/cli/_/index.js",
     "build": "tsc -b",
-    "build:watch": "tsc -b -w",
+    "build:watch": "tsc -b -w --preserveWatchOutput",
     "build:example-workspace": "(cd example-workspace && orbit ws --build --logLevel 1)",
     "build:app": "cd app/build-orbit && yarn run build:app",
     "build:app:resume": "cd app/build-orbit && yarn run build:app:resume",

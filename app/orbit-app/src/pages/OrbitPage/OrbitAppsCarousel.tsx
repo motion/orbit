@@ -54,6 +54,7 @@ class OrbitAppsCarouselStore {
 
   setRowNode = (next: HTMLElement) => {
     if (!next) return
+    if (next === this.rowNode) return
     this.rowNode = next
     // @ts-ignore
     this.rowRef.current = next

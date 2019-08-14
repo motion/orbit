@@ -151,7 +151,9 @@ export class WorkspaceManager {
     this.buildMode.main = this.options.dev ? 'development' : 'production'
     for (const app of this.activeApps) {
       // apps always default to production mode
-      this.buildMode[app.packageId] = this.buildMode[app.packageId] || 'production'
+      this.buildMode[app.packageId] = this.options.dev
+        ? 'development'
+        : this.buildMode[app.packageId] || 'production'
     }
     this.buildModePush(this.buildMode)
   }

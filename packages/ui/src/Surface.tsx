@@ -20,7 +20,8 @@ import { createSpacedChildren } from './SpaceGroup'
 import { scaledTextSizeTheme } from './text/SimpleText'
 import { Tooltip } from './Tooltip'
 import { getElevation } from './View/elevation'
-import { getMargin, View, ViewProps } from './View/View'
+import { ViewProps } from './View/types'
+import { getMargin, View } from './View/View'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells

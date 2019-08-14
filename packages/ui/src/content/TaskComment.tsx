@@ -7,7 +7,8 @@ import { Icon } from '../Icon'
 import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
 import { Text } from '../text/Text'
-import { View, ViewProps } from '../View/View'
+import { ViewProps } from '../View/types'
+import { View } from '../View/View'
 import { Markdown } from './Markdown'
 
 export type TaskCommentLike = {

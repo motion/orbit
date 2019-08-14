@@ -1,11 +1,12 @@
 import { isDefined } from '@o/utils'
-import { Base, gloss } from 'gloss'
+import { gloss } from 'gloss'
 import React, { forwardRef } from 'react'
 import { SpringValue } from 'react-spring'
 
 import { getSpaceSize, Size } from '../Space'
-import { usePadding } from './pad'
-import { View, ViewProps } from './View'
+import { PaddedView } from './PaddedView'
+import { ViewProps } from './types'
+import { View } from './View'
 
 // dont allow flexFlow so we force props down through flexDirection
 
@@ -86,10 +87,21 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
   )
 })
 
+const ScrollableChrome = gloss<ScrollableViewProps>(View, {
+  boxSizing: 'content-box',
+  flexDirection: 'inherit',
+  flexWrap: 'inherit',
+}).theme(props => ({
+  ...(props.scrollable === 'x' && { overflowX: 'auto', overflowY: 'hidden' }),
+  ...(props.scrollable === 'y' && { overflowY: 'auto', overflowX: 'hidden' }),
+  ...(props.scrollable === true && { overflow: 'auto' }),
+  ...(!props.scrollable && wrappingSpaceTheme(props)),
+}))
+
 /**
  * This can only be used on the innermost element to space its children, css-specific
  */
-const wrappingSpaceTheme = props => {
+export function wrappingSpaceTheme(props) {
   if (props.isWrapped) {
     const space = getSpaceSize(props.parentSpacing)
     return {
@@ -100,44 +112,3 @@ const wrappingSpaceTheme = props => {
     }
   }
 }
-
-export const PaddedView = gloss<
-  ViewProps & Pick<ScrollableViewProps, 'scrollable' | 'parentSpacing'> & { isWrapped?: boolean }
->(Base, {
-  flexDirection: 'inherit',
-  flexWrap: 'inherit',
-  // dont flex! this ruins the pad and width/height
-  // use minHeight/minWidth instead
-  // flex: 1,
-  alignItems: 'inherit',
-  justifyContent: 'inherit',
-  overflow: 'inherit',
-  // otherwise it "shrinks to fit" vertically and overflow will cut off
-  minWidth: '100%',
-  minHeight: 'min-content', // was 100% but this breaks AppsApp separators, they collapse too short
-  // testing! this fixed <AppCard /> in api-grid demo where scrollable stops working
-  // if you show messages in a room that has a lot, it wont scroll. my hope is this fixes it
-  // without needing to do stupid things like add a prop to control PaddedView inside
-  maxHeight: '-webkit-fill-available',
-}).theme(
-  props => ({
-    ...(!props.scrollable && { maxWidth: '100%' }),
-    ...(props.scrollable === 'x' && { maxHeight: '100%' }),
-    ...(props.scrollable === 'y' && { maxWidth: '100%' }),
-  }),
-  usePadding,
-  wrappingSpaceTheme,
-)
-
-export const ScrollableChrome = gloss<ScrollableViewProps>(View, {
-  boxSizing: 'content-box',
-  flexDirection: 'inherit',
-  flexWrap: 'inherit',
-  // width: '100%',
-  // height: '100%',
-}).theme(props => ({
-  ...(props.scrollable === 'x' && { overflowX: 'auto', overflowY: 'hidden' }),
-  ...(props.scrollable === 'y' && { overflowY: 'auto', overflowX: 'hidden' }),
-  ...(props.scrollable === true && { overflow: 'auto' }),
-  ...(!props.scrollable && wrappingSpaceTheme(props)),
-}))

@@ -8,7 +8,8 @@ import React, { createContext, forwardRef, memo, useContext } from 'react'
 import { Config } from './helpers/configureUI'
 import { useScale } from './Scale'
 import { SVG } from './SVG'
-import { View, ViewProps } from './View/View'
+import { ViewProps } from './View/types'
+import { View } from './View/View'
 
 export { IconName }
 

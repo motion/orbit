@@ -1,6 +1,8 @@
 import { gloss } from 'gloss'
 import { HTMLProps } from 'react'
-import { View, ViewProps } from './View/View'
+
+import { ViewProps } from './View/types'
+import { View } from './View/View'
 
 export type ImageProps = ViewProps & HTMLProps<HTMLImageElement>
 

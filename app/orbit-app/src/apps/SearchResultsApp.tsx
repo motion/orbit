@@ -12,7 +12,7 @@ export default createApp({
   app: SearchResultsApp,
 })
 
-function SearchResultsApp() {
+export function SearchResultsApp() {
   const searchStore = SearchStore.useStore()!
   const item = searchStore.selectedItem
 

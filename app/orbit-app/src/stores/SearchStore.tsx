@@ -38,17 +38,20 @@ export class SearchStoreStore {
     this.searchState = next
   }
 
-  get searchedQuery() {
-    const query = (this.searchState && this.searchState.query) || ''
-    return query[0] === '/' ? query.slice(1) : query
+  get query() {
+    return (this.searchState && this.searchState.query) || ''
   }
 
+  lastQuery = react(() => this.query, {
+    delayValue: true,
+  })
+
   get isChanging() {
-    return this.searchState && this.searchState.query !== this.searchedQuery
+    return this.searchState && this.searchState.query !== this.query
   }
 
   hasQuery = () => {
-    return !!this.searchedQuery
+    return !!this.query
   }
 
   get allApps() {
@@ -95,7 +98,7 @@ export class SearchStoreStore {
   state = react(
     () => [
       this.hooks.space.id,
-      this.searchedQuery,
+      this.query,
       this.hooks.app,
       this.apps.map(x => x.id).join(' '),
       !!this.searchState,
@@ -104,7 +107,12 @@ export class SearchStoreStore {
       ensure('app', !!app)
       ensure('this.searchState', !!this.searchState)
 
-      await sleep(120)
+      const isItemFiltering = this.query[0] === '/'
+      const isBeginningItemFilter = this.lastQuery === '' && isItemFiltering
+
+      if (!isBeginningItemFilter) {
+        await sleep(120)
+      }
 
       // RESULTS
       let results: ListItemProps[] = []
@@ -121,14 +129,18 @@ export class SearchStoreStore {
         results = [...results]
       }
 
-      addResults(this.getQuickResults(query))
-
-      // quick return from search
-      setValue({ results, query, finished: false })
+      if (!isItemFiltering) {
+        addResults(this.getQuickResults(query))
+      }
 
       // keep the previous results in memory and filter down fuzzy
       if (query.length) {
-        const lastResults = this.lastResults ? this.lastResults : []
+        let lastResults = this.lastResults ? this.lastResults : []
+
+        if (isItemFiltering) {
+          lastResults = lastResults.filter(x => x.groupName !== 'Apps')
+        }
+
         addResults(
           fuzzyFilter(query, lastResults, {
             threshold: -300,
@@ -136,6 +148,9 @@ export class SearchStoreStore {
           }),
         )
       }
+
+      // quick return from search
+      setValue({ results, query, finished: false })
 
       await sleep(50)
 
@@ -163,13 +178,14 @@ export class SearchStoreStore {
         .filter(x => x.type === MarkType.Location)
         .map(x => x.text)
       const { startDate, endDate } = dateState
+      const searchQuery = query[0] === '/' ? query.slice(1) : query
 
       /** We can load pages piece by piece with this */
       let total = 0
       async function addSearchResults({ take }: { take: number }) {
         const args: SearchQuery = {
           spaceId,
-          query,
+          query: searchQuery,
           sortBy,
           startDate,
           endDate,

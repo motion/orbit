@@ -1,5 +1,5 @@
 import { Bridge, BridgeOptions, proxySetters } from '@o/mobx-bridge'
-import { AppMeta } from '@o/models'
+import { AppMeta, CommandWsOptions } from '@o/models'
 import { decorate, deep } from '@o/use-store'
 
 // store export
@@ -17,6 +17,7 @@ class DesktopStore {
 
   state = deep({
     workspaceState: {
+      options: {} as CommandWsOptions,
       appMeta: {} as { [identifier: string]: AppMeta },
       identifierToPackageId: {} as { [identifier: string]: string },
       nameRegistry: [] as {

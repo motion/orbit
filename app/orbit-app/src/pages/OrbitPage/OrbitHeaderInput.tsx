@@ -8,6 +8,7 @@ import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 import { appsCarouselStore } from './OrbitAppsCarousel'
 import { appsDrawerStore } from './OrbitAppsDrawer'
 import { useHeaderStore } from './OrbitHeader'
+import { orbitSearchResultsStore } from './OrbitSearchResults'
 
 const Keys = {
   up: 38,
@@ -62,9 +63,9 @@ const handleKeyDown = async e => {
       }
       return
     case Keys.enter:
-      if (appsCarouselStore.state.zoomedOut) {
+      if (orbitSearchResultsStore.shouldHandleEnter) {
         e.stopPropagation()
-        appsCarouselStore.zoomIntoCurrentApp()
+        orbitSearchResultsStore.handleEnter()
         return
       } else {
         queryStore.setLastCommand('enter')
@@ -120,10 +121,6 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { f
   )
 
   const updateQuery = (next: string) => {
-    const prev = queryStore.query
-    if (!prev && next === '/') {
-      console.warn('should move into search results mode')
-    }
     setInputVal(next)
     queryStore.setQuery(next)
   }

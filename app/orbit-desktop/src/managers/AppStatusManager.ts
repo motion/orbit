@@ -1,5 +1,5 @@
 import { WindowMessage } from '@o/models'
-import { isDefined } from '@o/ui'
+import { isDefined } from '@o/utils'
 import Observable from 'zen-observable'
 
 export class AppStatusManager {

@@ -1,6 +1,6 @@
 import { Logger } from '@o/logger'
 import { SpaceEntity } from '@o/models'
-import { randomAdjective, randomNoun } from '@o/ui'
+import { randomAdjective, randomNoun } from '@o/utils'
 import { getRepository } from 'typeorm'
 
 const log = new Logger('findOrCreateWorkspace')

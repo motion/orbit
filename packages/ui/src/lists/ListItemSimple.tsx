@@ -1,8 +1,8 @@
 import { useReaction } from '@o/use-store'
-import { isDefined, selectDefined } from '@o/utils'
+import { idFn, isDefined, selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
 import { Box, gloss, Theme, ThemeContext, useTheme } from 'gloss'
-import React, { isValidElement } from 'react'
+import React, { isValidElement, useCallback } from 'react'
 
 import { BorderBottom } from '../Border'
 import { Button } from '../buttons/Button'
@@ -156,19 +156,23 @@ export type ListItemSpecificProps = ListItemHide & {
   onStartEdit?: () => any
 }
 
-export type ListItemSimpleProps = SizedSurfaceProps & ListItemSpecificProps
+export type ListItemSimpleProps = Omit<SizedSurfaceProps, 'onClick'> &
+  ListItemSpecificProps & {
+    onClick?: (e: Event, props: ListItemSimpleProps) => any
+  }
 
 // this wrapper required for virtualization to measure/style */}
 // prevents hard re-renders on resize by taking out the style prop
-export const ListItemSimple = React.forwardRef(
-  function ListItemSimple({ style, ...listProps }: ListItemSimpleProps, ref) {
-    return (
-      <div style={style} ref={ref as any}>
-        <ListItemInner {...listProps} />
-      </div>
-    )
-  },
-)
+export const ListItemSimple = React.forwardRef(function ListItemSimple(
+  { style, ...listProps }: ListItemSimpleProps,
+  ref,
+) {
+  return (
+    <div style={style} ref={ref as any}>
+      <ListItemInner {...listProps} />
+    </div>
+  )
+})
 
 // TODO re-check if this memo is worth perf
 const ListItemInner = memoIsEqualDeep(function ListItemInner(props: ListItemSimpleProps) {
@@ -268,6 +272,26 @@ const ListItemInner = memoIsEqualDeep(function ListItemInner(props: ListItemSimp
   const hasAfterTitle = isDefined(props.afterTitle, afterHeaderElement)
   const altTheme = isSelected ? (isFocused ? 'selected' : 'selectedInactive') : null
 
+  // its a lot easier at times to just get the props from the click event
+  const handleClick = useCallback(
+    onClick
+      ? e => {
+          onClick(e, props)
+        }
+      : idFn,
+    [onClick],
+  )
+
+  // move click to mouseup and automatically wrap click if wanted
+  // TODO check why this logic is necessary, has to do with selection/drag
+  const handleMouseUp = useCallback(
+    e => {
+      !!surfaceProps.onMouseUp && surfaceProps.onMouseUp!(e)
+      hasMouseDownEvent && handleClick(e)
+    },
+    [hasMouseDownEvent, surfaceProps.onMouseUp, handleClick],
+  )
+
   return (
     <Theme alt={altTheme}>
       {above}
@@ -286,7 +310,7 @@ const ListItemInner = memoIsEqualDeep(function ListItemInner(props: ListItemSimp
         alignItems="center"
         subTheme="listItem"
         borderRadius={borderRadius}
-        onClick={(!hasMouseDownEvent && onClick) || undefined}
+        onClick={(!hasMouseDownEvent && handleClick) || undefined}
         {...listItemAdjustedPadding}
         paddingLeft={(indent || 1) * listItemAdjustedPadding.paddingLeft}
         width="100%"
@@ -302,6 +326,7 @@ const ListItemInner = memoIsEqualDeep(function ListItemInner(props: ListItemSimp
         noInnerElement={!iconElement}
         {...disablePsuedoProps}
         {...surfaceProps}
+        onMouseUp={handleMouseUp}
       >
         <ListItemMainContent oneLine={oneLine}>
           <Col flex={1}>

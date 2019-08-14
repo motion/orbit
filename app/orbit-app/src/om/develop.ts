@@ -3,6 +3,7 @@ import { AppDefinition, BuildStatus, BuildStatusModel } from '@o/models'
 import { Desktop } from '@o/stores'
 import { BannerHandle, stringToIdentifier } from '@o/ui'
 import { difference } from 'lodash'
+import { reaction } from 'mobx'
 import { AsyncAction } from 'overmind'
 
 import { GlobalBanner } from '../pages/OrbitPage/OrbitPage'
@@ -24,10 +25,21 @@ const start: AsyncAction = async om => {
   // setup apps
   await om.actions.develop.loadApps()
 
+  // watch for development state
+  updateDevState()
+  reaction(() => Desktop.state.workspaceState.options.dev, updateDevState, {
+    fireImmediately: true,
+  })
+
   // observe changes
   observeMany(BuildStatusModel).subscribe(status => {
     om.actions.develop.updateStatus({ status, banner: GlobalBanner })
   })
+}
+
+function updateDevState() {
+  // @ts-ignore
+  window.__DEV__ = Desktop.state.workspaceState.options.dev
 }
 
 const getDevelopingIdentifiers = (x: BuildStatus[]) =>

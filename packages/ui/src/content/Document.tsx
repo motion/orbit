@@ -22,8 +22,8 @@ export function Document(rawProps: DocumentProps) {
   return (
     <Col space>
       <Title>{title}</Title>
-      <HighlightText size={1.2} whiteSpace="pre-line">
-        {body}
+      <HighlightText size={1.15} whiteSpace="pre-line" selectable>
+        {body.replace(/\n\n+/, '\n')}
       </HighlightText>
     </Col>
   )

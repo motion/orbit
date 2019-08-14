@@ -1,4 +1,5 @@
 import { ThemeSet } from '@o/css'
+import { linearGradient } from '@o/ui'
 import { colorize, fromStyles } from 'gloss-theme'
 
 import { colors, transparent } from './themeColors'
@@ -141,7 +142,13 @@ export const alternates: ThemeSet = {
     buttonFontWeight: 600,
     ...colorThemes.green,
   },
-  action: colorThemes.blue,
+  action: {
+    ...colorThemes.blue,
+    buttonBackground: linearGradient(
+      colorThemes.blue.background.lighten(0.1),
+      colorThemes.blue.background,
+    ),
+  },
   selected: {
     ...colorThemes.blue,
     // dont make selected things hover/active, they're active already

@@ -1,14 +1,15 @@
-import { AppBit, ensure, HighlightActiveQuery, react, SearchState, useReaction, useSearchState, useStore } from '@o/kit'
-import { FullScreen, FullScreenProps, linearGradient, List, ListItemProps, ProvideVisibility, SelectableStore, SubTitle, Theme, useTheme, View } from '@o/ui'
+import { AppBit, createUsableStore, ensure, HighlightActiveQuery, openItem, react, SearchState, useReaction, useSearchState } from '@o/kit'
+import { FullScreen, FullScreenProps, linearGradient, List, ListItemProps, normalizeItem, ProvideVisibility, Row, SelectableStore, SubTitle, Theme, useTheme, View } from '@o/ui'
 import { ThemeObject } from 'gloss'
-import React, { memo, useCallback, useMemo, useRef } from 'react'
+import React, { memo, Suspense, useCallback, useMemo, useRef } from 'react'
 
+import { SearchResultsApp } from '../../apps/SearchResultsApp'
 import { om } from '../../om/om'
 import { SearchStore, SearchStoreStore } from '../../stores/SearchStore'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarousel'
 import { appsDrawerStore } from './OrbitAppsDrawer'
 
-class SearchResultsStore {
+class OrbitSearchResultsStore {
   // @ts-ignore
   props: {
     searchStore: SearchStoreStore
@@ -25,7 +26,6 @@ class SearchResultsStore {
     async (next, { when }) => {
       if (next) {
         await when(() => this.isActive)
-        // await when(() => !appsCarouselStore.isAnimating)
         this.props.searchStore.setSearchState(next)
       }
     },
@@ -35,20 +35,48 @@ class SearchResultsStore {
     return !appsCarouselStore.zoomedIn && !appsDrawerStore.isOpen
   }
 
-  rows: ListItemProps[] = []
-
+  selectedRows: ListItemProps[] = []
   setRows(rows: ListItemProps[]) {
-    this.rows = rows
+    this.selectedRows = rows
+  }
+
+  isApp(row: ListItemProps) {
+    return row.extraData && row.extraData.app
+  }
+
+  // handlers for actions
+  get shouldHandleEnter() {
+    if (!this.isActive) return false
+    if (!this.selectedRows.length) return false
+    return true
+  }
+  handleEnter() {
+    const row = this.selectedRows[0]
+    if (!row) return
+    if (this.isApp(row)) {
+      appsCarouselStore.zoomIntoCurrentApp()
+    } else {
+      const item = row.item
+      if (!item) return
+      const normalized = normalizeItem(item)
+      if (normalized.locationLink) {
+        openItem(normalized.locationLink)
+      } else {
+        // we should show a banner here
+        console.warn('item doesnt have a location link!')
+      }
+    }
   }
 
   reactToItem = react(
-    () => this.rows,
+    () => this.selectedRows,
     async (rows, { sleep }) => {
       const item = rows[0]
       if (!item) return
       // lets not be super greedy here
       await sleep(100)
       if (item.extraData && item.extraData.app) {
+        appsCarouselStore.setHidden(false)
         // onSelect App
         const app: AppBit = item.extraData.app
         const carouselIndex = appsCarouselStore.apps.findIndex(x => x.id === app.id)
@@ -56,11 +84,15 @@ class SearchResultsStore {
         appsCarouselStore.animateAndScrollTo(carouselIndex)
       } else {
         // onSelect Bit
-        const carouselIndex = appsCarouselStore.apps.findIndex(
-          x => x.identifier === 'searchResults',
-        )
-        if (carouselIndex === -1) return
-        appsCarouselStore.animateAndScrollTo(carouselIndex)
+
+        appsCarouselStore.setHidden()
+
+        // to scroll to SearchResultsApp in carousel...
+        // const carouselIndex = appsCarouselStore.apps.findIndex(
+        //   x => x.identifier === 'searchResults',
+        // )
+        // if (carouselIndex === -1) return
+        // appsCarouselStore.animateAndScrollTo(carouselIndex)
 
         om.actions.setShare({
           id: `app-search-results`,
@@ -78,11 +110,13 @@ class SearchResultsStore {
     },
   )
 }
+export const orbitSearchResultsStore = createUsableStore(OrbitSearchResultsStore)
 
 export const OrbitSearchResults = memo(() => {
   const theme = useTheme()
   const searchStore = SearchStore.useStore()!
-  const searchResultsStore = useStore(SearchResultsStore, { searchStore })
+  const searchResultsStore = orbitSearchResultsStore.useStore()
+  orbitSearchResultsStore.setProps({ searchStore })
   const isActive = searchResultsStore.isActive
   const carousel = useAppsCarousel()
   const listRef = useRef<SelectableStore>(null)
@@ -152,8 +186,10 @@ export const OrbitSearchResults = memo(() => {
 
   // sync from carousel to list
   useReaction(
-    () => appsCarouselStore.apps[appsCarouselStore.focusedIndex],
-    async (app, { sleep }) => {
+    () => appsCarouselStore.focusedIndex,
+    async (index, { sleep }) => {
+      console.log('focused index is now', index)
+      const app = appsCarouselStore.apps[index]
       ensure('app', !!app)
       const listIndex = searchStore.results.findIndex(
         x => x.extraData && x.extraData.app && x.extraData.app.id === app.id,
@@ -170,48 +206,52 @@ export const OrbitSearchResults = memo(() => {
 
   return (
     <ProvideVisibility visible={isActive}>
-      <View
-        className="orbit-search-results"
-        perspective="1000px"
-        position="absolute"
-        left={0}
-        top={0}
-        bottom={0}
-        zIndex={200}
-        width="39%"
-        transition="all ease 300ms"
-        background="linear-gradient(to right, rgba(0,0,0,0.3) 15%, transparent 90%)"
-        opacity={carousel.zoomedIn ? 0 : 1}
-        pointerEvents={isActive ? 'auto' : 'none'}
-      >
-        <FullScreen
+      <Row width="100%" height="100%">
+        <View
+          className="orbit-search-results"
+          perspective="1000px"
+          zIndex={200}
+          width="39%"
           transition="all ease 300ms"
-          transformOrigin="left center"
-          paddingRight="10%"
-          {...carouselProps}
+          background="linear-gradient(to right, rgba(0,0,0,0.3) 15%, transparent 90%)"
+          opacity={carousel.zoomedIn ? 0 : 1}
+          pointerEvents={isActive ? 'auto' : 'none'}
         >
-          <Theme theme={highlightTheme}>
-            <HighlightActiveQuery query={searchStore.searchedQuery}>
-              <List
-                ref={listRef}
-                alwaysSelected
-                shareable
-                selectable
-                itemProps={useMemo(
-                  () => ({
-                    iconBefore: true,
-                    iconSize: 42,
-                  }),
-                  [],
-                )}
-                onSelect={handleSelect}
-                items={searchStore.results}
-                Separator={ListSeparatorLarge}
-              />
-            </HighlightActiveQuery>
-          </Theme>
-        </FullScreen>
-      </View>
+          <FullScreen
+            transition="all ease 300ms"
+            transformOrigin="left center"
+            paddingRight="10%"
+            {...carouselProps}
+          >
+            <Theme theme={highlightTheme}>
+              <HighlightActiveQuery query={searchStore.query}>
+                <List
+                  ref={listRef}
+                  alwaysSelected
+                  shareable
+                  selectable
+                  itemProps={useMemo(
+                    () => ({
+                      iconBefore: true,
+                      iconSize: 42,
+                    }),
+                    [],
+                  )}
+                  onSelect={handleSelect}
+                  items={searchStore.results}
+                  Separator={ListSeparatorLarge}
+                />
+              </HighlightActiveQuery>
+            </Theme>
+          </FullScreen>
+        </View>
+
+        <View flex={1}>
+          <Suspense fallback={null}>
+            <SearchResultsApp />
+          </Suspense>
+        </View>
+      </Row>
     </ProvideVisibility>
   )
 })

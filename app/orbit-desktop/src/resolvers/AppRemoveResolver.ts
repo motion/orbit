@@ -1,7 +1,7 @@
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { AppBit, AppEntity, AppRemoveCommand, BitEntity, Job, JobEntity } from '@o/models'
-import { OR_TIMED_OUT, orTimeout } from '@o/ui'
+import { OR_TIMED_OUT, orTimeout } from '@o/utils'
 import { getConnection, getManager, getRepository } from 'typeorm'
 
 const log = new Logger('command:app-remove')

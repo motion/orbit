@@ -9,6 +9,8 @@
     "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {
+    "@o/css": "^2.6.0",
+    "@o/react-sortable-hoc": "*",
     "@o/bridge": "^2.6.0",
     "@o/color": "^2.6.0",
     "@o/config": "^2.6.0",
@@ -22,16 +24,14 @@
     "@o/utils": "^2.6.0",
     "compromise": "^11.11.0",
     "date-fns": "2.0.0-alpha.7",
-    "fuzzysort": "^1.1.4",
     "gloss": "^2.6.0",
     "gloss-theme": "^2.6.0",
     "immer": "^3.1.2",
     "lodash": "4.17.11",
     "memoize-weak": "^1.0.2",
-    "react-cache": "^2.0.0-alpha.0",
-    "react-svg-inline": "2.1.1",
     "sherlockjs": "1.4.0",
-    "typeorm": "^0.3.0-alpha.23"
+    "typeorm": "^0.3.0-alpha.23",
+    "react-hot-loader": "4.12.11"
   },
   "peerDependencies": {
     "electron": "*",

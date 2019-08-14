@@ -222,7 +222,7 @@ function reactProdInvariant(code) {
 
 var lowPriorityWarning = function () {};
 
-if (__DEV__) {
+if (true) {
   var printWarning = function (format) {
     for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
       args[_key - 1] = arguments[_key];
@@ -268,7 +268,7 @@ var lowPriorityWarning$1 = lowPriorityWarning;
 
 var warningWithoutStack = function () {};
 
-if (__DEV__) {
+if (true) {
   warningWithoutStack = function (condition, format) {
     for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
       args[_key - 2] = arguments[_key];
@@ -393,7 +393,7 @@ var ReactNoopUpdateQueue = {
 };
 
 var emptyObject = {};
-if (__DEV__) {
+if (true) {
   Object.freeze(emptyObject);
 }
 
@@ -465,7 +465,7 @@ Component.prototype.forceUpdate = function (callback) {
  * we would like to deprecate them, we're not going to move them over to this
  * modern base class. Instead, we define a getter that warns if it's accessed.
  */
-if (__DEV__) {
+if (true) {
   var deprecatedAPIs = {
     isMounted: ['isMounted', 'Instead, make sure to clean up subscriptions and pending requests in ' + 'componentWillUnmount to prevent memory leaks.'],
     replaceState: ['replaceState', 'Refactor your code to use setState instead (see ' + 'https://github.com/facebook/react/issues/3236).']
@@ -1707,7 +1707,7 @@ function setCurrentlyValidatingElement(element) {
   }
 }
 
-if (__DEV__) {
+if (true) {
   // Stack implementation injected by the current renderer.
   ReactDebugCurrentFrame.getCurrentStack = null;
 
@@ -1738,7 +1738,7 @@ var ReactSharedInternals = {
   assign: objectAssign
 };
 
-{
+if (true) {
   // Re-export the schedule API(s) for UMD bundles.
   // This avoids introducing a dependency on a new UMD global in a minor update,
   // Since that would be a breaking change (e.g. for all existing CodeSandboxes).
@@ -1777,7 +1777,7 @@ var ReactSharedInternals = {
   });
 }
 
-if (__DEV__) {
+if (true) {
   objectAssign(ReactSharedInternals, {
     // These should not be included in production.
     ReactDebugCurrentFrame: ReactDebugCurrentFrame,
@@ -1796,7 +1796,7 @@ if (__DEV__) {
 
 var warning = warningWithoutStack$1;
 
-if (__DEV__) {
+if (true) {
   warning = function (condition, format) {
     if (condition) {
       return;
@@ -2834,11 +2834,7 @@ var checkPropTypes_1 = checkPropTypes;
  * that support it.
  */
 
-var propTypesMisspellWarningShown = void 0;
-
-if (__DEV__) {
-  propTypesMisspellWarningShown = false;
-}
+var propTypesMisspellWarningShown = false;
 
 function getDeclarationErrorAddendum() {
   if (ReactCurrentOwner.current) {

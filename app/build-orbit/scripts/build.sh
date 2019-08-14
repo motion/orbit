@@ -196,10 +196,12 @@ rm -r dist/mac/Orbit.app || true
 #
 # fix sqlite
 #
-(cd stage-app && ../node_modules/.bin/electron-rebuild)
-# so desktop node subprocess can use it
-rm -r stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64 || true
-mv stage-app/node_modules/sqlite3/lib/binding/electron-v4.0-darwin-x64 stage-app/node_modules/sqlite3/lib/binding/node-v69-darwin-x64 || echo "didnt copy sqlite: ok on rebuild, error on first build"
+if [[ "$FLAGS" =~ "--no-rebuild" ]]; then
+  (cd stage-app && ../node_modules/.bin/electron-rebuild)
+  # so desktop node subprocess can use it
+  rm -r stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64 || true
+  mv stage-app/node_modules/sqlite3/lib/binding/electron-v4.0-darwin-x64 stage-app/node_modules/sqlite3/lib/binding/node-v69-darwin-x64 || echo "didnt copy sqlite: ok on rebuild, error on first build"
+fi
 
 #
 # ensure base dlls present (where should this actually go?? a watcher at build time + rebuild on build?)

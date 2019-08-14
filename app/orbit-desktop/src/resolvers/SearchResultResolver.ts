@@ -96,12 +96,12 @@ export class SearchResultResolver {
     for (const ftsBit of ftsBits) {
       if (ftsBit.type === 'person') {
         matchedBits.push(ftsBit)
-        continue
-      }
-      if (cosalBits.findIndex(x => x.id === ftsBit.id) > -1) {
-        matchedBits.push(ftsBit)
       } else {
-        restBits.push(ftsBit)
+        if (cosalBits.findIndex(x => x.id === ftsBit.id) > -1) {
+          matchedBits.push(ftsBit)
+        } else {
+          restBits.push(ftsBit)
+        }
       }
     }
 

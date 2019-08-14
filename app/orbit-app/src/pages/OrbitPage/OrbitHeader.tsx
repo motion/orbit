@@ -53,7 +53,7 @@ class HeaderStore {
     if (!activeMarks) {
       return
     }
-    const markPositions = activeMarks.map(x => [x[0], x[1]])
+    const markPositions = activeMarks.map(x => [x[0], x[1], x[2]])
     return () => markPositions
   }
 

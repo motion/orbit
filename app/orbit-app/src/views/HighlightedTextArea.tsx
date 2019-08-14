@@ -92,6 +92,7 @@ export class HighlightedTextArea extends React.Component<Props> {
   }
 
   handleArrayHighlight(value, markList = []) {
+    if (!this.props.openMark || !this.props.closeMark) return ''
     const sortedMarkList = markList.slice().sort((a, b) => (a[0] < b[0] ? -1 : 1))
     let input = `${value}`
     let offset = 0
@@ -115,6 +116,7 @@ export class HighlightedTextArea extends React.Component<Props> {
   }
 
   handleObjectHighlight(input, markWords) {
+    if (!this.props.openMark) return ''
     const markWithClass = className => {
       const openMark = this.props.openMark.replace('>', ` class="${className}">`)
       return inner => `${openMark}${inner}${this.props.closeMark}`
@@ -135,12 +137,15 @@ export class HighlightedTextArea extends React.Component<Props> {
       return this.state.value
     }
     let highlightMarks = this.state.value
+    if (!highlightMarks) {
+      return ''
+    }
     const payload = this.props.highlight(highlightMarks)
     // escape HTML
-    highlightMarks = highlightMarks
+    highlightMarks = `${highlightMarks
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
+      .replace(/>/g, '&gt;')}`
 
     // javascript sucks looks at this conditional...
     if (payload) {
@@ -180,15 +185,18 @@ export class HighlightedTextArea extends React.Component<Props> {
         >
           {this.state.value}
         </UI.View>
-        {/* highlights layere */}
+        {/* highlights layer */}
         <Block
-          {...props}
+          {...props as any}
           ref={this.highlights}
           dangerouslySetInnerHTML={{ __html: this.getHighlights() }}
           color="transparent"
           overflowX="scroll"
           overflowY="hidden"
           className="hide-scrollbars"
+          data-is="OrbitHeaderInputHighlights"
+          // make it taller so the marks from highlighting show
+          height={26}
         />
         {/* actual input layer */}
         <SelectableBlock

@@ -16,7 +16,7 @@ export const OrbitHeaderOpenAppMenu = memo(
     const banner = useBanner()
 
     const constantMenuItems = [
-      <ListSeparator key={0}>App</ListSeparator>,
+      <ListSeparator key={1000}>App</ListSeparator>,
       state.router.urlString !== 'orbit://' && {
         title: 'Permalink',
         subTitle: state.router.urlString,
@@ -54,7 +54,7 @@ export const OrbitHeaderOpenAppMenu = memo(
         items={[
           ...(isOnOpenableApp
             ? [
-                <ListSeparator key={1}>Develop</ListSeparator>,
+                <ListSeparator key={100}>Develop</ListSeparator>,
                 {
                   title: 'Edit',
                   icon: 'edit',

@@ -181,7 +181,22 @@ export function makeWebpackConfig(
             { test: /\.flow$/, loader: 'ignore-loader' },
             target !== 'node' && {
               test: /.worker\.[jt]sx?$/,
-              use: ['workerize-loader'],
+              use: [
+                'workerize-loader',
+                {
+                  loader: 'babel-loader',
+                  options: {
+                    presets: [
+                      [
+                        require.resolve('@o/babel-preset-motion'),
+                        {
+                          disable: ['react-hot-loader/babel'],
+                        },
+                      ],
+                    ],
+                  },
+                },
+              ],
               exclude: /node_modules/,
             },
             // ignore .node.js modules in web modes

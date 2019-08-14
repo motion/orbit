@@ -7,18 +7,10 @@ import { AppBitMainProps } from '../types/AppTypes'
 import { BitStatusBar } from '../views/BitStatusBar'
 
 const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
-  if (!bits) {
-    return null
-  }
   return (
     <>
-      {bits.map(bit => {
-        return (
-          <ChatMessages
-            key={bit.id}
-            messages={(bit.data as any).messages} // todo(nate) looks like hardcoded to specific data property
-          />
-        )
+      {(bits || []).map(bit => {
+        return <ChatMessages key={bit.id} messages={bit.data.messages} people={bit.people} />
       })}
     </>
   )

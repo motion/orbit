@@ -1,14 +1,18 @@
 import * as React from 'react'
+
+import { Bit } from '../helpers/BitLike'
 import { ChatMessage } from './ChatMessage'
 
-export function ChatMessages({ messages }: { messages: ChatMessage[] }) {
-  if (!messages) {
-    return null
-  }
+export function ChatMessages({ messages, people }: { messages: ChatMessage[]; people?: Bit[] }) {
   return (
     <>
-      {messages.map((message, index) => (
-        <ChatMessage key={index} message={message} previousMessage={messages[index - 1]} />
+      {(messages || []).map((message, index) => (
+        <ChatMessage
+          key={index}
+          message={message}
+          previousMessage={messages[index - 1]}
+          people={people}
+        />
       ))}
     </>
   )

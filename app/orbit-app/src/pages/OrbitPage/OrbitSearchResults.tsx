@@ -25,7 +25,6 @@ class SearchResultsStore {
     async (next, { when }) => {
       if (next) {
         await when(() => this.isActive)
-        // await when(() => !appsCarouselStore.isAnimating)
         this.props.searchStore.setSearchState(next)
       }
     },
@@ -47,7 +46,7 @@ class SearchResultsStore {
       const item = rows[0]
       if (!item) return
       // lets not be super greedy here
-      await sleep(100)
+      await sleep(150)
       if (item.extraData && item.extraData.app) {
         // onSelect App
         const app: AppBit = item.extraData.app
@@ -191,7 +190,7 @@ export const OrbitSearchResults = memo(() => {
           {...carouselProps}
         >
           <Theme theme={highlightTheme}>
-            <HighlightActiveQuery query={searchStore.searchedQuery}>
+            <HighlightActiveQuery query={searchStore.query}>
               <List
                 ref={listRef}
                 alwaysSelected

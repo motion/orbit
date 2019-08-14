@@ -120,10 +120,6 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { f
   )
 
   const updateQuery = (next: string) => {
-    const prev = queryStore.query
-    if (!prev && next === '/') {
-      console.warn('should move into search results mode')
-    }
     setInputVal(next)
     queryStore.setQuery(next)
   }

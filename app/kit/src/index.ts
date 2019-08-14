@@ -23,6 +23,8 @@ export * from '@o/use-store'
 export * from '@o/utils'
 export { isEqual } from '@o/fast-compare'
 
+module.hot && module.hot.accept()
+
 export * from './OrbitHot'
 
 export * from './AppLoadContext'

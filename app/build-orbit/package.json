@@ -1,11 +1,11 @@
 {
   "name": "@o/build-orbit",
-  "version": "2.6.44",
+  "version": "2.6.47",
   "private": true,
   "scripts": {
     "start": "./scripts/build.sh --resume",
-    "test:built:electron": "npx electron ./dist/mac/Orbit.app/Contents/Resources/app/index.js",
     "test:built:app": "LOG_LEVEL=10 ./dist/mac/Orbit.app/Contents/MacOS/Orbit",
+    "test:built:app2": "LOG_LEVEL=10 npx electron ./dist/mac/Orbit.app/Contents/Resources/app/index.js",
     "build:app": "./scripts/build.sh",
     "build:app:resume": "./scripts/build.sh --resume",
     "build:app:resume:nosign": "./scripts/build.sh --resume --no-sign",

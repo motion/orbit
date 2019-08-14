@@ -48,6 +48,8 @@
   "resolutions": {
     "react": "16.8.6",
     "react-dom": "16.8.6",
+    "node-gyp": "5.0.3",
+    "node-abi": "2.11.0",
     "@types/lodash": "4.14.135",
     "@types/event-kit": "2.4.0",
     "@types/reconnectingwebsocket": "1.0.1",

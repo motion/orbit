@@ -15,7 +15,6 @@ import { PillButton } from '../../views/PillButton'
 import { PillButtonDark } from '../../views/PillButtonDark'
 import { TiltSquircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
-import { LineSep } from './LineSep'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 import { TitleTextSub } from './TitleTextSub'
 
@@ -435,7 +434,7 @@ export default function NeckSection() {
         </SpacedPageContent>
       </Page.Content>
 
-      <Page.Parallax overflow="visible" speed={0} zIndex={0}>
+      {/* <Page.Parallax overflow="visible" speed={0} zIndex={0}>
         <FullScreen
           transform={{ y: -180 }}
           minWidth={1000}
@@ -447,7 +446,7 @@ export default function NeckSection() {
         >
           <LineSep />
         </FullScreen>
-      </Page.Parallax>
+      </Page.Parallax> */}
 
       <Page.Parallax speed={0.24} zIndex={-1}>
         <FullScreen

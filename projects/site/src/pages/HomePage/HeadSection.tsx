@@ -23,17 +23,14 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `You need to visualize and manipulate data to build great tools for your team.`,
-    `Orbit is a revolution for that makes coding internal tools incredibly easy.`,
+    `A new type of app platform that separates app from data.`,
+    `Orbit lets you code amazing apps with incredible ease.`,
   ],
   medium: [
-    `You need to visualize and manipulate data to build great tools for your team.`,
-    `Orbit is a revolution for that makes coding internal tools incredibly easy.`,
+    `A new type of app platform that separates app from data.`,
+    `Orbit lets you code amazing apps with incredible ease.`,
   ],
-  small: [
-    `Create intranet apps easily.`,
-    `Orbit is a revolution for building internal apps, with all new abilities.`,
-  ],
+  small: [`Create intranet apps easily.`, `Orbit internal apps, with all new abilities.`],
 }
 
 const HeadContent = memo(() => {
@@ -202,7 +199,7 @@ export function HeadSection() {
   const Fade = useFadePage({
     threshold: 0,
   })
-  const size = useScreenSize()
+  // const size = useScreenSize()
 
   return (
     <Fade.FadeProvide>

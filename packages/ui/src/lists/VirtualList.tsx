@@ -79,8 +79,8 @@ const ListRow = memo(
         forwardRef={ref}
         key={Config.getItemKey(item, index)}
         ItemView={ItemView}
-        onClick={useCallback(e => onSelect(index, e), [])}
-        onDoubleClick={useCallback(e => onOpen(index, e), [])}
+        onClick={useCallback(e => onSelect && onSelect(index, e), [])}
+        onDoubleClick={useCallback(e => onOpen && onOpen(index, e), [])}
         disabled={!sortable}
         {...getSeparatorProps(listProps, items, item, index)}
         // base props

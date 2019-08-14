@@ -23,7 +23,6 @@
     { "path": "../../packages/constants" },
     { "path": "../../packages/logger" },
     { "path": "../../packages/cosal" },
-    { "path": "../../packages/babel-preset-motion" },
     { "path": "../../packages/electron-sudo" },
     { "path": "../../packages/devcert" },
     { "path": "../../packages/orbit-fork-process" }

@@ -128,6 +128,7 @@ export class WorkspaceManager {
     }
     Desktop.setState({
       workspaceState: {
+        options: this.options,
         appMeta: this.activeApps,
         identifierToPackageId: identifiers.reduce((acc, identifier) => {
           acc[identifier] = this.appsManager.identifierToPackageId(identifier)

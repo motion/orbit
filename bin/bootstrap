@@ -23,11 +23,11 @@ wait
 echo "installing dependencies"
 yarn install --ignore-engines
 
-ensure-dep "orbit" -- in cli yarn link || true
+ensure-dep "orbit" -- cd app/cli yarn link || true
 
 # build everything
 if [ ! -d "./app/orbit-desktop/_" ]; then
-  bin/build
+  yarn build
 fi
 
 sh ./scripts/pg-database.sh

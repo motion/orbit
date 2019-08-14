@@ -213,6 +213,7 @@ const OrbitDockButton = memo(function OrbitDockButton({
     <>
       <DockButton
         id={`${app.id}`}
+        alt="action"
         active={isActive}
         onClick={() => {
           om.actions.router.showAppPage({ id: `${app.id!}`, toggle: 'docked' })
@@ -318,17 +319,20 @@ const DockSidebarView = (props: AppMainViewProps) => {
   const { id } = useContext(AppLoadContext)
   return (
     <ListPassProps
-      itemProps={useMemo(() => ({
-        onClick(_, props) {
-          const item = props
-          if (!item) return
-          orbitDockStore.close()
-          om.actions.router.showAppPage({
-            id: `${id}`,
-            subId: (item.extraProps && item.extraProps.subId) || -1,
-          })
-        },
-      }), [id])}
+      itemProps={useMemo(
+        () => ({
+          onClick(_, props) {
+            const item = props
+            if (!item) return
+            orbitDockStore.close()
+            om.actions.router.showAppPage({
+              id: `${id}`,
+              subId: (item.extraProps && item.extraProps.subId) || -1,
+            })
+          },
+        }),
+        [id],
+      )}
     >
       {props.children}
     </ListPassProps>

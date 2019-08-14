@@ -1,16 +1,15 @@
 #!/bin/bash
 
 # kill any old stuck verdaccio
-kill $(lsof -t -i:4343) || true
+kill $(lsof -t -i:4343) 2> /dev/null || true
 
 # fail on exit, allow for exiting from verdaccio login
 set -e
 
-# start in root of this package
-cd $(dirname $0)/..
+THIS_DIR=$(realpath $(dirname $0))
 
-# kill any old stuck verdaccio
-kill $(lsof -t -i:4343) || true
+# start in root of this package
+cd $THIS_DIR/..
 
 # --resume
 FLAGS=$@
@@ -26,11 +25,11 @@ echo -n "" > ./scripts/.lastbuild
 #
 
 # get package.jsons to modify
-cd $(dirname $0)/../../..
+cd $THIS_DIR/../../..
 FILES=($(rg --files-with-matches -g "package.json" "private"))
 cd -
 function publicize-package-jsons() {
-  cd $(dirname $0)/../../..
+  cd $THIS_DIR/../../..
   for file in "${FILES[@]}"; do
     cp $file "$file.bak"
     sed -i '' '/"private": true/s/true/false/' $file
@@ -38,7 +37,7 @@ function publicize-package-jsons() {
   cd -
 }
 function undo-package-jsons() {
-  cd $(dirname $0)/../../..
+  cd $THIS_DIR/../../..
   for file in "${FILES[@]}"; do
     if [ -f "$file.bak" ]; then
       rm $file && mv "$file.bak" $file || echo "failed $file"

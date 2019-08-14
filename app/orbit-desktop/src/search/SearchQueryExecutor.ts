@@ -1,5 +1,5 @@
 import { Logger } from '@o/logger'
-import { Bit, SearchQuery } from '@o/models'
+import { Bit, BitContentType, SearchQuery } from '@o/models'
 import { getConnection } from 'typeorm'
 import { SqliteDriver } from 'typeorm/driver/sqlite/SqliteDriver'
 
@@ -207,7 +207,7 @@ export class SearchQueryExecutor {
         },
         appId: rawBit.appId,
         title: rawBit.title,
-        type: rawBit.type,
+        type: rawBit.type as BitContentType,
         updatedAt: new Date(rawBit.updatedAt),
         webLink: rawBit.webLink,
       }

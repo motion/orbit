@@ -1,8 +1,8 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import bodyParser from 'body-parser'
+import killPort from 'clear-port'
 import express, { Handler } from 'express'
-import killPort from 'kill-port'
 import * as Path from 'path'
 
 const log = new Logger('WebServer')

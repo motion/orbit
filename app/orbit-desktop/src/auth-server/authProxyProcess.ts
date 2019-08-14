@@ -3,7 +3,7 @@
 let devcert = require('@o/devcert')
 let httpProxy = require('http-proxy')
 let exec = require('execa')
-let killPort = require('kill-port')
+let killPort = require('clear-port')
 let fs = require('fs')
 let path = require('path')
 

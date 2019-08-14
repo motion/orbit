@@ -59,7 +59,7 @@ export async function main() {
     const ports = Object.values(config.ports)
     if (!process.env.NO_KILL_PORTS) {
       log.info('Ensuring all ports clear...', ports.join(','))
-      const killPort = require('kill-port')
+      const killPort = require('clear-port')
       await Promise.all(ports.map(port => killPort(port).catch(err => err)))
     }
   }

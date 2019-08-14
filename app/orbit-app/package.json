@@ -3,15 +3,6 @@
   "version": "2.6.0",
   "private": true,
   "main": "./index.js",
-  "scripts": {
-    "start": "./scripts/start.sh",
-    "start:prod": "./scripts/start.sh --prod",
-    "start:pundle": "PUNDLE=true ./scripts/start.sh",
-    "serve:prod": "static-server -p 3999 -n dist/index.html dist",
-    "build:app": "NODE_ENV=production mcro-build --entry ./src/main --build",
-    "deploy": "./scripts/deploy.sh",
-    "test:electron": "electron ./scripts/test-electron.js"
-  },
   "dependencies": {
     "@babel/runtime": "^7.4.4",
     "@o/bridge": "^2.6.0",
@@ -49,7 +40,6 @@
     "invariant": "2.2.4",
     "key-event-to-string": "1.2.0",
     "keycode": "^2.1.9",
-    "kill-port": "^1.5.1",
     "latinize": "0.4.0",
     "lodash": "4.17.11",
     "memoize-weak": "1.0.2",

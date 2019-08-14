@@ -1,8 +1,7 @@
-import { Col, Row, Scale, SimpleText, Space, SurfacePassProps, Theme, View } from '@o/ui'
+import { Col, Scale, Space, SurfacePassProps, Theme, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
-import { colors } from '../../constants'
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
 import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
@@ -17,23 +16,23 @@ let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'A new platform for apps, where data comes first',
-  medium: 'A new platform for apps, where data comes first',
+  large: 'Lets rethink how we build apps',
+  medium: 'Lets rethink how we build apps',
   small: 'The data-driven app platform',
 }
 
 let allTexts = {
   large: [
-    `Create powerful apps more easily than ever before, with an ecosystem.`,
-    `Data plugins, a first-class environment to make code easy, and more.`,
+    `You need to visualize and manipulate data to build great tools for your team.`,
+    `Orbit is a revolution for that makes coding internal tools incredibly easy.`,
   ],
   medium: [
-    `Create powerful apps more easily than ever before, with an ecosystem.`,
-    `Data plugins, a first-class environment to make code easy, and more.`,
+    `You need to visualize and manipulate data to build great tools for your team.`,
+    `Orbit is a revolution for that makes coding internal tools incredibly easy.`,
   ],
   small: [
     `Create intranet apps easily.`,
-    `Data plugins, a first-class environment to make code easy, and more.`,
+    `Orbit is a revolution for building internal apps, with all new abilities.`,
   ],
 }
 
@@ -218,34 +217,6 @@ export function HeadSection() {
           <Col ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
             <HeadContent />
           </Col>
-          <Space size={40} />
-          <Row
-            space="xl"
-            padding={[0, 'xl']}
-            scrollable="x"
-            maxWidth="100vw"
-            justifyContent="space-between"
-            display={size === 'small' ? 'none' : 'flex'}
-          >
-            <SubSection index={0} title="Easy" titleColor={colors.orange}>
-              Everything needed for managing data, syncing from many sources, all in a few lines of
-              code.
-            </SubSection>
-
-            <SubSection index={2} title="Powerful" titleColor={colors.red}>
-              A complete toolkit designed for managing large data, workflows and common patterns.
-            </SubSection>
-
-            <SubSection index={1} title="Controlled" titleColor={colors.purple}>
-              Share a single repo with your team to collaborate on many apps w/o configuration or
-              servers.
-            </SubSection>
-
-            <SubSection index={3} title="Secure" titleColor={colors.orange}>
-              Everything runs behind the firewall, so plugging in a database is secure. Sync using
-              p2p.
-            </SubSection>
-          </Row>
           <Space size="xxxl" />
           <View flex={1} />
           <HeadJoin />
@@ -255,28 +226,28 @@ export function HeadSection() {
   )
 }
 
-const SubSection = memo(({ title, children, index, titleColor }: any) => {
-  return (
-    <Col flex={1} minWidth={160} maxWidth={220}>
-      <FadeChild {...fadeUpProps} delay={200 + index * 200}>
-        <Paragraph
-          textAlign="center"
-          textTransform="uppercase"
-          alpha={0.65}
-          color={titleColor}
-          size={1}
-          fontWeight={600}
-        >
-          {title}
-        </Paragraph>
-        <Space size="sm" />
-        <SimpleText textAlign="center" selectable alpha={0.75} size={1} sizeLineHeight={1.1}>
-          {children}
-        </SimpleText>
-      </FadeChild>
-    </Col>
-  )
-})
+// const SubSection = memo(({ title, children, index, titleColor }: any) => {
+//   return (
+//     <Col flex={1} minWidth={160} maxWidth={220}>
+//       <FadeChild {...fadeUpProps} delay={200 + index * 200}>
+//         <Paragraph
+//           textAlign="center"
+//           textTransform="uppercase"
+//           alpha={0.65}
+//           color={titleColor}
+//           size={1}
+//           fontWeight={600}
+//         >
+//           {title}
+//         </Paragraph>
+//         <Space size="sm" />
+//         <SimpleText textAlign="center" selectable alpha={0.75} size={1} sizeLineHeight={1.1}>
+//           {children}
+//         </SimpleText>
+//       </FadeChild>
+//     </Col>
+//   )
+// })
 
 // {false && (
 //   <Page.Parallax zIndex={1} speed={0}>

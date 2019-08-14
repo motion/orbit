@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'isomorphic-fetch'
 
-import killPort from 'kill-port'
+import killPort from 'clear-port'
 
 import Browser from './debugBrowser'
 

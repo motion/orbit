@@ -43,14 +43,14 @@ export const PaddedView = gloss<
   wrappingSpaceTheme,
 )
 
-export const usePadding = (
+export function usePadding(
   props: PaddingProps & {
     paddingTop?: any
     paddingLeft?: any
     paddingRight?: any
     paddingBottom?: any
   },
-) => {
+) {
   const scale = useScale()
   let padding = getSizableValue(props.padding)
   padding = Array.isArray(padding)

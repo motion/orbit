@@ -81,159 +81,164 @@ function reactProdInvariant(code) {
 
 !React$1 ? __DEV__ ? invariant(false, 'ReactDOM was loaded before React. Make sure you load the React package before loading ReactDOM.') : reactProdInvariant('227') : void 0;
 
-var invokeGuardedCallbackImpl = function (name, func, context, a, b, c, d, e, f) {
+
+// In DEV mode, we swap out invokeGuardedCallback for a special version
+// that plays more nicely with the browser's DevTools. The idea is to preserve
+// "Pause on exceptions" behavior. Because React wraps all user-provided
+// functions in invokeGuardedCallback, and the production version of
+// invokeGuardedCallback uses a try-catch, all user exceptions are treated
+// like caught exceptions, and the DevTools won't pause unless the developer
+// takes the extra step of enabling pause on caught exceptions. This is
+// unintuitive, though, because even though React has caught the error, from
+// the developer's perspective, the error is uncaught.
+//
+// To preserve the expected "Pause on exceptions" behavior, we don't use a
+// try-catch in DEV. Instead, we synchronously dispatch a fake event to a fake
+// DOM node, and call the user-provided callback from inside an event handler
+// for that fake event. If the callback throws, the error is "captured" using
+// a global event handler. But because the error happens in a different
+// event loop context, it does not interrupt the normal program flow.
+// Effectively, this gives us try-catch behavior without actually using
+// try-catch. Neat!
+
+// Check that the browser supports the APIs we need to implement our special
+// DEV version of invokeGuardedCallback
+var invokeGuardedCallbackImpl$1 = function (name, func, context, a, b, c, d, e, f) {
   var funcArgs = Array.prototype.slice.call(arguments, 3);
   try {
     func.apply(context, funcArgs);
   } catch (error) {
     this.onError(error);
   }
-};
+}
 
-if (__DEV__) {
-  // In DEV mode, we swap out invokeGuardedCallback for a special version
-  // that plays more nicely with the browser's DevTools. The idea is to preserve
-  // "Pause on exceptions" behavior. Because React wraps all user-provided
-  // functions in invokeGuardedCallback, and the production version of
-  // invokeGuardedCallback uses a try-catch, all user exceptions are treated
-  // like caught exceptions, and the DevTools won't pause unless the developer
-  // takes the extra step of enabling pause on caught exceptions. This is
-  // unintuitive, though, because even though React has caught the error, from
-  // the developer's perspective, the error is uncaught.
-  //
-  // To preserve the expected "Pause on exceptions" behavior, we don't use a
-  // try-catch in DEV. Instead, we synchronously dispatch a fake event to a fake
-  // DOM node, and call the user-provided callback from inside an event handler
-  // for that fake event. If the callback throws, the error is "captured" using
-  // a global event handler. But because the error happens in a different
-  // event loop context, it does not interrupt the normal program flow.
-  // Effectively, this gives us try-catch behavior without actually using
-  // try-catch. Neat!
+if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function' && typeof document !== 'undefined' && typeof document.createEvent === 'function') {
+  var fakeNode = document.createElement('react');
 
-  // Check that the browser supports the APIs we need to implement our special
-  // DEV version of invokeGuardedCallback
-  if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function' && typeof document !== 'undefined' && typeof document.createEvent === 'function') {
-    var fakeNode = document.createElement('react');
-
-    var invokeGuardedCallbackDev = function (name, func, context, a, b, c, d, e, f) {
-      // If document doesn't exist we know for sure we will crash in this method
-      // when we call document.createEvent(). However this can cause confusing
-      // errors: https://github.com/facebookincubator/create-react-app/issues/3482
-      // So we preemptively throw with a better message instead.
-      !(typeof document !== 'undefined') ? __DEV__ ? invariant(false, 'The `document` global was defined when React was initialized, but is not defined anymore. This can happen in a test environment if a component schedules an update from an asynchronous callback, but the test has already finished running. To solve this, you can either unmount the component at the end of your test (and ensure that any asynchronous operations get canceled in `componentWillUnmount`), or you can change the test itself to be asynchronous.') : reactProdInvariant('252') : void 0;
-      var evt = document.createEvent('Event');
-
-      // Keeps track of whether the user-provided callback threw an error. We
-      // set this to true at the beginning, then set it to false right after
-      // calling the function. If the function errors, `didError` will never be
-      // set to false. This strategy works even if the browser is flaky and
-      // fails to call our global error handler, because it doesn't rely on
-      // the error event at all.
-      var didError = true;
-
-      // Keeps track of the value of window.event so that we can reset it
-      // during the callback to let user code access window.event in the
-      // browsers that support it.
-      var windowEvent = window.event;
-
-      // Keeps track of the descriptor of window.event to restore it after event
-      // dispatching: https://github.com/facebook/react/issues/13688
-      var windowEventDescriptor = Object.getOwnPropertyDescriptor(window, 'event');
-
-      // Create an event handler for our fake event. We will synchronously
-      // dispatch our fake event using `dispatchEvent`. Inside the handler, we
-      // call the user-provided callback.
+  invokeGuardedCallbackImpl$1 = function (name, func, context, a, b, c, d, e, f) {
+    if (!__DEV__) {
       var funcArgs = Array.prototype.slice.call(arguments, 3);
-      function callCallback() {
-        // We immediately remove the callback from event listeners so that
-        // nested `invokeGuardedCallback` calls do not clash. Otherwise, a
-        // nested call would trigger the fake event handlers of any call higher
-        // in the stack.
-        fakeNode.removeEventListener(evtType, callCallback, false);
-
-        // We check for window.hasOwnProperty('event') to prevent the
-        // window.event assignment in both IE <= 10 as they throw an error
-        // "Member not found" in strict mode, and in Firefox which does not
-        // support window.event.
-        if (typeof window.event !== 'undefined' && window.hasOwnProperty('event')) {
-          window.event = windowEvent;
-        }
-
+      try {
         func.apply(context, funcArgs);
-        didError = false;
+      } catch (error) {
+        this.onError(error);
+      }
+      return
+    }
+
+    // If document doesn't exist we know for sure we will crash in this method
+    // when we call document.createEvent(). However this can cause confusing
+    // errors: https://github.com/facebookincubator/create-react-app/issues/3482
+    // So we preemptively throw with a better message instead.
+    !(typeof document !== 'undefined') ? __DEV__ ? invariant(false, 'The `document` global was defined when React was initialized, but is not defined anymore. This can happen in a test environment if a component schedules an update from an asynchronous callback, but the test has already finished running. To solve this, you can either unmount the component at the end of your test (and ensure that any asynchronous operations get canceled in `componentWillUnmount`), or you can change the test itself to be asynchronous.') : reactProdInvariant('252') : void 0;
+    var evt = document.createEvent('Event');
+
+    // Keeps track of whether the user-provided callback threw an error. We
+    // set this to true at the beginning, then set it to false right after
+    // calling the function. If the function errors, `didError` will never be
+    // set to false. This strategy works even if the browser is flaky and
+    // fails to call our global error handler, because it doesn't rely on
+    // the error event at all.
+    var didError = true;
+
+    // Keeps track of the value of window.event so that we can reset it
+    // during the callback to let user code access window.event in the
+    // browsers that support it.
+    var windowEvent = window.event;
+
+    // Keeps track of the descriptor of window.event to restore it after event
+    // dispatching: https://github.com/facebook/react/issues/13688
+    var windowEventDescriptor = Object.getOwnPropertyDescriptor(window, 'event');
+
+    // Create an event handler for our fake event. We will synchronously
+    // dispatch our fake event using `dispatchEvent`. Inside the handler, we
+    // call the user-provided callback.
+    var funcArgs = Array.prototype.slice.call(arguments, 3);
+    function callCallback() {
+      // We immediately remove the callback from event listeners so that
+      // nested `invokeGuardedCallback` calls do not clash. Otherwise, a
+      // nested call would trigger the fake event handlers of any call higher
+      // in the stack.
+      fakeNode.removeEventListener(evtType, callCallback, false);
+
+      // We check for window.hasOwnProperty('event') to prevent the
+      // window.event assignment in both IE <= 10 as they throw an error
+      // "Member not found" in strict mode, and in Firefox which does not
+      // support window.event.
+      if (typeof window.event !== 'undefined' && window.hasOwnProperty('event')) {
+        window.event = windowEvent;
       }
 
-      // Create a global error event handler. We use this to capture the value
-      // that was thrown. It's possible that this error handler will fire more
-      // than once; for example, if non-React code also calls `dispatchEvent`
-      // and a handler for that event throws. We should be resilient to most of
-      // those cases. Even if our error event handler fires more than once, the
-      // last error event is always used. If the callback actually does error,
-      // we know that the last error event is the correct one, because it's not
-      // possible for anything else to have happened in between our callback
-      // erroring and the code that follows the `dispatchEvent` call below. If
-      // the callback doesn't error, but the error event was fired, we know to
-      // ignore it because `didError` will be false, as described above.
-      var error = void 0;
-      // Use this to track whether the error event is ever called.
-      var didSetError = false;
-      var isCrossOriginError = false;
+      func.apply(context, funcArgs);
+      didError = false;
+    }
 
-      function handleWindowError(event) {
-        error = event.error;
-        didSetError = true;
-        if (error === null && event.colno === 0 && event.lineno === 0) {
-          isCrossOriginError = true;
-        }
-        if (event.defaultPrevented) {
-          // Some other error handler has prevented default.
-          // Browsers silence the error report if this happens.
-          // We'll remember this to later decide whether to log it or not.
-          if (error != null && typeof error === 'object') {
-            try {
-              error._suppressLogging = true;
-            } catch (inner) {
-              // Ignore.
-            }
+    // Create a global error event handler. We use this to capture the value
+    // that was thrown. It's possible that this error handler will fire more
+    // than once; for example, if non-React code also calls `dispatchEvent`
+    // and a handler for that event throws. We should be resilient to most of
+    // those cases. Even if our error event handler fires more than once, the
+    // last error event is always used. If the callback actually does error,
+    // we know that the last error event is the correct one, because it's not
+    // possible for anything else to have happened in between our callback
+    // erroring and the code that follows the `dispatchEvent` call below. If
+    // the callback doesn't error, but the error event was fired, we know to
+    // ignore it because `didError` will be false, as described above.
+    var error = void 0;
+    // Use this to track whether the error event is ever called.
+    var didSetError = false;
+    var isCrossOriginError = false;
+
+    function handleWindowError(event) {
+      error = event.error;
+      didSetError = true;
+      if (error === null && event.colno === 0 && event.lineno === 0) {
+        isCrossOriginError = true;
+      }
+      if (event.defaultPrevented) {
+        // Some other error handler has prevented default.
+        // Browsers silence the error report if this happens.
+        // We'll remember this to later decide whether to log it or not.
+        if (error != null && typeof error === 'object') {
+          try {
+            error._suppressLogging = true;
+          } catch (inner) {
+            // Ignore.
           }
         }
       }
+    }
 
-      // Create a fake event type.
-      var evtType = 'react-' + (name ? name : 'invokeguardedcallback');
+    // Create a fake event type.
+    var evtType = 'react-' + (name ? name : 'invokeguardedcallback');
 
-      // Attach our event handlers
-      window.addEventListener('error', handleWindowError);
-      fakeNode.addEventListener(evtType, callCallback, false);
+    // Attach our event handlers
+    window.addEventListener('error', handleWindowError);
+    fakeNode.addEventListener(evtType, callCallback, false);
 
-      // Synchronously dispatch our fake event. If the user-provided function
-      // errors, it will trigger our global error handler.
-      evt.initEvent(evtType, false, false);
-      fakeNode.dispatchEvent(evt);
+    // Synchronously dispatch our fake event. If the user-provided function
+    // errors, it will trigger our global error handler.
+    evt.initEvent(evtType, false, false);
+    fakeNode.dispatchEvent(evt);
 
-      if (windowEventDescriptor) {
-        Object.defineProperty(window, 'event', windowEventDescriptor);
+    if (windowEventDescriptor) {
+      Object.defineProperty(window, 'event', windowEventDescriptor);
+    }
+
+    if (didError) {
+      if (!didSetError) {
+        // The callback errored, but the error event never fired.
+        error = new Error('An error was thrown inside one of your components, but React ' + "doesn't know what it was. This is likely due to browser " + 'flakiness. React does its best to preserve the "Pause on ' + 'exceptions" behavior of the DevTools, which requires some ' + "DEV-mode only tricks. It's possible that these don't work in " + 'your browser. Try triggering the error in production mode, ' + 'or switching to a modern browser. If you suspect that this is ' + 'actually an issue with React, please file an issue.');
+      } else if (isCrossOriginError) {
+        error = new Error("A cross-origin error was thrown. React doesn't have access to " + 'the actual error object in development. ' + 'See https://fb.me/react-crossorigin-error for more information.');
       }
+      this.onError(error);
+    }
 
-      if (didError) {
-        if (!didSetError) {
-          // The callback errored, but the error event never fired.
-          error = new Error('An error was thrown inside one of your components, but React ' + "doesn't know what it was. This is likely due to browser " + 'flakiness. React does its best to preserve the "Pause on ' + 'exceptions" behavior of the DevTools, which requires some ' + "DEV-mode only tricks. It's possible that these don't work in " + 'your browser. Try triggering the error in production mode, ' + 'or switching to a modern browser. If you suspect that this is ' + 'actually an issue with React, please file an issue.');
-        } else if (isCrossOriginError) {
-          error = new Error("A cross-origin error was thrown. React doesn't have access to " + 'the actual error object in development. ' + 'See https://fb.me/react-crossorigin-error for more information.');
-        }
-        this.onError(error);
-      }
-
-      // Remove our event listeners
-      window.removeEventListener('error', handleWindowError);
-    };
-
-    invokeGuardedCallbackImpl = invokeGuardedCallbackDev;
-  }
+    // Remove our event listeners
+    window.removeEventListener('error', handleWindowError);
+  };
 }
-
-var invokeGuardedCallbackImpl$1 = invokeGuardedCallbackImpl;
 
 // Used by Fiber to simulate a try-catch.
 var hasError = false;
@@ -436,7 +441,7 @@ var registrationNameDependencies = {};
  * only in __DEV__.
  * @type {Object}
  */
-var possibleRegistrationNames = __DEV__ ? {} : null;
+var possibleRegistrationNames = {};
 // Trust the developer to only use possibleRegistrationNames in __DEV__
 
 /**
@@ -2628,10 +2633,8 @@ function setCurrentPhase(lifeCyclePhase) {
  * same logic and follow the same code paths.
  */
 
-var warning = warningWithoutStack$1;
-
-if (__DEV__) {
-  warning = function (condition, format) {
+var warning = function (condition, format) {
+  if (__DEV__) {
     if (condition) {
       return;
     }
@@ -2644,8 +2647,8 @@ if (__DEV__) {
     }
 
     warningWithoutStack$1.apply(undefined, [false, format + '%s'].concat(args, [stack]));
-  };
-}
+  }
+};
 
 var warning$1 = warning;
 
@@ -3206,48 +3209,44 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
 
 var checkPropTypes_1 = checkPropTypes;
 
-var ReactDebugCurrentFrame$1 = null;
-
 var ReactControlledValuePropTypes = {
   checkPropTypes: null
 };
 
-if (__DEV__) {
-  ReactDebugCurrentFrame$1 = ReactSharedInternals.ReactDebugCurrentFrame;
+var hasReadOnlyValue = {
+  button: true,
+  checkbox: true,
+  image: true,
+  hidden: true,
+  radio: true,
+  reset: true,
+  submit: true
+};
 
-  var hasReadOnlyValue = {
-    button: true,
-    checkbox: true,
-    image: true,
-    hidden: true,
-    radio: true,
-    reset: true,
-    submit: true
-  };
-
-  var propTypes = {
-    value: function (props, propName, componentName) {
-      if (hasReadOnlyValue[props.type] || props.onChange || props.readOnly || props.disabled || props[propName] == null) {
-        return null;
-      }
-      return new Error('You provided a `value` prop to a form field without an ' + '`onChange` handler. This will render a read-only field. If ' + 'the field should be mutable use `defaultValue`. Otherwise, ' + 'set either `onChange` or `readOnly`.');
-    },
-    checked: function (props, propName, componentName) {
-      if (props.onChange || props.readOnly || props.disabled || props[propName] == null) {
-        return null;
-      }
-      return new Error('You provided a `checked` prop to a form field without an ' + '`onChange` handler. This will render a read-only field. If ' + 'the field should be mutable use `defaultChecked`. Otherwise, ' + 'set either `onChange` or `readOnly`.');
+var propTypes = {
+  value: function (props, propName, componentName) {
+    if (hasReadOnlyValue[props.type] || props.onChange || props.readOnly || props.disabled || props[propName] == null) {
+      return null;
     }
-  };
+    return new Error('You provided a `value` prop to a form field without an ' + '`onChange` handler. This will render a read-only field. If ' + 'the field should be mutable use `defaultValue`. Otherwise, ' + 'set either `onChange` or `readOnly`.');
+  },
+  checked: function (props, propName, componentName) {
+    if (props.onChange || props.readOnly || props.disabled || props[propName] == null) {
+      return null;
+    }
+    return new Error('You provided a `checked` prop to a form field without an ' + '`onChange` handler. This will render a read-only field. If ' + 'the field should be mutable use `defaultChecked`. Otherwise, ' + 'set either `onChange` or `readOnly`.');
+  }
+};
 
-  /**
-   * Provide a linked `value` attribute for controlled forms. You should not use
-   * this outside of the ReactDOM controlled form components.
-   */
-  ReactControlledValuePropTypes.checkPropTypes = function (tagName, props) {
-    checkPropTypes_1(propTypes, props, 'prop', tagName, ReactDebugCurrentFrame$1.getStackAddendum);
-  };
-}
+/**
+ * Provide a linked `value` attribute for controlled forms. You should not use
+ * this outside of the ReactDOM controlled form components.
+ */
+ReactControlledValuePropTypes.checkPropTypes = function (tagName, props) {
+  if (__DEV__) {
+    checkPropTypes_1(propTypes, props, 'prop', tagName, ReactSharedInternals.ReactDebugCurrentFrame.getStackAddendum);
+  }
+};
 
 var enableUserTimingAPI = __DEV__;
 
@@ -3258,11 +3257,11 @@ var debugRenderPhaseSideEffects = false;
 // This can be confusing for tests though,
 // And it can be bad for performance in production.
 // This feature flag can be used to control the behavior:
-var debugRenderPhaseSideEffectsForStrictMode = __DEV__;
+var debugRenderPhaseSideEffectsForStrictMode = () => __DEV__;
 
 // To preserve the "Pause on caught exceptions" behavior of the debugger, we
 // replay the begin phase of a failed component inside invokeGuardedCallback.
-var replayFailedUnitOfWorkWithInvokeGuardedCallback = __DEV__;
+var replayFailedUnitOfWorkWithInvokeGuardedCallback = () => __DEV__;
 
 // Warn about deprecated, async-unsafe lifecycles; relates to RFC #6:
 var warnAboutDeprecatedLifecycles = false;
@@ -6661,10 +6660,7 @@ var voidElementTags = _assign({
 // or add stack by default to invariants where possible.
 var HTML$1 = '__html';
 
-var ReactDebugCurrentFrame$2 = null;
-if (__DEV__) {
-  ReactDebugCurrentFrame$2 = ReactSharedInternals.ReactDebugCurrentFrame;
-}
+var ReactDebugCurrentFrame$2 = ReactSharedInternals.ReactDebugCurrentFrame;
 
 function assertValidProps(tag, props) {
   if (!props) {
@@ -7349,7 +7345,7 @@ function validateProperties$1(type, props) {
 
 var validateProperty$1 = function () {};
 
-if (__DEV__) {
+// __DEV__
   var warnedProperties$1 = {};
   var _hasOwnProperty = Object.prototype.hasOwnProperty;
   var EVENT_NAME_REGEX = /^on./;
@@ -7358,6 +7354,8 @@ if (__DEV__) {
   var rARIACamel$1 = new RegExp('^(aria)[A-Z][' + ATTRIBUTE_NAME_CHAR + ']*$');
 
   validateProperty$1 = function (tagName, name, value, canUseEventSystem) {
+    if (!__DEV__) return
+
     if (_hasOwnProperty.call(warnedProperties$1, name) && warnedProperties$1[name]) {
       return true;
     }
@@ -7475,7 +7473,7 @@ if (__DEV__) {
 
     return true;
   };
-}
+
 
 var warnUnknownProperties = function (type, props, canUseEventSystem) {
   var unknownProps = [];
@@ -7531,7 +7529,8 @@ var canDiffStyleForHydrationWarning = void 0;
 var normalizeMarkupForTextOrAttribute = void 0;
 var normalizeHTML = void 0;
 
-if (__DEV__) {
+// if __DEV__
+if (true) {
   warnedUnknownTags = {
     // Chrome is the only major browser not shipping <time>. But as of July
     // 2017 it intends to ship it due to widespread usage. We intentionally
@@ -7549,6 +7548,7 @@ if (__DEV__) {
   };
 
   validatePropertiesInDevelopment = function (type, props) {
+    if (!__DEV__) return
     validateProperties(type, props);
     validateProperties$1(type, props);
     validateProperties$2(type, props, /* canUseEventSystem */true);
@@ -8459,7 +8459,8 @@ function restoreControlledState$1(domElement, tag, props) {
 var validateDOMNesting = function () {};
 var updatedAncestorInfo = function () {};
 
-if (__DEV__) {
+// if __DEV__
+if (true) {
   // This validation code was written based on the HTML5 parsing spec:
   // https://html.spec.whatwg.org/multipage/syntax.html#has-an-element-in-scope
   //
@@ -8788,10 +8789,7 @@ var cloneHiddenInstance = shim;
 var cloneUnhiddenInstance = shim;
 var createHiddenTextInstance = shim;
 
-var SUPPRESS_HYDRATION_WARNING = void 0;
-if (__DEV__) {
-  SUPPRESS_HYDRATION_WARNING = 'suppressHydrationWarning';
-}
+var SUPPRESS_HYDRATION_WARNING = 'suppressHydrationWarning';
 
 var SUSPENSE_START_DATA = '$';
 var SUSPENSE_END_DATA = '/$';
@@ -9677,11 +9675,7 @@ function stopCommitLifeCyclesTimer() {
 
 var valueStack = [];
 
-var fiberStack = void 0;
-
-if (__DEV__) {
-  fiberStack = [];
-}
+var fiberStack = [];
 
 var index = -1;
 
@@ -9744,16 +9738,9 @@ function resetStackAfterFatalErrorInDev() {
   }
 }
 
-var warnedAboutMissingGetChildContext = void 0;
-
-if (__DEV__) {
-  warnedAboutMissingGetChildContext = {};
-}
+var warnedAboutMissingGetChildContext = {};
 
 var emptyContextObject = {};
-if (__DEV__) {
-  Object.freeze(emptyContextObject);
-}
 
 // A cursor to the current merged context object on the stack.
 var contextStackCursor = createCursor(emptyContextObject);
@@ -10079,10 +10066,7 @@ var ConcurrentMode = 1;
 var StrictMode = 2;
 var ProfileMode = 4;
 
-var hasBadMapPolyfill = void 0;
-
-if (__DEV__) {
-  hasBadMapPolyfill = false;
+var hasBadMapPolyfill = false;
   try {
     var nonExtensibleObject = Object.preventExtensions({});
     var testMap = new Map([[nonExtensibleObject, null]]);
@@ -10096,17 +10080,12 @@ if (__DEV__) {
     // TODO: Consider warning about bad polyfills
     hasBadMapPolyfill = true;
   }
-}
 
 // A Fiber is work on a Component that needs to be done or was done. There can
 // be more than one per component.
 
 
-var debugCounter = void 0;
-
-if (__DEV__) {
-  debugCounter = 1;
-}
+var debugCounter = 1;
 
 function FiberNode(tag, pendingProps, key, mode) {
   // Instance
@@ -10467,7 +10446,7 @@ function createFiberFromPortal(portal, mode, expirationTime) {
 
 // Used for stashing WIP properties to replay failed work in DEV.
 function assignFiberPropertiesInDEV(target, source) {
-  if (target === null) {
+  if (!target) {
     // This Fiber's initial properties will always be overwritten.
     // We only use a Fiber to ensure the same hidden class so DEV isn't slow.
     target = createFiber(IndeterminateComponent, null, null, NoContext);
@@ -10636,7 +10615,7 @@ function createFiberRoot(containerInfo, isConcurrent, hydrate) {
 
 var lowPriorityWarning = function () {};
 
-if (__DEV__) {
+if (true) {
   var printWarning$1 = function (format) {
     for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
       args[_key - 1] = arguments[_key];
@@ -10658,6 +10637,7 @@ if (__DEV__) {
   };
 
   lowPriorityWarning = function (condition, format) {
+    if (!__DEV__) return
     if (format === undefined) {
       throw new Error('`lowPriorityWarning(condition, format, ...args)` requires a warning ' + 'message argument');
     }
@@ -10683,7 +10663,7 @@ var ReactStrictModeWarnings = {
   flushLegacyContextWarning: function () {}
 };
 
-if (__DEV__) {
+if (true) {
   var LIFECYCLE_SUGGESTIONS = {
     UNSAFE_componentWillMount: 'componentDidMount',
     UNSAFE_componentWillReceiveProps: 'static getDerivedStateFromProps',
@@ -11237,7 +11217,7 @@ var didWarnAboutDirectlyAssigningPropsToState = void 0;
 var didWarnAboutContextTypeAndContextTypes = void 0;
 var didWarnAboutInvalidateContextType = void 0;
 
-if (__DEV__) {
+if (true) {
   didWarnAboutStateAssignmentForComponent = new Set();
   didWarnAboutUninitializedState = new Set();
   didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate = new Set();
@@ -11288,7 +11268,7 @@ function applyDerivedStateFromProps(workInProgress, ctor, getDerivedStateFromPro
   var prevState = workInProgress.memoizedState;
 
   if (__DEV__) {
-    if (debugRenderPhaseSideEffects || debugRenderPhaseSideEffectsForStrictMode && workInProgress.mode & StrictMode) {
+    if (debugRenderPhaseSideEffects || debugRenderPhaseSideEffectsForStrictMode() && workInProgress.mode & StrictMode) {
       // Invoke the function an extra time to help detect side-effects.
       getDerivedStateFromProps(nextProps, prevState);
     }
@@ -11516,7 +11496,7 @@ function constructClassInstance(workInProgress, ctor, props, renderExpirationTim
 
   // Instantiate twice to help detect side-effects.
   if (__DEV__) {
-    if (debugRenderPhaseSideEffects || debugRenderPhaseSideEffectsForStrictMode && workInProgress.mode & StrictMode) {
+    if (debugRenderPhaseSideEffects || debugRenderPhaseSideEffectsForStrictMode() && workInProgress.mode & StrictMode) {
       new ctor(props, context); // eslint-disable-line no-new
     }
   }
@@ -11903,7 +11883,7 @@ var ownerHasKeyUseWarning = void 0;
 var ownerHasFunctionTypeWarning = void 0;
 var warnForMissingKey = function (child) {};
 
-if (__DEV__) {
+if (true) {
   didWarnAboutMaps = false;
   didWarnAboutGenerators = false;
   didWarnAboutStringRefInStrictMode = {};
@@ -12918,7 +12898,7 @@ var ReactCurrentDispatcher$1 = ReactSharedInternals.ReactCurrentDispatcher;
 
 
 var didWarnAboutMismatchedHooksForComponent = void 0;
-if (__DEV__) {
+if (true) {
   didWarnAboutMismatchedHooksForComponent = new Set();
 }
 
@@ -13648,7 +13628,7 @@ function updateMemo(nextCreate, deps) {
 // is called outside of a batchedUpdates/TestUtils.act(...) call.
 var shouldWarnForUnbatchedSetState = false;
 
-if (__DEV__) {
+if (true) {
   // jest isn't a 'global', it's just exposed to tests via a wrapped function
   // further, this isn't a test file, so flow doesn't recognize the symbol. So...
   // $FlowExpectedError - because requirements don't give a damn about your type sigs.
@@ -13816,7 +13796,7 @@ var HooksDispatcherOnUpdateInDEV = null;
 var InvalidNestedHooksDispatcherOnMountInDEV = null;
 var InvalidNestedHooksDispatcherOnUpdateInDEV = null;
 
-if (__DEV__) {
+if (true) {
   var warnInvalidContextAccess = function () {
     __DEV__ ? warning$1(false, 'Context can only be read while React is rendering. ' + 'In classes, you can read it in the render method or getDerivedStateFromProps. ' + 'In function components, you can read it directly in the function body, but not ' + 'inside Hooks like useReducer() or useMemo().') : void 0;
   };
@@ -14580,7 +14560,7 @@ var didWarnAboutGetDerivedStateOnFunctionComponent = void 0;
 var didWarnAboutFunctionRefs = void 0;
 var didWarnAboutReassigningProps = void 0;
 
-if (__DEV__) {
+if (true) {
   didWarnAboutBadClass = {};
   didWarnAboutContextTypeOnFunctionComponent = {};
   didWarnAboutGetDerivedStateOnFunctionComponent = {};
@@ -14650,7 +14630,7 @@ function updateForwardRef(current$$1, workInProgress, Component, nextProps, rend
     ReactCurrentOwner$3.current = workInProgress;
     setCurrentPhase('render');
     nextChildren = renderWithHooks(current$$1, workInProgress, render, nextProps, ref, renderExpirationTime);
-    if (debugRenderPhaseSideEffects || debugRenderPhaseSideEffectsForStrictMode && workInProgress.mode & StrictMode) {
+    if (debugRenderPhaseSideEffects || debugRenderPhaseSideEffectsForStrictMode() && workInProgress.mode & StrictMode) {
       // Only double-render components with Hooks
       if (workInProgress.memoizedState !== null) {
         nextChildren = renderWithHooks(current$$1, workInProgress, render, nextProps, ref, renderExpirationTime);
@@ -14822,7 +14802,7 @@ function updateFunctionComponent(current$$1, workInProgress, Component, nextProp
     ReactCurrentOwner$3.current = workInProgress;
     setCurrentPhase('render');
     nextChildren = renderWithHooks(current$$1, workInProgress, Component, nextProps, context, renderExpirationTime);
-    if (debugRenderPhaseSideEffects || debugRenderPhaseSideEffectsForStrictMode && workInProgress.mode & StrictMode) {
+    if (debugRenderPhaseSideEffects || debugRenderPhaseSideEffectsForStrictMode() && workInProgress.mode & StrictMode) {
       // Only double-render components with Hooks
       if (workInProgress.memoizedState !== null) {
         nextChildren = renderWithHooks(current$$1, workInProgress, Component, nextProps, context, renderExpirationTime);
@@ -14938,7 +14918,7 @@ function finishClassComponent(current$$1, workInProgress, Component, shouldUpdat
     if (__DEV__) {
       setCurrentPhase('render');
       nextChildren = instance.render();
-      if (debugRenderPhaseSideEffects || debugRenderPhaseSideEffectsForStrictMode && workInProgress.mode & StrictMode) {
+      if (debugRenderPhaseSideEffects || debugRenderPhaseSideEffectsForStrictMode() && workInProgress.mode & StrictMode) {
         instance.render();
       }
       setCurrentPhase(null);
@@ -15257,7 +15237,7 @@ function mountIndeterminateComponent(_current, workInProgress, Component, render
     // Proceed under the assumption that this is a function component
     workInProgress.tag = FunctionComponent;
     if (__DEV__) {
-      if (debugRenderPhaseSideEffects || debugRenderPhaseSideEffectsForStrictMode && workInProgress.mode & StrictMode) {
+      if (debugRenderPhaseSideEffects || debugRenderPhaseSideEffectsForStrictMode() && workInProgress.mode & StrictMode) {
         // Only double-render components with Hooks
         if (workInProgress.memoizedState !== null) {
           value = renderWithHooks(null, workInProgress, Component, props, context, renderExpirationTime);
@@ -15918,7 +15898,7 @@ function beginWork(current$$1, workInProgress, renderExpirationTime) {
 var valueCursor = createCursor(null);
 
 var rendererSigil = void 0;
-if (__DEV__) {
+if (true) {
   // Use this to detect multiple renderers using the same context
   rendererSigil = {};
 }
@@ -16273,16 +16253,11 @@ var CaptureUpdate = 3;
 // `checkHasForceUpdateAfterProcessing`.
 var hasForceUpdate = false;
 
-var didWarnUpdateInsideUpdate = void 0;
-var currentlyProcessingQueue = void 0;
-var resetCurrentlyProcessingQueue = void 0;
-if (__DEV__) {
-  didWarnUpdateInsideUpdate = false;
+var didWarnUpdateInsideUpdate = false;
+var currentlyProcessingQueue = null;
+var resetCurrentlyProcessingQueue = function () {
   currentlyProcessingQueue = null;
-  resetCurrentlyProcessingQueue = function () {
-    currentlyProcessingQueue = null;
-  };
-}
+};
 
 function createUpdateQueue(baseState) {
   var queue = {
@@ -16449,7 +16424,7 @@ function getStateFromUpdate(workInProgress, queue, update, prevState, nextProps,
           // Updater function
           if (__DEV__) {
             enterDisallowedContextReadInDEV();
-            if (debugRenderPhaseSideEffects || debugRenderPhaseSideEffectsForStrictMode && workInProgress.mode & StrictMode) {
+            if (debugRenderPhaseSideEffects || debugRenderPhaseSideEffectsForStrictMode() && workInProgress.mode & StrictMode) {
               _payload.call(instance, prevState, nextProps);
             }
           }
@@ -16475,7 +16450,7 @@ function getStateFromUpdate(workInProgress, queue, update, prevState, nextProps,
           // Updater function
           if (__DEV__) {
             enterDisallowedContextReadInDEV();
-            if (debugRenderPhaseSideEffects || debugRenderPhaseSideEffectsForStrictMode && workInProgress.mode & StrictMode) {
+            if (debugRenderPhaseSideEffects || debugRenderPhaseSideEffectsForStrictMode() && workInProgress.mode & StrictMode) {
               _payload2.call(instance, prevState, nextProps);
             }
           }
@@ -17329,7 +17304,7 @@ function logCapturedError(capturedError) {
 }
 
 var didWarnAboutUndefinedSnapshotBeforeUpdate = null;
-if (__DEV__) {
+if (true) {
   didWarnAboutUndefinedSnapshotBeforeUpdate = new Set();
 }
 
@@ -18688,7 +18663,7 @@ if (enableSchedulerTracing) {
   !(__interactionsRef != null && __interactionsRef.current != null) ? __DEV__ ? invariant(false, 'It is not supported to run the profiling version of a renderer (for example, `react-dom/profiling`) without also replacing the `scheduler/tracing` module with `scheduler/tracing-profiling`. Your bundler might have a setting for aliasing both modules. Learn more at http://fb.me/react-profiling') : reactProdInvariant('302') : void 0;
 }
 
-if (__DEV__) {
+if (true) {
   didWarnAboutStateTransition = false;
   didWarnSetStateChildContext = false;
   var didWarnStateUpdateForUnmountedComponent = {};
@@ -18756,7 +18731,8 @@ var mayReplayFailedUnitOfWork = void 0;
 var isReplayingFailedUnitOfWork = void 0;
 var originalReplayError = void 0;
 var rethrowOriginalError = void 0;
-if (__DEV__ && replayFailedUnitOfWorkWithInvokeGuardedCallback) {
+
+if (true) {
   stashedWorkInProgressProperties = null;
   mayReplayFailedUnitOfWork = true;
   isReplayingFailedUnitOfWork = false;
@@ -19384,7 +19360,7 @@ function completeUnitOfWork(workInProgress) {
     var siblingFiber = workInProgress.sibling;
 
     if ((workInProgress.effectTag & Incomplete) === NoEffect) {
-      if (__DEV__ && replayFailedUnitOfWorkWithInvokeGuardedCallback) {
+      if (__DEV__ && replayFailedUnitOfWorkWithInvokeGuardedCallback()) {
         // Don't replay if it fails during completion phase.
         mayReplayFailedUnitOfWork = false;
       }
@@ -19403,7 +19379,7 @@ function completeUnitOfWork(workInProgress) {
       } else {
         nextUnitOfWork = completeWork(current$$1, workInProgress, nextRenderExpirationTime);
       }
-      if (__DEV__ && replayFailedUnitOfWorkWithInvokeGuardedCallback) {
+      if (__DEV__ && replayFailedUnitOfWorkWithInvokeGuardedCallback()) {
         // We're out of completion phase so replaying is fine now.
         mayReplayFailedUnitOfWork = true;
       }
@@ -19555,7 +19531,7 @@ function performUnitOfWork(workInProgress) {
     setCurrentFiber(workInProgress);
   }
 
-  if (__DEV__ && replayFailedUnitOfWorkWithInvokeGuardedCallback) {
+  if (__DEV__ && replayFailedUnitOfWorkWithInvokeGuardedCallback()) {
     stashedWorkInProgressProperties = assignFiberPropertiesInDEV(stashedWorkInProgressProperties, workInProgress);
   }
 
@@ -19696,7 +19672,7 @@ function renderRoot(root, isYieldy) {
       // Reset in case completion throws.
       // This is only used in DEV and when replaying is on.
       var mayReplay = void 0;
-      if (__DEV__ && replayFailedUnitOfWorkWithInvokeGuardedCallback) {
+      if (__DEV__ && replayFailedUnitOfWorkWithInvokeGuardedCallback()) {
         mayReplay = mayReplayFailedUnitOfWork;
         mayReplayFailedUnitOfWork = true;
       }
@@ -19718,7 +19694,7 @@ function renderRoot(root, isYieldy) {
           resetCurrentlyProcessingQueue();
         }
 
-        if (__DEV__ && replayFailedUnitOfWorkWithInvokeGuardedCallback) {
+        if (__DEV__ && replayFailedUnitOfWorkWithInvokeGuardedCallback()) {
           if (mayReplay) {
             var failedUnitOfWork = nextUnitOfWork;
             replayUnitOfWork(failedUnitOfWork, thrownValue, isYieldy);
@@ -20781,7 +20757,7 @@ function flushControlled(fn) {
 var didWarnAboutNestedUpdates = void 0;
 var didWarnAboutFindNodeInStrictMode = void 0;
 
-if (__DEV__) {
+if (true) {
   didWarnAboutNestedUpdates = false;
   didWarnAboutFindNodeInStrictMode = {};
 }
@@ -20936,7 +20912,7 @@ function findHostInstanceWithNoPortals(fiber) {
 
 var overrideProps = null;
 
-if (__DEV__) {
+if (true) {
   var copyWithSetImpl = function (obj, path, idx, value) {
     if (idx >= path.length) {
       return value;
@@ -20954,6 +20930,7 @@ if (__DEV__) {
 
   // Support DevTools props for function components, forwardRef, memo, host components, etc.
   overrideProps = function (fiber, path, value) {
+    if (!__DEV__) return
     flushPassiveEffects();
     fiber.pendingProps = copyWithSet(fiber.memoizedProps, path, value);
     if (fiber.alternate) {
@@ -21015,40 +20992,26 @@ var ReactVersion = '16.8.6';
 
 var ReactCurrentOwner = ReactSharedInternals.ReactCurrentOwner;
 
-var topLevelUpdateWarnings = void 0;
-var warnOnInvalidCallback = void 0;
-var didWarnAboutUnstableCreatePortal = false;
-
-if (__DEV__) {
-  if (typeof Map !== 'function' ||
-  // $FlowIssue Flow incorrectly thinks Map has no prototype
-  Map.prototype == null || typeof Map.prototype.forEach !== 'function' || typeof Set !== 'function' ||
-  // $FlowIssue Flow incorrectly thinks Set has no prototype
-  Set.prototype == null || typeof Set.prototype.clear !== 'function' || typeof Set.prototype.forEach !== 'function') {
-    __DEV__ ? warningWithoutStack$1(false, 'React depends on Map and Set built-in types. Make sure that you load a ' + 'polyfill in older browsers. https://fb.me/react-polyfills') : void 0;
+var topLevelUpdateWarnings = function(container) {
+  if (container._reactRootContainer && container.nodeType !== COMMENT_NODE) {
+    var hostInstance = findHostInstanceWithNoPortals(container._reactRootContainer._internalRoot.current);
+    if (hostInstance) {
+      __DEV__ ? !(hostInstance.parentNode === container) ? warningWithoutStack$1(false, 'render(...): It looks like the React-rendered content of this ' + 'container was removed without using React. This is not ' + 'supported and will cause errors. Instead, call ' + 'ReactDOM.unmountComponentAtNode to empty a container.') : void 0 : void 0;
+    }
   }
 
-  topLevelUpdateWarnings = function (container) {
-    if (container._reactRootContainer && container.nodeType !== COMMENT_NODE) {
-      var hostInstance = findHostInstanceWithNoPortals(container._reactRootContainer._internalRoot.current);
-      if (hostInstance) {
-        __DEV__ ? !(hostInstance.parentNode === container) ? warningWithoutStack$1(false, 'render(...): It looks like the React-rendered content of this ' + 'container was removed without using React. This is not ' + 'supported and will cause errors. Instead, call ' + 'ReactDOM.unmountComponentAtNode to empty a container.') : void 0 : void 0;
-      }
-    }
+  var isRootRenderedBySomeReact = !!container._reactRootContainer;
+  var rootEl = getReactRootElementInContainer(container);
+  var hasNonRootReactChild = !!(rootEl && getInstanceFromNode$1(rootEl));
 
-    var isRootRenderedBySomeReact = !!container._reactRootContainer;
-    var rootEl = getReactRootElementInContainer(container);
-    var hasNonRootReactChild = !!(rootEl && getInstanceFromNode$1(rootEl));
+  __DEV__ ? !(!hasNonRootReactChild || isRootRenderedBySomeReact) ? warningWithoutStack$1(false, 'render(...): Replacing React-rendered children with a new root ' + 'component. If you intended to update the children of this node, ' + 'you should instead have the existing children update their state ' + 'and render the new components instead of calling ReactDOM.render.') : void 0 : void 0;
 
-    __DEV__ ? !(!hasNonRootReactChild || isRootRenderedBySomeReact) ? warningWithoutStack$1(false, 'render(...): Replacing React-rendered children with a new root ' + 'component. If you intended to update the children of this node, ' + 'you should instead have the existing children update their state ' + 'and render the new components instead of calling ReactDOM.render.') : void 0 : void 0;
-
-    __DEV__ ? !(container.nodeType !== ELEMENT_NODE || !container.tagName || container.tagName.toUpperCase() !== 'BODY') ? warningWithoutStack$1(false, 'render(): Rendering components directly into document.body is ' + 'discouraged, since its children are often manipulated by third-party ' + 'scripts and browser extensions. This may lead to subtle ' + 'reconciliation issues. Try rendering into a container element created ' + 'for your app.') : void 0 : void 0;
-  };
-
-  warnOnInvalidCallback = function (callback, callerName) {
-    __DEV__ ? !(callback === null || typeof callback === 'function') ? warningWithoutStack$1(false, '%s(...): Expected the last optional `callback` argument to be a ' + 'function. Instead received: %s.', callerName, callback) : void 0 : void 0;
-  };
-}
+  __DEV__ ? !(container.nodeType !== ELEMENT_NODE || !container.tagName || container.tagName.toUpperCase() !== 'BODY') ? warningWithoutStack$1(false, 'render(): Rendering components directly into document.body is ' + 'discouraged, since its children are often manipulated by third-party ' + 'scripts and browser extensions. This may lead to subtle ' + 'reconciliation issues. Try rendering into a container element created ' + 'for your app.') : void 0 : void 0;
+};
+var warnOnInvalidCallback = function (callback, callerName) {
+  __DEV__ ? !(callback === null || typeof callback === 'function') ? warningWithoutStack$1(false, '%s(...): Expected the last optional `callback` argument to be a ' + 'function. Instead received: %s.', callerName, callback) : void 0 : void 0;
+};
+var didWarnAboutUnstableCreatePortal = false;
 
 setRestoreImplementation(restoreControlledState$1);
 
@@ -21546,7 +21509,7 @@ var foundDevTools = injectIntoDevTools({
   rendererPackageName: 'react-dom'
 });
 
-if (__DEV__) {
+if (true) {
   if (!foundDevTools && canUseDOM && window.top === window.self) {
     // If we're in Chrome or Firefox, provide a download link if not installed.
     if (navigator.userAgent.indexOf('Chrome') > -1 && navigator.userAgent.indexOf('Edge') === -1 || navigator.userAgent.indexOf('Firefox') > -1) {

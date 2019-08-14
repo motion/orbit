@@ -22,7 +22,7 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
 
   // for electron we use ports dynamically - each new app window consumes a port from this pool
   // todo: could allocate more or just add more as we need
-  const electronPorts = await findContiguousPorts(20, last(ports))
+  const electronPorts = await findContiguousPorts(20, last(ports) + 1)
   let config: GlobalConfig
 
   if (!ports || !electronPorts) {

@@ -1,10 +1,10 @@
 {
   "name": "@o/build-orbit",
-  "version": "2.6.40",
+  "version": "2.6.41",
   "private": true,
   "scripts": {
     "start": "./scripts/build.sh --resume",
-    "test:built:app": "LOG_LEVEL=3 ./dist/mac/Orbit.app/Contents/MacOS/Orbit",
+    "test:built:app": "LOG_LEVEL=10 ./dist/mac/Orbit.app/Contents/MacOS/Orbit",
     "build:app": "./scripts/build.sh",
     "build:app:resume": "./scripts/build.sh --resume",
     "build:app:resume:nosign": "./scripts/build.sh --resume --no-sign",

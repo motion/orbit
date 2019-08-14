@@ -29,7 +29,7 @@
     "hosted-git-info": "2.7.1",
     "is-valid-path": "0.1.1",
     "isomorphic-fetch": "^2.2.1",
-    "kill-port": "^1.5.0",
+    "kill-port": "^1.5.1",
     "lodash": "4.17.11",
     "opentracing": "0.14.3",
     "pretty-error": "^2.1.1",

@@ -17,23 +17,23 @@ let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'The Data-driven App Studio',
-  medium: 'The Data-driven App Studio',
-  small: 'Data-driven App Studio',
+  large: 'A new platform for apps, where data comes first',
+  medium: 'A new platform for apps, where data comes first',
+  small: 'The data-driven app platform',
 }
 
 let allTexts = {
   large: [
-    `Plug in data, build queries, write code to output powerful apps.`,
-    `An all-in-one app platform that gives you control over all your data.`,
+    `Create powerful apps more easily than ever before, with an ecosystem.`,
+    `Data plugins, a first-class environment to make code easy, and more.`,
   ],
   medium: [
-    `Plug in data, build queries, write code to output powerful apps.`,
-    `An all-in-one app platform that gives you control over all your data.`,
+    `Create powerful apps more easily than ever before, with an ecosystem.`,
+    `Data plugins, a first-class environment to make code easy, and more.`,
   ],
   small: [
     `Create intranet apps easily.`,
-    `An all-in-one app platform that gives you control over all your data.`,
+    `Data plugins, a first-class environment to make code easy, and more.`,
   ],
 }
 

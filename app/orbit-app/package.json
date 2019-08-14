@@ -49,7 +49,7 @@
     "invariant": "2.2.4",
     "key-event-to-string": "1.2.0",
     "keycode": "^2.1.9",
-    "kill-port": "1.3.2",
+    "kill-port": "^1.5.1",
     "latinize": "0.4.0",
     "lodash": "4.17.11",
     "memoize-weak": "1.0.2",

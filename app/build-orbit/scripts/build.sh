@@ -42,11 +42,13 @@ function undo-package-jsons() {
   done
   cd -
 }
+
 function handle-exit() {
   trap - EXIT
   undo-package-jsons
   exit 0
 }
+trap handle-exit EXIT
 
 #
 # BUILD
@@ -149,7 +151,6 @@ if [[ "$FLAGS" =~ "--no-publish" ]]; then
   echo "not publishing..."
 else
   echo "publishing packages..."
-  trap handle-exit EXIT
   publicize-package-jsons
   publish-packages
 fi
@@ -199,10 +200,8 @@ mv stage-app/node_modules/sqlite3/lib/binding/electron-v4.0-darwin-x64 stage-app
 # see stage-app/package.json for options
 echo "electron-builder..."
 if [[ "$FLAGS" =~ "--no-sign" ]]; then
-  cd stage-app
-  CSC_IDENTITY_AUTO_DISCOVERY=false npx electron-builder
+  (cd stage-app && CSC_IDENTITY_AUTO_DISCOVERY=false npx electron-builder)
 else
-  cd stage-app
-  npx electron-builder -p always
+  (cd stage-app && npx electron-builder -p always)
 fi
 

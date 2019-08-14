@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "./scripts/build.sh --resume",
+    "test:built:electron": "npx electron ./dist/mac/Orbit.app/Contents/Resources/app/index.js",
     "test:built:app": "LOG_LEVEL=10 ./dist/mac/Orbit.app/Contents/MacOS/Orbit",
     "build:app": "./scripts/build.sh",
     "build:app:resume": "./scripts/build.sh --resume",

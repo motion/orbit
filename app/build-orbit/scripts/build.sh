@@ -197,6 +197,8 @@ rm -r dist/mac/Orbit.app || true
 # fix sqlite
 #
 if [[ "$FLAGS" =~ "--no-rebuild" ]]; then
+  echo "not rebuilding"
+else
   (cd stage-app && ../node_modules/.bin/electron-rebuild)
   # so desktop node subprocess can use it
   rm -r stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64 || true

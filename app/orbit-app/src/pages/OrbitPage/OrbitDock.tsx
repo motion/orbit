@@ -318,16 +318,17 @@ const DockSidebarView = (props: AppMainViewProps) => {
   const { id } = useContext(AppLoadContext)
   return (
     <ListPassProps
-      onSelect={rows => {
-        return // disable for demo
-        console.log('on select', rows)
-        const item = rows[0]
-        if (!item) return
-        om.actions.router.showAppPage({
-          id: `${id}`,
-          subId: (item.extraProps && item.extraProps.subId) || -1,
-        })
-      }}
+      itemProps={useMemo(() => ({
+        onClick(_, props) {
+          const item = props
+          if (!item) return
+          orbitDockStore.close()
+          om.actions.router.showAppPage({
+            id: `${id}`,
+            subId: (item.extraProps && item.extraProps.subId) || -1,
+          })
+        },
+      }), [id])}
     >
       {props.children}
     </ListPassProps>

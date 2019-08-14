@@ -80,7 +80,7 @@ export const dark: ThemeObject = {
   ...fromStyles({
     background,
     backgroundHover: [20, 20, 20, 0.2],
-    backgroundActive: [30, 30, 30, 0.65],
+    backgroundActive: [30, 30, 30, 0.5],
     backgroundHighlightActive: selectedColor,
     backgroundHighlight: selectedColor,
     color: color,

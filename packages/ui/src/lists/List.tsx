@@ -77,8 +77,8 @@ const nullFn = () => null
 export const List = memo(
   forwardRef<SelectableStore, ListProps>((allProps, ref) => {
     const [collapseProps, allListProps] = splitCollapseProps(allProps)
-    const extraPropsContext = useContext(PropsContext.Context)
-    const extraOnSelect = extraPropsContext && extraPropsContext.onSelect
+    const { onSelect: extraOnSelect, itemProps: extraItemProps } =
+      useContext(PropsContext.Context) || ({} as ListProps)
     const props = useListProps(allListProps)
     const getProps = useGet(props)
     const {
@@ -108,6 +108,7 @@ export const List = memo(
       onDelete,
       Separator = ListSeparator,
       separatorProps,
+      itemProps,
       ...restProps
     } = props
     const shareStore = useShareStore()
@@ -120,6 +121,10 @@ export const List = memo(
     const getItems = useGet(filtered.results)
     const getShareable = useGet(shareable)
     const selection = useRef<[any[], number[]]>([[], []])
+    const finalItemProps = useMemo(() => ({ ...itemProps, ...extraItemProps }), [
+      itemProps,
+      extraItemProps,
+    ])
 
     const onSelectInner: SelectableProps['onSelect'] = useCallback(
       (selectedRows: any[], selectedIndices: number[]) => {
@@ -221,6 +226,7 @@ export const List = memo(
               ItemView={ListItem}
               Separator={Separator}
               {...restProps}
+              itemProps={finalItemProps}
               getItemProps={getItemPropsInner}
               onOpen={onOpenInner}
               selectableStore={selectableStore}

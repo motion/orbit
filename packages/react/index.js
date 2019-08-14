@@ -1778,7 +1778,6 @@ if (true) {
 }
 
 if (true) {
-  console.log('assigning that shit')
   objectAssign(ReactSharedInternals, {
     // These should not be included in production.
     ReactDebugCurrentFrame: ReactDebugCurrentFrame,

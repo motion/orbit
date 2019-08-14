@@ -5,7 +5,7 @@ import * as React from 'react'
 export function GmailSettings() {
   const app = useApp()
   return (
-    <Section flex={1}>
+    <Section padding flex={1}>
       <Row width="100%" alignItems="center">
         {app && <ManageSyncStatus app={app} />}
       </Row>

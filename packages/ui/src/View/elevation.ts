@@ -28,7 +28,7 @@ const elevatedShadow = (props: ElevatableProps, theme: ThemeObject) => {
     // y
     theme.elevatedShadowY ? theme.elevatedShadowY(el) : smoother(el, 1),
     // spread
-    theme.elevatedShadowSpread ? theme.elevatedShadowSpread(el) : smoother(el, 2.5),
+    theme.elevatedShadowSpread ? theme.elevatedShadowSpread(el) : smoother(el, 2.85),
     // color
     props.elevationShadowColor ||
       (theme.elevatedShadowColor
@@ -38,7 +38,7 @@ const elevatedShadow = (props: ElevatableProps, theme: ThemeObject) => {
             0,
             0,
             props.elevationShadowOpacity ||
-              round(0.1 * smoother(el)) + (theme.boxShadowOpacity || 0),
+              round(0.06 * smoother(el)) + (theme.boxShadowOpacity || 0),
           ]),
   ]
 }

@@ -3,7 +3,8 @@ import AutoResponsive from 'autoresponsive-react'
 import React from 'react'
 
 import { useNodeSize } from '../hooks/useNodeSize'
-import { View, ViewProps } from '../View/View'
+import { ViewProps } from '../View/types'
+import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
 
 export type MasonryLayoutProps = ViewProps & {

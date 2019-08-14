@@ -18,7 +18,7 @@ import { DateFormat } from '../text/DateFormat'
 import { SimpleText } from '../text/SimpleText'
 import { Text, TextProps } from '../text/Text'
 import { Col } from '../View/Col'
-import { usePadding } from '../View/pad'
+import { usePadding } from '../View/PaddedView'
 import { Row } from '../View/Row'
 import { View } from '../View/View'
 

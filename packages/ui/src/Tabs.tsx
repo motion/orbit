@@ -9,7 +9,7 @@ import { Loading } from './progress/Loading'
 import { Tab, TabItem } from './Tab'
 import { Col } from './View/Col'
 import { Row } from './View/Row'
-import { ViewProps } from './View/View'
+import { ViewProps } from './View/types'
 
 /**
  * Copyright 2018-present Facebook.

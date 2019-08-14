@@ -200,7 +200,7 @@ type ReactiveStoreDesc = {
 }
 
 type ReactiveStoreState = ReactiveStoreDesc & {
-  initialState: HydrationState | null
+  initialState?: HydrationState | null
 }
 
 const initialStoreState = {
@@ -244,9 +244,17 @@ function useReactiveStore<A extends any>(
         hook.__setUpdater(forceUpdate)
       })
     }
-    state.current = {
-      ...next,
-      initialState: dehydrate(next.store),
+    state.current = next
+    if (process.env.NODE_ENV === 'development') {
+      // set initial state for hmr purposes
+      const requestIdleCallback =
+        typeof window !== 'undefined' ? window['requestIdleCallback'] : setTimeout
+      requestIdleCallback(() => {
+        state.current = {
+          ...state.current,
+          initialState: dehydrate(next.store),
+        }
+      })
     }
     if (hasChangedSource && previousInitialState) {
       hydrate(state.current.store, previousInitialState, previousState)

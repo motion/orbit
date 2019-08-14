@@ -4,7 +4,8 @@ import React, { forwardRef, Suspense } from 'react'
 import { Breadcrumbs } from '../Breadcrumbs'
 import { CollapsableProps, createCollapsableChildren, splitCollapseProps } from '../Collapsable'
 import { createSpacedChildren, SpaceGroupProps } from '../SpaceGroup'
-import { ScrollableView, ScrollableViewProps } from './ScrollableView'
+import { ScrollableView } from './ScrollableView'
+import { ScrollableViewProps } from './types'
 
 type GroupProps = {
   group?: boolean

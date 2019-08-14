@@ -54,6 +54,7 @@ class OrbitAppsCarouselStore {
 
   setRowNode = (next: HTMLElement) => {
     if (!next) return
+    if (next === this.rowNode) return
     this.rowNode = next
     // @ts-ignore
     this.rowRef.current = next
@@ -383,6 +384,7 @@ export const OrbitAppsCarousel = memo(() => {
     },
     {
       defaultValue: [false, true],
+      name: 'OrbitAppsCarousel.render',
     },
   )
 
@@ -411,7 +413,7 @@ export const OrbitAppsCarousel = memo(() => {
 
   return (
     <View data-is="OrbitAppsCarousel" width="100%" height="100%">
-      <FullScreen>
+      <FullScreen pointerEvents="none" zIndex={3}>
         <OrbitSearchResults />
       </FullScreen>
       <View

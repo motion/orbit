@@ -6,21 +6,23 @@
 
 ## install
 
-Currenly using Node 9.11.1. Run this command:
+Currenly using Node 10.15.2. To setup, run this command:
 
 ```sh
 yarn bootstrap
 ```
 
-Bootstrap make sure everything is installed and built. I find the easiest way to add new npm packages to any app/package is to just edit the package.json directly (VSCode will suggest the latest version for you), and then re-run bootstrap.
+Bootstrap make sure everything is installed and built. I find the easiest way to add new npm packages to any app/package is to just edit the package.json directly (VSCode will suggest the latest version for you), and then re-run `yarn bootstrap`.
 
-If you just want to re-build everyhting, try `yarn build`.
+Once you have it all running, you either want to start a build watcher with `yarn build:watch` or you can start the task from VSCode.
 
 ## run
 
-Orbit now "self-builds" so you can just run with `yarn start` which runs `orbit ws` inside `example-workspace`.
+Orbit now "self-builds" so you can just run with `yarn start` which basically just runs `orbit ws` inside `./example-workspace`.
 
-To run the development tools, run `yarn start:devtools`. This will run two things:
+Note: If you are developing orbit, you want to probably run `yarn start --dev` which will run `orbit ws --dev`. This is our own internal development mode, it basically runs everything in dev mode by default. That lets you more easily change anything, and it should all hot reload.
+
+If you need to debug the backend at all some of the state in the frontend the dev tools are really helpful (REPL into all the processes) `yarn start:devtools`. This will run:
 
 - A [Puppeteer](https://github.com/GoogleChrome/puppeteer) instance that automatically hooks into the REPL for all processes (node, electron and client).
 - The [Overmind](https://overmindjs.org/) devtools which let you see the state inside Overmind which we use for mostly global state.
@@ -34,6 +36,7 @@ A the high level:
   - `apps` are individual orbit apps we've built.
   - `packages` contains anything that could run across any app, and are independent of orbit generally.
   - `projects` contains sub-projects like our website and a playground to do light debugging on things.
+  - `example-workspace` has an example workspace you can use to test things
 - Development:
   - `bin` lets you create scripts for the repo that you can run when you `source .env` directly from CLI. useful for more complex monorepo scripting.
   - `scripts` has one-off scripts that you may need for specific actions (like downloading datasets for fixtures).
@@ -94,6 +97,8 @@ What we may want to do is split these a bit further:
 ```
 
 ## using the monorepo
+
+You're basically good to go in terms of development. The rest is more in depth.
 
 Because lerna links things together it can cause some weirdness with installing packages. There are a few ways to do it. All examples start at the root directory.
 

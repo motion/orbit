@@ -2,7 +2,7 @@ import { createContext } from 'react'
 
 import { ItemRenderText } from '../lists/ListItemSimple'
 import { TextProps } from '../text/Text'
-import { ViewProps } from '../View/View'
+import { ViewProps } from '../View/types'
 
 export const ItemPropsContext = createContext({
   oneLine: false,

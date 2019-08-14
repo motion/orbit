@@ -7,7 +7,8 @@ import { Portal } from '../helpers/portal'
 import { Section, SectionProps } from '../Section'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { SurfaceProps } from '../Surface'
-import { View, ViewProps } from '../View/View'
+import { ViewProps } from '../View/types'
+import { View } from '../View/View'
 import { ProvideVisibility } from '../Visibility'
 
 export type SimpleModalProps = SectionProps &

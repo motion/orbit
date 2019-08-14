@@ -80,9 +80,12 @@ export class SelectableStore {
   )
 
   updateRows = react(
-    () => this.props.items,
-    items => {
-      this.rows = items
+    // gnarly bug: if this isnt always() it wont re-run sometimes
+    // has to be a bug in useStore somewhere, updateProps or something
+    // i was seeing it when i typed "andrey" into search with a lot of items in search
+    () => always(this.props.items),
+    () => {
+      this.rows = this.props.items
       this.keyToIndex = {}
       this.updateActiveAndKeyToIndex()
     },
@@ -126,6 +129,7 @@ export class SelectableStore {
   }
 
   private setActive(next: (string | number)[]) {
+    console.log('this', this, this.rows[0])
     // check for disabled rows
     const nextFiltered = this.removeUnselectable(next)
 
@@ -140,7 +144,6 @@ export class SelectableStore {
       return
     }
 
-    console.log('SETTING ACTIVE', nextActive)
     this.active = nextActive
     this.updateActiveAndKeyToIndex(next, false)
   }

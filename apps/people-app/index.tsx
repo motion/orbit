@@ -10,6 +10,9 @@ export default createApp({
   icon: 'person',
   iconColors: ['rgb(133, 20, 75)', 'rgb(123, 10, 65)'],
   itemType: 'person',
+  itemViews: {
+    person: PersonMedia,
+  },
   app: () => <AppNavigator index={PeopleAppIndex} detail={PeopleAppMain} />,
 })
 

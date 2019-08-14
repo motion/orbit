@@ -116,15 +116,15 @@ export const App = (props: AppProps) => {
   }
 
   useEffect(() => {
-    if (currentApp.didMountChild) {
+    if (currentApp.didMountChild || !appStore) {
       // dont do anything if we are the parent, the child will do this...
       return
     }
-    if (!isEqual(props.menuItems, appStore!.menuItems)) {
-      appStore!.setMenuItems(props.menuItems!)
+    if (!isEqual(props.menuItems, appStore.menuItems)) {
+      appStore.setMenuItems(props.menuItems!)
     }
     return () => {
-      appStore!.setMenuItems([])
+      appStore.setMenuItems([])
     }
   }, [props.menuItems])
 

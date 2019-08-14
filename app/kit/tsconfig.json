@@ -9,6 +9,7 @@
   "include": ["src/**/*"],
   "references": [
     { "path": "../../packages/gloss" },
+    { "path": "../../packages/css" },
     { "path": "../../packages/gloss-theme" },
     { "path": "../../packages/use-store" },
     { "path": "../../packages/fast-compare" },

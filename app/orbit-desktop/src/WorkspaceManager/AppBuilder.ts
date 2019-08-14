@@ -1,7 +1,7 @@
 import { AppMetaDict, AppsManager } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppMeta, BuildStatus } from '@o/models'
-import { stringToIdentifier } from '@o/ui'
+import { stringToIdentifier } from '@o/utils'
 import historyAPIFallback from 'connect-history-api-fallback'
 import { Handler } from 'express'
 import { readFile } from 'fs-extra'

@@ -23,6 +23,8 @@
     { "path": "../../packages/mediator" },
     { "path": "../../packages/react-textfit" },
     { "path": "../../packages/ui" },
-    { "path": "../../packages/color" }
+    { "path": "../../packages/color" },
+    { "path": "../../packages/gloss" },
+    { "path": "../../packages/gloss-theme" }
   ]
 }

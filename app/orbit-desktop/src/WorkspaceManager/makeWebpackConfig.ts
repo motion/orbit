@@ -1,4 +1,4 @@
-import { isDefined } from '@o/ui'
+import { isDefined } from '@o/utils'
 import AddAssetHtmlPlugin from 'add-asset-html-webpack-plugin'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
 import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'

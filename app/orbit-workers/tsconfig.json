@@ -14,6 +14,8 @@
     { "path": "../libs-node" },
     { "path": "../apps-manager" },
     { "path": "../../packages/logger" },
+    { "path": "../../packages/use-store" },
+    { "path": "../../packages/bridge" },
     { "path": "../../packages/mediator" },
     { "path": "../../packages/cosal" },
     { "path": "../../packages/utils" }

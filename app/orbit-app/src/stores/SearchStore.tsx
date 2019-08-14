@@ -39,7 +39,7 @@ export class SearchStoreStore {
   }
 
   get query() {
-    return (this.searchState && this.searchState.query) || ''
+    return (this.searchState && this.searchState.queryFull) || ''
   }
 
   lastQuery = react(() => this.query, {

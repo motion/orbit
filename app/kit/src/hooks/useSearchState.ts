@@ -7,6 +7,8 @@ import { useStoresSimple } from './useStores'
 
 export type SearchState = {
   query: string
+  /** Query without filters */
+  queryFull: string
   filters: QueryFilterStore
   dateState: QueryFilterStore['dateState']
   toggleFilterActive: QueryFilterStore['toggleFilterActive']
@@ -22,6 +24,7 @@ const getSearchState = (queryStore: QueryStore, includePrefix: boolean = false):
     // state
     filters: queryFilters,
     query: includePrefix ? queryFilters.activeQuery : queryStore.queryWithoutPrefix,
+    queryFull: queryStore.queryWithoutPrefix,
     dateState: queryFilters.dateState,
     toggleFilterActive: queryFilters.toggleFilterActive,
     activeFilters: queryFilters.activeFilters,

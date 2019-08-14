@@ -24,7 +24,7 @@ const getSearchState = (queryStore: QueryStore, includePrefix: boolean = false):
     // state
     filters: queryFilters,
     query: includePrefix ? queryFilters.activeQuery : queryStore.queryWithoutPrefix,
-    queryFull: queryStore.queryWithoutPrefix,
+    queryFull: queryStore.queryFull,
     dateState: queryFilters.dateState,
     toggleFilterActive: queryFilters.toggleFilterActive,
     activeFilters: queryFilters.activeFilters,

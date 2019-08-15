@@ -16,19 +16,19 @@ let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'Lets rethink how we build apps',
-  medium: 'Lets rethink how we build apps',
+  large: 'A smart operating system for work',
+  medium: 'A smart operating system for work',
   small: 'The data-driven app platform',
 }
 
 let allTexts = {
   large: [
-    `A new type of app platform that separates app from data.`,
-    `Orbit lets you code amazing apps with incredible ease.`,
+    `Build and collaborate on apps that power your company.`,
+    `Orbit is a new take on a Work OS.`,
   ],
   medium: [
-    `A new type of app platform that separates app from data.`,
-    `Orbit lets you code amazing apps with incredible ease.`,
+    `Build and collaborate on apps that power your company.`,
+    `Orbit is a new take on a Work OS.`,
   ],
   small: [`Create intranet apps easily.`, `Orbit internal apps, with all new abilities.`],
 }

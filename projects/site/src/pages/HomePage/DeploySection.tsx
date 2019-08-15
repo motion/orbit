@@ -54,7 +54,7 @@ export default function ShoulderSection() {
                 <PillButton>Trust</PillButton>
               </FadeChild>
               <FadeChild delay={300}>
-                <TitleText textAlign="center" size={useScreenVal('lg', 'lg', 'xl')}>
+                <TitleText textAlign="center" size={useScreenVal('md', 'md', 'lg')}>
                   Designed for privacy & control
                 </TitleText>
               </FadeChild>

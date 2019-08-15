@@ -62,15 +62,13 @@ export default memo(function DataAppKitFeaturesSection() {
                 </FadeChild>
                 <FadeChild delay={100}>
                   <TitleText textAlign="center" size="xl">
-                    Like IFFT for your apps.
+                    IFFT, meet custom apps.
                   </TitleText>
                 </FadeChild>
                 <TitleTextSub>
                   <FadeChild delay={200}>
-                    Every app exposes data - in GraphQL and TypeScript. Every view shows data
-                    naturally. Plug in data sources, move data between apps with a click.
-                    {screen !== 'small' && <br />}
-                    &nbsp;Link them together with a line of code.
+                    Plug in data source with a click - with GraphQL and TypeScript APIs. Use and
+                    fork apps from the app store.
                   </FadeChild>
                 </TitleTextSub>
               </>

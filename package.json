@@ -11,9 +11,8 @@
   ],
   "scripts": {
     "bootstrap": "./bin/bootstrap",
-    "watch": "source .env && build --watch",
-    "clean": "source .env && clean",
-    "clean:packages": "source .env && clean --all",
+    "clean": "bin/clean",
+    "clean:packages": "bin/clean --all",
     "start": "npm run fix-permissions && cd example-workspace && orbit ws --logLevel 1",
     "start:dev": "npm run fix-permissions && cd example-workspace && orbit ws --dev --logLevel 2",
     "start:dev:clean": "npm run fix-permissions && cd example-workspace && orbit ws --dev --logLevel 2 --clean",

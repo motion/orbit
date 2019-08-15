@@ -47,9 +47,6 @@ export type VirtualListProps<A = any> = SelectableProps &
   }
 
 const SortableList = SortableContainer(SelectableDynamicList, { withRef: true })
-SortableList.defaultProps = {
-  helperClass: 'sortableHelper',
-}
 
 const { useProps } = createContextualProps<Partial<VirtualListProps>>()
 
@@ -167,6 +164,7 @@ export const VirtualList = memo((virtualProps: VirtualListProps) => {
       itemData={createItemData(props.items, selectableStore, props)}
       shouldCancelStart={isRightClick}
       lockAxis="y"
+      helperClass="sortableHelper"
       {...props}
       pressDelay={getPressDelay(props)}
       onSortStart={useCallback(

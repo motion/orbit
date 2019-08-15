@@ -1,7 +1,7 @@
 import { save } from '@o/bridge'
 import { AppIcon, PaneManagerPane, useActiveAppsSorted, useStore } from '@o/kit'
 import { AppModel } from '@o/models'
-import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'
+import { SortableContainer, SortableContainerProps, SortableElement } from '@o/react-sortable-hoc'
 import { App } from '@o/stores'
 import { isRightClick, Space } from '@o/ui'
 import { Box, gloss, Row, RowProps } from 'gloss'
@@ -176,7 +176,7 @@ const SortableTab = SortableElement((props: TabProps) => {
 
 type SortableTabsProps = RowProps & { items: TabProps[] }
 
-const SortableTabs = SortableContainer(({ items, ...restProps }: SortableTabsProps) => {
+const SortableTabsContainer = SortableContainer(({ items, ...restProps }: SortableTabsProps) => {
   return (
     <Row {...restProps}>
       {items.map((item, index) => (
@@ -186,6 +186,6 @@ const SortableTabs = SortableContainer(({ items, ...restProps }: SortableTabsPro
   )
 })
 
-SortableTabs.defaultProps = {
-  helperClass: 'sortableHelper',
+function SortableTabs(props: SortableTabsProps & SortableContainerProps) {
+  return <SortableTabsContainer helperClass="sortableHelper" {...props} />
 }

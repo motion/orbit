@@ -55,12 +55,15 @@ const SortableGridInner = SortableContainer(
     )
   },
 )
-SortableGridInner.defaultProps = {
-  helperClass: 'sortableHelper',
-}
 
 export function SortableGrid<A>(props: SortableGridProps<A>) {
   return (
-    <SortableGridInner sortable={false} shouldCancelStart={isRightClick} axis="xy" {...props} />
+    <SortableGridInner
+      helperClass="sortableHelper"
+      sortable={false}
+      shouldCancelStart={isRightClick}
+      axis="xy"
+      {...props}
+    />
   )
 }

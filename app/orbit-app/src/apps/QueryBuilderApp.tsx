@@ -77,10 +77,10 @@ function QueryBuilderApp() {
   const [bits, actions] = useAppBits()
   useEffect(() => {
     console.log('persist them to bits', treeList.state!.items!)
-    for (const id of Object.keys(treeList.state!.items!)) {
-      const item = treeList.state!.items![id]
-      actions.createOrUpdate({})
-    }
+    // for (const id of Object.keys(treeList.state!.items!)) {
+    //   const item = treeList.state!.items![id]
+    //   actions.createOrUpdate({})
+    // }
   }, [treeList.state.items])
 
   // map id => navigator stack so we persist it per-item in the list

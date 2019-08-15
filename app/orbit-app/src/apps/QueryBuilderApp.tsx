@@ -1,4 +1,4 @@
-import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, react, save, Templates, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple } from '@o/kit'
+import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, loadOne, react, save, Templates, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple } from '@o/kit'
 import { ApiArgType, AppMetaCommand, Bit, BitModel, CallAppBitApiMethodCommand } from '@o/models'
 import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TitleRow, Toggle, TreeList, useGet, useTheme, useTreeList } from '@o/ui'
 import { capitalize } from 'lodash'
@@ -19,17 +19,29 @@ export default createApp({
 
 const treeId = 'qba'
 
-// TODO
-
+// TODO this can be shared by workers-kit/syncers and put in Kit
 class AppBitsStore {
-  create(bit: Partial<Bit> & Pick<Bit, 'id'>) {
+  create(bit: Bit) {
     return save(BitModel, bit)
   }
-  update(bit: Partial<Bit>) {
+  update(bit: Partial<Bit> & Pick<Bit, 'originalId'>) {
     return save(BitModel, bit)
   }
-  createOrUpdate(bit: Partial<Bit> & Pick<Bit, 'id'>) {
-    return save(BitModel, bit)
+  // TODO we need to scope this to the current app automatically!
+  async createOrUpdate(bit: Partial<Bit> & Pick<Bit, 'originalId'>) {
+    if (!bit.originalId) {
+      throw new Error(
+        `Must provide originalId, which you can choose, in order to determine uniqueness`,
+      )
+    }
+    const existing = await loadOne(BitModel, {
+      args: {
+        where: {
+          originalId: bit.originalId,
+        },
+      },
+    })
+    return await save(BitModel, { ...(existing || null), ...bit })
   }
 }
 
@@ -74,13 +86,20 @@ function QueryBuilderApp() {
 
   // TODO NEXT
   // want to persist queries to bits
-  const [bits, actions] = useAppBits()
+  const [_bits, actions] = useAppBits()
   useEffect(() => {
     console.log('persist them to bits', treeList.state!.items!)
     for (const id of Object.keys(treeList.state!.items!)) {
       const item = treeList.state!.items![id]
-      console.log('create a bit', item)
-      // actions.createOrUpdate({})
+      if (item && item.data && item.data.identifier) {
+        const definition = getAppDefinition(`${item.data.identifier}`)
+        console.log('create a bit', item)
+        actions.createOrUpdate({
+          title: item.name,
+          originalId: `${item.id}`,
+          icon: `${definition.icon}`,
+        })
+      }
     }
   }, [treeList.state.items])
 

@@ -606,7 +606,7 @@ const OrbitAppCard = memo(
             borderWidth={0}
             background={
               isFocusZoomed
-                ? definition.viewConfig && definition.viewConfig.transparentBackground
+                ? !definition.viewConfig || definition.viewConfig.transparentBackground !== false
                   ? theme.sidebarBackgroundTransparent
                   : theme.backgroundStronger
                 : theme.backgroundStronger

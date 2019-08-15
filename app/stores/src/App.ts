@@ -51,6 +51,7 @@ class AppStore {
   source = 'App'
 
   state = deep({
+    vibrancy: '',
     // for use syncing them to electron
     userSettings: {} as User['settings'],
     orbitState: {
@@ -115,6 +116,10 @@ class AppStore {
   }
 
   get vibrancy() {
+    // allow override
+    if (App.state.vibrancy) {
+      return App.state.vibrancy
+    }
     const { vibrancy } = App.state.userSettings
     if (vibrancy === 'none') {
       return 'none'
@@ -122,7 +127,7 @@ class AppStore {
     if (vibrancy === 'more') {
       return App.isDark ? 'ultra-dark' : 'light'
     }
-    return App.isDark ? 'ultra-dark' : 'light'
+    return App.isDark ? 'dark' : 'light'
   }
 
   get isShowingMenu() {

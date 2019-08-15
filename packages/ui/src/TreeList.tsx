@@ -1,6 +1,5 @@
-import { ImmutableUpdateFn, loadOne } from '@o/bridge'
-import { BitModel } from '@o/models'
 import { arrayMove } from '@o/react-sortable-hoc'
+import { ScopedState } from '@o/utils'
 import React, { Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { Button } from './buttons/Button'
@@ -61,8 +60,6 @@ const defaultState: TreeStateStatic = {
     },
   },
 }
-
-type ScopedState<A> = [A, ImmutableUpdateFn<A>]
 
 const getActions = (
   treeState: () => ScopedState<TreeStateStatic>,
@@ -283,8 +280,10 @@ async function loadTreeListItemProps(item?: TreeItem): Promise<ListItemProps> {
         subType: 'folder',
       }
     case 'bit':
-      return {
-        item: await loadOne(BitModel, { args: { where: { id: +item.id } } }),
+      if (Config.loadBit) {
+        return {
+          item: await Config.loadBit(+item.id),
+        }
       }
     default:
       return {

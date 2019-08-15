@@ -1,7 +1,7 @@
-import { ImmutableUpdateFn, loadOne, save, useModel } from '@o/bridge'
+import { loadOne, save, useModel } from '@o/bridge'
 import { StateModel } from '@o/models'
 import { useScopedStateId } from '@o/ui'
-import { isDefined, OR_TIMED_OUT, orTimeout, selectDefined } from '@o/utils'
+import { ImmutableUpdateFn, isDefined, OR_TIMED_OUT, orTimeout, ScopedState, selectDefined } from '@o/utils'
 import produce from 'immer'
 import { useCallback, useState } from 'react'
 
@@ -9,8 +9,6 @@ import { useCallback, useState } from 'react'
 // if you want to store data that is shared between everyone, use useScopedAppState
 // if you want to store data just for the individual user,
 //   (like positional state, where they are in the UI), use this
-
-export type ScopedState<A> = [A, ImmutableUpdateFn<A>]
 
 export function useUserState<A>(
   id: string | false,

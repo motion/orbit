@@ -20,7 +20,7 @@ export const useScopedStateId = () => {
   return (val && val.id) || ''
 }
 
-export const ScopedState = memo((props: ScopedStateProps & { children?: any }) => {
+export const ScopeState = memo((props: ScopedStateProps & { children?: any }) => {
   const existing = Context.useProps()
   return (
     <Context.PassProps id={`${existing ? existing.id : ''}${props.id}`}>

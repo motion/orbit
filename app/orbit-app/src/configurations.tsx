@@ -1,4 +1,6 @@
+import { loadOne } from '@o/bridge'
 import { AppIcon, Bit, configureKit, customItems, getAppDefinition, useAppState, useUserState } from '@o/kit'
+import { BitModel } from '@o/models'
 import { configureUseStore } from '@o/use-store'
 import { configure as configureMobx } from 'mobx'
 import page from 'page'
@@ -46,6 +48,9 @@ export function runConfigurations() {
         return <AppIcon identifier={bit.appIdentifier} colors={app.colors} />
       }
       return bit.appIdentifier
+    },
+    async loadBit(id: number) {
+      return await loadOne(BitModel, { args: { where: { id } } })
     },
   })
 

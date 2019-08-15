@@ -1,4 +1,6 @@
-import { PersistedStateOptions, ScopedState, usePersistedScopedState } from './useUserState'
+import { ScopedState } from '@o/utils'
+
+import { PersistedStateOptions, usePersistedScopedState } from './useUserState'
 
 export function useAppState<A>(
   id: string | false,

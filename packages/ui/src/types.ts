@@ -5,9 +5,6 @@
  * @format
  */
 
-//  allows draft function, or just passing in next value directly
-export type ImmutableUpdateFn<A> = (cb: ((draft: A) => A | void) | any) => void
-
 export type GenericComponent<T> = React.ComponentClass<T> | React.SFC<T>
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>

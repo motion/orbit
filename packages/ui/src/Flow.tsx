@@ -4,7 +4,7 @@ import React, { Children, FunctionComponent, isValidElement, memo, useLayoutEffe
 import { Button } from './buttons/Button'
 import { Center } from './Center'
 import { Config } from './helpers/configureUI'
-import { ScopeState } from './helpers/ScopedState'
+import { ScopeState } from './helpers/ScopeState'
 import { Section, SectionProps } from './Section'
 import { Slider } from './Slider'
 import { SliderPane } from './SliderPane'

@@ -17,7 +17,9 @@ export async function commandInstall(
   options: CommandInstallOptions,
   helpers?: CommandOpts,
 ): Promise<StatusReply> {
-  attachLogToCommand(log, helpers)
+  if (helpers) {
+    attachLogToCommand(log, helpers)
+  }
   log.info(`commandInstall ${options.directory} ${options.identifier}`)
 
   const command = await yarnOrNpm()

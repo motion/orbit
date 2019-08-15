@@ -306,7 +306,6 @@ const FlowStepSetup = memo(() => {
   const flow = useFlow()
 
   if (!flow.data) {
-    debugger
     throw new Error('No Data?')
   }
 

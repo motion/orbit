@@ -488,13 +488,19 @@ class AppCardStore {
   shouldRender = false
 
   renderApp = react(
-    () => [this.isIntersected, appsCarouselStore.isAnimating],
-    async ([isIntersected, isAnimating], { sleep }) => {
+    () => [
+      this.isIntersected,
+      appsCarouselStore.isAnimating,
+      appsCarouselStore.state.zoomedOut === false,
+    ],
+    async ([isIntersected, isAnimating, zoomedIn], { sleep }) => {
       ensure('not animating', !isAnimating)
       ensure('is intersected', isIntersected)
-      await whenIdle()
-      await sleep(50)
-      await whenIdle()
+      if (!zoomedIn) {
+        await whenIdle()
+        await sleep(50)
+        await whenIdle()
+      }
       this.shouldRender = true
     },
   )

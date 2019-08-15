@@ -223,7 +223,7 @@ export const OrbitSearchResults = memo(() => {
         <View
           data-is="OrbitSearchResults-Index"
           zIndex={200}
-          width="39%"
+          width="36%"
           transition="all ease 300ms"
           background="linear-gradient(to right, rgba(0,0,0,0.3) 15%, transparent 90%)"
           opacity={carousel.zoomedIn ? 0 : 1}
@@ -233,7 +233,7 @@ export const OrbitSearchResults = memo(() => {
           <FullScreen
             transition="all ease 300ms"
             transformOrigin="left center"
-            paddingRight="10%"
+            paddingRight="5%"
             {...carouselProps}
           >
             <Theme theme={highlightTheme}>

@@ -4,8 +4,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react, useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 import { createRef, useRef } from 'react'
+import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
@@ -365,7 +365,7 @@ const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   zIndex: -1,
   transition: 'all ease-in 300ms',
 }).theme(({ isActive }, theme) => ({
-  background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
+  // background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
 }))
 
 const HeaderContain = gloss<RowProps & { isActive?: boolean; isDeveloping: boolean }>(Row, {

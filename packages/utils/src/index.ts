@@ -6,6 +6,12 @@ export * from './randomWords'
 
 export const Lock = AwaitLock
 
+// type helpers, a little awkward here
+// enforce immutable style updates otherwise you hit insane cache issus
+export type UpdateFn<A> = (draft: A) => A | void
+export type ImmutableUpdateFn<A> = (cb: UpdateFn<A> | string | number | boolean | Object) => any
+export type ScopedState<A> = [A, ImmutableUpdateFn<A>]
+
 /**
  * Remove last X items from array (without mutating).
  */

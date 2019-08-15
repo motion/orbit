@@ -54,6 +54,8 @@ export type ConfigureUIProps = {
     title?: Partial<TitleProps> | null
     text?: Partial<SimpleTextProps> | null
   }
+
+  loadBit?: (id: number) => Promise<Bit>
 }
 
 export type CustomItemView = FunctionComponent<ListItemViewProps & { item: Bit }>

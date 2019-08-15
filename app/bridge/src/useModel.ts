@@ -1,15 +1,11 @@
 import { Model } from '@o/mediator'
-import { isDefined, OR_TIMED_OUT, orTimeout, shouldDebug } from '@o/utils'
+import { ImmutableUpdateFn, isDefined, OR_TIMED_OUT, orTimeout, shouldDebug } from '@o/utils'
 import produce from 'immer'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { queueUpdate } from './batchUpdate'
 import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from './Mediator'
-
-// enforce immutable style updates otherwise you hit insane cache issus
-type UpdateFn<A> = (draft: A) => A | void
-export type ImmutableUpdateFn<A> = (cb: UpdateFn<A> | string | number | boolean | Object) => any
 
 export type UseModelOptions = {
   defaultValue?: any

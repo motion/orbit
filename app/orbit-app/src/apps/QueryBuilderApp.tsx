@@ -17,7 +17,7 @@ export default createApp({
   app: QueryBuilderApp,
 })
 
-const treeId = 'query-builder4'
+const treeId = 'qba'
 
 // TODO
 
@@ -334,17 +334,19 @@ class QueryBuilderStore {
   }
 
   setMethod(next: string) {
-    this.method = next
-    this.arguments = []
-    this.argumentsVersion++
-    this.placeholders = []
+    if (this.method !== next) {
+      this.method = next
+      this.arguments = []
+      this.argumentsVersion++
+      this.placeholders = []
+    }
   }
 
   updateQuery = react(
     () => this.argumentsVersion,
     async (_, { sleep }) => {
       await sleep(500)
-      console.log('set query', this.resolvedArguments())
+      console.log('TODO set query', this.resolvedArguments())
       // this.setQuery(
       //   `${this.props.method}(${this.resolvedArguments()
       //     .map(argToVal)
@@ -405,7 +407,9 @@ const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
         backgrounded
         titleBorder
         title={props.title}
-        beforeTitle={<Button chromeless icon="chevron-left" onClick={props.navigation.back} />}
+        beforeTitle={
+          <Button alt="flat" circular icon="chevron-left" onClick={props.navigation.back} />
+        }
         titleProps={{
           editable: true,
           autoselect: true,
@@ -485,7 +489,6 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const theme = useTheme()
 
   useEffect(() => {
-    console.log('setting method', method)
     queryBuilder.setMethod(method.name)
   }, [method.name])
 

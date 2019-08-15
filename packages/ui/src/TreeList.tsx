@@ -95,9 +95,8 @@ class TreeListStore {
   }
 
   addItem(item?: Partial<TreeItem>, parentId?: number) {
-    const update = this.treeState[1]
     try {
-      update(next => {
+      this.treeStateUpdate(next => {
         const id = item.id || Math.random()
         next.items[parentId || this.curId()].children.push(id)
         next.items[id] = filterCleanObject({ name: '', children: [], ...item, id })
@@ -143,7 +142,7 @@ class TreeListStore {
     this.addItem({ name, type: 'folder' }, parentId)
   }
 
-  deleteItem(id: number | string) {
+  deleteItem(id: number) {
     this.treeStateUpdate(next => {
       // remove this item
       delete next.items[id]
@@ -190,8 +189,7 @@ class TreeListStore {
 
   setSelectedIndex(index: number) {
     this.userStateUpdate(draft => {
-      const curDepth = draft.depth[draft.depth.length - 1]
-      curDepth.selectedIndex = index
+      draft.depth[draft.depth.length - 1].selectedIndex = index
     })
   }
 
@@ -360,7 +358,7 @@ function TreeListInner(props: TreeListProps) {
 
   const handleDelete = useCallback(
     (item: ListItemProps) => {
-      useTree.deleteItem(item.id)
+      useTree.deleteItem(+item.id)
     },
     [useTree],
   )

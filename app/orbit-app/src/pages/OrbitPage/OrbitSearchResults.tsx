@@ -276,9 +276,9 @@ const OrbitSearchedItem = gloss<BoxProps & { visible: boolean }>(Box, {
   transition: 'all ease 300ms',
   pointerEvents: 'none',
   transform: {
-    rotateY: '10deg',
-    scale: 0.95,
-    x: 100,
+    rotateY: '-4deg',
+    scale: 0.9,
+    x: 15,
   },
   visible: {
     pointerEvents: 'auto',

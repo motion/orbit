@@ -1,5 +1,5 @@
 import { createApp } from '@o/kit'
-import { CenteredText } from '@o/ui'
+import { Card, CenteredText } from '@o/ui'
 import React from 'react'
 
 import { SearchStore } from '../stores/SearchStore'
@@ -17,7 +17,11 @@ export function SearchResultsApp() {
   const item = searchStore.selectedItem
 
   if (item && item.item) {
-    return <BitAppMain id={`${item.item.id}`} />
+    return (
+      <Card margin={14} flex={1} elevation={1.5} sizeRadius={1.2}>
+        <BitAppMain id={`${item.item.id}`} />
+      </Card>
+    )
   }
 
   return <CenteredText>Nothing found</CenteredText>

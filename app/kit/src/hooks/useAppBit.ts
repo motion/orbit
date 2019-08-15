@@ -1,7 +1,7 @@
-import { ImmutableUpdateFn, useModel } from '@o/bridge'
+import { useModel } from '@o/bridge'
 import { AppBit, AppModel } from '@o/models'
 import { ContextualProps, createContextualProps } from '@o/ui'
-import { isDefined, selectDefined } from '@o/utils'
+import { ImmutableUpdateFn, isDefined, selectDefined } from '@o/utils'
 import { merge } from 'lodash'
 
 import { useStoresSimple } from './useStores'

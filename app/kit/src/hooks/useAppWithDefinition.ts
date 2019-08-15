@@ -1,5 +1,5 @@
-import { ImmutableUpdateFn } from '@o/bridge'
 import { AppBit, AppDefinition } from '@o/models'
+import { ImmutableUpdateFn } from '@o/utils'
 
 import { getAppDefinition } from '../helpers/getAppDefinition'
 import { useAppBit } from './useAppBit'

@@ -43,11 +43,10 @@ function BitTitleBar({ bit }: { bit: Bit }) {
   const normalizedItem = normalizeItem(bit)
   const link = normalizedItem.desktopLink || normalizedItem.webLink
   return (
-    <ToolbarChrome space padding={[12, 12]}>
+    <ToolbarChrome space="sm" padding={[12, 12]}>
       {!!normalizedItem.locationLink && (
         <Button
           alt="flat"
-          circular
           iconSize={16}
           onClick={() => {
             openItem(normalizedItem.locationLink!)
@@ -73,7 +72,7 @@ function BitTitleBar({ bit }: { bit: Bit }) {
 
       <View flex={1} />
 
-      <Button alt="flat" circular icon="plus" tooltip="Drag to use in app" />
+      <Button alt="flat" circular size={1.1} icon="plus" tooltip="Drag to use in app" />
     </ToolbarChrome>
   )
 }

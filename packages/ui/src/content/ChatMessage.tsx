@@ -64,9 +64,7 @@ export function ChatMessage(rawProps: ChatMessageProps) {
       {!hideHeader && (
         <Row alignItems="center" cursor="default" padding={[itemProps.oneLine ? 0 : 3, 0]}>
           {itemProps.beforeTitle || null}
-          {!!person && (
-            <ButtonPerson background="transparent" photo={person.photo} name={person.title} />
-          )}
+          {!!person && <ButtonPerson alt="flat" photo={person.photo} name={person.title} />}
           {!itemProps.oneLine && (
             <>
               <div style={{ width: 6 }} />
@@ -80,7 +78,7 @@ export function ChatMessage(rawProps: ChatMessageProps) {
         </Row>
       )}
       <SizedSurface
-        background={theme => theme.backgroundStronger}
+        background={theme => theme.backgroundStronger.setAlpha(0.33)}
         padding={[6, 10]}
         noInnerElement
         sizeRadius={1}

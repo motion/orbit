@@ -1,11 +1,17 @@
-import { loadOne } from '@o/bridge'
+import { ImmutableUpdateFn, loadOne } from '@o/bridge'
 import { BitModel } from '@o/models'
 import { arrayMove } from '@o/react-sortable-hoc'
-import { Button, filterCleanObject, List, ListItemProps, ListProps, Loading, TreeItem, useDeepEqualState, useGet } from '@o/ui'
 import React, { Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { useAppState } from '../hooks/useAppState'
-import { ScopedState, useUserState } from '../hooks/useUserState'
+import { Button } from './buttons/Button'
+import { Config } from './helpers/configureUI'
+import { filterCleanObject } from './helpers/filterCleanObject'
+import { useDeepEqualState } from './hooks/useDeepEqualState'
+import { useGet } from './hooks/useGet'
+import { List, ListProps } from './lists/List'
+import { ListItemProps } from './lists/ListItem'
+import { Loading } from './progress/Loading'
+import { TreeItem } from './Tree'
 
 type TreeItems = { [key in string | number]: TreeItem }
 
@@ -55,6 +61,8 @@ const defaultState: TreeStateStatic = {
     },
   },
 }
+
+type ScopedState<A> = [A, ImmutableUpdateFn<A>]
 
 const getActions = (
   treeState: () => ScopedState<TreeStateStatic>,
@@ -231,14 +239,18 @@ const getStateOptions = (stateType: 'tree' | 'user', props?: TreeListProps) => {
 // persists to app state
 export function useTreeList(subSelect: string | false, props?: TreeListProps): TreeListStore {
   // const stores = useStoresSimple()
-  const ts = useAppState<TreeStateStatic>(
+  const ts = Config.useAppState<TreeStateStatic>(
     subSelect === false ? subSelect : `tl-${subSelect}`,
     {
       items: (props && props.items) || defaultState.items,
     },
     getStateOptions('tree', props),
   )
-  const us = useUserState(`tl-${subSelect}`, defaultUserState, getStateOptions('user', props))
+  const us = Config.useUserState(
+    `tl-${subSelect}`,
+    defaultUserState,
+    getStateOptions('user', props),
+  )
   const getTs = useGet(ts)
   const getUs = useGet(us)
   const actions = useMemo(() => getActions(getTs, getUs /* , stores */), [])
@@ -304,15 +316,12 @@ function TreeListInner(props: TreeListProps) {
   const [loadedItems, setLoadedItems] = useDeepEqualState<ListItemProps[]>([])
   const getOnChange = useGet(onChange)
 
-  console.log('load them', useTree, currentItem.children)
-
   useEffect(() => {
     if (!currentItem) return
     let cancel = false
     Promise.all(items[currentItem.id].children.map(id => loadTreeListItemProps(items[id]))).then(
       next => {
         if (!cancel) {
-          console.log('now loaded', next)
           setLoadedItems(next.filter(Boolean))
         }
       },

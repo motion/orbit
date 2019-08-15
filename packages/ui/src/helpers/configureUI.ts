@@ -11,6 +11,11 @@ import { TitleProps } from '../text/Title'
 import { ImmutableUpdateFn } from '../types'
 import { Bit } from './BitLike'
 
+// TODO duplicate of kit definition
+type PersistedStateOptions = {
+  persist?: 'off'
+}
+
 export type ConfigureUIProps = {
   // configure a custom icon for all surfaces
   // this could be made generic for any part of the ui kit to override
@@ -22,10 +27,18 @@ export type ConfigureUIProps = {
   getItemKey: (item: any, index: number) => string | number
 
   // set a custom persistence function for appState
-  useAppState: <A>(id: string, defaultState: A) => [A, ImmutableUpdateFn<A>]
+  useAppState: <A>(
+    id: string | false,
+    defaultState: A,
+    options?: PersistedStateOptions,
+  ) => [A, ImmutableUpdateFn<A>]
 
   // set a custom persistence function for userState
-  useUserState: <A>(id: string, defaultState: A) => [A, ImmutableUpdateFn<A>]
+  useUserState: <A>(
+    id: string | false,
+    defaultState: A,
+    options?: PersistedStateOptions,
+  ) => [A, ImmutableUpdateFn<A>]
 
   // you can control how list items and bits render
   customItems: {

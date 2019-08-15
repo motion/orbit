@@ -4,8 +4,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react, useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
+import { createRef, useRef } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
@@ -209,7 +209,7 @@ export const OrbitHeader = memo(() => {
       <BorderBottom
         borderColor={(isDeveloping && theme.headerBorderBottom) || theme.borderColor}
         zIndex={0}
-        opacity={0.5}
+        opacity={0.3}
       />
     </OrbitHeaderContainer>
   )

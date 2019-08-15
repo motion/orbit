@@ -1,6 +1,6 @@
 import { useModels } from '@o/bridge'
 import { Bit, BitModel } from '@o/models'
-import { ChatMessages, Section } from '@o/ui'
+import { ChatMessages, Col, Section } from '@o/ui'
 import * as React from 'react'
 
 import { AppBitMainProps } from '../types/AppTypes'
@@ -8,11 +8,11 @@ import { BitStatusBar } from '../views/BitStatusBar'
 
 const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
   return (
-    <>
+    <Col space>
       {(bits || []).map(bit => {
         return <ChatMessages key={bit.id} messages={bit.data.messages} people={bit.people} />
       })}
-    </>
+    </Col>
   )
 }
 

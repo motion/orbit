@@ -1,5 +1,5 @@
-import { AppContentView, AppNavigator, AppViewProps, createApp, NavigatorProps, TreeList, useSearchState, useTreeList } from '@o/kit'
-import { Dock, DockButton, randomAdjective, randomNoun, TitleRow } from '@o/ui'
+import { AppContentView, AppNavigator, AppViewProps, createApp, NavigatorProps, useSearchState } from '@o/kit'
+import { Dock, DockButton, randomAdjective, randomNoun, TitleRow, TreeList, useTreeList } from '@o/ui'
 import { capitalize } from 'lodash'
 import React from 'react'
 

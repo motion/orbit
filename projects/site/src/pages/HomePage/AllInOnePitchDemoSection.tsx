@@ -226,14 +226,14 @@ export default function NeckSection() {
                 <PillButton>How</PillButton>
               </FadeChild>
               <FadeChild delay={200}>
-                <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>All together</TitleText>
+                <TitleText size={useScreenVal('lg', 'xl', 'xxl')}>All together</TitleText>
               </FadeChild>
               <TitleTextSub ref={ref as any} margin="auto" minWidth={320}>
                 <FadeChild style={screen === 'small' ? { display: 'inline' } : null} delay={300}>
-                  &nbsp;Beautiful, simple to write apps that feel native.&nbsp;
+                  &nbsp;Orbit gives you everything you need to create custom apps.&nbsp;
                 </FadeChild>
                 <FadeChild style={screen === 'small' ? { display: 'inline' } : null} delay={450}>
-                  Runs on your desktop, deploys to your intranet.
+                  With data sources, views and more, you control the code.
                 </FadeChild>
               </TitleTextSub>
             </>

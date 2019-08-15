@@ -1,6 +1,6 @@
 import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, loadOne, react, save, Templates, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple } from '@o/kit'
 import { bitContentHash } from '@o/libs'
-import { ApiArgType, AppMetaCommand, Bit, BitModel, CallAppBitApiMethodCommand } from '@o/models'
+import { ApiArgType, AppBit, AppMetaCommand, Bit, BitModel, CallAppBitApiMethodCommand } from '@o/models'
 import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TitleRow, Toggle, TreeList, useGet, useTheme, useTreeList } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
@@ -22,6 +22,11 @@ const treeId = 'qba'
 
 // TODO this can be shared by workers-kit/syncers and put in Kit
 class AppBitsStore {
+  // @ts-ignore
+  props: {
+    app?: AppBit
+  }
+
   create(bit: Bit) {
     return save(BitModel, bit)
   }
@@ -35,14 +40,23 @@ class AppBitsStore {
         `Must provide originalId, which you can choose, in order to determine uniqueness`,
       )
     }
+    if (!this.props.app) {
+      throw new Error(`Must use within an app`)
+    }
+    const appId = this.props.app.id!
+    const appIdentifier = this.props.app.identifier!
     const existing = await loadOne(BitModel, {
       args: {
         where: {
+          appId,
+          appIdentifier,
           originalId: bit.originalId,
         },
       },
     })
     const next = {
+      appIdentifier,
+      appId,
       ...(existing || null),
       ...bit,
     }
@@ -52,7 +66,6 @@ class AppBitsStore {
     })
   }
 }
-
 function useAppBits(args?: FindOptions<Bit>) {
   const app = useApp()
   const [bits] = useModels(BitModel, {
@@ -62,7 +75,7 @@ function useAppBits(args?: FindOptions<Bit>) {
       appId: app.id,
     },
   })
-  const store = useStoreSimple(AppBitsStore)
+  const store = useStoreSimple(AppBitsStore, { app })
   return [bits, store] as const
 }
 
@@ -106,6 +119,7 @@ function QueryBuilderApp() {
           title: item.name,
           originalId: `${item.id}`,
           icon: `${definition.icon}`,
+          type: 'query'
         })
       }
     }

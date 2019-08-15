@@ -14,6 +14,7 @@
     "@o/mediator": "^2.6.0",
     "@o/models": "^2.6.0",
     "@o/utils": "^2.6.0",
+    "@o/libs": "*",
     "dompurify": "^1.0.7",
     "jsdom": "^11.12.0",
     "lodash": "4.17.11",

@@ -1,6 +1,6 @@
 import { Cosal } from '@o/cosal'
 import { Logger } from '@o/logger'
-import { AppEntity, Bit, SearchQuery } from '@o/models'
+import { AppEntity, Bit, BitEntity, SearchQuery } from '@o/models'
 import { uniqBy } from 'lodash'
 import { getRepository } from 'typeorm'
 
@@ -19,17 +19,17 @@ export class SearchResultResolver {
   private apps: AppEntity[] = []
   private cosalBitIds: number[] = []
 
-  constructor(cosal: Cosal, args: SearchQuery) {
-    this.args = args
+  constructor(cosal: Cosal) {
     this.cosal = cosal
-    this.log = new Logger('search (' + (args.query ? args.query + ', ' : '') + ')')
-    this.queryExecutor = new SearchQueryExecutor(this.log)
   }
 
   /**
    * Resolves search result based on a given search args.
    */
-  async resolve() {
+  async execute(args: SearchQuery) {
+    this.args = args
+    this.log = new Logger('search (' + (args.query ? args.query + ', ' : '') + ')')
+    this.queryExecutor = new SearchQueryExecutor(this.log)
     this.log.vtimer('search', this.args)
     this.apps = await getRepository(AppEntity).find({ spaces: { id: this.args.spaceId } })
     this.cosalBitIds = await this.searchCosalIds()
@@ -65,8 +65,31 @@ export class SearchResultResolver {
     const appIds = this.apps.map(app => app.id)
     this.log.verbose(`search, num apps`, this.apps.length, this.args)
 
-    // parallel search both fts and cosal
-    const [ftsResults, cosalResults] = await Promise.all([
+    // find exact matches
+    const exactBitIds = this.args.query
+      ? await getRepository(BitEntity).find({
+          select: ['id'],
+          where: {
+            title: {
+              $like: `%${this.args.query}%`.toLowerCase(),
+            },
+          },
+          take: 10,
+        })
+      : []
+
+    // parallel search
+    const [exactResults, ftsResults, cosalResults] = await Promise.all([
+      this.queryExecutor.execute({
+        ...this.args,
+        startDate: this.startDate,
+        endDate: this.endDate,
+        query: undefined,
+        ids: exactBitIds.map(x => x.id),
+        appIds,
+        take: 10,
+        skip: 0,
+      }),
       this.queryExecutor.execute({
         ...this.args,
         startDate: this.startDate,
@@ -87,6 +110,7 @@ export class SearchResultResolver {
       }),
     ])
 
+    const [exactBits] = exactResults
     const [ftsBits] = ftsResults
     const [cosalBits] = await cosalResults
 
@@ -106,7 +130,7 @@ export class SearchResultResolver {
     }
 
     // lastly return bits
-    const allBits = uniqBy([...matchedBits, ...restBits, ...cosalBits], 'id')
+    const allBits = uniqBy([...exactBits, ...matchedBits, ...restBits, ...cosalBits], 'id')
     return allBits
   }
 }

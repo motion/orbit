@@ -40,6 +40,7 @@ const darkAlternates: ThemeSet = {
   success: darkAltLight.lightGreen,
   action: fromStyles({
     background: selectedColor.lighten(0.2),
+    buttonBackground: linearGradient(selectedColor.lighten(0.3), selectedColor),
     color: '#fff',
   }),
   selected: colorize({

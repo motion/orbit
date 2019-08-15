@@ -121,6 +121,7 @@ export class OrbitDesktopRoot {
   webServer: WebServer
   bonjour: bonjour.Bonjour
   bonjourService: bonjour.Service
+  searchResultResolver: SearchResultResolver
 
   // managers
   workspaceManager: WorkspaceManager
@@ -162,7 +163,6 @@ export class OrbitDesktopRoot {
           await this.databaseManager.start()
         },
         async () => {
-          console.log('create workspace manager')
           this.workspaceManager = new WorkspaceManager(this.mediatorServer, {
             singleUseMode,
           })
@@ -197,6 +197,7 @@ export class OrbitDesktopRoot {
             // search index
             this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
             await this.cosalManager.start()
+            this.searchResultResolver = new SearchResultResolver(this.cosalManager.cosal)
           }
         },
         async () => {
@@ -401,7 +402,7 @@ export class OrbitDesktopRoot {
         })(),
         ...getCosalResolvers(cosal),
         resolveMany(SearchResultModel, async args => {
-          return await new SearchResultResolver(cosal, args).resolve()
+          return await this.searchResultResolver.execute(args)
         }),
         getSalientWordsResolver(cosal),
         resolveCommand(ResetDataCommand, async () => {

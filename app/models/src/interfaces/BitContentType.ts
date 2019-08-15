@@ -6,6 +6,7 @@ export type BitContentType =
   | 'website'
   | 'person'
   | 'folder'
+  | string
 
 export const BitContentTypes: BitContentType[] = [
   'task',

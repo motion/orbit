@@ -22,7 +22,7 @@ export function ListsAppIndex(props: NavigatorProps) {
   useSearchState({
     onChange(search) {
       if (search.query.length) {
-        treeList.actions.addFolder(search.query)
+        treeList.addFolder(search.query)
       }
     },
     onEvent: 'enter',
@@ -46,7 +46,7 @@ export function ListsAppIndex(props: NavigatorProps) {
           id="add"
           icon="plus"
           onClick={() => {
-            treeList.actions.addItem({
+            treeList.addItem({
               name: `${capitalize(randomAdjective())} ${capitalize(randomNoun())}`,
             })
           }}
@@ -82,7 +82,7 @@ function ListsAppMainFolder(props: AppViewProps) {
       sortable
       onDrop={useCallback(items => {
         console.log('dropped an item', items)
-        treeList.actions.addItemsFromDrop(items)
+        treeList.addItemsFromDrop(items)
       }, [])}
     />
   )

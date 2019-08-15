@@ -1,4 +1,6 @@
 
+-- make workers wait for app to finish startup before starting
+
 ---
 
 useState hooks:

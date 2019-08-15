@@ -1,4 +1,4 @@
-import { createApp } from '@o/kit'
+import { createApp, ensure, useReaction } from '@o/kit'
 import { Card, CenteredText } from '@o/ui'
 import React from 'react'
 
@@ -13,8 +13,13 @@ export default createApp({
 })
 
 export function SearchResultsApp() {
-  const searchStore = SearchStore.useStore()!
-  const item = searchStore.selectedItem
+  const searchStore = SearchStore.useStore(undefined, { react: false })!
+  const item = useReaction(() => {
+    const item = searchStore.selectedItem
+    ensure('item', !!item)
+    ensure('not app', !item!.extraData || !item!.extraData.app)
+    return item
+  })
 
   if (item && item.item) {
     return (

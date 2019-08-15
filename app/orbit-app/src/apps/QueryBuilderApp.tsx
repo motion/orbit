@@ -1,5 +1,6 @@
-import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, react, save, Templates, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple } from '@o/kit'
-import { ApiArgType, AppMetaCommand, Bit, BitModel, CallAppBitApiMethodCommand } from '@o/models'
+import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, loadOne, react, save, Templates, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple } from '@o/kit'
+import { bitContentHash } from '@o/libs'
+import { ApiArgType, AppBit, AppMetaCommand, Bit, BitModel, CallAppBitApiMethodCommand } from '@o/models'
 import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TitleRow, Toggle, TreeList, useGet, useTheme, useTreeList } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
@@ -17,22 +18,57 @@ export default createApp({
   app: QueryBuilderApp,
 })
 
-const treeId = 'query-builder4'
+const treeId = 'qba'
 
-// TODO
-
+// TODO this can be shared by workers-kit/syncers and put in Kit
 class AppBitsStore {
-  create(bit: Partial<Bit> & Pick<Bit, 'id'>) {
+  // @ts-ignore
+  props: {
+    app?: AppBit
+  }
+
+  create(bit: Bit) {
     return save(BitModel, bit)
   }
-  update(bit: Partial<Bit>) {
+  update(bit: Partial<Bit> & Pick<Bit, 'originalId'>) {
     return save(BitModel, bit)
   }
-  createOrUpdate(bit: Partial<Bit> & Pick<Bit, 'id'>) {
-    return save(BitModel, bit)
+  // TODO we need to scope this to the current app automatically!
+  async createOrUpdate(bit: Partial<Bit> & Pick<Bit, 'originalId'>) {
+    if (!bit.originalId) {
+      throw new Error(
+        `Must provide originalId, which you can choose, in order to determine uniqueness`,
+      )
+    }
+    if (!this.props.app) {
+      throw new Error(`Must use within an app`)
+    }
+    const appId = this.props.app.id
+    const appIdentifier = this.props.app.identifier
+    if (!appId || !appIdentifier) {
+      throw new Error(`Missing appId or appIdentifier`)
+    }
+    const existing = await loadOne(BitModel, {
+      args: {
+        where: {
+          appId,
+          appIdentifier,
+          originalId: bit.originalId,
+        },
+      },
+    })
+    const next = {
+      appIdentifier,
+      appId,
+      ...(existing || null),
+      ...bit,
+    }
+    return await save(BitModel, {
+      contentHash: bitContentHash(next),
+      ...next,
+    })
   }
 }
-
 function useAppBits(args?: FindOptions<Bit>) {
   const app = useApp()
   const [bits] = useModels(BitModel, {
@@ -42,7 +78,7 @@ function useAppBits(args?: FindOptions<Bit>) {
       appId: app.id,
     },
   })
-  const store = useStoreSimple(AppBitsStore)
+  const store = useStoreSimple(AppBitsStore, { app })
   return [bits, store] as const
 }
 
@@ -74,13 +110,22 @@ function QueryBuilderApp() {
 
   // TODO NEXT
   // want to persist queries to bits
-  const [bits, actions] = useAppBits()
+  const [_bits, actions] = useAppBits()
   useEffect(() => {
     console.log('persist them to bits', treeList.state!.items!)
-    // for (const id of Object.keys(treeList.state!.items!)) {
-    //   const item = treeList.state!.items![id]
-    //   actions.createOrUpdate({})
-    // }
+    for (const id of Object.keys(treeList.state!.items!)) {
+      const item = treeList.state!.items![id]
+      if (item && item.data && item.data.identifier) {
+        const definition = getAppDefinition(`${item.data.identifier}`)
+        console.log('create a bit', item)
+        actions.createOrUpdate({
+          title: item.name,
+          originalId: `${item.id}`,
+          icon: `${definition.icon}`,
+          type: 'query',
+        })
+      }
+    }
   }, [treeList.state.items])
 
   // map id => navigator stack so we persist it per-item in the list
@@ -171,7 +216,7 @@ function QueryBuilderIndex({
           icon="plus"
           onClick={() => {
             const name = `${capitalize(randomAdjective())} ${capitalize(randomNoun())}`
-            treeList.actions.addItem({
+            treeList.addItem({
               name,
               data: {
                 identifier: '',
@@ -195,7 +240,7 @@ function QueryBuilderMain({
         console.log('navigating to', item, treeList)
         if (!item) return
         // const icon = getAppDefinition(item.id)
-        treeList.actions.updateSelectedItem({
+        treeList.updateSelectedItem({
           data: {
             identifier: item.props!.subType || '',
           },
@@ -333,17 +378,19 @@ class QueryBuilderStore {
   }
 
   setMethod(next: string) {
-    this.method = next
-    this.arguments = []
-    this.argumentsVersion++
-    this.placeholders = []
+    if (this.method !== next) {
+      this.method = next
+      this.arguments = []
+      this.argumentsVersion++
+      this.placeholders = []
+    }
   }
 
   updateQuery = react(
     () => this.argumentsVersion,
     async (_, { sleep }) => {
       await sleep(500)
-      console.log('set query', this.resolvedArguments())
+      console.log('TODO set query', this.resolvedArguments())
       // this.setQuery(
       //   `${this.props.method}(${this.resolvedArguments()
       //     .map(argToVal)
@@ -404,7 +451,9 @@ const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
         backgrounded
         titleBorder
         title={props.title}
-        beforeTitle={<Button chromeless icon="chevron-left" onClick={props.navigation.back} />}
+        beforeTitle={
+          <Button alt="flat" circular icon="chevron-left" onClick={props.navigation.back} />
+        }
         titleProps={{
           editable: true,
           autoselect: true,
@@ -484,7 +533,6 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const theme = useTheme()
 
   useEffect(() => {
-    console.log('setting method', method)
     queryBuilder.setMethod(method.name)
   }, [method.name])
 

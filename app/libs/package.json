@@ -11,6 +11,7 @@
   "dependencies": {
     "@o/config": "^2.6.0",
     "@o/fast-compare": "^2.6.0",
-    "@o/models": "^2.6.0"
+    "@o/models": "^2.6.0",
+    "@o/utils": "*"
   }
 }

@@ -14,7 +14,7 @@
     "clean": "bin/clean",
     "clean:packages": "bin/clean --all",
     "start": "npm run fix-permissions && cd example-workspace && orbit ws --logLevel 1",
-    "start:dev": "npm run fix-permissions && cd example-workspace && orbit ws --dev --logLevel 2",
+    "start:dev": "npm run fix-permissions && cd example-workspace && orbit ws --dev",
     "start:dev:clean": "npm run fix-permissions && cd example-workspace && orbit ws --dev --logLevel 2 --clean",
     "start:dev:verbose": "cd example-workspace && orbit ws --dev --logLevel 3",
     "start:dev:noworkers": "(cd example-workspace && DISABLE_WORKERS=true orbit ws --dev --logLevel 1 --dev)",

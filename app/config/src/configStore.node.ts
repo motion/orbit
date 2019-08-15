@@ -6,13 +6,6 @@ import { join } from 'path'
 const log = new Logger('configStore')
 const conf = new ConfigStore(`orbit`, {}, { globalConfigPath: true })
 
-/** { [fullpath]: info } */
-type AppBuildInfo = {
-  [key: string]: {
-    buildId: number
-  }
-}
-
 export const baseWorkspaceDir = join(conf.path, '..', 'base-orbit-workspace')
 
 /**
@@ -20,7 +13,6 @@ export const baseWorkspaceDir = join(conf.path, '..', 'base-orbit-workspace')
  */
 export const configStore = {
   packageManager: createConfig<string>('packageManager'),
-  appBuildInfo: createConfig<AppBuildInfo>('appBuildInfo'),
   lastActiveWorkspace: createConfig<string>('lastActiveWorkspace2', baseWorkspaceDir),
 }
 

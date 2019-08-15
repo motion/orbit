@@ -7,6 +7,7 @@ import { SourceMapConsumer } from 'source-map'
 import stackTrace from 'stack-trace'
 
 export function prepareStackTrace(error, source) {
+  // @ts-ignore
   const map = new SourceMapConsumer(readFileSync(source, `utf8`))
   const stack = stackTrace
     .parse(error)

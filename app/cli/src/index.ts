@@ -43,7 +43,7 @@ function main() {
     .usage('$0 <cmd> [args]')
     .option('logLevel', {
       type: 'number',
-      default: isInMonoRepo ? 1 : 0,
+      default: isInMonoRepo ? 2 : 0,
     })
     .command(
       'new [appName] [template]',
@@ -151,10 +151,6 @@ function main() {
           .option('force', {
             type: 'boolean',
             default: false,
-          })
-          .option('debug-build', {
-            type: 'boolean',
-            default: false,
           }),
       async argv => {
         setVerbose(argv.logLevel)
@@ -164,7 +160,6 @@ function main() {
           projectRoot,
           watch: !!argv.watch,
           force: !!argv.force,
-          debugBuild: !!argv['debug-build'],
         })
       },
     )

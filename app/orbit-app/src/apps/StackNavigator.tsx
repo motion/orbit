@@ -63,7 +63,6 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
     () => stackNav && stackNav.currentItem,
     stackItem => {
       ensure('stackItem', !!stackItem)
-      console.log('calling onNavigate stackItem', stackItem)
       if (props.onNavigate) {
         props.onNavigate(stackItem)
       }
@@ -189,7 +188,7 @@ const filterSimpleValues = obj =>
 
 const StackNavContext = createStoreContext(StackNavigatorStore)
 
-export const useCreateStackNavigator = (props: StackNavProps) => {
+export const useCreateStackNavigator = (props: StackNavProps | false) => {
   // ensure we remount it on id change
   return StackNavContext.useCreateStore(props, [props.id])
 }

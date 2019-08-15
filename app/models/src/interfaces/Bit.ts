@@ -80,6 +80,12 @@ export interface Bit {
   bitCreatedAt?: number
 
   /**
+   * Icon, if you want to set a specific icon on it
+   * Orbit falls back to using the app's icon, or the contentType icon
+   */
+  icon?: string
+
+  /**
    * Time when bit was updated on its origin.
    */
   bitUpdatedAt?: number

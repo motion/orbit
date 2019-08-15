@@ -285,6 +285,11 @@ class OrbitAppsCarouselStore {
       scale: scale * (this.state.isDragging ? 0.95 : 1),
       ry,
       opacity,
+      ...(zoomedIn && {
+        // when zoomed in, go pretty fast to avoid long load
+        config: { mass: 1, tension: 500, friction: 36, velocity: 7 },
+        // config: { duration: 100 }
+      }),
     }
     return next
   }

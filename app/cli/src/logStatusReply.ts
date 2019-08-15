@@ -8,8 +8,9 @@ export function logStatusReply(reply?: StatusReply<any>) {
   }
   if (reply.type === 'success') {
     reporter.info(reply.message, reply.value)
-  }
-  if (reply.type === 'error') {
+  } else if (reply.type === 'error') {
     reporter.error(reply.message, reply.errors ? reply.errors[0] : undefined)
+  } else {
+    reporter.info(`reply? ${reply}`)
   }
 }

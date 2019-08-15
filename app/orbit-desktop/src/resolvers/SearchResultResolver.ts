@@ -19,17 +19,17 @@ export class SearchResultResolver {
   private apps: AppEntity[] = []
   private cosalBitIds: number[] = []
 
-  constructor(cosal: Cosal, args: SearchQuery) {
-    this.args = args
+  constructor(cosal: Cosal) {
     this.cosal = cosal
-    this.log = new Logger('search (' + (args.query ? args.query + ', ' : '') + ')')
-    this.queryExecutor = new SearchQueryExecutor(this.log)
   }
 
   /**
    * Resolves search result based on a given search args.
    */
-  async resolve() {
+  async execute(args: SearchQuery) {
+    this.args = args
+    this.log = new Logger('search (' + (args.query ? args.query + ', ' : '') + ')')
+    this.queryExecutor = new SearchQueryExecutor(this.log)
     this.log.vtimer('search', this.args)
     this.apps = await getRepository(AppEntity).find({ spaces: { id: this.args.spaceId } })
     this.cosalBitIds = await this.searchCosalIds()

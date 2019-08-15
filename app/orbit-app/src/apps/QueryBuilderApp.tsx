@@ -43,8 +43,11 @@ class AppBitsStore {
     if (!this.props.app) {
       throw new Error(`Must use within an app`)
     }
-    const appId = this.props.app.id!
-    const appIdentifier = this.props.app.identifier!
+    const appId = this.props.app.id
+    const appIdentifier = this.props.app.identifier
+    if (!appId || !appIdentifier) {
+      throw new Error(`Missing appId or appIdentifier`)
+    }
     const existing = await loadOne(BitModel, {
       args: {
         where: {
@@ -119,7 +122,7 @@ function QueryBuilderApp() {
           title: item.name,
           originalId: `${item.id}`,
           icon: `${definition.icon}`,
-          type: 'query'
+          type: 'query',
         })
       }
     }

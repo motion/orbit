@@ -185,3 +185,7 @@ const SortableTabs = SortableContainer(({ items, ...restProps }: SortableTabsPro
     </Row>
   )
 })
+
+SortableTabs.defaultProps = {
+  helperClass: 'sortableHelper',
+}

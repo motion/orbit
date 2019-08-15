@@ -55,6 +55,9 @@ const SortableGridInner = SortableContainer(
     )
   },
 )
+SortableGridInner.defaultProps = {
+  helperClass: 'sortableHelper',
+}
 
 export function SortableGrid<A>(props: SortableGridProps<A>) {
   return (

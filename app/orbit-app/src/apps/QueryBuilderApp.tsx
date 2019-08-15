@@ -72,7 +72,7 @@ function QueryBuilderApp() {
 
   const treeList = useTreeList(treeId)
 
-  // TODO
+  // TODO NEXT
   // want to persist queries to bits
   const [bits, actions] = useAppBits()
   useEffect(() => {

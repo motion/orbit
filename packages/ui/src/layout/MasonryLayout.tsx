@@ -35,6 +35,9 @@ export function MasonryLayout({ children, padding, ...props }: MasonryLayoutProp
 }
 
 const SortableResponsive = SortableContainer(AutoResponsive) as any
+SortableResponsive.defaultProps = {
+  helperClass: 'sortableHelper',
+}
 
 export type GridLayoutItemProps = {
   width: number

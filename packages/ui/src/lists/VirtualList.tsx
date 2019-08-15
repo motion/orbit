@@ -47,6 +47,9 @@ export type VirtualListProps<A = any> = SelectableProps &
   }
 
 const SortableList = SortableContainer(SelectableDynamicList, { withRef: true })
+SortableList.defaultProps = {
+  helperClass: 'sortableHelper',
+}
 
 const { useProps } = createContextualProps<Partial<VirtualListProps>>()
 

@@ -104,13 +104,13 @@ export class Cosal {
 
     // load database...
     if (this.databasePath) {
-      await this.setDatabase(this.databasePath)
+      await this.loadDatabase(this.databasePath)
     }
 
     this.started = true
   }
 
-  async setDatabase(database: string) {
+  async loadDatabase(database: string) {
     this.databasePath = database
 
     if (!(await pathExists(database))) {
@@ -251,6 +251,7 @@ export class Cosal {
 
   async persist() {
     if (this.databasePath) {
+      log.verbose(`Persisting cosal database at ${this.databasePath}`)
       await writeJSON(this.databasePath, this.state)
       await annoyScan({ db: 'records', path: this.databasePath })
     }

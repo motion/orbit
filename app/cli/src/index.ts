@@ -43,7 +43,7 @@ function main() {
     .usage('$0 <cmd> [args]')
     .option('logLevel', {
       type: 'number',
-      default: isInMonoRepo ? 1 : 0,
+      default: isInMonoRepo ? 2 : 0,
     })
     .command(
       'new [appName] [template]',

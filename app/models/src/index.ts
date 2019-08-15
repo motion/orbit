@@ -30,7 +30,7 @@ export const getSearchableText = (bit: Bit): string => {
     // TODO make a generic conversation bit data type
     const data = bit.data
     return data.messages
-      .map(x => `${x.user} ${x.text}`)
+      .map(x => `${x.user || ''} ${x.text || ''}`)
       .join(' ')
       .trim()
   }

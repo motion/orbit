@@ -35,7 +35,7 @@
     "prompts": "^2.1.0",
     "reconnecting-websocket": "4.1.10",
     "replace-in-file": "^4.1.1",
-    "source-map": "*",
+    "source-map": "0.5.7",
     "stack-trace": "^0.0.10",
     "strip-ansi": "5.0.0",
     "wait-on": "3.3.0-beta.0",

@@ -6,7 +6,7 @@ module.exports = {
   main: {
     plugins: [
       new MonacoWebpackPlugin({
-        languages: ['typescript'],
+        languages: ['typescript', 'sql'],
         features: [
           'bracketMatching',
           'caretOperations',

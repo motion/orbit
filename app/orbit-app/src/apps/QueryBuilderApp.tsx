@@ -1,6 +1,6 @@
 import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, react, save, Templates, TreeList, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple, useTreeList } from '@o/kit'
 import { ApiArgType, AppMetaCommand, Bit, BitModel, CallAppBitApiMethodCommand } from '@o/models'
-import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TitleRow, Toggle, useGet } from '@o/ui'
+import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TitleRow, Toggle, useGet, useTheme } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FindOptions } from 'typeorm'
@@ -51,8 +51,12 @@ function QueryBuilderApp() {
   const dataApps = useActiveDataApps()
   const [items, setItems] = useState<any[]>([])
   const hasItems = !!items.length
+
+  // current highlighted item
   const curItem = items[0]
   const id = (curItem && curItem.id) || -1
+
+  // note: navigator id changes with curItem so we have a fresh stack
   const navigator = useCreateStackNavigator({
     id: `query-builder-nav-${id}-2`,
     items: {
@@ -65,17 +69,22 @@ function QueryBuilderApp() {
       props: {},
     },
   })
+
   const treeList = useTreeList(treeId)
 
-  // TODO
+  // TODO NEXT
   // want to persist queries to bits
   const [bits, actions] = useAppBits()
   useEffect(() => {
-    for (const id of Object.keys(treeList.state!.items!)) {
-      const item = treeList.state!.items![id]
-      actions.createOrUpdate({})
-    }
+    console.log('persist them to bits', treeList.state!.items!)
+    // for (const id of Object.keys(treeList.state!.items!)) {
+    //   const item = treeList.state!.items![id]
+    //   actions.createOrUpdate({})
+    // }
   }, [treeList.state.items])
+
+  // map id => navigator stack so we persist it per-item in the list
+  // const navigatorStack = useAppState(`${treeId}-stack`, {})
 
   useEffect(() => {
     if (!navigator.currentItem) return
@@ -472,6 +481,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const allMethods = Object.keys(apiInfo)
   const [method, setMethod] = useState(apiInfo[allMethods[0]])
   const hasApiInfo = !!meta && !!apiInfo
+  const theme = useTheme()
 
   useEffect(() => {
     console.log('setting method', method)
@@ -542,11 +552,12 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
                   noGutter
                   readOnly
                   value={queryBuilder.query}
+                  language="sql"
                 />
               </Card>
             </Col>
           </Pane>
-          <Pane resizable title="Output" collapsable padding>
+          <Pane background={theme.backgroundStrong} resizable title="Output" collapsable padding>
             <Tabs defaultActive="0">
               <Tab padding key="0" label="Inspect">
                 <DataInspector data={{ data: queryBuilder.result }} />
@@ -561,7 +572,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
           </Pane>
         </Layout>
       </Pane>
-      <Pane display={props.showSidebar ? undefined : 'none'}>
+      <Pane background={theme.backgroundStrong} display={props.showSidebar ? undefined : 'none'}>
         <Layout type="column">
           <Pane
             title="Placeholders"

@@ -161,13 +161,6 @@ function use<ModelType, Args>(
         const promise = new Promise(res => {
           const finish = next => {
             clearTimeout(tm)
-            if (!isDefined(next)) {
-              // i'm seeing this on useJobs() where none exist
-              // so lets assume this means "emtpy" and return default value
-              console.warn('we need to debug why this happens', query, key)
-              debugger
-              next = defaultValues[type]
-            }
             if (!resolved) {
               resolved = true
               valueRef.current = next

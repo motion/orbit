@@ -304,12 +304,15 @@ function TreeListInner(props: TreeListProps) {
   const [loadedItems, setLoadedItems] = useDeepEqualState<ListItemProps[]>([])
   const getOnChange = useGet(onChange)
 
+  console.log('load them', useTree, currentItem.children)
+
   useEffect(() => {
     if (!currentItem) return
     let cancel = false
     Promise.all(items[currentItem.id].children.map(id => loadTreeListItemProps(items[id]))).then(
       next => {
         if (!cancel) {
+          console.log('now loaded', next)
           setLoadedItems(next.filter(Boolean))
         }
       },
@@ -317,7 +320,7 @@ function TreeListInner(props: TreeListProps) {
     return () => {
       cancel = true
     }
-  }, [items, currentItem && currentItem.id, ...(currentItem.children || [])])
+  }, [items, currentItem && currentItem.id, (currentItem.children || []).join('')])
 
   // onChange callback
   const ignoreInitial = useRef(true)

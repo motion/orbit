@@ -20,8 +20,8 @@ const darkAltLight: ThemeSet = Object.keys(alternates).reduce((acc, key) => {
   // for dark theme, make "light" themes darker
   if (key.indexOf('light') === 0) {
     acc[key] = fromStyles({
-      background: alternates[key].background!.darken(0.25),
-      borderColor: alternates[key].borderColor!.darken(0.3),
+      background: alternates[key].background!.darken(0.32),
+      borderColor: alternates[key].borderColor!.darken(0.375),
       color: '#fff',
     })
   }
@@ -98,12 +98,15 @@ Object.assign(
   dark,
   colorize({
     sidebarBackground: [15, 15, 15],
-    sidebarBackgroundTransparent: [15, 15, 15, 0.2],
+    sidebarBackgroundTransparent: [15, 15, 15, 0.4],
     sidebarBorderColor: '#444',
     headerBorderBottom: '#151515',
     headerBackground: linearGradient([0, 0, 0, 0.1], [0, 0, 0, 0.2]),
     headerBackgroundOpaque: linearGradient('#3f3f3f', '#353535'),
-    orbitHeaderBackgroundEditing: linearGradient(selectedColor, selectedColor.darken(0.1)),
+    orbitHeaderBackgroundEditing: linearGradient(
+      selectedColor.lighten(0.1).setAlpha(0.5),
+      selectedColor.setAlpha(0.5),
+    ),
     orbitInputBackgroundEditing: [0, 0, 0, 0.2],
     headerFadeBackground: linearGradient(
       'to right',

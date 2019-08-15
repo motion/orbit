@@ -266,14 +266,6 @@ export function parseSearchQuery(query: string): NLPResponse {
   }
 }
 
-// if (typeof window !== 'undefined') {
-//   window.nlp = {
-//     parseSearchQuery: x => JSON.stringify(parseSearchQuery(x), null, 2),
-//     setUserNames: setUserNames,
-//     state: state,
-//   }
-// }
-
 export function setUserNames(fullNames = []) {
   const cleanNames = fullNames
     .map(name => name.replace(/[^a-zA-Z\s]/g, '').trim())
@@ -294,5 +286,6 @@ export default function initNlp() {
   return {
     setUserNames,
     parseSearchQuery,
+    state,
   }
 }

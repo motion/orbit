@@ -164,6 +164,7 @@ export const VirtualList = memo((virtualProps: VirtualListProps) => {
       itemData={createItemData(props.items, selectableStore, props)}
       shouldCancelStart={isRightClick}
       lockAxis="y"
+      helperClass="sortableHelper"
       {...props}
       pressDelay={getPressDelay(props)}
       onSortStart={useCallback(

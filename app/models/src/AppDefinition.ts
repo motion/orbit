@@ -65,12 +65,12 @@ export type AppDefinition<AppData = any, SetupFields extends FormFieldsObj = any
   }
 
   /** Allow registering alternate and item views */
-  views: {
+  views?: {
     [key: string]: any
   }
 
   /** Allow registering item views that let you render views for specific item types */
-  itemViews: {
+  itemViews?: {
     [key: string]: AppViewProps
   }
 }

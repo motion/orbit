@@ -36,7 +36,7 @@
 }
 
 .sortableHelper {
-  z-index: 100000000;
+  z-index: 10000000000000000;
 }
 
 .resizable > span {

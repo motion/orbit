@@ -26,6 +26,7 @@ export function MasonryLayout({ children, padding, ...props }: MasonryLayoutProp
         itemMargin={10}
         gridWidth={20}
         containerWidth={size.width}
+        helperClass="sortableHelper"
         {...props}
       >
         {children}

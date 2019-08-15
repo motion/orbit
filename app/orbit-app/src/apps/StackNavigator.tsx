@@ -188,5 +188,10 @@ const filterSimpleValues = obj =>
   pickBy(obj, val => typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean')
 
 const StackNavContext = createStoreContext(StackNavigatorStore)
-export const useCreateStackNavigator = StackNavContext.useCreateStore
+
+export const useCreateStackNavigator = (props: StackNavProps) => {
+  // ensure we remount it on id change
+  return StackNavContext.useCreateStore(props, [props.id])
+}
+
 export const useStackNavigator = StackNavContext.useStore

@@ -167,8 +167,8 @@ export const OrbitDock = memo(() => {
         ))}
         <FullScreen
           data-is="DockShadow"
-          top={20}
-          bottom={20}
+          top={50}
+          bottom={30}
           left="50%"
           right="50%"
           transform={{
@@ -177,8 +177,8 @@ export const OrbitDock = memo(() => {
           borderRadius={100}
           boxShadow={[
             {
-              spread: 40,
-              blur: 80,
+              spread: 60,
+              blur: 70,
               color: theme.background.isDark() ? [30, 30, 30, 0.68] : [0, 0, 0, 0.25],
             },
           ]}

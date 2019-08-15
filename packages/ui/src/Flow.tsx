@@ -4,7 +4,7 @@ import React, { Children, FunctionComponent, isValidElement, memo, useLayoutEffe
 import { Button } from './buttons/Button'
 import { Center } from './Center'
 import { Config } from './helpers/configureUI'
-import { ScopedState } from './helpers/ScopedState'
+import { ScopeState } from './helpers/ScopedState'
 import { Section, SectionProps } from './Section'
 import { Slider } from './Slider'
 import { SliderPane } from './SliderPane'
@@ -302,7 +302,7 @@ export const Flow: FlowComponent<FlowProps> = memo(
           flowStore={flowStore}
           stepProps={stepProps}
         >
-          <ScopedState id="flow">{stepsRef.current}</ScopedState>
+          <ScopeState id="flow">{stepsRef.current}</ScopeState>
         </Layout>
       </FlowStoreContext.SimpleProvider>
     )

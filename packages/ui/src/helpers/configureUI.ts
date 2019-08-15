@@ -1,5 +1,5 @@
 import { isColorLike, toColor, toColorString } from '@o/color'
-import { fromEntries, isDefined, selectDefined } from '@o/utils'
+import { fromEntries, ImmutableUpdateFn, isDefined, selectDefined } from '@o/utils'
 import { configureCSS, configureGloss } from 'gloss'
 import sum from 'hash-sum'
 import { Context, createContext, FunctionComponent, isValidElement, useState } from 'react'
@@ -8,7 +8,6 @@ import { ListItemProps } from '../lists/ListItem'
 import { ListItemViewProps } from '../lists/ListItemViewProps'
 import { SimpleTextProps } from '../text/SimpleText'
 import { TitleProps } from '../text/Title'
-import { ImmutableUpdateFn } from '../types'
 import { Bit } from './BitLike'
 
 // TODO duplicate of kit definition

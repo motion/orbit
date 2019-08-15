@@ -285,7 +285,6 @@ async function loadTreeListItemProps(item?: TreeItem): Promise<ListItemProps> {
           item: await Config.loadBit(+item.id),
         }
       }
-      return item
     default:
       return {
         id: `${item.id}`,

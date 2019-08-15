@@ -1,6 +1,6 @@
 import { isEqual } from '@o/fast-compare'
 import { AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getApps, ProvideStores, RenderAppFn, useAppBit } from '@o/kit'
-import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
+import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopeState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
 import React, { memo, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react'
@@ -63,7 +63,7 @@ export const OrbitApp = memo(
           flex={1}
           pointerEvents={disableInteraction ? 'none' : 'inherit'}
         >
-          <ScopedState id={`app-${identifier}-${id}`}>
+          <ScopeState id={`app-${identifier}-${id}`}>
             <ProvideStores stores={{ appStore }}>
               <ProvideVisibility visible={isActive}>
                 <OrbitAppRender
@@ -75,7 +75,7 @@ export const OrbitApp = memo(
                 />
               </ProvideVisibility>
             </ProvideStores>
-          </ScopedState>
+          </ScopeState>
         </View>
       </Suspense>
     )

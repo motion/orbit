@@ -98,12 +98,15 @@ Object.assign(
   dark,
   colorize({
     sidebarBackground: [15, 15, 15],
-    sidebarBackgroundTransparent: [15, 15, 15, 0.2],
+    sidebarBackgroundTransparent: [15, 15, 15, 0.4],
     sidebarBorderColor: '#444',
     headerBorderBottom: '#151515',
     headerBackground: linearGradient([0, 0, 0, 0.1], [0, 0, 0, 0.2]),
     headerBackgroundOpaque: linearGradient('#3f3f3f', '#353535'),
-    orbitHeaderBackgroundEditing: linearGradient(selectedColor, selectedColor.darken(0.1)),
+    orbitHeaderBackgroundEditing: linearGradient(
+      selectedColor.lighten(0.1).setAlpha(0.35),
+      selectedColor.setAlpha(0.35),
+    ),
     orbitInputBackgroundEditing: [0, 0, 0, 0.2],
     headerFadeBackground: linearGradient(
       'to right',

@@ -4,8 +4,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react, useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
+import { createRef, useRef } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
@@ -341,11 +341,12 @@ HomeButton.acceptsProps = {
 const OrbitHeaderContainer = gloss<any>(View, {
   position: 'relative',
   overflow: 'hidden',
+  transition: 'all ease 300ms',
   zIndex: 0,
 }).theme((props, theme) => ({
   background:
     props.background ||
-    (props.isDeveloping && theme.headerBackgroundOpaque) ||
+    (props.isDeveloping && 'transparent') ||
     theme.headerBackground ||
     theme.background,
 }))
@@ -362,7 +363,7 @@ const HeaderSide = gloss<RowProps & { slim?: boolean }>(Row, {
 
 const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   zIndex: -1,
-  transition: 'all ease-in 500ms',
+  transition: 'all ease-in 300ms',
 }).theme(({ isActive }, theme) => ({
   background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
 }))

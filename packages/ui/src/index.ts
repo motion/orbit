@@ -1,6 +1,3 @@
-// accept hmrs
-module['hot'] && module['hot'].accept()
-
 // until next hotkeys patches types
 export * from './helpers/configureHotKeys'
 export { default as allIcons } from './icons'

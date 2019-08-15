@@ -1,5 +1,5 @@
-import { AppContentView, AppNavigator, AppStatusBar, AppViewProps, createApp, NavigatorProps, useSearchState, useTreeList } from '@o/kit'
-import { Breadcrumb, Breadcrumbs, Dock, DockButton, randomAdjective, randomNoun, StatusBarText, TitleRow, TreeList, View } from '@o/ui'
+import { AppContentView, AppNavigator, AppStatusBar, AppViewProps, createApp, NavigatorProps, useSearchState } from '@o/kit'
+import { Breadcrumb, Breadcrumbs, Dock, DockButton, randomAdjective, randomNoun, StatusBarText, TitleRow, TreeList, useTreeList, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import pluralize from 'pluralize'
 import React, { useCallback } from 'react'

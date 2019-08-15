@@ -10,7 +10,7 @@ export function SubSection({ title, ...sectionProps }: SubSectionProps) {
     <Section
       padding
       title={
-        <Title size="xxs" fontWeight={500}>
+        <Title size="xxs" fontWeight={300}>
           {title}
         </Title>
       }

@@ -126,18 +126,22 @@ export async function bundleApp(options: CommandBuildOptions) {
   let nodeConf: webpack.Configuration | null = null
 
   if (hasKey(appInfo, 'app')) {
-    log.info(`Found web app, building`)
+    log.info(`Found web app`)
     webConf = await getWebAppConfig(entry, pkg.name, options)
   }
 
   if (hasKey(appInfo, 'graph', 'workers', 'api')) {
-    log.info(`Found node app, building`)
+    log.info(`Found node app`)
     nodeConf = await getNodeAppConfig(entry, pkg.name, options)
   }
 
-  await webpackPromise([webConf, nodeConf].filter(Boolean), {
-    loud: verbose,
-  })
+  const configs = [webConf, nodeConf].filter(Boolean)
+  if (configs.length) {
+    log.info(`Building apps...`)
+    await webpackPromise(configs, {
+      loud: verbose,
+    })
+  }
 
   log.info(`Writing out app build information`)
 

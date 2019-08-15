@@ -1,4 +1,3 @@
-import { configStore } from '@o/config'
 import { readPackageJson } from '@o/libs-node'
 import { AppDefinition } from '@o/models'
 import { ensureDir, pathExists, readJSON, writeJSON } from 'fs-extra'
@@ -37,13 +36,6 @@ export async function updateBuildInfo(appRoot: string) {
     app: hasKey(appInfo, 'app'),
     graph: hasKey(appInfo, 'graph'),
     workers: hasKey(appInfo, 'workers'),
-  })
-  const appBuildInfo = configStore.appBuildInfo.get() || {}
-  configStore.appBuildInfo.set({
-    ...appBuildInfo,
-    [appRoot]: {
-      buildId,
-    },
   })
 }
 

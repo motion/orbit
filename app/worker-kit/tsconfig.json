@@ -11,6 +11,7 @@
     { "path": "../../packages/use-store" },
     { "path": "../../packages/fast-compare" },
     { "path": "../config" },
+    { "path": "../libs" },
     { "path": "../models" },
     { "path": "../bridge" }
   ]

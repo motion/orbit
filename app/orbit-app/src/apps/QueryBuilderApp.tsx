@@ -1,4 +1,5 @@
 import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, loadOne, react, save, Templates, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple } from '@o/kit'
+import { bitContentHash } from '@o/libs'
 import { ApiArgType, AppMetaCommand, Bit, BitModel, CallAppBitApiMethodCommand } from '@o/models'
 import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TitleRow, Toggle, TreeList, useGet, useTheme, useTreeList } from '@o/ui'
 import { capitalize } from 'lodash'
@@ -41,7 +42,14 @@ class AppBitsStore {
         },
       },
     })
-    return await save(BitModel, { ...(existing || null), ...bit })
+    const next = {
+      ...(existing || null),
+      ...bit,
+    }
+    return await save(BitModel, {
+      contentHash: bitContentHash(next),
+      ...next,
+    })
   }
 }
 

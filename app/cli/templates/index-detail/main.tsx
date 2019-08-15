@@ -27,7 +27,7 @@ export function AppIndex(props: NavigatorProps) {
   useSearchState({
     onChange(search) {
       if (search.query.length) {
-        treeList.actions.addFolder(search.query)
+        treeList.addFolder(search.query)
       }
     },
     onEvent: 'enter',
@@ -50,7 +50,7 @@ export function AppIndex(props: NavigatorProps) {
           id="add"
           icon="plus"
           onClick={() => {
-            treeList.actions.addItem({
+            treeList.addItem({
               name: `${capitalize(randomAdjective())} ${capitalize(randomNoun())}`,
             })
           }}
@@ -86,7 +86,7 @@ function AppMainFolder(props: AppViewProps) {
       sortable
       onDrop={items => {
         console.log('dropped an item', items)
-        treeList.actions.addItemsFromDrop(items)
+        treeList.addItemsFromDrop(items)
       }}
       onChange={items => {
         console.log('got an update, persist back to main list', items)

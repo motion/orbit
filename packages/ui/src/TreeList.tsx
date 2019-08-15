@@ -1,6 +1,7 @@
 import { arrayMove } from '@o/react-sortable-hoc'
+import { useStore } from '@o/use-store'
 import { ScopedState } from '@o/utils'
-import React, { Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { Suspense, useCallback, useEffect, useRef } from 'react'
 
 import { Button } from './buttons/Button'
 import { Config } from './helpers/configureUI'
@@ -61,146 +62,172 @@ const defaultState: TreeStateStatic = {
   },
 }
 
-const getActions = (
-  treeState: () => ScopedState<TreeStateStatic>,
-  userState: () => ScopedState<TreeUserState>,
-  // stores: KitStores,
-) => {
-  const Actions = {
-    addItem(item?: Partial<TreeItem>, parentId?: number) {
-      const update = treeState()[1]
-      try {
-        update(next => {
-          const id = item.id || Math.random()
-          next.items[parentId || Actions.curId()].children.push(id)
-          next.items[id] = filterCleanObject({ name: '', children: [], ...item, id })
-        })
-      } catch (err) {
-        console.error('error adding', err)
-      }
-    },
-    addItemsFromDrop(items?: any, parentId?: number) {
-      const addItem = x => {
-        // should normalize fancier
-        const item = x.type === 'row' ? x.values : x.item || x
-        let name = item.title || item.name
-        if (typeof name !== 'string') {
-          if (name) {
-            name = Object.keys(name)
-              .map(k => name[k])
-              .join(', ')
-          } else {
-            name = Object.keys(x)
-              .slice(0, 3)
-              .map(k => x[k])
-              .join(', ')
-          }
-        }
-        Actions.addItem(
-          {
-            name,
-            data: item,
-          },
-          parentId,
-        )
-      }
-      if (Array.isArray(items)) {
-        items.forEach(addItem)
-      } else {
-        addItem(items)
-      }
-    },
-    addFolder(name?: string, parentId?: number) {
-      Actions.addItem({ name, type: 'folder' }, parentId)
-    },
-    deleteItem(id: number | string) {
-      const update = treeState()[1]
-      update(next => {
-        // remove this item
-        delete next.items[id]
-        // remove any references to this item in .children[]
-        for (const key in next.items) {
-          const item = next.items[key]
-          if (item.children) {
-            item.children = item.children.filter(x => x !== id)
-          }
-        }
-      })
-    },
-    updateItem(item: TreeItem) {
-      const update = treeState()[1]
-      update(next => {
-        const id = item.id
-        next.items[id] = item
-      })
-    },
-    updateSelectedItem(item: Partial<TreeItem>) {
-      const selectedItem = Actions.getSelectedItem()
-      if (!selectedItem) {
-        return
-      }
-      Actions.updateItem({
-        ...selectedItem,
-        ...item,
-      })
-    },
-    getSelectedItem() {
-      const { selectedIndex } = Actions.curDepth()
-      if (selectedIndex === -1) {
-        console.error('No item selected')
-        return
-      }
-      const items = treeState()[0].items
-      const curItem = Actions.curItem()
-      const curSelectedId = curItem.children[selectedIndex]
-      return items[curSelectedId]
-    },
-    setSelectedIndex(index: number) {
-      const update = userState()[1]
-      update(draft => {
-        const curDepth = draft.depth[draft.depth.length - 1]
-        curDepth.selectedIndex = index
-      })
-    },
-    sort(oldIndex: number, newIndex: number) {
-      const update = treeState()[1]
-      update(next => {
-        const item = next.items[Actions.curId()]
-        item.children = arrayMove(item.children, oldIndex, newIndex)
-      })
-    },
-    curDepth() {
-      const { depth } = userState()[0]
-      return depth[depth.length - 1] || { id: 0, selectedIndex: -1 }
-    },
-    curItem() {
-      return treeState()[0].items[this.curId()]
-    },
-    curId() {
-      return Actions.curDepth().id
-    },
-    selectFolder(id: number) {
-      const update = userState()[1]
-      update(next => {
-        next.depth.push({ id, selectedIndex: -1 })
-      })
-    },
-    back() {
-      const update = userState()[1]
-      update(next => {
-        if (next.depth.length > 1) {
-          next.depth.pop()
-        }
-      })
-    },
+class TreeListStore {
+  props: {
+    treeState: ScopedState<TreeStateStatic>
+    userState: ScopedState<TreeUserState>
   }
-  return Actions
-}
 
-export type TreeListStore = {
-  state: TreeState
-  userState: TreeUserState
-  actions: ReturnType<typeof getActions>
+  get treeState() {
+    return this.props.treeState[0]
+  }
+  get treeStateUpdate() {
+    return this.props.treeState[1]
+  }
+  get userState() {
+    return this.props.userState[0]
+  }
+  get userStateUpdate() {
+    return this.props.userState[1]
+  }
+
+  get state(): TreeState {
+    const { treeState, userState } = this
+    const currentItem = treeState.items[userState.depth[userState.depth.length - 1].id]
+    return {
+      ...treeState,
+      currentItem,
+      currentItemChildren: ((currentItem && currentItem.children) || [])
+        .map(x => treeState.items[x])
+        .filter(Boolean),
+      history: userState.depth.map(item => treeState.items[item.id]),
+    }
+  }
+
+  addItem(item?: Partial<TreeItem>, parentId?: number) {
+    const update = this.treeState[1]
+    try {
+      update(next => {
+        const id = item.id || Math.random()
+        next.items[parentId || this.curId()].children.push(id)
+        next.items[id] = filterCleanObject({ name: '', children: [], ...item, id })
+      })
+    } catch (err) {
+      console.error('error adding', err)
+    }
+  }
+
+  addItemsFromDrop(items?: any, parentId?: number) {
+    const addItem = x => {
+      // should normalize fancier
+      const item = x.type === 'row' ? x.values : x.item || x
+      let name = item.title || item.name
+      if (typeof name !== 'string') {
+        if (name) {
+          name = Object.keys(name)
+            .map(k => name[k])
+            .join(', ')
+        } else {
+          name = Object.keys(x)
+            .slice(0, 3)
+            .map(k => x[k])
+            .join(', ')
+        }
+      }
+      this.addItem(
+        {
+          name,
+          data: item,
+        },
+        parentId,
+      )
+    }
+    if (Array.isArray(items)) {
+      items.forEach(addItem)
+    } else {
+      addItem(items)
+    }
+  }
+
+  addFolder(name?: string, parentId?: number) {
+    this.addItem({ name, type: 'folder' }, parentId)
+  }
+
+  deleteItem(id: number | string) {
+    this.treeStateUpdate(next => {
+      // remove this item
+      delete next.items[id]
+      // remove any references to this item in .children[]
+      for (const key in next.items) {
+        const item = next.items[key]
+        if (item.children) {
+          item.children = item.children.filter(x => x !== id)
+        }
+      }
+    })
+  }
+
+  updateItem(item: TreeItem) {
+    this.treeStateUpdate(next => {
+      const id = item.id
+      next.items[id] = item
+    })
+  }
+
+  updateSelectedItem(item: Partial<TreeItem>) {
+    const selectedItem = this.getSelectedItem()
+    console.log('updating', selectedItem, item)
+    if (!selectedItem) {
+      return
+    }
+    this.updateItem({
+      ...selectedItem,
+      ...item,
+    })
+  }
+
+  getSelectedItem() {
+    const { selectedIndex } = this.curDepth()
+    if (selectedIndex === -1) {
+      console.error('No item selected')
+      return
+    }
+    const items = this.treeState.items
+    const curItem = this.curItem()
+    const curSelectedId = curItem.children[selectedIndex]
+    return items[curSelectedId]
+  }
+
+  setSelectedIndex(index: number) {
+    this.userStateUpdate(draft => {
+      const curDepth = draft.depth[draft.depth.length - 1]
+      curDepth.selectedIndex = index
+    })
+  }
+
+  sort(oldIndex: number, newIndex: number) {
+    this.treeStateUpdate(next => {
+      const item = next.items[this.curId()]
+      item.children = arrayMove(item.children, oldIndex, newIndex)
+    })
+  }
+
+  curDepth() {
+    const { depth } = this.userState
+    return depth[depth.length - 1] || { id: 0, selectedIndex: -1 }
+  }
+
+  curItem() {
+    return this.treeState.items[this.curId()]
+  }
+
+  curId() {
+    return this.curDepth().id
+  }
+
+  selectFolder(id: number) {
+    this.userStateUpdate(next => {
+      next.depth.push({ id, selectedIndex: -1 })
+    })
+  }
+
+  back() {
+    this.userStateUpdate(next => {
+      if (next.depth.length > 1) {
+        next.depth.pop()
+      }
+    })
+  }
 }
 
 const defaultUserState: TreeUserState = {
@@ -210,18 +237,6 @@ const defaultUserState: TreeUserState = {
       selectedIndex: -1,
     },
   ],
-}
-
-const deriveState = (state: TreeStateStatic, userState: TreeUserState): TreeState => {
-  const currentItem = state.items[userState.depth[userState.depth.length - 1].id]
-  return {
-    ...state,
-    currentItem,
-    currentItemChildren: ((currentItem && currentItem.children) || [])
-      .map(x => state.items[x])
-      .filter(Boolean),
-    history: userState.depth.map(item => state.items[item.id]),
-  }
 }
 
 const getStateOptions = (stateType: 'tree' | 'user', props?: TreeListProps) => {
@@ -236,33 +251,27 @@ const getStateOptions = (stateType: 'tree' | 'user', props?: TreeListProps) => {
 // persists to app state
 export function useTreeList(subSelect: string | false, props?: TreeListProps): TreeListStore {
   // const stores = useStoresSimple()
-  const ts = Config.useAppState<TreeStateStatic>(
+  const treeState = Config.useAppState<TreeStateStatic>(
     subSelect === false ? subSelect : `tl-${subSelect}`,
     {
       items: (props && props.items) || defaultState.items,
     },
     getStateOptions('tree', props),
   )
-  const us = Config.useUserState(
-    `tl-${subSelect}`,
+  const userState = Config.useUserState(
+    `tl-us-${subSelect}`,
     defaultUserState,
     getStateOptions('user', props),
   )
-  const getTs = useGet(ts)
-  const getUs = useGet(us)
-  const actions = useMemo(() => getActions(getTs, getUs /* , stores */), [])
+  const treeListStore = useStore(TreeListStore, { treeState, userState })
 
   useEffect(() => {
     if (props && props.rootItemID) {
-      actions.selectFolder(props.rootItemID)
+      treeListStore.selectFolder(props.rootItemID)
     }
   }, [props && props.rootItemID])
 
-  return {
-    state: deriveState(ts[0], us[0]),
-    userState: us[0],
-    actions,
-  }
+  return treeListStore
 }
 
 async function loadTreeListItemProps(item?: TreeItem): Promise<ListItemProps> {
@@ -344,14 +353,14 @@ function TreeListInner(props: TreeListProps) {
 
   const handleSortEnd = useCallback(
     ({ oldIndex, newIndex }) => {
-      useTree.actions.sort(oldIndex, newIndex)
+      useTree.sort(oldIndex, newIndex)
     },
     [useTree],
   )
 
   const handleDelete = useCallback(
     (item: ListItemProps) => {
-      useTree.actions.deleteItem(item.id)
+      useTree.deleteItem(item.id)
     },
     [useTree],
   )
@@ -359,7 +368,7 @@ function TreeListInner(props: TreeListProps) {
   const handleEditTitle = useCallback(
     (item: TreeItem, name: string) => {
       item.name = name
-      useTree.actions.updateItem(item)
+      useTree.updateItem(item)
     },
     [useTree],
   )
@@ -367,7 +376,7 @@ function TreeListInner(props: TreeListProps) {
   const handleSelect = useCallback(
     (rows: any[], indices: number[]) => {
       if (indices.length) {
-        useTree.actions.setSelectedIndex(indices[0])
+        useTree.setSelectedIndex(indices[0])
       }
       if (props.onSelect) {
         props.onSelect(rows, indices)
@@ -383,7 +392,7 @@ function TreeListInner(props: TreeListProps) {
       if (props.onDrop) {
         props.onDrop(items, position)
       } else {
-        useTree.actions.addItemsFromDrop(items)
+        useTree.addItemsFromDrop(items)
       }
     },
     [props.onDrop, props.droppable],

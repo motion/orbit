@@ -77,10 +77,11 @@ function QueryBuilderApp() {
   const [bits, actions] = useAppBits()
   useEffect(() => {
     console.log('persist them to bits', treeList.state!.items!)
-    // for (const id of Object.keys(treeList.state!.items!)) {
-    //   const item = treeList.state!.items![id]
-    //   actions.createOrUpdate({})
-    // }
+    for (const id of Object.keys(treeList.state!.items!)) {
+      const item = treeList.state!.items![id]
+      console.log('create a bit', item)
+      // actions.createOrUpdate({})
+    }
   }, [treeList.state.items])
 
   // map id => navigator stack so we persist it per-item in the list
@@ -171,7 +172,7 @@ function QueryBuilderIndex({
           icon="plus"
           onClick={() => {
             const name = `${capitalize(randomAdjective())} ${capitalize(randomNoun())}`
-            treeList.actions.addItem({
+            treeList.addItem({
               name,
               data: {
                 identifier: '',
@@ -195,7 +196,7 @@ function QueryBuilderMain({
         console.log('navigating to', item, treeList)
         if (!item) return
         // const icon = getAppDefinition(item.id)
-        treeList.actions.updateSelectedItem({
+        treeList.updateSelectedItem({
           data: {
             identifier: item.props!.subType || '',
           },

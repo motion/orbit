@@ -5,6 +5,8 @@ export { default as allIcons } from './icons'
 export * from '@o/color'
 export * from '@o/utils'
 
+module.hot && module.hot.accept()
+
 export { default as useAsync } from 'react-use/lib/useAsync'
 export { default as useAsyncFn } from 'react-use/lib/useAsyncFn'
 export { default as useAsyncRetry } from 'react-use/lib/useAsyncRetry'

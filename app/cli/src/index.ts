@@ -151,10 +151,6 @@ function main() {
           .option('force', {
             type: 'boolean',
             default: false,
-          })
-          .option('debug-build', {
-            type: 'boolean',
-            default: false,
           }),
       async argv => {
         setVerbose(argv.logLevel)
@@ -164,7 +160,6 @@ function main() {
           projectRoot,
           watch: !!argv.watch,
           force: !!argv.force,
-          debugBuild: !!argv['debug-build'],
         })
       },
     )

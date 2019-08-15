@@ -108,8 +108,6 @@ export type CommandBuildOptions = {
   projectRoot: string
   watch?: boolean
   force?: boolean
-  // we can do more careful building for better errors
-  debugBuild?: boolean
   // if you dont want to build the whole thing in dev mode
   onlyInfo?: boolean
 }

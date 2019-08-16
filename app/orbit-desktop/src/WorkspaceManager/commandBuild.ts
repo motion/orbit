@@ -152,7 +152,7 @@ async function getWebAppConfig(entry: string, name: string, options: CommandBuil
   )
 }
 
-async function getNodeAppConfig(entry: string, name: any, options: CommandBuildOptions) {
+export async function getNodeAppConfig(entry: string, name: any, options: CommandBuildOptions) {
   return await makeWebpackConfig(
     getAppParams({
       name,

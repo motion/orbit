@@ -136,9 +136,9 @@ export class AuthServer {
 
   private setupAuthRefreshRoutes() {
     this.app.use('/auth/refreshToken/:service', async (req, res) => {
-      log.info('refresh for', req.params.service)
+      log.info('refresh for', req.params['service'])
       try {
-        const refreshToken = await this.oauth.refreshToken(req.params.service)
+        const refreshToken = await this.oauth.refreshToken(req.params['service'])
         res.json({ refreshToken })
       } catch (error) {
         log.info('error', error)

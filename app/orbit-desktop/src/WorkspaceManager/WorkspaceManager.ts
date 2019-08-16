@@ -20,8 +20,6 @@ import { resolveAppBuildCommand } from './commandBuild'
 import { resolveAppGenTypesCommand } from './commandGenTypes'
 import { resolveAppInstallCommand } from './commandInstall'
 import { ensureWorkspaceModel } from './ensureWorkspaceModel'
-import { getAppsConfig } from './getAppsConfig'
-import { webpackPromise } from './webpackPromise'
 
 const log = new Logger('WorkspaceManager')
 
@@ -32,7 +30,6 @@ export class WorkspaceManager {
   started = false
   // the apps we've toggled into development mode
   developingApps: AppMeta[] = []
-  buildNameToAppMeta: { [name: string]: AppMeta } = {}
   workspaceVersion = 0
   options: CommandWsOptions = {
     action: 'run',
@@ -140,8 +137,8 @@ export class WorkspaceManager {
           acc[identifier] = this.appsManager.identifierToPackageId(identifier)
           return acc
         }, {}),
-        nameRegistry: Object.keys(this.buildNameToAppMeta).map(buildName => {
-          const appMeta = this.buildNameToAppMeta[buildName]
+        nameRegistry: Object.keys(this.appBuilder.buildNameToAppMeta).map(buildName => {
+          const appMeta = this.appBuilder.buildNameToAppMeta[buildName]
           const { packageId } = appMeta
           const identifier = this.appsManager.packageIdToIdentifier(appMeta.packageId)
           const entryPath = join(appMeta.directory, appMeta.packageJson.main)
@@ -171,6 +168,10 @@ export class WorkspaceManager {
   lastBuildConfig = ''
   async updateAppBuilder() {
     const { options, activeApps, buildMode } = this
+    if (options.action === 'new') {
+      return
+    }
+
     log.info(`Start building workspace, building ${activeApps.length} apps...`, options, activeApps)
     if (!activeApps.length) {
       log.error(`Must have more than one app, workspace didn't detect any.`)
@@ -188,28 +189,12 @@ export class WorkspaceManager {
 
     try {
       this.updateBuildMode()
-      const res = await getAppsConfig(activeApps, this.buildMode, options)
-      if (!res) {
-        log.error('No config')
-        return
-      }
-      const { webpackConfigs, buildNameToAppMeta } = res
-      this.buildNameToAppMeta = buildNameToAppMeta
-      if (options.action === 'build') {
-        const { base, ...rest } = webpackConfigs
-        const configs = Object.keys(rest).map(key => rest[key])
-        log.info(`Building ${Object.keys(webpackConfigs).join(', ')}...`)
-        // build base dll first to ensure it feeds into rest
-        await webpackPromise([base], {
-          loud: true,
-        })
-        await webpackPromise(configs, {
-          loud: true,
-        })
-        log.info(`Build complete!`)
-      } else {
-        this.appBuilder.update(webpackConfigs, buildNameToAppMeta)
-      }
+      // this runs the build
+      this.appBuilder.update({
+        options,
+        buildMode: this.buildMode,
+        activeApps,
+      })
     } catch (err) {
       log.error(`Error running workspace: ${err.message}\n${err.stack}`)
     }

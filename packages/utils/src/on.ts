@@ -1,5 +1,5 @@
 import event from 'disposable-event'
-import { Disposable, CompositeDisposable } from 'event-kit'
+import { CompositeDisposable, Disposable } from 'event-kit'
 
 const isBrowser = typeof window !== 'undefined'
 
@@ -7,7 +7,7 @@ const RealMutationObserver =
   // @ts-ignore
   isBrowser && window.MutationObserver
 
-const IsomorphicMutationObserver: typeof MutationObserver = isBrowser
+const IsomorphicMutationObserver: any = isBrowser
   ? RealMutationObserver
   : class FakeMutationObserver {}
 

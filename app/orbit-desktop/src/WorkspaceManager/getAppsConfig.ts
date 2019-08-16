@@ -1,3 +1,4 @@
+import { getAppInfo } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppMeta, CommandWsOptions } from '@o/models'
 import { stringToIdentifier } from '@o/utils'
@@ -5,7 +6,7 @@ import { ensureDir, ensureSymlink, pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
 import webpack from 'webpack'
 
-import { getAppEntry } from './commandBuild'
+import { getAppEntry, getNodeAppConfig } from './commandBuild'
 import { getIsInMonorepo } from './getIsInMonorepo'
 import { DLLReferenceDesc, makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
 import { webpackPromise } from './webpackPromise'
@@ -20,14 +21,17 @@ const log = new Logger('getAppsConfig')
  *   3. the "main" entry point with orbit-app
  */
 
+export type AppBuildConfigs = {
+  nodeConfigs: { [name: string]: webpack.Configuration }
+  clientConfigs: { [name: string]: webpack.Configuration }
+  buildNameToAppMeta: { [name: string]: AppMeta }
+}
+
 export async function getAppsConfig(
   apps: AppMeta[],
   buildMode: AppBuildModeDict,
   options: CommandWsOptions,
-): Promise<{
-  webpackConfigs: { [name: string]: webpack.Configuration }
-  buildNameToAppMeta: { [name: string]: AppMeta }
-} | null> {
+): Promise<AppBuildConfigs | null> {
   if (!apps.length) {
     return null
   }
@@ -93,27 +97,8 @@ export async function getAppsConfig(
     })
   }
 
-  const webpackConfigs: { [key: string]: webpack.Configuration } = {}
-
-  // may not need with dynamic mode react/react-dom
-  // // contains react-dom/react, always in production
-  // const baseProdParams: WebpackParams = {
-  //   name: `baseProd`,
-  //   entry: ['react', 'react-dom', 'react-hot-loader'],
-  //   watch,
-  //   target: 'web',
-  //   mode: 'production',
-  //   context: directory,
-  //   outputDir,
-  //   publicPath: '/',
-  //   outputFile: 'baseProd.dll.js',
-  //   output: {
-  //     library: 'base',
-  //   },
-  //   dll: join(outputDir, 'manifest-baseProd.json'),
-  // }
-  // const baseProdConfig = await addDLL(baseProdParams)
-  // webpackConfigs.baseProd = baseProdConfig
+  const nodeConfigs: { [key: string]: webpack.Configuration } = {}
+  const clientConfigs: { [key: string]: webpack.Configuration } = {}
 
   // contains react-hot-loader, always in development
   const baseDevParams: WebpackParams = {
@@ -132,7 +117,7 @@ export async function getAppsConfig(
     dll: join(outputDir, 'manifest-baseDev.json'),
   }
   const baseDevConfig = await addDLL(baseDevParams)
-  webpackConfigs.baseDev = baseDevConfig
+  clientConfigs.baseDev = baseDevConfig
   const baseDevDllReference = {
     manifest: baseDevParams.dll,
     filepath: join(outputDir, baseDevParams.outputFile),
@@ -149,14 +134,16 @@ export async function getAppsConfig(
   if (isInMonoRepo) {
     sharedParams.mode = mode
     sharedParams.watch = watch
-    webpackConfigs.base = await addDLL(sharedParams)
+    clientConfigs.base = await addDLL(sharedParams)
   }
   const sharedDllReference = {
     manifest: sharedParams.dll,
     filepath: join(outputDir, sharedParams.outputFile),
   }
 
-  // add app dll configs
+  /**
+   * Gather app configurations
+   */
   const appParams: WebpackParams[] = await Promise.all(
     apps.map(async app => {
       const cleanName = stringToIdentifier(app.packageId)
@@ -188,16 +175,24 @@ export async function getAppsConfig(
     }),
   )
   const buildNameToAppMeta: { [name: string]: AppMeta } = {}
+  const appInfos = await Promise.all(apps.map(x => getAppInfo(x.directory)))
   await Promise.all(
     appParams.map(async (params, index) => {
       const appMeta = apps[index]
+      const appInfo = appInfos[index]
       const config = await addDLL({
         ...getAppParams(params),
         // only watch apps for updates in development mode
         watch: buildMode[appMeta.packageId] === 'development',
       })
       buildNameToAppMeta[params.name] = appMeta
-      webpackConfigs[params.name] = config
+      clientConfigs[params.name] = config
+      if (!!appInfo.workers) {
+        nodeConfigs[params.name] = await getNodeAppConfig(appMeta.directory, appMeta.packageId, {
+          watch: options.action === 'build' ? false : true,
+          projectRoot: appMeta.directory,
+        })
+      }
     }),
   )
 
@@ -226,7 +221,7 @@ export async function getAppsConfig(
       const { main, ...others } = extraConfig
       extraMainConfig = main
       for (const name in others) {
-        webpackConfigs[name] = await makeWebpackConfig(
+        clientConfigs[name] = await makeWebpackConfig(
           {
             mode,
             name,
@@ -245,7 +240,7 @@ export async function getAppsConfig(
     }
 
     // main bundle
-    webpackConfigs.main = await makeWebpackConfig(
+    clientConfigs.main = await makeWebpackConfig(
       {
         name: 'main',
         outputFile: 'main.js',
@@ -267,7 +262,8 @@ export async function getAppsConfig(
   }
 
   return {
-    webpackConfigs,
+    nodeConfigs,
+    clientConfigs,
     buildNameToAppMeta,
   }
 }

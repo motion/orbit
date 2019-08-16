@@ -4,7 +4,7 @@ import { isObjectProperty, isStringLiteral } from '@babel/types'
 import { getAppInfo } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppDefinition, CommandBuildOptions, StatusReply } from '@o/models'
-import { readFile, writeJSON } from 'fs-extra'
+import { ensureDir, readFile, writeJSON } from 'fs-extra'
 import { join } from 'path'
 
 import { getAppEntry } from './commandBuild'
@@ -89,6 +89,7 @@ async function writeAppInfo(appRoot: string): Promise<StatusReply> {
     }
   }
 
+  await ensureDir(join(appRoot, 'dist'))
   const out = join(appRoot, 'dist', 'appInfo.json')
   await writeJSON(out, apiInfo, {
     spaces: 2,

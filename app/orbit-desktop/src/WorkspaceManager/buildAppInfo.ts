@@ -1,4 +1,5 @@
 import { getAppInfo } from '@o/apps-manager'
+import { Logger } from '@o/logger'
 import { AppDefinition, CommandBuildOptions, StatusReply } from '@o/models'
 import { writeJSON } from 'fs-extra'
 import { join } from 'path'
@@ -9,12 +10,15 @@ import { compilerOptions } from './compilerOptions'
 
 // let just use typescript and extract that
 
+const log = new Logger('buildAppInfo')
+
 export async function buildAppInfo(
   options: CommandBuildOptions = {
     projectRoot: '',
     watch: false,
   },
 ): Promise<StatusReply<AppDefinition>> {
+  log.info(`Generating app info`, options)
   try {
     // build appInfo first, we can then use it to determine if we need to build web/node
     await writeAppInfo(options.projectRoot)
@@ -59,7 +63,11 @@ async function writeAppInfo(appRoot: string): Promise<StatusReply> {
     const name = prop.getName()
     const type = checker.getTypeOfSymbolAtLocation(prop, prop.valueDeclaration)
     const typeString = checker.typeToString(type)
-    console.log('name', name, typeString)
+    const node = checker.typeToTypeNode(type)
+    // let value = null
+    if (node && type) {
+      console.log('ok', name, typeString, type['text'], node.getText(), node['text'])
+    }
   }
 
   const out = join(appRoot, 'dist', 'appInfo.json')

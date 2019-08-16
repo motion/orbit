@@ -18,9 +18,6 @@ import { AppBuildModeDict } from './WorkspaceManager'
 
 const log = new Logger('AppBuilder')
 
-type WebpackConfigObj = {
-  [key: string]: Webpack.Configuration
-}
 type WebpackAppsDesc = {
   name: string
   hash?: string

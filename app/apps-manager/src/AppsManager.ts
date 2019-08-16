@@ -24,7 +24,7 @@ export * from './isInstalled'
 export * from './downloadAppDefinition'
 export * from './requireWorkspaceDefinitions'
 export * from './requireAppDefinition'
-export * from './buildInfo'
+export * from './getAppInfo'
 export * from './updateWorkspacePackageIds'
 export * from './getWorkspaceApps'
 

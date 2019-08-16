@@ -3,9 +3,9 @@ import Webpack from 'webpack'
 export async function webpackPromise(
   configs: Webpack.Configuration[],
   options: { loud?: boolean } = { loud: false },
-) {
+): Promise<Webpack.MultiWatching> {
   return new Promise((res, rej) => {
-    Webpack(configs, async (err, stats) => {
+    const instance = Webpack(configs, async (err, stats) => {
       if (err) {
         rej(err)
         return
@@ -24,7 +24,7 @@ export async function webpackPromise(
         )
       }
       if (!configs.some(x => x.watch)) {
-        res()
+        res(instance as Webpack.MultiWatching)
       } else {
         console.log('Webpack running in watch mode...')
       }

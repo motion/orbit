@@ -1,6 +1,6 @@
 import { Logger } from '@o/logger'
 
-import { getBuildInfo } from './buildInfo'
+import { getAppInfo } from './getAppInfo'
 import { setIdentifierToPackageId } from './getPackageId'
 import { getWorkspaceApps } from './getWorkspaceApps'
 
@@ -17,16 +17,16 @@ export async function updateWorkspacePackageIds(workspaceRoot: string) {
       .join(', ')}`,
   )
   for (const { packageId, directory } of paths) {
-    const buildInfo = await getBuildInfo(directory)
-    log.verbose(`got ${packageId} ${JSON.stringify(buildInfo)}`)
-    if (buildInfo) {
-      if (buildInfo.identifier) {
-        setIdentifierToPackageId(buildInfo.identifier, packageId)
+    const appInfo = await getAppInfo(directory)
+    log.verbose(`got ${packageId} ${JSON.stringify(appInfo)}`)
+    if (appInfo) {
+      if (appInfo.id) {
+        setIdentifierToPackageId(appInfo.id, packageId)
       } else {
-        log.info(`No identifier in buildInfo.json ${JSON.stringify(buildInfo)}`)
+        log.info(`No identifier in appInfo ${JSON.stringify(appInfo)}`)
       }
     } else {
-      log.info(`No buildInfo.json found: ${directory}`)
+      log.info(`No appInfo found: ${directory}`)
     }
   }
 }

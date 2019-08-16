@@ -9,7 +9,7 @@ import sanitize from 'sanitize-filename'
 import { getCurrentWorkspace } from '../helpers/getCurrentWorkspace'
 import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
 import { statusReplyCommand } from '../WorkspaceManager/commandHelpers'
-import { loadWorkspace } from '../WorkspaceManager/loadWorkspace'
+import { ensureWorkspaceModel } from '../WorkspaceManager/ensureWorkspaceModel'
 
 const log = new Logger('AppCreateNewCommand')
 
@@ -26,7 +26,7 @@ export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
           `Missing some props, needs identifier + name + template ${JSON.stringify(props)}`,
         )
       }
-      const ws = await loadWorkspace(directory)
+      const ws = await ensureWorkspaceModel(directory)
       return await createNewWorkspaceApp(ws, props)
     }),
   )

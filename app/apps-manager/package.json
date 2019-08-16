@@ -19,7 +19,7 @@
     "fs-extra": "^7.0.0"
   },
   "peerDependencies": {
-    "typeorm": "*",
-    "mobx": "*"
+    "mobx": "*",
+    "typeorm": "*"
   }
 }

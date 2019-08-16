@@ -13,7 +13,6 @@ import * as Models from '@o/models'
 import { App, Desktop, Electron } from '@o/stores'
 import * as UI from '@o/ui'
 import * as dateFns from 'date-fns'
-import global from 'global'
 import { css } from 'gloss'
 import * as GlossTheme from 'gloss-theme'
 import * as Mobx from 'mobx'
@@ -25,6 +24,8 @@ import * as OrbitApps from '../apps/orbitApps'
 import * as Constants from '../constants'
 import * as Helpers from '../helpers'
 import { log } from './log'
+
+const global = window as any
 
 // dont import app level stuff in here
 // it will break hmr

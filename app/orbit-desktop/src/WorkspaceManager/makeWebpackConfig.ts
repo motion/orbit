@@ -305,15 +305,7 @@ require('@o/kit').OrbitHot.fileLeave();
                 },
                 {
                   test: /\.(gif|png|jpe?g|svg)$/,
-                  use: [
-                    'file-loader',
-                    {
-                      loader: 'image-webpack-loader',
-                      options: {
-                        bypassOnDebug: true,
-                      },
-                    },
-                  ],
+                  use: ['file-loader'],
                 },
                 {
                   test: /\.(md)$/,

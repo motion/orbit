@@ -7,13 +7,6 @@ export * from '@o/utils'
 
 module.hot && module.hot.accept()
 
-export { default as useAsync } from 'react-use/lib/useAsync'
-export { default as useAsyncFn } from 'react-use/lib/useAsyncFn'
-export { default as useAsyncRetry } from 'react-use/lib/useAsyncRetry'
-export { default as useEffectOnce } from 'react-use/lib/useEffectOnce'
-export { default as useBattery } from 'react-use/lib/useBattery'
-export { default as useScroll } from 'react-use/lib/useScroll'
-
 export {
   Absolute,
   AbsoluteProps,
@@ -32,6 +25,8 @@ export {
 } from 'gloss'
 export { arrayMove } from '@o/react-sortable-hoc'
 export { GlobalHotKeys, HotKeys, KeySequence } from 'react-hotkeys'
+export { default as pluralize } from 'pluralize'
+
 export * from './Arrow'
 export * from './Avatar'
 export * from './Border'
@@ -105,6 +100,7 @@ export * from './helpers/normalizeItem'
 export * from './helpers/offset'
 export * from './helpers/portal'
 export * from './helpers/preventDefault'
+export * from './hooks/useAsyncFn'
 export * from './hooks/useDebounce'
 export * from './hooks/useFetch'
 export * from './hooks/useGet'

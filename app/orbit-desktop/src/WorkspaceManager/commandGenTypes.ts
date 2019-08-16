@@ -6,6 +6,7 @@ import { join } from 'path'
 import ts from 'typescript'
 
 import { attachLogToCommand, statusReplyCommand } from './commandHelpers'
+import { compilerOptions } from './compilerOptions'
 
 let checker: ts.TypeChecker
 
@@ -28,8 +29,8 @@ export async function commandGenTypes(
 
   if (!(await pathExists(apiEntry))) {
     return {
-      type: 'error',
-      message: 'Path doesnt exist',
+      type: 'success',
+      message: 'No API found',
     } as const
   }
 
@@ -113,36 +114,3 @@ ${JSON.stringify(apiTypes, null, 2)}
 
 `)
 }
-
-const compilerOptions = JSON.parse(`{
-  "compilerOptions": {
-    "strict": true,
-    "skipLibCheck": true,
-    "rootDir": "src",
-    "incremental": true,
-    "declaration": true,
-    "declarationMap": true,
-    "module": "CommonJS",
-    "removeComments": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es2018",
-    "noImplicitAny": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noEmitOnError": false,
-    "strictNullChecks": false,
-    "strictFunctionTypes": true,
-    "preserveConstEnums": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "jsx": "react",
-    "allowJs": false,
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "lib": ["es2017", "es2018", "dom", "esnext.array"]
-  },
-  "include": ["src/**/*"],
-  "exclude": ["**/*.test.ts", "**/*.test.tsx"]
-}`)

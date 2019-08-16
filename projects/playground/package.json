@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.4.4",
-    "@babel/runtime": "^7.4.4",
+    "@babel/runtime": "^7.4.5",
     "@o/babel-preset-motion": "^2.6.0",
     "@o/kit": "^2.6.0",
     "@o/ui": "^2.6.0",

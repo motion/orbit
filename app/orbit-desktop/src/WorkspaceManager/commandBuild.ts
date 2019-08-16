@@ -1,4 +1,3 @@
-import { updateBuildInfo } from '@o/apps-manager'
 import { getGlobalConfig } from '@o/config'
 import { isOrbitApp, readPackageJson } from '@o/libs-node'
 import { Logger } from '@o/logger'
@@ -6,15 +5,16 @@ import { CommandOpts, resolveCommand } from '@o/mediator'
 import { AppBuildCommand, AppDefinition, CommandBuildOptions, StatusReply } from '@o/models'
 import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
-import webpack = require('webpack')
+import webpack from 'webpack'
 
+import { buildAppInfo } from './buildAppInfo'
 import { commandGenTypes } from './commandGenTypes'
 import { attachLogToCommand, statusReplyCommand } from './commandHelpers'
 import { getAppParams } from './getAppsConfig'
 import { makeWebpackConfig } from './makeWebpackConfig'
 import { webpackPromise } from './webpackPromise'
 
-const log = new Logger('resolveAppBuildCommand')
+export const log = new Logger('resolveAppBuildCommand')
 
 export const resolveAppBuildCommand = resolveCommand(
   AppBuildCommand,
@@ -52,7 +52,7 @@ export async function commandBuild(
     }
   }
 
-  await Promise.all([
+  const [resBundle, resGenType] = await Promise.all([
     bundleApp(props),
     commandGenTypes(
       {
@@ -64,63 +64,30 @@ export async function commandBuild(
     ),
   ])
 
+  if (resBundle.type !== 'success') {
+    return resBundle
+  }
+  if (resGenType.type !== 'success') {
+    return resGenType
+  }
+
   return {
     type: 'success',
     message: 'Built app',
   }
 }
 
-export async function buildAppInfo(
-  options: CommandBuildOptions = {
-    projectRoot: '',
-    watch: false,
-  },
-): Promise<StatusReply> {
-  try {
-    const directory = options.projectRoot
-    const entry = await getAppEntry(options.projectRoot)
-    const pkg = await readPackageJson(directory)
-    if (!pkg) {
-      return {
-        type: 'error',
-        message: `No package.json at ${directory}`,
-      }
-    }
-    // build appInfo first, we can then use it to determine if we need to build web/node
-    const appInfoConf = await getAppInfoConfig(entry, pkg.name, options)
-    log.info(`Building appInfo...`, appInfoConf)
-    await webpackPromise([appInfoConf], {
-      loud: true,
-    })
-    return {
-      type: 'success',
-      message: `Built successfully`,
-    }
-  } catch (err) {
-    return {
-      type: 'error',
-      message: err.message,
-      errors: [err],
-    }
-  }
-}
-
-export async function bundleApp(options: CommandBuildOptions) {
+export async function bundleApp(options: CommandBuildOptions): Promise<StatusReply> {
   const verbose = true // !
   const entry = await getAppEntry(options.projectRoot)
   const pkg = await readPackageJson(options.projectRoot)
 
   const appInfoRes = await buildAppInfo(options)
   if (appInfoRes.type !== 'success') {
-    throw appInfoRes.errors ? appInfoRes.errors[0] : appInfoRes.message
+    return appInfoRes
   }
-
-  const appInfo = await getAppInfo(options.projectRoot)
+  const appInfo = appInfoRes.value
   log.info(`appInfo`, appInfo)
-
-  if (!appInfo) {
-    throw new Error(`No appInfo export default found`)
-  }
 
   let webConf: webpack.Configuration | null = null
   let nodeConf: webpack.Configuration | null = null
@@ -143,24 +110,14 @@ export async function bundleApp(options: CommandBuildOptions) {
     })
   }
 
-  log.info(`Writing out app build information`)
-
-  await updateBuildInfo(options.projectRoot)
+  return {
+    type: 'success',
+    message: `Bundled app`,
+  }
 }
 
 const hasKey = (appInfo: AppDefinition, ...keys: string[]) =>
   Object.keys(appInfo).some(x => keys.some(key => x === key))
-
-function getAppInfo(appRoot: string): AppDefinition | null {
-  try {
-    const path = join(appRoot, 'dist', 'appInfo.js')
-    log.info(`getAppInfo ${path}`)
-    return require(path).default
-  } catch (err) {
-    log.error(err.message, err)
-    return null
-  }
-}
 
 // default base dll
 let defaultBaseDll
@@ -228,7 +185,7 @@ async function getNodeAppConfig(entry: string, name: any, options: CommandBuildO
 }
 
 // used just to get the information like id/name from the entry file
-async function getAppInfoConfig(
+export async function getAppInfoConfig(
   entry: string,
   name: string,
   options: Pick<CommandBuildOptions, 'projectRoot' | 'watch'>,

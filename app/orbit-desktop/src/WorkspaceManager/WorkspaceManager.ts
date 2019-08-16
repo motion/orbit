@@ -14,11 +14,13 @@ import { GraphServer } from '../GraphServer'
 import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 import { getActiveSpace } from '../helpers/getActiveSpace'
 import { AppBuilder } from './AppBuilder'
-import { buildAppInfo, resolveAppBuildCommand } from './commandBuild'
+import { buildAppInfo } from './buildAppInfo'
+import { buildWorkspaceAppsInfo } from './buildWorkspaceAppsInfo'
+import { resolveAppBuildCommand } from './commandBuild'
 import { resolveAppGenTypesCommand } from './commandGenTypes'
 import { resolveAppInstallCommand } from './commandInstall'
+import { ensureWorkspaceModel } from './ensureWorkspaceModel'
 import { getAppsConfig } from './getAppsConfig'
-import { loadWorkspace } from './loadWorkspace'
 import { webpackPromise } from './webpackPromise'
 
 const log = new Logger('WorkspaceManager')
@@ -69,7 +71,11 @@ export class WorkspaceManager {
 
   async updateWorkspace(opts: CommandWsOptions) {
     log.info(`updateWorkspace ${JSON.stringify(opts)}`)
-    await loadWorkspace(opts.workspaceRoot)
+    // ensure Space model inserted and up to date
+    await ensureWorkspaceModel(opts.workspaceRoot)
+    // ensure app info built out once
+    await buildWorkspaceAppsInfo(opts.workspaceRoot, { watch: false })
+    // start watching apps for updates on their AppMeta
     await this.appsManager.start({
       singleUseMode: this.startOpts.singleUseMode,
     })

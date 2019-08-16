@@ -8,7 +8,7 @@ import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 
 const log = new Logger('loadWorkspace')
 
-export async function loadWorkspace(directory: string): Promise<Space> {
+export async function ensureWorkspaceModel(directory: string): Promise<Space> {
   const identifier = (await readJSON(join(directory, 'package.json'))).name
   // ensure/find space
   let space = await findOrCreateWorkspace({

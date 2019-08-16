@@ -35,8 +35,11 @@ export class AppBuilder {
   apps: AppMeta[] = []
 
   private buildStatus = new Map<string, 'compiling' | 'error' | 'success'>()
-  private completeFirstBuild: () => void
   private buildMode: AppBuildModeDict = {}
+
+  // used for tracking if we're finished with building all apps once
+  // prevent serving index.html for example until all done
+  private completeFirstBuild: () => void
   completedFirstBuild: Promise<boolean>
 
   constructor(

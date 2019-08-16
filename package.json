@@ -123,6 +123,6 @@
     "prettier": "1.17.0",
     "sb-promisify": "^2.0.2",
     "ts-jest": "24.0.0",
-    "typescript": "3.5.3"
+    "typescript": "3.6.1-rc"
   }
 }

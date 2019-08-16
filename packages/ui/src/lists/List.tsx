@@ -183,7 +183,7 @@ export const List = memo(
     const getItemPropsRaw: VirtualListProps['getItemProps'] = (item, index, c) => {
       // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
       const normalized = toListItemProps(item)
-      const itemExtraProps = getItemPropsGet()(normalized, index, c)
+      const itemExtraProps = getItemPropsGet()(item, index, c)
       const filterExtraProps = filteredGetItemProps(item, index, c)
       const itemProps = {
         onDelete: onDelete ? () => onDelete(item, index) : undefined,

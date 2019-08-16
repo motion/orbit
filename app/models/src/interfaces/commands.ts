@@ -188,7 +188,7 @@ export const SendClientDataCommand = new Command<
   void,
   {
     name: 'CLOSE_APP' | 'SHOW' | 'HIDE' | 'TOGGLE_SETTINGS' | 'APP_URL_OPENED'
-    value: any
+    value?: any
   }
 >('send-client-data')
 // export const TrayEventCommand = new Command<{ type: string, value: string }, void>('tray-event')

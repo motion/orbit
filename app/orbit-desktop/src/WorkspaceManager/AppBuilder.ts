@@ -1,6 +1,6 @@
-import { AppMetaDict, AppsManager } from '@o/apps-manager'
+import { AppsManager } from '@o/apps-manager'
 import { Logger } from '@o/logger'
-import { AppMeta, BuildStatus } from '@o/models'
+import { AppMeta, BuildStatus, CommandWsOptions } from '@o/models'
 import { stringToIdentifier } from '@o/utils'
 import historyAPIFallback from 'connect-history-api-fallback'
 import { Handler } from 'express'
@@ -12,6 +12,8 @@ import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 import Observable from 'zen-observable'
 
+import { AppBuildConfigs, getAppsConfig } from './getAppsConfig'
+import { webpackPromise } from './webpackPromise'
 import { AppBuildModeDict } from './WorkspaceManager'
 
 const log = new Logger('AppBuilder')
@@ -29,10 +31,16 @@ type WebpackAppsDesc = {
   config?: Webpack.Configuration
 }
 
+type AppBuilderUpdate = {
+  options: CommandWsOptions
+  buildMode: AppBuildModeDict
+  activeApps: AppMeta[]
+}
+
 export class AppBuilder {
-  configs = null
   state: WebpackAppsDesc[] = []
   apps: AppMeta[] = []
+  buildNameToAppMeta: { [name: string]: AppMeta } = {}
 
   private buildStatus = new Map<string, 'compiling' | 'error' | 'success'>()
   private buildMode: AppBuildModeDict = {}
@@ -56,14 +64,40 @@ export class AppBuilder {
     })
   }
 
-  update(
-    configs: { [name: string]: Webpack.Configuration },
-    buildNameToAppMeta: { [name: string]: AppMeta },
-  ) {
-    log.verbose(`update ${Object.keys(configs).join(', ')}`, configs)
-    this.configs = configs
+  async update({ buildMode, options, activeApps }: AppBuilderUpdate) {
+    const buildConfigs = await getAppsConfig(activeApps, buildMode, options)
+    const { clientConfigs, nodeConfigs, buildNameToAppMeta } = buildConfigs
+    log.verbose(`update() ${activeApps.length}`, buildConfigs)
+    this.buildNameToAppMeta = buildNameToAppMeta
     this.apps = Object.keys(buildNameToAppMeta).map(k => buildNameToAppMeta[k])
-    this.state = this.updateAppMiddlewares(configs, buildNameToAppMeta)
+
+    if (!clientConfigs && !nodeConfigs) {
+      log.error('No config')
+      return
+    }
+
+    if (options.action === 'run') {
+      this.state = this.updateAppBuilders(buildConfigs)
+      return
+    }
+
+    if (options.action === 'build') {
+      const { base, ...rest } = clientConfigs
+      const configs = [
+        ...Object.keys(rest).map(key => rest[key]),
+        ...Object.keys(nodeConfigs).map(x => nodeConfigs[x]),
+      ]
+      log.info(`Building ${Object.keys(clientConfigs).join(', ')}...`)
+      // build base dll first to ensure it feeds into rest
+      await webpackPromise([base], {
+        loud: true,
+      })
+      await webpackPromise(configs, {
+        loud: true,
+      })
+      log.info(`Build complete!`)
+      return
+    }
   }
 
   updateCompletedFirstBuild = async (name: string, status: 'compiling' | 'error' | 'success') => {
@@ -135,14 +169,17 @@ export class AppBuilder {
     })
   }
 
-  private updateAppMiddlewares(
-    configs: WebpackConfigObj,
-    nameToAppMeta: AppMetaDict,
-  ): WebpackAppsDesc[] {
-    log.verbose(`configs ${Object.keys(configs).join(', ')}`, configs)
+  private updateAppBuilders({
+    clientConfigs,
+    nodeConfigs,
+    buildNameToAppMeta,
+  }: AppBuildConfigs): WebpackAppsDesc[] {
+    log.verbose(`configs ${Object.keys(clientConfigs).join(', ')}`, clientConfigs)
 
-    const { main, ...rest } = configs
+    const { main, ...rest } = clientConfigs
     let res: WebpackAppsDesc[] = []
+
+    console.log('TODO refactor to handle nodeConfigs', nodeConfigs)
 
     // you have to do it this janky ass way because webpack just isnt really great at
     // doing multi-config hmr, and this makes sure the 404 hot-update bug is fixed (google)
@@ -150,7 +187,7 @@ export class AppBuilder {
       const config = rest[name]
       const devName = `${name}-dev`
       const current = this.state.find(x => x.name === devName)
-      const middleware = this.getMiddleware(config, name, nameToAppMeta[name], devName)
+      const middleware = this.getAppBuilder(config, name, buildNameToAppMeta[name], devName)
       if (middleware) {
         if (middleware === true) {
           // use last one
@@ -194,7 +231,7 @@ export class AppBuilder {
     // falls back to the main entry middleware
     if (main) {
       const name = 'main'
-      const middleware = this.getMiddleware(main, name, undefined, name)
+      const middleware = this.getAppBuilder(main, name, undefined, name)
       if (middleware) {
         if (middleware === true) {
           res = [...res, ...this.state.filter(x => x.name === name)]
@@ -243,16 +280,13 @@ export class AppBuilder {
     return res
   }
 
-  private getMiddleware = (
+  private getAppBuilder = (
     config: Webpack.Configuration,
     name: string,
     appMeta?: AppMeta,
     runningName?: string,
   ) => {
     try {
-      const compiler = Webpack(config)
-      const publicPath = config.output.publicPath
-
       // cache if it hasn't changed to avoid rebuilds
       const hash = hashObject({ sort: false }).hash(config)
       if (runningName) {
@@ -267,6 +301,8 @@ export class AppBuilder {
         }
       }
 
+      const compiler = Webpack(config)
+      const publicPath = config.output.publicPath
       const devMiddleware = WebpackDevMiddleware(compiler, {
         publicPath,
         reporter: this.createReporterForApp(name, appMeta),

@@ -41,7 +41,7 @@ export const Menu = forwardRef(
               if (isValidElement(item)) {
                 return item
               }
-              return <ListItem key={item['id'] || index} {...item} />
+              return <ListItem key={item['id'] || index} {...item as any} />
             })}
         </Col>
       </Popover>

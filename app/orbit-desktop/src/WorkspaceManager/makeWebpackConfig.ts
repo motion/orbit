@@ -132,6 +132,10 @@ export function makeWebpackConfig(
   let config: webpack.Configuration = {
     name,
     watch,
+    watchOptions: {
+      // wait a lot longer before rebuilding node
+      aggregateTimeout: target === 'node' ? 1500 : 30,
+    },
     context,
     target,
     mode,

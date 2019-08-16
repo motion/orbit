@@ -21,7 +21,7 @@ ensure-dep "firebase" -- npm i -g firebase-tools &
 wait
 
 echo "installing dependencies"
-yarn install --ignore-engines
+yarn install
 
 # build everything
 if [ ! -d "./app/orbit-desktop/_" ]; then

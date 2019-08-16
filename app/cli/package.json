@@ -6,6 +6,11 @@
   "bin": {
     "orbit": "_/index.js"
   },
+  "workspaces": {
+    "nohoist": [
+      "execa"
+    ]
+  },
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
@@ -13,7 +18,9 @@
   },
   "dependencies": {
     "@babel/code-frame": "^7.0.0",
+    "@o/config": "*",
     "@o/libs-node": "^2.6.0",
+    "@o/logger": "*",
     "@o/mediator": "^2.6.0",
     "@o/models": "^2.6.0",
     "@o/telemetry": "^2.6.0",
@@ -23,13 +30,11 @@
     "ci-info": "^2.0.0",
     "common-tags": "^1.8.0",
     "convert-hrtime": "^3.0.0",
-    "execa": "^2.0.3",
-    "fs-exists-cached": "1.0.0",
+    "execa": "2.0.3",
     "fs-extra": "^7.0.0",
     "hosted-git-info": "2.7.1",
     "is-valid-path": "0.1.1",
     "isomorphic-fetch": "^2.2.1",
-    "lodash": "4.17.11",
     "opentracing": "0.14.3",
     "pretty-error": "^2.1.1",
     "prompts": "^2.1.0",
@@ -37,8 +42,6 @@
     "replace-in-file": "^4.1.1",
     "source-map": "0.5.7",
     "stack-trace": "^0.0.10",
-    "strip-ansi": "5.0.0",
-    "wait-on": "3.3.0-beta.0",
     "ws": "^7.0.0",
     "yargs": "^13.2.2",
     "yurnalist": "^1.0.5"

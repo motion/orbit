@@ -9,15 +9,15 @@
     "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {
-    "@o/css": "^2.6.0",
-    "@o/react-sortable-hoc": "*",
     "@o/bridge": "^2.6.0",
     "@o/color": "^2.6.0",
     "@o/config": "^2.6.0",
+    "@o/css": "^2.6.0",
     "@o/fast-compare": "^2.6.0",
     "@o/logger": "^2.6.0",
     "@o/mediator": "^2.6.0",
     "@o/models": "^2.6.0",
+    "@o/react-sortable-hoc": "*",
     "@o/stores": "^2.6.0",
     "@o/ui": "^2.6.0",
     "@o/use-store": "^2.6.0",
@@ -29,12 +29,14 @@
     "immer": "^3.1.2",
     "lodash": "4.17.11",
     "memoize-weak": "^1.0.2",
+    "react-hot-loader": "4.12.11",
     "sherlockjs": "1.4.0",
-    "typeorm": "^0.3.0-alpha.23",
-    "react-hot-loader": "4.12.11"
+    "typeorm": "^0.3.0-alpha.23"
   },
   "peerDependencies": {
     "electron": "*",
-    "react": "*"
+    "mobx": "*",
+    "react": "*",
+    "react-dom": "*"
   }
 }

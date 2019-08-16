@@ -8,14 +8,14 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/use-store": "^2.6.0",
-    "@o/bridge": "^2.6.0",
     "@o/apps-manager": "^2.6.0",
+    "@o/bridge": "^2.6.0",
     "@o/config": "^2.6.0",
     "@o/libs-node": "^2.6.0",
     "@o/logger": "^2.6.0",
     "@o/mediator": "^2.6.0",
     "@o/models": "^2.6.0",
+    "@o/use-store": "^2.6.0",
     "@o/utils": "^2.6.0",
     "@o/worker-kit": "^2.6.0",
     "global": "^4.3.2",

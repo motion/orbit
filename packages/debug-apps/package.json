@@ -4,18 +4,16 @@
   "sideEffects": false,
   "private": true,
   "version": "2.6.0",
-  "bin": {
-    "debug-apps": "./_/index.js"
-  },
+  "bin": "./_/index.js",
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
     "start": "node --max_old_space_size=4096 ./_/index"
   },
   "dependencies": {
+    "clear-port": "^1.0.1",
     "express": "^4.12.3",
     "isomorphic-fetch": "^2.2.1",
-    "clear-port": "^1.0.1",
     "lodash": "4.17.11",
     "puppeteer": "^1.16.0",
     "request": "^2.67.0",

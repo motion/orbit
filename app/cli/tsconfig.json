@@ -9,8 +9,10 @@
   "include": ["src/**/*"],
   "references": [
     { "path": "../../packages/build" },
+    { "path": "../../packages/logger" },
     { "path": "../libs-node" },
     { "path": "../telemetry" },
-    { "path": "../models" }
+    { "path": "../models" },
+    { "path": "../config" }
   ]
 }

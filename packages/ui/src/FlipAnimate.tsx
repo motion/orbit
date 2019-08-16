@@ -1,6 +1,7 @@
 import { useForceUpdate } from '@o/use-store'
 import React, { createContext, memo, useContext, useLayoutEffect } from 'react'
-import { Flipped, FlippedProps, Flipper } from 'react-flip-toolkit'
+import { Flipped, Flipper } from 'react-flip-toolkit'
+import { FlippedProps } from 'react-flip-toolkit/dist/Flipped/types'
 
 const FlipContext = createContext<Function>(null)
 

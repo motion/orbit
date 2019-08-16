@@ -1,6 +1,6 @@
 import { getWorkspaceApps } from '@o/apps-manager'
 
-import { buildAppInfo } from './commandBuild'
+import { buildAppInfo } from './buildAppInfo'
 
 export async function buildWorkspaceAppsInfo(
   workspaceRoot: string,

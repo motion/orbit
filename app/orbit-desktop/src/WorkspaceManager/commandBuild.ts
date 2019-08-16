@@ -1,4 +1,3 @@
-import { getAppInfo } from '@o/apps-manager'
 import { getGlobalConfig } from '@o/config'
 import { isOrbitApp, readPackageJson } from '@o/libs-node'
 import { Logger } from '@o/logger'
@@ -8,13 +7,14 @@ import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
 import webpack from 'webpack'
 
+import { buildAppInfo } from './buildAppInfo'
 import { commandGenTypes } from './commandGenTypes'
 import { attachLogToCommand, statusReplyCommand } from './commandHelpers'
 import { getAppParams } from './getAppsConfig'
 import { makeWebpackConfig } from './makeWebpackConfig'
 import { webpackPromise } from './webpackPromise'
 
-const log = new Logger('resolveAppBuildCommand')
+export const log = new Logger('resolveAppBuildCommand')
 
 export const resolveAppBuildCommand = resolveCommand(
   AppBuildCommand,
@@ -77,45 +77,6 @@ export async function commandBuild(
   }
 }
 
-export async function buildAppInfo(
-  options: CommandBuildOptions = {
-    projectRoot: '',
-    watch: false,
-  },
-): Promise<StatusReply<{ appInfo: AppDefinition; compiler: webpack.MultiWatching }>> {
-  try {
-    const directory = options.projectRoot
-    const entry = await getAppEntry(options.projectRoot)
-    const pkg = await readPackageJson(directory)
-    if (!pkg) {
-      return {
-        type: 'error',
-        message: `No package.json at ${directory}`,
-      }
-    }
-    // build appInfo first, we can then use it to determine if we need to build web/node
-    const appInfoConf = await getAppInfoConfig(entry, pkg.name, options)
-    log.info(`Building appInfo...`, appInfoConf)
-    const compiler = await webpackPromise([appInfoConf], {
-      loud: true,
-    })
-    return {
-      type: 'success',
-      message: `Built successfully`,
-      value: {
-        appInfo: await getAppInfo(directory),
-        compiler,
-      },
-    }
-  } catch (err) {
-    return {
-      type: 'error',
-      message: err.message,
-      errors: [err],
-    }
-  }
-}
-
 export async function bundleApp(options: CommandBuildOptions): Promise<StatusReply> {
   const verbose = true // !
   const entry = await getAppEntry(options.projectRoot)
@@ -125,7 +86,7 @@ export async function bundleApp(options: CommandBuildOptions): Promise<StatusRep
   if (appInfoRes.type !== 'success') {
     return appInfoRes
   }
-  const { appInfo } = appInfoRes.value
+  const appInfo = appInfoRes.value
   log.info(`appInfo`, appInfo)
 
   let webConf: webpack.Configuration | null = null
@@ -224,7 +185,7 @@ async function getNodeAppConfig(entry: string, name: any, options: CommandBuildO
 }
 
 // used just to get the information like id/name from the entry file
-async function getAppInfoConfig(
+export async function getAppInfoConfig(
   entry: string,
   name: string,
   options: Pick<CommandBuildOptions, 'projectRoot' | 'watch'>,

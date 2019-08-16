@@ -13,7 +13,7 @@
     "deploy": "rm -r dist || true && yarn build:docs:ui && yarn build && ./firebase-fix.sh && yarn deploy:firebase"
   },
   "dependencies": {
-    "@babel/runtime": "^7.4.4",
+    "@babel/runtime": "^7.4.5",
     "@mdx-js/react": "1.0.2",
     "@mdx-js/tag": "0.20.3",
     "@o/babel-preset-motion": "^2.6.0",

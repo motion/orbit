@@ -29,8 +29,8 @@ export async function commandGenTypes(
 
   if (!(await pathExists(apiEntry))) {
     return {
-      type: 'error',
-      message: 'Path doesnt exist',
+      type: 'success',
+      message: 'No API found',
     } as const
   }
 

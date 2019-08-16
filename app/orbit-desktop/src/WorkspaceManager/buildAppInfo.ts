@@ -1,12 +1,13 @@
+import * as parser from '@babel/parser'
+import traverse from '@babel/traverse'
+import { isObjectProperty, isStringLiteral } from '@babel/types'
 import { getAppInfo } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppDefinition, CommandBuildOptions, StatusReply } from '@o/models'
-import { writeJSON } from 'fs-extra'
+import { readFile, writeJSON } from 'fs-extra'
 import { join } from 'path'
-import ts from 'typescript'
 
 import { getAppEntry } from './commandBuild'
-import { compilerOptions } from './compilerOptions'
 
 // let just use typescript and extract that
 
@@ -38,46 +39,60 @@ export async function buildAppInfo(
 
 async function writeAppInfo(appRoot: string): Promise<StatusReply> {
   const entryFile = await getAppEntry(appRoot)
-  const program = ts.createProgram([entryFile], compilerOptions)
-  const checker = program.getTypeChecker()
-  const sourceFile = program.getSourceFile(entryFile)
-  const moduleSymbol = checker.getSymbolAtLocation(sourceFile)
-  const exprts = checker.getExportsOfModule(moduleSymbol)
-  const defaultExportSymbol = exprts.find(x => x.escapedName === 'default')
+  const tree = parser.parse(await readFile(entryFile, 'utf8'), {
+    sourceType: 'module',
+    plugins: [
+      'typescript',
+      'jsx',
+      'objectRestSpread',
+      'classProperties',
+      'classPrivateProperties',
+      'classPrivateMethods',
+      'exportDefaultFrom',
+      'exportNamespaceFrom',
+      'bigInt',
+      'optionalCatchBinding',
+      'throwExpressions',
+      'nullishCoalescingOperator',
+    ],
+  })
 
-  if (!defaultExportSymbol) {
+  let apiInfo = {}
+
+  traverse(tree, {
+    ExportDefaultDeclaration(path) {
+      path.traverse({
+        CallExpression(path) {
+          path.traverse({
+            ObjectExpression(path) {
+              for (const prop of path.node.properties) {
+                if (isObjectProperty(prop)) {
+                  const key = prop.key.name
+                  if (isStringLiteral(prop.value)) {
+                    apiInfo[key] = prop.value.value
+                  } else {
+                    apiInfo[key] = true
+                  }
+                }
+              }
+            },
+          })
+        },
+      })
+    },
+  })
+
+  if (!apiInfo['id']) {
     return {
       type: 'error',
-      message: `No default export found at app entry ${entryFile}`,
-    }
-  }
-
-  const defaultExportType = checker.getTypeOfSymbolAtLocation(
-    defaultExportSymbol,
-    defaultExportSymbol.valueDeclaration,
-  )
-
-  const properties = defaultExportType.getApparentProperties()
-
-  for (const prop of properties) {
-    const name = prop.getName()
-    const type = checker.getTypeOfSymbolAtLocation(prop, prop.valueDeclaration)
-    const typeString = checker.typeToString(type)
-    const node = checker.typeToTypeNode(type)
-    // let value = null
-    if (node && type) {
-      console.log('ok', name, typeString, type['text'], node.getText(), node['text'])
+      message: `Didn't find export default that calls createApp({}) with id set to a string`,
     }
   }
 
   const out = join(appRoot, 'dist', 'appInfo.json')
-  await writeJSON(
-    out,
-    {},
-    {
-      spaces: 2,
-    },
-  )
+  await writeJSON(out, apiInfo, {
+    spaces: 2,
+  })
 
   return {
     type: 'success',

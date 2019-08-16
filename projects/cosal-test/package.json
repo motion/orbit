@@ -7,7 +7,7 @@
     "build-app": "NODE_ENV=production mcro-build --prod --report"
   },
   "dependencies": {
-    "@babel/runtime": "^7.4.4",
+    "@babel/runtime": "^7.4.5",
     "@o/build": "^2.6.0",
     "@o/cosal": "^2.6.0",
     "@o/ui": "^2.6.0",

@@ -21,7 +21,7 @@ class WindowManager {
     // STATE VARIABLES/CACHES
     
     /// This wrapper represents the entire state of the OS, including all windows, applications and spaces.
-    fileprivate var state = Swindler.state
+    fileprivate var state: Swindler.State!
     
     /// The previous frontmost application, if any.
     fileprivate var previousFrontmostApplication: NSRunningApplication?
@@ -44,6 +44,14 @@ class WindowManager {
     
     private init() {
         lastScrollTime = DispatchTime.now()
+        
+        // Init Swindler
+        Swindler.initialize().done { (state) in
+            self.state = state
+        }.catch { error in
+            Log.error("Unable to start WindowManager (Swindler initialization failed): \(error.localizedDescription)")
+            fatalError(error.localizedDescription)
+        }
     }
 
 }
@@ -92,8 +100,7 @@ extension WindowManager {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
             self.observeFrontmostApplication()
             self.observeWindowChanges()
-            self.observeWindowPosition()
-            self.observeWindowSize()
+            self.observeWindowFrame()
             self.observeWindowTitle()
         }
     }
@@ -146,28 +153,15 @@ fileprivate extension WindowManager {
     }
 
 
-    /// Observes changes to the frontmost application's main window position.
-    private func observeWindowPosition() {
-        state.on { (event: WindowPosChangedEvent) in
+    /// Observes changes to the frontmost application's main window frame.
+    private func observeWindowFrame() {
+        state.on { (event: WindowFrameChangedEvent) in
             // Make sure we're not ignoring events
             guard !self.shouldIgnoreEvents else { return }
-            let position = CGPoint(x: event.newValue.x, y: event.newValue.y)
+            let position = CGPoint(x: event.newValue.minX, y: event.newValue.minY)
             let size = event.window.size.value
             // Broadcast message
             Socket.send(.windowMoved(size: size, position: position))
-        }
-    }
-
-
-    /// Observes changes to the frontmost application's main window size.
-    private func observeWindowSize() {
-        state.on { (event: WindowSizeChangedEvent) in
-            // Make sure we're not ignoring events
-            guard !self.shouldIgnoreEvents else { return }
-            let size = CGSize(width: event.newValue.width, height: event.newValue.height)
-            let position = event.window.position.value
-            // Broadcast message
-            Socket.send(.windowResized(size: size, position: position))
         }
     }
 
@@ -215,7 +209,7 @@ fileprivate extension WindowManager {
         
         // Extract info
         let title = window.title.value.replacingOccurrences(of: "\"", with: "")
-        let position = window.position.value
+        let position = window.frame.value.origin
         let size = window.size.value
 
         // Broadcast message

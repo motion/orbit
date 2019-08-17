@@ -1,24 +1,14 @@
 PODS:
-  - AXSwift (0.2.2)
-  - PromiseKit (4.4.0):
-    - PromiseKit/Foundation (= 4.4.0)
-    - PromiseKit/QuartzCore (= 4.4.0)
-    - PromiseKit/UIKit (= 4.4.0)
-  - PromiseKit/CorePromise (4.4.0)
-  - PromiseKit/Foundation (4.4.0):
-    - PromiseKit/CorePromise
-  - PromiseKit/QuartzCore (4.4.0):
-    - PromiseKit/CorePromise
-  - PromiseKit/UIKit (4.4.0):
-    - PromiseKit/CorePromise
+  - AXSwift (0.2.3)
+  - PromiseKit/CorePromise (6.10.0)
   - Starscream (3.0.6)
-  - Swindler (0.0.1):
-    - AXSwift (= 0.2.2)
-    - PromiseKit (= 4.4.0)
+  - Swindler (0.0.4):
+    - AXSwift (= 0.2.3)
+    - PromiseKit/CorePromise (~> 6.0)
 
 DEPENDENCIES:
   - Starscream (>= 3.0.6)
-  - Swindler (from `https://github.com/tmandry/Swindler.git`, commit `a0d71455`)
+  - Swindler (from `https://github.com/tmandry/Swindler.git`, tag `0.0.4`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -28,20 +18,20 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   Swindler:
-    :commit: a0d71455
     :git: https://github.com/tmandry/Swindler.git
+    :tag: 0.0.4
 
 CHECKOUT OPTIONS:
   Swindler:
-    :commit: a0d71455
     :git: https://github.com/tmandry/Swindler.git
+    :tag: 0.0.4
 
 SPEC CHECKSUMS:
-  AXSwift: 495d2ae44b4351f98b94c63337d69989fa4a7978
-  PromiseKit: ecf5fe92275d57ee77c9ede858af47a162e9b97e
+  AXSwift: d49fe05ca04f983196c5caedfc88f617922ae671
+  PromiseKit: 1fdaeb6c0a94a5114fcb814ff3d772b86886ad4e
   Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
-  Swindler: e6542328dd440810ea73829fbb41da1105a58d70
+  Swindler: 5fdfdfed526e8b6f710f1481dde22f1722c14b65
 
-PODFILE CHECKSUM: 3f5ed8e9ce68c3b015026599867a0feeb7060370
+PODFILE CHECKSUM: e0fe418aaabbaed01220e46633134d4e1dc95fda
 
-COCOAPODS: 1.6.0.beta.2
+COCOAPODS: 1.7.4

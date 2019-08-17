@@ -2,6 +2,7 @@ import { AppEntity } from './AppEntity.node'
 import { BitEntity } from './BitEntity.node'
 import { JobEntity } from './JobEntity.node'
 import { SearchIndexEntity } from './SearchIndexEntity.node'
+import { SettingEntity } from './SettingEntity.node'
 import { SpaceEntity } from './SpaceEntity.node'
 import { StateEntity } from './StateEntity.node'
 import { UserEntity } from './UserEntity.node'
@@ -16,6 +17,7 @@ export * from './SearchIndexEntity.node'
 export * from './SpaceEntity.node'
 export * from './UserEntity.node'
 export * from './StateEntity.node'
+export * from './SettingEntity.node'
 
 export const Entities = [
   AppEntity,
@@ -25,4 +27,5 @@ export const Entities = [
   SpaceEntity,
   UserEntity,
   StateEntity,
+  SettingEntity,
 ]

@@ -1,9 +1,6 @@
 import { Cosal } from '@o/cosal'
 import { Logger } from '@o/logger'
-import { BitEntity, getSearchableText } from '@o/models'
 import { sleep } from '@o/utils'
-import { flatten, zip } from 'lodash'
-import { getRepository } from 'typeorm'
 
 import { ensureSetting, getSettingValue, updateSetting } from '../helpers/settingModelHelpers'
 
@@ -45,33 +42,10 @@ export class TopicsManager {
     }
     console.log('Scanning topics')
     console.time('doScanTopics')
-    const topTopics = await this.getGlobalTopTopics()
     this.updatedTo = Date.now()
     await updateSetting({
-      topTopics,
       topicsIndexUpdatedTo: this.updatedTo,
     })
     console.timeEnd('doScanTopics')
-  }
-
-  getGlobalTopTopics = async () => {
-    console.log('SCANNING ALL BITS MAY BE SUPER SLOW...')
-    const totalBits = await getRepository(BitEntity).count()
-    if (!totalBits) {
-      return []
-    }
-    const maxPerGroup = 50
-    const numScans = Math.ceil(totalBits / maxPerGroup)
-    let allTopics: string[][] = []
-    for (let i = 0; i < numScans; i++) {
-      const bits = await getRepository(BitEntity).find({ take: maxPerGroup, skip: maxPerGroup * i })
-      const bodies = bits.map(getSearchableText).join(' ')
-      const topics = await this.cosal.getTopWords(bodies, { max: 10, sortByWeight: true })
-      // dont flatten
-      allTopics = [...allTopics, topics]
-      await sleep(20)
-    }
-    const topTopics = flatten(flatten(zip(allTopics)))
-    return topTopics
   }
 }

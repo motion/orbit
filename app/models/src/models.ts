@@ -6,21 +6,20 @@ import { AppBit } from './interfaces/AppBit'
 import { Bit } from './interfaces/Bit'
 import { BitContentType } from './interfaces/BitContentType'
 import { Job } from './interfaces/Job'
+import { Setting } from './interfaces/Setting'
 import { Space } from './interfaces/SpaceInterface'
 import { State } from './interfaces/State'
 import { User } from './interfaces/User'
 
 export const BitModel = new Model<Bit, FindOptions<Bit>, FindOptionsWhere<Bit>>('Bit')
-
 export const JobModel = new Model<Job, FindOptions<Job>, FindOptionsWhere<Job>>('Job')
-
 export const SpaceModel = new Model<Space, FindOptions<Space>, FindOptionsWhere<Space>>('Space')
-
 export const AppModel = new Model<AppBit, FindOptions<AppBit>, FindOptionsWhere<AppBit>>('App')
-
 export const UserModel = new Model<User, FindOptions<User>, FindOptionsWhere<User>>('User')
-
 export const StateModel = new Model<State, FindOptions<State>, FindOptionsWhere<State>>('State')
+export const SettingModel = new Model<Setting, FindOptions<Setting>, FindOptionsWhere<Setting>>(
+  'Setting',
+)
 
 export type SearchQuery = {
   query: string

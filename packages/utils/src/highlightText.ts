@@ -130,8 +130,6 @@ export function highlightText(options: HighlightOptions): string {
     }
   }
 
-  console.log('hltext', options, text, final)
-
   let stringResult = final.join('').replace(splitChar, separator)
 
   if (stringResult.length) {

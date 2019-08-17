@@ -210,8 +210,28 @@ export const List = memo(
     const showPlaceholder = noQuery && !hasResults
     const hasSectionProps = isDefined(title, subTitle, bordered, icon, beforeTitle, afterTitle)
 
-    const children = (
+    let children = (
       <SelectableStoreProvider value={selectableStore}>
+        {hasResults && (
+          <VirtualList
+            items={filtered.results}
+            ItemView={ListItem}
+            Separator={Separator}
+            {...restProps}
+            itemProps={finalItemProps}
+            getItemProps={getItemPropsInner}
+            onOpen={onOpenInner}
+            selectableStore={selectableStore}
+            separatorProps={separatorProps}
+          />
+        )}
+        {showPlaceholder && (placeholder || <ListPlaceholder {...allProps} />)}
+      </SelectableStoreProvider>
+    )
+
+    // highlighting if its defined
+    if (isDefined(props.query)) {
+      children = (
         <ProvideHighlight
           {...useMemo(
             () => ({
@@ -222,23 +242,10 @@ export const List = memo(
             [props.query],
           )}
         >
-          {hasResults && (
-            <VirtualList
-              items={filtered.results}
-              ItemView={ListItem}
-              Separator={Separator}
-              {...restProps}
-              itemProps={finalItemProps}
-              getItemProps={getItemPropsInner}
-              onOpen={onOpenInner}
-              selectableStore={selectableStore}
-              separatorProps={separatorProps}
-            />
-          )}
-          {showPlaceholder && (placeholder || <ListPlaceholder {...allProps} />)}
+          {children}
         </ProvideHighlight>
-      </SelectableStoreProvider>
-    )
+      )
+    }
 
     if (!hasSectionProps) {
       return children

@@ -37,8 +37,8 @@ export async function annoySearch({
   db,
   vector,
   max,
-  maxDistance,
 }: CosalSearchOptions & { path: string; db: string; vector: number[] }) {
+  // these come back sorted by closest
   const out = await execAnnoy({
     SEARCH: 'true',
     DB_NAME: db,
@@ -53,18 +53,11 @@ export async function annoySearch({
   }
   // map to result
   const result: Result[] = []
-  let i = 0
-  while (result.length <= max) {
-    if (!out[i]) break
-    const id = out[0][i]
-    const distance = out[1][i]
-    if (distance <= maxDistance) {
-      result.push({
-        id,
-        distance,
-      })
-    }
-    i++
+  for (let i = 0; i < out[0].length; i++) {
+    result.push({
+      id: out[0][i],
+      distance: out[1][i],
+    })
   }
   return result
 }

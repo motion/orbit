@@ -47,7 +47,6 @@ export async function annoySearch({
     VECTOR: JSON.stringify(vector),
     COUNT: max,
   })
-  console.log('do these come back sorted by distance? if so... we dun goofed', out)
   if (!out) {
     throw new Error('No data returned from search')
   }

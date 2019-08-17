@@ -5,7 +5,17 @@ import { getRepository } from 'typeorm'
 const log = new Logger('settingModelHelpers')
 
 export async function getSetting() {
-  return await getRepository(SettingEntity).findOne({})
+  let instance = await getRepository(SettingEntity).findOne({})
+  if (!instance) {
+    instance = await getRepository(SettingEntity).create({
+      name: 'desktop',
+      value: {
+        cosalIndexUpdatedTo: 0,
+        topicsIndexUpdatedTo: 0,
+      },
+    })
+  }
+  return instance
 }
 
 class SettingValueError extends Error {}

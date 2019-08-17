@@ -13,5 +13,5 @@ export class SettingEntity extends BaseEntity implements Setting {
   name?: string
 
   @Column({ type: 'simple-json', default: '{}' })
-  value?: any
+  value?: Setting['value']
 }

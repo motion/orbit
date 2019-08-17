@@ -1,7 +1,8 @@
 import { exec } from 'child_process'
-import Path from 'path'
-import { Result } from './cosal'
 import electronUtil from 'electron-util/node'
+import Path from 'path'
+
+import { CosalSearchOptions, Result } from './cosal'
 
 const annoyPath = electronUtil.fixPathForAsarUnpack(Path.join(__dirname, '..', 'annoy.py'))
 
@@ -31,7 +32,13 @@ export async function annoyScan({ db, path }) {
   })
 }
 
-export async function annoySearch({ path, db, vector, max }) {
+export async function annoySearch({
+  path,
+  db,
+  vector,
+  max,
+  maxDistance,
+}: CosalSearchOptions & { path: string; db: string; vector: number[] }) {
   const out = await execAnnoy({
     SEARCH: 'true',
     DB_NAME: db,
@@ -40,16 +47,24 @@ export async function annoySearch({ path, db, vector, max }) {
     VECTOR: JSON.stringify(vector),
     COUNT: max,
   })
+  console.log('do these come back sorted by distance? if so... we dun goofed', out)
   if (!out) {
     throw new Error('No data returned from search')
   }
   // map to result
   const result: Result[] = []
-  for (let i = 0; i < out[0].length; i++) {
-    result.push({
-      id: out[0][i],
-      distance: out[1][i],
-    })
+  let i = 0
+  while (result.length <= max) {
+    if (!out[i]) break
+    const id = out[0][i]
+    const distance = out[1][i]
+    if (distance <= maxDistance) {
+      result.push({
+        id,
+        distance,
+      })
+    }
+    i++
   }
   return result
 }

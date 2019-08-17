@@ -47,7 +47,10 @@ export class SearchResultResolver {
       return []
     }
     this.log.vtimer('search in cosal', query)
-    const results = await this.cosal.search(query, Math.max(300, this.args.take))
+    const results = await this.cosal.search(query, {
+      max: Math.max(300, this.args.take),
+      maxDistance: 0.5,
+    })
     let ids = []
     // distance is "relevancy", we can adjust this with testing
     const lastIndex = results.findIndex(x => x.distance > 0.5)

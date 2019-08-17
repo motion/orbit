@@ -1,4 +1,4 @@
-import { Cosal } from '@o/cosal'
+import { Cosal, CosalSearchOptions } from '@o/cosal'
 import { Logger } from '@o/logger'
 import { Bit, BitEntity, getSearchableText } from '@o/models'
 import { sleep } from '@o/utils'
@@ -62,8 +62,8 @@ export class CosalManager {
     await this.start()
   }
 
-  search = async (query: string, { max = 10 }) => {
-    const res = await this.cosal.search(query, max)
+  search = async (query: string, options: CosalSearchOptions) => {
+    const res = await this.cosal.search(query, options)
     const ids = res.map(x => x.id)
     return await getRepository(BitEntity).find({ id: { $in: ids } })
   }
@@ -87,8 +87,8 @@ export class CosalManager {
         order: {
           bitUpdatedAt: 'ASC',
         },
-        take: 100,
-        skip: index * 100,
+        take: 20,
+        skip: index * 20,
       })
       index++
       log.verbose(`Scanning ${chunk.length}...`)

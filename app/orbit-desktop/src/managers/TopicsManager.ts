@@ -4,6 +4,7 @@ import { BitEntity, getSearchableText } from '@o/models'
 import { sleep } from '@o/utils'
 import { flatten, zip } from 'lodash'
 import { getRepository } from 'typeorm'
+
 import { ensureSetting, getSettingValue, updateSetting } from '../helpers/settingModelHelpers'
 
 const log = new Logger('TopicsManager')

@@ -120,20 +120,20 @@ export class SearchResultResolver {
     // results that are found both in cosal and in fts5 search
     // we order into beginning (since they are kinda treated as most accurate)
     const [matchedBits, restBits]: [Bit[], Bit[]] = [[], []]
-    for (const ftsBit of ftsBits) {
-      if (ftsBit.type === 'person') {
-        matchedBits.push(ftsBit)
+    for (const bit of [...exactBits, ...ftsBits]) {
+      if (bit.type === 'person') {
+        matchedBits.push(bit)
       } else {
-        if (cosalBits.findIndex(x => x.id === ftsBit.id) > -1) {
-          matchedBits.push(ftsBit)
+        if (cosalBits.findIndex(x => x.id === bit.id) > -1) {
+          matchedBits.push(bit)
         } else {
-          restBits.push(ftsBit)
+          restBits.push(bit)
         }
       }
     }
 
     // lastly return bits
-    const allBits = uniqBy([...exactBits, ...matchedBits, ...restBits, ...cosalBits], 'id')
+    const allBits = uniqBy([...matchedBits, ...restBits, ...cosalBits], 'id')
     return allBits
   }
 }

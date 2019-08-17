@@ -53,6 +53,7 @@ export function highlightText(options: HighlightOptions): string {
   if (!options.words) {
     return cutoff(text, maxChars).trim()
   }
+
   // lowercase needle
   let parts = [text]
   // lowercase haystack
@@ -113,6 +114,7 @@ export function highlightText(options: HighlightOptions): string {
       }
     }
   }
+
   let final: string[] = []
   let len = 0
   for (const part of filtered) {
@@ -127,10 +129,15 @@ export function highlightText(options: HighlightOptions): string {
       final.push(part)
     }
   }
+
+  console.log('hltext', options, text, final)
+
   let stringResult = final.join('').replace(splitChar, separator)
+
   if (stringResult.length) {
     return stringResult.trim()
   }
+
   // no result, do a simple cutoff
   return cutoff(text, maxChars).trim()
 }

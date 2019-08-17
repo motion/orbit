@@ -210,19 +210,18 @@ export const List = memo(
     const showPlaceholder = noQuery && !hasResults
     const hasSectionProps = isDefined(title, subTitle, bordered, icon, beforeTitle, afterTitle)
 
-    const words = useMemo(() => (props.query ? props.query.split(' ') : []), [props.query])
-    const highlightValue = useMemo(
-      () => ({
-        words,
-        maxChars: 500,
-        maxSurroundChars: 80,
-      }),
-      [words],
-    )
-
     const children = (
       <SelectableStoreProvider value={selectableStore}>
-        <ProvideHighlight {...highlightValue}>
+        <ProvideHighlight
+          {...useMemo(
+            () => ({
+              query: props.query || '',
+              maxChars: 500,
+              maxSurroundChars: 80,
+            }),
+            [props.query],
+          )}
+        >
           {hasResults && (
             <VirtualList
               items={filtered.results}

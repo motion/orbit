@@ -21,7 +21,11 @@ class HighlightQueryStore {
   props: HighlightQueryProps
 
   get state() {
-    return Object.assign(defaultState, this.props)
+    const res = { ...defaultState }
+    for (const key in this.props) {
+      res[key] = this.props[key]
+    }
+    return res
   }
 }
 
@@ -47,7 +51,7 @@ export function HighlightText({
 }: HighlightTextProps) {
   const { state } = HighlightQueryStoreContext.useStore()
   const query = selectDefined(props.query, state.query)
-  const words = useMemo(() => state.query.split(' '), [query])
+  const words = query.split(' ')
   const text =
     words &&
     (words.length > 1 ||
@@ -62,7 +66,7 @@ export function HighlightText({
       words,
       text,
     }),
-    [state.maxSurroundChars, state.maxChars, text, words, maxSurroundChars, maxChars],
+    [state.maxSurroundChars, state.maxChars, text, query, maxSurroundChars, maxChars],
   )
   return (
     <Text tagName="div" className="paragraph" display="block" highlight={highlight} {...props}>

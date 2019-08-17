@@ -1,7 +1,8 @@
 import { exec } from 'child_process'
-import Path from 'path'
-import { Result } from './cosal'
 import electronUtil from 'electron-util/node'
+import Path from 'path'
+
+import { CosalSearchOptions, Result } from './cosal'
 
 const annoyPath = electronUtil.fixPathForAsarUnpack(Path.join(__dirname, '..', 'annoy.py'))
 
@@ -31,7 +32,13 @@ export async function annoyScan({ db, path }) {
   })
 }
 
-export async function annoySearch({ path, db, vector, max }) {
+export async function annoySearch({
+  path,
+  db,
+  vector,
+  max,
+}: CosalSearchOptions & { path: string; db: string; vector: number[] }) {
+  // these come back sorted by closest
   const out = await execAnnoy({
     SEARCH: 'true',
     DB_NAME: db,

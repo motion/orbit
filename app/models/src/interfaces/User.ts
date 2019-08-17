@@ -6,9 +6,6 @@ export interface UserSettings {
   vibrancy?: 'some' | 'more' | 'none'
   openShortcut?: string
   recentSearches?: string[]
-  cosalIndexUpdatedTo?: number
-  topicsIndexUpdatedTo?: number
-  topTopics?: string[]
 }
 
 export interface User {

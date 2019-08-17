@@ -1,42 +1,52 @@
 import { Logger } from '@o/logger'
-import { User, UserEntity } from '@o/models'
+import { Setting, SettingEntity } from '@o/models'
 import { getRepository } from 'typeorm'
 
 const log = new Logger('settingModelHelpers')
 
-export async function getUser() {
-  return await getRepository(UserEntity).findOne({})
+export async function getSetting() {
+  let instance = await getRepository(SettingEntity).findOne({})
+  if (!instance) {
+    instance = await getRepository(SettingEntity).create({
+      name: 'desktop',
+      value: {
+        cosalIndexUpdatedTo: 0,
+        topicsIndexUpdatedTo: 0,
+      },
+    })
+  }
+  return instance
 }
 
 class SettingValueError extends Error {}
 
-export async function getSettingValue<A extends keyof User['settings']>(key?: A) {
-  const user = await getUser()
-  if (!user) {
+export async function getSettingValue<A extends keyof Setting['value']>(key?: A) {
+  const setting = await getSetting()
+  if (!setting) {
     throw new SettingValueError('No setting!')
   }
-  if (typeof user.settings[key] !== 'undefined') {
-    return user.settings[key]
+  if (typeof setting.value[key] !== 'undefined') {
+    return setting.value[key]
   }
   throw new SettingValueError(`No key found on setting: ${key}`)
 }
 
-export async function updateSetting(next: Partial<User['settings']>) {
-  const user = await getUser()
-  const nextSettings = {
-    ...user.settings,
+export async function updateSetting(next: Partial<Setting['value']>) {
+  const setting = await getSetting()
+  const nextValue = {
+    ...setting.value,
     ...next,
   }
-  if (JSON.stringify(user.settings) !== JSON.stringify(nextSettings)) {
-    log.info(`Updating user settings ${Object.keys(next)}`)
-    user.settings = nextSettings
-    await getRepository(UserEntity).save(user)
+  if (JSON.stringify(setting.value) !== JSON.stringify(nextValue)) {
+    log.info(`Updating setting value ${Object.keys(next)}`)
+    setting.value = nextValue
+    await getRepository(SettingEntity).save(setting)
   }
 }
 
-export async function ensureSetting<A extends keyof User['settings']>(
+export async function ensureSetting<A extends keyof Setting['value']>(
   key: A,
-  value: User['settings'][A],
+  value: Setting['value'][A],
 ) {
   try {
     await getSettingValue(key)

@@ -9,7 +9,7 @@ const log = new Logger('CosalResolver')
 export const getCosalResolvers = (cosal: Cosal) => {
   const cosalSearch = resolveMany(SearchByTopicModel, async ({ query, count }) => {
     console.time('cosal')
-    const ids = await cosal.search(query, count)
+    const ids = await cosal.search(query, { max: count })
     console.timeEnd('cosal')
     const bits = await getRepository(BitEntity).findByIds(ids.map(x => x.id))
     log.info(`got ${bits.length} topic search results`)

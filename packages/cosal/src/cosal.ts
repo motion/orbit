@@ -42,6 +42,11 @@ type CosalOptions = {
   fallbackVector?: string
 }
 
+export type CosalSearchOptions = {
+  max?: number
+  maxDistance?: number
+}
+
 const initialState = {
   records: {
     covariance: null as Covariance,
@@ -212,12 +217,12 @@ export class Cosal {
   }
 
   // takes a vector, returns a list of ids
-  searchWithAnnoy = async (db: DBType, vector: number[], { max }) => {
+  searchWithAnnoy = async (db: DBType, vector: number[], options: CosalSearchOptions) => {
     const resultsByIndex = await annoySearch({
       path: this.databasePath,
       db,
       vector,
-      max,
+      ...options,
     })
     // map back to ids
     return resultsByIndex.map(({ distance, id }) => ({
@@ -228,14 +233,15 @@ export class Cosal {
 
   // goes through all vectors and sorts by smallest distance up to max
   // TODO better data structure?
-  search = async (query: string, max = 10) => {
+  search = async (query: string, { max = 10, maxDistance }: CosalSearchOptions = {}) => {
     await this.ensureStarted()
     return await this.searchWithCovariance('records', query, {
+      maxDistance,
       max,
     })
   }
 
-  private async searchWithCovariance(db: DBType, query: string, { max = 10 }) {
+  private async searchWithCovariance(db: DBType, query: string, options: CosalSearchOptions) {
     const cosal = await toCosal(
       query,
       this.state[db].covariance,
@@ -246,7 +252,7 @@ export class Cosal {
       log.info('no vectors for query', query)
       return []
     }
-    return await this.searchWithAnnoy(db, cosal.vector, { max })
+    return await this.searchWithAnnoy(db, cosal.vector, options)
   }
 
   async persist() {
@@ -259,13 +265,13 @@ export class Cosal {
 
   topicsList = null
 
-  topics = async (query: string, { max = 10 } = {}) => {
+  topics = async (query: string, { max = 10, maxDistance }: CosalSearchOptions = {}) => {
     if (!this.topicsList) {
       this.topicsList = await readJSON(join(__dirname, '../topics2.json'))
       await this.scan(this.topicsList.slice(0, 2000).map((text, id) => ({ text, id })), 'topics')
       await annoyScan({ db: 'topics', path: this.databasePath })
     }
-    const res = await this.searchWithCovariance('topics', query, { max })
+    const res = await this.searchWithCovariance('topics', query, { max, maxDistance })
     return res.map(res => ({ ...res, topic: this.topicsList[res.id] }))
   }
 

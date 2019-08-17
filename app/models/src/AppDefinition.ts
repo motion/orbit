@@ -71,6 +71,6 @@ export type AppDefinition<AppData = any, SetupFields extends FormFieldsObj = any
 
   /** Allow registering item views that let you render views for specific item types */
   itemViews?: {
-    [key: string]: AppViewProps
+    [key: string]: FunctionComponent<AppViewProps>
   }
 }

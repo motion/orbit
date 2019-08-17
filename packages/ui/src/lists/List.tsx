@@ -210,36 +210,42 @@ export const List = memo(
     const showPlaceholder = noQuery && !hasResults
     const hasSectionProps = isDefined(title, subTitle, bordered, icon, beforeTitle, afterTitle)
 
-    const words = useMemo(() => (props.query ? props.query.split(' ') : []), [props.query])
-    const highlightValue = useMemo(
-      () => ({
-        words,
-        maxChars: 500,
-        maxSurroundChars: 80,
-      }),
-      [words],
-    )
-
-    const children = (
+    let children = (
       <SelectableStoreProvider value={selectableStore}>
-        <ProvideHighlight {...highlightValue}>
-          {hasResults && (
-            <VirtualList
-              items={filtered.results}
-              ItemView={ListItem}
-              Separator={Separator}
-              {...restProps}
-              itemProps={finalItemProps}
-              getItemProps={getItemPropsInner}
-              onOpen={onOpenInner}
-              selectableStore={selectableStore}
-              separatorProps={separatorProps}
-            />
-          )}
-          {showPlaceholder && (placeholder || <ListPlaceholder {...allProps} />)}
-        </ProvideHighlight>
+        {hasResults && (
+          <VirtualList
+            items={filtered.results}
+            ItemView={ListItem}
+            Separator={Separator}
+            {...restProps}
+            itemProps={finalItemProps}
+            getItemProps={getItemPropsInner}
+            onOpen={onOpenInner}
+            selectableStore={selectableStore}
+            separatorProps={separatorProps}
+          />
+        )}
+        {showPlaceholder && (placeholder || <ListPlaceholder {...allProps} />)}
       </SelectableStoreProvider>
     )
+
+    // highlighting if its defined
+    if (isDefined(props.query)) {
+      children = (
+        <ProvideHighlight
+          {...useMemo(
+            () => ({
+              query: props.query || '',
+              maxChars: 500,
+              maxSurroundChars: 80,
+            }),
+            [props.query],
+          )}
+        >
+          {children}
+        </ProvideHighlight>
+      )
+    }
 
     if (!hasSectionProps) {
       return children

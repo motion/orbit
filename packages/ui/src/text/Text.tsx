@@ -236,7 +236,7 @@ export class Text extends React.PureComponent<TextProps> {
             if (typeof child === 'string') {
               return (
                 <HTMLBlock key={index}>
-                  {`${index > 0 ? ' ' : ''}${highlightText({ text: child, ...highlight })}${
+                  {`${index > 0 ? ' ' : ''}${highlightText({ ...highlight, text: `${child}` })}${
                     index === children.length - 1 ? ' ' : ''
                   }`}
                 </HTMLBlock>
@@ -247,7 +247,7 @@ export class Text extends React.PureComponent<TextProps> {
           }),
         }
       } else if (typeof children === 'string') {
-        __html = highlightText({ text: children, ...highlight })
+        __html = highlightText({ ...highlight, text: `${children}` })
       }
       if (__html) {
         finalProps = {

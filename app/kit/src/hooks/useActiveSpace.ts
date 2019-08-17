@@ -1,9 +1,14 @@
 import { useModel } from '@o/bridge'
-import { SpaceModel, UserModel } from '@o/models'
+import { Space, SpaceModel } from '@o/models'
 import { useMemo } from 'react'
+import { FindOptions } from 'typeorm'
 
-export function useActiveSpace(query?) {
-  const [user] = useModel(UserModel)
+import { useActiveUser } from './useActiveUser'
+
+export function useActiveSpace(query?: FindOptions<Space>) {
+  const [user] = useActiveUser({
+    select: ['activeSpace'],
+  })
   return useModel(
     SpaceModel,
     user && {

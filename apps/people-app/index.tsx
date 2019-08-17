@@ -1,4 +1,4 @@
-import { AppNavigator, AppViewProps, createApp, LocationLink, NavigatorProps, useBitSearch, useLocationLink } from '@o/kit'
+import { AppNavigator, AppViewProps, createApp, LocationLink, NavigatorProps, useActiveQuery, useBitSearch, useLocationLink } from '@o/kit'
 import { Button, Center, List, Paragraph, Section, SubTitle } from '@o/ui'
 import React, { useCallback } from 'react'
 
@@ -17,10 +17,10 @@ export default createApp({
 })
 
 function PeopleAppIndex(props: NavigatorProps) {
+  const activeQuery = useActiveQuery({ delay: 100 })
   const people = useBitSearch({
     type: 'person',
     excludeData: true,
-    where: { title: { $not: { $equal: '' } } },
   })
   return (
     <List
@@ -30,6 +30,7 @@ function PeopleAppIndex(props: NavigatorProps) {
       selectable="multi"
       onSelect={props.selectItems}
       items={people}
+      query={activeQuery}
       removePrefix="@"
       sortBy={useCallback(x => x.title.toLowerCase(), [])}
       groupByLetter

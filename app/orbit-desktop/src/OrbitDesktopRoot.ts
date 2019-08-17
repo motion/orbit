@@ -12,6 +12,8 @@ import {
   resolveObserveOne,
 } from '@o/mediator'
 import {
+  SettingEntity,
+  SettingModel,
   AppEntity,
   AppModel,
   BitEntity,
@@ -330,6 +332,7 @@ export class OrbitDesktopRoot {
         OrbitProcessStdOutModel,
         BuildStatusModel,
         WorkspaceInfoModel,
+        SettingModel,
       ],
       transport: new WebSocketServerTransport({
         port: mediatorServerPort,
@@ -342,6 +345,7 @@ export class OrbitDesktopRoot {
           { entity: SpaceEntity, models: [SpaceModel] },
           { entity: UserEntity, models: [UserModel] },
           { entity: StateEntity, models: [StateModel] },
+          { entity: SettingEntity, models: [SettingModel] },
         ]),
 
         // this is a generic bus that routes all our Logger output out

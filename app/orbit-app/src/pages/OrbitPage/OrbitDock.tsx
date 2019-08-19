@@ -121,6 +121,7 @@ class OrbitDockStore {
 }
 
 export const OrbitDock = memo(() => {
+  const store = orbitDockStore.useStore()
   const { state } = useOm()
   const { appRole } = useStore(App)
   const isTorn = appRole === 'torn'
@@ -133,7 +134,17 @@ export const OrbitDock = memo(() => {
   )
 
   return (
-    <Col position="absolute" top={56} right={0} bottom={0} padding={[25, 10, 0, 0]} space="lg">
+    <Col
+      position="absolute"
+      top={56}
+      right={0}
+      padding={[25, 10, 10, 0]}
+      space="lg"
+      onMouseEnter={store.hoverEnter}
+      onMouseLeave={store.hoverLeave}
+      zIndex={100000000}
+      pointerEvents={store.isOpen ? 'auto' : 'none'}
+    >
       <OrbitDockPanel offset={0} apps={topDockApps} />
       <OrbitDockPanel offset={topDockApps.length} apps={bottomDockApps} />
     </Col>
@@ -159,8 +170,6 @@ export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
         flexDirection="column"
         ref={dockRef}
         pointerEvents={store.state === 'closed' ? 'none' : 'inherit'}
-        onMouseEnter={store.hoverEnter}
-        onMouseLeave={store.hoverLeave}
         transform={
           store.isOpen
             ? {

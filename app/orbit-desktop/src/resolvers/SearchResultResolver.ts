@@ -72,14 +72,33 @@ export class SearchResultResolver {
     const exactBitIds = this.args.query
       ? await getRepository(BitEntity).find({
           select: ['id'],
-          where: {
-            title: {
-              $like: `%${this.args.query}%`.toLowerCase(),
+          where: [
+            {
+              title: {
+                $like: `${this.args.query} %`.toLowerCase(),
+              },
             },
-          },
+            {
+              title: {
+                $like: `% ${this.args.query}`.toLowerCase(),
+              },
+            },
+            {
+              title: {
+                $like: `${this.args.query}`.toLowerCase(),
+              },
+            },
+            {
+              title: {
+                $like: `% ${this.args.query} %`.toLowerCase(),
+              },
+            },
+          ],
           take: 10,
         })
       : []
+
+    this.log.info(`exact matches ${exactBitIds.length}`)
 
     // parallel search
     const [exactResults, ftsResults, cosalResults] = await Promise.all([

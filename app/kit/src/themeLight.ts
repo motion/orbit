@@ -17,6 +17,7 @@ export const light: ThemeObject = {
   alternates,
   cardShadow: [0, 6, 14, [0, 0, 0, 0.058]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
+  boxShadowOpacity: 0.05,
   ...fromStyles({
     iconFillColor: '#000',
     glintColor: [255, 255, 255, 0.85],
@@ -28,7 +29,6 @@ export const light: ThemeObject = {
     backgroundHighlightActive: colors.blue.lighten(0.1),
     backgroundHighlight: colors.blue,
     boxShadowColor: [0, 0, 0],
-    boxShadowOpacity: 0.12,
     mainBackground: lightBackground,
     backgroundActive: '#eee',
     backgroundHover: '#eee',

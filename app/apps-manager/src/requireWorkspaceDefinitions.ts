@@ -14,7 +14,7 @@ export async function requireWorkspaceDefinitions(
       if (res.type !== 'success') {
         return {
           type: 'error',
-          message: `No node api, error: ${res.message}`,
+          message: `No node api for ${packageId}, error: ${res.message}`,
         } as const
       }
       return {

@@ -148,6 +148,9 @@ async function getWebAppConfig(entry: string, name: string, options: CommandBuil
       minify: false,
       hot: false,
       dllReferences: [defaultBaseDll],
+      output: {
+        libraryTarget: 'system',
+      },
     }),
   )
 }

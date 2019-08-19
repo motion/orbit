@@ -4,7 +4,7 @@ import { AppMeta, BuildStatus, CommandWsOptions } from '@o/models'
 import { stringToIdentifier } from '@o/utils'
 import historyAPIFallback from 'connect-history-api-fallback'
 import { Handler } from 'express'
-import { readFile } from 'fs-extra'
+import { pathExists, readFile } from 'fs-extra'
 import hashObject from 'node-object-hash'
 import { join } from 'path'
 import { parse } from 'url'
@@ -73,6 +73,8 @@ export class AppBuilder {
       return
     }
 
+    await this.ensureInitiallyBuilt(buildConfigs)
+
     if (options.action === 'run') {
       this.state = this.updateAppBuilders(buildConfigs)
       return
@@ -95,6 +97,24 @@ export class AppBuilder {
       log.info(`Build complete!`)
       return
     }
+  }
+
+  async ensureInitiallyBuilt(buildConfigs: AppBuildConfigs) {
+    const { nodeConfigs } = buildConfigs
+    await Promise.all(
+      Object.keys(nodeConfigs).map(async name => {
+        const nodeConf = nodeConfigs[name]
+        const outFile = join(nodeConf.context, nodeConf.output.filename)
+        if (await pathExists(outFile)) {
+          // we've built once, we can wait until the runner rebuilds
+        } else {
+          log.info(`No node definition found yet for ${name}, building...`)
+          await webpackPromise([nodeConf], {
+            loud: true,
+          })
+        }
+      }),
+    )
   }
 
   updateCompletedFirstBuild = async (name: string, status: 'compiling' | 'error' | 'success') => {

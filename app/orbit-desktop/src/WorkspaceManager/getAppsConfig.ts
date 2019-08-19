@@ -282,7 +282,6 @@ export function getAppParams(props: WebpackParams): WebpackParams {
     ignore: ['electron-log', '@o/worker-kit', 'configstore'],
     ...props,
     output: {
-      libraryTarget: 'system',
       ...props.output,
     },
   }

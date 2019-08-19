@@ -8,12 +8,11 @@ const log = new Logger('loadAppEntry')
 const entryFileNames = {
   node: 'index.node.js',
   web: 'index.js',
-  appInfo: 'appInfo.js',
 }
 
 export async function loadAppEntry(
   directory: string,
-  entryType: 'node' | 'web' | 'appInfo',
+  entryType: 'node' | 'web',
 ): Promise<AppDefinition | null> {
   try {
     log.verbose(`load entry ${entryType} in ${directory}`)

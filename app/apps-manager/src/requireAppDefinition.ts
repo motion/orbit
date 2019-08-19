@@ -14,7 +14,7 @@ export async function requireAppDefinition({
 }: {
   directory: string
   packageId: string
-  types: ('node' | 'web' | 'appInfo')[]
+  types: ('node' | 'web')[]
 }): Promise<StatusReply<AppDefinition>> {
   if (!directory || !packageId) {
     return {

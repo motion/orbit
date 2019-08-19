@@ -394,6 +394,7 @@ const FloatingLabel = gloss<{ visible?: boolean }>(Box, {
   left: 0,
   alignSelf: 'flex-start',
   background: [0, 0, 0, 0.95],
+  color: '#fff',
   padding: [4, 8],
   borderRadius: 100,
   fontSize: 14,

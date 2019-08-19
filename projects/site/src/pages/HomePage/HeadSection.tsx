@@ -24,13 +24,13 @@ let allTitles = {
 let allTexts = {
   large: [
     `Build and collaborate on apps that power your company.`,
-    `Orbit is a new take on a Work OS.`,
+    `Orbit is an open, data-first Work OS.`,
   ],
   medium: [
     `Build and collaborate on apps that power your company.`,
-    `Orbit is a new take on a Work OS.`,
+    `Orbit is an open, data-first Work OS.`,
   ],
-  small: [`Create intranet apps easily.`, `Orbit internal apps, with all new abilities.`],
+  small: [`Build apps that power your company.`, `The data-first Work OS.`],
 }
 
 const HeadContent = memo(() => {

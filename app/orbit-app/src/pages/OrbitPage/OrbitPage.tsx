@@ -177,11 +177,11 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       <OrbitHeader />
       <OrbitDock />
       <OrbitDraggableOverlay />
-      <InnerChrome torn={isEditing}>
+      <OrbitInnerChrome torn={isEditing}>
         <OrbitContentArea>
           <ListPassProps onOpen={onOpen}>{contentArea}</ListPassProps>
         </OrbitContentArea>
-      </InnerChrome>
+      </OrbitInnerChrome>
     </MainShortcutHandler>
   )
 })
@@ -200,11 +200,12 @@ const OrbitContentArea = gloss(Box, {
   },
 })
 
-const InnerChrome = gloss<{ torn?: boolean } & ViewProps>(View, {
+const OrbitInnerChrome = gloss<{ torn?: boolean } & ViewProps>(View, {
   flex: 1,
   overflow: 'hidden',
   position: 'relative',
   zIndex: 3,
-}).theme(({ torn }) => ({
+}).theme(({ torn }, theme) => ({
   boxShadow: [torn ? null : [0, 0, 80, [0, 0, 0, 0.05]]],
+  background: theme.orbitLauncherBackground,
 }))

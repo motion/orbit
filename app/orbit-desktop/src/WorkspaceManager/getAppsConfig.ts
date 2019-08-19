@@ -277,9 +277,11 @@ export function getAppParams(props: WebpackParams): WebpackParams {
   return {
     mode: 'development',
     publicPath: '/',
-    externals: {
-      typeorm: 'typeorm',
-    },
+    ...(props.target === 'web' && {
+      externals: {
+        typeorm: 'typeorm',
+      },
+    }),
     ignore: ['electron-log', '@o/worker-kit', 'configstore'],
     ...props,
     output: {

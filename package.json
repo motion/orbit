@@ -13,6 +13,7 @@
     "bootstrap": "./bin/bootstrap",
     "clean": "bin/clean",
     "clean:packages": "bin/clean --all",
+    "clean:apps": "rm -r apps/*/dist",
     "start": "cd example-workspace && orbit ws --logLevel 1",
     "start:dev": "cd example-workspace && orbit ws --dev --logLevel 3",
     "start:dev:clean": "cd example-workspace && orbit ws --dev --logLevel 2 --clean",

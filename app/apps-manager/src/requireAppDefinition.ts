@@ -31,7 +31,7 @@ export async function requireAppDefinition({
     }
   }
 
-  log.verbose(`Importing app definition at appRoot ${packageRoot}`)
+  log.verbose(packageRoot)
 
   // can specify preferred definition
   let definition: AppDefinition | null = null
@@ -53,6 +53,6 @@ export async function requireAppDefinition({
 
   return {
     type: 'error',
-    message: 'No definition found',
+    message: `No definition found at `,
   }
 }

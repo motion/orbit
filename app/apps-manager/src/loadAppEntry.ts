@@ -19,8 +19,12 @@ export async function loadAppEntry(
     log.verbose(`path for ${entryType}: ${path}`)
     if (await pathExists(path)) {
       return require(path).default
+    } else {
+      log.info(`No entry found`)
+      return null
     }
   } catch (err) {
+    console.log('error', err.message, err.stack)
     log.error(`Error loading entry`, err)
     return null
   }

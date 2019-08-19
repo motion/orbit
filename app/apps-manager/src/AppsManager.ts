@@ -188,7 +188,7 @@ export class AppsManager {
     if (!this.activeSpace) return
 
     await Promise.all([
-      this.updateNodeDefinitions(this.activeSpace),
+      this.updateNodeDefinitions(),
       // have cli update its cache of packageId => identifier for use installing
       updateWorkspacePackageIds(this.activeSpace.directory || ''),
     ])
@@ -218,10 +218,10 @@ export class AppsManager {
     this.fetchedAppsMeta = true
   }
 
-  private updateNodeDefinitions = async (space: Space) => {
+  private updateNodeDefinitions = async (space: Space = this.activeSpace) => {
     const definitions = await requireWorkspaceDefinitions((space && space.directory) || '', 'node')
     log.verbose(
-      `Got definitions ${definitions.map(x => `${x.type}: ${x.message}`).join(',\n')}`,
+      `Got definitions:\n${definitions.map(x => `${x.type}: ${x.message}`).join(',\n')}`,
       definitions,
     )
     this.nodeAppDefinitions = definitions.map(x => x.type === 'success' && x.value).filter(Boolean)

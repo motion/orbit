@@ -134,8 +134,8 @@ export const OrbitDock = memo(() => {
 
   return (
     <Col position="absolute" top={56} right={0} bottom={0} padding={[25, 10, 0, 0]} space="lg">
-      <OrbitDockPanel apps={topDockApps} />
-      <OrbitDockPanel apps={bottomDockApps} />
+      <OrbitDockPanel offset={0} apps={topDockApps} />
+      <OrbitDockPanel offset={topDockApps.length} apps={bottomDockApps} />
     </Col>
   )
 })
@@ -143,7 +143,7 @@ export const OrbitDock = memo(() => {
 export const orbitDockStore = createUsableStore(OrbitDockStore)
 window['orbitDockStore'] = orbitDockStore
 
-export const OrbitDockPanel = (props: { apps: AppBit[] }) => {
+export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
   const theme = useTheme()
   const store = orbitDockStore.useStore()
   const dockRef = useRef<HTMLElement>(null)
@@ -178,7 +178,7 @@ export const OrbitDockPanel = (props: { apps: AppBit[] }) => {
           <OrbitDockButton
             key={app.id}
             app={app}
-            index={index}
+            index={index + props.offset}
             circular={false}
             borderRadius={0}
             glint={false}

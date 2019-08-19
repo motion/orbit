@@ -92,11 +92,6 @@ export async function bundleApp(options: CommandBuildOptions): Promise<StatusRep
   let webConf: webpack.Configuration | null = null
   let nodeConf: webpack.Configuration | null = null
 
-  if (hasKey(appInfo, 'app')) {
-    log.info(`Found web app`)
-    webConf = await getWebAppConfig(entry, pkg.name, options)
-  }
-
   if (hasKey(appInfo, 'graph', 'workers', 'api')) {
     log.info(`Found node app`)
     nodeConf = await getNodeAppConfig(entry, pkg.name, options)
@@ -135,26 +130,6 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
-async function getWebAppConfig(entry: string, name: string, options: CommandBuildOptions) {
-  return await makeWebpackConfig(
-    getAppParams({
-      name,
-      context: options.projectRoot,
-      entry: [entry],
-      target: 'web', // TODO electron-renderer
-      outputFile: 'index.js',
-      watch: options.watch,
-      mode: 'production',
-      minify: false,
-      hot: false,
-      dllReferences: [defaultBaseDll],
-      output: {
-        libraryTarget: 'system',
-      },
-    }),
-  )
-}
-
 export async function getNodeAppConfig(entry: string, name: any, options: CommandBuildOptions) {
   return await makeWebpackConfig(
     getAppParams({
@@ -183,47 +158,6 @@ export async function getNodeAppConfig(entry: string, name: any, options: Comman
           callback()
         },
       ],
-    },
-  )
-}
-
-// used just to get the information like id/name from the entry file
-export async function getAppInfoConfig(
-  entry: string,
-  name: string,
-  options: Pick<CommandBuildOptions, 'projectRoot' | 'watch'>,
-) {
-  return await makeWebpackConfig(
-    {
-      name,
-      context: options.projectRoot,
-      entry: [entry],
-      target: 'node',
-      mode: 'development',
-      devtool: 'inline-source-map',
-      minify: false,
-      outputFile: 'appInfo.js',
-      watch: options.watch || false,
-      output: {
-        library: '[name]',
-        libraryTarget: 'umd',
-      },
-    },
-    {
-      externals: {
-        '@o/kit': '@o/kit/export-app',
-      },
-      module: {
-        // ignore *everything* outside entry
-        rules: [
-          {
-            test: x => {
-              return x !== entry
-            },
-            use: 'ignore-loader',
-          },
-        ],
-      },
     },
   )
 }

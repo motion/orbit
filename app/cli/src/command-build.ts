@@ -5,14 +5,14 @@ import { getOrbitDesktop } from './getDesktop'
 import { logStatusReply } from './logStatusReply'
 import { reporter } from './reporter'
 
-export async function commandBuild(options: CommandBuildOptions, singleUseMode = false) {
+export async function commandBuild(options: CommandBuildOptions, singleUseMode = true) {
   reporter.info(`Building...`)
   if (!(await isOrbitApp(options.projectRoot))) {
     reporter.panic(
       `\nNot inside an orbit app, add "config": { "orbitApp": true } } to the package.json`,
     )
   }
-  const { mediator, orbitProcess } = await getOrbitDesktop({
+  const { mediator, orbitProcess, didStartOrbit } = await getOrbitDesktop({
     singleUseMode,
   })
   const res = await mediator.command(AppBuildCommand, options, {
@@ -20,7 +20,7 @@ export async function commandBuild(options: CommandBuildOptions, singleUseMode =
     onMessage: reporter.info,
   })
   logStatusReply(res)
-  if (singleUseMode) {
+  if (didStartOrbit) {
     orbitProcess.kill()
   }
   process.exit(0)

@@ -251,8 +251,18 @@ const OrbitDockButton = memo(function OrbitDockButton({
         label={app.name}
         ref={buttonRef}
         labelProps={{
-          transition: 'all ease 300ms',
+          transition: 'all ease 150ms 200ms',
           elevation: 1,
+          opacity: 0,
+          transform: {
+            y: -10,
+          },
+          ...(dockStore.isOpen && {
+            opacity: 1,
+            transform: {
+              y: 0,
+            },
+          }),
         }}
         onMouseMove={() => {
           if (appsDrawerStore.isOpen) return

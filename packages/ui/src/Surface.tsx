@@ -237,6 +237,8 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
     space,
     spaceAround,
     betweenIconElement,
+    borderTopRadius,
+    borderBottomRadius,
     ...viewProps
   } = props
   const size = getSize(selectDefined(ogSize, 1))
@@ -278,15 +280,11 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
   const childrenProps: HTMLProps<HTMLDivElement> = {}
 
   const borderLeftRadius = Math.min(
-    segmentedStyle
-      ? segmentedStyle.borderLeftRadius
-      : +selectDefined(props.borderRadius),
+    segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius,
     +height / 2,
   )
   const borderRightRadius = Math.min(
-    segmentedStyle
-      ? segmentedStyle.borderRightRadius
-      : +selectDefined(props.borderRadius),
+    segmentedStyle ? segmentedStyle.borderRightRadius : +props.borderRadius,
     +height / 2,
   )
 
@@ -481,8 +479,11 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
     disabled,
     ...(!showElement && elementProps),
     ...throughProps,
-    ...segmentedStyle,
     ...viewProps,
+    ...segmentedStyle,
+    // ensure borderTopRadius, borderBottomRadius override
+    borderTopRadius,
+    borderBottomRadius,
     ...childrenProps,
     ...(!noInnerElement && { tagName }),
     opacity: crumb && crumb.total === 0 ? 0 : props.opacity,

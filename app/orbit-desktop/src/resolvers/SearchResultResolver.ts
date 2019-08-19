@@ -1,8 +1,9 @@
 import { Cosal } from '@o/cosal'
+import { subDays } from '@o/kit'
 import { Logger } from '@o/logger'
 import { AppEntity, Bit, BitEntity, SearchQuery } from '@o/models'
 import { uniqBy } from 'lodash'
-import { getRepository } from 'typeorm'
+import { getRepository, MoreThan } from 'typeorm'
 
 import { SearchQueryExecutor } from '../search/SearchQueryExecutor'
 
@@ -69,29 +70,40 @@ export class SearchResultResolver {
     this.log.verbose(`search, num apps`, this.apps.length, this.args)
 
     // find exact matches
+      const whereConditions = {
+        // within 30 days
+        bitCreatedAt: MoreThan(subDays(Date.now(), 30))
+      }
     const exactBitIds = this.args.query
       ? await getRepository(BitEntity).find({
           select: ['id'],
+          order: {
+            bitCreatedAt: 'ASC',
+          },
           where: [
             {
               title: {
                 $like: `${this.args.query} %`.toLowerCase(),
               },
+              ...whereConditions
             },
             {
               title: {
                 $like: `% ${this.args.query}`.toLowerCase(),
               },
+              ...whereConditions,
             },
             {
               title: {
                 $like: `${this.args.query}`.toLowerCase(),
               },
+              ...whereConditions,
             },
             {
               title: {
                 $like: `% ${this.args.query} %`.toLowerCase(),
               },
+              ...whereConditions,
             },
           ],
           take: 10,

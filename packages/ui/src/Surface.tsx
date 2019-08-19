@@ -278,11 +278,15 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
   const childrenProps: HTMLProps<HTMLDivElement> = {}
 
   const borderLeftRadius = Math.min(
-    segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius,
+    segmentedStyle
+      ? segmentedStyle.borderLeftRadius
+      : +selectDefined(props.borderRadius, props.borderTopRadius),
     +height / 2,
   )
   const borderRightRadius = Math.min(
-    segmentedStyle ? segmentedStyle.borderRightRadius : +props.borderRadius,
+    segmentedStyle
+      ? segmentedStyle.borderRightRadius
+      : +selectDefined(props.borderRadius, props.borderTopRadius),
     +height / 2,
   )
 
@@ -477,8 +481,8 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
     disabled,
     ...(!showElement && elementProps),
     ...throughProps,
-    ...viewProps,
     ...segmentedStyle,
+    ...viewProps,
     ...childrenProps,
     ...(!noInnerElement && { tagName }),
     opacity: crumb && crumb.total === 0 ? 0 : props.opacity,

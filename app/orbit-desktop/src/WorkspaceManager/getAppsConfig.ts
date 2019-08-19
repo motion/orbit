@@ -182,6 +182,9 @@ export async function getAppsConfig(
       const appInfo = appInfos[index]
       const config = await addDLL({
         ...getAppParams(params),
+        output: {
+          library: 'system',
+        },
         // only watch apps for updates in development mode
         watch: buildMode[appMeta.packageId] === 'development',
       })

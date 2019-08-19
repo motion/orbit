@@ -151,7 +151,6 @@ export const OrbitHeader = memo(() => {
       isDeveloping={isDeveloping}
       className="draggable"
       onMouseUp={headerStore.handleMouseUp}
-      background={appCarousel.zoomedIn ? undefined : 'transparent'}
     >
       <OrbitHeaderEditingBg isActive={isDeveloping} />
 
@@ -344,11 +343,7 @@ const OrbitHeaderContainer = gloss<any>(View, {
   transition: 'all ease 300ms',
   zIndex: 0,
 }).theme((props, theme) => ({
-  background:
-    props.background ||
-    (props.isDeveloping && 'transparent') ||
-    theme.headerBackground ||
-    theme.background,
+  background: props.background || theme.headerBackground || theme.background,
 }))
 
 const HeaderSide = gloss<RowProps & { slim?: boolean }>(Row, {

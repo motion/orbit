@@ -557,10 +557,10 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
 
   if (props.elevation) {
     boxShadow = [...(boxShadow || []), ...getElevation(props, theme).boxShadow]
+    console.log('eveation shadow', boxShadow)
   }
 
   const res = {
-    boxShadow,
     fontWeight: props.fontWeight || theme.fontWeight,
     overflow: props.overflow || theme.overflow,
     // note: base theme styles go *above* propsToStyles...
@@ -576,6 +576,7 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
     ...propStyles,
     ...marginStyle,
     ...styles,
+    boxShadow,
     '&:hover': props.active
       ? null
       : {

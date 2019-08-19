@@ -74,7 +74,7 @@ export const OrbitAppsDrawer = memo(() => {
         boxShadow={[
           {
             blur: boxShadowSize,
-            color: [0, 0, 10, hasDarkBackground ? 0.5 : 0.5],
+            color: [0, 0, 10, hasDarkBackground ? 0.5 : 0.1],
           },
         ]}
         sizeRadius={2}

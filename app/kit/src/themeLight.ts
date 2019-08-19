@@ -15,7 +15,7 @@ const backgroundStrongest = lightBackground.darken(0.075)
 
 export const light: ThemeObject = {
   alternates,
-  cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
+  cardShadow: [0, 6, 14, [0, 0, 0, 0.058]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
   ...fromStyles({
     iconFillColor: '#000',
@@ -28,7 +28,7 @@ export const light: ThemeObject = {
     backgroundHighlightActive: colors.blue.lighten(0.1),
     backgroundHighlight: colors.blue,
     boxShadowColor: [0, 0, 0],
-    boxShadowOpacity: 0.1,
+    boxShadowOpacity: 0.12,
     mainBackground: lightBackground,
     backgroundActive: '#eee',
     backgroundHover: '#eee',

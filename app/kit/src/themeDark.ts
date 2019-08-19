@@ -78,6 +78,8 @@ export const dark: ThemeObject = {
   // elevatedShadowSpread: (elevation: number) => smoother(x, 1),
   // elevatedShadowColor: (elevation: number) => smoother(x, 1),
   separatorBackground: backgroundStrong,
+  cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
+  cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
   ...fromStyles({
     background,
     backgroundHover: [20, 20, 20, 0.2],
@@ -146,8 +148,6 @@ Object.assign(
     cardBackgroundActive: [110, 110, 110],
     cardBorderColor: [255, 255, 255, 0.07],
     cardBorderColorHover: [255, 255, 255, 0.15],
-    cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
-    cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
     panelHeaderBackground: background.lighten(0.15),
     redTint: '#ff000011',
     yellowTint: '#FFCA0011',

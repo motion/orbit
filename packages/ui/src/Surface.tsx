@@ -280,13 +280,13 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
   const borderLeftRadius = Math.min(
     segmentedStyle
       ? segmentedStyle.borderLeftRadius
-      : +selectDefined(props.borderRadius, props.borderTopRadius),
+      : +selectDefined(props.borderRadius),
     +height / 2,
   )
   const borderRightRadius = Math.min(
     segmentedStyle
       ? segmentedStyle.borderRightRadius
-      : +selectDefined(props.borderRadius, props.borderTopRadius),
+      : +selectDefined(props.borderRadius),
     +height / 2,
   )
 

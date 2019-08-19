@@ -109,7 +109,7 @@ export class AppBuilder {
           // we've built once, we can wait until the runner rebuilds
         } else {
           log.info(`No node definition found yet for ${name}, building...`)
-          await webpackPromise([nodeConf], {
+          await webpackPromise([{ ...nodeConf, watch: false }], {
             loud: true,
           })
         }

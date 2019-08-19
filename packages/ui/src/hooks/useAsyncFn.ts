@@ -3,7 +3,6 @@ import { DependencyList, useCallback, useState } from 'react'
 
 import useRefMounted from './useRefMounted'
 
-
 export type AsyncState<T> =
   | {
       loading: boolean
@@ -26,7 +25,7 @@ export type AsyncFn<Result = any, Args extends any[] = any[]> = [
   (...args: Args | []) => Promise<Result>
 ]
 
-export default function useAsyncFn<Result = any, Args extends any[] = any[]>(
+export function useAsyncFn<Result = any, Args extends any[] = any[]>(
   fn: (...args: Args | []) => Promise<Result>,
   deps: DependencyList = [],
   initialState: AsyncState<Result> = { loading: false },

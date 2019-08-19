@@ -225,7 +225,9 @@ export const OrbitSearchResults = memo(() => {
           zIndex={200}
           width="36%"
           transition="all ease 300ms"
-          background="linear-gradient(to right, rgba(0,0,0,0.3) 15%, transparent 90%)"
+          background={`linear-gradient(to right, ${
+            theme.orbitMainBackground
+          } 15%, transparent 90%)`}
           opacity={carousel.zoomedIn ? 0 : 1}
           pointerEvents={isActive ? 'auto' : 'none'}
           perspective="1000px"
@@ -237,7 +239,7 @@ export const OrbitSearchResults = memo(() => {
             {...carouselProps}
           >
             <Theme theme={highlightTheme}>
-              <HighlightActiveQuery query={searchStore.query}>
+              <HighlightActiveQuery query={searchStore.query.length > 2 ? searchStore.query : ''}>
                 <List
                   ref={listRef}
                   alwaysSelected

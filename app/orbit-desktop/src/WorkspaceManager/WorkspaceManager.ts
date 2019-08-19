@@ -1,4 +1,4 @@
-import { AppsManager, getAppMeta, requireAppDefinition } from '@o/apps-manager'
+import { AppsManager, getAppInfo, getAppMeta } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveMany, resolveObserveOne } from '@o/mediator'
 import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppWorkspaceCommand, BuildStatusModel, CallAppBitApiMethodCommand, CommandWsOptions, Space, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
@@ -326,16 +326,15 @@ export class WorkspaceManager {
 
         // load appInfo to get identifier
         log.info(`Reading app definition...`)
-        const appInfoRes = await requireAppDefinition({
-          directory: appMeta.directory,
-          packageId: appMeta.packageId,
-          types: ['appInfo'],
-        })
-        if (appInfoRes.type !== 'success') {
-          return appInfoRes
+        const appInfoRes = await getAppInfo(appMeta.directory)
+        if (!appInfoRes) {
+          return {
+            type: 'error',
+            message: `Couldn't find appInfo for ${appMeta.directory}`,
+          } as const
         }
 
-        const identifier = appInfoRes.value.id
+        const identifier = appInfoRes.id
         log.info(`Loaded app with identifier: ${identifier}`)
 
         // ⚠️ finish refactor

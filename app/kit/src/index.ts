@@ -18,14 +18,15 @@ export {
   AppDefinition,
   AppViewProps,
 } from '@o/models'
-export { Actions } from './Actions'
 export * from '@o/use-store'
 export * from '@o/utils'
 export { isEqual } from '@o/fast-compare'
+export * from 'date-fns'
 
 module.hot && module.hot.accept()
 
 export * from './OrbitHot'
+export { Actions } from './Actions'
 
 export * from './AppLoadContext'
 export * from './bit/Readability'

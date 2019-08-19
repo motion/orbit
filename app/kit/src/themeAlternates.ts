@@ -145,8 +145,8 @@ export const alternates: ThemeSet = {
   action: {
     ...colorThemes.blue,
     buttonBackground: linearGradient(
-      colorThemes.blue.background.lighten(0.1),
       colorThemes.blue.background,
+      colorThemes.blue.background.darken(0.1),
     ),
   },
   // looks bad...

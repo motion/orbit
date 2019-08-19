@@ -24,7 +24,7 @@ export async function getOrbitDesktop(
   didStartOrbit: boolean
   orbitProcess: ChildProcess | null
 }> {
-  let port = await findBonjourService('orbitDesktop', 120)
+  let port = await findBonjourService('orbitDesktop', 180)
   let didStartOrbit = false
   let orbitProcess: ChildProcess | null = null
 

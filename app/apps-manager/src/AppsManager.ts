@@ -7,8 +7,11 @@ import { autorun } from 'mobx'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
+import { findPackage } from './findPackage'
 import { getIdentifierFromPackageId, getIdentifierToPackageId } from './getPackageId'
 import { getWorkspaceApps } from './getWorkspaceApps'
+import { loadAppEntry } from './loadAppEntry'
+import { requireAppDefinition } from './requireAppDefinition'
 import { requireWorkspaceDefinitions } from './requireWorkspaceDefinitions'
 import { updateWorkspacePackageIds } from './updateWorkspacePackageIds'
 
@@ -44,6 +47,16 @@ export class AppsManager {
   appMeta: AppMetaDict = shallow({})
   apps: AppBit[] = []
 
+  // globalize on here this helps for REPL usage
+  identifierToPackageId = getIdentifierToPackageId
+  getIdentifierFromPackageId = getIdentifierFromPackageId
+  requireWorkspaceDefinitions = requireWorkspaceDefinitions
+  getWorkspaceApps = getWorkspaceApps
+  updateWorkspacePackageIds = updateWorkspacePackageIds
+  loadAppEntry = loadAppEntry
+  requireAppDefinition = requireAppDefinition
+  findPackage = findPackage
+
   private packageJsonUpdate = 0
   private updatePackagesVersion = 0
   private fetchedAppsMeta = false
@@ -72,7 +85,6 @@ export class AppsManager {
   }
 
   // for easier debugging
-  identifierToPackageId = getIdentifierToPackageId
   packageIdToIdentifier(packageId: string) {
     for (const identifier of Object.keys(this.appMeta)) {
       const meta = this.appMeta[identifier]
@@ -176,7 +188,7 @@ export class AppsManager {
     if (!this.activeSpace) return
 
     await Promise.all([
-      this.updateNodeDefinitions(this.activeSpace),
+      this.updateNodeDefinitions(),
       // have cli update its cache of packageId => identifier for use installing
       updateWorkspacePackageIds(this.activeSpace.directory || ''),
     ])
@@ -206,9 +218,12 @@ export class AppsManager {
     this.fetchedAppsMeta = true
   }
 
-  private updateNodeDefinitions = async (space: Space) => {
+  private updateNodeDefinitions = async (space: Space = this.activeSpace) => {
     const definitions = await requireWorkspaceDefinitions((space && space.directory) || '', 'node')
-    log.verbose(`Got definitions ${definitions.map(x => x.type)}`, definitions)
+    log.verbose(
+      `Got definitions:\n${definitions.map(x => `${x.type}: ${x.message}`).join(',\n')}`,
+      definitions,
+    )
     this.nodeAppDefinitions = definitions.map(x => x.type === 'success' && x.value).filter(Boolean)
   }
 

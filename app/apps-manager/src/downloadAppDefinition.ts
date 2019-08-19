@@ -1,14 +1,18 @@
 import { yarnOrNpm } from '@o/libs-node'
 import { Logger } from '@o/logger'
+import { StatusReply } from '@o/models'
 import execa from 'execa'
 import { ensureDir, pathExists, writeJSON } from 'fs-extra'
 import { join } from 'path'
 
-import { requireAppDefinition } from './requireAppDefinition'
+import { getAppInfo } from './getAppInfo'
 
 const log = new Logger('downloadAppDefinition')
 
-export async function downloadAppDefinition(options: { directory: string; packageId: string }) {
+export async function downloadAppDefinition(options: {
+  directory: string
+  packageId: string
+}): Promise<StatusReply<{ identifier: string }>> {
   const { directory, packageId } = options
 
   if (!directory || !packageId) {
@@ -19,14 +23,14 @@ export async function downloadAppDefinition(options: { directory: string; packag
   }
 
   // if exists already just return it
-  const existing = await requireAppDefinition({
-    ...options,
-    types: ['appInfo'],
-  })
-  if (existing.type === 'success') {
+  const existing = await getAppInfo(directory)
+  if (existing) {
     return {
       type: 'success',
-      identifier: existing.value.id,
+      message: 'Success',
+      value: {
+        identifier: existing.id,
+      },
     } as const
   }
 
@@ -62,16 +66,20 @@ export async function downloadAppDefinition(options: { directory: string; packag
     // get app definition
     console.log('got app, need to provide app definition')
 
-    const loadedDef = await requireAppDefinition({
-      ...options,
-      types: ['appInfo'],
-    })
-    if (loadedDef.type !== 'success') {
-      return loadedDef
+    const loadedDef = await getAppInfo(directory)
+    if (!loadedDef) {
+      return {
+        type: 'error',
+        message: `Oh no...`,
+      }
     }
+
     return {
       type: 'success',
-      identifier: loadedDef.value.id,
+      message: 'Success',
+      value: {
+        identifier: loadedDef.id,
+      },
     } as const
   } catch (err) {
     console.log('npm install error', err.message, err.stack)

@@ -154,7 +154,7 @@ export async function getAppsConfig(
         throw new Error(`No buildMode set for app ${app.packageId} ${JSON.stringify(buildMode)}`)
       }
       const params: WebpackParams = {
-        name: `${cleanName}`,
+        name: cleanName,
         entry: [appEntry],
         context: directory,
         mode: appMode,
@@ -164,9 +164,6 @@ export async function getAppsConfig(
         outputDir,
         injectHot: true,
         watch: appMode === 'development',
-        output: {
-          library: cleanName,
-        },
         dll: dllFile,
         // apps use the base dll
         dllReferences: [baseDevDllReference, sharedDllReference],
@@ -276,13 +273,22 @@ export function getAppParams(props: WebpackParams): WebpackParams {
   return {
     mode: 'development',
     publicPath: '/',
-    externals: {
-      typeorm: 'typeorm',
-    },
+    ...(props.target === 'web' && {
+      externals: {
+        typeorm: 'typeorm',
+      },
+    }),
     ignore: ['electron-log', '@o/worker-kit', 'configstore'],
     ...props,
     output: {
-      libraryTarget: 'system',
+      ...(props.target === 'node' && {
+        library: '[name]',
+        libraryTarget: 'umd',
+      }),
+      ...(props.target === 'web' && {
+        library: props.name,
+        libraryTarget: 'system',
+      }),
       ...props.output,
     },
   }

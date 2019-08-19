@@ -350,7 +350,7 @@ export const OrbitAppsCarousel = memo(() => {
 
   const [springs, setCarouselSprings] = useSprings(apps.length, i => ({
     ...appsCarouselStore.getSpring(i),
-    config: { mass: 1, tension: 300, friction: 30 },
+    config: { mass: 1, tension: 350, friction: 32 },
     onRest: appsCarouselStore.onFinishZoom,
     onStart: appsCarouselStore.onStartZoom,
   }))
@@ -618,8 +618,8 @@ const OrbitAppCard = memo(
             background={
               isFocusZoomed
                 ? !definition.viewConfig || definition.viewConfig.transparentBackground !== false
-                  ? theme.sidebarBackgroundTransparent
-                  : theme.backgroundStronger
+                  ? theme.appCardBackgroundTransparent
+                  : theme.appCardBackground
                 : theme.backgroundStronger
             }
             borderRadius={isFocusZoomed ? 0 : 20}

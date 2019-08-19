@@ -8,20 +8,23 @@ const log = new Logger('loadAppEntry')
 const entryFileNames = {
   node: 'index.node.js',
   web: 'index.js',
-  appInfo: 'appInfo.js',
 }
 
 export async function loadAppEntry(
   directory: string,
-  entryType: 'node' | 'web' | 'appInfo',
+  entryType: 'node' | 'web',
 ): Promise<AppDefinition | null> {
   try {
-    log.verbose(`load entry ${entryType} in ${directory}`)
     const path = join(directory, 'dist', entryFileNames[entryType])
+    log.verbose(`path for ${entryType}: ${path}`)
     if (await pathExists(path)) {
       return require(path).default
+    } else {
+      log.info(`No entry found`)
+      return null
     }
   } catch (err) {
+    console.log('error', err.message, err.stack)
     log.error(`Error loading entry`, err)
     return null
   }

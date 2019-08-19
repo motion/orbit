@@ -40,7 +40,7 @@ const darkAlternates: ThemeSet = {
   success: darkAltLight.lightGreen,
   action: fromStyles({
     background: selectedColor.lighten(0.2),
-    buttonBackground: linearGradient(selectedColor.lighten(0.3), selectedColor),
+    buttonBackground: linearGradient(selectedColor.lighten(0.2), selectedColor),
     color: '#fff',
   }),
   selected: colorize({
@@ -78,6 +78,8 @@ export const dark: ThemeObject = {
   // elevatedShadowSpread: (elevation: number) => smoother(x, 1),
   // elevatedShadowColor: (elevation: number) => smoother(x, 1),
   separatorBackground: backgroundStrong,
+  cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
+  cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
   ...fromStyles({
     background,
     backgroundHover: [20, 20, 20, 0.2],
@@ -100,6 +102,9 @@ Object.assign(
   colorize({
     sidebarBackground: [15, 15, 15],
     sidebarBackgroundTransparent: [15, 15, 15, 0.4],
+    appCardBackground: [15, 15, 15],
+    appCardBackgroundTransparent: [15, 15, 15, 0],
+    orbitLauncherBackground: [0, 0, 0, 0],
     sidebarBorderColor: '#444',
     headerBorderBottom: '#151515',
     headerBackground: linearGradient([0, 0, 0, 0.1], [0, 0, 0, 0.2]),
@@ -143,8 +148,6 @@ Object.assign(
     cardBackgroundActive: [110, 110, 110],
     cardBorderColor: [255, 255, 255, 0.07],
     cardBorderColorHover: [255, 255, 255, 0.15],
-    cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
-    cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
     panelHeaderBackground: background.lighten(0.15),
     redTint: '#ff000011',
     yellowTint: '#FFCA0011',

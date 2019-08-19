@@ -1,8 +1,9 @@
 import { Cosal } from '@o/cosal'
+import { subDays } from '@o/kit'
 import { Logger } from '@o/logger'
 import { AppEntity, Bit, BitEntity, SearchQuery } from '@o/models'
 import { uniqBy } from 'lodash'
-import { getRepository } from 'typeorm'
+import { createQueryBuilder, getRepository, MoreThan } from 'typeorm'
 
 import { SearchQueryExecutor } from '../search/SearchQueryExecutor'
 
@@ -69,17 +70,44 @@ export class SearchResultResolver {
     this.log.verbose(`search, num apps`, this.apps.length, this.args)
 
     // find exact matches
-    const exactBitIds = this.args.query
-      ? await getRepository(BitEntity).find({
-          select: ['id'],
-          where: {
-            title: {
-              $like: `%${this.args.query}%`.toLowerCase(),
-            },
+    const whereConditions = {
+      // within 30 days
+      bitCreatedAt: MoreThan(subDays(Date.now(), 30)),
+    }
+
+    let exactBitIds = []
+    if (this.args.query.length) {
+      const query = createQueryBuilder(BitEntity, 'bit')
+        .take(10)
+        .select(['id'])
+        .orderBy('bitCreatedAt', 'ASC')
+        .where({
+          title: {
+            $like: `${this.args.query} %`.toLowerCase(),
           },
-          take: 10,
+          ...whereConditions,
         })
-      : []
+        .orWhere({
+          title: {
+            $like: `% ${this.args.query}`.toLowerCase(),
+          },
+          ...whereConditions,
+        })
+        .orWhere({
+          title: {
+            $like: `${this.args.query}`.toLowerCase(),
+          },
+          ...whereConditions,
+        })
+        .orWhere({
+          title: {
+            $like: `% ${this.args.query} %`.toLowerCase(),
+          },
+          ...whereConditions,
+        })
+      exactBitIds = await query.getMany()
+      this.log.info(`exact query: ${query.getSql()}, bit ids: ${JSON.stringify(exactBitIds)}`)
+    }
 
     // parallel search
     const [exactResults, ftsResults, cosalResults] = await Promise.all([

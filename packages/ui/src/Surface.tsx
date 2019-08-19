@@ -237,6 +237,8 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
     space,
     spaceAround,
     betweenIconElement,
+    borderTopRadius,
+    borderBottomRadius,
     ...viewProps
   } = props
   const size = getSize(selectDefined(ogSize, 1))
@@ -479,6 +481,9 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
     ...throughProps,
     ...viewProps,
     ...segmentedStyle,
+    // ensure borderTopRadius, borderBottomRadius override
+    borderTopRadius,
+    borderBottomRadius,
     ...childrenProps,
     ...(!noInnerElement && { tagName }),
     opacity: crumb && crumb.total === 0 ? 0 : props.opacity,
@@ -555,7 +560,6 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   }
 
   const res = {
-    boxShadow,
     fontWeight: props.fontWeight || theme.fontWeight,
     overflow: props.overflow || theme.overflow,
     // note: base theme styles go *above* propsToStyles...
@@ -571,6 +575,7 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
     ...propStyles,
     ...marginStyle,
     ...styles,
+    boxShadow,
     '&:hover': props.active
       ? null
       : {

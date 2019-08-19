@@ -533,8 +533,10 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const theme = useTheme()
 
   useEffect(() => {
-    queryBuilder.setMethod(method.name)
-  }, [method.name])
+    if (method) {
+      queryBuilder.setMethod(method.name)
+    }
+  }, [method ? method.name : ''])
 
   if (!hasApiInfo) {
     return <Templates.Message title="This app doesn't have an API" />

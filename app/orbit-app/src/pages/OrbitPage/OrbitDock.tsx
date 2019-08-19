@@ -1,7 +1,8 @@
 import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { ActiveDraggables, Dock, DockButton, DockButtonPassProps, FloatingCard, ListPassProps, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
+import { ActiveDraggables, Col, Dock, DockButton, DockButtonPassProps, DockButtonProps, FloatingCard, ListPassProps, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
+import { partition } from 'lodash'
 import React, { memo, useContext, useMemo, useRef } from 'react'
 
 import { om, useOm } from '../../om/om'
@@ -119,17 +120,42 @@ class OrbitDockStore {
   }
 }
 
-export const orbitDockStore = createUsableStore(OrbitDockStore)
-window['orbitDockStore'] = orbitDockStore
-
 export const OrbitDock = memo(() => {
+  const store = orbitDockStore.useStore()
   const { state } = useOm()
-  const theme = useTheme()
   const { appRole } = useStore(App)
   const isTorn = appRole === 'torn'
   const activeDockApps = state.apps.activeDockApps.filter(x =>
     isTorn ? x.identifier !== 'apps' : true,
   )
+  const [bottomDockApps, topDockApps] = partition(
+    activeDockApps,
+    _ => _.identifier === 'settings' || _.identifier === 'apps',
+  )
+
+  return (
+    <Col
+      position="absolute"
+      top={56}
+      right={0}
+      padding={[25, 10, 10, 0]}
+      space="lg"
+      onMouseEnter={store.hoverEnter}
+      onMouseLeave={store.hoverLeave}
+      zIndex={100000000}
+      pointerEvents={store.isOpen ? 'auto' : 'none'}
+    >
+      <OrbitDockPanel offset={0} apps={topDockApps} />
+      <OrbitDockPanel offset={topDockApps.length} apps={bottomDockApps} />
+    </Col>
+  )
+})
+
+export const orbitDockStore = createUsableStore(OrbitDockStore)
+window['orbitDockStore'] = orbitDockStore
+
+export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
+  const theme = useTheme()
   const store = orbitDockStore.useStore()
   const dockRef = useRef<HTMLElement>(null)
   const size = useNodeSize({
@@ -140,14 +166,10 @@ export const OrbitDock = memo(() => {
   return (
     <DockButtonPassProps>
       <Dock
+        position="relative"
         flexDirection="column"
         ref={dockRef}
         pointerEvents={store.state === 'closed' ? 'none' : 'inherit'}
-        onMouseEnter={store.hoverEnter}
-        onMouseLeave={store.hoverLeave}
-        top={56}
-        right={0}
-        padding={[25, 30, 0, 0]}
         transform={
           store.isOpen
             ? {
@@ -159,15 +181,30 @@ export const OrbitDock = memo(() => {
         }
         transition="all ease 300ms"
         className="orbit-dock"
-        space={16}
         bottom="auto"
       >
-        {activeDockApps.map((app, index) => (
-          <OrbitDockButton key={app.id} app={app} index={index} />
+        {props.apps.map((app, index) => (
+          <OrbitDockButton
+            key={app.id}
+            app={app}
+            index={index + props.offset}
+            circular={false}
+            borderRadius={0}
+            glint={false}
+            glintBottom={false}
+            {...index === 0 && {
+              borderTopRadius: 8,
+              borderBottomRadius: 0,
+            }}
+            {...index === props.apps.length - 1 && {
+              borderTopRadius: 0,
+              borderBottomRadius: 8,
+            }}
+          />
         ))}
         <FullScreen
           data-is="DockShadow"
-          top={50}
+          top={30}
           bottom={30}
           left="50%"
           right="50%"
@@ -177,8 +214,8 @@ export const OrbitDock = memo(() => {
           borderRadius={100}
           boxShadow={[
             {
-              spread: 60,
-              blur: 70,
+              spread: 30,
+              blur: 40,
               color: theme.background.isDark() ? [30, 30, 30, 0.68] : [0, 0, 0, 0.25],
             },
           ]}
@@ -187,15 +224,16 @@ export const OrbitDock = memo(() => {
       </Dock>
     </DockButtonPassProps>
   )
-})
+}
 
 const OrbitDockButton = memo(function OrbitDockButton({
   index,
   app,
+  ...rest
 }: {
   app: AppBit
   index: number
-}) {
+} & Partial<DockButtonProps>) {
   const dockStore = orbitDockStore.useStore()
   const definition = getAppDefinition(app.identifier!)
   const buttonRef = useRef(null)
@@ -213,7 +251,6 @@ const OrbitDockButton = memo(function OrbitDockButton({
     <>
       <DockButton
         id={`${app.id}`}
-        alt="action"
         active={isActive}
         onClick={() => {
           om.actions.router.showAppPage({ id: `${app.id!}`, toggle: 'docked' })
@@ -223,8 +260,18 @@ const OrbitDockButton = memo(function OrbitDockButton({
         label={app.name}
         ref={buttonRef}
         labelProps={{
-          transition: 'all ease 300ms',
+          transition: 'all ease 150ms 200ms',
           elevation: 1,
+          opacity: 0,
+          transform: {
+            y: -10,
+          },
+          ...(dockStore.isOpen && {
+            opacity: 1,
+            transform: {
+              y: 0,
+            },
+          }),
         }}
         onMouseMove={() => {
           if (appsDrawerStore.isOpen) return
@@ -240,6 +287,7 @@ const OrbitDockButton = memo(function OrbitDockButton({
         onMouseLeave={() => {
           dockStore.hoverLeaveButton()
         }}
+        {...rest}
       />
       {nodePosition && nodePosition.rect && (
         <FloatingAppWindow

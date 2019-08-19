@@ -237,7 +237,7 @@ export const OrbitSearchResults = memo(() => {
             {...carouselProps}
           >
             <Theme theme={highlightTheme}>
-              <HighlightActiveQuery query={searchStore.query}>
+              <HighlightActiveQuery query={searchStore.query.length > 2 ? searchStore.query : ''}>
                 <List
                   ref={listRef}
                   alwaysSelected

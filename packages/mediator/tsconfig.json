@@ -7,5 +7,10 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../../app/config" }, { "path": "../logger" }, { "path": "../utils" }]
+  "references": [
+    { "path": "../../app/config" },
+    { "path": "../fast-compare" },
+    { "path": "../logger" },
+    { "path": "../utils" }
+  ]
 }

@@ -12,7 +12,7 @@
     { "path": "../models" },
     { "path": "../stores" },
     { "path": "../config" },
-    { "path": "../cli" },
+    { "path": "../orbit" },
     { "path": "../libs" },
     { "path": "../libs-node" },
     { "path": "../apps-manager" },

@@ -4,7 +4,8 @@ import { AppMeta, BuildStatus, CommandWsOptions } from '@o/models'
 import { stringToIdentifier } from '@o/utils'
 import historyAPIFallback from 'connect-history-api-fallback'
 import { Handler } from 'express'
-import { pathExists, readFile } from 'fs-extra'
+import { readFile } from 'fs-extra'
+import { chunk } from 'lodash'
 import hashObject from 'node-object-hash'
 import { join } from 'path'
 import { parse } from 'url'
@@ -12,33 +13,36 @@ import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 import Observable from 'zen-observable'
 
+import { commandBuild } from './commandBuild'
 import { AppBuildConfigs, getAppsConfig } from './getAppsConfig'
 import { webpackPromise } from './webpackPromise'
 import { AppBuildModeDict } from './WorkspaceManager'
 
-const log = new Logger('AppBuilder')
+const log = new Logger('AppsBuilder')
 
 type WebpackAppsDesc = {
   name: string
   hash?: string
-  middleware: Handler
+  middleware?: Handler
   devMiddleware?: Handler
   close?: Function
   compiler?: Webpack.Compiler
+  watchingCompiler?: Webpack.MultiWatching
   config?: Webpack.Configuration
 }
 
-type AppBuilderUpdate = {
+type AppsBuilderUpdate = {
   options: CommandWsOptions
   buildMode: AppBuildModeDict
   activeApps: AppMeta[]
 }
 
-export class AppBuilder {
+export class AppsBuilder {
   state: WebpackAppsDesc[] = []
   apps: AppMeta[] = []
   buildNameToAppMeta: { [name: string]: AppMeta } = {}
 
+  wsOptions: CommandWsOptions
   private buildStatus = new Map<string, 'compiling' | 'error' | 'success'>()
   private buildMode: AppBuildModeDict = {}
 
@@ -61,7 +65,9 @@ export class AppBuilder {
     })
   }
 
-  async update({ buildMode, options, activeApps }: AppBuilderUpdate) {
+  async update({ buildMode, options, activeApps }: AppsBuilderUpdate) {
+    this.wsOptions = options
+
     const buildConfigs = await getAppsConfig(activeApps, buildMode, options)
     const { clientConfigs, nodeConfigs, buildNameToAppMeta } = buildConfigs
     log.verbose(`update() ${activeApps.length}`, buildConfigs)
@@ -73,138 +79,107 @@ export class AppBuilder {
       return
     }
 
-    await this.ensureInitiallyBuilt(buildConfigs)
-
-    if (options.action === 'run') {
-      this.state = this.updateAppBuilders(buildConfigs)
-      return
-    }
-
+    // for build mode, ensure we re-run the dll builds first
     if (options.action === 'build') {
-      const { base, ...rest } = clientConfigs
-      const configs = [
-        ...Object.keys(rest).map(key => rest[key]),
-        ...Object.keys(nodeConfigs).map(x => nodeConfigs[x]),
-      ]
+      const { base } = clientConfigs
       log.info(`Building ${Object.keys(clientConfigs).join(', ')}...`)
       // build base dll first to ensure it feeds into rest
       await webpackPromise([base], {
         loud: true,
       })
-      await webpackPromise(configs, {
-        loud: true,
-      })
-      log.info(`Build complete!`)
-      return
     }
-  }
 
-  async ensureInitiallyBuilt(buildConfigs: AppBuildConfigs) {
-    const { nodeConfigs } = buildConfigs
-    await Promise.all(
-      Object.keys(nodeConfigs).map(async name => {
-        const nodeConf = nodeConfigs[name]
-        const outFile = join(nodeConf.context, nodeConf.output.filename)
-        if (await pathExists(outFile)) {
-          // we've built once, we can wait until the runner rebuilds
-        } else {
-          log.info(`No node definition found yet for ${name}, building...`)
-          await webpackPromise([{ ...nodeConf, watch: false }], {
-            loud: true,
-          })
-        }
-      }),
-    )
-  }
-
-  updateCompletedFirstBuild = async (name: string, status: 'compiling' | 'error' | 'success') => {
-    this.buildStatus.set(name, status)
-    if (this.buildStatus.size === 0) {
-      return
-    }
-    const statuses = [...this.buildStatus].map(x => x[1])
-    if (statuses.every(status => status === 'success')) {
-      log.verbose(`Completed initial build`)
-      this.completeFirstBuild()
-    }
-  }
-
-  /**
-   * Resolves all requests if they are valid down the the proper app middleware
-   */
-  middleware: Handler = async (req, res, next) => {
-    const sendIndex = async () => {
-      await this.completedFirstBuild
-      res.send(await this.getIndex())
-    }
-    // hacky way to just serve our own index.html for now
-    if (req.path[1] !== '_' && req.path.indexOf('.') === -1) {
-      return await sendIndex()
-    }
-    let fin
-    for (const { middleware } of this.state) {
-      fin = null
-      await middleware(req, res, err => {
-        fin = err || true
-      })
-      if (fin === null) {
-        return
+    // ensure builds have run for each app
+    try {
+      let builds = []
+      for (const apps of chunk(activeApps, Math.max(1, require('os').cpus() - 1))) {
+        builds = [
+          ...builds,
+          ...(await Promise.all(
+            apps.map(async app => {
+              return await commandBuild({
+                projectRoot: app.directory,
+                // dont force, were just ensureing its initially built once
+                force: false,
+              })
+            }),
+          )),
+        ]
       }
+      if (builds.some(x => x.type === 'error')) {
+        log.error(
+          `Finished apps initial build, error running initial builds of apps:\n${builds
+            .filter(x => x.type === 'error')
+            .map(x => ` - ${x.message}`)
+            .join('\n')}`,
+        )
+      } else {
+        log.info(`Finished apps initial build, success`)
+      }
+    } catch (err) {
+      log.error(`Error running initial builds ${err.message}\n${err.stack}`)
     }
-    log.verbose('no match', req.path)
-    return next()
+
+    if (options.action === 'run') {
+      this.state = await this.updateBuild(buildConfigs)
+      return
+    }
   }
 
   /**
-   * Returns Observable for the current workspace information
+   * Runs every time you see a change in the apps and runs the webpack/middlewares for each.
+   * Think of it like a React.render()
+   * Except a bit less nice, in that we manually do shouldUpdate checks within this render
+   * and if we see things that change we re-run. This could be improved by being a lot more
+   * react-like in the next refactor.
    */
-  observables = new Set<{ update: (next: any) => void; observable: Observable<BuildStatus[]> }>()
-  observeBuildStatus() {
-    const observable = new Observable<BuildStatus[]>(observer => {
-      this.observables.add({
-        update: (status: BuildStatus[]) => {
-          observer.next(status)
-        },
-        observable,
-      })
-      // send initial status
-      observer.next(this.buildStatuses)
-    })
-    return observable
-  }
-
-  buildStatuses: BuildStatus[] = []
-  private setBuildStatus = async (status: BuildStatus) => {
-    const existing = this.buildStatuses.findIndex(x => x.identifier === status.identifier)
-    if (existing > -1) {
-      this.buildStatuses = this.buildStatuses.map((x, i) => (i === existing ? status : x))
-    } else {
-      this.buildStatuses.push(status)
-    }
-    this.observables.forEach(({ update }) => {
-      update(this.buildStatuses)
-    })
-  }
-
-  private updateAppBuilders({
-    clientConfigs,
+  private async updateBuild({
     nodeConfigs,
+    clientConfigs,
     buildNameToAppMeta,
-  }: AppBuildConfigs): WebpackAppsDesc[] {
+  }: AppBuildConfigs): Promise<WebpackAppsDesc[]> {
     log.verbose(`configs ${Object.keys(clientConfigs).join(', ')}`, clientConfigs)
 
     const { main, ...rest } = clientConfigs
     let res: WebpackAppsDesc[] = []
 
-    console.log('TODO refactor to handle nodeConfigs', nodeConfigs)
+    // manage node compilers
+    for (const name in nodeConfigs) {
+      const config = nodeConfigs[name]
+      const runningName = `${name}-node`
+      const { running, hash, hasChanged } = this.getRunningApp(runningName, config)
+      if (hasChanged === false) {
+        res.push(running)
+      } else {
+        if (running && running.close) {
+          running.close()
+        }
+        const packer = await webpackPromise([config], { loud: true })
+        if (packer.type !== 'watch') {
+          throw new Error(`Shouldn't ever get here`)
+        }
+        res.push({
+          name: runningName,
+          hash,
+          config,
+          watchingCompiler: packer.compiler,
+          close: () => {
+            packer.compiler.close(() => {
+              log.verbose(`Closed node compiler ${name}`)
+            })
+          },
+        })
+      }
+    }
 
     // you have to do it this janky ass way because webpack just isnt really great at
     // doing multi-config hmr, and this makes sure the 404 hot-update bug is fixed (google)
+    const clientDescs: WebpackAppsDesc[] = []
     for (const name in rest) {
       const config = rest[name]
-      const devName = `${name}-dev`
+      const devName = `${name}-client`
       const current = this.state.find(x => x.name === devName)
-      const middleware = this.getAppBuilder(config, name, buildNameToAppMeta[name], devName)
+      const middleware = this.getClientBuilder(config, name, buildNameToAppMeta[name], devName)
       if (middleware) {
         if (middleware === true) {
           // use last one
@@ -214,7 +189,7 @@ export class AppBuilder {
             current.close()
           }
           const { hash, devMiddleware, compiler } = middleware
-          res.push({
+          const appDesc = {
             name: devName,
             hash,
             devMiddleware,
@@ -225,7 +200,9 @@ export class AppBuilder {
             },
             compiler,
             config,
-          })
+          }
+          res.push(appDesc)
+          clientDescs.push(appDesc)
         }
       }
     }
@@ -233,14 +210,14 @@ export class AppBuilder {
     /**
      * One HMR server for everything because EventStream's don't support >5 in Chrome
      */
-    const appsHotMiddleware = this.getHotMiddleware(res.map(x => x.compiler), {
+    const appsHotMiddleware = this.getHotMiddleware(clientDescs.map(x => x.compiler), {
       path: '/__webpack_hmr',
       log: console.log,
       heartBeat: 10 * 1000,
     })
     res.push({
       name: 'apps-hot',
-      middleware: resolveIfExists(appsHotMiddleware, res.map(x => x.config.output.path), [
+      middleware: resolveIfExists(appsHotMiddleware, clientDescs.map(x => x.config.output.path), [
         '/__webpack_hmr',
       ]),
     })
@@ -248,7 +225,7 @@ export class AppBuilder {
     // falls back to the main entry middleware
     if (main) {
       const name = 'main'
-      const middleware = this.getAppBuilder(main, name, undefined, name)
+      const middleware = this.getClientBuilder(main, name, undefined, name)
       if (middleware) {
         if (middleware === true) {
           res = [...res, ...this.state.filter(x => x.name === name)]
@@ -297,7 +274,100 @@ export class AppBuilder {
     return res
   }
 
-  private getAppBuilder = (
+  updateCompletedFirstBuild = async (name: string, status: 'compiling' | 'error' | 'success') => {
+    this.buildStatus.set(name, status)
+    if (this.buildStatus.size === 0) {
+      return
+    }
+    const statuses = [...this.buildStatus].map(x => x[1])
+    if (statuses.every(status => status === 'success')) {
+      log.verbose(`Completed initial build`)
+      this.completeFirstBuild()
+    }
+  }
+
+  /**
+   * Resolves all requests if they are valid down the the proper app middleware
+   */
+  middleware: Handler = async (req, res, next) => {
+    const sendIndex = async () => {
+      await this.completedFirstBuild
+      res.send(await this.getIndex())
+    }
+    // hacky way to just serve our own index.html for now
+    if (req.path[1] !== '_' && req.path.indexOf('.') === -1) {
+      return await sendIndex()
+    }
+    let fin
+    for (const { middleware } of this.state) {
+      if (!middleware) {
+        continue
+      }
+      fin = null
+      await middleware(req, res, err => {
+        fin = err || true
+      })
+      if (fin === null) {
+        return
+      }
+    }
+    log.verbose('no match', req.path)
+    return next()
+  }
+
+  /**
+   * Returns Observable for the current workspace information
+   */
+  observables = new Set<{ update: (next: any) => void; observable: Observable<BuildStatus[]> }>()
+  observeBuildStatus() {
+    const observable = new Observable<BuildStatus[]>(observer => {
+      this.observables.add({
+        update: (status: BuildStatus[]) => {
+          observer.next(status)
+        },
+        observable,
+      })
+      // send initial status
+      observer.next(this.buildStatuses)
+    })
+    return observable
+  }
+
+  buildStatuses: BuildStatus[] = []
+  private setBuildStatus = async (status: BuildStatus) => {
+    const existing = this.buildStatuses.findIndex(x => x.identifier === status.identifier)
+    if (existing > -1) {
+      this.buildStatuses = this.buildStatuses.map((x, i) => (i === existing ? status : x))
+    } else {
+      this.buildStatuses.push(status)
+    }
+    this.observables.forEach(({ update }) => {
+      update(this.buildStatuses)
+    })
+  }
+
+  private getConfigHash(config: Webpack.Configuration) {
+    return hashObject({ sort: false }).hash(config)
+  }
+
+  private getRunningApp(name: string, config: Webpack.Configuration) {
+    const hash = this.getConfigHash(config)
+    if (name) {
+      const running = this.state.find(x => x.name === name)
+      if (running) {
+        if (hash === running.hash) {
+          // log.verbose(`${name} config hasnt changed! dont re-run this one just return the old one`)
+          return { hash, running, hasChanged: false }
+        } else {
+          log.verbose(`${name}config has changed!`)
+          return { hash, running, hasChanged: true }
+        }
+      }
+    }
+    return { hash, running: null, hasChanged: true }
+  }
+
+  private getClientBuilder = (
     config: Webpack.Configuration,
     name: string,
     appMeta?: AppMeta,
@@ -305,17 +375,9 @@ export class AppBuilder {
   ) => {
     try {
       // cache if it hasn't changed to avoid rebuilds
-      const hash = hashObject({ sort: false }).hash(config)
-      if (runningName) {
-        const running = this.state.find(x => x.name === runningName)
-        if (running) {
-          if (hash === running.hash) {
-            // log.verbose(`${name} config hasnt changed! dont re-run this one just return the old one`)
-            return true
-          } else {
-            log.verbose(`${name}config has changed!`)
-          }
-        }
+      const { hash, hasChanged } = this.getRunningApp(runningName, config)
+      if (hasChanged === false) {
+        return true
       }
 
       const compiler = Webpack(config)

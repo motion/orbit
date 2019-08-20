@@ -1,5 +1,6 @@
-import { reporter } from '@o/logger'
 import { StatusReply } from '@o/models'
+
+import { reporter } from './reporter'
 
 export function logStatusReply(reply?: StatusReply<any>) {
   if (!reply) {
@@ -7,7 +8,7 @@ export function logStatusReply(reply?: StatusReply<any>) {
     return
   }
   if (reply.type === 'success') {
-    reporter.info(reply.message, reply.value)
+    reporter.success(reply.message, reply.value)
   } else if (reply.type === 'error') {
     reporter.error(reply.message, reply.errors ? reply.errors[0] : undefined)
   } else {

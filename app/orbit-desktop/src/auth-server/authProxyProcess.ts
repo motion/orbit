@@ -67,7 +67,7 @@ async function setupPortForwarding() {
   const pfEntry = `rdr pass inet proto tcp from any to any port 443 -> ${authHost} port ${authPort}`
 
   // check if we already modified the pfctl
-  const pfExisting = (await exec.shell(`pfctl -s nat`)).stdout
+  const pfExisting = (await exec.command(`pfctl -s nat`, { shell: true })).stdout
 
   if (pfExisting.indexOf(pfEntry) >= 0) {
     console.log('has existing entry for port forwarding, done')
@@ -81,7 +81,7 @@ async function setupPortForwarding() {
   try {
     const pfCommand = `echo "\n${pfEntry}\n" | sudo pfctl -ef -`
     console.log('running command', pfCommand)
-    const res = await exec.shell(pfCommand)
+    const res = await exec.command(pfCommand, { shell: true })
     console.log('created new pf entry...', res.code, res.failed, res.stdout.toString())
   } catch (err) {
     // fine, its already there!

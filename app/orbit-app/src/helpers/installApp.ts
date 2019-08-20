@@ -74,7 +74,7 @@ async function installApp(
       return res
     }
 
-    banner.set({ message: `Authenticated!` })
+    banner.set({ message: `Authenticated!`, timeout: 3 })
     return res
   }
 

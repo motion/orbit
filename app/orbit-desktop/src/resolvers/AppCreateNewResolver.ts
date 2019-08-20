@@ -1,8 +1,8 @@
-import { commandNew } from '@o/cli'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { AppCreateNewCommand, AppCreateNewOptions, Space, StatusReply } from '@o/models'
 import { pathExists } from 'fs-extra'
+import { commandNew } from 'orbit'
 import { join } from 'path'
 import sanitize from 'sanitize-filename'
 
@@ -48,7 +48,7 @@ export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
       return res
     }
     // ensure we update the workspace with new package id
-    await orbitDesktop.workspaceManager.updateAppBuilder()
+    await orbitDesktop.workspaceManager.updateAppsBuilder()
     return {
       type: 'success',
       message: `Starting workspace`,

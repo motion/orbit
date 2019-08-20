@@ -1,8 +1,0 @@
-{
-  "query": {
-    "name": "query",
-    "typeString": "(query: string, parameters?: any[]) => Promise<any[]>",
-    "comment": "",
-    "types": []
-  }
-}

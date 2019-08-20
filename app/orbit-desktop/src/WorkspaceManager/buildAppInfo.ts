@@ -59,7 +59,16 @@ async function writeAppInfo(appRoot: string): Promise<StatusReply> {
 
   let apiInfo = {}
 
+  // TODO we need to use this for the later parsing of api types, or move to babel...
+  let nodeImports = []
+
   traverse(tree, {
+    ImportDeclaration(path) {
+      const importPath = path.node.source.value
+      if (importPath.indexOf('.node') > -1) {
+        nodeImports.push(importPath)
+      }
+    },
     ExportDefaultDeclaration(path) {
       path.traverse({
         CallExpression(path) {

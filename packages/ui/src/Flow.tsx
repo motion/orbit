@@ -173,7 +173,7 @@ interface FlowComponent<Props> extends FunctionComponent<Props> {
 }
 
 export class FlowStore {
-  props: FlowStoreProps
+  props: FlowStoreProps = {}
   steps: FlowStepProps[] = []
 
   private state = useHooks(() => {

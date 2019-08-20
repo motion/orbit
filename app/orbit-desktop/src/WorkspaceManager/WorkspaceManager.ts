@@ -13,7 +13,7 @@ import Observable from 'zen-observable'
 import { GraphServer } from '../GraphServer'
 import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 import { getActiveSpace } from '../helpers/getActiveSpace'
-import { AppBuilder } from './AppBuilder'
+import { AppsBuilder } from './AppsBuilder'
 import { buildAppInfo } from './buildAppInfo'
 import { buildWorkspaceAppsInfo } from './buildWorkspaceAppsInfo'
 import { resolveAppBuildCommand } from './commandBuild'
@@ -47,9 +47,9 @@ export class WorkspaceManager {
   // handles watching disk for apps and updating AppMeta
   appsManager = new AppsManager()
   // takes a list of apps in and starts webpack, provides web middleware
-  appBuilder = new AppBuilder(this.appsManager, this.buildModeObservable)
+  appsBuilder = new AppsBuilder(this.appsManager, this.buildModeObservable)
   // shorthand to middleware
-  middleware = this.appBuilder.middleware
+  middleware = this.appsBuilder.middleware
   // starts the graphql server, can update based on app definitinos
   graphServer = new GraphServer()
 
@@ -115,7 +115,7 @@ export class WorkspaceManager {
       const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
       this.graphServer.setupGraph(apps)
       // this is the main build action, no need to await here
-      this.updateAppBuilder()
+      this.updateAppsBuilder()
       this.updateDesktopState()
     },
   )
@@ -137,8 +137,8 @@ export class WorkspaceManager {
           acc[identifier] = this.appsManager.identifierToPackageId(identifier)
           return acc
         }, {}),
-        nameRegistry: Object.keys(this.appBuilder.buildNameToAppMeta).map(buildName => {
-          const appMeta = this.appBuilder.buildNameToAppMeta[buildName]
+        nameRegistry: Object.keys(this.appsBuilder.buildNameToAppMeta).map(buildName => {
+          const appMeta = this.appsBuilder.buildNameToAppMeta[buildName]
           const { packageId } = appMeta
           const identifier = this.appsManager.packageIdToIdentifier(appMeta.packageId)
           const entryPath = join(appMeta.directory, appMeta.packageJson.main)
@@ -166,7 +166,7 @@ export class WorkspaceManager {
    * a webpack configuration, and updating AppsMiddlware
    */
   lastBuildConfig = ''
-  async updateAppBuilder() {
+  async updateAppsBuilder() {
     const { options, activeApps, buildMode } = this
     if (options.action === 'new') {
       return
@@ -190,7 +190,7 @@ export class WorkspaceManager {
     try {
       this.updateBuildMode()
       // this runs the build
-      this.appBuilder.update({
+      this.appsBuilder.update({
         options,
         buildMode: this.buildMode,
         activeApps,
@@ -263,7 +263,7 @@ export class WorkspaceManager {
   getResolvers() {
     return [
       resolveObserveMany(BuildStatusModel, () => {
-        return this.appBuilder.observeBuildStatus()
+        return this.appsBuilder.observeBuildStatus()
       }),
 
       resolveObserveOne(WorkspaceInfoModel, () => {
@@ -283,7 +283,7 @@ export class WorkspaceManager {
           }
         }
         await this.updateWorkspace(options)
-        await this.updateAppBuilder()
+        await this.updateAppsBuilder()
         return true
       }),
 

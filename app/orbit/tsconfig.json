@@ -2,9 +2,17 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "composite": true,
+    "module": "CommonJS",
     "outDir": "_",
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../kit" }, { "path": "../worker-kit" }]
+  "references": [
+    { "path": "../../packages/build" },
+    { "path": "../../packages/logger" },
+    { "path": "../libs-node" },
+    { "path": "../telemetry" },
+    { "path": "../models" },
+    { "path": "../config" }
+  ]
 }

@@ -54,7 +54,12 @@ export async function getAppMeta(directory: string, isLocal: boolean = false): P
     const apiInfoPath = join(directory, 'dist', 'api.json')
     let apiInfo = null
     if (await pathExists(apiInfoPath)) {
-      apiInfo = await readJSON(apiInfoPath)
+      // could be empty...
+      try {
+        apiInfo = await readJSON(apiInfoPath)
+      } catch (err) {
+        log.info(`error reading api: ${err.message}`)
+      }
     }
     return {
       packageJson,

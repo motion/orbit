@@ -12,7 +12,7 @@
     { "path": "./app/orbit-main" },
     { "path": "./app/orbit-repl" },
     { "path": "./app/orbit-dotapp" },
-    { "path": "./app/cli" },
+    { "path": "./app/orbit" },
 
     // apps type defs only for use in monorepo
     // warning this slowed things down

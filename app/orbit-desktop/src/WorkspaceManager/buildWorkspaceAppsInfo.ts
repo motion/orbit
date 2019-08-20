@@ -11,7 +11,7 @@ export async function buildWorkspaceAppsInfo(
 ) {
   const paths = await getWorkspaceApps(workspaceRoot)
   log.info(`building app info`, paths)
-  await Promise.all(
+  return await Promise.all(
     paths.map(path => {
       return buildAppInfo({
         projectRoot: path.directory,

@@ -87,8 +87,8 @@ export class CosalManager {
         order: {
           bitUpdatedAt: 'ASC',
         },
-        take: 20,
-        skip: index * 20,
+        take: 30,
+        skip: index * 30,
       })
       index++
       log.verbose(`Scanning ${chunk.length}...`)

@@ -1,13 +1,14 @@
 import { AppIcon, command, createApp, getAppDefinition, useLocationLink, useSearchState } from '@o/kit'
-import { AppCreateNewCommand } from '@o/models'
+import { AppCreateNewCommand, AppDefinition } from '@o/models'
 import { Button, Col, Flow, FlowLayoutInline, FlowProvide, Form, IconLabeled, List, ListItemProps, Scale, SectionPassProps, SelectableGrid, SelectableSurface, Text, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
 import { stringToIdentifier } from '@o/utils'
 import React, { memo, useLayoutEffect } from 'react'
 
 import { createAppBitInActiveSpace, useInstallApp } from '../helpers/installApp'
 import { newAppStore } from '../om/stores'
-import { useSearchAppStoreApps, useTopAppStoreApps } from './apps/AppsApp'
+import { useSearchAppStoreApps } from './apps/AppsApp'
 import { AppsMainNew } from './apps/AppsMainNew'
+import { useTopAppStoreApps } from './apps/useTopAppStoreApps'
 import { useUserVisualAppDefinitions } from './orbitApps'
 import { StackNavigator, useStackNavigator } from './StackNavigator'
 
@@ -16,6 +17,9 @@ export default createApp({
   name: 'Add App',
   icon: 'plus',
   app: SetupAppMain,
+  viewConfig: {
+    transparentBackground: false,
+  },
 })
 
 function SetupAppMain() {
@@ -172,8 +176,8 @@ function SetupAppCustom() {
 
 type SetupAppHomeProps = { isEmbedded?: boolean }
 
-export const SetupAppHome = memo((props: SetupAppHomeProps) => {
-  const installedApps: ListItemProps[] = useUserVisualAppDefinitions().map(def => ({
+const appDefToListItem = (def: AppDefinition) => {
+  return {
     title: def.name,
     identifier: def.id,
     groupName: 'Installed apps',
@@ -181,12 +185,20 @@ export const SetupAppHome = memo((props: SetupAppHomeProps) => {
     extraData: {
       definition: def,
     },
-  }))
+  }
+}
+
+export const SetupAppHome = memo((props: SetupAppHomeProps) => {
+  const installedApps: ListItemProps[] = useUserVisualAppDefinitions().map(appDefToListItem)
   const [searchedApps, search] = useSearchAppStoreApps(results =>
     results.filter(res => res.features.some(x => x === 'app')),
   )
   const topApps = useTopAppStoreApps(results =>
-    results.filter(res => res.features.some(x => x === 'app')),
+    results.filter(
+      res =>
+        res.features.some(x => x === 'app') &&
+        installedApps.every(x => x.identifier !== res.identifier),
+    ),
   )
 
   const flow = useCreateFlow({

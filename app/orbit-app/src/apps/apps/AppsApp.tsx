@@ -1,7 +1,7 @@
 import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, CurrentAppBitContext, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem } from '@o/models'
 import { Button, Card, Col, Icon, List, ListItemProps, Section, SubTitle, useAsyncFn, useBanner } from '@o/ui'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 import { ManageApps } from '../../views/ManageApps'
 import { useUserAppDefinitions } from '../orbitApps'
@@ -9,6 +9,7 @@ import { AppSetupForm } from './AppSetupForm'
 import { AppsMainAddApp } from './AppsMainAddApp'
 import { AppsMainNew } from './AppsMainNew'
 import { getAppListItem } from './getAppListItem'
+import { useTopAppStoreApps } from './useTopAppStoreApps'
 
 export default createApp({
   id: 'apps',
@@ -50,7 +51,7 @@ export const setupAppListItem = (def: AppDefinition): ListItemProps => {
   }
 }
 
-const appSearchToListItem = (item: ApiSearchItem): ListItemProps => ({
+export const appSearchToListItem = (item: ApiSearchItem): ListItemProps => ({
   title: item.name,
   subTitle: item.description.slice(0, 300) || 'No description',
   icon: <AppIcon icon={item.icon} />,
@@ -58,6 +59,9 @@ const appSearchToListItem = (item: ApiSearchItem): ListItemProps => ({
   after: item.features.some(x => x === 'graph' || x === 'sync' || x === 'api') ? sourceIcon : null,
   subType: 'add-app',
   subId: item.identifier,
+  extraData: {
+    definition: item,
+  },
 })
 
 export async function searchApps(query: string): Promise<ApiSearchItem[]> {
@@ -65,7 +69,7 @@ export async function searchApps(query: string): Promise<ApiSearchItem[]> {
   return await fetch(`https://tryorbit.com/api/search/${query}`).then(res => res.json())
 }
 
-type FilterSearchItems = (items: ApiSearchItem[]) => ApiSearchItem[]
+export type FilterSearchItems = (items: ApiSearchItem[]) => ApiSearchItem[]
 
 export function useSearchAppStoreApps(filterFn: FilterSearchItems = _ => _) {
   const [searchResults, search] = useAsyncFn(searchApps)
@@ -73,37 +77,6 @@ export function useSearchAppStoreApps(filterFn: FilterSearchItems = _ => _) {
     ? filterFn(searchResults.value).map(x => ({ ...appSearchToListItem(x), disableFilter: true }))
     : []
   return [results, search] as const
-}
-
-export function useTopAppStoreApps(
-  filterFn: FilterSearchItems = _ => _,
-  fallback: ListItemProps = {
-    selectable: false,
-    children: <SubTitle>Loading app store</SubTitle>,
-  },
-): ListItemProps[] {
-  const [topApps, setTopApps] = useState([])
-
-  useEffect(() => {
-    let cancelled = false
-    fetch(`https://tryorbit.com/api/apps`)
-      .then(res => res.json())
-      .then(res => {
-        if (!cancelled) {
-          setTopApps(res)
-        }
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
-  const filtered = filterFn(topApps || [])
-  const withFallback = filtered.length ? filtered.map(appSearchToListItem) : [fallback]
-  return withFallback.map(x => ({
-    ...x,
-    groupName: 'Trending (App Store)',
-  }))
 }
 
 export function AppsIndex() {

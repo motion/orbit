@@ -17,7 +17,7 @@
     "@o/worker-kit": "^2.6.0",
     "autolinker": "^1.7.1",
     "express-graphql": "0.8.0",
-    "graphql": "14.2.1",
+    "graphql": "^14.4.2",
     "lodash": "4.17.11",
     "request": "^2.88.0",
     "slack": "^11.0.1"

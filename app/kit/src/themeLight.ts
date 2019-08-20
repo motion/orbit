@@ -17,7 +17,7 @@ export const light: ThemeObject = {
   alternates,
   cardShadow: [0, 6, 14, [0, 0, 0, 0.058]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
-  boxShadowOpacity: 0.05,
+  boxShadowOpacity: 0.01,
   ...fromStyles({
     iconFillColor: '#000',
     glintColor: [255, 255, 255, 0.85],
@@ -44,7 +44,7 @@ export const light: ThemeObject = {
     borderColorActive: [230, 230, 230],
     borderColorHover: [230, 230, 230],
     borderColorLight: [215, 215, 215, 0.5],
-    headerBackground: linearGradient([255, 255, 255, 0.85], [255, 255, 255, 0.9]),
+    headerBackground: linearGradient([255, 255, 255, 0.9], [255, 255, 255, 0.95]),
     sidebarBackground: '#f5f7f9',
     sidebarBackgroundTransparent: [255, 255, 255, 0.8],
     appCardBackground: '#f5f7f9',

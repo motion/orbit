@@ -1,4 +1,6 @@
 // until next hotkeys patches types
+import pluralizeOg from 'pluralize'
+
 export * from './helpers/configureHotKeys'
 export { default as allIcons } from './icons'
 
@@ -6,6 +8,11 @@ export * from '@o/color'
 export * from '@o/utils'
 
 module.hot && module.hot.accept()
+
+// add types
+export const pluralize = (word: string, count: number, inclusize?: boolean) => {
+  return pluralizeOg(word, count, inclusize)
+}
 
 export {
   Absolute,
@@ -25,7 +32,6 @@ export {
 } from 'gloss'
 export { arrayMove } from '@o/react-sortable-hoc'
 export { GlobalHotKeys, HotKeys, KeySequence } from 'react-hotkeys'
-export { default as pluralize } from 'pluralize'
 
 export * from './Arrow'
 export * from './Avatar'

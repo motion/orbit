@@ -24,7 +24,7 @@ const summarize = (items: any[]) => {
       .slice(0, 2)
       .join(', ')}${items.length > 2 ? '...' : ''}`
   }
-  return `${items.length} ${pluralize(items.length, 'item')}`
+  return `${items.length} ${pluralize('item', items.length)}`
 }
 
 const ClipboardAppIndex = memo(() => {

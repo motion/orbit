@@ -49,6 +49,7 @@ async function installApp(
 ) {
   banner.set({
     message: `Installing app ${def.name}`,
+    timeout: 3,
   })
 
   if (def.auth) {

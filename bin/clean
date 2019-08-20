@@ -2,6 +2,8 @@
 
 set +e
 
+FLAGS=$@
+
 # hard source clear
 rm -r ./example-workspace/dist/node_modules/.cache
 rm -r ./example-workspace/dist/.cache
@@ -31,12 +33,16 @@ rm -r apps/*/package-lock.json || true
 rm -r packages/*/package-lock.json || true
 rm -r projects/*/package-lock.json || true
 
-if [[ "$1" = "--all" ]]; then
+if [[ "$FLAGS" =~ "--modules" ]]; then
   rm -r node_modules || true
   rm -r app/*/node_modules || true
   rm -r apps/*/node_modules || true
   rm -r projects-*/*/node_modules || true
   rm -r packages/*/node_modules || true
+fi
+
+if [[ "$FLAGS" =~ "--data" ]]; then
+  rm ~/Library/Application\\ Support/Electron/development_database.sqlite
 fi
 
 # echo "re-installing with `yarn --check-files` to ensure everything installed"

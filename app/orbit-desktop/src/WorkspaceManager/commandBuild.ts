@@ -151,26 +151,31 @@ async function readBuildInfo(appDir: string) {
   }
 }
 
+async function isValidJSONFile(path: string) {
+  try {
+    await readJSON(path)
+    return true
+  } catch (err) {
+    return false
+  }
+}
+
 async function shouldRebuildApp(appRoot: string) {
   // do some basic sanity checks
   // no buildInfo yet
-  if (!(await pathExists(join(appRoot, 'dist', 'buildInfo.json')))) {
+  if (!(await isValidJSONFile(join(appRoot, 'dist', 'buildInfo.json')))) {
     return true
   }
   // no appInfo yet
-  if (!(await pathExists(join(appRoot, 'dist', 'appInfo.json')))) {
+  if (!(await isValidJSONFile(join(appRoot, 'dist', 'appInfo.json')))) {
     return true
   }
 
   // do some appInfo => output comparison checks
   const appInfo = await getAppInfo(appRoot)
   // ensure api file built
-  if (appInfo.api) {
-    try {
-      await readJSON(join(appRoot, 'dist', 'api.json'))
-    } catch {
-      return true
-    }
+  if (appInfo.api && !(await isValidJSONFile(join(appRoot, 'dist', 'api.json')))) {
+    return false
   }
   // ensure node bundle built
   if (appInfo.workers || appInfo.graph) {

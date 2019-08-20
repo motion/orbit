@@ -6,8 +6,9 @@ import React, { memo, useLayoutEffect } from 'react'
 
 import { createAppBitInActiveSpace, useInstallApp } from '../helpers/installApp'
 import { newAppStore } from '../om/stores'
-import { useSearchAppStoreApps, useTopAppStoreApps } from './apps/AppsApp'
+import { useSearchAppStoreApps } from './apps/AppsApp'
 import { AppsMainNew } from './apps/AppsMainNew'
+import { useTopAppStoreApps } from './apps/useTopAppStoreApps'
 import { useUserVisualAppDefinitions } from './orbitApps'
 import { StackNavigator, useStackNavigator } from './StackNavigator'
 
@@ -16,6 +17,9 @@ export default createApp({
   name: 'Add App',
   icon: 'plus',
   app: SetupAppMain,
+  viewConfig: {
+    transparentBackground: false,
+  },
 })
 
 function SetupAppMain() {
@@ -186,8 +190,14 @@ export const SetupAppHome = memo((props: SetupAppHomeProps) => {
     results.filter(res => res.features.some(x => x === 'app')),
   )
   const topApps = useTopAppStoreApps(results =>
-    results.filter(res => res.features.some(x => x === 'app')),
+    results.filter(
+      res =>
+        res.features.some(x => x === 'app') &&
+        installedApps.every(x => x.identifier !== res.identifier),
+    ),
   )
+
+  console.log('setup apps', installedApps, searchedApps, topApps)
 
   const flow = useCreateFlow({
     data: {

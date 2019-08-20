@@ -142,10 +142,12 @@ export class AppsManager {
             },
           })
           .subscribe(next => {
+            log.verbose(`Update apps`)
             this.apps = next as AppBit[]
             this.resolvedApps = true
           })
         return () => {
+          log.verbose(`Unsubscribe from space subscription`)
           subsription.unsubscribe()
         }
       })

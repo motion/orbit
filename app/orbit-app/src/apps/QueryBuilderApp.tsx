@@ -117,7 +117,6 @@ function QueryBuilderApp() {
       const item = treeList.state!.items![id]
       if (item && item.data && item.data.identifier) {
         const definition = getAppDefinition(`${item.data.identifier}`)
-        console.log('create a bit', item)
         actions.createOrUpdate({
           title: item.name,
           originalId: `${item.id}`,
@@ -237,7 +236,6 @@ function QueryBuilderMain({
     <StackNavigator
       useNavigator={navigator}
       onNavigate={item => {
-        console.log('navigating to', item, treeList)
         if (!item) return
         // const icon = getAppDefinition(item.id)
         treeList.updateSelectedItem({

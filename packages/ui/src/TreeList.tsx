@@ -165,7 +165,7 @@ class TreeListStore {
 
   updateSelectedItem(item: Partial<TreeItem>) {
     const selectedItem = this.getSelectedItem()
-    console.log('updating', selectedItem, item)
+    // console.log('updating', selectedItem, item)
     if (!selectedItem) {
       return
     }

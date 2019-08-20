@@ -12,7 +12,8 @@
   "scripts": {
     "bootstrap": "./bin/bootstrap",
     "clean": "bin/clean",
-    "clean:packages": "bin/clean --all",
+    "clean:modules": "bin/clean --modules",
+    "clean:data": "bin/clean --data",
     "clean:apps": "rm -r apps/*/dist",
     "start": "cd example-workspace && orbit ws --logLevel 1",
     "start:dev": "cd example-workspace && orbit ws --dev --logLevel 3",

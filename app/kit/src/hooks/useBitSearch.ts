@@ -89,6 +89,8 @@ export function useBitSearch({
     finalArgs.where = whereFinal
   }
 
+  console.debug('useBitSearch args', finalArgs)
+
   return useModels(BitModel, finalArgs)[0]
 }
 

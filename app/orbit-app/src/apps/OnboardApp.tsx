@@ -103,7 +103,9 @@ function OnboardToolbar() {
   const flow = useFlow()
   const onboardStore = Onboard.useStore()!
 
-  const buttons = [<>ok</>]
+  const buttons = [
+    // extra buttons
+  ]
 
   return (
     <Scale size="lg">

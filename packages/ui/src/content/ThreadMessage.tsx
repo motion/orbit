@@ -1,5 +1,6 @@
 import { Box, gloss } from 'gloss'
 import * as React from 'react'
+import ShadowDOM from 'react-shadow'
 
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { HighlightText } from '../Highlight'
@@ -45,9 +46,7 @@ export function ThreadMessage({ date, participants, body }: ThreadMessageLike) {
   )
 }
 
-const Message = gloss(Box).theme(theme => ({
-  borderBottom: [1, theme.borderColor],
-}))
+const Message = gloss(Box)
 
 const Paragraph = gloss(HighlightText, {
   marginBottom: '0.35rem',
@@ -71,8 +70,39 @@ const Block = gloss({
 
 const MailBody = ({ children, ...props }) => {
   return (
-    <View color="#151515" background="#fff" borderRadius={10} overflow="hidden">
-      <Block className="gmail-body" {...props} dangerouslySetInnerHTML={{ __html: children }} />
+    <View color="#151515" background="#fff" borderRadius={10} overflow="hidden" padding>
+      <ShadowDOM.div mode="closed">
+        <div>
+          <Block className="gmail-body" {...props} dangerouslySetInnerHTML={{ __html: children }} />
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
+              :host { all: initial }
+
+              .gmail-body table {
+                table-layout: fixed;
+                width: 100%;
+              }
+              .gmail-body tbody {
+                vertical-align: middle;
+                border-color: inherit;
+              }
+              .gmail-body td,
+              .gmail-body tr,
+              .gmail-body table,
+              .gmail-body tbody {
+                border-collapse: separate;
+                border-spacing: 0px;
+                vertical-align: inherit;
+              }
+              .gmail-body p {
+                line-height: 11pt;
+              }
+            `,
+            }}
+          />
+        </div>
+      </ShadowDOM.div>
     </View>
   )
 }

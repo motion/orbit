@@ -11890,6 +11890,11 @@ humanize-ms@^1.2.1:
   dependencies:
     ms "^2.0.0"
 
+humps@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/humps/-/humps-2.0.1.tgz#dd02ea6081bd0568dc5d073184463957ba9ef9aa"
+  integrity sha1-3QLqYIG9BWjcXQcxhEY5V7qe+ao=
+
 hyphenate-style-name@^1.0.2:
   version "1.0.3"
   resolved "https://registry.npmjs.org/hyphenate-style-name/-/hyphenate-style-name-1.0.3.tgz#097bb7fa0b8f1a9cf0bd5c734cf95899981a9b48"
@@ -19089,10 +19094,12 @@ react-select@^3.0.4:
     react-input-autosize "^2.2.1"
     react-transition-group "^2.2.1"
 
-react-shadow@16.3.2:
-  version "16.3.2"
-  resolved "https://registry.npmjs.org/react-shadow/-/react-shadow-16.3.2.tgz#a431a7101b0e222dbc669c4070ab395f42dbb675"
-  integrity sha512-NxFoBvEg2WD3V25jgiWgIltpDfs2XBCbDyi63jEM6Gch8g8r2cqJxSWy2GfG666EfOpRR5Zsrhu0Qn5yze1PrA==
+react-shadow@^17.1.3:
+  version "17.1.3"
+  resolved "https://registry.npmjs.org/react-shadow/-/react-shadow-17.1.3.tgz#21f8ebbbeff8f867a5eb29dec52758a3fb576d42"
+  integrity sha512-T0TETccduTNwid9/URfWRhtAH0Fv3eA1zra7cq+2bY5u4fd4oBjtXA629h/95QN8aznlJof3ELd36qOyzaGdHQ==
+  dependencies:
+    humps "^2.0.1"
 
 react-side-effect@^1.1.0:
   version "1.1.5"

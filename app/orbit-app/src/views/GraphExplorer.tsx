@@ -47,7 +47,7 @@ export function GraphExplorer() {
           __html: `.resolved { flex: 1; overflow: hidden; }`,
         }}
       />
-      <ShadowDOM>
+      <ShadowDOM.div>
         <div>
           <div
             style={{
@@ -101,6 +101,8 @@ export function GraphExplorer() {
           <style
             dangerouslySetInnerHTML={{
               __html: `
+                :host { all: initial }
+
                 :host > span {
                   width: 100%;
                   height: 100%;
@@ -282,7 +284,7 @@ export function GraphExplorer() {
             }}
           />
         </div>
-      </ShadowDOM>
+      </ShadowDOM.div>
     </>
   )
 }

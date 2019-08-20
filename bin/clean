@@ -42,7 +42,7 @@ if [[ "$FLAGS" =~ "--modules" ]]; then
 fi
 
 if [[ "$FLAGS" =~ "--data" ]]; then
-  rm ~/Library/Application\\ Support/Electron/development_database.sqlite
+  rm ~/Library/Application\ Support/Electron/development_database.sqlite
 fi
 
 # echo "re-installing with `yarn --check-files` to ensure everything installed"

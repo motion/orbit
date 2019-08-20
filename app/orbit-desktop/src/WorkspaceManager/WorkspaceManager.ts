@@ -167,7 +167,9 @@ export class WorkspaceManager {
    */
   lastBuildConfig = ''
   async updateAppsBuilder() {
+    this.updateBuildMode()
     const { options, activeApps, buildMode } = this
+
     if (options.action === 'new') {
       return
     }
@@ -178,21 +180,12 @@ export class WorkspaceManager {
       return
     }
 
-    // avoid costly rebuilds
-    const nextBuildConfig = JSON.stringify({ options, activeApps, buildMode })
-    if (this.lastBuildConfig === nextBuildConfig) {
-      log.verbose(`Same build config, avoiding rebuild`)
-      return
-    } else {
-      this.lastBuildConfig = nextBuildConfig
-    }
-
     try {
-      this.updateBuildMode()
       // this runs the build
       this.appsBuilder.update({
         options,
-        buildMode: this.buildMode,
+        // this update is weird
+        buildMode,
         activeApps,
       })
     } catch (err) {

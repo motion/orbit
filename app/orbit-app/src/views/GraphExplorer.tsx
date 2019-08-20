@@ -47,7 +47,7 @@ export function GraphExplorer() {
           __html: `.resolved { flex: 1; overflow: hidden; }`,
         }}
       />
-      <ShadowDOM.div>
+      <ShadowDOM.div style={{ pointerEvents: 'inherit' }}>
         <div>
           <div
             style={{
@@ -55,7 +55,7 @@ export function GraphExplorer() {
               flexFlow: 'row',
               flex: 1,
               overflow: 'hidden',
-              color: theme.color.toString(),
+              color: `${theme.color}`,
             }}
             ref={shadowRoot}
           >

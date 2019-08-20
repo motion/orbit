@@ -1,0 +1,18 @@
+{
+  "name": "@o/db-browser-app",
+  "version": "1.0.0",
+  "main": "index.tsx",
+  "ts:main": "src/index.tsx",
+  "config": {
+    "orbitApp": true
+  },
+  "scripts": {
+    "start": "orbit dev",
+    "build": "orbit build"
+  },
+  "dependencies": {
+    "@o/kit": "^2.6.0",
+    "@o/mock-data": "^2.6.0",
+    "@o/ui": "^2.6.0"
+  }
+}

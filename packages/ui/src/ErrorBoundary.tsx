@@ -40,7 +40,7 @@ export class ErrorBoundary extends Component<{ name: string; displayInline?: boo
         return (
           <Col flex={1} position="relative">
             <Center>
-              <SubTitle>On no! An error occured.</SubTitle>
+              <SubTitle>Oh no! An error occured.</SubTitle>
             </Center>
           </Col>
         )

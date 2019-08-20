@@ -101,7 +101,11 @@ export function GraphExplorer() {
           <style
             dangerouslySetInnerHTML={{
               __html: `
-                :host { all: initial }
+                :host {
+                  all: initial;
+                  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+      'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
+                }
 
                 :host > span {
                   width: 100%;

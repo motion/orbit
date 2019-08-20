@@ -77,7 +77,15 @@ const MailBody = ({ children, ...props }) => {
           <style
             dangerouslySetInnerHTML={{
               __html: `
-              :host { all: initial }
+              :host {
+                all: initial;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
+              }
+
+              gmail-body {
+                user-select: text;
+              }
 
               .gmail-body table {
                 table-layout: fixed;

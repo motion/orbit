@@ -85,7 +85,7 @@ const MailBody = ({ children, ...props }) => {
 
   return (
     <View color="#151515" background="#fff" borderRadius={10} overflow="hidden" padding>
-      <ShadowDOM.div>
+      <ShadowDOM.div style={{ pointerEvents: 'inherit' }}>
         <div ref={rootNode}>
           <Block className="gmail-body" {...props} dangerouslySetInnerHTML={{ __html: children }} />
           <style

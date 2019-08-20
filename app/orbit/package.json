@@ -9,11 +9,6 @@
   "resolutions": {
     "execa": "2.0.3"
   },
-  "workspaces": {
-    "nohoist": [
-      "execa"
-    ]
-  },
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",

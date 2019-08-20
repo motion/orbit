@@ -2564,7 +2564,7 @@
   dependencies:
     mkdirp "^0.5.1"
 
-"@react-spring/addons@^9.0.0-beta.33":
+"@react-spring/addons@^9.0.0-beta.31":
   version "9.0.0-beta.33"
   resolved "https://registry.npmjs.org/@react-spring/addons/-/addons-9.0.0-beta.33.tgz#0948301c271758f7a52aa39a1d96d4db65c6dd9b"
   integrity sha512-/QJ5vcq54oljT1n4dSx9maYGaIKzz5WRuKGa12fhLD2JsYo9syTc9S3VH4qmAM4pkbggUQdiaA/AJWack4NF7A==
@@ -2574,7 +2574,7 @@
     "@react-spring/core" "^9.0.0-beta.33"
     use-memo-one "^1.1.0"
 
-"@react-spring/animated@9.0.0-beta.31":
+"@react-spring/animated@9.0.0-beta.31", "@react-spring/animated@^9.0.0-beta.33":
   version "9.0.0-beta.31"
   resolved "https://registry.npmjs.org/@react-spring/animated/-/animated-9.0.0-beta.31.tgz#d7fe8171724ee8870fd5585a58c87818690e422b"
   integrity sha512-Zrf6VQCpXexv/NngV1c/J2gPrK3uGk/yjEi6pnrXgmUAO67rfsNxJb/9kWcI4v2U9yrUS9EYAoDqG1BZV8Jvcw==
@@ -2582,16 +2582,7 @@
     "@babel/runtime" "^7.3.1"
     "@react-spring/shared" "^9.0.0-beta.31"
 
-"@react-spring/animated@^9.0.0-beta.33":
-  version "9.0.0-beta.33"
-  resolved "https://registry.npmjs.org/@react-spring/animated/-/animated-9.0.0-beta.33.tgz#5481278056e771466137f4d48c2efbf3277faad3"
-  integrity sha512-0ecIXTLjvUuplQgUOr3fhXzHuVcCuVi4gLAEG74m/OcXZ8JZ0DuQCwdIT2TNJYaWX1pOG0OstT3bJ8KN+Ji/BQ==
-  dependencies:
-    "@babel/runtime" "^7.3.1"
-    "@react-spring/shared" "^9.0.0-beta.33"
-    tiny-invariant "^1.0.4"
-
-"@react-spring/core@^9.0.0-beta.33":
+"@react-spring/core@^9.0.0-beta.31", "@react-spring/core@^9.0.0-beta.33":
   version "9.0.0-beta.33"
   resolved "https://registry.npmjs.org/@react-spring/core/-/core-9.0.0-beta.33.tgz#3b894fb9fbc3d0dde5e4cdfc8eb52935e8cea9bf"
   integrity sha512-fIUGsAsCmZSBtucfE3zf2XTBjdTYbzdcblZyeo1/pUGW7ehjB85x2oNj7o6JQ603+elsTJ9k7POiYI5/wn1N3A==
@@ -2601,7 +2592,7 @@
     "@react-spring/shared" "^9.0.0-beta.33"
     use-memo-one "^1.1.0"
 
-"@react-spring/konva@^9.0.0-beta.33":
+"@react-spring/konva@^9.0.0-beta.31":
   version "9.0.0-beta.33"
   resolved "https://registry.npmjs.org/@react-spring/konva/-/konva-9.0.0-beta.33.tgz#2a116aee5a32ab4cde1b5eef1c10b533183f6518"
   integrity sha512-9tfrbd/j3ZZHu8Vjpx86vAkLZ3lQLv9VEgvDIQSpzUzQOUojeQPdbB/xVKSoqR2hWR0XMV2IurD2e6rolZv7fQ==
@@ -2611,7 +2602,7 @@
     "@react-spring/core" "^9.0.0-beta.33"
     "@react-spring/shared" "^9.0.0-beta.33"
 
-"@react-spring/native@^9.0.0-beta.33":
+"@react-spring/native@^9.0.0-beta.31":
   version "9.0.0-beta.33"
   resolved "https://registry.npmjs.org/@react-spring/native/-/native-9.0.0-beta.33.tgz#0e27f34acbb395e2f355c9f91fc8010fbd1c4967"
   integrity sha512-x2Wlcr0JSxc2O/6QsOut4aR3VOVYP8QOLBNXA+5tgQGK5yfkTaDoXTZC8vD/uX3dBsY41FUr2x9a+LOqvTfziQ==
@@ -2637,7 +2628,7 @@
     "@babel/runtime" "^7.3.1"
     tiny-invariant "^1.0.4"
 
-"@react-spring/three@^9.0.0-beta.33":
+"@react-spring/three@^9.0.0-beta.31":
   version "9.0.0-beta.33"
   resolved "https://registry.npmjs.org/@react-spring/three/-/three-9.0.0-beta.33.tgz#556f8ef92397c3b9bec0f92c13acc9c7d7c6995d"
   integrity sha512-ouTN6w1VMjN2V04JGSG7eliesBgOqPmplrETeUSc3gAl3unv9LzqRDK/NGan0GwvsCx98BUycKYD26wWAAu1lA==
@@ -2647,7 +2638,7 @@
     "@react-spring/core" "^9.0.0-beta.33"
     "@react-spring/shared" "^9.0.0-beta.33"
 
-"@react-spring/web@^9.0.0-beta.33":
+"@react-spring/web@^9.0.0-beta.31":
   version "9.0.0-beta.33"
   resolved "https://registry.npmjs.org/@react-spring/web/-/web-9.0.0-beta.33.tgz#d1dbe05dfa888ab0c46fe3fac8790cd3a7dfb8d5"
   integrity sha512-IIKF+wwnDahMOB7Llr/HdLUHrzL9LEGHGPmnv9bJsdxmMdn28Dydbk3ekbpZrbjYnduKCeFVqtTl/TZcnQDVdw==
@@ -2657,7 +2648,7 @@
     "@react-spring/core" "^9.0.0-beta.33"
     "@react-spring/shared" "^9.0.0-beta.33"
 
-"@react-spring/zdog@^9.0.0-beta.33":
+"@react-spring/zdog@^9.0.0-beta.31":
   version "9.0.0-beta.33"
   resolved "https://registry.npmjs.org/@react-spring/zdog/-/zdog-9.0.0-beta.33.tgz#0f49d72bd56c9d9c797ac0390b141d6f9c7eafbe"
   integrity sha512-cGxNJxZxbKpaagpelTxdOLOxJkdUEjmiXzrePu0dAgO58WTGcya9XWcI0ntKZo1/8T6E2qR29j0J59MDeHkAZQ==
@@ -3452,9 +3443,9 @@ acorn-globals@^4.1.0, acorn-globals@^4.3.0, acorn-globals@^4.3.2:
     acorn-walk "^6.0.1"
 
 acorn-jsx@^5.0.0:
-  version "5.0.1"
-  resolved "https://registry.npmjs.org/acorn-jsx/-/acorn-jsx-5.0.1.tgz#32a064fd925429216a09b141102bfdd185fae40e"
-  integrity sha512-HJ7CfNHrfJLlNTzIEUTj43LNWGkqpRLxm3YjAlcD0ACydk9XynzYsCBHxut+iqt+1aBXkx9UP/w/ZqMr13XIzg==
+  version "5.0.2"
+  resolved "https://registry.npmjs.org/acorn-jsx/-/acorn-jsx-5.0.2.tgz#84b68ea44b373c4f8686023a551f61a21b7c4a4f"
+  integrity sha512-tiNTrP1MP0QrChmD2DdupCr6HWSFeKVw5d/dHTu4Y7rkAkRhU/Dt7dphAfIUyxtHpl/eBVip5uTNSpQJHylpAw==
 
 acorn-walk@^6.0.1, acorn-walk@^6.1.1:
   version "6.2.0"
@@ -8576,9 +8567,9 @@ electron-rebuild@1.8.5:
     yargs "^13.2.2"
 
 electron-to-chromium@^1.3.103, electron-to-chromium@^1.3.191, electron-to-chromium@^1.3.47:
-  version "1.3.235"
-  resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.3.235.tgz#8d0d52c9ec76d12189f2f2d265a17d57f41d20dc"
-  integrity sha512-xNabEDbMIKPLQd6xgv4nyyeMaWXIKSJr6G51ZhUemHhbz6kjZAYcygA8CvfEcMF+Mt5eLmDWaLmfSOWdQxzBVQ==
+  version "1.3.236"
+  resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.3.236.tgz#c7158cbd4d17a3670ac7c9b44da44d752aa193a9"
+  integrity sha512-LWOvuJ80pLO3FtFqTcGuXB0dxdMtzSCkRmbXdY5mHUvXRQGor3sTVmyfU70aD2yF5i+fbHz52ncWr5T3xUYHlA==
 
 electron-updater@3.1.1:
   version "3.1.1"
@@ -9008,9 +8999,9 @@ eslint-scope@^4.0.0, eslint-scope@^4.0.3:
     estraverse "^4.1.1"
 
 eslint-utils@^1.3.1:
-  version "1.4.0"
-  resolved "https://registry.npmjs.org/eslint-utils/-/eslint-utils-1.4.0.tgz#e2c3c8dba768425f897cf0f9e51fe2e241485d4c"
-  integrity sha512-7ehnzPaP5IIEh1r1tkjuIrxqhNkzUJa9z3R92tLJdZIVdWaczEhr3EbhGtsMrVxi1KeR8qA7Off6SWc5WNQqyQ==
+  version "1.4.2"
+  resolved "https://registry.npmjs.org/eslint-utils/-/eslint-utils-1.4.2.tgz#166a5180ef6ab7eb462f162fd0e6f2463d7309ab"
+  integrity sha512-eAZS2sEUMlIeCjBeubdj45dmBHQwPHWyBcT1VSYB7o9x9WRRqKxyUoiXlRjyAwzN7YEzHJlYg0NmzDRWx6GP4Q==
   dependencies:
     eslint-visitor-keys "^1.0.0"
 
@@ -16729,9 +16720,9 @@ overmind-react@20.0.1:
     overmind "19.0.1"
 
 overmind-themes@next:
-  version "1.0.2-1566237041476"
-  resolved "https://registry.npmjs.org/overmind-themes/-/overmind-themes-1.0.2-1566237041476.tgz#fcaf239930ca4d902939fa43bc725f16a076b91f"
-  integrity sha512-AGSV5sAlByarPvNyIUXCsKhPpDX6pbpDRXDmoH1wHFZ+27gOb6MWJ9qsSFTYuonVGee6mHTrnc248qnjDoWbzw==
+  version "1.0.2-1566284577417"
+  resolved "https://registry.npmjs.org/overmind-themes/-/overmind-themes-1.0.2-1566284577417.tgz#9f513996480c1cf8cc5e0570423c3e4db0390536"
+  integrity sha512-BtG2VdMSbtF/nEC52hBfYc9cvRUxO10TiiM+2W4oIC0VL0nq/z8Dsz5SRzZCOQUDGpH7buRCyHvJkLZNy1fbaA==
   dependencies:
     color "^3.0.0"
 
@@ -19119,19 +19110,19 @@ react-side-effect@^1.1.0:
     exenv "^1.2.1"
     shallowequal "^1.0.1"
 
-react-spring@9.0.0-beta.33:
-  version "9.0.0-beta.33"
-  resolved "https://registry.npmjs.org/react-spring/-/react-spring-9.0.0-beta.33.tgz#b367559c5ddada133b5cbe771d456a1918dc5c23"
-  integrity sha512-fSGlIEeJJ1gzEHuD/AbQC3fd7pXic8P/O9ssz4DBiSs2SANkO+BESlgbFaFLVrLgRvjdd+bKF7WrdGeaPEVv2w==
+react-spring@9.0.0-beta.31:
+  version "9.0.0-beta.31"
+  resolved "https://registry.npmjs.org/react-spring/-/react-spring-9.0.0-beta.31.tgz#4c61e49319ecc05c4b8780dbe2718e433049531d"
+  integrity sha512-g4z40d+y3MtWNKsvpaGX9Qh33WtVo/qa0/78IisnUKQy7rUwLEMRd2X4HefuUZmbex0/neTbxWFDHiKMudn5Fw==
   dependencies:
     "@babel/runtime" "^7.3.1"
-    "@react-spring/addons" "^9.0.0-beta.33"
-    "@react-spring/core" "^9.0.0-beta.33"
-    "@react-spring/konva" "^9.0.0-beta.33"
-    "@react-spring/native" "^9.0.0-beta.33"
-    "@react-spring/three" "^9.0.0-beta.33"
-    "@react-spring/web" "^9.0.0-beta.33"
-    "@react-spring/zdog" "^9.0.0-beta.33"
+    "@react-spring/addons" "^9.0.0-beta.31"
+    "@react-spring/core" "^9.0.0-beta.31"
+    "@react-spring/konva" "^9.0.0-beta.31"
+    "@react-spring/native" "^9.0.0-beta.31"
+    "@react-spring/three" "^9.0.0-beta.31"
+    "@react-spring/web" "^9.0.0-beta.31"
+    "@react-spring/zdog" "^9.0.0-beta.31"
 
 react-svg-inline@^2.1.0, react-svg-inline@^2.1.1:
   version "2.1.1"
@@ -20409,9 +20400,9 @@ serialize-error@^2.1.0:
   integrity sha1-ULZ51WNc34Rme9yOWa9OW4HV9go=
 
 serialize-javascript@^1.4.0, serialize-javascript@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.npmjs.org/serialize-javascript/-/serialize-javascript-1.7.0.tgz#d6e0dfb2a3832a8c94468e6eb1db97e55a192a65"
-  integrity sha512-ke8UG8ulpFOxO8f8gRYabHQe/ZntKlcig2Mp+8+URDP1D8vJZ0KUt7LYo07q25Z/+JVSgpr/cui9PIp5H6/+nA==
+  version "1.8.0"
+  resolved "https://registry.npmjs.org/serialize-javascript/-/serialize-javascript-1.8.0.tgz#9515fc687232e2321aea1ca7a529476eb34bb480"
+  integrity sha512-3tHgtF4OzDmeKYj6V9nSyceRS0UJ3C7VqyD2Yj28vC/z2j6jG5FmFGahOKMD9CrglxTm3tETr87jEypaYV8DUg==
 
 serve-index@^1.9.1:
   version "1.9.1"

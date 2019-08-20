@@ -1,7 +1,7 @@
 import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, loadOne, react, save, Templates, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple } from '@o/kit'
 import { bitContentHash } from '@o/libs'
 import { ApiArgType, AppBit, AppMetaCommand, Bit, BitModel, CallAppBitApiMethodCommand } from '@o/models'
-import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TitleRow, Toggle, TreeList, useGet, useTheme, useTreeList } from '@o/ui'
+import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TitleRow, Toggle, TreeList, useGet, useTheme, useTreeList, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import { FindOptions } from 'typeorm'
@@ -529,6 +529,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const [method, setMethod] = useState(apiInfo[allMethods[0]])
   const hasApiInfo = !!meta && !!apiInfo
   const theme = useTheme()
+  const [tab, setTab] = useState('0')
 
   useEffect(() => {
     if (method) {
@@ -556,11 +557,21 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
         <Layout type="column">
           <Pane flex={2} resizable>
             <Col padding space>
-              <Row justifyContent="space-between">
+              <Row>
                 <Tag size={1.2} alt="lightGray">
                   {method.name}
                 </Tag>
-                <Button alt="flat" sizeIcon={1.4} tooltip="Show help" icon="help" />
+                <View flex={1} />
+                <Button
+                  alt="approve"
+                  margin={[0, 'auto']}
+                  size="lg"
+                  iconAfter
+                  icon="play"
+                  onClick={queryBuilder.run}
+                >
+                  Run
+                </Button>
               </Row>
 
               {(method.args || []).map((arg, index) => {
@@ -576,22 +587,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
               <SeparatorHorizontal />
               <Space size="xl" />
 
-              <TitleRow
-                title="Preview"
-                size="xs"
-                after={
-                  <Button
-                    alt="approve"
-                    margin={[0, 'auto']}
-                    size="lg"
-                    iconAfter
-                    icon="play"
-                    onClick={queryBuilder.run}
-                  >
-                    Run
-                  </Button>
-                }
-              />
+              <TitleRow title="Preview" size="xs" />
 
               <Card elevation={3} height={24 * 3 + 16 * 2}>
                 <MonacoEditor
@@ -605,18 +601,23 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
               </Card>
             </Col>
           </Pane>
-          <Pane background={theme.backgroundStrong} resizable title="Output" collapsable padding>
-            <Tabs defaultActive="0">
-              <Tab padding key="0" label="Inspect">
-                <DataInspector data={{ data: queryBuilder.result }} />
-              </Tab>
-              <Tab padding key="1" label="JSON">
-                <Code minHeight={200}>{JSON.stringify(queryBuilder.result)}</Code>
-              </Tab>
-              <Tab padding key="2" label="Table">
-                <Table items={[].concat(queryBuilder.result || [])} />
-              </Tab>
-            </Tabs>
+          <Pane
+            background={theme.backgroundStrong}
+            resizable
+            title="Output"
+            collapsable
+            padding
+            afterTitle={
+              <Tabs defaultActive="0" onChange={setTab}>
+                <Tab key="0" label="Inspect" />
+                <Tab key="1" label="JSON" />
+                <Tab key="2" label="Table" />
+              </Tabs>
+            }
+          >
+            {tab === '0' && <DataInspector data={{ data: queryBuilder.result }} />}
+            {tab === '1' && <Code minHeight={200}>{JSON.stringify(queryBuilder.result)}</Code>}
+            {tab === '2' && <Table items={[].concat(queryBuilder.result || [])} />}
           </Pane>
         </Layout>
       </Pane>
@@ -629,7 +630,6 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             padding
             resizable
             collapsable
-            debug
           >
             <SimpleFormField label="Name">
               <Tag alt="lightBlue">$0</Tag>
@@ -721,8 +721,9 @@ const ArgumentField = memo(
         >
           <MonacoEditor
             padding
-            // not controlled
             noGutter
+            language=""
+            // not controlled
             value={queryBuilder.arguments[index]}
             onChange={val => {
               setIsActive(() => true)

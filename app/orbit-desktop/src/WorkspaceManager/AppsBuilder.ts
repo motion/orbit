@@ -7,6 +7,7 @@ import { Handler } from 'express'
 import { readFile } from 'fs-extra'
 import { chunk } from 'lodash'
 import hashObject from 'node-object-hash'
+import { cpus } from 'os'
 import { join } from 'path'
 import { parse } from 'url'
 import Webpack from 'webpack'
@@ -92,7 +93,9 @@ export class AppsBuilder {
     // ensure builds have run for each app
     try {
       let builds = []
-      for (const apps of chunk(activeApps, Math.max(1, require('os').cpus() - 1))) {
+      const chunks = Math.max(1, cpus().length - 1)
+      for (const apps of chunk(activeApps, chunks)) {
+        log.verbose(`Building apps ${apps.map(x => x.packageId).join(', ')}`)
         builds = [
           ...builds,
           ...(await Promise.all(

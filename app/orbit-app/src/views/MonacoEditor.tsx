@@ -26,6 +26,7 @@ export function MonacoEditor({ width, height, noGutter, padding, ...props }: Mon
   const preventUpdate = useRef(false)
 
   useOnMount(() => {
+    console.log('props', props)
     const editor = monaco.editor.create(node.current!, {
       ...props,
       theme: monacoTheme,

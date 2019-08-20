@@ -25,7 +25,7 @@ export default (app: AppBit<PostgresAppData>) => {
       }
       try {
         const appData: PostgresAppData = app.data
-        console.log('connecting...')
+        console.log('connecting...', appData)
         connection = await connect(appData)
         console.log('querying...')
         const result = await connection.query(query, parameters)

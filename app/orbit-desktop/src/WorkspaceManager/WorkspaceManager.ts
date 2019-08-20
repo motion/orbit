@@ -3,7 +3,7 @@ import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveMany, resolveObserveOne } from '@o/mediator'
 import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppWorkspaceCommand, BuildStatusModel, CallAppBitApiMethodCommand, CommandWsOptions, Space, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop } from '@o/stores'
-import { decorate, ensure, react } from '@o/use-store'
+import { always, decorate, ensure, react } from '@o/use-store'
 import { remove } from 'fs-extra'
 import _, { uniqBy } from 'lodash'
 import { join, relative } from 'path'
@@ -121,7 +121,7 @@ export class WorkspaceManager {
   )
 
   // temp fix, i was seeing these not update
-  updateDesktopStateOnNewApps = react(() => this.appsManager.apps, this.updateDesktopState)
+  updateDesktopStateOnNewApps = react(() => always(this.appsManager.apps), this.updateDesktopState)
 
   updateDesktopState() {
     const identifiers = this.appsManager.apps.map(x => x.identifier)

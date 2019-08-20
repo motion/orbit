@@ -26,10 +26,11 @@ export async function insertDevelopmentPostgres() {
     spaceId: activeSpace.id,
     data: {
       setup: {
-        hostname: 'localhost',
+        hostname: '127.0.0.1',
         database: 'test',
         username: 'postgres',
         password: 'test',
+        port: 5942,
       },
     } as any,
   })

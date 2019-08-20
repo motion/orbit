@@ -85,6 +85,8 @@ const len = employees.length
 const items = [...new Array(10000)].map((_, index) => employees[index % (len - 1)])
 
 function DemoLayoutApp() {
+  // const [bit] = useModel(AppModel, { where: { identifier: 'postgres' } })
+  // const postgres = useApp()
   const [treeState, setTreeState] = useState(treeData)
   const [selected, setSelected] = useState(0)
   return (

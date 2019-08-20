@@ -64,7 +64,6 @@
 		"url-loader": "^1.0.1",
 		"webpack": "4.39.2",
 		"webpack-bundle-analyzer": "3.3.2",
-		"webpack-cli": "^3.3.6",
 		"webpack-deep-scope-plugin": "1.6.0",
 		"webpack-dev-server": "^3.8.0",
 		"webpack-merge": "^4.2.1",

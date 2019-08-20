@@ -23,7 +23,7 @@
     "start:dev:noworkers:clean": "(cd example-workspace && DISABLE_WORKERS=true orbit ws --dev --logLevel 6 --dev --clean)",
     "start:devtools": "overmind-devtools & (cd app/orbit-repl && yarn start)",
     "start:site": "cd projects/site && yarn start",
-    "fix-permissions": "chmod ug+x app/cli/_/index.js",
+    "fix-permissions": "chmod ug+x app/orbit/_/index.js",
     "build": "tsc -b",
     "build:watch": "tsc -b -w --preserveWatchOutput",
     "build:example-workspace": "(cd example-workspace && orbit ws --build --logLevel 1)",

@@ -2,15 +2,54 @@
   "name": "orbit",
   "version": "2.6.0",
   "main": "_/index.js",
-  "ts:main": "src/index.ts",
-  "private": true,
+  "bin": {
+    "orbit": "_/index.js"
+  },
+  "license": "MIT",
+  "resolutions": {
+    "execa": "2.0.3"
+  },
+  "workspaces": {
+    "nohoist": [
+      "execa"
+    ]
+  },
   "scripts": {
-    "build": "tsc -b",
-    "watch": "tsc --preserveWatchOutput --watch"
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "bundle": "mcro-build --build --prod --target node --executable"
   },
   "dependencies": {
-    "@o/fast-compare": "^2.6.0",
-    "@o/kit": "^2.6.0",
-    "@o/worker-kit": "^2.6.0"
+    "@babel/code-frame": "^7.0.0",
+    "@o/config": "*",
+    "@o/libs-node": "^2.6.0",
+    "@o/logger": "*",
+    "@o/mediator": "^2.6.0",
+    "@o/models": "^2.6.0",
+    "@o/telemetry": "^2.6.0",
+    "@o/utils": "^2.6.0",
+    "bonjour": "*",
+    "chalk": "^2.4.2",
+    "ci-info": "^2.0.0",
+    "common-tags": "^1.8.0",
+    "convert-hrtime": "^3.0.0",
+    "execa": "2.0.3",
+    "fs-extra": "^7.0.0",
+    "hosted-git-info": "2.7.1",
+    "is-valid-path": "0.1.1",
+    "isomorphic-fetch": "^2.2.1",
+    "opentracing": "0.14.3",
+    "pretty-error": "^2.1.1",
+    "prompts": "^2.1.0",
+    "reconnecting-websocket": "4.1.10",
+    "replace-in-file": "^4.1.1",
+    "source-map": "0.5.7",
+    "stack-trace": "^0.0.10",
+    "ws": "^7.0.0",
+    "yargs": "^13.2.2",
+    "yurnalist": "^1.0.5"
+  },
+  "devDependencies": {
+    "@types/yargs": "^12.0.10"
   }
 }

@@ -1,8 +1,8 @@
-import { commandNew } from '@o/cli'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { AppCreateNewCommand, AppCreateNewOptions, Space, StatusReply } from '@o/models'
 import { pathExists } from 'fs-extra'
+import { commandNew } from 'orbit'
 import { join } from 'path'
 import sanitize from 'sanitize-filename'
 

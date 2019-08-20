@@ -109,7 +109,7 @@ export function makeWebpackConfig(
   }
 
   // include the cli node modules as backup
-  const cliPath = Path.join(require.resolve('@o/cli'), '..', '..', 'node_modules')
+  const cliPath = Path.join(require.resolve('orbit'), '..', '..', 'node_modules')
   let modules = ['node_modules', cliPath]
 
   // if in monorepo add monorepo hoisted modules

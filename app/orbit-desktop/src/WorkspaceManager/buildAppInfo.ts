@@ -58,8 +58,13 @@ async function writeAppInfo(appRoot: string): Promise<StatusReply> {
   })
 
   let apiInfo = {}
+  let nodeImports = []
 
   traverse(tree, {
+    ImportDeclaration(path) {
+      console.log('path', path)
+      nodeImports.push(path)
+    },
     ExportDefaultDeclaration(path) {
       path.traverse({
         CallExpression(path) {

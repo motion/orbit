@@ -21,6 +21,13 @@ export const SettingModel = new Model<Setting, FindOptions<Setting>, FindOptions
   'Setting',
 )
 
+export type BuildInfo = {
+  hash: string
+  filesHash: {
+    [path: string]: string
+  }
+}
+
 export type SearchQuery = {
   query: string
   contentType?: BitContentType

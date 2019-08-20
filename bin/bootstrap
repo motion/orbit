@@ -24,7 +24,7 @@ wait
 source $ROOT/.binenv
 
 echo "installing dependencies"
-yarn install
+yarn install --ignore-engines
 
 # build everything
 if [ ! -d "./app/orbit-desktop/_" ]; then
@@ -51,7 +51,9 @@ function link-orbit() {
   ln -s $(realpath ./app/orbit/_/index.js) $(yarn global bin)/orbit
   ln -s $(realpath ./app/orbit) $(yarn global dir)/node_modules/orbit
 }
-link-orbit
+if [ ! -f "$(yarn global bin)/orbit" ]; then
+  link-orbit
+fi
 
 printf "\n\n"
 printf "  🎉🎉🎉 bootstrapped! 🎉🎉🎉"

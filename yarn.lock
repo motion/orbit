@@ -29,7 +29,7 @@
   optionalDependencies:
     chokidar "^2.0.4"
 
-"@babel/code-frame@7.0.0", "@babel/code-frame@7.0.0-beta.44", "@babel/code-frame@^7.0.0":
+"@babel/code-frame@7.0.0", "@babel/code-frame@7.0.0-beta.44", "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.5.5":
   version "7.0.0"
   resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.0.0.tgz#06e2ab19bdb535385559aabb5ba59729482800f8"
   integrity sha512-OfC2uemaknXr87bdLUkWog7nYuliM9Ij5HUcajsVcMCpQrcLmtxRbVFTIqmcSkSeYRBFBRxs2FiUqFJDLdiebA==
@@ -56,7 +56,7 @@
     semver "^5.4.1"
     source-map "^0.5.0"
 
-"@babel/generator@7.4.4", "@babel/generator@^7.0.0", "@babel/generator@^7.4.0", "@babel/generator@^7.4.4":
+"@babel/generator@7.4.4", "@babel/generator@^7.0.0", "@babel/generator@^7.4.0", "@babel/generator@^7.4.4", "@babel/generator@^7.5.5":
   version "7.4.4"
   resolved "https://registry.npmjs.org/@babel/generator/-/generator-7.4.4.tgz#174a215eb843fc392c7edcaabeaa873de6e8f041"
   integrity sha512-53UOLK6TVNqKxf7RUh8NE851EHRxOOeVXKbK2bivdb+iziMyk03Sr4eaE9OELCbyZAAafAKPDwF2TPUES5QbxQ==
@@ -242,7 +242,7 @@
     "@babel/traverse" "^7.1.0"
     "@babel/types" "^7.2.0"
 
-"@babel/helpers@^7.4.4":
+"@babel/helpers@^7.4.4", "@babel/helpers@^7.5.5":
   version "7.5.5"
   resolved "https://registry.npmjs.org/@babel/helpers/-/helpers-7.5.5.tgz#63908d2a73942229d1e6685bc2a0e730dde3b75e"
   integrity sha512-nRq2BUhxZFnfEn/ciJuhklHvFOqjJUD5wpx+1bxUF2axL9C+v4DE/dmp5sT2dKnpOs4orZWzpAZqlCy8QqE/7g==
@@ -272,7 +272,7 @@
     node-environment-flags "^1.0.5"
     v8flags "^3.1.1"
 
-"@babel/parser@7.4.5", "@babel/parser@^7.0.0", "@babel/parser@^7.1.0", "@babel/parser@^7.4.3", "@babel/parser@^7.4.4", "@babel/parser@^7.4.5", "@babel/parser@~7.4.4":
+"@babel/parser@7.4.5", "@babel/parser@^7.0.0", "@babel/parser@^7.1.0", "@babel/parser@^7.4.3", "@babel/parser@^7.4.4", "@babel/parser@^7.4.5", "@babel/parser@^7.5.5", "@babel/parser@~7.4.4":
   version "7.4.5"
   resolved "https://registry.npmjs.org/@babel/parser/-/parser-7.4.5.tgz#04af8d5d5a2b044a2a1bffacc1e5e6673544e872"
   integrity sha512-9mUqkL1FF5T7f0WDFfAoDdiMVPWsdD1gZYzSnaXsxUCUqzuch/8of9G3VUSNiZmMBoRxT3neyVsqeiL/ZPcjew==
@@ -2574,7 +2574,7 @@
     "@react-spring/core" "^9.0.0-beta.31"
     use-memo-one "^1.1.0"
 
-"@react-spring/animated@9.0.0-beta.31", "@react-spring/animated@^9.0.0-beta.31", "@react-spring/animated@^9.0.0-beta.33":
+"@react-spring/animated@9.0.0-beta.31", "@react-spring/animated@^9.0.0-beta.31":
   version "9.0.0-beta.31"
   resolved "https://registry.npmjs.org/@react-spring/animated/-/animated-9.0.0-beta.31.tgz#d7fe8171724ee8870fd5585a58c87818690e422b"
   integrity sha512-Zrf6VQCpXexv/NngV1c/J2gPrK3uGk/yjEi6pnrXgmUAO67rfsNxJb/9kWcI4v2U9yrUS9EYAoDqG1BZV8Jvcw==
@@ -2582,7 +2582,7 @@
     "@babel/runtime" "^7.3.1"
     "@react-spring/shared" "^9.0.0-beta.31"
 
-"@react-spring/core@9.0.0-beta.31", "@react-spring/core@^9.0.0-beta.31", "@react-spring/core@^9.0.0-beta.33":
+"@react-spring/core@9.0.0-beta.31", "@react-spring/core@^9.0.0-beta.31":
   version "9.0.0-beta.31"
   resolved "https://registry.npmjs.org/@react-spring/core/-/core-9.0.0-beta.31.tgz#3ccdea75bcfb937b02ca540135383c51660e3a38"
   integrity sha512-E0cwfnBjP6kftwfr/81LBhLsuN4wObwTlUO3eAfEuwPnyzaWfQ0QkM33uw8FUASyk+NdinmRVPfaUZNGYjdZNg==
@@ -2592,15 +2592,15 @@
     "@react-spring/shared" "^9.0.0-beta.31"
     use-memo-one "^1.1.0"
 
-"@react-spring/konva@^9.0.0-beta.31":
-  version "9.0.0-beta.33"
-  resolved "https://registry.npmjs.org/@react-spring/konva/-/konva-9.0.0-beta.33.tgz#2a116aee5a32ab4cde1b5eef1c10b533183f6518"
-  integrity sha512-9tfrbd/j3ZZHu8Vjpx86vAkLZ3lQLv9VEgvDIQSpzUzQOUojeQPdbB/xVKSoqR2hWR0XMV2IurD2e6rolZv7fQ==
+"@react-spring/konva@9.0.0-beta.31", "@react-spring/konva@^9.0.0-beta.31":
+  version "9.0.0-beta.31"
+  resolved "https://registry.npmjs.org/@react-spring/konva/-/konva-9.0.0-beta.31.tgz#3eb9f9a12c21b2386058a348f7ff773d219f58a0"
+  integrity sha512-IezBohtc8sl6yXKkjKV80yZzypA21OiPT1vc6x/nh2iqaZcNCesDjNSwtQUZbWyWqgx/f9mQ0nCejtIw07C/NQ==
   dependencies:
     "@babel/runtime" "^7.3.1"
-    "@react-spring/animated" "^9.0.0-beta.33"
-    "@react-spring/core" "^9.0.0-beta.33"
-    "@react-spring/shared" "^9.0.0-beta.33"
+    "@react-spring/animated" "^9.0.0-beta.31"
+    "@react-spring/core" "^9.0.0-beta.31"
+    "@react-spring/shared" "^9.0.0-beta.31"
 
 "@react-spring/native@9.0.0-beta.31", "@react-spring/native@^9.0.0-beta.31":
   version "9.0.0-beta.31"
@@ -2612,7 +2612,7 @@
     "@react-spring/core" "^9.0.0-beta.31"
     "@react-spring/shared" "^9.0.0-beta.31"
 
-"@react-spring/shared@9.0.0-beta.31", "@react-spring/shared@^9.0.0-beta.31", "@react-spring/shared@^9.0.0-beta.33":
+"@react-spring/shared@9.0.0-beta.31", "@react-spring/shared@^9.0.0-beta.31":
   version "9.0.0-beta.31"
   resolved "https://registry.npmjs.org/@react-spring/shared/-/shared-9.0.0-beta.31.tgz#417622806247fd9f676eda064baee622d608e937"
   integrity sha512-MVCD2a8C5rQVRS67Ov4372efT8aDb6/5ZWRKwBcIeN2CrTuGqO6S3HgRZnER1LIZr7/BM4jkxA26KwTILQiaHw==
@@ -2620,15 +2620,15 @@
     "@babel/runtime" "^7.3.1"
     tiny-invariant "^1.0.4"
 
-"@react-spring/three@^9.0.0-beta.31":
-  version "9.0.0-beta.33"
-  resolved "https://registry.npmjs.org/@react-spring/three/-/three-9.0.0-beta.33.tgz#556f8ef92397c3b9bec0f92c13acc9c7d7c6995d"
-  integrity sha512-ouTN6w1VMjN2V04JGSG7eliesBgOqPmplrETeUSc3gAl3unv9LzqRDK/NGan0GwvsCx98BUycKYD26wWAAu1lA==
+"@react-spring/three@9.0.0-beta.31", "@react-spring/three@^9.0.0-beta.31":
+  version "9.0.0-beta.31"
+  resolved "https://registry.npmjs.org/@react-spring/three/-/three-9.0.0-beta.31.tgz#256b7a837a5d513a2cf52bbfb3792a283a65d6dd"
+  integrity sha512-XgkBiWnb+7IWRxrO2iO33NeCz/KWbjxwpHiOZ+VQRsXO0Goe9upWezqgg2HCgq/yh2tNYFiOUY92MGNIscWo5w==
   dependencies:
     "@babel/runtime" "^7.3.1"
-    "@react-spring/animated" "^9.0.0-beta.33"
-    "@react-spring/core" "^9.0.0-beta.33"
-    "@react-spring/shared" "^9.0.0-beta.33"
+    "@react-spring/animated" "^9.0.0-beta.31"
+    "@react-spring/core" "^9.0.0-beta.31"
+    "@react-spring/shared" "^9.0.0-beta.31"
 
 "@react-spring/web@9.0.0-beta.31", "@react-spring/web@^9.0.0-beta.31":
   version "9.0.0-beta.31"
@@ -2640,15 +2640,15 @@
     "@react-spring/core" "^9.0.0-beta.31"
     "@react-spring/shared" "^9.0.0-beta.31"
 
-"@react-spring/zdog@^9.0.0-beta.31":
-  version "9.0.0-beta.33"
-  resolved "https://registry.npmjs.org/@react-spring/zdog/-/zdog-9.0.0-beta.33.tgz#0f49d72bd56c9d9c797ac0390b141d6f9c7eafbe"
-  integrity sha512-cGxNJxZxbKpaagpelTxdOLOxJkdUEjmiXzrePu0dAgO58WTGcya9XWcI0ntKZo1/8T6E2qR29j0J59MDeHkAZQ==
+"@react-spring/zdog@9.0.0-beta.31", "@react-spring/zdog@^9.0.0-beta.31":
+  version "9.0.0-beta.31"
+  resolved "https://registry.npmjs.org/@react-spring/zdog/-/zdog-9.0.0-beta.31.tgz#b4c440df6d600fb3690cd66844555ec4719a4691"
+  integrity sha512-BzdZ+jHY7RNfhu98w1P42yzHPkCqSzjxcea4RTqzD2x9DOYCTACUUcsl0SiOBkdRtEHWsqRdPMY3cqcegiKP8Q==
   dependencies:
     "@babel/runtime" "^7.3.1"
-    "@react-spring/animated" "^9.0.0-beta.33"
-    "@react-spring/core" "^9.0.0-beta.33"
-    "@react-spring/shared" "^9.0.0-beta.33"
+    "@react-spring/animated" "^9.0.0-beta.31"
+    "@react-spring/core" "^9.0.0-beta.31"
+    "@react-spring/shared" "^9.0.0-beta.31"
 
 "@seznam/compose-react-refs@^1.0.1":
   version "1.0.2"

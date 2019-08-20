@@ -28,6 +28,12 @@ if [ ! -d "./app/orbit-desktop/_" ]; then
   yarn build
 fi
 
+# fix stupid yarn workspaces bug with not seeing nohoist unless you do this
+if [ ! -d "./app/cli/node_modules" ]; then
+  printf "fixing cli execa node_module"
+  (cd app/cli && yarn install)
+fi
+
 sh ./scripts/pg-database.sh
 
 # fixes bug where TS loses permissions every damn clean

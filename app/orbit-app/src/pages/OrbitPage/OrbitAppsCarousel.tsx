@@ -251,7 +251,8 @@ class OrbitAppsCarouselStore {
     })
   }
 
-  outScaler = numberScaler(0, 1, 0.6, 0.65)
+  // NOTE if this goes higher than 0.6, it seems to cause extra scrolling
+  outScaler = numberScaler(0, 1, 0.55, 0.6)
   inScaler = numberScaler(0, 1, 0.9, 1)
   opacityScaler = numberScaler(1, 0, 1.2, 0)
   boundRotation = numberBounder(-10, 10)
@@ -272,11 +273,12 @@ class OrbitAppsCarouselStore {
     if (zoomedIn) {
       // if zoomed in, move the side apps out of view (by 500px)
       if (offset !== 0) {
-        x = offset > 0 ? -100 : 100
+        // in percent
+        x = offset > 0 ? -80 : 80
       }
     } else {
       // zoomed out, move them a bit faster, shift them to the right side
-      // remember: this is in percent
+      // in percent
       x = (offset > -0.2 ? offset * 1 : offset * 0.25) + 19
     }
     const next = {

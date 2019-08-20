@@ -6,6 +6,7 @@ import { HighlightText } from '../Highlight'
 import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
 import { Text } from '../text/Text'
+import { View } from '../View/View'
 
 export type ThreadMessageLike = {
   body?: string
@@ -39,15 +40,12 @@ export function ThreadMessage({ date, participants, body }: ThreadMessageLike) {
             </React.Fragment>
           ))}
       </MessageHeader>
-      <Space />
       <MailBody>{body}</MailBody>
     </Message>
   )
 }
 
-const Message = gloss(Box, {
-  padding: 15,
-}).theme(theme => ({
+const Message = gloss(Box).theme(theme => ({
   borderBottom: [1, theme.borderColor],
 }))
 
@@ -71,8 +69,10 @@ const Block = gloss({
   },
 })
 
-const MailBody = ({ children, ...props }) => (
-  <Text>
-    <Block className="gmail-body" {...props} dangerouslySetInnerHTML={{ __html: children }} />
-  </Text>
-)
+const MailBody = ({ children, ...props }) => {
+  return (
+    <View color="#151515" background="#fff" borderRadius={10} overflow="hidden">
+      <Block className="gmail-body" {...props} dangerouslySetInnerHTML={{ __html: children }} />
+    </View>
+  )
+}

@@ -59,7 +59,9 @@ export const appSearchToListItem = (item: ApiSearchItem): ListItemProps => ({
   after: item.features.some(x => x === 'graph' || x === 'sync' || x === 'api') ? sourceIcon : null,
   subType: 'add-app',
   subId: item.identifier,
-  identifier: item.identifier,
+  extraData: {
+    definition: item,
+  },
 })
 
 export async function searchApps(query: string): Promise<ApiSearchItem[]> {

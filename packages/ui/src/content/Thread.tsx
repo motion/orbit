@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { HighlightText } from '../Highlight'
+import { Col } from '../View/Col'
 import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
 import { ThreadMessage, ThreadMessageLike } from './ThreadMessage'
 
@@ -24,10 +25,10 @@ export function Thread(rawProps: ThreadProps) {
     return <HighlightText ellipse>{body.slice(0, 200)}</HighlightText>
   }
   return (
-    <div>
+    <Col space>
       {messages.map((message, index) => {
         return <ThreadMessage key={index} {...message} />
       })}
-    </div>
+    </Col>
   )
 }

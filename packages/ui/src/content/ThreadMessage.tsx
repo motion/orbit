@@ -1,11 +1,13 @@
 import { Box, gloss } from 'gloss'
 import * as React from 'react'
+import ShadowDOM from 'react-shadow'
 
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { HighlightText } from '../Highlight'
 import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
 import { Text } from '../text/Text'
+import { View } from '../View/View'
 
 export type ThreadMessageLike = {
   body?: string
@@ -39,17 +41,12 @@ export function ThreadMessage({ date, participants, body }: ThreadMessageLike) {
             </React.Fragment>
           ))}
       </MessageHeader>
-      <Space />
       <MailBody>{body}</MailBody>
     </Message>
   )
 }
 
-const Message = gloss(Box, {
-  padding: 15,
-}).theme(theme => ({
-  borderBottom: [1, theme.borderColor],
-}))
+const Message = gloss(Box)
 
 const Paragraph = gloss(HighlightText, {
   marginBottom: '0.35rem',
@@ -71,8 +68,49 @@ const Block = gloss({
   },
 })
 
-const MailBody = ({ children, ...props }) => (
-  <Text>
-    <Block className="gmail-body" {...props} dangerouslySetInnerHTML={{ __html: children }} />
-  </Text>
-)
+const MailBody = ({ children, ...props }) => {
+  return (
+    <View color="#151515" background="#fff" borderRadius={10} overflow="hidden" padding>
+      <ShadowDOM.div mode="closed">
+        <div>
+          <Block className="gmail-body" {...props} dangerouslySetInnerHTML={{ __html: children }} />
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
+              :host {
+                all: initial;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
+              }
+
+              gmail-body {
+                user-select: text;
+              }
+
+              .gmail-body table {
+                table-layout: fixed;
+                width: 100%;
+              }
+              .gmail-body tbody {
+                vertical-align: middle;
+                border-color: inherit;
+              }
+              .gmail-body td,
+              .gmail-body tr,
+              .gmail-body table,
+              .gmail-body tbody {
+                border-collapse: separate;
+                border-spacing: 0px;
+                vertical-align: inherit;
+              }
+              .gmail-body p {
+                line-height: 11pt;
+              }
+            `,
+            }}
+          />
+        </div>
+      </ShadowDOM.div>
+    </View>
+  )
+}

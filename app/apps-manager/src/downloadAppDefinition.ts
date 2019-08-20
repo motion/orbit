@@ -26,7 +26,7 @@ export async function downloadAppDefinition(options: {
   // if exists already just return it
   const existing = await findPackage(options)
   if (existing) {
-    const info = await getAppInfo(directory)
+    const info = await getAppInfo(existing)
     if (info) {
       return {
         type: 'success',

@@ -20,6 +20,9 @@ ensure-dep "pg_config" -- brew install postgresql &
 ensure-dep "firebase" -- npm i -g firebase-tools &
 wait
 
+# source our helper binaries for ease of use
+source $ROOT/.binenv
+
 echo "installing dependencies"
 yarn install
 

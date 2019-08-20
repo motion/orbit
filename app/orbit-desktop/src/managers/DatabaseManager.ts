@@ -31,7 +31,7 @@ export class DatabaseManager {
     log.verbose('Ensure default user...')
     await this.ensureDefaultUser()
 
-    await sleep(100)
+    await sleep(20)
 
     log.verbose('Connected models...')
 
@@ -50,7 +50,7 @@ export class DatabaseManager {
       } catch (err) {
         console.log('got err, migrations may not be done yet...', err)
       } finally {
-        await sleep(100)
+        await sleep(20)
       }
     }
 

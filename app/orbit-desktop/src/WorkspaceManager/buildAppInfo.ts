@@ -62,8 +62,11 @@ async function writeAppInfo(appRoot: string): Promise<StatusReply> {
 
   traverse(tree, {
     ImportDeclaration(path) {
-      console.log('path', path)
-      nodeImports.push(path)
+      const importPath = path.node.source.value
+      if (importPath.indexOf('.node') > -1) {
+        console.log('path', importPath)
+        nodeImports.push(importPath)
+      }
     },
     ExportDefaultDeclaration(path) {
       path.traverse({

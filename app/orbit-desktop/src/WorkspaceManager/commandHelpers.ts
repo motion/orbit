@@ -35,7 +35,10 @@ export function statusReplyCommand<A extends Function>(cb: A): A {
   return (res as any) as A
 }
 
-export function attachLogToCommand(log: Logger, options: CommandOpts) {
+export function attachLogToCommand(log: Logger, options?: CommandOpts) {
+  if (!options) {
+    return
+  }
   const sendMessage: LogMiddleware = (level, _namespace, messages: string[]) => {
     if (level !== 'debug') {
       options.sendMessage(messages.join(' '))

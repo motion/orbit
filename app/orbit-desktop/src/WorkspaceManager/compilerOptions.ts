@@ -1,6 +1,5 @@
 export const compilerOptions = JSON.parse(`{
   "compilerOptions": {
-    "strict": false,
     "skipLibCheck": true,
     "rootDir": "src",
     "module": "CommonJS",
@@ -12,6 +11,6 @@ export const compilerOptions = JSON.parse(`{
     "jsx": "react",
     "lib": ["es2017", "es2018", "dom", "esnext.array"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["**/*.test.ts", "**/*.test.tsx"]
+  "include": ["**/*"],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "node_modules", "dist"]
 }`)

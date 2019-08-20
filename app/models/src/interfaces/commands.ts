@@ -108,8 +108,6 @@ export type CommandBuildOptions = {
   projectRoot: string
   watch?: boolean
   force?: boolean
-  // if you dont want to build the whole thing in dev mode
-  onlyInfo?: boolean
 }
 export const AppBuildCommand = new Command<StatusReply, CommandBuildOptions>('AppBuildCommand')
 

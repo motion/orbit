@@ -4,7 +4,8 @@ import { AppMeta, BuildStatus, CommandWsOptions } from '@o/models'
 import { stringToIdentifier } from '@o/utils'
 import historyAPIFallback from 'connect-history-api-fallback'
 import { Handler } from 'express'
-import { pathExists, readFile } from 'fs-extra'
+import { readFile } from 'fs-extra'
+import { chunk } from 'lodash'
 import hashObject from 'node-object-hash'
 import { join } from 'path'
 import { parse } from 'url'
@@ -12,11 +13,12 @@ import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 import Observable from 'zen-observable'
 
+import { commandBuild } from './commandBuild'
 import { AppBuildConfigs, getAppsConfig } from './getAppsConfig'
 import { webpackPromise } from './webpackPromise'
 import { AppBuildModeDict } from './WorkspaceManager'
 
-const log = new Logger('AppBuilder')
+const log = new Logger('AppsBuilder')
 
 type WebpackAppsDesc = {
   name: string
@@ -28,13 +30,13 @@ type WebpackAppsDesc = {
   config?: Webpack.Configuration
 }
 
-type AppBuilderUpdate = {
+type AppsBuilderUpdate = {
   options: CommandWsOptions
   buildMode: AppBuildModeDict
   activeApps: AppMeta[]
 }
 
-export class AppBuilder {
+export class AppsBuilder {
   state: WebpackAppsDesc[] = []
   apps: AppMeta[] = []
   buildNameToAppMeta: { [name: string]: AppMeta } = {}
@@ -61,7 +63,7 @@ export class AppBuilder {
     })
   }
 
-  async update({ buildMode, options, activeApps }: AppBuilderUpdate) {
+  async update({ buildMode, options, activeApps }: AppsBuilderUpdate) {
     const buildConfigs = await getAppsConfig(activeApps, buildMode, options)
     const { clientConfigs, nodeConfigs, buildNameToAppMeta } = buildConfigs
     log.verbose(`update() ${activeApps.length}`, buildConfigs)
@@ -73,48 +75,45 @@ export class AppBuilder {
       return
     }
 
-    await this.ensureInitiallyBuilt(buildConfigs)
-
-    if (options.action === 'run') {
-      this.state = this.updateAppBuilders(buildConfigs)
-      return
-    }
-
+    // for build mode, ensure we re-run the dll builds first
     if (options.action === 'build') {
-      const { base, ...rest } = clientConfigs
-      const configs = [
-        ...Object.keys(rest).map(key => rest[key]),
-        ...Object.keys(nodeConfigs).map(x => nodeConfigs[x]),
-      ]
+      const { base } = clientConfigs
       log.info(`Building ${Object.keys(clientConfigs).join(', ')}...`)
       // build base dll first to ensure it feeds into rest
       await webpackPromise([base], {
         loud: true,
       })
-      await webpackPromise(configs, {
-        loud: true,
-      })
-      log.info(`Build complete!`)
+    }
+
+    // ensure builds have run for each app
+    let builds = []
+    for (const apps of chunk(activeApps, Math.max(1, require('os').cpus() - 1))) {
+      builds = [
+        ...builds,
+        ...(await Promise.all(
+          apps.map(async app => {
+            return await commandBuild({
+              projectRoot: app.directory,
+              // dont force, were just ensureing its initially built once
+              force: false,
+            })
+          }),
+        )),
+      ]
+    }
+    if (builds.some(x => x.type === 'error')) {
+      log.error(
+        `Error running initial builds of apps:\n${builds
+          .filter(x => x.type === 'error')
+          .map(x => ` - ${x.message}`)
+          .join('\n')}`,
+      )
+    }
+
+    if (options.action === 'run') {
+      this.state = this.updateBuild(buildConfigs)
       return
     }
-  }
-
-  async ensureInitiallyBuilt(buildConfigs: AppBuildConfigs) {
-    const { nodeConfigs } = buildConfigs
-    await Promise.all(
-      Object.keys(nodeConfigs).map(async name => {
-        const nodeConf = nodeConfigs[name]
-        const outFile = join(nodeConf.context, nodeConf.output.filename)
-        if (await pathExists(outFile)) {
-          // we've built once, we can wait until the runner rebuilds
-        } else {
-          log.info(`No node definition found yet for ${name}, building...`)
-          await webpackPromise([{ ...nodeConf, watch: false }], {
-            loud: true,
-          })
-        }
-      }),
-    )
   }
 
   updateCompletedFirstBuild = async (name: string, status: 'compiling' | 'error' | 'success') => {
@@ -186,17 +185,11 @@ export class AppBuilder {
     })
   }
 
-  private updateAppBuilders({
-    clientConfigs,
-    nodeConfigs,
-    buildNameToAppMeta,
-  }: AppBuildConfigs): WebpackAppsDesc[] {
+  private updateBuild({ clientConfigs, buildNameToAppMeta }: AppBuildConfigs): WebpackAppsDesc[] {
     log.verbose(`configs ${Object.keys(clientConfigs).join(', ')}`, clientConfigs)
 
     const { main, ...rest } = clientConfigs
     let res: WebpackAppsDesc[] = []
-
-    console.log('TODO refactor to handle nodeConfigs', nodeConfigs)
 
     // you have to do it this janky ass way because webpack just isnt really great at
     // doing multi-config hmr, and this makes sure the 404 hot-update bug is fixed (google)
@@ -204,7 +197,7 @@ export class AppBuilder {
       const config = rest[name]
       const devName = `${name}-dev`
       const current = this.state.find(x => x.name === devName)
-      const middleware = this.getAppBuilder(config, name, buildNameToAppMeta[name], devName)
+      const middleware = this.getClientBuilder(config, name, buildNameToAppMeta[name], devName)
       if (middleware) {
         if (middleware === true) {
           // use last one
@@ -248,7 +241,7 @@ export class AppBuilder {
     // falls back to the main entry middleware
     if (main) {
       const name = 'main'
-      const middleware = this.getAppBuilder(main, name, undefined, name)
+      const middleware = this.getClientBuilder(main, name, undefined, name)
       if (middleware) {
         if (middleware === true) {
           res = [...res, ...this.state.filter(x => x.name === name)]
@@ -297,7 +290,7 @@ export class AppBuilder {
     return res
   }
 
-  private getAppBuilder = (
+  private getClientBuilder = (
     config: Webpack.Configuration,
     name: string,
     appMeta?: AppMeta,

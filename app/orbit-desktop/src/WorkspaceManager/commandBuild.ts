@@ -1,9 +1,10 @@
 import { getGlobalConfig } from '@o/config'
+import { isEqual } from '@o/kit'
 import { isOrbitApp, readPackageJson } from '@o/libs-node'
 import { Logger } from '@o/logger'
 import { CommandOpts, resolveCommand } from '@o/mediator'
 import { AppBuildCommand, AppDefinition, CommandBuildOptions, StatusReply } from '@o/models'
-import { pathExists, readJSON } from 'fs-extra'
+import { ensureDir, pathExists, readJSON, writeJSON } from 'fs-extra'
 import { join } from 'path'
 import webpack from 'webpack'
 
@@ -52,6 +53,13 @@ export async function commandBuild(
     }
   }
 
+  await ensureDir(join(props.projectRoot, 'dist'))
+
+  if (!(await hasChangedAppHash(props.projectRoot))) {
+    log.info(`App hasn't changed, not rebuilding. To force build, run: orbit build --force`)
+    return
+  }
+
   const [resBundle, resGenType] = await Promise.all([
     bundleApp(props),
     commandGenTypes(
@@ -82,33 +90,64 @@ export async function bundleApp(options: CommandBuildOptions): Promise<StatusRep
   const entry = await getAppEntry(options.projectRoot)
   const pkg = await readPackageJson(options.projectRoot)
 
+  const appHash = await getAppHash(options.projectRoot)
   const appInfoRes = await buildAppInfo(options)
   if (appInfoRes.type !== 'success') {
     return appInfoRes
   }
   const appInfo = appInfoRes.value
-  log.info(`appInfo`, appInfo)
 
   let webConf: webpack.Configuration | null = null
   let nodeConf: webpack.Configuration | null = null
 
   if (hasKey(appInfo, 'graph', 'workers', 'api')) {
-    log.info(`Found node app`)
+    log.info(`Has node app...`)
     nodeConf = await getNodeAppConfig(entry, pkg.name, options)
   }
 
   const configs = [webConf, nodeConf].filter(Boolean)
   if (configs.length) {
-    log.info(`Building apps...`)
+    log.info(`Building...`)
     await webpackPromise(configs, {
       loud: verbose,
     })
   }
 
+  await writeBuildInfo(options.projectRoot, appHash)
+
   return {
     type: 'success',
     message: `Bundled app`,
   }
+}
+
+const folderHash = require('folder-hash')
+
+async function getAppHash(appDir: string) {
+  return await folderHash.hashElement(appDir, {
+    folders: { exclude: ['node_modules', 'test', 'dist', '.*'] },
+    files: { include: ['*.js', '*.json', '*.ts', '*.tsx'] },
+  })
+}
+
+async function writeBuildInfo(appDir: string, appHash) {
+  const file = join(appDir, 'dist', 'buildInfo.json')
+  return await writeJSON(file, appHash)
+}
+
+async function readBuildInfo(appDir: string) {
+  const file = join(appDir, 'dist', 'buildInfo.json')
+  try {
+    return await readJSON(file)
+  } catch {
+    return null
+  }
+}
+
+async function hasChangedAppHash(appDir: string) {
+  const current = await getAppHash(appDir)
+  const existing = await readBuildInfo(appDir)
+  return isEqual(current, existing) === false
 }
 
 const hasKey = (appInfo: AppDefinition, ...keys: string[]) =>

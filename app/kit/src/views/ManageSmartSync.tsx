@@ -1,14 +1,16 @@
-import { CheckBox, Label, Row, Surface, Text } from '@o/ui'
+import { CheckBox, Label, Row, SizedSurface, Text } from '@o/ui'
+import { useStore } from '@o/use-store'
 import * as React from 'react'
 
 import { WhiteList } from '../hooks/useWhiteList'
 
 export function ManageSmartSync({ whitelist }: { whitelist: WhiteList }) {
+  const store = useStore(whitelist)
   return (
-    <Surface
-      alt={whitelist.isWhitelisting ? 'selected' : null}
-      borderRadius={4}
-      padding={[2, 6]}
+    <SizedSurface
+      alt={store.isWhitelisting ? 'selected' : null}
+      sizeRadius
+      sizePadding
       tooltip="Turning this on will let Orbit manage space"
     >
       <Label>
@@ -17,6 +19,6 @@ export function ManageSmartSync({ whitelist }: { whitelist: WhiteList }) {
           <Text>Smart sync</Text>
         </Row>
       </Label>
-    </Surface>
+    </SizedSurface>
   )
 }

@@ -11,7 +11,6 @@ export function useTopAppStoreApps(
   },
 ): ListItemProps[] {
   const [topApps, setTopApps] = useState([])
-  console.log('topApps', topApps)
 
   useEffect(() => {
     let cancelled = false

@@ -58,7 +58,10 @@ export async function commandBuild(
 
   if (!(await shouldRebuildApp(props.projectRoot))) {
     log.info(`App hasn't changed, not rebuilding. To force build, run: orbit build --force`)
-    return
+    return {
+      type: 'success',
+      message: `Already built`,
+    }
   }
 
   const [resBundle, resGenType] = await Promise.all([

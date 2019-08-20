@@ -5,41 +5,45 @@ import { useEffect, useRef } from 'react'
 
 import { useAppBit } from './useAppBit'
 
-// type ApiCall = AppWithDefinition & {
-//   args: any[]
-//   method: string
-// }
-
 export type UnPromisifiedObject<T> = { [k in keyof T]: UnPromisify<T[k]> }
 export type UnPromisify<T> = T extends (...args: any[]) => Promise<infer U>
   ? (...args: any[]) => U
   : (...args: any[]) => T
 
-// Once react-cache exists
-// const AppApiResource = unstable_createResource(({ definition, app, method, args }: ApiCall) => {
-//   return definition.api(app)[method](...args)
-// })
-
 const ApiCache = {}
+
+/**
+ * TODO this probably should be names useApi,
+ * OR we should do useApp().api and have other information there to
+ * ALSO the automatic-suspsense should be an option
+ */
 
 export function useApp(): AppBit
 export function useApp<A extends AppDefinition>(
   definition: A,
-  app: AppBit,
+  // if empty, will use the first available in the workspace
+  // we eventually prompt them to choose which they'd like
+  app?: AppBit,
 ): UnPromisifiedObject<A['api'] extends Function ? ReturnType<A['api']> : undefined>
-export function useApp(definition?: AppDefinition, app?: AppBit) {
+export function useApp(definition?: AppDefinition, userApp?: AppBit) {
   const shouldCheckUpdate = useRef<any>(null)
   const forceUpdate = useForceUpdate()
+  const [firstApp] = useAppBit(definition ? { where: { identifier: definition.id } } : false)
+  const app = userApp || firstApp
 
   useEffect(() => {
     if (!shouldCheckUpdate.current) return
+    if (!app) {
+      console.warn('no app found')
+      return
+    }
     if (!definition || !definition.api) {
       console.warn('no def or api')
       return
     }
     let cancel = false
 
-    const { key, app, method, args } = shouldCheckUpdate.current
+    const { key, method, args } = shouldCheckUpdate.current
 
     // check for any updated val
     definition
@@ -59,26 +63,28 @@ export function useApp(definition?: AppDefinition, app?: AppBit) {
     return () => {
       cancel = true
     }
-  }, [shouldCheckUpdate])
+  }, [app, shouldCheckUpdate])
 
   if (!definition || !definition.api) {
     return useAppBit()[0]
   }
-
   if (!app) {
     return null
   }
 
+  const apiMethods = definition.api(app)
+
   // wraps any API method with a fake call that makes it Suspense-style
   return new Proxy(
-    {},
+    // make them easy to see in repl
+    { ...apiMethods },
     {
       get(_, method) {
         return (...args: any[]) => {
-          const key = stringHash(JSON.stringify({ app, method, args }))
+          const key = stringHash(JSON.stringify({ method, args }))
 
           if (ApiCache[key]) {
-            shouldCheckUpdate.current = { app, method, args, key }
+            shouldCheckUpdate.current = { method, args, key }
           } else {
             const rawRead = definition!.api!(app)[method](...args)
             const read = rawRead

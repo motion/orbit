@@ -16,12 +16,12 @@ const backgroundStrongest = background.lighten(0.45)
 const darkFadeBackground = [0, 0, 0, 0.15]
 const darkButtonBg = linearGradient([77, 77, 77], [70, 70, 70])
 
-const darkAltLight: ThemeSet = Object.keys(alternates).reduce((acc, key) => {
+const darkenedAlts: ThemeSet = Object.keys(alternates).reduce((acc, key) => {
   // for dark theme, make "light" themes darker
   if (key.indexOf('light') === 0) {
     acc[key] = fromStyles({
-      background: alternates[key].background!.darken(0.32),
-      borderColor: alternates[key].borderColor!.darken(0.375),
+      background: alternates[key].background!.darken(0.42),
+      borderColor: alternates[key].borderColor!.darken(0.525),
       color: '#fff',
     })
   }
@@ -32,12 +32,12 @@ const selectedColor = toColor('#363165')
 
 const darkAlternates: ThemeSet = {
   ...alternates,
-  ...darkAltLight,
-  delete: darkAltLight.lightRed,
-  error: darkAltLight.lightRed,
-  warn: darkAltLight.lightYellow,
-  approve: darkAltLight.lightGreen,
-  success: darkAltLight.lightGreen,
+  ...darkenedAlts,
+  delete: darkenedAlts.lightRed,
+  error: darkenedAlts.lightRed,
+  warn: darkenedAlts.lightYellow,
+  approve: darkenedAlts.lightGreen,
+  success: darkenedAlts.lightGreen,
   action: fromStyles({
     background: selectedColor.lighten(0.2),
     buttonBackground: linearGradient(selectedColor.lighten(0.2), selectedColor),

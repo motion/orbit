@@ -1,3 +1,4 @@
+import { useForceUpdate } from '@o/use-store'
 import { Box, gloss } from 'gloss'
 import * as React from 'react'
 import ShadowDOM from 'react-shadow'
@@ -8,6 +9,7 @@ import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
 import { Text } from '../text/Text'
 import { View } from '../View/View'
+import { useCaptureLinks } from './Thread'
 
 export type ThreadMessageLike = {
   body?: string
@@ -69,10 +71,22 @@ const Block = gloss({
 })
 
 const MailBody = ({ children, ...props }) => {
+  const rootNode = React.useRef(null)
+  const forceUpdate = useForceUpdate()
+
+  // bugfix reactshadow no ref on first render
+  React.useEffect(() => {
+    if (!rootNode.current) {
+      setTimeout(forceUpdate)
+    }
+  }, [])
+
+  useCaptureLinks(rootNode.current)
+
   return (
     <View color="#151515" background="#fff" borderRadius={10} overflow="hidden" padding>
-      <ShadowDOM.div mode="closed">
-        <div>
+      <ShadowDOM.div>
+        <div ref={rootNode}>
           <Block className="gmail-body" {...props} dangerouslySetInnerHTML={{ __html: children }} />
           <style
             dangerouslySetInnerHTML={{

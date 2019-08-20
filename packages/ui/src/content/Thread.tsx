@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { Config } from '../helpers/configureUI'
 import { HighlightText } from '../Highlight'
 import { Col } from '../View/Col'
 import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
@@ -31,4 +32,35 @@ export function Thread(rawProps: ThreadProps) {
       })}
     </Col>
   )
+}
+
+// copied from orbit-app, TODO unfiy
+export const useCaptureLinks = (node: any) => {
+  // capture un-captured links
+  // if you don't then clicking a link will cause electron to go there
+  // this is a good safeguard
+  React.useEffect(() => {
+    if (!node) return
+    const onClickLink = event => {
+      let i = 0
+      let cur = event.target
+      let found
+      // find the ancestor link
+      while (cur && !found && i < 100) {
+        i++
+        if (cur.tagName === 'A') {
+          found = cur
+        } else {
+          cur = cur.parentNode
+        }
+      }
+      if (found) {
+        Config.handleLink(event, found.href)
+      }
+    }
+    node.addEventListener('click', onClickLink)
+    return () => {
+      node.removeEventListener('click', onClickLink)
+    }
+  }, [node])
 }

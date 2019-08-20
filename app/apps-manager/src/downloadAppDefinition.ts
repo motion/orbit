@@ -5,6 +5,7 @@ import execa from 'execa'
 import { ensureDir, pathExists, writeJSON } from 'fs-extra'
 import { join } from 'path'
 
+import { findPackage } from './findPackage'
 import { getAppInfo } from './getAppInfo'
 
 const log = new Logger('downloadAppDefinition')
@@ -23,15 +24,18 @@ export async function downloadAppDefinition(options: {
   }
 
   // if exists already just return it
-  const existing = await getAppInfo(directory)
+  const existing = await findPackage(options)
   if (existing) {
-    return {
-      type: 'success',
-      message: 'Success',
-      value: {
-        identifier: existing.id,
-      },
-    } as const
+    const info = await getAppInfo(directory)
+    if (info) {
+      return {
+        type: 'success',
+        message: 'Success',
+        value: {
+          identifier: info.id,
+        },
+      } as const
+    }
   }
 
   await ensureDir(directory)

@@ -10,6 +10,7 @@ const log = new Logger('findPackage')
  * Traverses upwards as necessary to find node_modules.
  *
  * Also supports workspace style apps that are directly in current directory.
+ * BECAUSE they are hardlinked into node_modules... we may need to od that better
  */
 export async function findPackage({
   packageId,

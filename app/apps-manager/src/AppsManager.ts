@@ -7,9 +7,12 @@ import { autorun } from 'mobx'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
+import { downloadAppDefinition } from './downloadAppDefinition'
 import { findPackage } from './findPackage'
 import { getIdentifierFromPackageId, getIdentifierToPackageId } from './getPackageId'
+import { getRegistryLatestVersion } from './getRegistryLatestVersion'
 import { getWorkspaceApps } from './getWorkspaceApps'
+import { isInstalled } from './isInstalled'
 import { loadAppEntry } from './loadAppEntry'
 import { requireAppDefinition } from './requireAppDefinition'
 import { requireWorkspaceDefinitions } from './requireWorkspaceDefinitions'
@@ -56,6 +59,9 @@ export class AppsManager {
   loadAppEntry = loadAppEntry
   requireAppDefinition = requireAppDefinition
   findPackage = findPackage
+  downloadAppDefinition = downloadAppDefinition
+  isInstalled = isInstalled
+  getRegistryLatestVersion = getRegistryLatestVersion
 
   private packageJsonUpdate = 0
   private updatePackagesVersion = 0

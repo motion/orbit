@@ -51,7 +51,7 @@ export const finishAuth = async (type: string, values: OauthValues) => {
       }
     }
 
-    log.info(`Downloading (if necessary) and loading app definition (packageId: ${packageId})`)
+    log.info(`Downloading (if necessary) and loading app definition (${packageId}, ${directory})`)
 
     const downloaded = await downloadAppDefinition({
       packageId,

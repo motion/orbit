@@ -184,8 +184,8 @@ function AppSettings(props: { appId: number }) {
       icon={<AppIcon identifier={app.identifier} colors={app.colors} />}
       space
       padding
-      title={app.name}
-      subTitle={`${definition.name}`}
+      title="App Settings"
+      subTitle={`${app.name} · ${definition.name}`}
       afterTitle={
         app &&
         app.tabDisplay !== 'permanent' && (

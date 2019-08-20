@@ -5,7 +5,7 @@ notes from onboarding andrew:
 - some bug with Desktop.state.workspaceState.nameRegistry not being set after adding local app
 - reloading of apps would be important from the UI in case things dont work
 - return errors from app methods / postgres to UI
-
+- searchResults app shouldn't insert by default
 -- make workers wait for app to finish startup before starting
 
 ---

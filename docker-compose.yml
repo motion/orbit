@@ -7,7 +7,7 @@ services:
     volumes:
       - ./data/postgres:/docker-entrypoint-initdb.d
     ports:
-      - '5432:5432'
+      - '5942:5942'
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'test'

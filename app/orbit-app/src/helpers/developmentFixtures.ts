@@ -30,7 +30,7 @@ export async function insertDevelopmentPostgres() {
         database: 'test',
         username: 'postgres',
         password: 'test',
-        port: 5432,
+        port: 5942,
       },
     } as any,
   })

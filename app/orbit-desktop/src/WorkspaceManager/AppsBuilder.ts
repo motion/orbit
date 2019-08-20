@@ -1,4 +1,5 @@
 import { AppsManager } from '@o/apps-manager'
+import { decorate } from '@o/kit'
 import { Logger } from '@o/logger'
 import { AppMeta, BuildStatus, CommandWsOptions } from '@o/models'
 import { stringToIdentifier } from '@o/utils'
@@ -38,6 +39,7 @@ type AppsBuilderUpdate = {
   activeApps: AppMeta[]
 }
 
+@decorate
 export class AppsBuilder {
   state: WebpackAppsDesc[] = []
   apps: AppMeta[] = []

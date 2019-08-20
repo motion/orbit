@@ -120,8 +120,14 @@ export class WorkspaceManager {
     },
   )
 
-  // temp fix, i was seeing these not update
-  updateDesktopStateOnNewApps = react(() => always(this.appsManager.apps), this.updateDesktopState)
+  // ensure we keep state up to date
+  updateDesktopStateOnNewApps = react(
+    () => always(this.appsManager.apps, this.appsBuilder.buildNameToAppMeta),
+    () => {
+      log.verbose(`Update desktop state via apps`)
+      this.updateDesktopState()
+    },
+  )
 
   updateDesktopState() {
     const identifiers = this.appsManager.apps.map(x => x.identifier)
@@ -129,6 +135,7 @@ export class WorkspaceManager {
       log.info(`No apps to update...`)
       return
     }
+    log.info(`Updating desktop state`)
     Desktop.setState({
       workspaceState: {
         options: this.options,

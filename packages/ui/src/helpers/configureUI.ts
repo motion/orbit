@@ -1,5 +1,5 @@
 import { isColorLike, toColor, toColorString } from '@o/color'
-import { fromEntries, ImmutableUpdateFn, isDefined, selectDefined } from '@o/utils'
+import { fromEntries, idFn, ImmutableUpdateFn, isDefined, selectDefined } from '@o/utils'
 import { configureCSS, configureGloss } from 'gloss'
 import sum from 'hash-sum'
 import { Context, createContext, FunctionComponent, isValidElement, useState } from 'react'
@@ -24,6 +24,8 @@ export type ConfigureUIProps = {
 
   // set a custom item key getter for lists/tables
   getItemKey: (item: any, index: number) => string | number
+
+  handleLink: (event: Event, url: string) => any
 
   // set a custom persistence function for appState
   useAppState: <A>(
@@ -83,6 +85,7 @@ export let Config: ConfigureUIProps = {
   // used to configure how the UI persists non-temporal state
   useUserState: useState,
   useAppState: useState,
+  handleLink: idFn,
 
   StoreContext: createContext(null),
   getItemKey: (x, index) => {

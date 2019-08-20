@@ -1,6 +1,5 @@
 notes from onboarding andrew:
 
-- onboarding fix initial state breaking
 - adding app to local apps not reloading
 - some bug with Desktop.state.workspaceState.nameRegistry not being set after adding local app
 - reloading of apps would be important from the UI in case things dont work

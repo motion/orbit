@@ -138,9 +138,9 @@ function OnboardStepProxy() {
   return (
     <Centered space="xl" padding="xxl" scrollable="y" flex={1}>
       <Text size="xxl">Welcome to Orbit</Text>
-      <IntroPara alpha={0.5}>Lets set up.</IntroPara>
+      <IntroPara alpha={0.5}>Let's set up.</IntroPara>
       <IntroPara>
-        Orbit is <b>runs entirely privately on your desktop</b>, it never sends your keys or data
+        Orbit <b>runs entirely privately on your desktop</b>, it never sends your keys or data
         off your computer. To do this, we run a private local server:
       </IntroPara>
 

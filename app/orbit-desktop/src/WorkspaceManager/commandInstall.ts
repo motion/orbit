@@ -27,6 +27,7 @@ export async function commandInstall(
     search: true,
     rescanWorkspacePath: options.directory,
   })
+  log.verbose(`packageId ${packageId}`)
 
   if (!packageId) {
     return {
@@ -36,6 +37,7 @@ export async function commandInstall(
   }
 
   const curVersion = options.upgrade ? await getRegistryLatestVersion(packageId) : undefined
+  log.verbose(`curVersion ${curVersion}`)
 
   // check if already installed and avoid work
   if (await isInstalled(packageId, options.directory, curVersion)) {

@@ -272,7 +272,7 @@ class OrbitAppsCarouselStore {
     if (zoomedIn) {
       // if zoomed in, move the side apps out of view (by 500px)
       if (offset !== 0) {
-        x = offset > 0 ? -30 : 30
+        x = offset > 0 ? -100 : 100
       }
     } else {
       // zoomed out, move them a bit faster, shift them to the right side

@@ -9,7 +9,10 @@ const log = new Logger('findPackage')
  * Finds a package root directory (where package.json is) given id and current directory
  * Traverses upwards as necessary to find node_modules.
  *
+ * Returns the string directory of the app
+ *
  * Also supports workspace style apps that are directly in current directory.
+ * BECAUSE they are hardlinked into node_modules... we may need to od that better
  */
 export async function findPackage({
   packageId,

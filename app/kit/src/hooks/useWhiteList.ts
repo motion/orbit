@@ -7,7 +7,9 @@ export function useWhiteList(uid: string, opts: { getAll: () => string[] }) {
     isWhitelisting: !!state.length,
     toggleActive() {
       update(next => {
-        if (next) return []
+        if (next.length) {
+          return []
+        }
         return opts.getAll()
       })
     },

@@ -174,6 +174,7 @@ export class AppsBuilder {
 
     // you have to do it this janky ass way because webpack just isnt really great at
     // doing multi-config hmr, and this makes sure the 404 hot-update bug is fixed (google)
+    const clientDescs: WebpackAppsDesc[] = []
     for (const name in rest) {
       const config = rest[name]
       const devName = `${name}-client`
@@ -188,7 +189,7 @@ export class AppsBuilder {
             current.close()
           }
           const { hash, devMiddleware, compiler } = middleware
-          res.push({
+          const appDesc = {
             name: devName,
             hash,
             devMiddleware,
@@ -199,7 +200,9 @@ export class AppsBuilder {
             },
             compiler,
             config,
-          })
+          }
+          res.push(appDesc)
+          clientDescs.push(appDesc)
         }
       }
     }
@@ -207,14 +210,14 @@ export class AppsBuilder {
     /**
      * One HMR server for everything because EventStream's don't support >5 in Chrome
      */
-    const appsHotMiddleware = this.getHotMiddleware(res.map(x => x.compiler), {
+    const appsHotMiddleware = this.getHotMiddleware(clientDescs.map(x => x.compiler), {
       path: '/__webpack_hmr',
       log: console.log,
       heartBeat: 10 * 1000,
     })
     res.push({
       name: 'apps-hot',
-      middleware: resolveIfExists(appsHotMiddleware, res.map(x => x.config.output.path), [
+      middleware: resolveIfExists(appsHotMiddleware, clientDescs.map(x => x.config.output.path), [
         '/__webpack_hmr',
       ]),
     })
@@ -297,6 +300,9 @@ export class AppsBuilder {
     }
     let fin
     for (const { middleware } of this.state) {
+      if (!middleware) {
+        continue
+      }
       fin = null
       await middleware(req, res, err => {
         fin = err || true

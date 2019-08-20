@@ -1,11 +1,15 @@
 import Webpack from 'webpack'
 
+type WebpackDesc =
+  | { type: 'watch'; compiler: Webpack.MultiWatching }
+  | { type: 'build'; compiler: Webpack.MultiCompiler }
+
 export async function webpackPromise(
   configs: Webpack.Configuration[],
   options: { loud?: boolean } = { loud: false },
-): Promise<Webpack.MultiWatching> {
+): Promise<WebpackDesc> {
   return new Promise((res, rej) => {
-    const instance = Webpack(configs, async (err, stats) => {
+    const compiler = Webpack(configs, async (err, stats) => {
       if (err) {
         rej(err)
         return
@@ -23,11 +27,10 @@ export async function webpackPromise(
           }),
         )
       }
-      if (!configs.some(x => x.watch)) {
-        res(instance as Webpack.MultiWatching)
-      } else {
-        console.log('Webpack running in watch mode...')
-      }
+      res({
+        type: configs.some(x => x.watch) ? 'watch' : 'build',
+        compiler: compiler as any,
+      })
     })
   })
 }

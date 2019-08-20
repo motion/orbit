@@ -42,7 +42,7 @@ export class AppsBuilder {
   apps: AppMeta[] = []
   buildNameToAppMeta: { [name: string]: AppMeta } = {}
 
-  private wsOptions: CommandWsOptions
+  wsOptions: CommandWsOptions
   private buildStatus = new Map<string, 'compiling' | 'error' | 'success'>()
   private buildMode: AppBuildModeDict = {}
 
@@ -90,28 +90,34 @@ export class AppsBuilder {
     }
 
     // ensure builds have run for each app
-    let builds = []
-    for (const apps of chunk(activeApps, Math.max(1, require('os').cpus() - 1))) {
-      builds = [
-        ...builds,
-        ...(await Promise.all(
-          apps.map(async app => {
-            return await commandBuild({
-              projectRoot: app.directory,
-              // dont force, were just ensureing its initially built once
-              force: false,
-            })
-          }),
-        )),
-      ]
-    }
-    if (builds.some(x => x.type === 'error')) {
-      log.error(
-        `Error running initial builds of apps:\n${builds
-          .filter(x => x.type === 'error')
-          .map(x => ` - ${x.message}`)
-          .join('\n')}`,
-      )
+    try {
+      let builds = []
+      for (const apps of chunk(activeApps, Math.max(1, require('os').cpus() - 1))) {
+        builds = [
+          ...builds,
+          ...(await Promise.all(
+            apps.map(async app => {
+              return await commandBuild({
+                projectRoot: app.directory,
+                // dont force, were just ensureing its initially built once
+                force: false,
+              })
+            }),
+          )),
+        ]
+      }
+      if (builds.some(x => x.type === 'error')) {
+        log.error(
+          `Finished apps initial build, error running initial builds of apps:\n${builds
+            .filter(x => x.type === 'error')
+            .map(x => ` - ${x.message}`)
+            .join('\n')}`,
+        )
+      } else {
+        log.info(`Finished apps initial build, success`)
+      }
+    } catch (err) {
+      log.error(`Error running initial builds ${err.message}\n${err.stack}`)
     }
 
     if (options.action === 'run') {
@@ -148,14 +154,17 @@ export class AppsBuilder {
         if (running && running.close) {
           running.close()
         }
-        const compiler = await webpackPromise([config], { loud: !!this.wsOptions.dev })
+        const packer = await webpackPromise([config], { loud: true })
+        if (packer.type !== 'watch') {
+          throw new Error(`Shouldn't ever get here`)
+        }
         res.push({
           name: runningName,
           hash,
           config,
-          watchingCompiler: compiler,
+          watchingCompiler: packer.compiler,
           close: () => {
-            compiler.close(() => {
+            packer.compiler.close(() => {
               log.verbose(`Closed node compiler ${name}`)
             })
           },

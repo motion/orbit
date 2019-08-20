@@ -1,3 +1,4 @@
+import { getAppInfo } from '@o/apps-manager'
 import { getGlobalConfig } from '@o/config'
 import { isEqual } from '@o/kit'
 import { isOrbitApp, readPackageJson } from '@o/libs-node'
@@ -55,7 +56,7 @@ export async function commandBuild(
 
   await ensureDir(join(props.projectRoot, 'dist'))
 
-  if (!(await hasChangedAppHash(props.projectRoot))) {
+  if (!(await shouldRebuildApp(props.projectRoot))) {
     log.info(`App hasn't changed, not rebuilding. To force build, run: orbit build --force`)
     return
   }
@@ -99,6 +100,12 @@ export async function bundleApp(options: CommandBuildOptions): Promise<StatusRep
 
   let webConf: webpack.Configuration | null = null
   let nodeConf: webpack.Configuration | null = null
+
+  // TODO re-enable but make work with static serving app bundles / watching
+  // if (hasKey(appInfo, 'app')) {
+  //   log.info(`Has web app...`)
+  //   nodeConf = await getNodeAppConfig(entry, pkg.name, options)
+  // }
 
   if (hasKey(appInfo, 'graph', 'workers', 'api')) {
     log.info(`Has node app...`)
@@ -144,9 +151,36 @@ async function readBuildInfo(appDir: string) {
   }
 }
 
-async function hasChangedAppHash(appDir: string) {
-  const current = await getAppHash(appDir)
-  const existing = await readBuildInfo(appDir)
+async function shouldRebuildApp(appRoot: string) {
+  // do some basic sanity checks
+  // no buildInfo yet
+  if (!(await pathExists(join(appRoot, 'dist', 'buildInfo.json')))) {
+    return true
+  }
+  // no appInfo yet
+  if (!(await pathExists(join(appRoot, 'dist', 'appInfo.json')))) {
+    return true
+  }
+
+  // do some appInfo => output comparison checks
+  const appInfo = await getAppInfo(appRoot)
+  // ensure api file built
+  if (appInfo.api) {
+    try {
+      await readJSON(join(appRoot, 'dist', 'api.json'))
+    } catch {
+      return true
+    }
+  }
+  // ensure node bundle built
+  if (appInfo.workers || appInfo.graph) {
+    if (!(await pathExists(join(appRoot, 'dist', 'index.node.js')))) {
+      return true
+    }
+  }
+  // ensure buildInfo hash is equal
+  const current = await getAppHash(appRoot)
+  const existing = await readBuildInfo(appRoot)
   return isEqual(current, existing) === false
 }
 

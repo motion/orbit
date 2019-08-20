@@ -138,8 +138,7 @@ export const effects = {
       for (const appDef of appDefs) {
         const app = await loadOne(AppModel, { args: { where: { identifier: appDef.id } } })
         if (!app) {
-          const tabDisplay =
-            appDef.id === 'setupApp' || appDef.id === 'searchResults' ? 'permanentLast' : 'hidden'
+          const tabDisplay = appDef.id === 'setupApp' ? 'permanentLast' : 'hidden'
           const next: AppBit = {
             name: appDef.name,
             target: 'app',

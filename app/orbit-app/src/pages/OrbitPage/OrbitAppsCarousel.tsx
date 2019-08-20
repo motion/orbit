@@ -326,13 +326,11 @@ class OrbitAppsCarouselStore {
   }
 }
 
-const stackMarginLessPct = 0.3
+const stackMarginLessPct = 0.6
 
 export const appsCarouselStore = createUsableStore(OrbitAppsCarouselStore)
 export const useAppsCarousel = appsCarouselStore.useStore
 window['appsCarousel'] = appsCarouselStore
-
-let lastHiddenVal = false
 
 export const OrbitAppsCarousel = memo(() => {
   const { state } = useOm()

@@ -1,4 +1,4 @@
-import { appToListItem, createStoreContext, ensure, MarkType, react, searchBits, SearchQuery, SearchState, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
+import { always, appToListItem, createStoreContext, ensure, MarkType, react, searchBits, SearchQuery, SearchState, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
 import { fuzzyFilter, ListItemProps } from '@o/ui'
 
 import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
@@ -96,13 +96,7 @@ export class SearchStoreStore {
   }
 
   state = react(
-    () => [
-      this.hooks.space.id,
-      this.query,
-      this.hooks.app,
-      this.apps.map(x => x.id).join(' '),
-      !!this.searchState,
-    ],
+    () => [this.hooks.space.id, this.query, this.hooks.app, always(this.apps), !!this.searchState],
     async ([spaceId, query, app], { sleep, when, setValue }): Promise<SearchResults> => {
       ensure('app', !!app)
       ensure('this.searchState', !!this.searchState)

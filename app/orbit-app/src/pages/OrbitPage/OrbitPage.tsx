@@ -172,12 +172,21 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     }
   }, [])
 
+  // bugfix: sometimes this node would get scrolled even though its overflow hidden
+  const innerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!innerRef.current) return
+    innerRef.current!.addEventListener('scroll', () => {
+      innerRef.current!.scrollTop = 0
+    })
+  }, [innerRef])
+
   return (
     <MainShortcutHandler handlers={handlers}>
       <OrbitHeader />
       <OrbitDock />
       <OrbitDraggableOverlay />
-      <OrbitInnerChrome torn={isEditing}>
+      <OrbitInnerChrome ref={innerRef} torn={isEditing}>
         <OrbitContentArea>
           <ListPassProps onOpen={onOpen}>{contentArea}</ListPassProps>
         </OrbitContentArea>

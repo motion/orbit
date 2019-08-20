@@ -43,7 +43,7 @@
     "react-hotkeys": "2.0.0-pre9",
     "react-markdown": "4.0.6",
     "react-select": "^3.0.4",
-    "react-spring": "9.0.0-beta.31",
+    "react-spring": "9.0.0-beta.33",
     "react-svg-inline": "^2.1.1",
     "react-switch": "^5.0.0",
     "react-with-gesture": "4.0.8",
@@ -53,14 +53,8 @@
     "svg.js": "^2.7.1"
   },
   "devDependencies": {
-    "@types/react": "16.8.23",
-    "@types/react-dom": "16.8.4",
     "@types/react-select": "3.0.0",
     "@types/react-window": "1.8.0"
-  },
-  "resolutions": {
-    "@types/react": "16.8.23",
-    "@types/react-dom": "16.8.4"
   },
   "peerDependencies": {
     "electron": "*",

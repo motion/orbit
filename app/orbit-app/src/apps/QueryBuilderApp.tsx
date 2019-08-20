@@ -1,4 +1,4 @@
-import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, loadOne, react, save, Templates, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple } from '@o/kit'
+import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, isEqual, loadOne, react, save, Templates, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple } from '@o/kit'
 import { bitContentHash } from '@o/libs'
 import { ApiArgType, AppBit, AppMetaCommand, Bit, BitModel, CallAppBitApiMethodCommand } from '@o/models'
 import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TitleRow, Toggle, TreeList, useGet, useTheme, useTreeList, View } from '@o/ui'
@@ -63,10 +63,12 @@ class AppBitsStore {
       ...(existing || null),
       ...bit,
     }
-    return await save(BitModel, {
-      contentHash: bitContentHash(next),
-      ...next,
-    })
+    if (!isEqual(existing, next)) {
+      return await save(BitModel, {
+        contentHash: bitContentHash(next),
+        ...next,
+      })
+    }
   }
 }
 function useAppBits(args?: FindOptions<Bit>) {
@@ -112,7 +114,6 @@ function QueryBuilderApp() {
   // want to persist queries to bits
   const [, actions] = useAppBits()
   useEffect(() => {
-    console.log('persist them to bits', treeList.state!.items!)
     for (const id of Object.keys(treeList.state!.items!)) {
       const item = treeList.state!.items![id]
       if (item && item.data && item.data.identifier) {

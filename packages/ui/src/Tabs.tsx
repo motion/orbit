@@ -17,7 +17,7 @@ import { ViewProps } from './View/types'
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-export type TabsProps = Omit<ViewProps, 'order'> & {
+export type TabsProps = Omit<ViewProps, 'order' | 'onChange'> & {
   /** tab height */
   height?: number
   /** Callback for when the active tab has changed. */

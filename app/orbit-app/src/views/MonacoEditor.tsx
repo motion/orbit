@@ -28,6 +28,7 @@ export function MonacoEditor({ width, height, noGutter, padding, ...props }: Mon
   useOnMount(() => {
     const editor = monaco.editor.create(node.current!, {
       ...props,
+      language: 'sql',
       theme: monacoTheme,
       ...(noGutter && noGutterProps),
     })

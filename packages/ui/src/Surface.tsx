@@ -356,12 +356,13 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
             className="ui-glint-contain"
             borderLeftRadius={borderLeftRadius + 1}
             borderRightRadius={borderRightRadius + 1}
-            {...borderPosition === 'inside' && {
-              height: roundHalf(+height - size / 2),
-              transform: {
-                y: roundHalf(size) % 1,
-              },
-            }}
+            {...borderPosition === 'inside' &&
+              borderWidth > 0 && {
+                height: roundHalf(+height - size / 2),
+                transform: {
+                  y: roundHalf(size) % 1,
+                },
+              }}
           >
             {glint && !props.chromeless && (
               <Glint

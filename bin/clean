@@ -4,34 +4,36 @@ set +e
 
 FLAGS=$@
 
-# hard source clear
+# hard source cache clear
 rm -r ./example-workspace/dist/node_modules/.cache
 rm -r ./example-workspace/dist/.cache
 rm -r ./apps/*/dist/node_modules/.cache
 
-# clean apps build
-rm -r apps/*/dist || true
-
-rm -r app/*/tsconfig.tsbuildinfo || true
-rm -r apps/*/tsconfig.tsbuildinfo || true
-rm -r packages/*/tsconfig.tsbuildinfo || true
-
-rm -r app/*/npm-debug.log.* || true
-rm -r packages/*/npm-debug.log.* || true
-rm -r app/*/_ || true
-rm -r apps/*/_ || true
-rm -r projects-*/*/_ || true
-rm -r packages/*/_ || true
-
+# potentially bad files / not needed files
 rm -r app/*/shrinkwrap.yaml || true
 rm -r apps/*/shrinkwrap.yaml || true
 rm -r packages/*/shrinkwrap.yaml || true
 rm -r projects/*/shrinkwrap.yaml || true
-
 rm -r app/*/package-lock.json || true
 rm -r apps/*/package-lock.json || true
 rm -r packages/*/package-lock.json || true
 rm -r projects/*/package-lock.json || true
+
+if [[ "$FLAGS" =~ "--apps" ]]; then
+  rm -r apps/*/dist || true
+fi
+
+# clean apps build output
+if [[ "$FLAGS" =~ "--build" ]]; then
+  rm -r app/*/tsconfig.tsbuildinfo || true
+  rm -r apps/*/tsconfig.tsbuildinfo || true
+  rm -r packages/*/tsconfig.tsbuildinfo || true
+  rm -r app/*/npm-debug.log.* || true
+  rm -r packages/*/npm-debug.log.* || true
+  rm -r app/*/_ || true
+  rm -r projects-*/*/_ || true
+  rm -r packages/*/_ || true
+fi
 
 if [[ "$FLAGS" =~ "--modules" ]]; then
   rm -r node_modules || true

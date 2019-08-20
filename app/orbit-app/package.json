@@ -31,7 +31,7 @@
     "gloss": "^2.6.0",
     "gloss-theme": "^2.6.0",
     "graphiql-explorer": "^0.4.2",
-    "graphql": "14.2.1",
+    "graphql": "^14.4.2",
     "immer": "^3.1.2",
     "invariant": "2.2.4",
     "key-event-to-string": "1.2.0",

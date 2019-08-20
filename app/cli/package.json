@@ -8,7 +8,7 @@
   },
   "workspaces": {
     "nohoist": [
-      "execa"
+      "**"
     ]
   },
   "scripts": {

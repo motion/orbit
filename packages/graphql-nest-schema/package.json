@@ -5,9 +5,9 @@
   "main": "index.js",
   "sideEffects": false,
   "dependencies": {
-    "apollo-link-http": "^1.5.14",
-    "graphql": "^14.2.1",
-    "graphql-tools": "^4.0.4",
+    "apollo-link-http": "^1.5.15",
+    "graphql": "^14.4.2",
+    "graphql-tools": "^4.0.5",
     "invariant": "^2.2.4",
     "node-fetch": "^2.5.0",
     "uuid": "^3.3.2"

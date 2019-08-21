@@ -35,6 +35,7 @@ export const PaddedView = gloss<
   maxHeight: '-webkit-fill-available',
 }).theme(
   props => ({
+    flex: props.flex,
     ...(!props.scrollable && { maxWidth: '100%' }),
     ...(props.scrollable === 'x' && { maxHeight: '100%' }),
     ...(props.scrollable === 'y' && { maxWidth: '100%' }),

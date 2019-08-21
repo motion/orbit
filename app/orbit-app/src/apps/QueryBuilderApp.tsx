@@ -1,6 +1,6 @@
 import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, isEqual, loadOne, query, react, save, Templates, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple } from '@o/kit'
 import { bitContentHash } from '@o/libs'
-import { ApiArgType, AppBit, AppMetaCommand, Bit, BitModel, CallAppBitApiMethodCommand } from '@o/models'
+import { ApiArgType, AppBit, AppMeta, AppMetaCommand, Bit, BitModel, CallAppBitApiMethodCommand } from '@o/models'
 import { Button, Card, CardProps, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, InputProps, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, TitleRow, Toggle, TreeList, useGet, useTheme, useTreeList, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
@@ -622,38 +622,96 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             <FormField label="Value" name="pname" defaultValue="" />
           </Pane>
 
-          <Pane title="Explore API" scrollable="y" padding="sm" flex={2} space="sm" collapsable>
-            {allMethods.map(key => {
-              const info = meta.apiInfo![key]
-              return (
-                <CardSimple
-                  space="sm"
-                  padding="sm"
-                  key={key}
-                  title={info.name}
-                  onClick={() => {
-                    if (
-                      window.confirm(
-                        `Change current method? This will clear your current query data.`,
-                      )
-                    ) {
-                      setMethod(info)
-                    }
-                  }}
-                >
-                  <MonoSpaceText alpha={0.6} fontWeight={500} size={0.8}>
-                    {info.typeString}
-                  </MonoSpaceText>
-                  {info.comment}
-                </CardSimple>
-              )
-            })}
-          </Pane>
+          <SelectMethodPane queryBuilder={queryBuilder} setMethod={setMethod} meta={meta} />
         </Layout>
       </Pane>
     </Layout>
   )
 })
+
+const SelectMethodPane = memo(
+  ({
+    meta,
+    queryBuilder,
+    setMethod,
+    ...rest
+  }: {
+    meta: AppMeta
+    queryBuilder: QueryBuilderStore
+    setMethod: any
+  }) => {
+    const apiInfo = meta.apiInfo || {}
+    const allMethods = Object.keys(apiInfo)
+    return (
+      <Pane
+        title="Explore API"
+        scrollable="y"
+        padding="sm"
+        flex={2}
+        space="sm"
+        collapsable
+        {...rest}
+      >
+        {/* <VirtualList
+          items={allMethods}
+          ItemView={CardSimple}
+          getItemProps={key => {
+            const info = meta.apiInfo![key]
+            return (
+              <CardSimple
+                space="sm"
+                padding="sm"
+                key={key}
+                title={info.name}
+                onClick={() => {
+                  if (
+                    window.confirm(
+                      `Change current method? This will clear your current query data.`,
+                    )
+                  ) {
+                    setMethod(info)
+                  }
+                }}
+              >
+                <MonoSpaceText alpha={0.6} fontWeight={500} size={0.8}>
+                  {info.typeString}
+                </MonoSpaceText>
+                {info.comment}
+              </CardSimple>
+            )
+          }}
+        /> */}
+
+        {allMethods.map(key => {
+          const info = meta.apiInfo![key]
+          return (
+            <CardSimple
+              space="sm"
+              padding="sm"
+              key={key}
+              title={info.name}
+              onClick={() => {
+                if (
+                  window.confirm(`Change current method? This will clear your current query data.`)
+                ) {
+                  setMethod(info)
+                }
+              }}
+            >
+              <MonoSpaceText alpha={0.6} fontWeight={500} size={0.8}>
+                {info.typeString}
+              </MonoSpaceText>
+              {info.comment}
+            </CardSimple>
+          )
+        })}
+      </Pane>
+    )
+  },
+)
+SelectMethodPane['acceptsProps'] = {
+  paneProps: true,
+}
 
 const OutputPane = memo(({ queryBuilder, ...rest }: { queryBuilder: QueryBuilderStore }) => {
   const theme = useTheme()

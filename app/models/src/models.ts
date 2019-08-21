@@ -76,9 +76,6 @@ export type WindowMessage = {
 export const WindowMessageModel = new Model<WindowMessage, { windowId: number }>(
   'WindowMessageModel',
 )
-export const WindowMessageId = {
-  install: (identifier: string) => `install-${identifier}`,
-}
 
 /**
  * For communicating the status of the current workspace, for reloading app definitions

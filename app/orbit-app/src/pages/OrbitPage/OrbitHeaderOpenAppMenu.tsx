@@ -15,27 +15,31 @@ export const OrbitHeaderOpenAppMenu = memo(
     const { state, effects } = useOm()
     const { appRole } = useStore(App)
     const banner = useBanner()
-    const appsCarousel = useAppsCarousel()
+    const appsCarousel = useAppsCarousel({ react: false })
     const disabled = useReaction(() => {
       return appsCarousel.focusedApp.identifier === 'setupApp' || appsDrawerStore.isOpen
     })
 
     const isOnOpenableApp = useDebounceValue(appsCarousel.isOnOpenableApp, 100)
 
-    const constantMenuItemsFast = [
-      <ListSeparator key={1000}>App</ListSeparator>,
-      state.router.urlString !== 'orbit://' && {
-        title: 'Permalink',
-        subTitle: state.router.urlString,
-        icon: 'link',
-        onClick: effects.copyAppLink,
-      },
-      {
-        title: 'App Settings',
-        icon: 'cog',
-        onClick: goToAppSettings,
-      },
-    ].filter(Boolean)
+    const constantMenuItemsFast = useMemo(
+      () =>
+        [
+          <ListSeparator key={1000}>App</ListSeparator>,
+          state.router.urlString !== 'orbit://' && {
+            title: 'Permalink',
+            subTitle: state.router.urlString,
+            icon: 'link',
+            onClick: effects.copyAppLink,
+          },
+          {
+            title: 'App Settings',
+            icon: 'cog',
+            onClick: goToAppSettings,
+          },
+        ].filter(Boolean),
+      [state.router.urlString],
+    )
     const constantMenuItems = useDebounceValue(constantMenuItemsFast, 100)
 
     const items = useMemo(() => {

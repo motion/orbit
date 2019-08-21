@@ -1,4 +1,9 @@
 import React from 'react'
-import { Input } from './Input'
 
-export const TextArea = props => <Input tagName="textarea" sizeRadius={false} {...props} />
+import { Input, InputProps } from './Input'
+
+export type TextAreaProps = InputProps
+
+export const TextArea = (props: TextAreaProps) => (
+  <Input noInnerElement tagName="textarea" sizeRadius={false} {...props} />
+)

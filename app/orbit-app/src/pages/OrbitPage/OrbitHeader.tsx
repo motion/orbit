@@ -2,10 +2,10 @@ import { AppIcon, useModels, useStore } from '@o/kit'
 import { BuildStatusModel } from '@o/models'
 import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
-import { createUsableStore, ensure, react, useReaction, useStoreDebug } from '@o/use-store'
+import { createUsableStore, ensure, react, useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 import { createRef, useRef } from 'react'
+import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
@@ -124,9 +124,6 @@ export const OrbitHeader = memo(() => {
   const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()
   const appRole = useReaction(() => App.appRole)
-
-  console.log('render header')
-  useStoreDebug()
 
   // TODO this model isn't database backed so no optimistic updating,
   // perhaps we can have a generic react hook/pattern here to handle the optimistic updates

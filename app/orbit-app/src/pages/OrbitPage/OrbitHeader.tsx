@@ -1,7 +1,7 @@
 import { AppIcon, useModels, useStore } from '@o/kit'
 import { BuildStatusModel } from '@o/models'
 import { App, Electron } from '@o/stores'
-import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, SurfacePassProps, View } from '@o/ui'
+import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react, useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
@@ -17,7 +17,7 @@ import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitHeaderOpenAppMenu } from './OrbitHeaderOpenAppMenu'
 import { OrbitNav } from './OrbitNav'
 
-export const headerButtonProps: SizedSurfaceProps = {
+export const headerButtonProps = {
   circular: true,
   background: 'transparent',
   glint: false,
@@ -32,7 +32,7 @@ export const headerButtonProps: SizedSurfaceProps = {
   },
   iconSize: 14,
   activeStyle: false,
-}
+} as const
 
 const HeaderButtonPassProps = (props: any) => {
   return <SurfacePassProps {...headerButtonProps} {...props} />

@@ -1,7 +1,7 @@
 import { command, openItem, useReaction, useStore } from '@o/kit'
 import { AppDevCloseCommand, AppDevOpenCommand } from '@o/models'
 import { App } from '@o/stores'
-import { Icon, ListSeparator, MenuButton, Row, Toggle, useBanner } from '@o/ui'
+import { Icon, ListSeparator, MenuButton, Row, Toggle, useBanner, useDebounceValue } from '@o/ui'
 import React, { memo, useMemo } from 'react'
 
 import { om, useOm } from '../../om/om'
@@ -20,7 +20,9 @@ export const OrbitHeaderOpenAppMenu = memo(
       return appsCarousel.focusedApp.identifier === 'setupApp' || appsDrawerStore.isOpen
     })
 
-    const constantMenuItems = [
+    const isOnOpenableApp = useDebounceValue(appsCarousel.isOnOpenableApp, 100)
+
+    const constantMenuItemsFast = [
       <ListSeparator key={1000}>App</ListSeparator>,
       state.router.urlString !== 'orbit://' && {
         title: 'Permalink',
@@ -34,8 +36,7 @@ export const OrbitHeaderOpenAppMenu = memo(
         onClick: goToAppSettings,
       },
     ].filter(Boolean)
-
-    const { isOnOpenableApp } = appsCarousel
+    const constantMenuItems = useDebounceValue(constantMenuItemsFast, 100)
 
     const items = useMemo(() => {
       return [

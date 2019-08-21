@@ -20,7 +20,7 @@ export function useDebounce(fn: Function, amount: number, mountArgs: any[] = [])
 }
 
 export function useDebounceValue(val: any, amt = 0) {
-  const [state, setState] = useState(undefined)
+  const [state, setState] = useState(val)
 
   useEffect(() => {
     let tm = setTimeout(() => {

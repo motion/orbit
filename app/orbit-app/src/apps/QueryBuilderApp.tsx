@@ -590,7 +590,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
 
               <CodeCard
                 cardProps={{
-                  elevation: 3,
+                  elevation: 2,
                   height: 24 * 3 + 16 * 2,
                 }}
                 inputProps={{

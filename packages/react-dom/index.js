@@ -15,8 +15,6 @@
 	(global.ReactDOM = factory(global.React));
 }(this, (function (React$1) { 'use strict';
 
-const __DEV__ = window['__DEV__'] || true
-
 /**
  * Use invariant() to assert state which your program assumes to be true.
  *
@@ -13813,32 +13811,32 @@ if (true) {
     },
     useCallback: function (callback, deps) {
       currentHookNameInDev = 'useCallback';
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       return mountCallback(callback, deps);
     },
     useContext: function (context, observedBits) {
       currentHookNameInDev = 'useContext';
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       return readContext(context, observedBits);
     },
     useEffect: function (create, deps) {
       currentHookNameInDev = 'useEffect';
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       return mountEffect(create, deps);
     },
     useImperativeHandle: function (ref, create, deps) {
       currentHookNameInDev = 'useImperativeHandle';
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       return mountImperativeHandle(ref, create, deps);
     },
     useLayoutEffect: function (create, deps) {
       currentHookNameInDev = 'useLayoutEffect';
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       return mountLayoutEffect(create, deps);
     },
     useMemo: function (create, deps) {
       currentHookNameInDev = 'useMemo';
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       var prevDispatcher = ReactCurrentDispatcher$1.current;
       ReactCurrentDispatcher$1.current = InvalidNestedHooksDispatcherOnMountInDEV;
       try {
@@ -13849,7 +13847,7 @@ if (true) {
     },
     useReducer: function (reducer, initialArg, init) {
       currentHookNameInDev = 'useReducer';
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       var prevDispatcher = ReactCurrentDispatcher$1.current;
       ReactCurrentDispatcher$1.current = InvalidNestedHooksDispatcherOnMountInDEV;
       try {
@@ -13860,12 +13858,12 @@ if (true) {
     },
     useRef: function (initialValue) {
       currentHookNameInDev = 'useRef';
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       return mountRef(initialValue);
     },
     useState: function (initialState) {
       currentHookNameInDev = 'useState';
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       var prevDispatcher = ReactCurrentDispatcher$1.current;
       ReactCurrentDispatcher$1.current = InvalidNestedHooksDispatcherOnMountInDEV;
       try {
@@ -13876,7 +13874,7 @@ if (true) {
     },
     useDebugValue: function (value, formatterFn) {
       currentHookNameInDev = 'useDebugValue';
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       return mountDebugValue(value, formatterFn);
     }
   };
@@ -14037,37 +14035,37 @@ if (true) {
     useCallback: function (callback, deps) {
       currentHookNameInDev = 'useCallback';
       warnInvalidHookAccess();
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       return mountCallback(callback, deps);
     },
     useContext: function (context, observedBits) {
       currentHookNameInDev = 'useContext';
       warnInvalidHookAccess();
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       return readContext(context, observedBits);
     },
     useEffect: function (create, deps) {
       currentHookNameInDev = 'useEffect';
       warnInvalidHookAccess();
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       return mountEffect(create, deps);
     },
     useImperativeHandle: function (ref, create, deps) {
       currentHookNameInDev = 'useImperativeHandle';
       warnInvalidHookAccess();
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       return mountImperativeHandle(ref, create, deps);
     },
     useLayoutEffect: function (create, deps) {
       currentHookNameInDev = 'useLayoutEffect';
       warnInvalidHookAccess();
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       return mountLayoutEffect(create, deps);
     },
     useMemo: function (create, deps) {
       currentHookNameInDev = 'useMemo';
       warnInvalidHookAccess();
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       var prevDispatcher = ReactCurrentDispatcher$1.current;
       ReactCurrentDispatcher$1.current = InvalidNestedHooksDispatcherOnMountInDEV;
       try {
@@ -14079,7 +14077,7 @@ if (true) {
     useReducer: function (reducer, initialArg, init) {
       currentHookNameInDev = 'useReducer';
       warnInvalidHookAccess();
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       var prevDispatcher = ReactCurrentDispatcher$1.current;
       ReactCurrentDispatcher$1.current = InvalidNestedHooksDispatcherOnMountInDEV;
       try {
@@ -14091,13 +14089,13 @@ if (true) {
     useRef: function (initialValue) {
       currentHookNameInDev = 'useRef';
       warnInvalidHookAccess();
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       return mountRef(initialValue);
     },
     useState: function (initialState) {
       currentHookNameInDev = 'useState';
       warnInvalidHookAccess();
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       var prevDispatcher = ReactCurrentDispatcher$1.current;
       ReactCurrentDispatcher$1.current = InvalidNestedHooksDispatcherOnMountInDEV;
       try {
@@ -14109,7 +14107,7 @@ if (true) {
     useDebugValue: function (value, formatterFn) {
       currentHookNameInDev = 'useDebugValue';
       warnInvalidHookAccess();
-      mountHookTypesDev();
+      if (__DEV__) mountHookTypesDev();
       return mountDebugValue(value, formatterFn);
     }
   };

@@ -2,7 +2,7 @@ import { AppIcon, useModels, useStore } from '@o/kit'
 import { BuildStatusModel } from '@o/models'
 import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
-import { createUsableStore, ensure, react, useReaction } from '@o/use-store'
+import { createUsableStore, ensure, react, useReaction, useStoreDebug } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 import { createRef, useRef } from 'react'
@@ -109,20 +109,31 @@ export const useHeaderStore = headerStore.useStore
 export const OrbitHeader = memo(() => {
   const om = useOm()
   const containerRef = useRef()
-  const appCarousel = useAppsCarousel()
+  // perf sensitive
+  const [focusedApp, zoomedIn] = useReaction(
+    () => [appsCarouselStore.focusedApp, appsCarouselStore.zoomedIn],
+    async (_, { sleep }) => {
+      await sleep(200)
+      return _
+    },
+    {
+      defaultValue: [appsCarouselStore.focusedApp, appsCarouselStore.zoomedIn],
+    },
+  )
   const orbitStore = useOrbitStore()
   const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()
   const appRole = useReaction(() => App.appRole)
+
+  console.log('render header')
+  useStoreDebug()
 
   // TODO this model isn't database backed so no optimistic updating,
   // perhaps we can have a generic react hook/pattern here to handle the optimistic updates
   const [buildStatus] = useModels(BuildStatusModel)
   const [isDeveloping, setIsDeveloping] = useState(false)
   const serverIsDeveloping = buildStatus.some(
-    s =>
-      s.identifier === (appCarousel.focusedApp ? appCarousel.focusedApp.identifier! : '') &&
-      s.mode === 'development',
+    s => s.identifier === (focusedApp ? focusedApp.identifier! : '') && s.mode === 'development',
   )
   useEffect(() => {
     setIsDeveloping(serverIsDeveloping)
@@ -168,8 +179,7 @@ export const OrbitHeader = memo(() => {
           <Row
             space
             transition="all ease 300ms"
-            {...!isOnTearablePane &&
-              appCarousel.zoomedIn && { pointerEvents: 'none', opacity: 0.3 }}
+            {...!isOnTearablePane && zoomedIn && { pointerEvents: 'none', opacity: 0.3 }}
           >
             <SurfacePassProps sizeRadius={1.5} sizeHeight={0.9} sizeIcon={1.1} sizePadding={1.2}>
               {orbitStore.activeActions}
@@ -297,7 +307,7 @@ const HomeButton = memo(
     const theme = useTheme()
     const newAppStore = useNewAppStore()
     const paneManager = usePaneManagerStore()
-    const activePane = paneManager.activePane
+    const activePane = paneManager.activePaneSlow
     const activePaneType = activePane.type
     const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
     return (

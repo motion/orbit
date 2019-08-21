@@ -1,5 +1,15 @@
 --
 
+- [ ] fix perf issue with switching between items
+- [ ] fix pane resizing bugs
+- [ ] fix suspense flickering issues
+- [ ] fix issues using different app apis, test
+- [ ] persisting queries
+- [ ] persisting to bits the query information
+- [ ] parameters can add/remove them
+- [ ] parameters can use them in queries
+- [ ] can drag/drop a query into a table
+
 notes from onboarding andrew:
 
 - adding app to local apps not reloading

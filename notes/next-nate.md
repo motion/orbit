@@ -1,13 +1,11 @@
 notes from onboarding andrew:
 
 - adding app to local apps not reloading
-- some bug with Desktop.state.workspaceState.nameRegistry not being set after adding local app
 - reloading of apps would be important from the UI in case things dont work
 - return errors from app methods / postgres to UI
 - searchResults app shouldn't insert by default
 - make workers wait for app to finish startup before starting
 - node rebuilding slowly
-- useApp() is hard to use, you have to pass the AppBit, and useAppBit() takes an id it should just take a normal FindOptions
 
 ---
 
@@ -50,7 +48,6 @@ First: working, non-buggy demos of everything. Visually impressive.
 - Get interaction with search + show AppShowBit proper
 - Fixing bugs with carousel/drawer/drop
 
-
 Fix query builder postgres loop with drag/drop
 make a generic app for search + display data that you can drag a query into
 make user manager app use grid layout probably
@@ -80,12 +77,6 @@ next
 
 ---
 
-Aug
-
-hire......... so someone can do "Really be able to develop an app"
-
-me: "Really be able to sync config between"
-
 Sep
 
 "Have good demo apps"
@@ -110,16 +101,19 @@ First, need to talk to a few startup people to get some feedback:
 - Retool?
 - ... add a few more
 
-Goal #2: Syncing configuration and other information p2p
+---
 
-1. App config and space config should sync through hyperswarm
-2. Link that into Spaces and testing it out
+there should be a concept of "extensions" that could be loaded via app store.
 
-Goal #3: Apps store for p2p
+extensions would be basically a DLL that provides functionality to all apps.
 
-1. In the same way public one works, but instead uses hyperswarm
-2. Allow for teams to collaborate without publicly sharing anything
-3. May need some consideration for linking to github repo (instead, in addition to?)
+examples:
+
+- MonacoEditorExtension provides a code editor, you can import and use it.
+- DraftEditor Extension (wysiwig)
+- NLP/Screen/Etc
+- Then apps would have to declare the extensions they rely on and have orbit install
+- Is very tricky in terms of reloading, would require a hard reload likely
 
 ---
 

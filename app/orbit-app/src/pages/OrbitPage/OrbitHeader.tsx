@@ -4,8 +4,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react, useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
+import { createRef, useRef } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
@@ -154,7 +154,7 @@ export const OrbitHeader = memo(() => {
     >
       <OrbitHeaderEditingBg isActive={isDeveloping} />
 
-      <HeaderTop height={slim ? 46 : 56}>
+      <HeaderTop height={slim ? 42 : 56}>
         <HeaderButtonPassProps>
           <HeaderSide space="sm" slim={slim}>
             <BackButton isTorn={isTorn} />

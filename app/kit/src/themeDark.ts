@@ -20,8 +20,8 @@ const darkenedAlts: ThemeSet = Object.keys(alternates).reduce((acc, key) => {
   // for dark theme, make "light" themes darker
   if (key.indexOf('light') === 0) {
     acc[key] = fromStyles({
-      background: alternates[key].background!.darken(0.42),
-      borderColor: alternates[key].borderColor!.darken(0.525),
+      background: alternates[key].background!.darken(0.5).desaturate(0.2),
+      borderColor: alternates[key].borderColor!.darken(0.6).desaturate(0.2),
       color: '#fff',
     })
   }

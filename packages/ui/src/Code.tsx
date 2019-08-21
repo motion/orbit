@@ -5,4 +5,5 @@ import { fontFamilyMonospace } from './data/DataInspectorControlled'
 export const Code = gloss('code', {
   whiteSpace: 'pre',
   fontFamily: fontFamilyMonospace,
+  userSelect: 'text',
 })

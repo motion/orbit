@@ -1,16 +1,16 @@
-import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, isEqual, loadOne, react, save, Templates, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple } from '@o/kit'
+import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, isEqual, loadOne, query, react, save, Templates, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple } from '@o/kit'
 import { bitContentHash } from '@o/libs'
 import { ApiArgType, AppBit, AppMetaCommand, Bit, BitModel, CallAppBitApiMethodCommand } from '@o/models'
-import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TitleRow, Toggle, TreeList, useGet, useTheme, useTreeList, View } from '@o/ui'
+import { Button, Card, CardProps, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, InputProps, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, TitleRow, Toggle, TreeList, useGet, useTheme, useTreeList, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import { FindOptions } from 'typeorm'
 
 import { useOm } from '../om/om'
-import { MonacoEditor } from '../views/MonacoEditor'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
 import { NavigatorProps, StackNavigator, StackNavigatorStore, useCreateStackNavigator } from './StackNavigator'
 
+// import { MonacoEditor } from '../views/MonacoEditor'
 export default createApp({
   id: 'query-builder',
   name: 'Query Builder',
@@ -589,16 +589,16 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
 
               <TitleRow title="Preview" size="xs" />
 
-              <Card elevation={3} height={24 * 3 + 16 * 2}>
-                <MonacoEditor
-                  onChange={queryBuilder.setQuery}
-                  padding
-                  noGutter
-                  readOnly
-                  value={queryBuilder.query}
-                  language="sql"
-                />
-              </Card>
+              <CodeCard
+                cardProps={{
+                  elevation: 3,
+                  height: 24 * 3 + 16 * 2,
+                }}
+                inputProps={{
+                  onChange: queryBuilder.setQuery,
+                  value: queryBuilder.query,
+                }}
+              />
             </Col>
           </Pane>
           <Pane
@@ -606,7 +606,6 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             resizable
             title="Output"
             collapsable
-            padding
             afterTitle={
               <Tabs defaultActive="0" onChange={setTab}>
                 <Tab key="0" label="Inspect" />
@@ -615,8 +614,17 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
               </Tabs>
             }
           >
-            {tab === '0' && <DataInspector data={{ data: queryBuilder.result }} />}
-            {tab === '1' && <Code minHeight={200}>{JSON.stringify(queryBuilder.result)}</Code>}
+            {tab === '0' && (
+              <View padding>
+                {' '}
+                <DataInspector data={{ data: queryBuilder.result }} />
+              </View>
+            )}
+            {tab === '1' && (
+              <View padding>
+                <Code minHeight={200}>{JSON.stringify(queryBuilder.result, null, 2)}</Code>
+              </View>
+            )}
             {tab === '2' && <Table items={[].concat(queryBuilder.result || [])} />}
           </Pane>
         </Layout>
@@ -640,12 +648,13 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             <FormField label="Value" name="pname" defaultValue="" />
           </Pane>
 
-          <Pane title="Explore API" scrollable="y" padding flex={2} space collapsable>
+          <Pane title="Explore API" scrollable="y" padding="sm" flex={2} space="sm" collapsable>
             {allMethods.map(key => {
               const info = meta.apiInfo![key]
               return (
                 <CardSimple
-                  space
+                  space="sm"
+                  padding="sm"
                   key={key}
                   title={info.name}
                   onClick={() => {
@@ -682,9 +691,7 @@ const ArgumentField = memo(
     index: number
     arg: ApiArgType
   }) => {
-    const [numLines, setNumLines] = useState(1)
     const key = `${index}${arg.name}${arg.type}`
-    const [value, setValue] = useAppState(`val-${key}`, '')
     const [isActive, setIsActive] = useAppState(`active-${key}`, arg.isOptional ? false : true)
 
     return (
@@ -712,31 +719,62 @@ const ArgumentField = memo(
             />
           )}
         </Row>
-        <Card
-          transition="all ease 300ms"
-          opacity={isActive ? 1 : 0.35}
-          elevation={1}
-          height={24 * numLines + /* padding */ 16 * 2}
-        >
-          <MonacoEditor
-            padding
-            noGutter
-            language=""
-            // not controlled
-            value={value}
-            onChange={val => {
+        <CodeCard
+          cardProps={{
+            opacity: isActive ? 1 : 0.35,
+          }}
+          inputProps={{
+            defaultValue: queryBuilder.arguments[index],
+            onChange: e => {
+              const val = e.target.value
               setIsActive(() => true)
-              setNumLines(val.split('\n').length)
-              // TODO
-              setValue
-              // queryBuilder.setArg(index, val)
-            }}
-          />
-        </Card>
+              queryBuilder.setArg(index, val)
+            },
+          }}
+        />
       </Col>
     )
   },
 )
+
+const lineCount = (str: string) => str.split('\n').length
+
+const CodeCard = (props: { cardProps: CardProps; inputProps: InputProps }) => {
+  const initVal = props.inputProps.defaultValue || props.inputProps.value || ''
+  const [numLines, setNumLines] = useState(lineCount(initVal))
+  return (
+    <Card
+      transition="all ease 300ms"
+      elevation={1}
+      height={24 * numLines + /* padding */ 16 * 2}
+      {...props.cardProps}
+    >
+      <SimpleCode
+        height="100%"
+        padding
+        background={theme => theme.backgroundStronger}
+        {...props.inputProps}
+        onChange={e => {
+          setNumLines(lineCount(e.target.value))
+          if (props.inputProps.onChange) {
+            props.inputProps.onChange(e)
+          }
+        }}
+      />
+    </Card>
+  )
+}
+
+const SimpleCode = (props: InputProps) => {
+  return (
+    <TextArea
+      fontSize={14}
+      fontFamily="'Operator Mono', 'Meslo LG S DZ', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono',
+    monospace"
+      {...props}
+    />
+  )
+}
 
 const GraphQueryBuild = memo((_: { id: number }) => {
   return (

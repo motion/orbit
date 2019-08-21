@@ -24,15 +24,11 @@ export type InputType =
 
 export type InputProps = React.HTMLAttributes<HTMLInputElement> &
   Omit<SizedSurfaceProps, 'type'> & {
-    step?: any
-    value?: string
     onEnter?: Function
     type?: InputType
-    name?: string
     form?: Object
-    elementProps?: Object
-    onClick?: Function
-    forwardRef?: any
+    value?: string
+    step?: any
   }
 
 export const Input = React.forwardRef(function Input(

@@ -1,4 +1,4 @@
-import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, loadOne, react, save, Templates, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple } from '@o/kit'
+import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, isEqual, loadOne, react, save, Templates, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple } from '@o/kit'
 import { bitContentHash } from '@o/libs'
 import { ApiArgType, AppBit, AppMetaCommand, Bit, BitModel, CallAppBitApiMethodCommand } from '@o/models'
 import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TitleRow, Toggle, TreeList, useGet, useTheme, useTreeList, View } from '@o/ui'
@@ -63,10 +63,12 @@ class AppBitsStore {
       ...(existing || null),
       ...bit,
     }
-    return await save(BitModel, {
-      contentHash: bitContentHash(next),
-      ...next,
-    })
+    if (!isEqual(existing, next)) {
+      return await save(BitModel, {
+        contentHash: bitContentHash(next),
+        ...next,
+      })
+    }
   }
 }
 function useAppBits(args?: FindOptions<Bit>) {
@@ -110,9 +112,8 @@ function QueryBuilderApp() {
 
   // TODO NEXT
   // want to persist queries to bits
-  const [_bits, actions] = useAppBits()
+  const [, actions] = useAppBits()
   useEffect(() => {
-    console.log('persist them to bits', treeList.state!.items!)
     for (const id of Object.keys(treeList.state!.items!)) {
       const item = treeList.state!.items![id]
       if (item && item.data && item.data.identifier) {
@@ -237,7 +238,6 @@ function QueryBuilderMain({
       useNavigator={navigator}
       onNavigate={item => {
         if (!item) return
-        // const icon = getAppDefinition(item.id)
         treeList.updateSelectedItem({
           data: {
             identifier: item.props!.subType || '',
@@ -642,7 +642,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
 
           <Pane title="Explore API" scrollable="y" padding flex={2} space collapsable>
             {allMethods.map(key => {
-              const info = meta.apiInfo[key]
+              const info = meta.apiInfo![key]
               return (
                 <CardSimple
                   space
@@ -683,10 +683,9 @@ const ArgumentField = memo(
     arg: ApiArgType
   }) => {
     const [numLines, setNumLines] = useState(1)
-    const [isActive, setIsActive] = useAppState(
-      `arg-${index}${arg.name}${arg.type}`,
-      arg.isOptional ? false : true,
-    )
+    const key = `${index}${arg.name}${arg.type}`
+    const [value, setValue] = useAppState(`val-${key}`, '')
+    const [isActive, setIsActive] = useAppState(`active-${key}`, arg.isOptional ? false : true)
 
     return (
       <Col space>
@@ -724,11 +723,13 @@ const ArgumentField = memo(
             noGutter
             language=""
             // not controlled
-            value={queryBuilder.arguments[index]}
+            value={value}
             onChange={val => {
               setIsActive(() => true)
               setNumLines(val.split('\n').length)
-              queryBuilder.setArg(index, val)
+              // TODO
+              setValue
+              // queryBuilder.setArg(index, val)
             }}
           />
         </Card>

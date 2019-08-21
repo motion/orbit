@@ -6,7 +6,7 @@ import { ChatMessage } from './ChatMessage'
 
 export function ChatMessages({ messages, people }: { messages: ChatMessage[]; people?: Bit[] }) {
   return (
-    <Col space>
+    <Col space="sm">
       {(messages || []).map((message, index) => (
         <ChatMessage
           key={index}

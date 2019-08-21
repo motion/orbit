@@ -5,7 +5,7 @@ import React, { memo, useCallback, useState } from 'react'
 
 import { queryStore, useOrbitWindowStore, usePaneManagerStore, useQueryStore } from '../../om/stores'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
-import { appsCarouselStore } from './OrbitAppsCarousel'
+import { appsCarouselStore } from './OrbitAppsCarouselStore'
 import { appsDrawerStore } from './OrbitAppsDrawer'
 import { useHeaderStore } from './OrbitHeader'
 import { orbitSearchResultsStore } from './OrbitSearchResults'

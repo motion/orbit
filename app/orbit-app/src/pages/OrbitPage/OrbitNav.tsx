@@ -12,7 +12,7 @@ import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useOm } from '../../om/om'
 import { usePaneManagerStore } from '../../om/stores'
 import { OrbitTab, tabHeight, TabProps } from '../../views/OrbitTab'
-import { appsCarouselStore } from './OrbitAppsCarousel'
+import { appsCarouselStore } from './OrbitAppsCarouselStore'
 
 const isOnSettings = (pane?: PaneManagerPane) =>
   pane && (pane.type === 'sources' || pane.type === 'spaces' || pane.type === 'settings')

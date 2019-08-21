@@ -4,7 +4,7 @@ import { Lock } from '@o/utils'
 import { Action, AsyncAction, Derive } from 'overmind'
 
 import { orbitStaticApps } from '../apps/orbitApps'
-import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
+import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarouselStore'
 import { updatePaneManagerPanes } from './spaces/paneManagerEffects'
 import { queryStore } from './stores'
 

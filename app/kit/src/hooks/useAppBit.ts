@@ -1,8 +1,9 @@
 import { useModel } from '@o/bridge'
 import { AppBit, AppModel } from '@o/models'
 import { ContextualProps, createContextualProps } from '@o/ui'
-import { ImmutableUpdateFn, isDefined, selectDefined } from '@o/utils'
+import { ImmutableUpdateFn } from '@o/utils'
 import { merge } from 'lodash'
+import { FindOptions } from 'typeorm'
 
 import { useStoresSimple } from './useStores'
 
@@ -12,31 +13,24 @@ export const CurrentAppBitContext: ContextualProps<{
 }> = createContextualProps({})
 
 export function useAppBit(
-  appId?: number | false,
-  extraConditions?,
+  userConditions?: FindOptions<AppBit> | false,
 ): [AppBit | null, ImmutableUpdateFn<AppBit>] {
   // currently used by settings panes where appStore isn't loaded
   const curApp = CurrentAppBitContext.useProps()
-  // TODO may want to just deprecate appStore in favor of above
-  const appStoreId = useCurrentAppId()
-
-  const id = selectDefined(appId, curApp ? curApp.id : undefined, appStoreId)
-
-  const currentAppIdentifier = useCurrentAppIdentifier()
+  const curAppId = curApp ? curApp.id : undefined
   let conditions: any = null
 
-  if (isDefined(id)) {
-    // use id for non-static apps
-    conditions = { where: { id } }
+  if (userConditions) {
+    conditions = userConditions
   } else {
-    // use identifier for static apps (theres only one)
-    conditions = { where: { identifier: currentAppIdentifier } }
+    // use id for non-static apps
+    conditions = { where: { id: curAppId } }
   }
 
-  const finalConditions = merge(conditions, extraConditions)
+  const finalConditions = merge(conditions, userConditions)
   const [app, update] = useModel(AppModel, finalConditions)
 
-  if (!app || appId === false) {
+  if (!app || userConditions === false) {
     return [null, update]
   }
 

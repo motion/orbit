@@ -4,7 +4,6 @@ import { ChatMessages, Col, Section } from '@o/ui'
 import * as React from 'react'
 
 import { AppBitMainProps } from '../types/AppTypes'
-import { BitStatusBar } from '../views/BitStatusBar'
 
 const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
   return (
@@ -37,12 +36,9 @@ export function BitConversation(props: AppBitMainProps) {
   })
 
   return (
-    <>
-      <Section flex={1} padding scrollable="y" space>
-        <ConvoGroup bits={prevConvos.reverse()} />
-        {!!props.item && <ChatMessages messages={props.item.data.messages} />}
-      </Section>
-      <BitStatusBar {...props} />
-    </>
+    <Section flex={1} space>
+      <ConvoGroup bits={prevConvos.reverse()} />
+      {!!props.item && <ChatMessages messages={props.item.data.messages} />}
+    </Section>
   )
 }

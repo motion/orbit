@@ -2,7 +2,7 @@ import { command } from '@o/bridge'
 import { TearAppCommand } from '@o/models'
 import { Electron } from '@o/stores'
 
-import { appsCarouselStore } from '../../pages/OrbitPage/OrbitAppsCarousel'
+import { appsCarouselStore } from '../../pages/OrbitPage/OrbitAppsCarouselStore'
 import { appsDrawerStore } from '../../pages/OrbitPage/OrbitAppsDrawer'
 import { paneManagerStore } from '../stores'
 

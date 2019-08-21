@@ -1,7 +1,7 @@
 import { useModel } from '@o/bridge'
 import { AppViewProps, createApp, ItemView, openItem } from '@o/kit'
 import { Bit, BitModel } from '@o/models'
-import { Button, Col, ItemPropsProvider, normalizeItem, Row, View } from '@o/ui'
+import { Button, Col, ItemPropsProvider, normalizeItem, Row, Text, View } from '@o/ui'
 import { gloss } from 'gloss'
 import * as React from 'react'
 
@@ -69,6 +69,12 @@ function BitTitleBar({ bit }: { bit: Bit }) {
           Open
         </Button>
       )}
+
+      <View flex={1} />
+
+      <View flex={4} overflow="hidden" alignItems="center" justifyContent="center">
+        <Text ellipse>{bit.title}</Text>
+      </View>
 
       <View flex={1} />
 

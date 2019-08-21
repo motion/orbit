@@ -6,7 +6,7 @@ import React, { memo, Suspense, useCallback, useMemo, useRef } from 'react'
 import { SearchResultsApp } from '../../apps/SearchResultsApp'
 import { om } from '../../om/om'
 import { SearchStore, SearchStoreStore } from '../../stores/SearchStore'
-import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarousel'
+import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarouselStore'
 import { appsDrawerStore } from './OrbitAppsDrawer'
 
 class OrbitSearchResultsStore {
@@ -31,9 +31,21 @@ class OrbitSearchResultsStore {
     },
   )
 
-  get isActive() {
+  get isActiveRaw() {
     return !appsCarouselStore.zoomedIn && !appsDrawerStore.isOpen
   }
+
+  isActive = react(
+    () => this.isActiveRaw,
+    async (next, { sleep, when }) => {
+      await sleep(20)
+      await when(() => !appsCarouselStore.isAnimating)
+      return next
+    },
+    {
+      defaultValue: this.isActiveRaw,
+    },
+  )
 
   selectedRows: ListItemProps[] = []
   setRows(rows: ListItemProps[]) {
@@ -46,7 +58,7 @@ class OrbitSearchResultsStore {
 
   // handlers for actions
   get shouldHandleEnter() {
-    if (!this.isActive) return false
+    if (!this.isActiveRaw) return false
     if (!this.selectedRows.length) return false
     return true
   }

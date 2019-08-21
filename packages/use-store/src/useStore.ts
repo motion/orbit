@@ -97,8 +97,12 @@ export const shallow = <X>(x: X) => {
 }
 
 export type UseStoreOptions = {
+  // logs information
   debug?: boolean
+  // if false, view wont update on store changes
   react?: boolean
+  // if changed will recreate the store
+  id?: string | number
 }
 
 export function disposeStore(store: any, component?: CurrentComponent) {
@@ -201,9 +205,11 @@ type ReactiveStoreDesc = {
 
 type ReactiveStoreState = ReactiveStoreDesc & {
   initialState?: HydrationState | null
+  id: any
 }
 
 const initialStoreState = {
+  id: '',
   store: null,
   initialState: null,
   hooks: null,
@@ -213,9 +219,16 @@ const initialStoreState = {
 function useReactiveStore<A extends any>(
   Store: new () => A | false,
   props?: any,
+  options?: UseStoreOptions
 ): { store: A; hasChangedSource: boolean; dispose: Function | null } | null {
   const forceUpdate = useForceUpdate()
   const state = useRef<ReactiveStoreState>(initialStoreState)
+
+  // clear state on id change
+  if (options && options.id !== state.current.id) {
+    state.current = initialStoreState
+  }
+
   let store = state.current.store
   let dispose: Function | null = null
   const hasChangedSource = store && !isSourceEqual(store, Store)
@@ -244,7 +257,7 @@ function useReactiveStore<A extends any>(
         hook.__setUpdater(forceUpdate)
       })
     }
-    state.current = next
+    state.current = { ...next, id: options ? options.id : '' }
     if (process.env.NODE_ENV === 'development') {
       // set initial state for hmr purposes
       const requestIdleCallback =
@@ -310,8 +323,14 @@ export function useStore<A extends ReactiveStore<any> | any>(
     shouldReact,
     isInstantiated,
     dispose: null as any,
+    id: options ? options.id : ''
   })
   let store: any = null
+
+  // reset when id changes
+  if (options && state.current.id !== options.id) {
+    state.current.isInstantiated = false
+  }
 
   if (process.env.NODE_ENV === 'development') {
     if (state.current.shouldReact !== shouldReact) {

@@ -37,10 +37,10 @@ export type StackNavViewProps =
 export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>((props, ref) => {
   const stackNavParent = useStore('useNavigator' in props ? props.useNavigator : null)
   // TODO our type intersections are odd
+  const id = props['id'] || 'default'
   const stackNavInternal = useCreateStackNavigator(
-    'useNavigator' in props
-      ? false
-      : { id: props['id'] || 'default', items: props['items'], ...props },
+    'useNavigator' in props ? false : { id, items: props['items'], ...props },
+    { id },
   )
   // should never switch them out....
   const stackNav = stackNavParent || stackNavInternal
@@ -190,7 +190,7 @@ const StackNavContext = createStoreContext(StackNavigatorStore)
 
 export const useCreateStackNavigator = (props: StackNavProps | false) => {
   // ensure we remount it on id change
-  return StackNavContext.useCreateStore(props, [props.id])
+  return StackNavContext.useCreateStore(props, { id: props ? props.id : '' })
 }
 
 export const useStackNavigator = StackNavContext.useStore

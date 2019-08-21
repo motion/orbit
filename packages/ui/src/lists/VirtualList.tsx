@@ -9,20 +9,19 @@ import { createContextualProps } from '../helpers/createContextualProps'
 import { rowItemCompare } from '../helpers/rowItemCompare'
 import { GenericComponent } from '../types'
 import { DynamicListControlled, DynamicListProps } from './DynamicList'
-import { ListItemProps } from './ListItem'
 import { HandleSelection } from './ListItemSimple'
 import { SelectableDynamicList } from './SelectableList'
 import { SelectableProps, SelectableStore } from './SelectableStore'
 import { VirtualListItem } from './VirtualListItem'
 
-export type VirtualListProps<A = any> = SelectableProps &
+export type VirtualListProps<A = any, B = any> = SelectableProps &
   SortableContainerProps &
   Omit<DynamicListProps, 'children' | 'itemCount' | 'itemData'> & {
     onSelect?: HandleSelection
     onOpen?: HandleSelection
 
     /** Additional props */
-    itemProps?: Partial<ListItemProps>
+    itemProps?: B
 
     /** Custom view for children */
     ItemView?: GenericComponent<A>
@@ -37,7 +36,7 @@ export type VirtualListProps<A = any> = SelectableProps &
     items: A[]
 
     /** Dynamically add extra props to each item */
-    getItemProps?: (item: ListItemProps, index: number, items: A[]) => ListItemProps | null | false
+    getItemProps?: (item: A, index: number, items: A[]) => B | null | false
 
     /** Custom separator element */
     Separator?: FunctionComponent<{ children: string }>

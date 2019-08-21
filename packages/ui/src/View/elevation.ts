@@ -38,7 +38,7 @@ const elevatedShadow = (props: ElevatableProps, theme: ThemeObject) => {
             0,
             0,
             props.elevationShadowOpacity ||
-              round(0.05 * smoother(el)) + (theme.boxShadowOpacity || 0),
+              round(0.05 * smoother((11 - Math.min(10, el)) * 0.2)) + (theme.boxShadowOpacity || 0),
           ]),
   ]
 }

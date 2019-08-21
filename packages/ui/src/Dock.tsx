@@ -113,7 +113,7 @@ type TagLabelProps = TagProps & {
 const TagLabel = ({
   arrowSize = 12,
   towards = 'right',
-  maxWidth = 75,
+  maxWidth,
   position,
   top,
   left,

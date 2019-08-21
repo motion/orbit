@@ -55,6 +55,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
         parentSpacing={parentSpacing}
         isWrapped={isWrapped}
         padding={padding}
+        flex={props.flex}
       >
         {content}
       </PaddedView>

@@ -188,7 +188,7 @@ export class AppsBuilder {
       if (middleware) {
         if (middleware === true) {
           // use last one
-          res.push(current)
+          clientDescs.push(current)
         } else {
           if (current && current.close) {
             current.close()
@@ -206,25 +206,28 @@ export class AppsBuilder {
             compiler,
             config,
           }
-          res.push(appDesc)
           clientDescs.push(appDesc)
         }
       }
     }
 
+    // add cleint descs to output
+    res = [...res, ...clientDescs]
+
     /**
      * One HMR server for everything because EventStream's don't support >5 in Chrome
      */
-    const appsHotMiddleware = this.getHotMiddleware(clientDescs.map(x => x.compiler), {
-      path: '/__webpack_hmr',
-      log: console.log,
-      heartBeat: 10 * 1000,
-    })
     res.push({
       name: 'apps-hot',
-      middleware: resolveIfExists(appsHotMiddleware, clientDescs.map(x => x.config.output.path), [
-        '/__webpack_hmr',
-      ]),
+      middleware: resolveIfExists(
+        this.getHotMiddleware(clientDescs.map(x => x.compiler), {
+          path: '/__webpack_hmr',
+          log: console.log,
+          heartBeat: 10 * 1000,
+        }),
+        clientDescs.map(x => x.config.output.path),
+        ['/__webpack_hmr'],
+      ),
     })
 
     // falls back to the main entry middleware

@@ -23,7 +23,6 @@ type TextSizeExtraProps = {
 }
 
 export function getTextSizeTheme(props: TextSizeProps, extraProps?: TextSizeExtraProps) {
-  console.time('getTextSizeTheme')
   const scale = (extraProps && extraProps.scale) || 1
   const size = ((extraProps && extraProps.size) || props.size || 1) * scale
   const sizeLineHeight = (props.sizeLineHeight === true ? 1 : props.sizeLineHeight || 1) * scale
@@ -82,7 +81,6 @@ export function getTextSizeTheme(props: TextSizeProps, extraProps?: TextSizeExtr
       'inherited, can we either do negative margin using relative units, or contextually pass down inherited font size',
     )
   }
-  console.timeEnd('getTextSizeTheme')
   return styles
 }
 

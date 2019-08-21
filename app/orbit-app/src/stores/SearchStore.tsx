@@ -1,7 +1,7 @@
 import { always, appToListItem, createStoreContext, ensure, MarkType, react, searchBits, SearchQuery, SearchState, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
 import { fuzzyFilter, ListItemProps } from '@o/ui'
 
-import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
+import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarouselStore'
 
 type SearchResults = {
   results: ListItemProps[]

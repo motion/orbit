@@ -17,8 +17,9 @@ export { configureAutomagical, AutomagicalConfiguration } from './AutomagicalCon
 // this lets you "always" react to any values you give as arguments without bugs
 type AlwaysReactFn = (...args: any[]) => number
 
+const { isObservableObject } = Mobx
 export const always = (((obj: any) => {
-  if (Mobx.isObservableObject(obj)) {
+  if (isObservableObject(obj)) {
     // watch all values (shallowly) of an object
     for (const k in obj) obj[k]
   }

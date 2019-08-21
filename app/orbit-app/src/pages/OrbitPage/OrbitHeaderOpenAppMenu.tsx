@@ -6,7 +6,7 @@ import React, { memo } from 'react'
 
 import { om, useOm } from '../../om/om'
 import { paneManagerStore } from '../../om/stores'
-import { useAppsCarousel } from './OrbitAppsCarousel'
+import { useAppsCarousel } from './OrbitAppsCarouselStore'
 import { headerButtonProps } from './OrbitHeader'
 
 export const OrbitHeaderOpenAppMenu = memo(

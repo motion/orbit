@@ -3,7 +3,7 @@ import { Action, AsyncAction, catchError, Derive, mutate, Operator, pipe, run } 
 import page from 'page'
 import queryString from 'query-string'
 
-import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
+import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarouselStore'
 import { headerStore } from '../pages/OrbitPage/OrbitHeader'
 import { paneManagerStore } from './stores'
 

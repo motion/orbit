@@ -4,7 +4,7 @@ import React, { memo, useMemo } from 'react'
 
 import { useStores } from '../hooks/useStores'
 import { useOm } from '../om/om'
-import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
+import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarouselStore'
 import { appsDrawerStore } from '../pages/OrbitPage/OrbitAppsDrawer'
 import { orbitDockStore } from '../pages/OrbitPage/OrbitDock'
 

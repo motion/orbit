@@ -19,12 +19,14 @@ class OrbitAppsCarouselStore {
     setScrollSpring: idFn,
     rowWidth: 0,
   }
+
   // this is only the state that matters for animating
   state = shallow({
     index: 0,
     zoomedOut: true,
     isDragging: false,
   })
+
   get zoomedIn() {
     return !this.state.zoomedOut
   }
@@ -34,6 +36,7 @@ class OrbitAppsCarouselStore {
       (this.focusedApp.tabDisplay === 'plain' || this.focusedApp.tabDisplay === 'pinned')
     )
   }
+
   hidden = false
   zoomIntoNextApp = false
   nextFocusedIndex = -1
@@ -42,6 +45,7 @@ class OrbitAppsCarouselStore {
   isZooming = false
   rowNode: HTMLElement | null = null
   rowRef = createRef<HTMLElement>()
+
   setRowNode = (next: HTMLElement) => {
     if (!next) return
     if (next === this.rowNode) return
@@ -52,6 +56,7 @@ class OrbitAppsCarouselStore {
   setHidden(val = true) {
     this.hidden = val
   }
+
   get isAnimating() {
     return this.isScrolling || this.isZooming
   }
@@ -67,6 +72,7 @@ class OrbitAppsCarouselStore {
       id: x.id,
     }))
   }
+
   updateAnimation = react(
     () => always(this.state),
     () => {
@@ -78,9 +84,11 @@ class OrbitAppsCarouselStore {
       log: false,
     },
   )
+
   zoomIntoCurrentApp() {
     this.scrollToIndex(Math.round(this.state.index), true)
   }
+
   get currentNode(): HTMLElement | null {
     if (this.rowNode && this.focusedIndex > -1) {
       const elements = Array.from(this.rowNode.children) as HTMLElement[]
@@ -88,6 +96,7 @@ class OrbitAppsCarouselStore {
     }
     return null
   }
+
   ensureScrollLeftOnResize = react(
     () => this.zoomedIn,
     (zoomedIn, { useEffect }) => {
@@ -106,6 +115,7 @@ class OrbitAppsCarouselStore {
       })
     },
   )
+
   // listen for pane movement
   // doing it with nextPane allows us to load in apps later
   scrollToIndex = (index: number, shouldZoomIn?: boolean) => {
@@ -114,6 +124,7 @@ class OrbitAppsCarouselStore {
       this.nextFocusedIndex = index
     }
   }
+
   updateScrollPane = react(
     () => [this.nextFocusedIndex, this.zoomIntoNextApp],
     async ([index], { when }) => {
@@ -127,9 +138,11 @@ class OrbitAppsCarouselStore {
       this.nextFocusedIndex = -1
     },
   )
+
   shouldZoomIn() {
     this.zoomIntoNextApp = true
   }
+
   ensureScrollToPane = react(
     () => this.isAnimating,
     () => {
@@ -138,12 +151,14 @@ class OrbitAppsCarouselStore {
       this.finishScroll()
     },
   )
+
   undoShouldZoomOnZoomChange = react(
     () => this.state.zoomedOut,
     () => {
       this.zoomIntoNextApp = false
     },
   )
+
   setFocused(next: number, forceScroll = false) {
     if (!this.apps[next]) return
     if (next !== this.focusedIndex) {
@@ -163,6 +178,7 @@ class OrbitAppsCarouselStore {
     this.state.zoomedOut = next
     this.zoomIntoNextApp = false
   }
+
   right() {
     if (this.focusedIndex < this.apps.length - 1) {
       this.setFocused(this.focusedIndex + 1, true)
@@ -173,6 +189,7 @@ class OrbitAppsCarouselStore {
       this.setFocused(this.focusedIndex - 1, true)
     }
   }
+
   animateCardsTo = (index: number) => {
     if (this.state.index !== index) {
       const paneIndex = Math.round(index)
@@ -182,6 +199,7 @@ class OrbitAppsCarouselStore {
       this.state.index = index
     }
   }
+
   animateAndScrollTo = async (index: number) => {
     if (!this.rowNode) return
     if (this.state.index === index) return
@@ -197,11 +215,13 @@ class OrbitAppsCarouselStore {
     this.props.setScrollSpring({ x })
     this.animateCardsTo(index)
   }
+
   isControlled = false
   animateTo = (index: number) => {
     this.isControlled = true
     this.animateCardsTo(index)
   }
+
   // after scroll, select focused card
   finishScroll = () => {
     const next = Math.round(this.state.index)
@@ -216,6 +236,7 @@ class OrbitAppsCarouselStore {
       config: { duration: 0 },
     })
   }
+
   // NOTE if this goes higher than 0.6, it seems to cause extra scrolling
   outScaler = numberScaler(0, 1, 0.55, 0.6)
   inScaler = numberScaler(0, 1, 0.9, 1)
@@ -258,6 +279,7 @@ class OrbitAppsCarouselStore {
     }
     return next
   }
+
   lastDragAt = Date.now()
   onDrag = next => {
     if (!this.state.zoomedOut) return
@@ -272,6 +294,7 @@ class OrbitAppsCarouselStore {
       this.animateAndScrollTo(nextI)
     }
   }
+
   onFinishScroll = () => {
     this.isScrolling = false
   }
@@ -285,6 +308,7 @@ class OrbitAppsCarouselStore {
     this.isZooming = true
   }
 }
+
 export const stackMarginLessPct = 0.4
 export const appsCarouselStore = createUsableStore(OrbitAppsCarouselStore)
 export const useAppsCarousel = appsCarouselStore.useStore

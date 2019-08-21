@@ -66,7 +66,7 @@ export type FormStoreProps = Pick<FormProps<FormFieldsObj>, 'fields' | 'errors'>
 
 class FormStore {
   // @ts-ignore
-  props: FormStoreProps
+  props: FormStoreProps = {}
   globalError: string = ''
   values: FormFieldsObj = shallow({})
   derivedValues = shallow({})

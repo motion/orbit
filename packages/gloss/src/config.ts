@@ -1,4 +1,4 @@
-import { colorToString } from '.'
+import { colorToString } from './helpers/helpers'
 import { preProcessTheme } from './helpers/preProcessTheme'
 import { GlossOptions } from './types'
 

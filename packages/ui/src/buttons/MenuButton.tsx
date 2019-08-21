@@ -17,7 +17,6 @@ export type MenuButtonProps = ButtonProps &
 
 export const MenuButton = memo(
   ({ items, scrollable, children, openIconProps, open, openOnHover, ...rest }: MenuButtonProps) => {
-    console.log('render now')
     const height = useSurfaceHeight(rest.size)
     // using the same group ensures the tooltip closes when the menu opens
     const group = useRef(`${Math.random()}`).current

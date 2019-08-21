@@ -15,8 +15,6 @@
 	(global.React = factory());
 }(this, (function () { 'use strict';
 
-const __DEV__ = window['__DEV__'] || true
-
 // TODO: this is special because it gets imported during build.
 
 var ReactVersion = '16.8.6';

@@ -5,11 +5,13 @@ import { HSL, HSLA, HSV, HSVA, RGB, RGBA } from './interfaces'
 import { bound01, boundAlpha, clamp01 } from './util'
 
 export interface ColorOptions {
-  format: string
+  format: ColorFormats
   gradientType: string
 }
 
 export type ColorInput = string | RGB | RGBA | HSL | HSLA | HSV | HSVA | Color
+
+const emptyKey = ''
 
 export type ColorFormats =
   | 'rgb'
@@ -51,19 +53,28 @@ export class Color {
   roundA!: number
 
   constructor(color: ColorInput = '', opts: Partial<ColorOptions> = {}) {
-    if (color instanceof Color) {
-      return color
-    }
-
     this.originalInput = color
-    const rgb = inputToRGB(color)
-    this.r = rgb.r
-    this.g = rgb.g
-    this.b = rgb.b
-    this.a = rgb.a
-    this.roundA = Math.round(100 * this.a) / 100
-    this.format = opts.format || rgb.format
-    this.gradientType = opts.gradientType
+    // faster to parse this way
+    if (color instanceof Color) {
+      this.r = color.r
+      this.g = color.g
+      this.b = color.b
+      this.a = color.a
+      this.roundA = color.roundA
+      this.format = opts.format || color.format
+      this.gradientType = opts.gradientType
+      this.isValid = true
+    } else {
+      const rgb = inputToRGB(color)
+      this.r = rgb.r
+      this.g = rgb.g
+      this.b = rgb.b
+      this.a = rgb.a
+      this.roundA = Math.round(100 * this.a) / 100
+      this.format = opts.format || rgb.format
+      this.gradientType = opts.gradientType
+      this.isValid = rgb.ok
+    }
 
     // Don't let the range of [0,255] come back in [0,1].
     // Potentially lose a little bit of precision here, but will fix issues where
@@ -80,8 +91,6 @@ export class Color {
     if (this.b < 1) {
       this.b = Math.round(this.b)
     }
-
-    this.isValid = rgb.ok
   }
 
   toCSS() {
@@ -150,7 +159,7 @@ export class Color {
    * Clones a new instance of this class
    */
   clone(modifyCb?: (next: Color) => void) {
-    const next = new Color(this.toString() as string)
+    const next = new Color(this)
     modifyCb && modifyCb(next)
     return next
   }
@@ -255,6 +264,7 @@ export class Color {
    * Returns the RGBA values interpolated into a string with the following format:
    * "RGBA(xxx, xxx, xxx, xx)".
    */
+  // cache it
   toRgbString() {
     const r = Math.round(this.r)
     const g = Math.round(this.g)
@@ -309,10 +319,14 @@ export class Color {
    *
    * @param format - The format to be used when displaying the string representation.
    */
+  // cache it
+  cacheToString = {}
   toString(format?: ColorFormats) {
+    const key = format || emptyKey
+    const cacheVal = this.cacheToString[key]
+    if (cacheVal) return cacheVal
     const formatSet = Boolean(format)
     format = format || this.format
-
     let formattedString: string | false = false
     const hasAlpha = this.a < 1 && this.a >= 0
     const needsAlphaFormat =
@@ -322,49 +336,50 @@ export class Color {
       // Special case for "transparent", all other non-alpha formats
       // will return rgba when there is transparency.
       if (format === 'name' && this.a === 0) {
-        return this.toName()
+        formattedString = this.toName()
+      } else {
+        formattedString = this.toRgbString()
+      }
+    } else {
+      if (format === 'rgb') {
+        formattedString = this.toRgbString()
       }
 
-      return this.toRgbString()
+      if (format === 'prgb') {
+        formattedString = this.toPercentageRgbString()
+      }
+
+      if (format === 'hex' || format === 'hex6') {
+        formattedString = this.toHexString()
+      }
+
+      if (format === 'hex3') {
+        formattedString = this.toHexString(true)
+      }
+
+      if (format === 'hex4') {
+        formattedString = this.toHex8String(true)
+      }
+
+      if (format === 'hex8') {
+        formattedString = this.toHex8String()
+      }
+
+      if (format === 'name') {
+        formattedString = this.toName()
+      }
+
+      if (format === 'hsl') {
+        formattedString = this.toHslString()
+      }
+
+      if (format === 'hsv') {
+        formattedString = this.toHsvString()
+      }
     }
 
-    if (format === 'rgb') {
-      formattedString = this.toRgbString()
-    }
-
-    if (format === 'prgb') {
-      formattedString = this.toPercentageRgbString()
-    }
-
-    if (format === 'hex' || format === 'hex6') {
-      formattedString = this.toHexString()
-    }
-
-    if (format === 'hex3') {
-      formattedString = this.toHexString(true)
-    }
-
-    if (format === 'hex4') {
-      formattedString = this.toHex8String(true)
-    }
-
-    if (format === 'hex8') {
-      formattedString = this.toHex8String()
-    }
-
-    if (format === 'name') {
-      formattedString = this.toName()
-    }
-
-    if (format === 'hsl') {
-      formattedString = this.toHslString()
-    }
-
-    if (format === 'hsv') {
-      formattedString = this.toHsvString()
-    }
-
-    return formattedString || this.toHexString()
+    this.cacheToString[key] = formattedString || this.toHexString()
+    return this.cacheToString[key]
   }
 
   /**

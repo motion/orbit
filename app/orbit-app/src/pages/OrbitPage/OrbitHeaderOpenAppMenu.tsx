@@ -20,7 +20,7 @@ export const OrbitHeaderOpenAppMenu = memo(
       return appsCarousel.focusedApp.identifier === 'setupApp' || appsDrawerStore.isOpen
     })
 
-    const isOnOpenableApp = useDebounceValue(appsCarousel.isOnOpenableApp, 100)
+    const isOnOpenableApp = useDebounceValue(appsCarousel.isOnOpenableApp, 300)
 
     const constantMenuItemsFast = useMemo(
       () =>
@@ -40,7 +40,8 @@ export const OrbitHeaderOpenAppMenu = memo(
         ].filter(Boolean),
       [state.router.urlString],
     )
-    const constantMenuItems = useDebounceValue(constantMenuItemsFast, 100)
+    const constantMenuItems = useDebounceValue(constantMenuItemsFast, 300)
+    console.log('constantMenuItems', constantMenuItems)
 
     const items = useMemo(() => {
       return [

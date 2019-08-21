@@ -768,6 +768,7 @@ const CodeCard = (props: { cardProps: CardProps; inputProps: InputProps }) => {
 const SimpleCode = (props: InputProps) => {
   return (
     <TextArea
+      resize="none"
       fontSize={14}
       fontFamily="'Operator Mono', 'Meslo LG S DZ', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono',
     monospace"

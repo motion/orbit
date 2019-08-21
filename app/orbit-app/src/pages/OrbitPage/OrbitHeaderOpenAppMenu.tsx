@@ -117,9 +117,12 @@ export const OrbitHeaderOpenAppMenu = memo(
         elevationShadowOpacity={0.2}
         disabled={disabled}
         opacity={disabled ? 0.5 : 1}
-        openIconProps={useMemo(() => {
-          name: isDeveloping ? 'edit' : 'chevron-down',
-        }, [isDeveloping])}
+        openIconProps={useMemo(
+          () => ({
+            name: isDeveloping ? 'edit' : 'chevron-down',
+          }),
+          [isDeveloping],
+        )}
         items={items}
       >
         Open

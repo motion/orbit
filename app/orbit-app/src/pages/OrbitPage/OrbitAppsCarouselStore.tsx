@@ -274,7 +274,7 @@ class OrbitAppsCarouselStore {
       opacity,
       ...(zoomedIn && {
         // when zoomed in, go pretty fast to avoid long load
-        config: { mass: 1, tension: 500, friction: 36, velocity: 7 },
+        config: { mass: 1, tension: 500, friction: 36, velocity: 4 },
       }),
     }
     return next

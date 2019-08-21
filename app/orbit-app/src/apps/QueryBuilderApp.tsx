@@ -606,7 +606,6 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             resizable
             title="Output"
             collapsable
-            padding
             afterTitle={
               <Tabs defaultActive="0" onChange={setTab}>
                 <Tab key="0" label="Inspect" />
@@ -615,8 +614,17 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
               </Tabs>
             }
           >
-            {tab === '0' && <DataInspector data={{ data: queryBuilder.result }} />}
-            {tab === '1' && <Code minHeight={200}>{JSON.stringify(queryBuilder.result)}</Code>}
+            {tab === '0' && (
+              <View padding>
+                {' '}
+                <DataInspector data={{ data: queryBuilder.result }} />
+              </View>
+            )}
+            {tab === '1' && (
+              <View padding>
+                <Code minHeight={200}>{JSON.stringify(queryBuilder.result, null, 2)}</Code>
+              </View>
+            )}
             {tab === '2' && <Table items={[].concat(queryBuilder.result || [])} />}
           </Pane>
         </Layout>

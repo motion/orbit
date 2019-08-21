@@ -28,7 +28,11 @@ export const acceptsProps = (child, key) =>
 export const Layout = memo((props: LayoutProps) => {
   const children: ReactElement[] = Children.map(props.children, child => {
     if (!isValidElement(child) || !acceptsProps(child, 'paneProps')) {
-      console.warn(`Invalid child: <Layout /> accepts only <Pane /> as children.`, child, props)
+      console.warn(
+        `Invalid child: <Layout /> accepts only <Pane /> as children. You can fix this by adding Component.acceptsProps = { paneProps: true } and passing the pane props down to child <Pane />.`,
+        child,
+        props,
+      )
       return null
     }
     return child

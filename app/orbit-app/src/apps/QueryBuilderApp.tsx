@@ -529,7 +529,6 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const [method, setMethod] = useState(apiInfo[allMethods[0]])
   const hasApiInfo = !!meta && !!apiInfo
   const theme = useTheme()
-  const [tab, setTab] = useState('0')
 
   useEffect(() => {
     if (method) {
@@ -601,32 +600,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
               />
             </Col>
           </Pane>
-          <Pane
-            background={theme.backgroundStrong}
-            resizable
-            title="Output"
-            collapsable
-            afterTitle={
-              <Tabs defaultActive="0" onChange={setTab}>
-                <Tab key="0" label="Inspect" />
-                <Tab key="1" label="JSON" />
-                <Tab key="2" label="Table" />
-              </Tabs>
-            }
-          >
-            {tab === '0' && (
-              <View padding>
-                {' '}
-                <DataInspector data={{ data: queryBuilder.result }} />
-              </View>
-            )}
-            {tab === '1' && (
-              <View padding>
-                <Code minHeight={200}>{JSON.stringify(queryBuilder.result, null, 2)}</Code>
-              </View>
-            )}
-            {tab === '2' && <Table items={[].concat(queryBuilder.result || [])} />}
-          </Pane>
+          <OutputPane queryBuilder={queryBuilder} />
         </Layout>
       </Pane>
       <Pane background={theme.backgroundStrong} display={props.showSidebar ? undefined : 'none'}>
@@ -680,6 +654,43 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
     </Layout>
   )
 })
+
+const OutputPane = memo(({ queryBuilder, ...rest }: { queryBuilder: QueryBuilderStore }) => {
+  const theme = useTheme()
+  const [tab, setTab] = useState('0')
+  return (
+    <Pane
+      background={theme.backgroundStrong}
+      resizable
+      title="Output"
+      collapsable
+      afterTitle={
+        <Tabs defaultActive="0" onChange={setTab}>
+          <Tab key="0" label="Inspect" />
+          <Tab key="1" label="JSON" />
+          <Tab key="2" label="Table" />
+        </Tabs>
+      }
+      {...rest}
+    >
+      {tab === '0' && (
+        <View padding>
+          {' '}
+          <DataInspector data={{ data: queryBuilder.result }} />
+        </View>
+      )}
+      {tab === '1' && (
+        <View padding>
+          <Code minHeight={200}>{JSON.stringify(queryBuilder.result, null, 2)}</Code>
+        </View>
+      )}
+      {tab === '2' && <Table items={[].concat(queryBuilder.result || [])} />}
+    </Pane>
+  )
+})
+OutputPane['acceptsProps'] = {
+  paneProps: true,
+}
 
 const ArgumentField = memo(
   ({

@@ -1,10 +1,8 @@
-import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, isEqual, loadOne, query, react, save, Templates, TreeListStore, useActiveDataApps, useApp, useAppState, useAppWithDefinition, useCommand, useHooks, useModels, useStoreSimple } from '@o/kit'
-import { bitContentHash } from '@o/libs'
-import { ApiArgType, AppBit, AppMeta, AppMetaCommand, Bit, BitModel, CallAppBitApiMethodCommand } from '@o/models'
+import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, query, react, Templates, TreeListStore, useActiveDataApps, useAppBitHelpers, useAppState, useAppWithDefinition, useCommand, useHooks } from '@o/kit'
+import { ApiArgType, AppMeta, AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
 import { Button, Card, CardProps, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, InputProps, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, TitleRow, Toggle, TreeList, useGet, useTheme, useTreeList, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
-import { FindOptions } from 'typeorm'
 
 import { useOm } from '../om/om'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
@@ -19,70 +17,6 @@ export default createApp({
 })
 
 const treeId = 'qba'
-
-// TODO this can be shared by workers-kit/syncers and put in Kit
-class AppBitsStore {
-  // @ts-ignore
-  props: {
-    app?: AppBit
-  }
-
-  create(bit: Bit) {
-    return save(BitModel, bit)
-  }
-  update(bit: Partial<Bit> & Pick<Bit, 'originalId'>) {
-    return save(BitModel, bit)
-  }
-  // TODO we need to scope this to the current app automatically!
-  async createOrUpdate(bit: Partial<Bit> & Pick<Bit, 'originalId'>) {
-    if (!bit.originalId) {
-      throw new Error(
-        `Must provide originalId, which you can choose, in order to determine uniqueness`,
-      )
-    }
-    if (!this.props.app) {
-      throw new Error(`Must use within an app`)
-    }
-    const appId = this.props.app.id
-    const appIdentifier = this.props.app.identifier
-    if (!appId || !appIdentifier) {
-      throw new Error(`Missing appId or appIdentifier`)
-    }
-    const existing = await loadOne(BitModel, {
-      args: {
-        where: {
-          appId,
-          appIdentifier,
-          originalId: bit.originalId,
-        },
-      },
-    })
-    const next = {
-      appIdentifier,
-      appId,
-      ...(existing || null),
-      ...bit,
-    }
-    if (!isEqual(existing, next)) {
-      return await save(BitModel, {
-        contentHash: bitContentHash(next),
-        ...next,
-      })
-    }
-  }
-}
-function useAppBits(args?: FindOptions<Bit>) {
-  const app = useApp()
-  const [bits] = useModels(BitModel, {
-    ...args,
-    where: {
-      ...((args && args.where) || null),
-      appId: app.id,
-    },
-  })
-  const store = useStoreSimple(AppBitsStore, { app })
-  return [bits, store] as const
-}
 
 function QueryBuilderApp() {
   const om = useOm()
@@ -112,13 +46,13 @@ function QueryBuilderApp() {
 
   // TODO NEXT
   // want to persist queries to bits
-  const [, actions] = useAppBits()
+  const appBitHelpers = useAppBitHelpers()
   useEffect(() => {
     for (const id of Object.keys(treeList.state!.items!)) {
       const item = treeList.state!.items![id]
       if (item && item.data && item.data.identifier) {
         const definition = getAppDefinition(`${item.data.identifier}`)
-        actions.createOrUpdate({
+        appBitHelpers.createOrUpdate({
           title: item.name,
           originalId: `${item.id}`,
           icon: `${definition.icon}`,

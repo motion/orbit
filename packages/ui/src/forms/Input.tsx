@@ -27,6 +27,8 @@ export type InputProps = React.HTMLAttributes<HTMLInputElement> &
     onEnter?: Function
     type?: InputType
     form?: Object
+    value?: string
+    step?: any
   }
 
 export const Input = React.forwardRef(function Input(

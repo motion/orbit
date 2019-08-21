@@ -12,8 +12,6 @@
     "@o/kit": "^2.6.0",
     "@o/ui": "^2.6.0",
     "@o/use-store": "^2.6.0",
-    "@react-navigation/core": "3.0.2",
-    "@react-navigation/web": "1.0.0-alpha.7",
     "core-js": "2.6.5",
     "gloss": "^2.6.0",
     "lodash": "4.17.11",

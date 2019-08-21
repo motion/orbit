@@ -117,7 +117,7 @@ export function configureUI(opts: Partial<ConfigureUIProps>) {
   })
 
   configureGloss({
-    toColor: toColor,
+    toColor,
   })
 }
 

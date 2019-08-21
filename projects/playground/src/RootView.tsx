@@ -1,14 +1,14 @@
 import * as React from 'react'
 import { hot } from 'react-hot-loader/root'
 
-import { TestStores } from './TestStores'
+import { TestUI } from './TestUI'
 
 export default hot(function RootView() {
   return (
     <>
-      {/* <TestUI /> */}
+      <TestUI />
       {/* <TestHMR /> */}
-      <TestStores />
+      {/* <TestStores /> */}
       {/* <TestMiniApps /> */}
       {/* <TestUIKitchenSink /> */}
       {/* <IconShape name="flow" /> */}

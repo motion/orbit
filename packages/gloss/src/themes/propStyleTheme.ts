@@ -9,6 +9,7 @@ export function styleVal(val: any, theme: ThemeObject, props?: Object) {
 // resolves props into styles for valid css
 
 export function propStyleTheme(props: any, theme: ThemeObject): CSSPropertySet | null {
+  console.time('propStyleTheme')
   let styles: CSSPropertySet | null = null
   // loop over props turning into styles
   for (let key in props) {
@@ -37,5 +38,6 @@ export function propStyleTheme(props: any, theme: ThemeObject): CSSPropertySet |
       }
     }
   }
+  console.timeEnd('propStyleTheme')
   return styles
 }

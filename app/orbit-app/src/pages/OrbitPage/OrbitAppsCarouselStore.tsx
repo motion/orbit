@@ -278,7 +278,7 @@ class OrbitAppsCarouselStore {
             config: { mass: 1, tension: 500, friction: 36, velocity: 5 },
           }
         : {
-            config: { mass: 1, tension: 400, friction: 32, velocity: 3 },
+            config: { mass: 1, tension: 400, friction: 35 },
           }),
     }
     return next

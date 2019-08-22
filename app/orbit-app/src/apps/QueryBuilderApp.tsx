@@ -1,4 +1,4 @@
-import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, query, react, Templates, TreeListStore, useActiveDataApps, useAppBitHelpers, useAppState, useAppWithDefinition, useCommand, useHooks } from '@o/kit'
+import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, query, react, Templates, TreeListStore, useActiveDataApps, useAppBitHelpers, useAppState, useAppWithDefinition, useCommand, useHooks, useStore } from '@o/kit'
 import { ApiArgType, AppMeta, AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
 import { Button, Card, CardProps, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, InputProps, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, TitleRow, Toggle, TreeList, useGet, useTheme, useTreeList, View } from '@o/ui'
 import { capitalize } from 'lodash'
@@ -648,6 +648,7 @@ SelectMethodPane['acceptsProps'] = {
 }
 
 const OutputPane = memo(({ queryBuilder, ...rest }: { queryBuilder: QueryBuilderStore }) => {
+  const { result } = useStore(queryBuilder)
   const theme = useTheme()
   const [tab, setTab] = useState('0')
   return (
@@ -668,15 +669,15 @@ const OutputPane = memo(({ queryBuilder, ...rest }: { queryBuilder: QueryBuilder
       {tab === '0' && (
         <View padding>
           {' '}
-          <DataInspector data={{ data: queryBuilder.result }} />
+          <DataInspector data={{ data: result }} />
         </View>
       )}
       {tab === '1' && (
         <View padding>
-          <Code minHeight={200}>{JSON.stringify(queryBuilder.result, null, 2)}</Code>
+          <Code minHeight={200}>{JSON.stringify(result, null, 2)}</Code>
         </View>
       )}
-      {tab === '2' && <Table items={[].concat(queryBuilder.result || [])} />}
+      {tab === '2' && <Table items={[].concat(result || [])} />}
     </Pane>
   )
 })

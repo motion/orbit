@@ -259,7 +259,8 @@ export class Logger {
     } else if (level === 'verbose') {
       this.flush(
         logLevel > 1,
-        'debug',
+        // log direct to console if in high log mode
+        logLevel > 3 ? 'info' : 'debug',
         ...colored(this.namespace, `color: ${color}; font-weight: bold`),
         ...messages,
       )

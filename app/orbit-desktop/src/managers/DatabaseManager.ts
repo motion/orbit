@@ -1,6 +1,6 @@
 import { connectModels } from '@o/libs-node'
 import { Logger } from '@o/logger'
-import { Entities, userDefaultValue, UserEntity } from '@o/models'
+import { Entities, UserEntity } from '@o/models'
 import { Desktop } from '@o/stores'
 import { sleep } from '@o/utils'
 import { remove } from 'fs-extra'
@@ -152,8 +152,17 @@ export class DatabaseManager {
 
     if (!user) {
       await getRepository(UserEntity).save({
-        ...userDefaultValue,
-        activeSpace: -1,
+        name: 'Me',
+        spaceConfig: {},
+        appState: {},
+        settings: {
+          hasOnboarded: false,
+          openShortcut: 'Option+Space',
+          autoLaunch: true,
+          autoUpdate: true,
+          theme: 'automatic',
+        },
+        activeSpace: 0,
       })
     }
   }

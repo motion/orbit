@@ -104,7 +104,7 @@ export const OrbitAppRenderOfDefinition = ({
 }: OrbitAppProps & {
   appDef: AppDefinition
 }) => {
-  const [app] = useAppBit(id)
+  const [app] = useAppBit({ where: { id } })
   const om = useOm()
   const [activeItem, setActiveItem] = useState<AppViewProps | null>(null)
   const getActiveItem = useGet(activeItem)

@@ -2,7 +2,7 @@ import { createApp, ensure, useReaction } from '@o/kit'
 import { Card, CenteredText } from '@o/ui'
 import React from 'react'
 
-import { SearchStore } from '../stores/SearchStore'
+import { SearchStore } from '../om/SearchStore'
 import { BitAppMain } from './BitApp'
 
 export default createApp({

@@ -42,11 +42,14 @@ export const Input = React.forwardRef(function Input(
   const updateFormContext = useThrottledFn(
     (value: string) => {
       if (formStore) {
-        formStore.changeField({
-          name: props.name,
-          value,
-          type,
-        })
+        formStore.changeValue(
+          props.name,
+          {
+            value,
+            type,
+          },
+          true,
+        )
       }
     },
     { amount: 200 },

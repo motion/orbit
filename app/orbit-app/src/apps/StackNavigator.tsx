@@ -40,7 +40,6 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
   const id = props['id'] || 'default'
   const stackNavInternal = useCreateStackNavigator(
     'useNavigator' in props ? false : { id, items: props['items'], ...props },
-    { id },
   )
   // should never switch them out....
   const stackNav = stackNavParent || stackNavInternal

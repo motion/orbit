@@ -1,4 +1,3 @@
-import { gloss } from 'gloss'
 import React, { memo, useCallback, useContext, useEffect, useState } from 'react'
 
 import { BorderLeft, BorderTop } from '../Border'
@@ -113,18 +112,13 @@ export const SizablePane = memo(
     } else {
       element = (
         // @ts-ignore
-        <PaneChrome data-is="SizablePane-PaneChrome" {...props} style={style}>
+        <View data-is="SizablePane-PaneChrome" overflow="hidden" {...props} style={style}>
           {borderElement}
           {childElement}
-        </PaneChrome>
+        </View>
       )
     }
 
     return element
   },
 )
-
-const PaneChrome = gloss(View, {
-  position: 'relative',
-  overflow: 'hidden',
-})

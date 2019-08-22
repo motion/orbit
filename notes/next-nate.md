@@ -1,4 +1,4 @@
---
+---
 
 - [ ] fix perf issue with switching between items
 - [ ] fix pane resizing bugs

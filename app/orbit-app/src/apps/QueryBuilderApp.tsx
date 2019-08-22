@@ -6,9 +6,8 @@ import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from
 
 import { useOm } from '../om/om'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
-import { NavigatorProps, StackNavigator, StackNavigatorStore, useCreateStackNavigator } from './StackNavigator'
+import { NavigatorProps, StackNavigator, useCreateStackNavigator } from './StackNavigator'
 
-// import { MonacoEditor } from '../views/MonacoEditor'
 export default createApp({
   id: 'query-builder',
   name: 'Query Builder',
@@ -21,27 +20,29 @@ const treeId = 'qba'
 function QueryBuilderApp() {
   const om = useOm()
   const dataApps = useActiveDataApps()
+  if (!dataApps.length) {
+    return (
+      <Scale size={0.8}>
+        <Templates.Message
+          title="No data apps"
+          subTitle="You haven't added any data apps to this workspace."
+        >
+          <Button alt="action" onClick={() => om.actions.router.showAppPage({ id: 'apps' })}>
+            Install apps
+          </Button>
+        </Templates.Message>
+      </Scale>
+    )
+  }
+  return <QueryBuilderAppContent />
+}
+
+function QueryBuilderAppContent() {
   const [items, setItems] = useState<any[]>([])
   const hasItems = !!items.length
-
   // current highlighted item
   const curItem = items[0]
   const id = (curItem && curItem.id) || -1
-
-  // note: navigator id changes with curItem so we have a fresh stack
-  const navigator = useCreateStackNavigator({
-    id: `query-builder-nav-${id}-2`,
-    items: {
-      Null: () => null,
-      SelectApp: QueryBuilderSelectApp,
-      QueryEdit: QueryBuilderQueryEdit,
-    },
-    defaultItem: {
-      id: 'Null',
-      props: {},
-    },
-  })
-
   const treeList = useTreeList(treeId)
 
   // TODO NEXT
@@ -62,59 +63,17 @@ function QueryBuilderApp() {
     }
   }, [treeList.state.items])
 
-  // map id => navigator stack so we persist it per-item in the list
-  // const navigatorStack = useAppState(`${treeId}-stack`, {})
-
-  useEffect(() => {
-    if (!navigator.currentItem) return
-    if (curItem && navigator.currentItem.id === 'Null') {
-      navigator.navigateTo(
-        {
-          id: 'SelectApp',
-          props: curItem,
-        },
-        {
-          replaceAll: true,
-        },
-      )
-    }
-  }, [curItem, navigator.currentItem])
-
-  if (!dataApps.length) {
-    return (
-      <Scale size={0.8}>
-        <Templates.Message
-          title="No data apps"
-          subTitle="You haven't added any data apps to this workspace."
-        >
-          <Button alt="action" onClick={() => om.actions.router.showAppPage({ id: 'apps' })}>
-            Install apps
-          </Button>
-        </Templates.Message>
-      </Scale>
-    )
-  }
-
   return (
-    <App
-      index={<QueryBuilderIndex treeList={treeList} navigator={navigator} setItems={setItems} />}
-    >
+    <App index={<QueryBuilderIndex treeList={treeList} setItems={setItems} />}>
       {!hasItems && <CenteredText>Add a query</CenteredText>}
       <Suspense fallback={<Loading />}>
-        {hasItems && <QueryBuilderMain key={id} treeList={treeList} navigator={navigator} />}
+        {hasItems && <QueryBuilderMain key={id} id={id} curItem={curItem} treeList={treeList} />}
       </Suspense>
     </App>
   )
 }
 
-function QueryBuilderIndex({
-  treeList,
-  setItems,
-}: {
-  treeList: TreeListStore
-  navigator: StackNavigatorStore
-  setItems: any
-}) {
+function QueryBuilderIndex({ treeList, setItems }: { treeList: TreeListStore; setItems: any }) {
   return (
     <>
       <TreeList
@@ -164,9 +123,39 @@ function QueryBuilderIndex({
 }
 
 function QueryBuilderMain({
-  navigator,
+  id,
+  curItem,
   treeList,
-}: AppViewProps & { navigator: StackNavigatorStore; treeList: TreeListStore }) {
+}: AppViewProps & { treeList: TreeListStore; id: string; curItem: any }) {
+  // note: navigator id changes with curItem so we have a fresh stack
+  const navigator = useCreateStackNavigator({
+    id: `query-builder-nav-${id}-2`,
+    items: {
+      Null: () => null,
+      SelectApp: QueryBuilderSelectApp,
+      QueryEdit: QueryBuilderQueryEdit,
+    },
+    defaultItem: {
+      id: 'Null',
+      props: {},
+    },
+  })
+
+  useEffect(() => {
+    if (!navigator.currentItem) return
+    if (curItem && navigator.currentItem.id === 'Null') {
+      navigator.navigateTo(
+        {
+          id: 'SelectApp',
+          props: curItem,
+        },
+        {
+          replaceAll: true,
+        },
+      )
+    }
+  }, [curItem, navigator.currentItem])
+
   return (
     <StackNavigator
       useNavigator={navigator}
@@ -379,6 +368,7 @@ const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
     <QueryBuilder.SimpleProvider value={queryBuilder}>
       <Section
         flex={1}
+        overflow="hidden"
         titlePadding
         backgrounded
         titleBorder
@@ -433,9 +423,9 @@ const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
       >
         <Suspense fallback={null}>
           {mode === 'api' ? (
-            <APIQueryBuild id={+props.id!} showSidebar={showSidebar} />
+            <APIQueryBuild key={props.id!} id={+props.id!} showSidebar={showSidebar} />
           ) : (
-            <GraphQueryBuild id={+props.id!} />
+            <GraphQueryBuild key={props.id!} id={+props.id!} />
           )}
         </Suspense>
       </Section>
@@ -520,11 +510,9 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
               <SeparatorHorizontal />
               <Space size="xl" />
 
-              <TitleRow title="Preview" size="xs" />
-
+              <TitleRow title="Preview" size="xxs" />
               <CodeCard
                 cardProps={{
-                  elevation: 2,
                   height: 24 * 3 + 16 * 2,
                 }}
                 inputProps={{

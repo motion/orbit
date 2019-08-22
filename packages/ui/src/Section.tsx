@@ -253,6 +253,9 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           beforeSpace={!showTitleAbove && titleEl}
           useCollapse={collapse}
           suspense={<Loading />}
+          // this helps flex issues
+          // see QueryBuilder sidebar when lots of API props come down
+          overflow="hidden"
           {...viewProps}
         >
           {children}

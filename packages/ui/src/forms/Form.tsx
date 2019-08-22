@@ -1,3 +1,4 @@
+import { isEqual } from '@o/fast-compare'
 import { createStoreContext, ensure, react, shallow, useReaction, useStore } from '@o/use-store'
 import { selectDefined } from '@o/utils'
 import { flatten } from 'lodash'
@@ -38,7 +39,7 @@ export type FormErrors<A> = { [key in keyof A]: string } | string | null | true 
 
 type FormFieldType =
   | {
-      name: string
+      label: string
       type?: InputType
       value?: any
       required?: boolean
@@ -46,7 +47,7 @@ type FormFieldType =
       validate?: (val: any) => string
     }
   | {
-      name: string
+      label: string
       type: 'select'
       value: { label: string; value: string }[]
       required?: boolean
@@ -54,7 +55,7 @@ type FormFieldType =
       validate?: (val: any) => string
     }
   | {
-      name: string
+      label: string
       type: 'custom'
       children: React.ReactNode
       value?: any
@@ -66,45 +67,54 @@ export type FormStoreProps = Pick<FormProps<FormFieldsObj>, 'fields' | 'errors'>
 
 class FormStore {
   // @ts-ignore
-  props: FormStoreProps = {}
+  props: FormStoreProps
   globalError: string = ''
+  hasEdited = {}
+  simpleValues = {}
   values: FormFieldsObj = shallow({})
   derivedValues = shallow({})
   errors: FormErrors<any> = null
   mountKey = 0
 
-  get simpleValues() {
-    return Object.keys(this.values).reduce((acc, key) => {
-      acc[key] = this.values[key].value
-      return acc
-    }, {})
+  get fields() {
+    return this.props ? this.props.fields : {}
   }
 
+  lastPropValues = {}
   updateValuesFromProps = react(
-    () => this.props.fields,
+    () => this.fields,
     fields => {
       ensure('fields', !!fields)
       for (const key in fields) {
-        const field = fields[key]
-        this.changeField({
-          ...field,
-          // this is really weird, and we need to fix something here
-          // because the key on the fields object is the real "name" here.
-          name: key,
-        })
+        const fieldValue = fields[key].value
+        // only update if the value changes
+        if (fieldValue !== this.lastPropValues[key]) {
+          // dont worry about updating after weve edited a derived field
+          if (typeof fieldValue === 'function' && this.hasEdited[key]) {
+            continue
+          }
+          this.lastPropValues[key] = fieldValue
+          this.changeValue(key, fields[key])
+        }
       }
     },
   )
 
   updateDerivedValues = react(
-    () => [this.props.fields, this.simpleValues],
-    ([fields, simpleValues]) => {
-      ensure('fields', !!fields)
-      for (const key of Object.keys(fields)) {
-        if (typeof fields[key].value === 'function') {
-          const next = fields[key].value(simpleValues)
+    () => [this.fields, this.simpleValues],
+    () => {
+      const { fields, simpleValues } = this
+      for (const key in fields) {
+        const simpleValue = simpleValues[key]
+        const field = fields[key]
+        let next: any
+        if (typeof field.value === 'function' && !this.hasEdited[key]) {
+          next = field.value(simpleValues)
+        } else {
+          next = simpleValue
+        }
+        if (next !== this.derivedValues[key]) {
           this.derivedValues[key] = next
-          this.values[key] = next
         }
       }
     },
@@ -127,17 +137,20 @@ class FormStore {
     }
   }
 
-  setFields(value: FormFieldsObj) {
-    this.values = value
-  }
-
-  changeField(next: FormFieldType) {
+  changeValue = (key: string, next: Partial<FormFieldType>, isDirectEdit = false) => {
+    if (isDirectEdit) {
+      this.hasEdited[key] = true
+    }
     // mount
-    if (this.values[next.name] === undefined) {
+    if (this.values[key] === undefined) {
       this.mountKey++
     }
-    if (this.values) {
-      this.values[next.name] = next
+    if (this.values && !isEqual(next.value, this.simpleValues[key])) {
+      this.values[key] = { ...this.values[key], ...next } as any
+      this.simpleValues = {
+        ...this.simpleValues,
+        [key]: typeof next.value === 'function' ? next.value(this.simpleValues) : next.value,
+      }
     }
   }
 
@@ -146,29 +159,30 @@ class FormStore {
   }
 
   getValue(name: string) {
-    if (!this.values[name]) {
-      this.values[name] = { value: null, name }
+    if (typeof this.derivedValues[name] === undefined) {
+      // init so it will be observable
+      this.derivedValues[name] = null
     }
-    return this.derivedValues[name] || this.simpleValues[name]
+    return this.derivedValues[name]
   }
 
   getFilters(names: string[]) {
     // re-read on new mounts
     this.mountKey
-    const fields = Object.keys(this.values)
-      .filter(x => names.some(y => y === x))
-      .map(key => this.values[key])
+    const keys = Object.keys(this.values).filter(x => names.some(y => y === x))
+    const fields = keys.map(key => this.values[key])
     const selectFields = flatten(
       fields
         .filter(x => x.type === 'select')
         // can have multiple values
-        .map(x =>
-          Array.isArray(x.value)
-            ? x.value.map(y => createIncludeFilter(x.name, y.value))
+        .map((x, i) => {
+          const key = keys[i]
+          return Array.isArray(x.value)
+            ? x.value.map(y => createIncludeFilter(key, y.value))
             : x.value
-            ? createIncludeFilter(x.name, x.value.value)
-            : null,
-        ),
+            ? createIncludeFilter(key, x.value.value)
+            : null
+        }),
     ).filter(Boolean)
     return selectFields
   }
@@ -221,20 +235,20 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
           const field = formStore.values[key]
 
           if (field.required && !field.value) {
-            fieldErrors[name] = 'is required.'
+            fieldErrors[key] = 'is required.'
             continue
           }
 
           if (typeof field.validate === 'function') {
             const err = field.validate(field.value)
             if (err) {
-              fieldErrors[name] = err
+              fieldErrors[key] = err
             }
             continue
           }
 
           // set final value to callback
-          values[field.name] = field.value
+          values[key] = field.value
         }
 
         if (Object.keys(fieldErrors).length) {
@@ -302,7 +316,7 @@ function useFormFields(store: FormStore, fields: FormFieldsObj): React.ReactNode
     return (
       <FormField
         key={key}
-        label={field.name}
+        label={field.label}
         name={key}
         type={DataType[field.type]}
         defaultValue={selectDefined(values[key], fields[key].value)}

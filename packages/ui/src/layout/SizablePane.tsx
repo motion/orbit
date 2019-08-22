@@ -111,6 +111,7 @@ export const SizablePane = memo(
       )
     } else {
       element = (
+        // @ts-ignore
         <View data-is="SizablePane-PaneChrome" overflow="hidden" {...props} style={style}>
           {borderElement}
           {childElement}

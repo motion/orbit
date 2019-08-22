@@ -28,7 +28,7 @@ export function useApp<A extends AppDefinition>(
 export function useApp(definition?: AppDefinition, userApp?: AppBit) {
   const shouldCheckUpdate = useRef<any>(null)
   const forceUpdate = useForceUpdate()
-  const [firstApp] = useAppBit(definition ? { where: { identifier: definition.id } } : false)
+  const [firstApp] = useAppBit(definition ? { identifier: definition.id } : false)
   const app = userApp || firstApp
 
   useEffect(() => {

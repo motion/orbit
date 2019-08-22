@@ -2,9 +2,9 @@ import { command, observeOne } from '@o/bridge'
 import { AppDefinition, OrbitHot, ProvideStores, showConfirmDialog, useStore } from '@o/kit'
 import { AppCloseWindowCommand, AppDevCloseCommand, WindowMessageModel } from '@o/models'
 import { App } from '@o/stores'
-import { BannerHandle, ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
+import { BannerHandle, ListPassProps, Loading, sleep, useBanner, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
-import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { IS_ELECTRON, WINDOW_ID } from '../../constants'
 import { useOm } from '../../om/om'
@@ -13,7 +13,7 @@ import { Stores, useThemeStore } from '../../om/stores'
 import { AppWrapper } from '../../views'
 import MainShortcutHandler from '../../views/MainShortcutHandler'
 import { LoadApp } from './LoadApp'
-import { OrbitApp } from './OrbitApp'
+import { OrbitApp, whenIdle } from './OrbitApp'
 import { OrbitAppsCarousel } from './OrbitAppsCarousel'
 import { OrbitAppsDrawer } from './OrbitAppsDrawer'
 import { OrbitDock } from './OrbitDock'
@@ -158,7 +158,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     contentArea = (
       <Suspense fallback={null}>
         <OrbitAppsCarousel />
-        <OrbitAppsDrawer />
+        <IdleLoad>{() => <OrbitAppsDrawer />}</IdleLoad>
       </Suspense>
     )
   }
@@ -194,6 +194,23 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     </MainShortcutHandler>
   )
 })
+
+const IdleLoad = (props: { children: () => React.ReactElement }) => {
+  const [show, setShow] = useState(false)
+  useEffect(() => {
+    setTimeout(async () => {
+      await sleep(10)
+      await whenIdle()
+      await sleep(10)
+      await whenIdle()
+      await sleep(10)
+      await whenIdle()
+      console.log('showing it')
+      setShow(true)
+    }, 100)
+  }, [])
+  return show ? props.children() : null
+}
 
 let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
   return (

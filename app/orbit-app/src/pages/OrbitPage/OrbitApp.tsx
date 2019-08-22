@@ -104,7 +104,7 @@ export const OrbitAppRenderOfDefinition = ({
 }: OrbitAppProps & {
   appDef: AppDefinition
 }) => {
-  const [app] = useAppBit({ where: { id } })
+  const [app] = useAppBit({ id })
   const om = useOm()
   const [activeItem, setActiveItem] = useState<AppViewProps | null>(null)
   const getActiveItem = useGet(activeItem)
@@ -218,7 +218,7 @@ export function getSourceAppProps(appDef?: AppDefinition, model?: Bit): AppViewP
   }
 }
 
-export const whenIdle = ({ timeout = 600 }: { timeout?: number } = {}) =>
+export const whenIdle = ({ timeout = 5000 }: { timeout?: number } = {}) =>
   new Promise(res => window['requestIdleCallback'](res, { timeout }))
 
 const FadeInDiv = gloss(Box, {

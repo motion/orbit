@@ -2,7 +2,6 @@ import { useModel } from '@o/bridge'
 import { AppBit, AppModel } from '@o/models'
 import { ContextualProps, createContextualProps } from '@o/ui'
 import { ImmutableUpdateFn } from '@o/utils'
-import { merge } from 'lodash'
 import { FindOptions } from 'typeorm'
 
 import { useStoresSimple } from './useStores'
@@ -13,24 +12,16 @@ export const CurrentAppBitContext: ContextualProps<{
 }> = createContextualProps({})
 
 export function useAppBit(
-  userConditions?: FindOptions<AppBit> | false,
+  where?: FindOptions<AppBit>['where'] | false,
 ): [AppBit | null, ImmutableUpdateFn<AppBit>] {
   // currently used by settings panes where appStore isn't loaded
   const curApp = CurrentAppBitContext.useProps()
   const curAppId = curApp ? curApp.id : undefined
-  let conditions: any = null
+  const conditions = { where: where || { id: curAppId } }
 
-  if (userConditions) {
-    conditions = userConditions
-  } else {
-    // use id for non-static apps
-    conditions = { where: { id: curAppId } }
-  }
+  const [app, update] = useModel(AppModel, conditions)
 
-  const finalConditions = merge(conditions, userConditions)
-  const [app, update] = useModel(AppModel, finalConditions)
-
-  if (!app || userConditions === false) {
+  if (!app || where === false) {
     return [null, update]
   }
 

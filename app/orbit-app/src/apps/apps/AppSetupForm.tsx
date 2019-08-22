@@ -1,4 +1,4 @@
-import { AppBit, AppDefinition, command, selectDefined, useActiveSpace, useAppBit } from '@o/kit'
+import { AppBit, AppDefinition, command, useActiveSpace, useAppBit } from '@o/kit'
 import { AppDefinitionSetupVerifyCommand } from '@o/models'
 import { Form, FormFieldsObj, FormProps } from '@o/ui'
 import produce from 'immer'
@@ -22,7 +22,7 @@ type AppSetupFormProps = Omit<FormProps<any>, 'id'> & {
 
 export function AppSetupForm({ def, id, ...rest }: AppSetupFormProps) {
   const [activeSpace] = useActiveSpace()
-  const [existingApp] = useAppBit(selectDefined(id, false))
+  const [existingApp] = useAppBit(id ? { id } : false)
   const newApp = createNewApp(def)
   const app: AppBit = existingApp || newApp
   const installApp = useInstallApp()

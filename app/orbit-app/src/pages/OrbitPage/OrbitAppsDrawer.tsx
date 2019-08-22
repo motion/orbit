@@ -145,8 +145,7 @@ export const OrbitAppsDrawer = memo(() => {
         <DrawerCloseButton />
         {apps.map(app => {
           // we avoid rendering them until after the animatino completes
-          const shouldRender = `${app.id}` === appsDrawer.activeIdAfterAnimating
-          if (shouldRender) {
+          if (`${app.id}` === appsDrawer.activeIdAfterAnimating) {
             renderApp.current[app.id!] = true
           }
           const shouldRenderApp = renderApp.current[app.id!]

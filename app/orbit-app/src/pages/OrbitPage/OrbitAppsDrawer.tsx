@@ -27,7 +27,7 @@ class AppsDrawerStore {
   }
 
   get activeId() {
-    return paneManagerStore.activePane.id
+    return paneManagerStore.activePane ? paneManagerStore.activePane.id : -1
   }
   activeIdAfterAnimating = react(
     () => this.activeId,

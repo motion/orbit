@@ -68,7 +68,7 @@ const ClipboardAppIndex = memo(() => {
 const ClipboardAppMain = memo((props: AppViewProps) => {
   const om = useOm()
   const shareItem = om.state.share[props.id!]
-  const [app] = useAppBit(shareItem && shareItem.id)
+  const [app] = useAppBit(shareItem ? { id: shareItem.id } : false)
 
   if (!shareItem || !app) {
     return <CenteredText>No item found.</CenteredText>

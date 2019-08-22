@@ -3,7 +3,7 @@ import { QueryStore } from '@o/kit'
 import { App } from '@o/stores'
 import { react } from '@o/use-store'
 
-import { themeStore } from '../om/stores'
+import { themeStore } from './stores'
 
 export class OrbitWindowStore {
   props: {

@@ -52,12 +52,13 @@ export function AppsMainNew({
     }
   }, [app])
 
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current!.focus()
-      inputRef.current!.select()
-    }
-  }, [inputRef.current])
+  // this steals focus as you search in the apps settings...
+  // useEffect(() => {
+  //   if (inputRef.current) {
+  //     inputRef.current!.focus()
+  //     inputRef.current!.select()
+  //   }
+  // }, [inputRef.current])
 
   return (
     <Col space>

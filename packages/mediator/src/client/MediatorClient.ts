@@ -67,6 +67,8 @@ function cachedObservable(
 }
 
 export class MediatorClient {
+  log = log
+
   constructor(public options: MediatorClientOptions) {
     this.options = options
   }

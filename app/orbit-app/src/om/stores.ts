@@ -2,8 +2,8 @@ import { PaneManagerStore, QueryStore, ThemeStore } from '@o/kit'
 import { createUsableStore } from '@o/use-store'
 
 import { OrbitStore } from '../pages/OrbitPage/OrbitStore'
-import { NewAppStore } from '../stores/NewAppStore'
-import { OrbitWindowStore } from '../stores/OrbitWindowStore'
+import { NewAppStore } from './NewAppStore'
+import { OrbitWindowStore } from './OrbitWindowStore'
 
 export const themeStore = createUsableStore(ThemeStore)
 export const useThemeStore = themeStore.useStore

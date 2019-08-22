@@ -1,8 +1,8 @@
 import { KitStores } from '@o/kit'
 import { createContext } from 'react'
 
+import { NewAppStore } from './om/NewAppStore'
 import { OrbitStore } from './pages/OrbitPage/OrbitStore'
-import { NewAppStore } from './stores/NewAppStore'
 
 export type AllStores = KitStores & {
   orbitStore?: OrbitStore

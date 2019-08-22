@@ -5,7 +5,7 @@ import React, { memo, Suspense, useCallback, useMemo, useRef } from 'react'
 
 import { SearchResultsApp } from '../../apps/SearchResultsApp'
 import { om } from '../../om/om'
-import { SearchStore, SearchStoreStore } from '../../stores/SearchStore'
+import { SearchStore, SearchStoreStore } from '../../om/SearchStore'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarouselStore'
 import { appsDrawerStore } from './OrbitAppsDrawer'
 

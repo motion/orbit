@@ -50,12 +50,12 @@ function SetupAppCustom() {
   const form = useCreateForm({
     fields: {
       name: {
-        name: 'Name',
+        label: 'Name',
         type: 'text',
         value: '',
       },
       identifier: {
-        name: 'Unique ID',
+        label: 'Unique ID',
         description: 'You can change this later.',
         type: 'text',
         value: fields => stringToIdentifier(fields.name, '-').toLowerCase(),

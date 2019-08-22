@@ -1,5 +1,5 @@
 import { command, observeOne } from '@o/bridge'
-import { AppDefinition, OrbitHot, ProvideStores, showConfirmDialog, useStore } from '@o/kit'
+import { AppDefinition, OrbitHot, ProvideStores, showConfirmDialog, useReaction, useStore } from '@o/kit'
 import { AppCloseWindowCommand, AppDevCloseCommand, WindowMessageModel } from '@o/models'
 import { App } from '@o/stores'
 import { BannerHandle, ListPassProps, Loading, sleep, useBanner, View, ViewProps } from '@o/ui'
@@ -15,6 +15,7 @@ import MainShortcutHandler from '../../views/MainShortcutHandler'
 import { LoadApp } from './LoadApp'
 import { OrbitApp, whenIdle } from './OrbitApp'
 import { OrbitAppsCarousel } from './OrbitAppsCarousel'
+import { appsCarouselStore } from './OrbitAppsCarouselStore'
 import { OrbitAppsDrawer } from './OrbitAppsDrawer'
 import { OrbitDock } from './OrbitDock'
 import { OrbitDraggableOverlay } from './OrbitDraggableOverlay'
@@ -196,19 +197,26 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 })
 
 const IdleLoad = (props: { children: () => React.ReactElement }) => {
-  const [show, setShow] = useState(false)
-  useEffect(() => {
-    setTimeout(async () => {
-      await sleep(10)
+  const show = useReaction(
+    () => appsCarouselStore.isAnimating,
+    async (isAnimating, { sleep, when, getValue }) => {
+      if (getValue() === true) {
+        return true
+      }
+      await sleep(100)
       await whenIdle()
-      await sleep(10)
+      await sleep(100)
       await whenIdle()
-      await sleep(10)
+      await when(() => !isAnimating)
+      await sleep(100)
       await whenIdle()
-      console.log('showing it')
-      setShow(true)
-    }, 100)
-  }, [])
+      return true
+    },
+    {
+      defaultValue: false,
+    },
+  )
+
   return show ? props.children() : null
 }
 

@@ -1,4 +1,5 @@
 import { CompositeDisposable } from 'event-kit'
+import { IEqualsComparer } from 'mobx'
 
 // how to have a more flexible Function?
 // this often complains when used as callbacks from eventListener or mutationobserver
@@ -18,12 +19,10 @@ export type ReactionHelpers = {
 }
 
 export type ReactionOptions = {
-  trace?: boolean
-  equals?: Function
+  equals?: IEqualsComparer<any>
   log?: boolean | 'state' | 'all'
   delay?: number
   delayValue?: boolean
-  isIf?: boolean
   defaultValue?: any
   lazy?: boolean
   name?: string

@@ -1,4 +1,4 @@
-import { AppBit, createUsableStore, getAppDefinition, react, useForceUpdate } from '@o/kit'
+import { AppBit, createUsableStore, ensure, getAppDefinition, react, useForceUpdate, useReaction } from '@o/kit'
 import { Button, Card, FullScreen, idFn, sleep, useNodeSize, useTheme } from '@o/ui'
 import React, { memo, useEffect, useRef } from 'react'
 import { useSpring } from 'react-spring'
@@ -6,6 +6,7 @@ import { useSpring } from 'react-spring'
 import { om, useOm } from '../../om/om'
 import { paneManagerStore } from '../../om/stores'
 import { OrbitApp, whenIdle } from './OrbitApp'
+import { appsCarouselStore } from './OrbitAppsCarouselStore'
 
 const boxShadowSize = 20
 
@@ -97,27 +98,23 @@ export const OrbitAppsDrawer = memo(() => {
 
   // this is a sort of "trickle render" to load the dock apps
   // in the backgorund, so they show before they animate open
-  useEffect(() => {
-    let cancelled = false
-    const tm = setTimeout(async () => {
+  useReaction(
+    () => [appsCarouselStore.isAnimating],
+    async ([animating], { sleep }) => {
+      ensure('not animating', !animating)
+      await sleep(100)
+      await whenIdle()
       for (const app of apps) {
-        if (cancelled) continue
-        // make sure its pretty idle
-        await whenIdle()
-        await sleep(10)
-        await whenIdle()
-        await sleep(10)
-        await whenIdle()
-        renderApp.current[app.id!] = true
-        forceUpdate()
-        await sleep(300)
+        if (renderApp.current[app.id!] === false) {
+          await sleep(100)
+          renderApp.current[app.id!] = true
+          console.log('start loading a dock item')
+          forceUpdate()
+          await whenIdle()
+        }
       }
-    }, 2000)
-    return () => {
-      cancelled = true
-      clearTimeout(tm)
-    }
-  }, [apps])
+    },
+  )
 
   const renderApp = useRef({})
   const hasDarkBackground = theme.background.isDark()

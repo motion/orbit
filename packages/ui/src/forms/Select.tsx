@@ -112,11 +112,14 @@ export function Select({ minWidth, ...props }: SelectProps) {
       }
       if (!props.name) return
       if (!formStore) return
-      formStore.changeField({
-        name: props.name,
-        value: items,
-        type: 'select',
-      })
+      formStore.changeValue(
+        props.name,
+        {
+          value: items,
+          type: 'select',
+        },
+        true,
+      )
       return () => {
         formStore.removeField(props.name)
       }

@@ -43,6 +43,7 @@ function constructWithProps(Store: any, args: any[], props?: Object) {
     { name: Store.name },
   )
   let initialProps
+  // validate only after we constructor to avoid initial value problems
   const getProps = {
     configurable: true,
     get: () => storeProps.props,
@@ -50,7 +51,9 @@ function constructWithProps(Store: any, args: any[], props?: Object) {
     set(val: Object) {
       if (!val) return
       if (initialProps) {
-        throw new Error(`Don't use this.props = to set, use this.setProps()`)
+        // throw new Error(`Don't use this.props = to set, use this.setProps()`)
+        // this was being called twice, why?
+        return
       }
       initialProps = val
     },

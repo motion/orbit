@@ -43,18 +43,19 @@ export function createReaction(
     return +((typeof localStorage !== 'undefined' && localStorage.getItem('enableLog')) || 0)
   }
 
-  const { delayValue, lazy, delay, ...options } = getReactionOptions(userOptions)
-  let mobxOptions = options as Mobx.IReactionOptions
-  // we run immediately by default
-  // its the 95% use case and causes less bugs
-  mobxOptions.fireImmediately = !lazy
-  mobxOptions.name = config.name
+  const { delayValue, lazy, delay, equals, log: optionsLog, name } = getReactionOptions(userOptions)
+  let mobxOptions: Mobx.IReactionOptions = {
+    equals,
+    // we run immediately by default
+    fireImmediately: !lazy,
+    name: config.name || name,
+  }
   if (typeof delay === 'number') {
     mobxOptions.delay = delay
   }
 
   let id = lazy ? 1 : 0
-  const shouldLog = () => options.log !== false || localSettingLog() > 0
+  const shouldLog = () => optionsLog !== false || localSettingLog() > 0
   let currentValueUnreactive: any // for comparing previous value without triggering reaction
   let previousValue: any
   let stopReaction: Function | null = null

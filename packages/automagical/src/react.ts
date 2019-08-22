@@ -9,7 +9,7 @@ export const SHARED_REJECTION_ERROR = new ReactionRejectionError()
 export type UnwrapObservable<A> = A extends Observable<infer U> ? U : A
 
 export type ReactVal =
-  | undefined
+  | void
   | null
   | number
   | string

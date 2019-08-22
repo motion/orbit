@@ -112,7 +112,7 @@ export const OrbitAppsDrawer = memo(() => {
         forceUpdate()
         await sleep(300)
       }
-    }, 300)
+    }, 2000)
     return () => {
       cancelled = true
       clearTimeout(tm)

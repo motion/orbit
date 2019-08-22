@@ -1,6 +1,5 @@
 import { Bit } from './interfaces/Bit'
 
-export * from './defaultValues/userDefaultValue'
 export * from './entities/index.node'
 export * from './interfaces/AppBit'
 export * from './interfaces/Bit'

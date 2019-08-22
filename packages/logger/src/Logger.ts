@@ -25,6 +25,14 @@ type LoggerOpts = {
   trace?: boolean
 }
 
+const getLogLevel = () => {
+  if (typeof window !== 'undefined' && typeof window['enableLog'] !== 'undefined') {
+    return window['enableLog']
+  } else {
+    return process.env.LOG_LEVEL
+  }
+}
+
 const has = (x, y) => x.indexOf(y) > -1
 
 const knownUselessLog = str => {
@@ -140,7 +148,7 @@ export class Logger {
   }
 
   private shouldLogAll(type: LogType) {
-    const level = process.env.LOG_LEVEL ? +process.env.LOG_LEVEL : 1
+    const level = getLogLevel() ? +getLogLevel() : 1
     if (type === 'error') {
       return true
     }
@@ -175,7 +183,7 @@ export class Logger {
     const isDevelopment = process.env.NODE_ENV === 'development'
     const isTrace = this.opts.trace && isDevelopment
     const shouldLogAll = this.shouldLogAll(level)
-    const logLevel = process.env.LOG_LEVEL ? +process.env.LOG_LEVEL : 0
+    const logLevel = getLogLevel() ? +getLogLevel() : 0
 
     // for syncer process with no-logging mode we do not log objects in messages
     if (!shouldLogAll) {

@@ -164,6 +164,15 @@ export const SurfacePassPropsReset = SizedSurfacePropsContext.Reset
 export const SurfacePassProps = SizedSurfacePropsContext.PassProps
 export const useSurfaceProps = SizedSurfacePropsContext.useProps
 
+const getBorderRadius = (t, b, l, r, tl, tr, bl, br) => {
+  return {
+    borderTopLeftRadius: selectDefined(tl, t, l),
+    borderTopRightRadius: selectDefined(tr, t, r),
+    borderBottomRightRadius: selectDefined(br, b, r),
+    borderBottomLeftRadius: selectDefined(bl, b, l),
+  }
+}
+
 type ThroughProps = Pick<
   SurfaceProps,
   | 'height'
@@ -288,6 +297,17 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
     +height / 2,
   )
 
+  const borderProps = getBorderRadius(
+    borderTopRadius,
+    borderBottomRadius,
+    borderLeftRadius,
+    borderRightRadius,
+    props.borderTopLeftRadius,
+    props.borderTopRightRadius,
+    props.borderBottomRightRadius,
+    props.borderBottomLeftRadius,
+  )
+
   const hasAnyGlint = !props.chromeless && !!(glint || glintBottom)
   let showElement = false
 
@@ -354,8 +374,7 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
         {hasAnyGlint && (
           <GlintContain
             className="ui-glint-contain"
-            borderLeftRadius={borderLeftRadius + 1}
-            borderRightRadius={borderRightRadius + 1}
+            {...borderProps}
             {...borderPosition === 'inside' &&
               borderWidth > 0 && {
                 height: roundHalf(+height - size / 2),
@@ -365,23 +384,10 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
               }}
           >
             {glint && !props.chromeless && (
-              <Glint
-                alt={alt}
-                size={size}
-                borderLeftRadius={borderLeftRadius}
-                borderRightRadius={borderRightRadius}
-                subTheme={subTheme}
-              />
+              <Glint alt={alt} size={size} {...borderProps} subTheme={subTheme} />
             )}
             {glintBottom && !props.chromeless && (
-              <Glint
-                alt={alt}
-                size={size}
-                bottom={0}
-                borderLeftRadius={borderLeftRadius}
-                borderRightRadius={borderRightRadius}
-                subTheme={subTheme}
-              />
+              <Glint alt={alt} size={size} bottom={0} {...borderProps} subTheme={subTheme} />
             )}
           </GlintContain>
         )}

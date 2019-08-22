@@ -1,6 +1,6 @@
 import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { ActiveDraggables, Col, Dock, DockButton, DockButtonPassProps, DockButtonProps, FloatingCard, ListPassProps, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
+import { ActiveDraggables, Col, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
 import { partition } from 'lodash'
 import React, { memo, useContext, useMemo, useRef } from 'react'
@@ -164,65 +164,62 @@ export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
   })
 
   return (
-    <DockButtonPassProps>
-      <Dock
-        position="relative"
-        flexDirection="column"
-        ref={dockRef}
-        pointerEvents={store.state === 'closed' ? 'none' : 'inherit'}
-        transform={
-          store.isOpen
-            ? {
-                x: 0,
-              }
-            : {
-                x: size.width + 40,
-              }
-        }
-        transition="all ease 300ms"
-        className="orbit-dock"
-        bottom="auto"
-      >
-        {props.apps.map((app, index) => (
-          <OrbitDockButton
-            key={app.id}
-            app={app}
-            index={index + props.offset}
-            circular={false}
-            borderRadius={0}
-            glint={false}
-            glintBottom={false}
-            {...index === 0 && {
-              borderTopRadius: 8,
-              borderBottomRadius: 0,
-            }}
-            {...index === props.apps.length - 1 && {
-              borderTopRadius: 0,
-              borderBottomRadius: 8,
-            }}
-          />
-        ))}
-        <FullScreen
-          data-is="DockShadow"
-          top={30}
-          bottom={30}
-          left="50%"
-          right="50%"
-          transform={{
-            x: 50,
+    <Dock
+      position="relative"
+      flexDirection="column"
+      ref={dockRef}
+      pointerEvents={store.state === 'closed' ? 'none' : 'inherit'}
+      transform={
+        store.isOpen
+          ? {
+              x: 0,
+            }
+          : {
+              x: size.width + 40,
+            }
+      }
+      transition="all ease 300ms"
+      className="orbit-dock"
+      bottom="auto"
+    >
+      {props.apps.map((app, index) => (
+        <OrbitDockButton
+          key={app.id}
+          app={app}
+          index={index + props.offset}
+          circular={false}
+          borderRadius={0}
+          glintBottom={false}
+          {...index === 0 && {
+            borderTopRadius: 8,
+            borderBottomRadius: 0,
           }}
-          borderRadius={100}
-          boxShadow={[
-            {
-              spread: 30,
-              blur: 40,
-              color: theme.background.isDark() ? [30, 30, 30, 0.68] : [0, 0, 0, 0.25],
-            },
-          ]}
-          zIndex={-1}
+          {...index === props.apps.length - 1 && {
+            borderTopRadius: 0,
+            borderBottomRadius: 8,
+          }}
         />
-      </Dock>
-    </DockButtonPassProps>
+      ))}
+      <FullScreen
+        data-is="DockShadow"
+        top={30}
+        bottom={30}
+        left="50%"
+        right="50%"
+        transform={{
+          x: 50,
+        }}
+        borderRadius={100}
+        boxShadow={[
+          {
+            spread: 30,
+            blur: 40,
+            color: theme.background.isDark() ? [30, 30, 30, 0.68] : [0, 0, 0, 0.25],
+          },
+        ]}
+        zIndex={-1}
+      />
+    </Dock>
   )
 }
 

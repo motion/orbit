@@ -8,7 +8,6 @@ import { useOm } from '../om/om'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
 import { NavigatorProps, StackNavigator, useCreateStackNavigator } from './StackNavigator'
 
-// import { MonacoEditor } from '../views/MonacoEditor'
 export default createApp({
   id: 'query-builder',
   name: 'Query Builder',
@@ -369,6 +368,7 @@ const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
     <QueryBuilder.SimpleProvider value={queryBuilder}>
       <Section
         flex={1}
+        overflow="hidden"
         titlePadding
         backgrounded
         titleBorder
@@ -423,9 +423,9 @@ const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
       >
         <Suspense fallback={null}>
           {mode === 'api' ? (
-            <APIQueryBuild id={+props.id!} showSidebar={showSidebar} />
+            <APIQueryBuild key={props.id!} id={+props.id!} showSidebar={showSidebar} />
           ) : (
-            <GraphQueryBuild id={+props.id!} />
+            <GraphQueryBuild key={props.id!} id={+props.id!} />
           )}
         </Suspense>
       </Section>
@@ -510,11 +510,9 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
               <SeparatorHorizontal />
               <Space size="xl" />
 
-              <TitleRow title="Preview" size="xs" />
-
+              <TitleRow title="Preview" size="xxs" />
               <CodeCard
                 cardProps={{
-                  elevation: 2,
                   height: 24 * 3 + 16 * 2,
                 }}
                 inputProps={{

@@ -138,6 +138,7 @@ export const OrbitAppsDrawer = memo(() => {
         transform={spring.y.to(y => `translate3d(0,${y}px,0)`)}
         pointerEvents="auto"
         position="relative"
+        overflow="hidden"
       >
         <DrawerCloseButton />
         {apps.map(app => {

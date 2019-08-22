@@ -8,7 +8,7 @@ import { paneManagerStore } from '../../om/stores'
 import { OrbitApp, whenIdle } from './OrbitApp'
 import { appsCarouselStore } from './OrbitAppsCarouselStore'
 
-const boxShadowSize = 20
+const boxShadowSize = 15
 
 class AppsDrawerStore {
   props: {
@@ -126,8 +126,8 @@ export const OrbitAppsDrawer = memo(() => {
         background={theme.backgroundStronger}
         boxShadow={[
           {
-            blur: boxShadowSize,
-            color: [0, 0, 10, hasDarkBackground ? 0.5 : 0.1],
+            blur: boxShadowSize * 0.7,
+            color: [0, 0, 10, hasDarkBackground ? 0.5 : 0.3],
           },
         ]}
         sizeRadius={2}

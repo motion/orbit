@@ -20,6 +20,10 @@ export class OracleManager {
     await this.oracle.start()
   }
 
+  async stop() {
+    await this.oracle.stop()
+  }
+
   handleMessage: OracleMessageHandler = (message, value) => {
     log.info('message', message)
     switch (message) {

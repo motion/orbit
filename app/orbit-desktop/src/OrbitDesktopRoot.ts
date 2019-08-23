@@ -314,6 +314,9 @@ export class OrbitDesktopRoot {
       this.bonjour.destroy()
       this.bonjour = null
     }
+    if (this.oracleManager) {
+      await this.oracleManager.stop()
+    }
     this.disposed = true
     return true
   }

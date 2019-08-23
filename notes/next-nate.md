@@ -137,3 +137,5 @@ small:
   - custom memo function:
     - if children set, dont memo at all
     - do a few smart props that we know are usually POJOs
+
+- https://github.com/humandx/slate-automerge

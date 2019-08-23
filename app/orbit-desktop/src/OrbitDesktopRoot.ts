@@ -253,7 +253,7 @@ export class OrbitDesktopRoot {
               }
             },
             async () => {
-              if (!singleUseMode) {
+              if (!singleUseMode && process.env.ENABLE_OCR) {
                 this.oracleManager = new OracleManager()
                 await this.oracleManager.start()
               }

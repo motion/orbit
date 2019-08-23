@@ -7,5 +7,5 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../../packages/logger" }]
+  "references": [{ "path": "../../packages/logger" }, { "path": "../models" }]
 }

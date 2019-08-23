@@ -112,7 +112,7 @@ type TagLabelProps = TagProps & {
 
 const TagLabel = ({
   arrowSize = 12,
-  towards = 'right',
+  towards,
   maxWidth,
   position,
   top,
@@ -126,6 +126,7 @@ const TagLabel = ({
   transition,
   ...props
 }: TagLabelProps) => {
+  13
   return (
     <TagLabelChrome
       {...{ position, top, left, bottom, right, display, opacity, transform, transition }}

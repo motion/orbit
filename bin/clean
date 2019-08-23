@@ -18,6 +18,7 @@ rm -r app/*/package-lock.json || true
 rm -r apps/*/package-lock.json || true
 rm -r packages/*/package-lock.json || true
 rm -r projects/*/package-lock.json || true
+rm -r services/*/package-lock.json || true
 
 if [[ "$FLAGS" =~ "--apps" ]]; then
   rm -r apps/*/dist || true
@@ -28,6 +29,7 @@ if [[ "$FLAGS" =~ "--build" ]]; then
   rm -r app/*/tsconfig.tsbuildinfo || true
   rm -r apps/*/tsconfig.tsbuildinfo || true
   rm -r packages/*/tsconfig.tsbuildinfo || true
+  rm -r services/*/tsconfig.tsbuildinfo || true
   rm -r app/*/npm-debug.log.* || true
   rm -r packages/*/npm-debug.log.* || true
   rm -r app/*/_ || true
@@ -41,6 +43,7 @@ if [[ "$FLAGS" =~ "--modules" ]]; then
   rm -r apps/*/node_modules || true
   rm -r projects-*/*/node_modules || true
   rm -r packages/*/node_modules || true
+  rm -r services/*/node_modules || true
 fi
 
 if [[ "$FLAGS" =~ "--data" ]]; then

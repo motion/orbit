@@ -85,7 +85,6 @@ What we may want to do is split these a bit further:
 
   # some things in ./app are from older attempts, not currently used:
   /oracle           # realtime OCR system for mac desktop
-  /screen           # watches your screen for events and runs OCR
   /orbit-dotapp     # experiment on making custom .app icons for each app
 
 /packages           # all packages we maintain

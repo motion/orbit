@@ -104,6 +104,7 @@ export async function main() {
 
   const { handleExit, setupHandleExit } = require('./helpers/handleExit')
 
+  process.on('message', x => x === 'dispose-process' && handleExit())
   process.on('exit', handleExit)
   process.on('SIGINT', handleExit)
   process.on('SIGSEGV', handleExit)

@@ -30,6 +30,10 @@ export async function main() {
     workersRoot.dispose()
   })
   process.on('exit', dispose)
+  process.on('SIGINT', dispose)
+  process.on('SIGSEGV', dispose)
+  process.on('SIGTERM', dispose)
+  process.on('SIGQUIT', dispose)
 
   await workersRoot.start()
   return dispose

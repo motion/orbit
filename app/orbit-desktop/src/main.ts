@@ -11,6 +11,7 @@ export async function main() {
 
   // handle exits gracefully
   const dispose = once(async () => {
+    require('fs').writeFileSync('/tmp/hi2', 'hi')
     console.log('Desktop exiting...')
     await desktopRoot.dispose()
     console.log('Dispose children...')

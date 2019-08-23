@@ -157,8 +157,8 @@ export function runOrbitDesktop(
         addProcessDispose({
           action: 'SIGINT',
           dispose: () => {
-            reporter.verbose('killing orbit')
-            child.kill()
+            reporter.verbose('dispose-process orbit')
+            process.kill(-child.pid)
           },
         })
       }

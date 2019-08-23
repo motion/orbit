@@ -14,10 +14,12 @@ export const handleExit = once(async () => {
     for (const { name, proc } of processes) {
       try {
         log.info(`Killing ${name}`)
-        process.kill(proc.pid)
+        process.kill(-proc.pid)
       } catch (err) {
+        log.info('kill err', err)
         try {
           cleanupChildren(proc.pid)
+          process.kill(proc.pid)
         } catch {
           log.info('error killing children for', proc.pid)
         }

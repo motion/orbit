@@ -1,3 +1,11 @@
+Weekend goals!!!!!!
+
+- [ ] Get ocr fully linked in with tray => Bit
+- [ ] get tray showing a dropdown menu
+- [ ] fix apps make the loop from "CMD+N" to actually editing and app <10s
+- [ ] do all querybuilder improvements
+- [ ] more wysiwig
+
 ---
 
 - [ ] fix perf issue with switching between items

@@ -1,7 +1,9 @@
 import { getGlobalConfig } from '@o/config'
-import { Logger } from '@o/kit'
+import { Logger, resolveObserveMany } from '@o/kit'
 import { Oracle, OracleMessageHandler, OracleMessages } from '@o/oracle'
 import { Desktop } from '@o/stores'
+import { OracleWordsFoundModel, OracleWordsFoundMessage } from '@o/models'
+import Observable from 'zen-observable'
 
 // handles the oracle, which includes OCR and screen watching
 const log = new Logger('OracleManager')
@@ -27,18 +29,44 @@ export class OracleManager {
   handleMessage: OracleMessageHandler = (message, value) => {
     log.info('message', message, value)
     switch (message) {
+      case OracleMessages.words:
+        for (const observer of this.wordObservers) {
+          observer.update(value)
+        }
+        break
       case OracleMessages.trayBounds:
         Desktop.setState({ operatingSystem: { trayBounds: value } })
         break
       case OracleMessages.trayClicked:
+        Desktop.setState({ operatingSystem: { trayClicked: Date.now() } })
+        break
       case OracleMessages.trayHovered:
-        // Desktop.sendMessage(App, App.messages.TRAY_EVENT, { type: message, value: value.id })
+        Desktop.setState({ operatingSystem: { trayHovered: Date.now() } })
         break
     }
   }
 
-  /**
-   * TODO return the model resolver (just one can handle all)
-   */
-  getResolvers() {}
+  wordObservers = new Set<{
+    update: (next: OracleWordsFoundMessage[]) => void
+    observable: Observable<OracleWordsFoundMessage[]>
+  }>()
+  observeWordsFound() {
+    const observable = new Observable<OracleWordsFoundMessage[]>(observer => {
+      this.wordObservers.add({
+        update: (status: OracleWordsFoundMessage[]) => {
+          observer.next(status)
+        },
+        observable,
+      })
+    })
+    return observable
+  }
+
+  getResolvers() {
+    return [
+      resolveObserveMany(OracleWordsFoundModel, () => {
+        return this.observeWordsFound()
+      }),
+    ]
+  }
 }

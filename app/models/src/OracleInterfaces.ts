@@ -1,12 +1,23 @@
 // TODO having this type here is.. weird
 // but importing oracle is a nono
 
+export enum OracleMessages {
+  trayBounds = 'trayBounds',
+  trayHovered = 'trayHovered',
+  trayClicked = 'trayClicked',
+  windowEvent = 'windowEvent',
+  windowChanged = 'windowChanged',
+  windowMoved = 'windowMoved',
+  windowResized = 'windowResized',
+  words = 'words',
+}
+
 interface Message {
   message: string
 }
 
 export interface OracleTrayBoundsMessage extends Message {
-  message: 'trayBounds'
+  message: OracleMessages.trayBounds
   value: {
     position: [number, number]
     size: [number, number]
@@ -14,21 +25,21 @@ export interface OracleTrayBoundsMessage extends Message {
 }
 
 export interface OracleTrayHoveredMessage extends Message {
-  message: 'trayHovered'
+  message: OracleMessages.trayHovered
   value: {
     id: '0' | '1' | '2' | 'Out'
   }
 }
 
 export interface OracleMouseMovedMessage extends Message {
-  message: 'trayHovered'
+  message: OracleMessages.trayHovered
   value: {
     position: [number, number]
   }
 }
 
 export interface OracleWindowChangedMessage extends Message {
-  message: 'windowChanged'
+  message: OracleMessages.windowChanged
   value: {
     id: number
     title: string
@@ -38,7 +49,7 @@ export interface OracleWindowChangedMessage extends Message {
 }
 
 export interface OracleWindowMovedMessage extends Message {
-  message: 'windowMoved'
+  message: OracleMessages.windowMoved
   value: {
     id: number
     title: string
@@ -48,7 +59,7 @@ export interface OracleWindowMovedMessage extends Message {
 }
 
 export interface OracleWindowResizedMessage extends Message {
-  message: 'windowResized'
+  message: OracleMessages.windowResized
   value: {
     id: number
     title: string
@@ -58,7 +69,7 @@ export interface OracleWindowResizedMessage extends Message {
 }
 
 export interface OracleWordsFoundMessage extends Message {
-  message: 'words'
+  message: OracleMessages.words
   value: {
     string: string
     bounds: [number, number, number, number]
@@ -73,17 +84,6 @@ export type OracleMessage =
   | OracleWindowMovedMessage
   | OracleWindowResizedMessage
   | OracleWordsFoundMessage
-
-export enum OracleMessages {
-  trayBounds = 'trayBounds',
-  trayHovered = 'trayHovered',
-  trayClicked = 'trayClicked',
-  windowEvent = 'windowEvent',
-  windowChanged = 'windowChanged',
-  windowMoved = 'windowMoved',
-  windowResized = 'windowResized',
-  words = 'words',
-}
 
 export type OracleAction =
   | { action: 'startRecording' }

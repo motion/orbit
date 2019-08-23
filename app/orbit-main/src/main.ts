@@ -82,7 +82,7 @@ export async function main() {
       case 'workers':
         require('@o/orbit-workers').main()
         return
-      case 'electron-menus':
+      case 'electron-chrome':
       case 'electron-apps':
         require('./startElectron').startElectron({ mainProcess: false })
       default:
@@ -156,6 +156,14 @@ export async function main() {
     } else {
       log.info(`Workers disabled`)
     }
+  }
+
+  if (!process.env.DISABLE_CHROME) {
+    setupProcess({
+      name: 'electron-chrome',
+      inspectPort: 9009,
+      inspectPortRemote: 9010,
+    })
   }
 
   log.info('Started everything!')

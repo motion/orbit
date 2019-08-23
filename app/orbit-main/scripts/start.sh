@@ -20,7 +20,7 @@ if [[ "$FLAGS" =~ "--yes-menu" ]]; then
   echo "ENABLE MENU"
 else
   echo "DISABLE MENU"
-  export DISABLE_MENU="true"
+  export DISABLE_CHROME="true"
 fi
 
 if [[ "$FLAGS" =~ "--no-gpu" ]]; then

@@ -3,11 +3,11 @@ import { Window } from '@o/reactron'
 import { Electron } from '@o/stores'
 import * as React from 'react'
 
-import { WEB_PREFERENCES } from '../constants'
+import { WEB_PREFERENCES } from './constants'
 
 const Config = getGlobalConfig()
 
-export default function MenuWindow() {
+export function OrbitChromeWindow() {
   const [show, setShow] = React.useState(false)
   return (
     <Window

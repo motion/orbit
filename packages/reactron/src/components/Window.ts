@@ -41,6 +41,7 @@ export class Window extends BaseComponent {
     const { props } = this
 
     this.options = filterUndefined({
+      webviewTag: !!props.webviewTag,
       show: props.show === undefined ? true : props.show,
       acceptFirstMouse: !!props.acceptFirstMouse,
       titleBarStyle: props.titleBarStyle,

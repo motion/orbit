@@ -313,7 +313,7 @@ const OrbitAppCard = memo(
           >
             <AppLoadingScreen definition={definition} app={app} visible={!store.shouldRender} />
             {store.shouldRender && (
-              <iframe
+              <webview
                 style={{ width: '100%', height: '100%' }}
                 src={`http://localhost:3001/isolate/${app.identifier}/${app.id}`}
               />

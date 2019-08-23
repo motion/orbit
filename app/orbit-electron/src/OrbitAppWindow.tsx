@@ -80,6 +80,7 @@ export function OrbitAppWindow({ windowId, forwardRef, ...windowProps }: AppWind
 
   return (
     <Window
+      webviewTag
       show={store.show}
       webPreferences={{
         nodeIntegration: true,

@@ -31,6 +31,7 @@ export function forkAndStartOrbitApp(
       STACK_FILTER: process.env.STACK_FILTER,
       NODE_ENV: process.env.NODE_ENV,
       SINGLE_USE_MODE: process.env.SINGLE_USE_MODE,
+      ENABLE_OCR: process.env.ENABLE_OCR,
       ...environmentVariables,
       WINDOW_ID: windowId,
     },

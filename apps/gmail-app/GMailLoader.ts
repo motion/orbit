@@ -1,6 +1,6 @@
 import { AppBit, getGlobalConfig, Logger, ServiceLoader, ServiceLoaderAppSaveCallback, sleep } from '@o/kit'
 
-import { GMailHistoryLoadResult, GMailThread, GMailUserProfile } from './GMailModels'
+import { GMailHistoryLoadResult, GMailHistoryMessageAction, GMailThread, GMailUserProfile } from './GMailModels'
 import { GMailQueries } from './GMailQueries'
 
 /**
@@ -74,12 +74,15 @@ export class GMailLoader {
     let deletedThreadIds: string[] = []
 
     // find changes in history if it exist
+
+    const isTrashOrSpam = (action: GMailHistoryMessageAction) =>
+      action.labelIds.indexOf('TRASH') !== -1 && action.labelIds.indexOf('SPAM') !== -1
+
     if (result.history) {
       result.history.forEach(history => {
+        console.log('history.labelsAdded', history.labelsAdded)
         if (history.labelsAdded) {
-          const trashedOrSpam = history.labelsAdded.filter(action => {
-            return action.labelIds.indexOf('TRASH') !== -1 && action.labelIds.indexOf('SPAM') !== -1
-          })
+          const trashedOrSpam = history.labelsAdded.filter(isTrashOrSpam)
           trashedOrSpam.forEach(action => {
             const threadId = action.message.threadId
             if (deletedThreadIds.indexOf(threadId) === -1) deletedThreadIds.push(threadId)
@@ -93,7 +96,9 @@ export class GMailLoader {
         }
         if (history.messagesAdded) {
           history.messagesAdded.forEach(action => {
+            if (isTrashOrSpam(action)) return
             const threadId = action.message.threadId
+            console.log('action labelIds', action.labelIds)
             if (
               deletedThreadIds.indexOf(threadId) === -1 &&
               addedThreadIds.indexOf(threadId) === -1

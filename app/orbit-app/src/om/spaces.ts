@@ -21,6 +21,7 @@ export const state: SpacesState = {
 }
 
 const setSpaces: Action<Space[]> = (om, spaces) => {
+  console.log('setting spaces', spaces)
   if (!spaces) return
   if (isEqual(spaces, om.state.spaces.spaces)) {
     return

@@ -11,6 +11,7 @@ export const urls = {
   home: '/',
   app: '/app/:id',
   appSub: '/app/:id/:subId',
+  isolate: '/isolate/:identifier/:id',
 }
 
 type RouteName = keyof typeof urls
@@ -35,6 +36,7 @@ export type RouterState = {
   isOnSetupApp: Derive<RouterState, boolean>
   isOnQuickFind: Derive<RouterState, boolean>
   isOnDockedApp: Derive<RouterState, boolean>
+  isOnIsolateApp: Derive<RouterState, boolean>
   lastPage: Derive<RouterState, HistoryItem | undefined>
   curPage: Derive<RouterState, HistoryItem>
   ignoreNextPush: boolean
@@ -67,6 +69,8 @@ const getItem = (name: RouteName, params?: Params, replace?: boolean): HistoryIt
 
 // state
 
+const isOnIsolateApp = () => window.location.pathname.indexOf('/isolate') === 0
+
 export const state: RouterState = {
   historyIndex: -1,
   history: [],
@@ -77,6 +81,7 @@ export const state: RouterState = {
   curPage: state => state.history[state.history.length - 1],
   appIdentifier: state =>
     (state.pageName === 'app' && `${state.curPage.params!.identifier!}`) || '',
+  isOnIsolateApp,
   isOnSetupApp: state => state.pageName === 'app' && state.appIdentifier === 'setupApp',
   isOnQuickFind: state => state.pageName === 'app' && state.appIdentifier === 'quickFind',
   isOnDockedApp: (state, globalState) =>
@@ -100,7 +105,7 @@ const showPage: Operator<HistoryItem> = pipe(
   }),
   run((om, item) => {
     // use the home path for the first app
-    if (item.name === 'app' && +item.params!.id! === getFirstApp(om).id) {
+    if (!isOnIsolateApp() && item.name === 'app' && +item.params!.id! === getFirstApp(om).id) {
       item.path = '/'
     }
 
@@ -182,6 +187,15 @@ const showAppPage: Action<ShowAppPageProps> = (om, params) => {
   om.effects.router.setPane(id, { avoidScroll: !!params.replace, avoidZoom: params.avoidZoom })
 }
 
+const showIsolatePage: Action<{ id: string; identifier: string }> = (om, item) => {
+  const app = om.state.apps.activeApps.find(x => x.identifier === item.identifier)
+  if (app) {
+    om.actions.router.showAppPage({ id: item.id, subId: item.identifier })
+  } else {
+    console.error('No app found')
+  }
+}
+
 const showQuickFind: Action = om => {
   om.actions.router.showAppPage({ id: 'quickFind' })
 }
@@ -233,10 +247,10 @@ const forward: Action = om => {
   }
 }
 
-const routeListen: Action<{ url: string; action: 'showHomePage' | 'showAppPage' }> = (
-  om,
-  { action, url },
-) => {
+const routeListen: Action<{
+  url: string
+  action: 'showHomePage' | 'showAppPage' | 'showIsolatePage'
+}> = (om, { action, url }) => {
   page(url, ({ params, querystring }) => {
     if (ignoreNextRoute) {
       ignoreNextRoute = false
@@ -280,6 +294,7 @@ export const actions = {
   showAppPage,
   showHomePage,
   showSetupAppPage,
+  showIsolatePage,
   toggleSetupAppPage,
   ignoreNextPush,
   back,

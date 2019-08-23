@@ -1,8 +1,8 @@
 import { command, observeOne } from '@o/bridge'
-import { AppDefinition, OrbitHot, ProvideStores, showConfirmDialog, useReaction, useStore } from '@o/kit'
+import { OrbitHot, ProvideStores, showConfirmDialog, useReaction, useStore } from '@o/kit'
 import { AppCloseWindowCommand, AppDevCloseCommand, WindowMessageModel } from '@o/models'
 import { App } from '@o/stores'
-import { BannerHandle, ListPassProps, Loading, sleep, useBanner, View, ViewProps } from '@o/ui'
+import { BannerHandle, ListPassProps, sleep, useBanner, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -12,7 +12,6 @@ import { SearchStore } from '../../om/SearchStore'
 import { Stores, useThemeStore } from '../../om/stores'
 import { AppWrapper } from '../../views'
 import MainShortcutHandler from '../../views/MainShortcutHandler'
-import { LoadApp } from './LoadApp'
 import { OrbitApp, whenIdle } from './OrbitApp'
 import { OrbitAppsCarousel } from './OrbitAppsCarousel'
 import { appsCarouselStore } from './OrbitAppsCarouselStore'
@@ -21,6 +20,7 @@ import { OrbitDock } from './OrbitDock'
 import { OrbitDraggableOverlay } from './OrbitDraggableOverlay'
 import { OrbitHeader } from './OrbitHeader'
 
+// import { LoadApp } from './LoadApp'
 export let GlobalBanner: BannerHandle | null = null
 
 export const OrbitPage = memo(function OrbitPage() {
@@ -66,7 +66,8 @@ const OrbitStatusMessages = memo(() => {
 
 const OrbitPageInner = memo(function OrbitPageInner() {
   const { isEditing } = useStore(App)
-  const { actions } = useOm()
+  const { actions, state } = useOm()
+  const isOnIsolateApp = state.router.isOnIsolateApp
 
   const shortcutState = useRef({
     closeTab: 0,
@@ -145,23 +146,38 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   // }, [App.appConf.appId])
 
   if (isEditing) {
-    const bundleUrl = `${App.bundleUrl}?cacheKey=${Math.random()}`
-    console.log(
-      `%cEditing app id: ${App.appConf.windowId} at url ${bundleUrl}`,
-      'color: green; background: lightgreen; font-weight: bold;',
-    )
-    contentArea = (
-      <Suspense fallback={<Loading message={`Loading app ${App.appConf.windowId}`} />}>
-        <LoadApp RenderApp={RenderDevApp} bundleURL={bundleUrl} />
-      </Suspense>
-    )
+    // const bundleUrl = `${App.bundleUrl}?cacheKey=${Math.random()}`
+    // console.log(
+    //   `%cEditing app id: ${App.appConf.windowId} at url ${bundleUrl}`,
+    //   'color: green; background: lightgreen; font-weight: bold;',
+    // )
+    // contentArea = (
+    //   <Suspense fallback={<Loading message={`Loading app ${App.appConf.windowId}`} />}>
+    //     <LoadApp RenderApp={RenderDevApp} bundleURL={bundleUrl} />
+    //   </Suspense>
+    // )
   } else {
-    contentArea = (
-      <Suspense fallback={null}>
-        <OrbitAppsCarousel />
-        <IdleLoad>{() => <OrbitAppsDrawer />}</IdleLoad>
-      </Suspense>
-    )
+    if (isOnIsolateApp) {
+      const params = state.router.curPage.params!
+      contentArea = (
+        <Suspense fallback={null}>
+          <OrbitApp
+            id={+params.id!}
+            identifier={`${params.identifier!}`}
+            shouldRenderApp
+            isVisible
+          />
+          {/* <IdleLoad>{() => <OrbitAppsDrawer />}</IdleLoad> */}
+        </Suspense>
+      )
+    } else {
+      contentArea = (
+        <Suspense fallback={null}>
+          <OrbitAppsCarousel />
+          <IdleLoad>{() => <OrbitAppsDrawer />}</IdleLoad>
+        </Suspense>
+      )
+    }
   }
 
   const onOpen = useCallback(rows => {
@@ -184,8 +200,8 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
   return (
     <MainShortcutHandler handlers={handlers}>
-      <OrbitHeader />
-      <OrbitDock />
+      {!isOnIsolateApp && <OrbitHeader />}
+      {!isOnIsolateApp && <OrbitDock />}
       <OrbitDraggableOverlay />
       <OrbitInnerChrome ref={innerRef} torn={isEditing}>
         <OrbitContentArea>
@@ -220,11 +236,11 @@ const IdleLoad = (props: { children: () => React.ReactElement }) => {
   return show ? props.children() : null
 }
 
-let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
-  return (
-    <OrbitApp appDef={appDef} id={App.appConf.windowId} identifier={appDef.id} shouldRenderApp />
-  )
-}
+// let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
+//   return (
+//     <OrbitApp appDef={appDef} id={App.appConf.windowId} identifier={appDef.id} shouldRenderApp />
+//   )
+// }
 
 const OrbitContentArea = gloss(Box, {
   flexFlow: 'row',

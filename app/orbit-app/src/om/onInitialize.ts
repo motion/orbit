@@ -13,6 +13,7 @@ export const onInitialize: OnInitialize = async om => {
 
   runConfigurations()
 
+  actions.router.routeListen({ url: urls.isolate, action: 'showIsolatePage' })
   actions.router.routeListen({ url: urls.home, action: 'showHomePage' })
   actions.router.routeListen({ url: urls.app, action: 'showAppPage' })
   actions.router.routeListen({ url: urls.appSub, action: 'showAppPage' })

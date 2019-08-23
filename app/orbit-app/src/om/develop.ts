@@ -171,7 +171,13 @@ const loadAppDLL: AsyncAction<{ name: string; mode: DevMode }> = async (_, { nam
 
 export const loadApps: AsyncAction = async om => {
   // writing our own little System loader
-  const nameRegistry = Desktop.state.workspaceState.nameRegistry
+  let nameRegistry = Desktop.state.workspaceState.nameRegistry
+
+  // isolate mode load just one
+  if (window.location.pathname.indexOf('/isolate') === 0) {
+    nameRegistry = nameRegistry.filter(x => x.identifier === window.location.pathname.split('/')[2])
+  }
+
   om.state.develop.appModules = await Promise.all(
     nameRegistry.map(async ({ buildName, entryPathRelative }) => {
       const appModule = await loadSystemModule(buildName, window)
@@ -182,7 +188,11 @@ export const loadApps: AsyncAction = async om => {
 
 async function loadSystemModule(name: string, modules: any): Promise<(path: string) => any> {
   return new Promise(res => {
-    const { args, init } = window['System'].registry[name]
+    const appBundle = window['System'].registry[name]
+    if (!appBundle) {
+      return
+    }
+    const { args, init } = appBundle
     const { setters, execute } = init(res)
     // adds the dependencies
     for (const [index, arg] of args.entries()) {

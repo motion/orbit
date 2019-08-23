@@ -20,8 +20,12 @@ export class OracleManager {
     await this.oracle.start()
   }
 
+  async stop() {
+    await this.oracle.stop()
+  }
+
   handleMessage: OracleMessageHandler = (message, value) => {
-    log.info('message', message)
+    log.info('message', message, value)
     switch (message) {
       case OracleMessages.trayBounds:
         Desktop.setState({ operatingSystem: { trayBounds: value } })

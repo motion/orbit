@@ -23,6 +23,7 @@ type Disposable = Function | { action: string; dispose: Function }
 let disposers: Disposable[] = []
 
 export function addProcessDispose(fn: Disposable) {
+  reporter.verbose(`Adding a process dispose`, fn)
   disposers.push(fn)
 }
 

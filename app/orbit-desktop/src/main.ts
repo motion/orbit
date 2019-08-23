@@ -1,15 +1,17 @@
 import { cleanupChildren } from '@o/orbit-fork-process'
 import { once } from 'lodash'
 
+import { OrbitDesktopRoot } from './OrbitDesktopRoot'
+
 export async function main() {
   /*
    *  Setup app after config
    */
-  const { OrbitDesktopRoot } = require('./OrbitDesktopRoot')
   const desktopRoot = new OrbitDesktopRoot()
 
   // handle exits gracefully
   const dispose = once(async () => {
+    require('fs').writeFileSync('/tmp/hi2', 'hi')
     console.log('Desktop exiting...')
     await desktopRoot.dispose()
     console.log('Dispose children...')

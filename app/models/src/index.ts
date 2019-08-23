@@ -12,7 +12,7 @@ export * from './SpaceInterface'
 export * from './Setting'
 export * from './User'
 export * from './State'
-export * from './Oracle'
+export * from './OracleInterfaces'
 export * from './models'
 
 export * from './AppInterfaces'

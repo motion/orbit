@@ -292,6 +292,7 @@ export class OrbitDesktopRoot {
   }
 
   dispose = async () => {
+    require('fs').writeFileSync('/tmp/hi', 'hi')
     log.info('Disposing Desktop.Root')
     if (this.disposed) {
       return
@@ -313,6 +314,9 @@ export class OrbitDesktopRoot {
     if (this.bonjour) {
       this.bonjour.destroy()
       this.bonjour = null
+    }
+    if (this.oracleManager) {
+      await this.oracleManager.stop()
     }
     this.disposed = true
     return true

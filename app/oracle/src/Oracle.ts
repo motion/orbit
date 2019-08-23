@@ -5,6 +5,8 @@ import electronUtil from 'electron-util/node'
 import Path from 'path'
 import { Server } from 'ws'
 
+export { OracleAction, OracleMessage } from '@o/models'
+
 const log = new Logger('Oracle')
 const sleep = (ms: number) => new Promise(res => setTimeout(res, ms))
 const dir = electronUtil.fixPathForAsarUnpack(__dirname)

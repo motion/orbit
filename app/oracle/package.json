@@ -7,7 +7,8 @@
     "edit": "open ./Oracle.xcworkspace",
     "install-pods": "pod install",
     "build": "./build.sh --if-empty && npx tsc || true",
-    "watch": "tsc -b --watch --preserveWatchOutput"
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "test": "LOG_LEVEL=4 node ./_/test.js"
   },
   "dependencies": {
     "@o/logger": "^2.6.0",

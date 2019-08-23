@@ -12,7 +12,18 @@ const sleep = (ms: number) => new Promise(res => setTimeout(res, ms))
 const dir = electronUtil.fixPathForAsarUnpack(__dirname)
 const bin = 'Oracle'
 const appPath = (bundle: string) =>
-  Path.join(dir, '..', 'Build', 'Products', bundle, 'Oracle.app', 'Contents', 'MacOS')
+  Path.join(
+    dir,
+    '..',
+    'DerivedData',
+    'Oracle',
+    'Build',
+    'Products',
+    bundle,
+    'Oracle.app',
+    'Contents',
+    'MacOS',
+  )
 const RELEASE_PATH = appPath('Release')
 
 export type OracleOptions = {

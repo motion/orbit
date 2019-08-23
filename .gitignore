@@ -41,19 +41,8 @@ app/orbit-dotapp/macapp/Build
 app/orbit-dotapp/macapp/orbit.xcodeproj
 app/orbit-dotapp/macapp/orbit.xcworkspace/xcuserdata
 
-app/screen/train
-app/screen/orbit/orbit.xcodeproj/project.xcworkspace
-app/screen/orbit/orbit.xcodeproj/xcuserdata
-app/screen/orbit/Carthage
-app/screen/swindler/Carthage
-app/screen/orbit/Index
-app/screen/orbit/Build
-app/screen/orbit/orbit.xcodeproj
-# for now keep build orbit.app, its about 14mb
-!app/screen/orbit/Build/Products/Release/orbit.app
-!app/screen/orbit/Build/Products/Release/orbit.app/*
-
 app/oracle/Build
+app/oracle/DerivedData
 app/oracle/Index
 app/oracle/Oracle/Dependencies
 app/oracle/orbit.xcodeproj/project.xcworkspace

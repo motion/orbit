@@ -1,10 +1,8 @@
 import { FormErrors, FormFieldsObj } from '@o/ui'
 import { FunctionComponent } from 'react'
 
-import { AppViewProps } from './AppViewProps'
-import { AppWorker } from './AppWorker'
-import { AppBit } from './interfaces/AppBit'
-import { ItemType } from './interfaces/ItemType'
+import { AppBit } from './AppBit'
+import { ItemType } from './ItemType'
 
 export type AppDefinition<AppData = any, SetupFields extends FormFieldsObj = any> = {
   /** Unique identifier for app bundle */
@@ -74,3 +72,21 @@ export type AppDefinition<AppData = any, SetupFields extends FormFieldsObj = any
     [key: string]: FunctionComponent<AppViewProps>
   }
 }
+
+export type AppViewProps<A = any> = {
+  identifier?: string
+  id?: string
+  subId?: string
+  title?: string
+  subTitle?: string
+  data?: A
+  icon?: string
+  iconLight?: string
+  subType?: string
+  viewType?: 'main' | 'index' | 'setup' | 'settings'
+}
+
+/**
+ * Function that executes worker.
+ */
+export type AppWorker = () => any

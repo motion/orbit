@@ -32,4 +32,9 @@ export class OracleManager {
         break
     }
   }
+
+  /**
+   * TODO return the model resolver (just one can handle all)
+   */
+  getResolvers() {}
 }

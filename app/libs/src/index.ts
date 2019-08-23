@@ -38,3 +38,15 @@ export function bitContentHash(bit: Bit): number {
     ),
   )
 }
+
+export const getSearchableText = (bit: Bit): string => {
+  if (bit.type === 'conversation') {
+    // TODO make a generic conversation bit data type
+    const data = bit.data
+    return data.messages
+      .map(x => `${x.user || ''} ${x.text || ''}`)
+      .join(' ')
+      .trim()
+  }
+  return `${bit.title} ${bit.body}`.trim()
+}

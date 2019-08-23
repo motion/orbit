@@ -1,4 +1,5 @@
 import { Logger } from '@o/logger'
+import { OracleAction, OracleMessage } from '@o/models'
 import { ChildProcess, spawn } from 'child_process'
 import electronUtil from 'electron-util/node'
 import Path from 'path'
@@ -19,106 +20,6 @@ export type OracleOptions = {
 }
 
 // message types
-
-interface Message {
-  message: string
-}
-
-interface TrayBoundsMessage extends Message {
-  message: 'trayBounds'
-  value: {
-    position: [number, number]
-    size: [number, number]
-  }
-}
-
-interface TrayHoveredMessage extends Message {
-  message: 'trayHovered'
-  value: {
-    id: '0' | '1' | '2' | 'Out'
-  }
-}
-
-interface MouseMovedMessage extends Message {
-  message: 'trayHovered'
-  value: {
-    position: [number, number]
-  }
-}
-
-interface WindowChangedMessage extends Message {
-  message: 'windowChanged'
-  value: {
-    id: number
-    title: string
-    size: [number, number]
-    position: [number, number]
-  }
-}
-
-interface WindowMovedMessage extends Message {
-  message: 'windowMoved'
-  value: {
-    id: number
-    title: string
-    size: [number, number]
-    position: [number, number]
-  }
-}
-
-interface WindowResizedMessage extends Message {
-  message: 'windowResized'
-  value: {
-    id: number
-    title: string
-    size: [number, number]
-    position: [number, number]
-  }
-}
-
-interface WordsFoundMessage extends Message {
-  message: 'words'
-  value: {
-    string: string
-    bounds: [number, number, number, number]
-  }[]
-}
-
-export type OracleMessage =
-  | TrayHoveredMessage
-  | TrayBoundsMessage
-  | MouseMovedMessage
-  | WindowChangedMessage
-  | WindowMovedMessage
-  | WindowResizedMessage
-  | WordsFoundMessage
-
-export enum OracleMessages {
-  trayBounds = 'trayBounds',
-  trayHovered = 'trayHovered',
-  trayClicked = 'trayClicked',
-  windowEvent = 'windowEvent',
-  windowChanged = 'windowChanged',
-  windowMoved = 'windowMoved',
-  windowResized = 'windowResized',
-  words = 'words',
-}
-
-export type OracleAction =
-  | { action: 'startRecording' }
-  | { action: 'stopRecording' }
-  | { action: 'setBounds'; value: { x: number; y: number; width: number; height: number } }
-  | { action: 'setFPS'; value: { fps: number } }
-  | { action: 'startObservingWindows' }
-  | { action: 'stopObservingWindows' }
-
-export enum OracleActions {
-  startRecording = 'startRecording',
-  stopRecording = 'stopRecording',
-  setBounds = 'setBounds',
-  startObservingWindows = 'startObservingWindows',
-  stopObservingWindows = 'stopObservingWindows',
-}
 
 type Narrow<T, K> = T extends { message: K } ? T : never
 

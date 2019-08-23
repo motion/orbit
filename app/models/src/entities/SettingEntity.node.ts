@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
-import { Setting } from '../interfaces/Setting'
+import { Setting } from '../Setting'
 
 @Entity()
 export class SettingEntity extends BaseEntity implements Setting {

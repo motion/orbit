@@ -1,15 +1,16 @@
 import { Model } from '@o/mediator'
 import { FindOptions, FindOptionsWhere } from 'typeorm'
 
-import { AppDefinition } from './AppDefinition'
-import { AppBit } from './interfaces/AppBit'
-import { Bit } from './interfaces/Bit'
-import { BitContentType } from './interfaces/BitContentType'
-import { Job } from './interfaces/Job'
-import { Setting } from './interfaces/Setting'
-import { Space } from './interfaces/SpaceInterface'
-import { State } from './interfaces/State'
-import { User } from './interfaces/User'
+import { AppBit } from './AppBit'
+import { AppDefinition } from './AppInterfaces'
+import { Bit } from './Bit'
+import { BitContentType } from './BitContentType'
+import { Job } from './Job'
+import { OracleWordsFoundMessage } from './Oracle'
+import { Setting } from './Setting'
+import { Space } from './SpaceInterface'
+import { State } from './State'
+import { User } from './User'
 
 export const BitModel = new Model<Bit, FindOptions<Bit>, FindOptionsWhere<Bit>>('Bit')
 export const JobModel = new Model<Job, FindOptions<Job>, FindOptionsWhere<Job>>('Job')
@@ -122,3 +123,7 @@ export const CosalTopicsModel = new Model<string, { query: string; count: number
 )
 
 export const OrbitProcessStdOutModel = new Model<string, undefined>('OrbitProcessStdOutModel')
+
+export const OracleWordsFoundModel = new Model<OracleWordsFoundMessage, undefined>(
+  'OracleWordsFoundModel',
+)

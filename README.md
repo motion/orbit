@@ -36,6 +36,7 @@ A the high level:
   - `apps` are individual orbit apps we've built.
   - `packages` contains anything that could run across any app, and are independent of orbit generally.
   - `projects` contains sub-projects like our website and a playground to do light debugging on things.
+  - `services` constains stuff we run in the cloud
   - `example-workspace` has an example workspace you can use to test things
 - Development:
   - `bin` lets you create scripts for the repo that you can run when you `source .env` directly from CLI. useful for more complex monorepo scripting.
@@ -56,9 +57,8 @@ What we may want to do is split these a bit further:
 ```sh
 /app
   # for running the main app
-
-  /cli              # CLI, because we may want `orbit` to be CLI + APIs
-  /orbit            # empty for now, will eventually be our CLI
+  /orbit            # CLI, because we may want `orbit` to be CLI + APIs
+  /orbit-main       # entry for electron, starts other processes
   /orbit-app        # web app (webpack, electron loads it)
   /orbit-desktop    # node process (runs server for oauth, runs a variety of backend services)
   /build-server     # used by orbit-desktop to run webpack for apps
@@ -79,10 +79,6 @@ What we may want to do is split these a bit further:
   # mobile
   /mobile           # as of now just experiment to get our UI kit running in react-native, on hold until react native better supports things, we should move off haul and onto their own packager once monorepo support.
 
-  # cloud
-  /api              # search / registry updating endpoints for publishing apps
-  /registry         # verdaccio registry (basically our own npm registry) so we have an index of all orbit apps published
-
   # some things in ./app are from older attempts, not currently used:
   /oracle           # realtime OCR system for mac desktop
   /orbit-dotapp     # experiment on making custom .app icons for each app
@@ -93,6 +89,10 @@ What we may want to do is split these a bit further:
   /use-store          # used for all our stores, automatically tracks changes
   /gloss              # our sweet CSS-in-JS solution
   /ui                 # lower level pure UI kit, built with gloss
+
+/services
+  /api              # search / registry updating endpoints for publishing apps
+  /registry         # verdaccio registry (basically our own npm registry) so we have an index of all orbit apps published
 ```
 
 ## using the monorepo

@@ -6,6 +6,7 @@
     "packages/*",
     "apps/*",
     "projects/*",
+    "services/*",
     "example-workspace",
     "example-workspace/apps/*"
   ],

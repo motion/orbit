@@ -73,7 +73,7 @@ export class NLPStore {
     async (names, { sleep }) => {
       ensure('names', !!names)
       await sleep(200) // debounce
-      setUserNames(names.filter(Boolean).slice()) // ensure js
+      typeof setUserNames === 'function' && setUserNames(names.filter(Boolean).slice()) // ensure js
     },
   )
 }

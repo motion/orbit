@@ -2511,26 +2511,6 @@
     xcode "^2.0.0"
     xmldoc "^0.4.0"
 
-"@react-navigation/core@3.0.2":
-  version "3.0.2"
-  resolved "https://registry.npmjs.org/@react-navigation/core/-/core-3.0.2.tgz#8631801533a27d034a3b8421dfd0510a9f27dcf3"
-  integrity sha512-E0ETZJUuJRHvjtb0f0U416NcDxt9T5HvRLxXu5K4DNxtmjpOfkT9Sh+Q309/zrCwSkHY85ZpGKvewZTSGI7Q1Q==
-  dependencies:
-    create-react-context "0.2.2"
-    hoist-non-react-statics "^3.0.1"
-    path-to-regexp "^1.7.0"
-    query-string "^6.2.0"
-    react-is "^16.5.2"
-    react-lifecycles-compat "^3.0.4"
-
-"@react-navigation/web@1.0.0-alpha.7":
-  version "1.0.0-alpha.7"
-  resolved "https://registry.npmjs.org/@react-navigation/web/-/web-1.0.0-alpha.7.tgz#262545e38c2f83f58022098a00f72b0447bc6fb2"
-  integrity sha512-EZxF7pXeR1PWCfLLmu6COtTrBHxHPRW/IsXOaPGUXebAqqlKMw8xr5Rwwk3UQqPOMjHTxQLsNHhk8L13zupwMA==
-  dependencies:
-    history "^4.7.2"
-    query-string "^6.2.0"
-
 "@react-slate/components@0.2.0":
   version "0.2.0"
   resolved "https://registry.npmjs.org/@react-slate/components/-/components-0.2.0.tgz#c101a76968c4325d37c02fedf851c6f34e097be0"
@@ -7142,14 +7122,6 @@ create-react-class@^15.6.2, create-react-class@^15.6.3:
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
 
-create-react-context@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.npmjs.org/create-react-context/-/create-react-context-0.2.2.tgz#9836542f9aaa22868cd7d4a6f82667df38019dca"
-  integrity sha512-KkpaLARMhsTsgp0d2NA/R94F/eDLbhXERdIq3LvX2biCAXcDvHYoOqHfWCHf1+OLj+HKBotLG3KqaOOf+C1C+A==
-  dependencies:
-    fbjs "^0.8.0"
-    gud "^1.0.0"
-
 create-react-context@^0.2.2:
   version "0.2.3"
   resolved "https://registry.npmjs.org/create-react-context/-/create-react-context-0.2.3.tgz#9ec140a6914a22ef04b8b09b7771de89567cb6f3"
@@ -7804,14 +7776,6 @@ deep-is@~0.1.3:
   version "0.1.3"
   resolved "https://registry.npmjs.org/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
   integrity sha1-s2nW+128E+7PUk+RsHD+7cNXzzQ=
-
-deep-scope-analyser@^1.6.0:
-  version "1.7.0"
-  resolved "https://registry.npmjs.org/deep-scope-analyser/-/deep-scope-analyser-1.7.0.tgz#23015b3a1d23181b1d9cebd25b783a7378ead8da"
-  integrity sha512-rl5Dmt2IZkFpZo6XbEY1zG8st2Wpq8Pi/dV2gz8ZF6BDYt3fnor2JNxHwdO1WLo0k6JbmYp0x8MNy8kE4l1NtA==
-  dependencies:
-    esrecurse "^4.2.1"
-    estraverse "^4.2.0"
 
 deepmerge@4.0.0:
   version "4.0.0"
@@ -8585,10 +8549,10 @@ electron-util@0.9.0:
   dependencies:
     electron-is-dev "^0.3.0"
 
-electron@7.0.0-beta.2:
-  version "7.0.0-beta.2"
-  resolved "https://registry.npmjs.org/electron/-/electron-7.0.0-beta.2.tgz#869ff87f4ee0eb3073c44164f9a2444fcc443677"
-  integrity sha512-mY+0ITfffviI9FZFy+LiyYdW4NSDTbm+wC4O6lH+9xUOs6P4qga8QFY/D/n0T6iUNno+hUHMCGFYH25OwTu7Yw==
+electron@7.0.0-beta.3:
+  version "7.0.0-beta.3"
+  resolved "https://registry.npmjs.org/electron/-/electron-7.0.0-beta.3.tgz#7b0d133a4db14c80128a02c3309b1013d59298de"
+  integrity sha512-Ga7eORNlRcwmDUWblImmDacuI08OaWKG0ifEJ+ccg+aXfWKrN0W4n7vngwbVWDngoeVRbLPmDERdeJheOaA5nw==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"
@@ -9075,7 +9039,7 @@ esquery@^1.0.1:
   dependencies:
     estraverse "^4.0.0"
 
-esrecurse@^4.1.0, esrecurse@^4.2.1:
+esrecurse@^4.1.0:
   version "4.2.1"
   resolved "https://registry.npmjs.org/esrecurse/-/esrecurse-4.2.1.tgz#007a3b9fdbc2b3bb87e4879ea19c92fdbd3942cf"
   integrity sha512-64RBB++fIOAXPw3P9cy89qfMlvZEXZkqqJkjqqXIvzP5ezRZjW+lPWjw35UX/3EhUPFYbg5ER4JYgDw4007/DQ==
@@ -11618,7 +11582,7 @@ hoist-non-react-statics@^2.2.1, hoist-non-react-statics@^2.5.0:
   resolved "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz#c5903cf409c0dfd908f388e619d86b9c1174cb47"
   integrity sha512-rqcy4pJo55FTTLWt+bU8ukscqHeE/e9KWvsOW2b/a3afxQZhwkQdT1rPPCJ0rYXdj4vNcasY8zHTH+jF/qStxw==
 
-hoist-non-react-statics@^3.0.1, hoist-non-react-statics@^3.3.0:
+hoist-non-react-statics@^3.3.0:
   version "3.3.0"
   resolved "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-3.3.0.tgz#b09178f0122184fb95acf525daaecb4d8f45958b"
   integrity sha512-0XsbTXxgiaCDYDIWFcwkmerZPSwywfUqYmwT4jzewKTQSWoE6FCMoUVOeBJWK3E/CrWbxRG3m5GzY4lnIwGRBA==
@@ -17232,13 +17196,6 @@ path-to-regexp@0.1.7:
   resolved "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-0.1.7.tgz#df604178005f522f15eb4490e7247a1bfaa67f8c"
   integrity sha1-32BBeABfUi8V60SQ5yR6G/qmf4w=
 
-path-to-regexp@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-1.7.0.tgz#59fde0f435badacba103a84e9d3bc64e96b9937d"
-  integrity sha1-Wf3g9DW62suhA6hOnTvGTpa5k30=
-  dependencies:
-    isarray "0.0.1"
-
 path-to-regexp@~1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-1.2.1.tgz#b33705c140234d873c8721c7b9fd8b541ed3aff9"
@@ -18535,7 +18492,7 @@ query-string@^5.0.1:
     object-assign "^4.1.0"
     strict-uri-encode "^1.0.0"
 
-query-string@^6.2.0, query-string@^6.5.0:
+query-string@^6.5.0:
   version "6.8.2"
   resolved "https://registry.npmjs.org/query-string/-/query-string-6.8.2.tgz#36cb7e452ae11a4b5e9efee83375e0954407b2f6"
   integrity sha512-J3Qi8XZJXh93t2FiKyd/7Ec6GNifsjKXUsVFkSBj/kjLsDylWhnCz4NT1bkPcKotttPW+QbKGqqPH8OoI2pdqw==
@@ -18911,7 +18868,7 @@ react-input-autosize@^2.2.1:
   dependencies:
     prop-types "^15.5.8"
 
-react-is@^16.5.2, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.3, react-is@^16.8.4:
+react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.3, react-is@^16.8.4:
   version "16.9.0"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.9.0.tgz#21ca9561399aad0ff1a7701c01683e8ca981edcb"
   integrity sha512-tJBzzzIgnnRfEm046qRcURvwQnZVXmuCbscxUO5RWrGTXpon2d4c8mI0D8WE6ydVIm29JiLB6+RslkIvym9Rjw==
@@ -23173,13 +23130,6 @@ webpack-cli@^3.3.6, webpack-cli@^3.3.7:
     supports-color "6.1.0"
     v8-compile-cache "2.0.3"
     yargs "13.2.4"
-
-webpack-deep-scope-plugin@1.6.0:
-  version "1.6.0"
-  resolved "https://registry.npmjs.org/webpack-deep-scope-plugin/-/webpack-deep-scope-plugin-1.6.0.tgz#5a3a26dc8a40863c7c362840df1fb63f5ca4c441"
-  integrity sha512-ZYldKNeWQtk9SoV70x7Eb2NRmvHMtNBOjscs0wUdg/pfymntiF+0W/D9v2o76ztufjND6RNFjNVnyFQww25AZg==
-  dependencies:
-    deep-scope-analyser "^1.6.0"
 
 webpack-dev-middleware@^3.7.0:
   version "3.7.0"

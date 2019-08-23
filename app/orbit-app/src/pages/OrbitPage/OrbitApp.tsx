@@ -90,7 +90,7 @@ const OrbitAppRender = memo((props: OrbitAppProps) => {
   }
   return (
     <Suspense fallback={<Loading />}>
-      <OrbitAppRenderOfDefinition appDef={appDef} {...props} />
+      <OrbitAppRenderOfDefinition {...props} appDef={appDef} />
     </Suspense>
   )
 })

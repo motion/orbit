@@ -5,6 +5,7 @@ import { AppMeta, BuildStatus, CommandWsOptions } from '@o/models'
 import { stringToIdentifier } from '@o/utils'
 import historyAPIFallback from 'connect-history-api-fallback'
 import { Handler } from 'express'
+import { Dictionary, Request } from 'express-serve-static-core'
 import { readFile } from 'fs-extra'
 import { chunk } from 'lodash'
 import hashObject from 'node-object-hash'
@@ -300,7 +301,7 @@ export class AppsBuilder {
   middleware: Handler = async (req, res, next) => {
     const sendIndex = async () => {
       await this.completedFirstBuild
-      res.send(await this.getIndex())
+      res.send(await this.getIndex(req))
     }
     // hacky way to just serve our own index.html for now
     if (req.path[1] !== '_' && req.path.indexOf('.') === -1) {
@@ -444,24 +445,39 @@ export class AppsBuilder {
     }
   }
 
-  private async getIndex() {
+  private async getIndex(req: Request<Dictionary<string>>) {
+    log.info('getIndex', req.path)
+
     // const isProd = Object.keys(this.buildMode).every(x => this.buildMode[x] === 'production')
     const desktopRoot = join(require.resolve('@o/orbit-desktop'), '..', '..')
     const index = await readFile(join(desktopRoot, 'index.html'), 'utf8')
-    const scripts = `
+    const scriptsPre = `
     <script id="script_base" src="/baseDev.dll.js"></script>
     <script id="script_shared" src="/shared.dll.js"></script>
-${this.apps
-  .map(
-    app =>
-      `    <script id="script_app_${stringToIdentifier(app.packageId)}" src="/${stringToIdentifier(
-        app.packageId,
-      )}.${this.buildMode[app.packageId]}.dll.js"></script>`,
-  )
-  .join('\n')}
+`
+    const scriptsPost = `
     <script src="/main.js"></script>
 `
-    return index.replace('<!-- orbit-scripts -->', scripts)
+    const getAppScriptDLL = (app: AppMeta) =>
+      `    <script id="script_app_${stringToIdentifier(app.packageId)}" src="/${stringToIdentifier(
+        app.packageId,
+      )}.${this.buildMode[app.packageId]}.dll.js"></script>`
+
+    if (req.path.indexOf('/isolate') > -1) {
+      const identifier = req.path.split('/')[2]
+      const packageId = this.appsManager.identifierToPackageId(identifier)
+      const app = this.apps.find(x => x.packageId === packageId)
+      console.log('identifier', identifier)
+      return index.replace(
+        '<!-- orbit-scripts -->',
+        `${scriptsPre}${getAppScriptDLL(app)}${scriptsPost}`,
+      )
+    } else {
+      return index.replace(
+        '<!-- orbit-scripts -->',
+        `${scriptsPre}${this.apps.map(getAppScriptDLL).join('\n')}${scriptsPost}`,
+      )
+    }
   }
 
   /**

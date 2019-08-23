@@ -247,9 +247,10 @@ export default class DebugApps {
             try {
               const REMOTE_URL = 'http://localhost:3001'
               const PORT_NAMES = {
-                9000: 'Desktop',
-                9001: 'Electron',
-                9003: 'Workers',
+                9005: 'Desktop',
+                9006: 'Electron',
+                9007: 'Electron Remote',
+                9008: 'Workers',
               }
               let title = document.getElementsByTagName('title')[0]
               if (!title) {

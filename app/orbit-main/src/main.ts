@@ -104,14 +104,11 @@ export async function main() {
 
   const { handleExit, setupHandleExit } = require('./helpers/handleExit')
 
-  if (process.env.NODE_ENV === 'development') {
-    // in prod electron handles thishandleErrors
-    process.on('exit', handleExit)
-    process.on('SIGINT', handleExit)
-    process.on('SIGSEGV', handleExit)
-    process.on('SIGTERM', handleExit)
-    process.on('SIGQUIT', handleExit)
-  }
+  process.on('exit', handleExit)
+  process.on('SIGINT', handleExit)
+  process.on('SIGSEGV', handleExit)
+  process.on('SIGTERM', handleExit)
+  process.on('SIGQUIT', handleExit)
 
   // our processes
   // each call pushes the process into the array and then gives them all over to setupHandleExit
@@ -127,38 +124,37 @@ export async function main() {
     isNode: true,
   })
 
-  if (process.env.SINGLE_USE_MODE) {
+  if (SINGLE_USE_MODE) {
     log.verbose(`Single use mode!, not running other processes`)
-    return
-  }
-
-  // start electron
-  if (DISABLE_ELECTRON !== 'true') {
-    log.info('Starting electron...')
-    // start main electron process inside this thread (no forking)
-    require('./startElectron').startElectron({ mainProcess: true })
-  }
-
-  // workers
-  if (!DISABLE_WORKERS) {
-    // i bumped up the wait time here because when you run `orbit ws` the CLI:
-    //  1. starts orbit-desktop
-    //  2. sends OpenWorkspaceCommand to the resolver
-    //  3. that then needs to validate/update the space.directory if it moved
-    //  4. if workers runs too quickly it will run its OrbitAppsManager with the wrong space.directory
-    //
-    //  the ideal fix would be a big refactor of this whole area taking into account many moving pieces
-    await new Promise(res => setTimeout(res, 8000))
-    setupProcess({
-      name: 'workers',
-      inspectPort: 9008,
-      isNode: true,
-      env: {
-        RUN_MEDIATOR: 'true',
-      },
-    })
   } else {
-    log.info(`Workers disabled`)
+    // start electron
+    if (DISABLE_ELECTRON !== 'true') {
+      log.info('Starting electron...')
+      // start main electron process inside this thread (no forking)
+      require('./startElectron').startElectron({ mainProcess: true })
+    }
+
+    // workers
+    if (!DISABLE_WORKERS) {
+      // i bumped up the wait time here because when you run `orbit ws` the CLI:
+      //  1. starts orbit-desktop
+      //  2. sends OpenWorkspaceCommand to the resolver
+      //  3. that then needs to validate/update the space.directory if it moved
+      //  4. if workers runs too quickly it will run its OrbitAppsManager with the wrong space.directory
+      //
+      //  the ideal fix would be a big refactor of this whole area taking into account many moving pieces
+      await new Promise(res => setTimeout(res, 8000))
+      setupProcess({
+        name: 'workers',
+        inspectPort: 9008,
+        isNode: true,
+        env: {
+          RUN_MEDIATOR: 'true',
+        },
+      })
+    } else {
+      log.info(`Workers disabled`)
+    }
   }
 
   log.info('Started everything!')

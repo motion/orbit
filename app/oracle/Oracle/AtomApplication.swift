@@ -29,11 +29,11 @@ import Cocoa
 
 /// Set this to `true` to log debug/performance messages.
 /// Not recommended for production builds.
-let shouldLogDebug = true
+let shouldLogDebug = false
 
 /// Set this to `true` to log the final OCR output for each frame.
 /// Disable for production builds.
-let shouldLogOCR = true
+let shouldLogOCR = false
 
 /// Set this to `true` to save character boxes and other debug images
 /// to the test output directory.

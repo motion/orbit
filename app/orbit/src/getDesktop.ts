@@ -27,13 +27,13 @@ export async function getOrbitDesktop(
   let port = await findBonjourService('orbitDesktop', 180)
   let didStartOrbit = false
   let orbitProcess: ChildProcess | null = null
+  const isInMonoRepo = await getIsInMonorepo()
 
   if (port) {
     reporter.info(`Found existing orbit process`)
   } else {
     reporter.info('Starting Orbit.app')
     // run desktop and try again
-    const isInMonoRepo = await getIsInMonorepo()
     orbitProcess = runOrbitDesktop(props, isInMonoRepo)
     if (orbitProcess) {
       reporter.verbose(`Started orbit process, waiting for bonjour`)
@@ -59,26 +59,16 @@ export async function getOrbitDesktop(
   })
   await transport.onOpen()
 
-  if (!mediator) {
-    reporter.panic('No mediator found')
+  if (!isInMonoRepo) {
+    // in dev mode connect to orbit process and pipe logs here for easy debug
+    const model = mediator.observeOne(OrbitProcessStdOutModel, undefined).subscribe(msg => {
+      reporter.verbose(`> ${msg}`)
+    })
+    addProcessDispose(() => model.unsubscribe())
   }
 
-  const inMono = await getIsInMonorepo()
-
-  if (inMono) {
-    if (orbitProcess) {
-      console.log('Dev mode helper enabled: CTRL+C will kill Orbit daemon.')
-      addProcessDispose({
-        action: 'SIGINT',
-        dispose: () => orbitProcess.kill(),
-      })
-    } else {
-      // in dev mode connect to orbit process and pipe logs here for easy debug
-      const model = mediator.observeOne(OrbitProcessStdOutModel, undefined).subscribe(msg => {
-        reporter.verbose(`> ${msg}`)
-      })
-      addProcessDispose(() => model.unsubscribe())
-    }
+  if (!mediator) {
+    reporter.panic('No mediator found')
   }
 
   return {
@@ -161,6 +151,17 @@ export function runOrbitDesktop(
           CLI_PATH: cliPath,
         },
       })
+
+      if (isInMonoRepo) {
+        console.log('Dev mode helper enabled: CTRL+C will kill Orbit daemon.')
+        addProcessDispose({
+          action: 'SIGINT',
+          dispose: () => {
+            reporter.verbose('killing orbit')
+            child.kill()
+          },
+        })
+      }
 
       if (reporter.isVerbose) {
         // all fixed a bug where it would stop piping from stdio/stderr

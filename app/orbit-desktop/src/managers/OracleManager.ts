@@ -25,7 +25,7 @@ export class OracleManager {
   }
 
   handleMessage: OracleMessageHandler = (message, value) => {
-    log.info('message', message)
+    log.info('message', message, value)
     switch (message) {
       case OracleMessages.trayBounds:
         Desktop.setState({ operatingSystem: { trayBounds: value } })

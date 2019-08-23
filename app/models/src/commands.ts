@@ -2,7 +2,7 @@ import { Command } from '@o/mediator'
 
 import { ApiInfo } from './ApiInfo'
 import { AppBit } from './AppBit'
-import { OracleActions } from './Oracle'
+import { OracleActions } from './OracleInterfaces'
 import { Space } from './SpaceInterface'
 
 export type StatusReply<A = string> =

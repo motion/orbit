@@ -1,11 +1,12 @@
 import { cleanupChildren } from '@o/orbit-fork-process'
 import { once } from 'lodash'
 
+import { OrbitDesktopRoot } from './OrbitDesktopRoot'
+
 export async function main() {
   /*
    *  Setup app after config
    */
-  const { OrbitDesktopRoot } = require('./OrbitDesktopRoot')
   const desktopRoot = new OrbitDesktopRoot()
 
   // handle exits gracefully

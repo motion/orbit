@@ -387,14 +387,14 @@ const DockSidebarView = (props: AppMainViewProps) => {
 const FloatingLabel = gloss<{ visible?: boolean }>(Box, {
   pointerEvents: 'none',
   position: 'absolute',
-  top: -40,
+  top: -30,
   left: 0,
   alignSelf: 'flex-start',
-  background: [0, 0, 0, 0.95],
+  background: [0, 0, 0, 0.8],
   color: '#fff',
-  padding: [4, 8],
+  padding: [2, 6],
   borderRadius: 100,
-  fontSize: 14,
+  fontSize: 12,
   fontWeight: 600,
   textShadow: {
     x: 0,

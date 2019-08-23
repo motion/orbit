@@ -21,10 +21,7 @@ export type OracleOptions = {
   onMessage: OracleMessageHandler
 }
 
-// message types
-
 type Narrow<T, K> = T extends { message: K } ? T : never
-
 export type OracleMessageHandler = <K extends OracleMessage['message']>(
   message: K,
   value: Narrow<OracleMessage, K>,
@@ -40,7 +37,6 @@ export class Oracle {
   constructor(public options: OracleOptions) {
     this.server = new Server({ port: options.port })
     this.options = options
-
     this.server.on('error', (...args) => {
       console.error('server error', args)
     })
@@ -87,10 +83,8 @@ export class Oracle {
 
       const handleOut = data => {
         if (!data) return
-        const str = data.toString()
-        log.info('Oracle process:', str)
+        log.info(`Oracle process: ${data}`)
       }
-
       this.process.stdout.on('data', handleOut)
       this.process.stderr.on('data', handleOut)
       this.process.on('exit', () => {

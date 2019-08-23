@@ -4,7 +4,7 @@ import electronUtil from 'electron-util/node'
 import Path from 'path'
 import { Server } from 'ws'
 
-const log = new Logger('screen')
+const log = new Logger('Oracle')
 const sleep = (ms: number) => new Promise(res => setTimeout(res, ms))
 const dir = electronUtil.fixPathForAsarUnpack(__dirname)
 const bin = 'Oracle'
@@ -32,21 +32,100 @@ interface TrayBoundsMessage extends Message {
   }
 }
 
-interface TrayHoverMessage extends Message {
-  message: 'trayHover'
+interface TrayHoveredMessage extends Message {
+  message: 'trayHovered'
   value: {
     id: '0' | '1' | '2' | 'Out'
   }
 }
 
-type OracleMessage = TrayHoverMessage | TrayBoundsMessage
+interface MouseMovedMessage extends Message {
+  message: 'trayHovered'
+  value: {
+    position: [number, number]
+  }
+}
+
+interface WindowChangedMessage extends Message {
+  message: 'windowChanged'
+  value: {
+    id: number
+    title: string
+    size: [number, number]
+    position: [number, number]
+  }
+}
+
+interface WindowMovedMessage extends Message {
+  message: 'windowMoved'
+  value: {
+    id: number
+    title: string
+    size: [number, number]
+    position: [number, number]
+  }
+}
+
+interface WindowResizedMessage extends Message {
+  message: 'windowResized'
+  value: {
+    id: number
+    title: string
+    size: [number, number]
+    position: [number, number]
+  }
+}
+
+interface WordsFoundMessage extends Message {
+  message: 'words'
+  value: {
+    string: string
+    bounds: [number, number, number, number]
+  }[]
+}
+
+export type OracleMessage =
+  | TrayHoveredMessage
+  | TrayBoundsMessage
+  | MouseMovedMessage
+  | WindowChangedMessage
+  | WindowMovedMessage
+  | WindowResizedMessage
+  | WordsFoundMessage
+
+export enum OracleMessages {
+  trayBounds = 'trayBounds',
+  trayHovered = 'trayHovered',
+  trayClicked = 'trayClicked',
+  windowEvent = 'windowEvent',
+  windowChanged = 'windowChanged',
+  windowMoved = 'windowMoved',
+  windowResized = 'windowResized',
+  words = 'words',
+}
+
+export type OracleAction =
+  | { action: 'startRecording' }
+  | { action: 'stopRecording' }
+  | { action: 'setBounds'; value: { x: number; y: number; width: number; height: number } }
+  | { action: 'setFPS'; value: { fps: number } }
+  | { action: 'startObservingWindows' }
+  | { action: 'stopObservingWindows' }
+
+export enum OracleActions {
+  startRecording = 'startRecording',
+  stopRecording = 'stopRecording',
+  setBounds = 'setBounds',
+  startObservingWindows = 'startObservingWindows',
+  stopObservingWindows = 'stopObservingWindows',
+}
 
 type Narrow<T, K> = T extends { message: K } ? T : never
 
-export type OracleMessageHandler = (<K extends OracleMessage['message']>(
+export type OracleMessageHandler = <K extends OracleMessage['message']>(
   message: K,
   value: Narrow<OracleMessage, K>,
-) => void)
+) => void
 
 export class Oracle {
   private process: ChildProcess
@@ -66,7 +145,7 @@ export class Oracle {
   }
 
   start = async () => {
-    await this.runScreenProcess()
+    await this.runOracleProcess()
     await this.socketConnected
   }
 
@@ -86,11 +165,11 @@ export class Oracle {
     await sleep(32)
   }
 
-  send = () => {
-    this.socket.send('')
+  sendAction = (action: OracleAction) => {
+    this.socket.send(JSON.stringify(action))
   }
 
-  private async runScreenProcess() {
+  private async runOracleProcess() {
     if (this.process !== undefined) {
       throw new Error('Call `.stop()` first')
     }

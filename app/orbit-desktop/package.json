@@ -34,6 +34,7 @@
     "@o/stores": "^2.6.0",
     "@o/use-store": "^2.6.0",
     "@o/utils": "^2.6.0",
+    "@o/oracle": "*",
     "add-asset-html-webpack-plugin": "^3.1.3",
     "add-source-loader": "^2.6.0",
     "apollo-link-http": "^1.5.15",

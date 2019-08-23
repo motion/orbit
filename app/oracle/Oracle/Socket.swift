@@ -139,9 +139,8 @@ class Socket {
                 
             case .windowChanged(let title, let size, let position):
                 message = [
-                    "action" : "windowEvent",
+                    "action" : "windowChanged",
                     "value" : [
-                        "type" : "FrontmostWindowChangedEvent",
                         "id" : 12345, // TODO
                         "title" : title,
                         "size" : [Int(size.width), Int(size.height)],
@@ -151,9 +150,8 @@ class Socket {
 
             case .windowMoved(let size, let position):
                 message = [
-                    "action" : "windowEvent",
+                    "action" : "windowMoved",
                     "value" : [
-                        "type" : "WindowPosChangedEvent",
                         "id" : 12345, // TODO
                         "size" : [Int(size.width), Int(size.height)],
                         "position" : [Int(position.x), Int(position.y)]
@@ -162,9 +160,8 @@ class Socket {
 
             case .windowResized(let size, let position):
                 message = [
-                    "action" : "windowEvent",
+                    "action" : "windowResized",
                     "value" : [
-                        "type" : "WindowPosChangedEvent",
                         "id" : 12345, // TODO
                         "size" : [Int(size.width), Int(size.height)],
                         "position" : [Int(position.x), Int(position.y)]

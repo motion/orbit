@@ -4,6 +4,7 @@
   "private": true,
   "main": "./_/Oracle.js",
   "scripts": {
+    "edit": "open ./Oracle.xcworkspace",
     "install-pods": "pod install",
     "build": "./build.sh --if-empty && npx tsc || true",
     "watch": "tsc -b --watch --preserveWatchOutput"

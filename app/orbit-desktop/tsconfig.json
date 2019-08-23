@@ -17,6 +17,7 @@
     { "path": "../libs-node" },
     { "path": "../apps-manager" },
     { "path": "../kit" },
+    { "path": "../oracle" },
     { "path": "../../packages/utils" },
     { "path": "../../packages/use-store" },
     { "path": "../../packages/mediator" },

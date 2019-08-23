@@ -1,7 +1,8 @@
 import { Command } from '@o/mediator'
 
-import { ApiInfo } from '../ApiInfo'
+import { ApiInfo } from './ApiInfo'
 import { AppBit } from './AppBit'
+import { OracleActions } from './Oracle'
 import { Space } from './SpaceInterface'
 
 export type StatusReply<A = string> =
@@ -200,3 +201,5 @@ export const CallAppBitApiMethodCommand = new Command<
     args: any[]
   }
 >('CallAppBitApiMethodCommand')
+
+export const OracleCommand = new Command<void, OracleActions>('OracleCommand')

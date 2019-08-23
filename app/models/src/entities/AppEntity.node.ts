@@ -1,8 +1,8 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
-import { AppBit } from '../interfaces/AppBit'
-import { ItemType } from '../interfaces/ItemType'
-import { Space } from '../interfaces/SpaceInterface'
+import { AppBit } from '../AppBit'
+import { ItemType } from '../ItemType'
+import { Space } from '../SpaceInterface'
 import { SpaceEntity } from './SpaceEntity.node'
 
 @Entity()

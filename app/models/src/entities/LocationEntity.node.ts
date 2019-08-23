@@ -1,5 +1,6 @@
 import { Column } from 'typeorm'
-import { Location } from '../interfaces/Location'
+
+import { Location } from '../Location'
 
 export class LocationEntity implements Location {
   @Column({ nullable: true })

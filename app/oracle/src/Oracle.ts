@@ -1,10 +1,13 @@
 import { Logger } from '@o/logger'
+import { OracleAction, OracleMessage } from '@o/models'
 import { ChildProcess, spawn } from 'child_process'
 import electronUtil from 'electron-util/node'
 import Path from 'path'
 import { Server } from 'ws'
 
-const log = new Logger('screen')
+export { OracleAction, OracleMessage } from '@o/models'
+
+const log = new Logger('Oracle')
 const sleep = (ms: number) => new Promise(res => setTimeout(res, ms))
 const dir = electronUtil.fixPathForAsarUnpack(__dirname)
 const bin = 'Oracle'
@@ -20,33 +23,12 @@ export type OracleOptions = {
 
 // message types
 
-interface Message {
-  message: string
-}
-
-interface TrayBoundsMessage extends Message {
-  message: 'trayBounds'
-  value: {
-    position: [number, number]
-    size: [number, number]
-  }
-}
-
-interface TrayHoverMessage extends Message {
-  message: 'trayHover'
-  value: {
-    id: '0' | '1' | '2' | 'Out'
-  }
-}
-
-type OracleMessage = TrayHoverMessage | TrayBoundsMessage
-
 type Narrow<T, K> = T extends { message: K } ? T : never
 
-export type OracleMessageHandler = (<K extends OracleMessage['message']>(
+export type OracleMessageHandler = <K extends OracleMessage['message']>(
   message: K,
   value: Narrow<OracleMessage, K>,
-) => void)
+) => void
 
 export class Oracle {
   private process: ChildProcess
@@ -66,7 +48,7 @@ export class Oracle {
   }
 
   start = async () => {
-    await this.runScreenProcess()
+    await this.runOracleProcess()
     await this.socketConnected
   }
 
@@ -86,11 +68,11 @@ export class Oracle {
     await sleep(32)
   }
 
-  send = () => {
-    this.socket.send('')
+  sendAction = (action: OracleAction) => {
+    this.socket.send(JSON.stringify(action))
   }
 
-  private async runScreenProcess() {
+  private async runOracleProcess() {
     if (this.process !== undefined) {
       throw new Error('Call `.stop()` first')
     }

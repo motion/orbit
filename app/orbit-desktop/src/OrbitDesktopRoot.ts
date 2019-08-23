@@ -79,28 +79,39 @@ import { WorkspaceManager } from './WorkspaceManager/WorkspaceManager'
 import { orTimeout, OR_TIMED_OUT } from '@o/utils'
 import { interceptStdOut } from './helpers/interceptStdOut'
 import { appStatusManager, AppStatusManager } from './managers/AppStatusManager'
+import { OracleManager } from './managers/OracleManager'
 
 const log = new Logger('OrbitDesktopRoot')
 const Config = getGlobalConfig()
 
-async function startSeries(
-  fns: (() => Promise<void>)[],
+type AsyncFn = () => Promise<any>
+
+async function asyncRun(
+  fns: (AsyncFn | { parallel: AsyncFn[] })[],
   options: {
     timeout?: number
   } = {},
 ) {
-  log.verbose(`startSeries ${fns.length}`)
-  for (const [index, fn] of fns.entries()) {
-    log.verbose(`startSeries, start function ${index}`, fn, options.timeout)
+  log.verbose(`asyncRun ${fns.length}`)
+  for (const [index, item] of fns.entries()) {
+    log.verbose(`asyncRun, start function ${index}`, item, options.timeout)
+    const runItem = async () => {
+      if (typeof item === 'function') {
+        await item()
+      }
+      if ('parallel' in item) {
+        await Promise.all(item.parallel.map(x => x()))
+      }
+    }
     try {
       if (options.timeout) {
-        await orTimeout(fn(), options.timeout)
+        await orTimeout(runItem(), options.timeout)
       } else {
-        await fn()
+        await runItem()
       }
     } catch (err) {
       if (err === OR_TIMED_OUT) {
-        log.error('Timed out starting', fn)
+        log.error('Timed out starting', item)
       }
       log.error('got real err', err)
       throw err
@@ -132,6 +143,7 @@ export class OrbitDesktopRoot {
   generalSettingManager: GeneralSettingManager
   topicsManager: TopicsManager
   operatingSystemManager: OperatingSystemManager
+  oracleManager: OracleManager
 
   // attaching here for debugging
   appStatusManager: AppStatusManager = appStatusManager
@@ -143,26 +155,33 @@ export class OrbitDesktopRoot {
 
     this.registerREPLGlobals()
 
-    await startSeries(
+    /**
+     * Next step for asyncRun would be instead to have a proper graph based on deps.
+     */
+    await asyncRun(
       [
-        async () => {
-          if (!singleUseMode) {
-            await Desktop.start({
-              ignoreSelf: true,
-              master: true,
-              stores: {
-                App,
-                Electron,
-                Desktop,
-              },
-            })
-          }
-        },
-        async () => {
-          // databaserunner runs your migrations which everything can be impacted by...
-          // leave it as high up here as possible
-          this.databaseManager = new DatabaseManager()
-          await this.databaseManager.start()
+        {
+          parallel: [
+            async () => {
+              if (!singleUseMode) {
+                await Desktop.start({
+                  ignoreSelf: true,
+                  master: true,
+                  stores: {
+                    App,
+                    Electron,
+                    Desktop,
+                  },
+                })
+              }
+            },
+            async () => {
+              // databaserunner runs your migrations which everything can be impacted by...
+              // leave it as high up here as possible
+              this.databaseManager = new DatabaseManager()
+              await this.databaseManager.start()
+            },
+          ],
         },
         async () => {
           this.workspaceManager = new WorkspaceManager(this.mediatorServer, {
@@ -180,52 +199,66 @@ export class OrbitDesktopRoot {
             await this.webServer.start()
           }
         },
-        async () => {
-          if (!singleUseMode) {
-            // run this early, it sets up the general setting if needed
-            this.generalSettingManager = new GeneralSettingManager()
-            await this.generalSettingManager.start()
-          }
+        {
+          parallel: [
+            async () => {
+              if (!singleUseMode) {
+                // run this early, it sets up the general setting if needed
+                this.generalSettingManager = new GeneralSettingManager()
+                await this.generalSettingManager.start()
+              }
+            },
+            async () => {
+              if (!singleUseMode) {
+                // manages operating system state
+                this.operatingSystemManager = new OperatingSystemManager()
+                await this.operatingSystemManager.start()
+              }
+            },
+            async () => {
+              if (!singleUseMode) {
+                // search index
+                this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
+                await this.cosalManager.start()
+                this.searchResultResolver = new SearchResultResolver(this.cosalManager.cosal)
+              }
+            },
+          ],
         },
-        async () => {
-          if (!singleUseMode) {
-            // manages operating system state
-            this.operatingSystemManager = new OperatingSystemManager()
-            await this.operatingSystemManager.start()
-          }
-        },
-        async () => {
-          if (!singleUseMode) {
-            // search index
-            this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
-            await this.cosalManager.start()
-            this.searchResultResolver = new SearchResultResolver(this.cosalManager.cosal)
-          }
-        },
-        async () => {
-          if (!singleUseMode) {
-            this.authServer = new AuthServer()
-            await this.authServer.start()
-          }
-        },
-        async () => {
-          if (!singleUseMode) {
-            // depends on cosal
-            this.topicsManager = new TopicsManager({ cosal: this.cosalManager.cosal })
-            await this.topicsManager.start()
-          }
-        },
-        async () => {
-          if (!singleUseMode) {
-            this.onboardManager = new OnboardManager()
-            await this.onboardManager.start()
-          }
-        },
-        async () => {
-          if (!singleUseMode) {
-            this.orbitDataManager = new OrbitDataManager()
-            await this.orbitDataManager.start()
-          }
+        {
+          parallel: [
+            async () => {
+              if (!singleUseMode) {
+                this.authServer = new AuthServer()
+                await this.authServer.start()
+              }
+            },
+            async () => {
+              if (!singleUseMode) {
+                // depends on cosal
+                this.topicsManager = new TopicsManager({ cosal: this.cosalManager.cosal })
+                await this.topicsManager.start()
+              }
+            },
+            async () => {
+              if (!singleUseMode) {
+                this.onboardManager = new OnboardManager()
+                await this.onboardManager.start()
+              }
+            },
+            async () => {
+              if (!singleUseMode) {
+                this.orbitDataManager = new OrbitDataManager()
+                await this.orbitDataManager.start()
+              }
+            },
+            async () => {
+              if (!singleUseMode) {
+                this.oracleManager = new OracleManager()
+                await this.oracleManager.start()
+              }
+            },
+          ],
         },
       ],
       {

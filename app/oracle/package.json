@@ -4,12 +4,14 @@
   "private": true,
   "main": "./_/Oracle.js",
   "scripts": {
+    "edit": "open ./Oracle.xcworkspace",
     "install-pods": "pod install",
     "build": "./build.sh --if-empty && npx tsc || true",
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@o/logger": "^2.6.0",
+    "@o/models": "*",
     "electron-util": "0.9.0",
     "fs-extra": "7.0.0",
     "ws": "^7.0.0"

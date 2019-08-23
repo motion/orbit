@@ -1,6 +1,7 @@
 import { loadMany } from '@o/bridge'
 import { NLP } from '@o/kit'
-import { getSearchableText, SearchByTopicModel } from '@o/models'
+import { getSearchableText } from '@o/libs'
+import { SearchByTopicModel } from '@o/models'
 import { react, useStore } from '@o/use-store'
 import * as React from 'react'
 

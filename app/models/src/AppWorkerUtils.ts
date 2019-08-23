@@ -2,10 +2,10 @@ import { Logger } from '@o/logger'
 import { MediatorClient } from '@o/mediator'
 import { EntityManager } from 'typeorm'
 
-import { AppBit } from './interfaces/AppBit'
-import { Bit } from './interfaces/Bit'
-import { BitContentType } from './interfaces/BitContentType'
-import { Location } from './interfaces/Location'
+import { AppBit } from './AppBit'
+import { Bit } from './Bit'
+import { BitContentType } from './BitContentType'
+import { Location } from './Location'
 
 export interface WorkerUtilsConstructor {
   new (

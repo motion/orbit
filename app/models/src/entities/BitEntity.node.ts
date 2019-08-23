@@ -1,19 +1,9 @@
-import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  Index,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  PrimaryColumn,
-  UpdateDateColumn,
-} from 'typeorm'
-import { AppBit } from '../interfaces/AppBit'
-import { Bit } from '../interfaces/Bit'
-import { BitContentType } from '../interfaces/BitContentType'
-import { Space } from '../interfaces/SpaceInterface'
+import { BaseEntity, Column, CreateDateColumn, Entity, Index, JoinTable, ManyToMany, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm'
+
+import { AppBit } from '../AppBit'
+import { Bit } from '../Bit'
+import { BitContentType } from '../BitContentType'
+import { Space } from '../SpaceInterface'
 import { AppEntity } from './AppEntity.node'
 import { LocationEntity } from './LocationEntity.node'
 import { SpaceEntity } from './SpaceEntity.node'

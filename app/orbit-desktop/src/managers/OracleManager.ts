@@ -1,33 +1,40 @@
-// import { getGlobalConfig } from '@o/config'
-// import { Oracle, OracleMessageHandler } from '@o/oracle'
-// import { Desktop } from '@o/stores'
+import { getGlobalConfig } from '@o/config'
+import { Logger } from '@o/kit'
+import { Oracle, OracleMessageHandler, OracleMessages } from '@o/oracle'
+import { Desktop } from '@o/stores'
 
-// // handles the oracle, which includes OCR and screen watching
+// handles the oracle, which includes OCR and screen watching
+const log = new Logger('OracleManager')
 
-// export class OracleManager {
-//   private oracle: Oracle
+export class OracleManager {
+  private oracle: Oracle
 
-//   constructor() {
-//     this.oracle = new Oracle({
-//       port: getGlobalConfig().ports.ocrBridge,
-//       onMessage: this.handleMessage,
-//     })
-//   }
+  constructor() {
+    this.oracle = new Oracle({
+      port: getGlobalConfig().ports.ocrBridge,
+      onMessage: this.handleMessage,
+    })
+  }
 
-//   async start() {
-//     await this.oracle.start()
-//   }
+  async start() {
+    await this.oracle.start()
+  }
 
-//   handleMessage: OracleMessageHandler = (message, value) => {
-//     // console.log('message', message)
-//     switch (message) {
-//       case 'trayBounds':
-//         Desktop.setState({ operatingSystem: { trayBounds: value } })
-//         break
-//       case 'trayClicked':
-//       case 'trayHovered':
-//         // Desktop.sendMessage(App, App.messages.TRAY_EVENT, { type: message, value: value.id })
-//         break
-//     }
-//   }
-// }
+  handleMessage: OracleMessageHandler = (message, value) => {
+    log.info('message', message)
+    switch (message) {
+      case OracleMessages.trayBounds:
+        Desktop.setState({ operatingSystem: { trayBounds: value } })
+        break
+      case OracleMessages.trayClicked:
+      case OracleMessages.trayHovered:
+        // Desktop.sendMessage(App, App.messages.TRAY_EVENT, { type: message, value: value.id })
+        break
+    }
+  }
+
+  /**
+   * TODO return the model resolver (just one can handle all)
+   */
+  getResolvers() {}
+}

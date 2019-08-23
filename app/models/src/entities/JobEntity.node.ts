@@ -1,8 +1,9 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
-import { AppBit } from '../interfaces/AppBit'
-import { Job } from '../interfaces/Job'
-import { JobStatus } from '../interfaces/JobStatus'
-import { JobType } from '../interfaces/JobType'
+
+import { AppBit } from '../AppBit'
+import { Job } from '../Job'
+import { JobStatus } from '../JobStatus'
+import { JobType } from '../JobType'
 import { AppEntity } from './AppEntity.node'
 
 @Entity()

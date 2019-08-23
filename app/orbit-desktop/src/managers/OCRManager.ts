@@ -138,121 +138,121 @@
 //     })
 
 //     // OCR words
-//     // this.screen.onWords(async wordBounds => {
-//     //   // [x, y, width, height, 'word']
-//     //   const words = wordBounds.map(x => x[4]) as string[]
+//     this.screen.onWords(async wordBounds => {
+//       // [x, y, width, height, 'word']
+//       const words = wordBounds.map(x => x[4]) as string[]
 
-//     //   const wordsString = words.join(' ')
-//     //   const salientWords = await this.cosal.getTopWords(wordsString, { max: 5 })
+//       const wordsString = words.join(' ')
+//       const salientWords = await this.cosal.getTopWords(wordsString, { max: 5 })
 
-//     //   this.hasResolvedOCR = true
-//     //   Desktop.setOcrState({
-//     //     salientWords,
-//     //     wordsString,
-//     //     words: wordBounds,
-//     //     updatedAt: Date.now(),
-//     //   })
-//     // })
+//       this.hasResolvedOCR = true
+//       Desktop.setOcrState({
+//         salientWords,
+//         wordsString,
+//         words: wordBounds,
+//         updatedAt: Date.now(),
+//       })
+//     })
 
 //     // OCR lines
-//     // this.screen.onLines(lines => {
-//     //   Desktop.setOcrState({
-//     //     lines,
-//     //   })
-//     // })
+//     this.screen.onLines(lines => {
+//       Desktop.setOcrState({
+//         lines,
+//       })
+//     })
 
 //     // window movements
-//     // this.screen.onWindowChange((event, value) => {
-//     //   // pause if no permission
-//     //   if (this.pauseIfNoPermission()) {
-//     //     return
-//     //   }
-//     //   if (event === 'ScrollEvent') {
-//     //     // always clear if not paused, you can pause it to prevent clear if you want
-//     //     if (!Desktop.ocrState.paused) {
-//     //       this.setScreenChanged()
-//     //     }
-//     //     this.ocrCurrentApp()
-//     //     return
-//     //   }
-//     //   console.log('got window change', event, value)
-//     //   // console.log(`got event ${event} ${JSON.stringify(value)}`)
-//     //   const lastState = toJS(Desktop.appState)
-//     //   let appState: any = {}
-//     //   let id = this.curAppID
-//     //   const wasFocusedOnOrbit = this.curAppID === ORBIT_WINDOW_ID
-//     //   switch (event) {
-//     //     case 'FrontmostWindowChangedEvent':
-//     //       id = value.id
-//     //       appState = {
-//     //         id,
-//     //         name: id ? last(id.split('.')) : value.title,
-//     //         title: value.title,
-//     //         offset: value.position,
-//     //         bounds: value.size,
-//     //       }
-//     //       // update these now so we can use to track
-//     //       this.curAppID = id
-//     //       this.curAppName = appState.name
-//     //       break
-//     //     case 'WindowPosChangedEvent':
-//     //       appState.bounds = value.size
-//     //       appState.offset = value.position
-//     //   }
-//     //   // no change
-//     //   if (isEqual(appState, lastState)) {
-//     //     log.info('Same app state, ignoring scan')
-//     //     return
-//     //   }
-//     //   const focusedOnOrbit = this.curAppID === ORBIT_WINDOW_ID
-//     //   Desktop.setState({ focusedOnOrbit })
-//     //   // when were moving into focus prevent app, store its appName, pause then return
-//     //   if (PREVENT_APP_STATE[this.curAppName]) {
-//     //     log.info('Prevent app state', this.curAppName)
-//     //     this.screen.pause()
-//     //     return
-//     //   }
-//     //   if (!wasFocusedOnOrbit && !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[appState.name]) {
-//     //     const { appState } = Desktop.state
-//     //     if (
-//     //       !isEqual(appState.bounds, appState.bounds) ||
-//     //       !isEqual(appState.offset, appState.offset)
-//     //     ) {
-//     //       console.log('ocr clearing...')
-//     //       // immediate clear for moving
-//     //       Desktop.sendMessage(Electron, Electron.messages.CLEAR)
-//     //     }
-//     //   }
-//     //   if (!Desktop.ocrState.paused) {
-//     //     this.screen.resume()
-//     //   }
-//     //   console.log('setting app state!', appState)
-//     //   Desktop.setState({ appState })
-//     // })
+//     this.screen.onWindowChange((event, value) => {
+//       // pause if no permission
+//       if (this.pauseIfNoPermission()) {
+//         return
+//       }
+//       if (event === 'ScrollEvent') {
+//         // always clear if not paused, you can pause it to prevent clear if you want
+//         if (!Desktop.ocrState.paused) {
+//           this.setScreenChanged()
+//         }
+//         this.ocrCurrentApp()
+//         return
+//       }
+//       console.log('got window change', event, value)
+//       // console.log(`got event ${event} ${JSON.stringify(value)}`)
+//       const lastState = toJS(Desktop.appState)
+//       let appState: any = {}
+//       let id = this.curAppID
+//       const wasFocusedOnOrbit = this.curAppID === ORBIT_WINDOW_ID
+//       switch (event) {
+//         case 'FrontmostWindowChangedEvent':
+//           id = value.id
+//           appState = {
+//             id,
+//             name: id ? last(id.split('.')) : value.title,
+//             title: value.title,
+//             offset: value.position,
+//             bounds: value.size,
+//           }
+//           // update these now so we can use to track
+//           this.curAppID = id
+//           this.curAppName = appState.name
+//           break
+//         case 'WindowPosChangedEvent':
+//           appState.bounds = value.size
+//           appState.offset = value.position
+//       }
+//       // no change
+//       if (isEqual(appState, lastState)) {
+//         log.info('Same app state, ignoring scan')
+//         return
+//       }
+//       const focusedOnOrbit = this.curAppID === ORBIT_WINDOW_ID
+//       Desktop.setState({ focusedOnOrbit })
+//       // when were moving into focus prevent app, store its appName, pause then return
+//       if (PREVENT_APP_STATE[this.curAppName]) {
+//         log.info('Prevent app state', this.curAppName)
+//         this.screen.pause()
+//         return
+//       }
+//       if (!wasFocusedOnOrbit && !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[appState.name]) {
+//         const { appState } = Desktop.state
+//         if (
+//           !isEqual(appState.bounds, appState.bounds) ||
+//           !isEqual(appState.offset, appState.offset)
+//         ) {
+//           console.log('ocr clearing...')
+//           // immediate clear for moving
+//           Desktop.sendMessage(Electron, Electron.messages.CLEAR)
+//         }
+//       }
+//       if (!Desktop.ocrState.paused) {
+//         this.screen.resume()
+//       }
+//       console.log('setting app state!', appState)
+//       Desktop.setState({ appState })
+//     })
 
 //     // OCR work clear
-//     // this.screen.onBoxChanged(count => {
-//     //   if (!Desktop.ocrState.words) {
-//     //     log.info('RESET screen boxChanged (App)')
-//     //     this.setScreenChanged()
-//     //     if (this.isWatching === 'OCR') {
-//     //       log.info('reset is watching ocr to set back to app')
-//     //       this.ocrCurrentApp()
-//     //     }
-//     //   } else {
-//     //     // for not many clears, try it
-//     //     if (count < 20) {
-//     //       // Desktop.setState({
-//     //       //   clearWord: this.screen.changedIds,
-//     //       // })
-//     //     } else {
-//     //       // else just clear it all
-//     //       log.info('RESET screen boxChanged (NOTTTTTTT App)')
-//     //       this.setScreenChanged()
-//     //       this.ocrCurrentApp()
-//     //     }
-//     //   }
-//     // })
+//     this.screen.onBoxChanged(count => {
+//       if (!Desktop.ocrState.words) {
+//         log.info('RESET screen boxChanged (App)')
+//         this.setScreenChanged()
+//         if (this.isWatching === 'OCR') {
+//           log.info('reset is watching ocr to set back to app')
+//           this.ocrCurrentApp()
+//         }
+//       } else {
+//         // for not many clears, try it
+//         if (count < 20) {
+//           // Desktop.setState({
+//           //   clearWord: this.screen.changedIds,
+//           // })
+//         } else {
+//           // else just clear it all
+//           log.info('RESET screen boxChanged (NOTTTTTTT App)')
+//           this.setScreenChanged()
+//           this.ocrCurrentApp()
+//         }
+//       }
+//     })
 //   }
 
 //   async restartScreen() {
@@ -279,64 +279,64 @@
 //     })
 //   }, 32)
 
-//   // async ocrCurrentApp() {
-//   //   if (!this.started) {
-//   //     return
-//   //   }
-//   //   clearTimeout(this.clearOCRTm)
-//   //   if (!Desktop.appState.id || Desktop.ocrState.paused) {
-//   //     return
-//   //   }
-//   //   const { name, offset, bounds } = Desktop.appState
-//   //   if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) {
-//   //     log.info('Prevent scanning app', name)
-//   //     return
-//   //   }
-//   //   if (!offset || !bounds) {
-//   //     log.info('No offset or no bounds')
-//   //     return
-//   //   }
-//   //   console.log('scanning new app')
-//   //   this.setScreenChanged()
-//   //   // we are watching the whole app for words
-//   //   await this.watchBounds('App', {
-//   //     fps: 10,
-//   //     sampleSpacing: 100,
-//   //     sensitivity: 1,
-//   //     showCursor: false,
-//   //     boxes: [
-//   //       {
-//   //         id: WINDOW_ID,
-//   //         x: offset[0],
-//   //         y: offset[1],
-//   //         width: bounds[0],
-//   //         height: bounds[1],
-//   //         // screenDir: Constants.TMP_DIR,
-//   //         initialScreenshot: true,
-//   //         findContent: true,
-//   //         ocr: true,
-//   //       },
-//   //     ],
-//   //   })
-//   //   this.hasResolvedOCR = false
-//   //   if (Desktop.ocrState.paused) {
-//   //     return
-//   //   }
-//   //   log.info('ocrCurrentApp.resume', name)
-//   //   await this.screen.resume()
-//   //   this.clearOCRTm = setTimeout(async () => {
-//   //     if (!this.hasResolvedOCR) {
-//   //       log.info('seems like ocr has stopped working, restarting...')
-//   //       this.restartScreen()
-//   //     }
-//   //   }, 15000)
-//   // }
+//   async ocrCurrentApp() {
+//     if (!this.started) {
+//       return
+//     }
+//     clearTimeout(this.clearOCRTm)
+//     if (!Desktop.appState.id || Desktop.ocrState.paused) {
+//       return
+//     }
+//     const { name, offset, bounds } = Desktop.appState
+//     if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) {
+//       log.info('Prevent scanning app', name)
+//       return
+//     }
+//     if (!offset || !bounds) {
+//       log.info('No offset or no bounds')
+//       return
+//     }
+//     console.log('scanning new app')
+//     this.setScreenChanged()
+//     // we are watching the whole app for words
+//     await this.watchBounds('App', {
+//       fps: 10,
+//       sampleSpacing: 100,
+//       sensitivity: 1,
+//       showCursor: false,
+//       boxes: [
+//         {
+//           id: WINDOW_ID,
+//           x: offset[0],
+//           y: offset[1],
+//           width: bounds[0],
+//           height: bounds[1],
+//           // screenDir: Constants.TMP_DIR,
+//           initialScreenshot: true,
+//           findContent: true,
+//           ocr: true,
+//         },
+//       ],
+//     })
+//     this.hasResolvedOCR = false
+//     if (Desktop.ocrState.paused) {
+//       return
+//     }
+//     log.info('ocrCurrentApp.resume', name)
+//     await this.screen.resume()
+//     this.clearOCRTm = setTimeout(async () => {
+//       if (!this.hasResolvedOCR) {
+//         log.info('seems like ocr has stopped working, restarting...')
+//         this.restartScreen()
+//       }
+//     }, 15000)
+//   }
 
-//   // watchBounds = async (name, settings) => {
-//   //   console.log('watchBounds', name, settings)
-//   //   this.isWatching = name
-//   //   this.watchSettings = { name, settings }
-//   //   await this.screen.pause()
-//   //   // this.screen.watchBounds(settings)
-//   // }
+//   watchBounds = async (name, settings) => {
+//     console.log('watchBounds', name, settings)
+//     this.isWatching = name
+//     this.watchSettings = { name, settings }
+//     await this.screen.pause()
+//     // this.screen.watchBounds(settings)
+//   }
 // }

@@ -1,6 +1,7 @@
 import { Cosal, CosalSearchOptions } from '@o/cosal'
+import { getSearchableText } from '@o/libs'
 import { Logger } from '@o/logger'
-import { Bit, BitEntity, getSearchableText } from '@o/models'
+import { Bit, BitEntity } from '@o/models'
 import { sleep } from '@o/utils'
 import { remove } from 'fs-extra'
 import { last } from 'lodash'

@@ -6,7 +6,7 @@ import { to, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
 import { useOm } from '../../om/om'
-import { whenIdle } from './OrbitApp'
+import { OrbitApp, whenIdle } from './OrbitApp'
 import { appsCarouselStore, stackMarginLessPct } from './OrbitAppsCarouselStore'
 import { OrbitSearchResults } from './OrbitSearchResults'
 
@@ -312,12 +312,13 @@ const OrbitAppCard = memo(
             {...cardProps}
           >
             <AppLoadingScreen definition={definition} app={app} visible={!store.shouldRender} />
-            {store.shouldRender && (
-              <webview
-                style={{ width: '100%', height: '100%' }}
-                src={`http://localhost:3001/isolate/${app.identifier}/${app.id}`}
-              />
-            )}
+            <OrbitApp
+              id={app.id!}
+              disableInteraction={disableInteraction}
+              identifier={definition.id}
+              appDef={definition}
+              shouldRenderApp={store.shouldRender}
+            />
           </Card>
         </View>
       </View>

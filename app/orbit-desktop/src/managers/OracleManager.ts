@@ -1,8 +1,8 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger, resolveObserveMany } from '@o/kit'
+import { OracleWordsFound, OracleWordsFoundModel } from '@o/models'
 import { Oracle, OracleMessageHandler, OracleMessages } from '@o/oracle'
 import { Desktop } from '@o/stores'
-import { OracleWordsFoundModel, OracleWordsFoundMessage } from '@o/models'
 import Observable from 'zen-observable'
 
 // handles the oracle, which includes OCR and screen watching
@@ -26,9 +26,9 @@ export class OracleManager {
     await this.oracle.stop()
   }
 
-  handleMessage: OracleMessageHandler = (message, value) => {
-    log.info('message', message, value)
-    switch (message) {
+  handleMessage: OracleMessageHandler = ({ action, value }) => {
+    log.info('action', message, value)
+    switch (action) {
       case OracleMessages.words:
         for (const observer of this.wordObservers) {
           observer.update(value)
@@ -47,13 +47,13 @@ export class OracleManager {
   }
 
   wordObservers = new Set<{
-    update: (next: OracleWordsFoundMessage[]) => void
-    observable: Observable<OracleWordsFoundMessage[]>
+    update: (next: OracleWordsFound[]) => void
+    observable: Observable<OracleWordsFound[]>
   }>()
   observeWordsFound() {
-    const observable = new Observable<OracleWordsFoundMessage[]>(observer => {
+    const observable = new Observable<OracleWordsFound[]>(observer => {
       this.wordObservers.add({
-        update: (status: OracleWordsFoundMessage[]) => {
+        update: (status: OracleWordsFound[]) => {
           observer.next(status)
         },
         observable,

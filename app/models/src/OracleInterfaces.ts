@@ -68,12 +68,14 @@ export interface OracleWindowResizedMessage extends Message {
   }
 }
 
+export type OracleWordsFound = {
+  string: string
+  bounds: [number, number, number, number]
+}
+
 export interface OracleWordsFoundMessage extends Message {
   message: OracleMessages.words
-  value: {
-    string: string
-    bounds: [number, number, number, number]
-  }[]
+  value: OracleWordsFound[]
 }
 
 export type OracleMessage =

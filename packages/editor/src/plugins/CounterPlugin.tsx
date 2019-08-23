@@ -5,7 +5,6 @@ import { BLOCKS } from './constants'
 import { replacer } from './helpers'
 import node from './node'
 
-@node
 const CounterNode = node(({ node }) => {
   const diff = (num: number) => {
     const {

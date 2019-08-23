@@ -1,4 +1,4 @@
-const isList = require('./isList');
+const isList = require('./isList')
 
 /**
  * Return the parent list block for an item block.
@@ -9,11 +9,9 @@ const isList = require('./isList');
  * @return {Slate.Block || Void}
  */
 function getListForItem(opts, state, item) {
-    const { document } = state;
-    const parent = document.getParent(item.key);
-    return (parent && isList(opts, parent))
-        ? parent
-        : null;
+  const { document } = state
+  const parent = document.getParent(item.key)
+  return parent && isList(opts, parent) ? parent : null
 }
 
-module.exports = getListForItem;
+module.exports = getListForItem

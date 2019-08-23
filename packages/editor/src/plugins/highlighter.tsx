@@ -1,11 +1,12 @@
-import { findAll } from './highlightCore'
 import React from 'react'
+
+import { findAll } from './highlightCore'
 
 /**
  * Highlights all occurrences of search terms (searchText) within a string (textToHighlight).
  * This function returns an array of strings and <span>s (wrapping highlighted words).
  */
-export default function Highlighter({
+export function Highlighter({
   activeClassName = '',
   activeIndex = -1,
   autoEscape,
@@ -28,26 +29,18 @@ export default function Highlighter({
   let highlightClassNames = ''
 
   return (
-    <span $$text className={className}>
+    <span className={className}>
       {chunks.map((chunk, index) => {
-        const text = textToHighlight.substr(
-          chunk.start,
-          chunk.end - chunk.start
-        )
+        const text = textToHighlight.substr(chunk.start, chunk.end - chunk.start)
 
         if (chunk.highlight) {
           highlightCount++
-          highlightClassNames = `${highlightClassName} ${highlightCount ===
-            +activeIndex
-            ? activeClassName
-            : ''}`
+          highlightClassNames = `${highlightClassName} ${
+            highlightCount === +activeIndex ? activeClassName : ''
+          }`
 
           return (
-            <HighlightTag
-              className={highlightClassNames}
-              key={index}
-              style={highlightStyle}
-            >
+            <HighlightTag className={highlightClassNames} key={index} style={highlightStyle}>
               {text}
             </HighlightTag>
           )

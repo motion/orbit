@@ -4,7 +4,7 @@
  * @return {Boolean} true if the node is a UL or OL
  */
 function isList(opts, node) {
-    return opts.types.includes(node.type);
+  return opts.types.includes(node.type)
 }
 
-module.exports = isList;
+module.exports = isList

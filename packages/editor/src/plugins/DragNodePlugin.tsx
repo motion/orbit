@@ -1,4 +1,4 @@
-export default class DragNode {
+export class DragNodePlugin {
   onDropNode = (e, data, state, store) => {
     store.transform(state =>
       state

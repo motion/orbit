@@ -1,102 +1,68 @@
-// @flow
-import { view } from '@o/black'
+import { useStore } from '@o/use-store'
 import React from 'react'
 import { Editor } from 'slate'
 
-import EditorStore from './EditorStore'
-import SelectBar from './SelectBar'
+import { EditorStore } from './EditorStore'
+import { SelectBar } from './SelectBar'
 
 export { Raw } from 'slate'
-
-const empty = () => {}
 
 export type Props = {
   rules?: any[]
   plugins?: any[]
   inline?: boolean
   readOnly?: boolean
-  editorStore: EditorStore
-  rootStore?: rootStore
+  placeholder?: any
 }
 
-@view.attach('rootStore')
-@view.provide({
-  editorStore: EditorStore,
-})
-export default class EditorView {
-  props: Props
+export function EditorView({ placeholder, readOnly }: Props) {
+  const editorStore = useStore(EditorStore)
+  const { spec } = editorStore
 
-  static defaultProps = {
-    onChange: empty,
-    onDocumentChange: empty,
-    getRef: empty,
-    onKeyDown: empty,
+  const onDocumentChange = (document: Document, state: Object) => {
+    editorStore.setContents(state)
   }
 
-  onDocumentChange = (document: Document, state: Object) => {
-    this.props.editorStore.setContents(state)
-  }
-
-  onDocumentMouseUp = (event: SyntheticMouseEvent) => {
+  const onDocumentMouseUp = (event: SyntheticMouseEvent) => {
     event.persist()
-    this.props.editorStore.selection.mouseUpEvent = event
+    editorStore.selection.mouseUpEvent = event
   }
 
-  render({ placeholder, readOnly, editorStore }: Props) {
-    const { spec } = editorStore
-
-    return (
-      <document
-        onClick={editorStore.handleDocumentClick}
-        onMouseUp={this.onDocumentMouseUp}
-        $fullPage={!editorStore.inline}
-        $editable={!readOnly}
-      >
-        <Editor
-          if={editorStore.state}
-          state={editorStore.state}
-          $editor
-          $$undraggable
-          editorStore={editorStore}
-          readOnly={readOnly}
-          plugins={spec.plugins}
-          schema={spec.schema}
-          onDocumentChange={this.onDocumentChange}
-          onChange={editorStore.onChange}
-          ref={editorStore.getRef}
-          onFocus={editorStore.onFocus}
-          onBlur={editorStore.onBlur}
-          onKeyDown={editorStore.onKeyDown}
-          placeholder={placeholder}
-        />
-        <SelectBar editorStore={editorStore} />
-      </document>
-    )
-  }
-
-  static style = {
-    document: {
-      // dont make this overflow hidden
-      // or drag n drop wont go over sidebar
-      flex: 1,
-      maxWidth: '100%',
-    },
-    editable: {
-      cursor: 'text !important',
-    },
-    editor: {
-      color: '#444',
-      fontSize: 16,
-      lineHeight: 1.5,
-      fontFamily: 'Whitney SSm A,Whitney SSm B,Helvetica,Arial',
-    },
-  }
-
-  static theme = {
-    inline: {
-      document: {
-        overflow: 'hidden',
-      },
-    },
-  }
+  return (
+    <div
+      onClick={editorStore.handleDocumentClick}
+      onMouseUp={onDocumentMouseUp}
+      style={{
+        cursor: !readOnly ? 'text' : 'default',
+        flex: 1,
+        maxWidth: '100%',
+      }}
+      $fullPage={!editorStore.inline}
+      $editable={!readOnly}
+    >
+      <Editor
+        if={editorStore.state}
+        state={editorStore.state}
+        style={{
+          color: '#444',
+          fontSize: 16,
+          lineHeight: 1.5,
+          fontFamily: 'Whitney SSm A,Whitney SSm B,Helvetica,Arial',
+        }}
+        $$undraggable
+        editorStore={editorStore}
+        readOnly={readOnly}
+        plugins={spec.plugins}
+        schema={spec.schema}
+        onDocumentChange={onDocumentChange}
+        onChange={editorStore.onChange}
+        ref={editorStore.getRef}
+        onFocus={editorStore.onFocus}
+        onBlur={editorStore.onBlur}
+        onKeyDown={editorStore.onKeyDown}
+        placeholder={placeholder}
+      />
+      <SelectBar editorStore={editorStore} />
+    </div>
+  )
 }

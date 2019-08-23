@@ -1,4 +1,3 @@
-
 /**
  * Return the current list item, from current selection or from a node.
  *
@@ -8,17 +7,15 @@
  * @return {Slate.Block || Void}
  */
 function getCurrentItem(opts, state, block) {
-    const { document } = state;
+  const { document } = state
 
-    if (!block) {
-        if (!state.selection.startKey) return null;
-        block = state.startBlock;
-    }
+  if (!block) {
+    if (!state.selection.startKey) return null
+    block = state.startBlock
+  }
 
-    const parent = document.getParent(block.key);
-    return (parent && parent.type === opts.typeItem)
-        ? parent
-        : null;
+  const parent = document.getParent(block.key)
+  return parent && parent.type === opts.typeItem ? parent : null
 }
 
-module.exports = getCurrentItem;
+module.exports = getCurrentItem

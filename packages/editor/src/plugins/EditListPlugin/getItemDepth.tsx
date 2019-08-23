@@ -1,4 +1,4 @@
-const getCurrentItem = require('./getCurrentItem');
+const getCurrentItem = require('./getCurrentItem')
 
 /**
  * Get depth of current block in a document list
@@ -9,17 +9,17 @@ const getCurrentItem = require('./getCurrentItem');
  * @return {Number}
  */
 function getItemDepth(opts, state, block) {
-    const { document, startBlock } = state;
-    block = block || startBlock;
+  const { document, startBlock } = state
+  block = block || startBlock
 
-    const currentItem = getCurrentItem(opts, state, block);
-    if (!currentItem) {
-        return 0;
-    }
+  const currentItem = getCurrentItem(opts, state, block)
+  if (!currentItem) {
+    return 0
+  }
 
-    const list = document.getParent(currentItem.key);
+  const list = document.getParent(currentItem.key)
 
-    return (1 + getItemDepth(opts, state, list));
+  return 1 + getItemDepth(opts, state, list)
 }
 
-module.exports = getItemDepth;
+module.exports = getItemDepth

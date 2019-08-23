@@ -1,7 +1,7 @@
 import { BLOCKS } from './constants'
 import { findDOMNode } from './helpers'
 
-export default class Selection {
+export class SelectionStore {
   mouseUp = null
   hovered = null
   hoveredNode = null

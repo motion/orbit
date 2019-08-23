@@ -5,28 +5,22 @@ import AutoReplace from 'slate-auto-replace'
 
 import { BLOCKS } from '../constants'
 import { node } from '../node'
-import EditList from './EditListPlugin'
+import { EditListPlugin } from './EditListPlugin'
 import { createButton } from './helpers'
-import { Paragraph } from './paragraphPlugin'
+import { Paragraph } from './ParagraphPlugin'
 
 // import moment from 'moment'
 const { UL_LIST, OL_LIST, LIST_ITEM } = BLOCKS
-const editList = EditList()
+const editList = EditListPlugin()
 
 editList.utils.isInListOfType = (state, type) => {
   const list = editList.utils.getCurrentList(state)
   return list && list.type === type
 }
 
-const ol_list = node(
-  view(props => {
-    return (
-      <ol $$ol {...props.attributes}>
-        {props.children}
-      </ol>
-    )
-  }),
-)
+const ol_list = node(props => {
+  return <ol {...props.attributes}>{props.children}</ol>
+})
 
 @node
 // @view.ui

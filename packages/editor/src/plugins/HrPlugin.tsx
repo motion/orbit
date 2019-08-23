@@ -1,9 +1,13 @@
+import React from 'react'
 import AutoReplace from 'slate-auto-replace'
+
 import { BLOCKS } from './constants'
 import node from './node'
 
 const hr = props =>
-  node(<hr contentEditable={false} css={{ background: '#000', height: 1 }} {...props.attributes} />)
+  node(
+    <hr contentEditable={false} style={{ background: '#000', height: 1 }} {...props.attributes} />,
+  )
 
 export class Separators {
   nodes = {

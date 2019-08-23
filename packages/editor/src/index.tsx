@@ -1,9 +1,9 @@
 import React from 'react'
 
 import { viewCache } from './helpers'
-import PlainEditor from './PlainEditor'
+import { PlainEditor } from './PlainEditor'
 
-export default class JotEditor extends React.Component {
+export class Editor extends React.Component {
   state = {
     plugins: null,
   }
@@ -27,11 +27,12 @@ export default class JotEditor extends React.Component {
     viewCache.remove(this)
   }
 
-  render({ getRef, ...props }, { plugins }) {
+  render() {
     if (!plugins) {
       return null
     }
-
+    const { getRef, ...props } = this.props
+    const { plugins } = this.state
     return <PlainEditor plugins={plugins} getRef={getRef} {...props} />
   }
 }

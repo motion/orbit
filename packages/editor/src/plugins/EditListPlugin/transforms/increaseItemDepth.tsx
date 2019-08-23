@@ -1,9 +1,9 @@
-const Slate = require('slate');
+const Slate = require('slate')
 
-const getPreviousItem = require('../getPreviousItem');
-const getCurrentItem = require('../getCurrentItem');
-const getListForItem = require('../getListForItem');
-const isList = require('../isList');
+const getPreviousItem = require('../getPreviousItem')
+const getCurrentItem = require('../getCurrentItem')
+const getListForItem = require('../getListForItem')
+const isList = require('../isList')
 
 /**
  * Increase the depth of the current item by putting it in a sub-list
@@ -15,16 +15,16 @@ const isList = require('../isList');
  * @return {Transform} transform
  */
 function increaseItemDepth(opts, transform) {
-    const previousItem = getPreviousItem(opts, transform.state);
+  const previousItem = getPreviousItem(opts, transform.state)
 
-    if (!previousItem) {
-        return transform;
-    }
+  if (!previousItem) {
+    return transform
+  }
 
-    const currentItem = getCurrentItem(opts, transform.state);
+  const currentItem = getCurrentItem(opts, transform.state)
 
-    // Move the item in the sublist of previous item
-    return moveAsSubItem(opts, transform, currentItem, previousItem.key);
+  // Move the item in the sublist of previous item
+  return moveAsSubItem(opts, transform, currentItem, previousItem.key)
 }
 
 /**
@@ -38,40 +38,32 @@ function increaseItemDepth(opts, transform) {
  * @return {Slate.Transform}
  */
 function moveAsSubItem(opts, transform, item, destKey) {
-    const destination = transform.state.document.getDescendant(destKey);
-    const lastIndex = destination.nodes.count();
-    const lastChild = destination.nodes.last();
+  const destination = transform.state.document.getDescendant(destKey)
+  const lastIndex = destination.nodes.count()
+  const lastChild = destination.nodes.last()
 
-    // The potential existing last child list
-    const existingList = isList(opts, lastChild) ? lastChild : null;
+  // The potential existing last child list
+  const existingList = isList(opts, lastChild) ? lastChild : null
 
-    if (existingList) {
-        return transform.moveNodeByKey(
-            item.key,
-            existingList.key,
-            existingList.nodes.count() // as last item
-        );
-    } else {
-        const currentList = getListForItem(opts, transform.state, destination);
+  if (existingList) {
+    return transform.moveNodeByKey(
+      item.key,
+      existingList.key,
+      existingList.nodes.count(), // as last item
+    )
+  } else {
+    const currentList = getListForItem(opts, transform.state, destination)
 
-        const newSublist = Slate.Block.create({
-            kind: 'block',
-            type: currentList.type,
-            data: currentList.data
-        });
+    const newSublist = Slate.Block.create({
+      kind: 'block',
+      type: currentList.type,
+      data: currentList.data,
+    })
 
-        transform = transform.insertNodeByKey(
-            destKey,
-            lastIndex,
-            newSublist
-        );
+    transform = transform.insertNodeByKey(destKey, lastIndex, newSublist)
 
-        return transform.moveNodeByKey(
-            item.key,
-            newSublist.key,
-            0
-        );
-    }
+    return transform.moveNodeByKey(item.key, newSublist.key, 0)
+  }
 }
 
-module.exports = increaseItemDepth;
+module.exports = increaseItemDepth

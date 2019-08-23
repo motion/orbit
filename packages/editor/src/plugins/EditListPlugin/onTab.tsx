@@ -1,6 +1,6 @@
-const decreaseItemDepth = require('./transforms/decreaseItemDepth');
-const increaseItemDepth = require('./transforms/increaseItemDepth');
-const getCurrentItem = require('./getCurrentItem');
+const decreaseItemDepth = require('./transforms/decreaseItemDepth')
+const increaseItemDepth = require('./transforms/increaseItemDepth')
+const getCurrentItem = require('./getCurrentItem')
 
 /**
  * User pressed Tab in an editor.
@@ -8,29 +8,23 @@ const getCurrentItem = require('./getCurrentItem');
  * Shift+Tab -> Decrease item depth if inside a list item
  */
 function onTab(event, data, state, opts) {
-    const { isCollapsed } = state;
+  const { isCollapsed } = state
 
-    if (!isCollapsed || !getCurrentItem(opts, state)) {
-        return;
-    }
+  if (!isCollapsed || !getCurrentItem(opts, state)) {
+    return
+  }
 
-    // Shift+tab reduce depth
-    if (data.isShift) {
-        event.preventDefault();
+  // Shift+tab reduce depth
+  if (data.isShift) {
+    event.preventDefault()
 
-        return decreaseItemDepth(
-            opts,
-            state.transform()
-        ).apply();
-    }
+    return decreaseItemDepth(opts, state.transform()).apply()
+  }
 
-    // Tab increases depth
-    event.preventDefault();
+  // Tab increases depth
+  event.preventDefault()
 
-    return increaseItemDepth(
-        opts,
-        state.transform()
-    ).apply();
+  return increaseItemDepth(opts, state.transform()).apply()
 }
 
-module.exports = onTab;
+module.exports = onTab

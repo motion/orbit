@@ -1,6 +1,5 @@
 export { CounterPlugin } from './CounterPlugin'
 export { FormPlugin } from './FormPlugin'
-export { EmailPlugin } from './EmailPlugin'
 export { ImagePlugin } from './ImagePlugin'
 export { ListPlugin } from './ListPlugin'
 export { LinkPlugin } from './LinkPlugin'

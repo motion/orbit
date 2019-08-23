@@ -1,14 +1,11 @@
 import { computed } from '@o/black'
 import * as UI from '@o/ui'
 import React from 'react'
-import { BLOCKS } from '~/views/editor/constants'
+
+import { BLOCKS } from './constants'
 
 export function node(View) {
-  class DecoratedNode extends React.Component {
-    static get name() {
-      return Node.name
-    }
-
+  class DecoratedNode extends React.Component<any> {
     state = {
       context: null,
     }

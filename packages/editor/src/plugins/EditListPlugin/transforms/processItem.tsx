@@ -35,11 +35,7 @@ function processItem(currentItem, opts, transform, ordered) {
   const prefix = ['due', 'by']
   const remove = new RegExp(`(${prefix.join('|')})? ${date.text}`)
   transform.removeTextByKey(text, 0, text.length)
-  transform.insertTextByKey(
-    currentItem.getFirstText(),
-    0,
-    currentItem.text.replace(remove, '')
-  )
+  transform.insertTextByKey(currentItem.getFirstText(), 0, currentItem.text.replace(remove, ''))
   return transform
 }
 

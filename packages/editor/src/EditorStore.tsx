@@ -2,7 +2,7 @@ import { flatten, includes, uniq } from 'lodash'
 import { Raw } from 'slate'
 
 import { getSpec } from './helpers'
-import SelectionStore from './selectionStore'
+import { SelectionStore } from './SelectionStore'
 
 type Plugin = any
 type Props = {
@@ -15,7 +15,7 @@ type Props = {
   // rootStore: rootStore,
 }
 
-export default class EditorStore {
+export class EditorStore {
   props: Props
 
   id = this.props.id || `${Math.random()}`

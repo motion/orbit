@@ -1,6 +1,6 @@
-const Slate = require('slate');
-const { List } = require('immutable');
-const isList = require('../isList');
+const Slate = require('slate')
+const { List } = require('immutable')
+const isList = require('../isList')
 
 /**
  * Wrap the blocks in the current selection in a new list. Selected
@@ -13,26 +13,26 @@ const isList = require('../isList');
  * @return {Transform} transform
  */
 function wrapInList(opts, transform, ordered, data) {
-    const selectedBlocks = getHighestSelectedBlocks(transform.state);
-    const type = ordered || opts.types[0];
+  const selectedBlocks = getHighestSelectedBlocks(transform.state)
+  const type = ordered || opts.types[0]
 
-    // Wrap in container
-    transform.wrapBlock({
-        type,
-        data: Slate.Data.create(data)
-    });
+  // Wrap in container
+  transform.wrapBlock({
+    type,
+    data: Slate.Data.create(data),
+  })
 
-    // Wrap in list items
-    selectedBlocks.forEach((node) => {
-        if (isList(opts, node)) {
-            // Merge its items with the created list
-            node.nodes.forEach(({ key }) => transform.unwrapNodeByKey(key));
-        } else {
-            transform.wrapBlockByKey(node.key, opts.typeItem);
-        }
-    });
+  // Wrap in list items
+  selectedBlocks.forEach(node => {
+    if (isList(opts, node)) {
+      // Merge its items with the created list
+      node.nodes.forEach(({ key }) => transform.unwrapNodeByKey(key))
+    } else {
+      transform.wrapBlockByKey(node.key, opts.typeItem)
+    }
+  })
 
-    return transform;
+  return transform
 }
 
 /**
@@ -41,21 +41,21 @@ function wrapInList(opts, transform, ordered, data) {
  * current selection
  */
 function getHighestSelectedBlocks(state) {
-    const range = state.selection;
-    const { document } = state;
+  const range = state.selection
+  const { document } = state
 
-    const startBlock = document.getClosestBlock(range.startKey);
-    const endBlock = document.getClosestBlock(range.endKey);
+  const startBlock = document.getClosestBlock(range.startKey)
+  const endBlock = document.getClosestBlock(range.endKey)
 
-    if (startBlock === endBlock) {
-        return List([startBlock]);
-    } else {
-        const ancestor = document.getCommonAncestor(startBlock.key, endBlock.key);
-        const startPath = ancestor.getPath(startBlock.key);
-        const endPath = ancestor.getPath(endBlock.key);
+  if (startBlock === endBlock) {
+    return List([startBlock])
+  } else {
+    const ancestor = document.getCommonAncestor(startBlock.key, endBlock.key)
+    const startPath = ancestor.getPath(startBlock.key)
+    const endPath = ancestor.getPath(endBlock.key)
 
-        return ancestor.nodes.slice(startPath[0], endPath[0] + 1);
-    }
+    return ancestor.nodes.slice(startPath[0], endPath[0] + 1)
+  }
 }
 
-module.exports = wrapInList;
+module.exports = wrapInList

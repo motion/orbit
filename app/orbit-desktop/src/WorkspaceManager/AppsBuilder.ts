@@ -463,7 +463,9 @@ export class AppsBuilder {
         app.packageId,
       )}.${this.buildMode[app.packageId]}.dll.js"></script>`
 
-    if (req.path.indexOf('/isolate') > -1) {
+    if (req.path.indexOf('/chrome') > -1) {
+      return index.replace('<!-- orbit-scripts -->', `${scriptsPre}${scriptsPost}`)
+    } else if (req.path.indexOf('/isolate') > -1) {
       const identifier = req.path.split('/')[2]
       const packageId = this.appsManager.identifierToPackageId(identifier)
       const app = this.apps.find(x => x.packageId === packageId)

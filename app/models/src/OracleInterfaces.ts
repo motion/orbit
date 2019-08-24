@@ -1,7 +1,7 @@
 // TODO having this type here is.. weird
 // but importing oracle is a nono
 
-export const enum OracleMessages {
+export enum OracleMessages {
   trayBounds,
   trayHovered,
   trayClicked,

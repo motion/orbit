@@ -58,10 +58,6 @@ export async function main() {
     // EVEN IF port was found to be empty.... killing again helps
     if (!process.env.NO_KILL_PORTS) {
       let ports = Object.values(config.ports)
-      if (process.env.NODE_ENV === 'development') {
-        // add the debug ports
-        ports = [...ports, 9005, 9006, 9007]
-      }
       log.info('Ensuring all ports clear...', ports.join(','))
       const killPort = require('clear-port')
       await Promise.all(ports.map(port => killPort(port).catch(err => err)))

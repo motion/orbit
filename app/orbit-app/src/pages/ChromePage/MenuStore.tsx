@@ -1,6 +1,6 @@
 import { PaneManagerStore, QueryStore, useActiveApps } from '@o/kit'
-import { App, Desktop, Electron } from '@o/stores'
-import { always, createStoreContext, ensure, react } from '@o/use-store'
+import { App, Desktop } from '@o/stores'
+import { createStoreContext, ensure, react } from '@o/use-store'
 import { debounce } from 'lodash'
 import { createRef } from 'react'
 
@@ -228,19 +228,9 @@ class MenuStore {
     },
   )
 
-  setPinnedFromPinKey = react(
-    () => always(Electron.state.pinKey.at),
-    () => {
-      this.isPinnedOpen = true
-    },
-    {
-      lazy: true,
-    },
-  )
-
-  closeMenuOnEsc = react(() => Desktop.state.keyboardState.escapeDown, this.closeMenu, {
-    lazy: true,
-  })
+  // closeMenuOnEsc = react(() => Desktop.state.keyboardState.escapeDown, this.closeMenu, {
+  //   lazy: true,
+  // })
 
   closeMenuOnPeekClose = react(
     () => App.isShowingPeek,
@@ -290,27 +280,10 @@ class MenuStore {
 
   isFocused = react(
     () => this.isOpenOutsideAnimation,
-    async (shouldFocus, { whenChanged, sleep }) => {
+    async (shouldFocus, { sleep }) => {
       if (!shouldFocus) {
         setTrayFocused(false)
         return false
-      }
-      if (this.isHoldingOption) {
-        // wait for a certain key to break
-        let pinnedKey
-        while (!pinnedKey) {
-          await whenChanged(() => Electron.state.pinKey.at)
-          const { name } = Electron.state.pinKey
-          // dont break on left/right
-          if (name !== 'left' && name !== 'right' && name !== 'down') {
-            pinnedKey = name
-            this.isPinnedOpen = true
-            if (this.searchInput.value === '') {
-              this.searchInput.value = name
-            }
-          }
-        }
-        console.log('GOT A PIN KEY', pinnedKey)
       }
       setTrayFocused(true)
       await sleep(32)
@@ -391,13 +364,13 @@ class MenuStore {
     this.mouseEvent = 'leave'
   }
 
-  leaveMouseOnLeaveBounds = react(
-    () => Desktop.state.hoverState.menuHovered,
-    menuHovered => {
-      ensure('not hovered', !menuHovered)
-      this.handleMouseLeave()
-    },
-  )
+  // leaveMouseOnLeaveBounds = react(
+  //   () => Desktop.state.hoverState.menuHovered,
+  //   menuHovered => {
+  //     ensure('not hovered', !menuHovered)
+  //     this.handleMouseLeave()
+  //   },
+  // )
 
   handleSearchInput = (ref: HTMLInputElement) => {
     this.searchInput = ref

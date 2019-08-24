@@ -26,22 +26,24 @@ export class OracleManager {
     await this.oracle.stop()
   }
 
-  handleMessage: OracleMessageHandler = ({ message, value }) => {
-    log.info('message', message, value)
-    switch (message) {
+  handleMessage: OracleMessageHandler = obj => {
+    log.info('message', obj)
+    switch (obj.message) {
       case OracleMessages.words:
         for (const observer of this.wordObservers) {
-          observer.update(value)
+          observer.update(obj.value)
         }
         break
       case OracleMessages.trayBounds:
-        Desktop.setState({ operatingSystem: { trayBounds: value } })
+        Desktop.setState({ operatingSystem: { trayBounds: obj.value } })
         break
       case OracleMessages.trayClicked:
         Desktop.setState({ operatingSystem: { trayClicked: Date.now() } })
         break
       case OracleMessages.trayHovered:
         Desktop.setState({ operatingSystem: { trayHovered: Date.now() } })
+        break
+      default:
         break
     }
   }

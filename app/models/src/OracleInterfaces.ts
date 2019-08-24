@@ -1,20 +1,21 @@
 // TODO having this type here is.. weird
 // but importing oracle is a nono
 
-export enum OracleMessages {
-  trayBounds = 'trayBounds',
-  trayHovered = 'trayHovered',
-  trayClicked = 'trayClicked',
-  windowEvent = 'windowEvent',
-  windowChanged = 'windowChanged',
-  windowMoved = 'windowMoved',
-  windowResized = 'windowResized',
-  words = 'words',
-  mouseMoved = 'mouseMoved',
+export const enum OracleMessages {
+  trayBounds,
+  trayHovered,
+  trayClicked,
+  windowEvent,
+  windowChanged,
+  windowMoved,
+  windowResized,
+  words,
+  mouseMoved,
 }
 
 interface Message {
-  message: string
+  message: OracleMessages
+  value: any
 }
 
 export interface OracleTrayBoundsMessage extends Message {
@@ -91,7 +92,6 @@ export type OracleMessage =
   | OracleTrayClickedMessage
   | OracleTrayHoveredMessage
   | OracleTrayBoundsMessage
-  | OracleMouseMovedMessage
   | OracleWindowChangedMessage
   | OracleWindowMovedMessage
   | OracleWindowResizedMessage

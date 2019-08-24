@@ -6,22 +6,21 @@ import { hot } from 'react-hot-loader/root'
 
 import { IS_ELECTRON } from './constants'
 import ContextMenu from './helpers/electron/ContextMenu.electron'
-import { om, useOm } from './om/om'
+import { om } from './om/om'
 import { useThemeStore } from './om/stores'
 import { useCaptureLinks } from './useCaptureLinks'
 
 export const OrbitRoot = hot(function OrbitRoot() {
   const themeStore = useThemeStore()
-  const { state } = useOm()
 
   useCaptureLinks(document)
 
-  let page: React.ReactNode = null
+  let CurPage: any = null
 
-  if (state.router.curPage.path === '/chrome') {
-    page = React.lazy(() => import('./pages/ChromePage/ChromePage'))
+  if (window.location.pathname === '/chrome') {
+    CurPage = React.lazy(() => import('./pages/ChromePage/ChromePage'))
   } else {
-    page = React.lazy(() => import('./pages/OrbitPage/OrbitPage'))
+    CurPage = React.lazy(() => import('./pages/OrbitPage/OrbitPage'))
   }
 
   return (
@@ -35,7 +34,9 @@ export const OrbitRoot = hot(function OrbitRoot() {
       >
         <ProvideUI themes={themes} activeTheme={themeStore.themeColor}>
           <ErrorBoundary name="Root">
-            <React.Suspense fallback={<Loading />}>{page}</React.Suspense>
+            <React.Suspense fallback={<Loading />}>
+              <CurPage />
+            </React.Suspense>
           </ErrorBoundary>
         </ProvideUI>
       </ContextMenuProvider>

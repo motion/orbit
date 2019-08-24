@@ -9,7 +9,11 @@ import { urls } from './router'
 export const onInitialize: OnInitialize = async om => {
   const { actions } = om
 
-  await actions.develop.start()
+  if (window.location.pathname !== '/chrome') {
+    await actions.develop.start()
+  }
+
+  actions.develop.updateDevState()
 
   runConfigurations()
 

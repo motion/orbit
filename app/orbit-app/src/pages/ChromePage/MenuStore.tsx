@@ -61,7 +61,7 @@ class MenuStore {
   )
 
   get isHoldingOption() {
-    return Desktop.keyboardState.isHoldingOption
+    return false
   }
 
   openState = react(

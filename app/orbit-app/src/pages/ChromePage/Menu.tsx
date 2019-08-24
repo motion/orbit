@@ -9,7 +9,7 @@ import MainShortcutHandler from '../../views/MainShortcutHandler'
 import { BrowserDebugTray } from './BrowserDebugTray'
 import { MenuApp } from './MenuApp'
 import { MenuChrome } from './MenuChrome'
-import { useCreateMenuStore, useMenuApps } from './MenuStore'
+import { ProvideMenuStore, useCreateMenuStore, useMenuApps, useMenuStore } from './MenuStore'
 import Searchable from './Searchable'
 
 export const menuApps = ['search', 'topics', 'people']
@@ -84,7 +84,8 @@ export function Menu() {
 }
 
 const MenuLayerContent = React.memo(() => {
-  const { menuStore, queryStore } = useStores()
+  const menuStore = useMenuStore()
+  const { queryStore } = useStores()
   const menuApps = useMenuApps()
   return (
     <View className="app-parent-bounds">

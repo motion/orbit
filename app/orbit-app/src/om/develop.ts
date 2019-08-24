@@ -4,7 +4,7 @@ import { Desktop } from '@o/stores'
 import { BannerHandle, stringToIdentifier } from '@o/ui'
 import { difference } from 'lodash'
 import { reaction } from 'mobx'
-import { AsyncAction } from 'overmind'
+import { Action, AsyncAction } from 'overmind'
 
 import { GlobalBanner } from '../pages/OrbitPage/OrbitPage'
 
@@ -26,10 +26,14 @@ const start: AsyncAction = async om => {
   await om.actions.develop.loadApps()
 
   // watch for development state
-  updateDevState()
-  reaction(() => Desktop.state.workspaceState.options.dev, updateDevState, {
-    fireImmediately: true,
-  })
+  om.actions.develop.updateDevState()
+  reaction(
+    () => Desktop.state.workspaceState.options.dev,
+    () => om.actions.develop.updateDevState(),
+    {
+      fireImmediately: true,
+    },
+  )
 
   // observe changes
   observeMany(BuildStatusModel).subscribe(status => {
@@ -37,7 +41,7 @@ const start: AsyncAction = async om => {
   })
 }
 
-function updateDevState() {
+const updateDevState: Action = () => {
   // @ts-ignore
   window.__DEV__ = Desktop.state.workspaceState.options.dev
 }
@@ -208,4 +212,5 @@ export const actions = {
   changeAppDevelopmentMode,
   loadAppDLL,
   loadApps,
+  updateDevState,
 }

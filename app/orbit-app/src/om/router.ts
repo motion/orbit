@@ -155,6 +155,7 @@ const showHomePage: Action<ShowAppPageProps | null> = (om, item) => {
 }
 
 const showChromePage: Action = om => {
+  console.log('show page chrome')
   om.actions.router.showPage({
     name: 'chrome',
     path: '/chrome',
@@ -257,7 +258,7 @@ const forward: Action = om => {
 
 const routeListen: Action<{
   url: string
-  action: 'showHomePage' | 'showAppPage' | 'showIsolatePage'
+  action: 'showHomePage' | 'showAppPage' | 'showIsolatePage' | 'showChromePage'
 }> = (om, { action, url }) => {
   page(url, ({ params, querystring }) => {
     if (ignoreNextRoute) {

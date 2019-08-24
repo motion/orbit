@@ -3,7 +3,7 @@ import * as React from 'react'
 import { animated, interpolate, useSpring } from 'react-spring'
 
 import { MENU_WIDTH } from '../../constants'
-import { useStores } from '../../hooks/useStores'
+import { useMenuStore } from './MenuStore'
 
 const springyConfig = {
   mass: 0.8,
@@ -14,7 +14,7 @@ const springyConfig = {
 const noAnimationConfig = { duration: 1 }
 
 export function MenuChrome(props: { children: any }) {
-  const { menuStore } = useStores()
+  const menuStore = useMenuStore()
   const { menuCenter, menuHeight, openState } = menuStore
 
   React.useEffect(() => {

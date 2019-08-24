@@ -10,6 +10,7 @@ export enum OracleMessages {
   windowMoved = 'windowMoved',
   windowResized = 'windowResized',
   words = 'words',
+  mouseMoved = 'mouseMoved',
 }
 
 interface Message {
@@ -31,8 +32,15 @@ export interface OracleTrayHoveredMessage extends Message {
   }
 }
 
+export interface OracleTrayClickedMessage extends Message {
+  message: OracleMessages.trayClicked
+  value: {
+    id: '0' | '1' | '2' | 'Out'
+  }
+}
+
 export interface OracleMouseMovedMessage extends Message {
-  message: OracleMessages.trayHovered
+  message: OracleMessages.mouseMoved
   value: {
     position: [number, number]
   }
@@ -79,6 +87,8 @@ export interface OracleWordsFoundMessage extends Message {
 }
 
 export type OracleMessage =
+  | OracleMouseMovedMessage
+  | OracleTrayClickedMessage
   | OracleTrayHoveredMessage
   | OracleTrayBoundsMessage
   | OracleMouseMovedMessage

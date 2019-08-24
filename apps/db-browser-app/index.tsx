@@ -1,7 +1,7 @@
 import { AppModel, createApp, useModel, useApp } from '@o/kit'
 import PostgresApp from "@o/postgres-app"
 import { DataInspector, Layout, Pane, Scale, Table, useActiveSearchQuery } from '@o/ui'
-import React from 'react'
+import React, { useState } from 'react'
 
 export default createApp({
   id: 'db-browser-app',
@@ -11,10 +11,21 @@ export default createApp({
   app: DatabaseBrowserApp,
 })
 
+function QueryInput({ onBlur }) {
+  const [localQuery, setLocalQuery] = useState('')
+  return (
+    <div>
+      <input type="text" value={localQuery} onChange={e => setLocalQuery(e.target.value)} onBlur={onBlur} />
+    </div>
+  )
+}
+
 function DatabaseBrowserApp() {
   const [bit] = useModel(AppModel, { where: { identifier: "postgres" } })
   const postgres = useApp(PostgresApp, bit)
-  const staff = postgres.query('SELECT * from staff;')
+
+  const [query, setQuery] = useState('')
+  const staff = postgres.query(query)
   const items = staff
 
   return (
@@ -31,11 +42,12 @@ function DatabaseBrowserApp() {
           />
         </Pane>
         <Pane>
+          <QueryInput onBlur={(e: React.FocusEvent<HTMLInputElement>): void => setQuery(e.target.value)}/>
+        </Pane>
         <Pane title="Elements" resizable padding collapsable>
           <DataInspector
             data={items[0]}
           />
-        </Pane>
         </Pane>
       </Layout>
     </Scale>

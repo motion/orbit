@@ -2,15 +2,15 @@
 // but importing oracle is a nono
 
 export enum OracleMessages {
-  trayBounds,
-  trayHovered,
-  trayClicked,
-  windowEvent,
-  windowChanged,
-  windowMoved,
-  windowResized,
-  words,
-  mouseMoved,
+  trayBounds = 'trayBounds',
+  trayHovered = 'trayHovered',
+  trayClicked = 'trayClicked',
+  windowEvent = 'windowEvent',
+  windowChanged = 'windowChanged',
+  windowMoved = 'windowMoved',
+  windowResized = 'windowResized',
+  words = 'words',
+  mouseMoved = 'mouseMoved',
 }
 
 interface Message {

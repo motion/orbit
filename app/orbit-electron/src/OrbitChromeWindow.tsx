@@ -1,7 +1,7 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { Window } from '@o/reactron'
-import { Electron } from '@o/stores'
+import { Desktop, Electron } from '@o/stores'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
 
@@ -22,7 +22,7 @@ export function OrbitChromeWindow() {
       // TODO useScreenSize()
       size={electron.state.screenSize.slice()}
       focus={false}
-      // ignoreMouseEvents={!Desktop.hoverState.menuHovered}
+      ignoreMouseEvents={!Desktop.state.hoverState.menuHovered}
       focusable
       file={`${Config.urls.server}/chrome`}
       frame={false}

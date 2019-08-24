@@ -321,7 +321,7 @@ class MenuStore {
       switch (event.value) {
         case '0':
           // special case: switch us over to the main orbit app
-          AppActions.setOrbitDocked(!App.state.orbitState.docked)
+          // TODO open it
           // and close this menu
           this.closeMenu()
           break
@@ -334,6 +334,7 @@ class MenuStore {
       }
     }
   }
+
   handleMouseEvent = react(
     () => this.mouseEvent,
     async (event, { sleep, when }) => {
@@ -395,14 +396,14 @@ export function useMenuApps() {
   const searchApp = allApps.find(x => x.identifier === 'search')
   return [
     // indices start at 1 because 0 = orbit O
-    { ...searchApp, index: 1 },
+    searchApp && { id: searchApp.id, index: 1 },
     // {
     //   id: 100,
     //   index: 3,
     //   type: 'actions',
     //   name: 'Actions',
     // },
-  ]
+  ].filter(Boolean)
 }
 
 export const menuStore = createStoreContext(MenuStore)

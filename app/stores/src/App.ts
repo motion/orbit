@@ -41,8 +41,6 @@ class AppStore {
   // TODO proxySetters should auto-type this
   // shortcuts
   orbitState: AppStore['state']['orbitState']
-  authState: AppStore['state']['authState']
-  setAuthState: Function
 
   setState = Bridge.setState
   sendMessage = Bridge.sendMessage
@@ -55,9 +53,6 @@ class AppStore {
     // for use syncing them to electron
     userSettings: {} as User['settings'],
     orbitState: {
-      orbitOnLeft: false,
-      position: [0, 0],
-      size: [0, 0],
       shortcutInputFocused: false,
     },
     trayState: {
@@ -67,10 +62,6 @@ class AppStore {
         2: defaultMenuState(2),
         3: defaultMenuState(3),
       },
-    },
-    authState: {
-      openId: null,
-      closeId: null,
     },
     highlightWords: {},
     hoveredWord: null,

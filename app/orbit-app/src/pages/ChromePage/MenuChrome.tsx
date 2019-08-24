@@ -1,5 +1,4 @@
-import { Popover } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
+import { Popover } from '@o/ui'
 import * as React from 'react'
 import { animated, interpolate, useSpring } from 'react-spring'
 
@@ -14,7 +13,7 @@ const springyConfig = {
 }
 const noAnimationConfig = { duration: 1 }
 
-export const MenuChrome = observer(function MenuChrome(props: { children: any }) {
+export function MenuChrome(props: { children: any }) {
   const { menuStore } = useStores()
   const { menuCenter, menuHeight, openState } = menuStore
 
@@ -77,4 +76,4 @@ export const MenuChrome = observer(function MenuChrome(props: { children: any })
       </animated.div>
     </>
   )
-})
+}

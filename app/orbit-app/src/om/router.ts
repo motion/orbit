@@ -12,6 +12,7 @@ export const urls = {
   app: '/app/:id',
   appSub: '/app/:id/:subId',
   isolate: '/isolate/:identifier/:id',
+  chrome: '/chrome',
 }
 
 type RouteName = keyof typeof urls
@@ -151,6 +152,13 @@ const showHomePage: Action<ShowAppPageProps | null> = (om, item) => {
   } else {
     console.log('no home app found')
   }
+}
+
+const showChromePage: Action = om => {
+  om.actions.router.showPage({
+    name: 'chrome',
+    path: '/chrome',
+  })
 }
 
 const showAppPage: Action<ShowAppPageProps> = (om, params) => {
@@ -295,6 +303,7 @@ export const actions = {
   showHomePage,
   showSetupAppPage,
   showIsolatePage,
+  showChromePage,
   toggleSetupAppPage,
   ignoreNextPush,
   back,

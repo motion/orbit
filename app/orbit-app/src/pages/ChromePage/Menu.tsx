@@ -6,13 +6,13 @@ import * as React from 'react'
 
 import { useStores } from '../../hooks/useStores'
 import MainShortcutHandler from '../../views/MainShortcutHandler'
-import BrowserDebugTray from './BrowserDebugTray'
+import { BrowserDebugTray } from './BrowserDebugTray'
 import { MenuApp } from './MenuApp'
 import { MenuChrome } from './MenuChrome'
-import { MenuStore, useMenuApps } from './MenuStore'
+import { useCreateMenuStore, useMenuApps } from './MenuStore'
 import Searchable from './Searchable'
 
-export const menuApps = ['search', 'topics', 'people'] as AppType[]
+export const menuApps = ['search', 'topics', 'people']
 
 export function Menu() {
   const queryStore = useStore(QueryStore)
@@ -25,7 +25,7 @@ export function Menu() {
     },
   })
 
-  const menuStore = useStore(MenuStore, {
+  const menuStore = useCreateMenuStore({
     paneManagerStore,
     queryStore,
     menuItems: menuApps,
@@ -64,7 +64,7 @@ export function Menu() {
   }, [])
 
   return (
-    <>
+    <ProvideMenuStore value={menuStore}>
       <ProvideStores
         stores={{
           queryStore,
@@ -79,17 +79,9 @@ export function Menu() {
           </MainShortcutHandler>
         </BrowserDebugTray>
       </ProvideStores>
-    </>
+    </ProvideMenuStore>
   )
 }
-
-// TODO theres a context for this right?
-// const itemProps = {
-//   oneLine: false,
-//   condensed: true,
-//   onSelectItem: false,
-//   hideSubtitle: true,
-// }
 
 const MenuLayerContent = React.memo(() => {
   const { menuStore, queryStore } = useStores()

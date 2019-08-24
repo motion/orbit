@@ -1,15 +1,16 @@
-import { QueryStore, useActiveApps } from '@o/kit'
+import { PaneManagerStore, QueryStore, useActiveApps } from '@o/kit'
 import { App, Desktop, Electron } from '@o/stores'
-import { always, ensure, react } from '@o/use-store'
+import { always, createStoreContext, ensure, react } from '@o/use-store'
 import { debounce } from 'lodash'
 import { createRef } from 'react'
 
 import { IS_ELECTRON, MENU_WIDTH } from '../../constants'
 import { setTrayFocused } from './helpers'
 
-export class MenuStore {
-  // @ts-ignores
+class MenuStore {
+  // @ts-ignore
   props: {
+    paneManagerStore: PaneManagerStore
     queryStore: QueryStore
     menuItems: ({
       id: number
@@ -418,17 +419,20 @@ export class MenuStore {
 
 export function useMenuApps() {
   const allApps = useActiveApps()
-  const searchApp = allApps.find(x => x.type === 'search')
-  const listsApp = allApps.find(x => x.type === 'lists')
+  const searchApp = allApps.find(x => x.identifier === 'search')
   return [
     // indices start at 1 because 0 = orbit O
     { ...searchApp, index: 1 },
-    { ...listsApp, index: 2 },
-    {
-      id: 100,
-      index: 3,
-      type: 'actions',
-      name: 'Actions',
-    },
+    // {
+    //   id: 100,
+    //   index: 3,
+    //   type: 'actions',
+    //   name: 'Actions',
+    // },
   ]
 }
+
+export const menuStore = createStoreContext(MenuStore)
+export const useMenuStore = menuStore.useStore
+export const useCreateMenuStore = menuStore.useCreateStore
+export const ProvideMenuStore = menuStore.SimpleProvider

@@ -26,9 +26,9 @@ export class OracleManager {
     await this.oracle.stop()
   }
 
-  handleMessage: OracleMessageHandler = ({ action, value }) => {
-    log.info('action', message, value)
-    switch (action) {
+  handleMessage: OracleMessageHandler = ({ message, value }) => {
+    log.info('message', message, value)
+    switch (message) {
       case OracleMessages.words:
         for (const observer of this.wordObservers) {
           observer.update(value)

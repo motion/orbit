@@ -17,6 +17,7 @@ export const onInitialize: OnInitialize = async om => {
   actions.router.routeListen({ url: urls.home, action: 'showHomePage' })
   actions.router.routeListen({ url: urls.app, action: 'showAppPage' })
   actions.router.routeListen({ url: urls.appSub, action: 'showAppPage' })
+  actions.router.routeListen({ url: urls.chrome, action: 'showChromePage' })
   actions.router.routeListenNotFound()
 
   // load user before spaces so we have activeSpace

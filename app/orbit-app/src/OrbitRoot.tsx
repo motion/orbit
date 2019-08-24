@@ -1,27 +1,28 @@
 import { themes } from '@o/kit'
 import { ContextMenuProvider, ErrorBoundary, Loading, ProvideUI } from '@o/ui'
 import { Provider } from 'overmind-react'
-import React, { useLayoutEffect } from 'react'
+import React from 'react'
 import { hot } from 'react-hot-loader/root'
 
 import { IS_ELECTRON } from './constants'
 import ContextMenu from './helpers/electron/ContextMenu.electron'
-import { om } from './om/om'
+import { om, useOm } from './om/om'
 import { useThemeStore } from './om/stores'
-import { OrbitPage } from './pages/OrbitPage/OrbitPage'
 import { useCaptureLinks } from './useCaptureLinks'
 
 export const OrbitRoot = hot(function OrbitRoot() {
   const themeStore = useThemeStore()
-
-  useLayoutEffect(() => {
-    if (!IS_ELECTRON) {
-      // @ts-ignore
-      document.body.style.background = themes[themeStore.themeColor].background.toString()
-    }
-  }, [themeStore.themeColor])
+  const { state } = useOm()
 
   useCaptureLinks(document)
+
+  let page: React.ReactNode = null
+
+  if (state.router.curPage.path === '/chrome') {
+    page = React.lazy(() => import('./pages/ChromePage/ChromePage'))
+  } else {
+    page = React.lazy(() => import('./pages/OrbitPage/OrbitPage'))
+  }
 
   return (
     <Provider value={om}>
@@ -34,9 +35,7 @@ export const OrbitRoot = hot(function OrbitRoot() {
       >
         <ProvideUI themes={themes} activeTheme={themeStore.themeColor}>
           <ErrorBoundary name="Root">
-            <React.Suspense fallback={<Loading />}>
-              <OrbitPage />
-            </React.Suspense>
+            <React.Suspense fallback={<Loading />}>{page}</React.Suspense>
           </ErrorBoundary>
         </ProvideUI>
       </ContextMenuProvider>

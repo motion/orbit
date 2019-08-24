@@ -9,10 +9,10 @@
     <link rel="shortcut icon" type="image/png" href="./favicon.png" />
     <title>Orbit</title>
     <script>
-      if (typeof require !== 'undefined') {
-        window.electronRequire = require
+      const isInElectron = navigator.userAgent.includes('Electron')
+      if (isInElectron) {
+        window.electronRequire = window['require']
       } else {
-        window.notInElectron = true
         window.electronRequire = module => {
           return {}
         }
@@ -23,7 +23,7 @@
   <body>
     <div id="app"></div>
     <script>
-      if (window.notInElectron) {
+      if (!navigator.userAgent.includes('Electron')) {
         // easier to see what would be transparent in dev mode in browser
         document.body.style.background = '#eee'
       }

@@ -88,7 +88,7 @@ async function main() {
   // console.timeEnd('loadStores')
 
   // install dev tools
-  require('./helpers/installDevelopmentHelpers')
+  require('./helpers/installDevTools')
 
   // prevent scroll bounce
   document.body.style.overflow = 'hidden'

@@ -6,7 +6,7 @@ Error.stackTraceLimit = Infinity
 // they dont work well (you can only access globals not see logs)
 // so lets avoid clutter unless absolutely wanted
 
-const { DISABLE_WORKERS, DISABLE_CHROMES } = process.env
+const { DISABLE_WORKERS, DISABLE_CHROME } = process.env
 
 async function start() {
   const sessions = [
@@ -17,8 +17,8 @@ async function start() {
     { port: '9006' },
     { port: '9007' },
     !DISABLE_WORKERS && { port: '9008' },
-    !DISABLE_CHROMES && { port: '9009' },
-    !DISABLE_CHROMES && { port: '9010' },
+    !DISABLE_CHROME && { port: '9009' },
+    !DISABLE_CHROME && { port: '9010' },
 
     // electron apps (look for a few)
     { port: '9011' },

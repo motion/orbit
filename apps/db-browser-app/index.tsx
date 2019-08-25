@@ -1,7 +1,7 @@
 import { AppModel, createApp, useModel, useApp } from '@o/kit'
 import PostgresApp from "@o/postgres-app"
 import { DataInspector, Layout, Pane, Scale, Table, useActiveSearchQuery } from '@o/ui'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 
 export default createApp({
   id: 'db-browser-app',
@@ -24,9 +24,14 @@ function DatabaseBrowserApp() {
   const [bit] = useModel(AppModel, { where: { identifier: "postgres" } })
   const postgres = useApp(PostgresApp, bit)
 
+  const [selected, setSelected] = useState([])
   const [query, setQuery] = useState('')
-  const staff = postgres.query(query)
-  const items = staff
+  const items = useMemo(() => postgres.query(query), [query])
+  const selectedItems = useMemo(() => items.filter((_, i) => selected.includes(i)), [selected, items])
+
+  const onSelect = (_: any[], indicies: any[]): void => {
+    setSelected(indicies)
+  }
 
   return (
     <Scale size={1}>
@@ -36,6 +41,7 @@ function DatabaseBrowserApp() {
             columnSizes={{ username: 120 }}
             searchable
             query={useActiveSearchQuery()}
+            onSelect={onSelect}
             selectable="multi"
             shareable
             items={items}
@@ -46,7 +52,7 @@ function DatabaseBrowserApp() {
         </Pane>
         <Pane title="Elements" resizable padding collapsable>
           <DataInspector
-            data={items[0]}
+            data={selectedItems.length === 1 ? selectedItems[0] : selectedItems}
           />
         </Pane>
       </Layout>

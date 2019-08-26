@@ -1,12 +1,10 @@
 import { observeMany, OrbitHot } from '@o/kit'
 import { AppDefinition, BuildStatus, BuildStatusModel } from '@o/models'
 import { Desktop } from '@o/stores'
-import { BannerHandle, stringToIdentifier } from '@o/ui'
+import { stringToIdentifier } from '@o/ui'
 import { difference } from 'lodash'
 import { reaction } from 'mobx'
 import { Action, AsyncAction } from 'overmind'
-
-import { GlobalBanner } from '../pages/OrbitPage/OrbitPage'
 
 export type DevMode = 'development' | 'production'
 export type DevelopState = {
@@ -37,7 +35,7 @@ const start: AsyncAction = async om => {
 
   // observe changes
   observeMany(BuildStatusModel).subscribe(status => {
-    om.actions.develop.updateStatus({ status, banner: GlobalBanner })
+    om.actions.develop.updateStatus({ status })
   })
 }
 
@@ -55,8 +53,7 @@ const isAppIdentifier = (id: string) => {
 
 const updateStatus: AsyncAction<{
   status: BuildStatus[]
-  banner: BannerHandle | null
-}> = async (om, { status, banner }) => {
+}> = async (om, { status }) => {
   if (!om.state.develop.started) {
     om.state.develop.started = true
     // avoid running update on inital load, we serve it in proper state already
@@ -81,13 +78,12 @@ const updateStatus: AsyncAction<{
   await Promise.all([
     ...toAdd.map(identifier => {
       return om.actions.develop.changeAppDevelopmentMode({
-        banner,
         identifier,
         mode: 'development',
       })
     }),
     ...toRemove.map(identifier => {
-      om.actions.develop.changeAppDevelopmentMode({ banner, identifier, mode: 'production' })
+      om.actions.develop.changeAppDevelopmentMode({ identifier, mode: 'production' })
     }),
   ])
 
@@ -106,23 +102,12 @@ const updateStatus: AsyncAction<{
 const changeAppDevelopmentMode: AsyncAction<{
   identifier: string
   mode: 'development' | 'production'
-  banner?: BannerHandle | null
-}> = async (om, { identifier, mode, banner }) => {
+}> = async (om, { identifier, mode }) => {
   const packageId = Desktop.state.workspaceState.identifierToPackageId[identifier]
   if (!packageId) {
     return
   }
   const name = stringToIdentifier(packageId)
-
-  banner &&
-    banner.set({
-      type: 'info',
-      message:
-        mode === 'development'
-          ? `Starting app ${identifier} in development...`
-          : `Changing app ${identifier} to production...`,
-      loading: true,
-    })
 
   // wait until new bundle loaded
   await new Promise(res => {
@@ -143,15 +128,6 @@ const changeAppDevelopmentMode: AsyncAction<{
 
   // load the new script
   await om.actions.develop.loadAppDLL({ name, mode })
-
-  banner &&
-    banner.set({
-      type: 'success',
-      loading: false,
-      timeout: 1,
-      message:
-        mode === 'development' ? `Started app in development!` : `Switched back to production.`,
-    })
 }
 
 function replaceScript(id: string, src: string) {

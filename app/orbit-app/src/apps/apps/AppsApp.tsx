@@ -1,4 +1,4 @@
-import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, CurrentAppBitContext, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
+import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, CurrentAppBitContext, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem } from '@o/models'
 import { Button, Card, Col, Icon, List, ListItemProps, Section, SubTitle, useAsyncFn, useBanner } from '@o/ui'
 import React, { useCallback, useState } from 'react'
@@ -24,62 +24,7 @@ export default createApp({
   },
 })
 
-function getDescription(def: AppDefinition) {
-  const hasData = isDataDefinition(def)
-  const hasClient = !!def.app
-  const titles = [hasData ? 'Data Source' : '', hasClient ? 'Client' : ''].filter(Boolean)
-  return titles.join(', ')
-}
-
-const sourceIcon = <Icon opacity={0.5} size={12} name="database" />
-
-export function useDataAppDefinitions() {
-  return useAppDefinitions().filter(x => isDataDefinition(x))
-}
-
-export const setupAppListItem = (def: AppDefinition): ListItemProps => {
-  return {
-    key: `install-${def.id}`,
-    groupName: 'Setup (Local)',
-    title: def.name,
-    icon: <AppIcon identifier={def.id} />,
-    subTitle: getDescription(def) || 'No Description',
-    after: sourceIcon,
-    identifier: 'apps',
-    subType: 'add-app',
-    subId: def.id,
-  }
-}
-
-export const appSearchToListItem = (item: ApiSearchItem): ListItemProps => ({
-  title: item.name,
-  subTitle: item.description.slice(0, 300) || 'No description',
-  icon: <AppIcon icon={item.icon} />,
-  groupName: 'Search (App Store)',
-  after: item.features.some(x => x === 'graph' || x === 'sync' || x === 'api') ? sourceIcon : null,
-  subType: 'add-app',
-  subId: item.identifier,
-  extraData: {
-    definition: item,
-  },
-})
-
-export async function searchApps(query: string): Promise<ApiSearchItem[]> {
-  query = query.replace(/[^a-z]/gi, '-').replace(/--{1,}/g, '-')
-  return await fetch(`https://tryorbit.com/api/search/${query}`).then(res => res.json())
-}
-
-export type FilterSearchItems = (items: ApiSearchItem[]) => ApiSearchItem[]
-
-export function useSearchAppStoreApps(filterFn: FilterSearchItems = _ => _) {
-  const [searchResults, search] = useAsyncFn(searchApps)
-  const results: ListItemProps[] = searchResults.value
-    ? filterFn(searchResults.value).map(x => ({ ...appSearchToListItem(x), disableFilter: true }))
-    : []
-  return [results, search] as const
-}
-
-export function AppsIndex() {
+function AppsIndex() {
   const allApps = useActiveAppsWithDefinition()
   const clientApps = allApps.filter(x => !!x.definition.app)
   const dataApps = useActiveDataAppsWithDefinition()
@@ -150,7 +95,7 @@ export function AppsIndex() {
   )
 }
 
-export function AppsMain(props: AppViewProps) {
+function AppsMain(props: AppViewProps) {
   if (props.subType === 'manage-apps') {
     return <ManageApps />
   }
@@ -218,4 +163,55 @@ function AppSettings(props: { appId: number }) {
       )}
     </Section>
   )
+}
+
+const sourceIcon = <Icon opacity={0.5} size={12} name="database" />
+
+export const appSearchToListItem = (item: ApiSearchItem): ListItemProps => ({
+  title: item.name,
+  subTitle: item.description.slice(0, 300) || 'No description',
+  icon: <AppIcon icon={item.icon} />,
+  groupName: 'Search (App Store)',
+  after: item.features.some(x => x === 'graph' || x === 'sync' || x === 'api') ? sourceIcon : null,
+  subType: 'add-app',
+  subId: item.identifier,
+  extraData: {
+    definition: item,
+  },
+})
+
+export async function searchApps(query: string): Promise<ApiSearchItem[]> {
+  query = query.replace(/[^a-z]/gi, '-').replace(/--{1,}/g, '-')
+  return await fetch(`https://tryorbit.com/api/search/${query}`).then(res => res.json())
+}
+
+export type FilterSearchItems = (items: ApiSearchItem[]) => ApiSearchItem[]
+
+export function useSearchAppStoreApps(filterFn: FilterSearchItems = _ => _) {
+  const [searchResults, search] = useAsyncFn(searchApps)
+  const results: ListItemProps[] = searchResults.value
+    ? filterFn(searchResults.value).map(x => ({ ...appSearchToListItem(x), disableFilter: true }))
+    : []
+  return [results, search] as const
+}
+
+function getDescription(def: AppDefinition) {
+  const hasData = isDataDefinition(def)
+  const hasClient = !!def.app
+  const titles = [hasData ? 'Data Source' : '', hasClient ? 'Client' : ''].filter(Boolean)
+  return titles.join(', ')
+}
+
+export function setupAppListItem(def: AppDefinition): ListItemProps {
+  return {
+    key: `install-${def.id}`,
+    groupName: 'Setup (Local)',
+    title: def.name,
+    icon: <AppIcon identifier={def.id} />,
+    subTitle: getDescription(def) || 'No Description',
+    after: sourceIcon,
+    identifier: 'apps',
+    subType: 'add-app',
+    subId: def.id,
+  }
 }

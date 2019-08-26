@@ -1,7 +1,7 @@
 import { AppBit, AppIcon, AppModel, save } from '@o/kit'
 import { allIcons, Col, FormField, IconShape, Input, Row, useThrottledFn } from '@o/ui'
 import memoize from 'memoize-weak'
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react'
 
 import { useNewAppStore } from '../../om/stores'
 import { ColorPicker } from '../../views/ColorPicker'

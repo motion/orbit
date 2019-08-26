@@ -14,7 +14,7 @@ import React, { useState } from 'react'
 /**
  * Your default export creates the app. Some notes:
  *
- *   1. See createApp type definitions for other features you cand define.
+ *   1. See createApp type definitions for other features you can define.
  *   2. See <App /> type definitions for more options on different app layouts.
  *   3. The `api`, `graph`, and `workers` options should all be in their own `.node.ts` files, they are node processes.
  *   4. Run `orbit dev` in this directory to start editing this app!

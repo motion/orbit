@@ -41,7 +41,6 @@ export const OrbitHeaderOpenAppMenu = memo(
       [state.router.urlString],
     )
     const constantMenuItems = useDebounceValue(constantMenuItemsFast, 300)
-    console.log('constantMenuItems', constantMenuItems)
 
     const items = useMemo(() => {
       return [

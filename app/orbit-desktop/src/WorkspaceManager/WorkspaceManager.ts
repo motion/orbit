@@ -150,7 +150,11 @@ export class WorkspaceManager {
           const { packageId } = appMeta
           const identifier = this.appsManager.packageIdToIdentifier(appMeta.packageId)
           const entryPath = join(appMeta.directory, appMeta.packageJson.main)
-          const entryPathRelative = relative(this.options.workspaceRoot, entryPath)
+          let entryPathRelative = relative(this.options.workspaceRoot, entryPath)
+          // bugfix: local workspace apps looked like `apps/abc/main.tsx` which broke webpack expectations of moduleId
+          if (entryPathRelative[0] !== '.') {
+            entryPathRelative = `./${entryPathRelative}`
+          }
           return { buildName, packageId, identifier, entryPath, entryPathRelative }
         }),
       },

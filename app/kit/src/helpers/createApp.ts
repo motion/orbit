@@ -12,6 +12,7 @@ export function createApp<T extends any>(app: AppDefinition<T>): AppDefinition<T
   const appWrapped = setupApp(app)
   // remove old one first (HMR)
   if (apps.find(x => x.id === app.id)) {
+    console.log('hmr this thing', app)
     apps = apps.filter(x => x.id !== app.id)
   }
   apps.push(appWrapped)

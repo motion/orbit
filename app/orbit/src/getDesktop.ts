@@ -121,7 +121,7 @@ export function runOrbitDesktop(
   if (isInMonoRepo) {
     const monoRoot = join(__dirname, '..', '..', '..')
     cwd = join(monoRoot, 'app', 'orbit-main')
-    cmd = `npx electron --async-stack-traces --inspect=9007 --remote-debugging-port=9008 ./_/main.js`
+    cmd = `npx electron --async-stack-traces --inspect=9006 --remote-debugging-port=9007 ./_/main.js`
   } else {
     throw new Error(`TODO Production mode`)
   }

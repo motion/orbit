@@ -18,9 +18,11 @@ export const OrbitRoot = hot(function OrbitRoot() {
   let CurPage: any = null
 
   if (window.location.pathname === '/chrome') {
-    CurPage = React.lazy(() => import('./pages/ChromePage/ChromePage'))
+    // CurPage = React.lazy(() => import('./pages/ChromePage/ChromePage'))
+    CurPage = require('./pages/ChromePage/ChromePage').default
   } else {
-    CurPage = React.lazy(() => import('./pages/OrbitPage/OrbitPage'))
+    // CurPage = React.lazy(() => import('./pages/OrbitPage/OrbitPage'))
+    CurPage = require('./pages/OrbitPage/OrbitPage').default
   }
 
   return (

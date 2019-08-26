@@ -53,10 +53,11 @@ export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
       return res
     }
     // ensure we update the workspace with new package id
+    log.verbose(`Setup app successfully, ensuring built`)
     await orbitDesktop.workspaceManager.updateAppsBuilder()
     return {
       type: 'success',
-      message: `Starting workspace`,
+      message: `Created app.`,
     }
   }
 }

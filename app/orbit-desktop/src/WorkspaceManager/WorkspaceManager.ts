@@ -189,7 +189,7 @@ export class WorkspaceManager {
 
     try {
       // this runs the build
-      this.appsBuilder.update({
+      await this.appsBuilder.update({
         options,
         // this update is weird
         buildMode,
@@ -197,6 +197,8 @@ export class WorkspaceManager {
       })
     } catch (err) {
       log.error(`Error running workspace: ${err.message}\n${err.stack}`)
+    } finally {
+      log.verbose(`Finished updateAppsBuilder`)
     }
   }
 

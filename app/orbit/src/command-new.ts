@@ -60,6 +60,8 @@ export async function commandNew(
       },
     })
 
+    reporter.verbose(`Finished with commandNew`)
+
     return res
   } catch (err) {
     reporter.error(err.message, err)

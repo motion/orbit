@@ -16,7 +16,7 @@ import { getAppParams } from './getAppsConfig'
 import { makeWebpackConfig } from './makeWebpackConfig'
 import { webpackPromise } from './webpackPromise'
 
-export const log = new Logger('resolveAppBuildCommand')
+export const log = new Logger('commandBuild')
 
 export const resolveAppBuildCommand = resolveCommand(
   AppBuildCommand,

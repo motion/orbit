@@ -6,7 +6,7 @@
     "orbitWorkspace": true
   },
   "workspaces": [
-    "apps"
+    "apps/*"
   ],
   "dependencies": {
     "@babel/runtime": "^7.4.5",

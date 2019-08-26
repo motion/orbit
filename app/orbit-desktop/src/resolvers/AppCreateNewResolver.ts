@@ -8,6 +8,7 @@ import sanitize from 'sanitize-filename'
 
 import { getCurrentWorkspace } from '../helpers/getCurrentWorkspace'
 import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
+import { commandBuild } from '../WorkspaceManager/commandBuild'
 import { attachLogToCommand, statusReplyCommand } from '../WorkspaceManager/commandHelpers'
 import { ensureWorkspaceModel } from '../WorkspaceManager/ensureWorkspaceModel'
 
@@ -54,6 +55,20 @@ export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
     }
     // ensure we update the workspace with new package id
     log.verbose(`Setup app successfully, ensuring built`)
+    // build this app once
+    const buildRes = await commandBuild(
+      {
+        projectRoot: join(appsDir, name),
+        watch: false,
+      },
+      cmdOpts,
+    )
+    if (buildRes.type === 'error') {
+      return buildRes
+    }
+    // this picks up new app meta
+    await orbitDesktop.workspaceManager.appsManager.updateAppMeta()
+    // then ensure everything built
     await orbitDesktop.workspaceManager.updateAppsBuilder()
     return {
       type: 'success',

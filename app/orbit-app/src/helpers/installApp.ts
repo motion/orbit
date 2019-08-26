@@ -20,18 +20,23 @@ export function useNewAppBit(identifier: string) {
 export async function createAppBitInActiveSpace(
   appBit: Partial<AppBit> & Pick<AppBit, 'identifier'>,
 ) {
-  const activeSpace = await getActiveSpace()
-  const def = await getAppDefinition(appBit.identifier)
-  const bit = {
-    ...newEmptyAppBit(def),
-    spaceId: activeSpace.id,
-    space: activeSpace,
-    name: newAppStore.app.name || def.name,
-    colors: newAppStore.app.colors,
-    ...appBit,
+  try {
+    const activeSpace = await getActiveSpace()
+    const def = await getAppDefinition(appBit.identifier)
+    const bit = {
+      ...newEmptyAppBit(def),
+      spaceId: activeSpace.id,
+      space: activeSpace,
+      name: newAppStore.app.name || def.name,
+      colors: newAppStore.app.colors,
+      ...appBit,
+    }
+    console.log('Saving new app', bit)
+    await save(AppModel, bit)
+  } catch (err) {
+    console.error(err.message, err.stack)
+    alert(`Error creating new app ${err.message}`)
   }
-  console.log('Saving new app', bit)
-  await save(AppModel, bit)
 }
 
 export function useInstallApp() {

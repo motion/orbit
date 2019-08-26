@@ -227,8 +227,8 @@ export const Banner = (props: BannerViewProps) => {
       overflow="hidden"
       elevation={2}
       alignSelf="flex-end"
-      maxWidth={width - 80}
-      maxHeight={height - 80}
+      maxWidth={Math.max(200, width * 0.33)}
+      maxHeight={Math.max(250, height * 0.33)}
       background={useCallback(theme => theme.background, [])}
       {...rest}
     >

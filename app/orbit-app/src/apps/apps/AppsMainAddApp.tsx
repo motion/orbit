@@ -74,6 +74,7 @@ export function AppsMainAddAppContent({
       subTitle={`Add ${def.name} app.`}
       titlePadding
       titleBorder
+      scrollable="y"
       afterTitle={
         <>
           {def.auth && (

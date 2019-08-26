@@ -316,16 +316,16 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
 })
 
 function useFormFields(store: FormStore, fields: FormFieldsObj): React.ReactNode {
-  const values = useReaction(() => store.derivedValues)
+  const values = useReaction(() => store.derivedValues, { defaultValue: store.derivedValues })
   return Object.keys(fields || {}).map(key => {
-    const field = fields[key] || { ...store.fields[key], value: '' } // this bug was showing up but probably shouldn't have been
+    const field = fields[key]
     return (
       <FormField
         key={key}
         label={field.label}
         name={key}
         type={DataType[field.type]}
-        defaultValue={selectDefined(values[key], field.value)}
+        defaultValue={selectDefined(values ? values[key] : undefined, field.value, '')}
         description={'description' in field ? field.description : undefined}
         {...field.type === 'custom' && { children: field.children }}
       />

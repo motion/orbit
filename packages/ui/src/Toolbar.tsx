@@ -43,7 +43,7 @@ export function Toolbar({
       glint={false}
       borderPosition="outside"
     >
-      <ToolbarRow elevation={elevation} padding={size} {...props}>
+      <ToolbarRow elevation={elevation} padding={size} hoverStyle={false} {...props}>
         {border !== false && borderElement[attach]}
         <Row flex={1} space={size}>
           {children}

@@ -138,7 +138,7 @@ Object.assign(
     inputBackgroundHover: transparent,
     inputBackgroundActive: transparent,
     inputBackgroundFocus: transparent,
-    inputBackgroundSelection: '#111',
+    inputBackgroundSelection: '#444',
     listItemBackground: transparent,
     listItemBackgroundSelected: [60, 60, 60, 0.2],
     listItemBackgroundHover: [20, 20, 20, 0.13],

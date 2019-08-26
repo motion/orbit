@@ -5,9 +5,6 @@
   "config": {
     "orbitWorkspace": true
   },
-  "workspaces": [
-    "apps"
-  ],
   "dependencies": {
     "@babel/runtime": "^7.4.5",
     "@o/confluence-app": "^2.6.0",

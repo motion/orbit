@@ -1,4 +1,4 @@
-import { createStoreContext, useHooks, useStore } from '@o/use-store'
+import { createStoreContext, ensure, react, useHooks, useStore } from '@o/use-store'
 import React, { Children, FunctionComponent, isValidElement, memo, useLayoutEffect, useRef, useState } from 'react'
 
 import { Button } from './buttons/Button'
@@ -14,16 +14,20 @@ import { Row } from './View/Row'
 
 type FlowSectionProps = Pick<SectionProps, 'afterTitle'>
 
+// TODO: needs a little love, likely FlowStoreProps should be same as FlowPropsBase
+
 export type FlowPropsBase = FlowSectionProps & {
   children: any
   Layout?: FunctionComponent<FlowLayoutProps>
   Toolbar?: FunctionComponent<FlowLayoutProps>
   height?: number
+  onChangeStep?: (step: number) => any
 }
 
 export type FlowStoreProps = {
   id?: string
   data?: any
+  onChangeStep?: (step: number) => any
 }
 
 export type FlowProps =
@@ -208,6 +212,16 @@ export class FlowStore {
   get step() {
     return this.steps[this.state.index]
   }
+
+  onStepChangeCallback = react(
+    () => [this.index],
+    ([index]) => {
+      const { onChangeStep } = this.props
+      ensure('index', index > -1)
+      ensure('onChangeStep', !!onChangeStep)
+      onChangeStep(index)
+    },
+  )
 
   next = async () => {
     const nextIndex = Math.min(this.total - 1, this.state.index + 1)

@@ -74,7 +74,7 @@ export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
     await orbitDesktop.workspaceManager.appsManager.updateAppMeta()
     // then ensure everything built
     await orbitDesktop.workspaceManager.updateAppsBuilder()
-    // then update identifiers
+    // then update identifiers, had to add this to ensure it ran before return...
     await orbitDesktop.workspaceManager.updateDesktopState()
     return {
       type: 'success',

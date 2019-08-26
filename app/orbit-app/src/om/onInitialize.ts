@@ -9,7 +9,11 @@ import { urls } from './router'
 export const onInitialize: OnInitialize = async om => {
   const { actions } = om
 
-  await actions.develop.start()
+  if (window.location.pathname !== '/chrome') {
+    await actions.develop.start()
+  }
+
+  actions.develop.updateDevState()
 
   runConfigurations()
 
@@ -17,6 +21,7 @@ export const onInitialize: OnInitialize = async om => {
   actions.router.routeListen({ url: urls.home, action: 'showHomePage' })
   actions.router.routeListen({ url: urls.app, action: 'showAppPage' })
   actions.router.routeListen({ url: urls.appSub, action: 'showAppPage' })
+  actions.router.routeListen({ url: urls.chrome, action: 'showChromePage' })
   actions.router.routeListenNotFound()
 
   // load user before spaces so we have activeSpace

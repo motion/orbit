@@ -1,15 +1,16 @@
-import { QueryStore, useActiveApps } from '@o/kit'
-import { App, Desktop, Electron } from '@o/stores'
-import { always, ensure, react } from '@o/use-store'
+import { PaneManagerStore, QueryStore, useActiveApps } from '@o/kit'
+import { App, Desktop } from '@o/stores'
+import { createStoreContext, ensure, react } from '@o/use-store'
 import { debounce } from 'lodash'
 import { createRef } from 'react'
 
 import { IS_ELECTRON, MENU_WIDTH } from '../../constants'
 import { setTrayFocused } from './helpers'
 
-export class MenuStore {
-  // @ts-ignores
+class MenuStore {
+  // @ts-ignore
   props: {
+    paneManagerStore: PaneManagerStore
     queryStore: QueryStore
     menuItems: ({
       id: number
@@ -60,7 +61,7 @@ export class MenuStore {
   )
 
   get isHoldingOption() {
-    return Desktop.keyboardState.isHoldingOption
+    return false
   }
 
   openState = react(
@@ -227,19 +228,9 @@ export class MenuStore {
     },
   )
 
-  setPinnedFromPinKey = react(
-    () => always(Electron.state.pinKey.at),
-    () => {
-      this.isPinnedOpen = true
-    },
-    {
-      lazy: true,
-    },
-  )
-
-  closeMenuOnEsc = react(() => Desktop.state.keyboardState.escapeDown, this.closeMenu, {
-    lazy: true,
-  })
+  // closeMenuOnEsc = react(() => Desktop.state.keyboardState.escapeDown, this.closeMenu, {
+  //   lazy: true,
+  // })
 
   closeMenuOnPeekClose = react(
     () => App.isShowingPeek,
@@ -289,27 +280,10 @@ export class MenuStore {
 
   isFocused = react(
     () => this.isOpenOutsideAnimation,
-    async (shouldFocus, { whenChanged, sleep }) => {
+    async (shouldFocus, { sleep }) => {
       if (!shouldFocus) {
         setTrayFocused(false)
         return false
-      }
-      if (this.isHoldingOption) {
-        // wait for a certain key to break
-        let pinnedKey
-        while (!pinnedKey) {
-          await whenChanged(() => Electron.state.pinKey.at)
-          const { name } = Electron.state.pinKey
-          // dont break on left/right
-          if (name !== 'left' && name !== 'right' && name !== 'down') {
-            pinnedKey = name
-            this.isPinnedOpen = true
-            if (this.searchInput.value === '') {
-              this.searchInput.value = name
-            }
-          }
-        }
-        console.log('GOT A PIN KEY', pinnedKey)
       }
       setTrayFocused(true)
       await sleep(32)
@@ -347,7 +321,7 @@ export class MenuStore {
       switch (event.value) {
         case '0':
           // special case: switch us over to the main orbit app
-          AppActions.setOrbitDocked(!App.state.orbitState.docked)
+          // TODO open it
           // and close this menu
           this.closeMenu()
           break
@@ -360,6 +334,7 @@ export class MenuStore {
       }
     }
   }
+
   handleMouseEvent = react(
     () => this.mouseEvent,
     async (event, { sleep, when }) => {
@@ -390,13 +365,13 @@ export class MenuStore {
     this.mouseEvent = 'leave'
   }
 
-  leaveMouseOnLeaveBounds = react(
-    () => Desktop.state.hoverState.menuHovered,
-    menuHovered => {
-      ensure('not hovered', !menuHovered)
-      this.handleMouseLeave()
-    },
-  )
+  // leaveMouseOnLeaveBounds = react(
+  //   () => Desktop.state.hoverState.menuHovered,
+  //   menuHovered => {
+  //     ensure('not hovered', !menuHovered)
+  //     this.handleMouseLeave()
+  //   },
+  // )
 
   handleSearchInput = (ref: HTMLInputElement) => {
     this.searchInput = ref
@@ -418,17 +393,20 @@ export class MenuStore {
 
 export function useMenuApps() {
   const allApps = useActiveApps()
-  const searchApp = allApps.find(x => x.type === 'search')
-  const listsApp = allApps.find(x => x.type === 'lists')
+  const searchApp = allApps.find(x => x.identifier === 'search')
   return [
     // indices start at 1 because 0 = orbit O
-    { ...searchApp, index: 1 },
-    { ...listsApp, index: 2 },
-    {
-      id: 100,
-      index: 3,
-      type: 'actions',
-      name: 'Actions',
-    },
-  ]
+    searchApp && { id: searchApp.id, index: 1 },
+    // {
+    //   id: 100,
+    //   index: 3,
+    //   type: 'actions',
+    //   name: 'Actions',
+    // },
+  ].filter(Boolean)
 }
+
+export const menuStore = createStoreContext(MenuStore)
+export const useMenuStore = menuStore.useStore
+export const useCreateMenuStore = menuStore.useCreateStore
+export const ProvideMenuStore = menuStore.SimpleProvider

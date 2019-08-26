@@ -1,10 +1,10 @@
 import { command, observeOne } from '@o/bridge'
-import { OrbitHot, ProvideStores, showConfirmDialog, useReaction, useStore } from '@o/kit'
+import { OrbitHot, ProvideStores, showConfirmDialog, themes, useReaction, useStore } from '@o/kit'
 import { AppCloseWindowCommand, AppDevCloseCommand, WindowMessageModel } from '@o/models'
 import { App } from '@o/stores'
-import { BannerHandle, ListPassProps, sleep, useBanner, View, ViewProps } from '@o/ui'
+import { BannerHandle, ListPassProps, useBanner, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
-import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 
 import { IS_ELECTRON, WINDOW_ID } from '../../constants'
 import { useOm } from '../../om/om'
@@ -23,9 +23,18 @@ import { OrbitHeader } from './OrbitHeader'
 // import { LoadApp } from './LoadApp'
 export let GlobalBanner: BannerHandle | null = null
 
-export const OrbitPage = memo(function OrbitPage() {
+export default memo(function OrbitPage() {
   const themeStore = useThemeStore()
   window['GlobalBanner'] = GlobalBanner = useBanner()
+
+  // set body background in browser mode
+  useLayoutEffect(() => {
+    if (!IS_ELECTRON) {
+      // @ts-ignore
+      document.body.style.background = themes[themeStore.themeColor].background.toString()
+    }
+  }, [themeStore.themeColor])
+
   return (
     <ProvideStores stores={Stores}>
       <SearchStore.Provider>

@@ -48,6 +48,7 @@ export function startChildProcess({
       PATH: process.env.PATH,
       LOG_LEVEL: process.env.LOG_LEVEL,
       SINGLE_USE_MODE: process.env.SINGLE_USE_MODE,
+      ENABLE_OCR: process.env.ENABLE_OCR,
       ...env,
       ORBIT_CONFIG: JSON.stringify(Config),
     },

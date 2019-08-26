@@ -28,6 +28,9 @@ class DesktopStore {
         entryPathRelative: string
       }[],
     },
+    hoverState: {
+      menuHovered: false,
+    },
     errorState: {
       title: '',
       message: '',

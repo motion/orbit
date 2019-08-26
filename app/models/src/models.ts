@@ -6,7 +6,7 @@ import { AppDefinition } from './AppInterfaces'
 import { Bit } from './Bit'
 import { BitContentType } from './BitContentType'
 import { Job } from './Job'
-import { OracleWordsFoundMessage } from './OracleInterfaces'
+import { OracleWordsFound } from './OracleInterfaces'
 import { Setting } from './Setting'
 import { Space } from './SpaceInterface'
 import { State } from './State'
@@ -124,6 +124,4 @@ export const CosalTopicsModel = new Model<string, { query: string; count: number
 
 export const OrbitProcessStdOutModel = new Model<string, undefined>('OrbitProcessStdOutModel')
 
-export const OracleWordsFoundModel = new Model<OracleWordsFoundMessage, undefined>(
-  'OracleWordsFoundModel',
-)
+export const OracleWordsFoundModel = new Model<OracleWordsFound, undefined>('OracleWordsFoundModel')

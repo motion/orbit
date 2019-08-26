@@ -1,16 +1,15 @@
-import { App } from '@mcro/stores'
-import { Absolute, Row, View } from '@mcro/ui'
+import { Absolute, Row, View } from '@o/ui'
 import * as React from 'react'
 
 import { IS_ELECTRON } from '../../constants'
-import { useStores } from '../../hooks/useStores'
+import { useMenuStore } from './MenuStore'
 
 export function BrowserDebugTray({ children }: any) {
+  const menuStore = useMenuStore()
+
   if (IS_ELECTRON) {
     return children
   }
-
-  const { menuStore } = useStores()
 
   // set open the first menu by default for dev
   React.useEffect(() => {
@@ -22,9 +21,9 @@ export function BrowserDebugTray({ children }: any) {
     <Absolute top={0} left={0} right={0}>
       <Row justifyContent="center" alignItems="center" width="100%" background="#eee">
         <View
-          onMouseLeave={() =>
-            App.sendMessage(App, App.messages.TRAY_EVENT, { type: 'trayHovered', value: 'Out' })
-          }
+          onMouseLeave={() => {
+            // App.sendMessage(App, App.messages.TRAY_EVENT, { type: 'trayHovered', value: 'Out' })
+          }}
           flexFlow="row"
           height={28}
           alignItems="center"
@@ -44,11 +43,11 @@ export function BrowserDebugTray({ children }: any) {
 }
 
 const Target = (props: { id: number }) => {
-  const { menuStore } = useStores()
+  const menuStore = useMenuStore()
   return (
     <View
       onMouseEnter={() => {
-        App.sendMessage(App, App.messages.TRAY_EVENT, { type: 'trayHovered', value: `${props.id}` })
+        // App.sendMessage(App, App.messages.TRAY_EVENT, { type: 'trayHovered', value: `${props.id}` })
       }}
       onClick={() => {
         console.log('pin', props.id)

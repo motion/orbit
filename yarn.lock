@@ -16826,6 +16826,13 @@ overmind-react@20.0.1:
   dependencies:
     overmind "19.0.1"
 
+overmind-react@20.1.0:
+  version "20.1.0"
+  resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-20.1.0.tgz#fdf9a4e534876b122c7b4a3fb2c385316886a2f6"
+  integrity sha512-z9lfTnt4KalRxZEhkmtOuG6/bU9nUKF9MUqzwhz8OAGxJjs6cLQosNLE3Ut2dNwy5Ue5aUMawZSwkKHZXG/BKA==
+  dependencies:
+    overmind "19.1.0"
+
 overmind-themes@next:
   version "1.0.2-1566284577417"
   resolved "https://registry.npmjs.org/overmind-themes/-/overmind-themes-1.0.2-1566284577417.tgz#9f513996480c1cf8cc5e0570423c3e4db0390536"
@@ -16841,6 +16848,15 @@ overmind@19.0.1:
     betsy "1.0.2"
     is-plain-obj "^1.1.0"
     proxy-state-tree "4.4.1"
+
+overmind@19.1.0:
+  version "19.1.0"
+  resolved "https://registry.npmjs.org/overmind/-/overmind-19.1.0.tgz#ff18d5e62b95d3cded16438eb5eb42fd51fed1f8"
+  integrity sha512-jhF0WGceRr9YKGNpl9i5+DHroXzCNOmbA0Rbc4VTMvPSFDeNxlUM6+nlQKUGZljGQfbxWJPoWa3b2otxGrD84Q==
+  dependencies:
+    betsy "1.0.2"
+    is-plain-obj "^1.1.0"
+    proxy-state-tree "4.4.2"
 
 p-cancelable@^0.3.0:
   version "0.3.0"
@@ -18458,6 +18474,13 @@ proxy-state-tree@4.4.1:
   version "4.4.1"
   resolved "https://registry.npmjs.org/proxy-state-tree/-/proxy-state-tree-4.4.1.tgz#92fefb199425acd192e3d05bfd0ec4b5c1a46e8d"
   integrity sha512-ZsdMGhrUcFMziOboUIknjmnLHefthk7GxuxWKC6aGrpa8KXR6ODa2EPk+cwyvt7Iss2tYDbkMlNc+nYmHgcIgA==
+  dependencies:
+    is-plain-obj "^1.1.0"
+
+proxy-state-tree@4.4.2:
+  version "4.4.2"
+  resolved "https://registry.npmjs.org/proxy-state-tree/-/proxy-state-tree-4.4.2.tgz#9aa5530ceedd2c5b9386360df046f8550a78b151"
+  integrity sha512-kSn78uW+Aty0hsXee/EL3iheXnkTMoC75SoHZ6yiYlMc09DvNjfX5fSAflpro3wVNCpbVt5q17jpYmiWsBeFzw==
   dependencies:
     is-plain-obj "^1.1.0"
 

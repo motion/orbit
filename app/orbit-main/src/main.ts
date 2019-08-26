@@ -57,10 +57,11 @@ export async function main() {
     // 🐛 for some reason you'll get "directv-tick" consistently on a port
     // EVEN IF port was found to be empty.... killing again helps
     if (!process.env.NO_KILL_PORTS) {
-      let ports = Object.values(config.ports)
+      let ports = [...Object.values(config.ports)]
       if (process.env.NODE_ENV === 'development') {
-        // add the debug ports
-        ports = [...ports, 9005, 9006, 9007]
+        // sub-process inspect ports can get stuck
+        // dont kill 9006/7 thats *this* process debuggers
+        ports = [...ports, 9005, 9008, 9009, 9010]
       }
       log.info('Ensuring all ports clear...', ports.join(','))
       const killPort = require('clear-port')
@@ -82,7 +83,7 @@ export async function main() {
       case 'workers':
         require('@o/orbit-workers').main()
         return
-      case 'electron-menus':
+      case 'electron-chrome':
       case 'electron-apps':
         require('./startElectron').startElectron({ mainProcess: false })
       default:
@@ -156,6 +157,14 @@ export async function main() {
     } else {
       log.info(`Workers disabled`)
     }
+  }
+
+  if (!process.env.DISABLE_CHROME && process.env.ENABLE_OCR) {
+    setupProcess({
+      name: 'electron-chrome',
+      inspectPort: 9009,
+      inspectPortRemote: 9010,
+    })
   }
 
   log.info('Started everything!')

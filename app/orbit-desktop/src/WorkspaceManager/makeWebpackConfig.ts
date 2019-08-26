@@ -401,7 +401,7 @@ require('@o/kit').OrbitHot.fileLeave();
 
       hot &&
         new webpack.HotModuleReplacementPlugin({
-          // multiStep: true,
+          multiStep: true,
         }),
 
       // new (require('bundle-analyzer-plugin').default)({

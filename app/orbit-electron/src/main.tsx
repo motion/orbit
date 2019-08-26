@@ -12,7 +12,7 @@ import waitOn from 'wait-on'
 
 import { IS_MAIN_ORBIT } from './constants'
 import ElectronRoot from './ElectronRoot'
-import MenuWindow from './menus/MenuWindow'
+import { OrbitChromeWindow } from './OrbitChromeWindow'
 import { OrbitRoot } from './OrbitRoot'
 import { AppCloseWindowResolver } from './resolver/AppCloseWindowResolver'
 import { AppOpenWindowResolver } from './resolver/AppOpenWindowResolver'
@@ -94,10 +94,10 @@ export async function main() {
   //
 
   switch (process.env.SUB_PROCESS) {
-    case 'electron-menus':
+    case 'electron-chrome':
       render(
         <ElectronRoot>
-          <MenuWindow />
+          <OrbitChromeWindow />
         </ElectronRoot>,
       )
       return

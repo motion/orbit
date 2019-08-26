@@ -251,6 +251,8 @@ export default class DebugApps {
                 9006: 'Electron',
                 9007: 'Electron Remote',
                 9008: 'Workers',
+                9009: 'Chrome',
+                9010: 'Chrome Remote',
               }
               let title = document.getElementsByTagName('title')[0]
               if (!title) {

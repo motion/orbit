@@ -79,6 +79,24 @@ export function setupReact(
 // TODO i want to make a helper so we can make any function a reaction easily
 // solves for a good pattern, started it here but problem is how do you pass in helpers?
 // both are weird:
+
+/**
+ * Potential answer: use generators :)
+ *
+ * Fixes every problem I've had at the expense of being a little "wierd" (rarely used).
+ *
+ *   1. encourages naming your reaction using function name
+ *   2. no more need for special helper functions, yield can cancel anywhere
+ *   3. we can even yield values back intermediately instead of setValue
+ *   4. `yield` undefined could be getValue, perhaps
+ *   5.
+ *
+ * react(function *myReaction() {
+ *   yield when(() => {})
+ * })
+ *
+ */
+
 /**
  * class X {
  *   x = reactFn(helpers => (...args) => { })

@@ -6,7 +6,7 @@ Error.stackTraceLimit = Infinity
 // they dont work well (you can only access globals not see logs)
 // so lets avoid clutter unless absolutely wanted
 
-const { DISABLE_WORKERS } = process.env
+const { DISABLE_WORKERS, DISABLE_CHROME } = process.env
 
 async function start() {
   const sessions = [
@@ -16,15 +16,15 @@ async function start() {
     // electron + remote
     { port: '9006' },
     { port: '9007' },
-
-    // workers
     !DISABLE_WORKERS && { port: '9008' },
+    !DISABLE_CHROME && { port: '9009' },
+    !DISABLE_CHROME && { port: '9010' },
 
     // electron apps (look for a few)
-    { port: '9008' },
-    { port: '9010' },
     { port: '9011' },
     { port: '9012' },
+    { port: '9013' },
+    { port: '9014' },
   ].filter(Boolean)
 
   console.log('starting REPL with sessions...', sessions)

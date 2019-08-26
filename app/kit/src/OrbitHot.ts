@@ -5,21 +5,6 @@ import { EventSourceManager } from './EventSourceManager'
 
 const log = new Logger('createHotHandler')
 
-// singletons
-let source: EventSourceManager
-const hotHandlers = new Set<HotHandler>()
-
-// for wrapping app entry points
-export let appHandler = null
-
-// for debugging
-if (typeof window !== 'undefined') {
-  window['__orbit_hot'] = {
-    source,
-    hotHandlers,
-  }
-}
-
 type OrbitHotProps = {
   name: string
   __webpack_require__: { h(): string; id: string }
@@ -32,46 +17,53 @@ type OrbitHotProps = {
 
 // singleton
 export const OrbitHot = {
+  // for wrapping app entry points
+  appHandler: null,
+  source: null,
+  hotHandlers: new Set<HotHandler>(),
   getCurrentHandler() {
-    return appHandler
+    return this.appHandler
   },
   fileLeave() {
-    appHandler = null
+    this.appHandler = null
   },
   fileEnter(props: OrbitHotProps) {
     log.verbose(`createHotHandler`, props)
-    appHandler = entry => {
-      return hot(props.module)(entry)
+    this.appHandler = entry => {
+      const hotEntry = hot(props.module)(entry)
+      return hotEntry
     }
+    // accept this (this should be created only at root)
+    props.module.hot.accept()
     // singleton
-    source = source || new EventSourceManager('/__webpack_hmr')
-    const handler = new HotHandler(props)
-    hotHandlers.add(handler)
+    this.source = this.source || new EventSourceManager('/__webpack_hmr')
+    let handler = [...OrbitHot.hotHandlers].find(x => x.props.name === props.name)
+    if (!handler) {
+      handler = new HotHandler(this.source, props)
+      OrbitHot.hotHandlers.add(handler)
+    }
     return handler
   },
   getHotHandlers() {
-    return hotHandlers
+    return OrbitHot.hotHandlers
   },
   removeHotHandler(name: string) {
     log.verbose(`removeHotHandler ${name}`)
-    hotHandlers.forEach(handler => {
+    OrbitHot.hotHandlers.forEach(handler => {
       if (handler.props.name === name) {
         handler.dispose()
-        hotHandlers.delete(handler)
+        OrbitHot.hotHandlers.delete(handler)
       }
     })
   },
   removeAllHotHandlers() {
     log.verbose(`removeAllHotHandlers`)
-    hotHandlers.clear()
-    source.close()
+    OrbitHot.hotHandlers.clear()
+    this.source.close()
   },
 }
 
 class HotHandler {
-  props: OrbitHotProps
-  source = source
-
   private lastHash = ''
   private failureStatuses = { abort: 1, fail: 1 }
   private applyOptions = {
@@ -92,24 +84,20 @@ class HotHandler {
     },
   }
 
+  constructor(private source: EventSourceManager, public props: OrbitHotProps) {
+    if (!this.module.hot) {
+      throw new Error('[HMR] Hot Module Replacement is disabled.')
+    }
+    this.source.addMessageListener(this.handleMessage)
+    window.addEventListener('beforeunload', this.dispose)
+  }
+
   get module() {
     return this.props.module
   }
 
   get entry() {
     return this.props.__webpack_require__.id
-  }
-
-  constructor(props: OrbitHotProps) {
-    this.props = props
-    if (!this.module.hot) {
-      throw new Error('[HMR] Hot Module Replacement is disabled.')
-    }
-    // accept this (this should be created only at root)
-    this.module.hot.accept()
-
-    this.source.addMessageListener(this.handleMessage)
-    window.addEventListener('beforeunload', this.dispose)
   }
 
   dispose = () => {
@@ -248,4 +236,9 @@ class HotHandler {
       }
     }
   }
+}
+
+// for debugging
+if (typeof window !== 'undefined') {
+  window['OrbitHot'] = OrbitHot
 }

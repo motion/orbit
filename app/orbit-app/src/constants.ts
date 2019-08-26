@@ -13,7 +13,7 @@ export const WINDOW_ID = appMatch && appMatch[1] ? +appMatch[1] : 0
 // mostly in the index apps
 export const IS_MINIMAL = IS_MENU || IS_APP
 
-export const IS_ELECTRON = !window['notInElectron']
+export const IS_ELECTRON = navigator.userAgent.includes('Electron')
 
 export const BORDER_RADIUS = 15
 export const CHROME_PAD = 1

@@ -32,11 +32,7 @@ export type OracleOptions = {
   onMessage: OracleMessageHandler
 }
 
-type Narrow<T, K> = T extends { message: K } ? T : never
-export type OracleMessageHandler = <K extends OracleMessage['message']>(
-  message: K,
-  value: Narrow<OracleMessage, K>,
-) => void
+export type OracleMessageHandler = (message: OracleMessage) => any
 
 export class Oracle {
   private process: ChildProcess
@@ -112,8 +108,8 @@ export class Oracle {
       this.resolveSocketConnected()
 
       socket.on('message', str => {
-        const { action, value } = JSON.parse(str.toString())
-        this.options.onMessage(action, value)
+        const message = JSON.parse(str.toString())
+        this.options.onMessage(message)
       })
 
       socket.on('error', err => {

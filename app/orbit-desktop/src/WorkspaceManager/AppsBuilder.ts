@@ -9,7 +9,6 @@ import { Dictionary, Request } from 'express-serve-static-core'
 import { readFile } from 'fs-extra'
 import { chunk } from 'lodash'
 import hashObject from 'node-object-hash'
-import { cpus } from 'os'
 import { join } from 'path'
 import { parse } from 'url'
 import Webpack from 'webpack'
@@ -22,6 +21,33 @@ import { webpackPromise } from './webpackPromise'
 import { AppBuildModeDict } from './WorkspaceManager'
 
 const log = new Logger('AppsBuilder')
+
+/**
+ * Welcome to AppsBuilder. This is an early implementation of a build system for Orbit. It:
+ *
+ *  1. Runs webpack for each app
+ *  2. Returns a middleware for apps in dev mode
+ *  3. Returns a hot middleware that handles an event-stream for HMR
+ *  4. Manages the status of the builds and communicates that
+ *  5. Serves the index.html and awaits builds complete before doing so
+ *  6. Ensures apps are built before running watch
+ *
+ * What we need to do next:
+ *
+ *  1. We need to split this into a parent "AppsBuilder" which has a set of "AppBuilder"s
+ *  2. That requires a bit better sepeartion of concerns, AppsBuilder would then:
+ *     - Boot up an AppBuilder for each app
+ *     - Aggregate the status of each apps build
+ *     - Link the middleres together as it does now into a single resolver
+ *     - Handle watching/updating the AppsBuilders
+ *  3. Meanwhile each AppBuilder would take over building itself and communicating that upwards
+ *  4. The final step of this refactor would be to use worker_threads to paralellize it:
+ *     - AppBuilder would need to be wrapped in a function createAppBuilder()
+ *     - That function would type out all the ways it communicates (message passing statuses / taking events from parent)
+ *     - Then we'd workerize it and get it working in parallel
+ *
+ * Just wanted to note this stuff for future work, and #4 there is important to keep in mind.
+ */
 
 type WebpackAppsDesc = {
   name: string
@@ -96,9 +122,13 @@ export class AppsBuilder {
     // ensure builds have run for each app
     try {
       let builds = []
-      const chunks = Math.max(1, cpus().length - 1)
-      for (const apps of chunk(activeApps, chunks)) {
-        log.verbose(`Building apps ${apps.map(x => x.packageId).join(', ')}`)
+      const chunks = chunk(activeApps, 2)
+      for (const apps of chunks) {
+        log.verbose(
+          `Building apps. num chunks ${chunks.length}, cur chunk ${apps
+            .map(x => x.packageId)
+            .join(', ')}`,
+        )
         builds = [
           ...builds,
           ...(await Promise.all(
@@ -463,7 +493,9 @@ export class AppsBuilder {
         app.packageId,
       )}.${this.buildMode[app.packageId]}.dll.js"></script>`
 
-    if (req.path.indexOf('/isolate') > -1) {
+    if (req.path.indexOf('/chrome') > -1) {
+      return index.replace('<!-- orbit-scripts -->', `${scriptsPre}${scriptsPost}`)
+    } else if (req.path.indexOf('/isolate') > -1) {
       const identifier = req.path.split('/')[2]
       const packageId = this.appsManager.identifierToPackageId(identifier)
       const app = this.apps.find(x => x.packageId === packageId)

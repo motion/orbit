@@ -43,6 +43,7 @@ import {
   NewFallbackServerPortCommand,
   BuildStatusModel,
   WorkspaceInfoModel,
+  OracleWordsFoundModel,
 } from '@o/models'
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
@@ -253,6 +254,7 @@ export class OrbitDesktopRoot {
               }
             },
             async () => {
+              log.info(`process.env.ENABLE_OCR = ${process.env.ENABLE_OCR}`)
               if (!singleUseMode && process.env.ENABLE_OCR) {
                 this.oracleManager = new OracleManager()
                 await this.oracleManager.start()
@@ -370,6 +372,7 @@ export class OrbitDesktopRoot {
         BuildStatusModel,
         WorkspaceInfoModel,
         SettingModel,
+        OracleWordsFoundModel,
       ],
       transport: new WebSocketServerTransport({
         port: mediatorServerPort,
@@ -400,7 +403,11 @@ export class OrbitDesktopRoot {
         }),
 
         ...loadAppDefinitionResolvers(),
+
+        // children resolvers
         ...this.workspaceManager.getResolvers(),
+        ...((this.oracleManager && this.oracleManager.getResolvers()) || []),
+
         resolveCommand(GetPIDCommand, async () => {
           return process.pid
         }),

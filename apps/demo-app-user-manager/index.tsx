@@ -35,14 +35,13 @@ function DemoAppUserManager() {
           <Layout type="column">
             <Pane resizable>
               <Row space="sm" padding="sm">
-                {/* <SearchInput name="search" /> */}
                 <Select name="active" options={active} />
                 <Select name="type" isMulti options={type} />
               </Row>
               <Table
                 selectable="multi"
                 shareable
-                // query={form.getValue('search')}
+                alwaysSelected
                 query={useActiveSearchQuery()}
                 onSelect={items => setHighlighted(items)}
                 items={users}

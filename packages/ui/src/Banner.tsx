@@ -215,6 +215,7 @@ export const Banner = (props: BannerViewProps) => {
     }
   }, [type, title, message, timeout])
 
+  const maxHeight = Math.max(250, height * 0.33)
   return (
     <Message
       className="ui-banner"
@@ -228,7 +229,6 @@ export const Banner = (props: BannerViewProps) => {
       elevation={2}
       alignSelf="flex-end"
       maxWidth={Math.max(200, width * 0.33)}
-      maxHeight={Math.max(250, height * 0.33)}
       background={useCallback(theme => theme.background, [])}
       {...rest}
     >
@@ -236,7 +236,9 @@ export const Banner = (props: BannerViewProps) => {
         {!!loading && <Spinner />}
         <Col flex={1} space="xs">
           <Message.Title>{title}</Message.Title>
-          <SimpleText whiteSpace="pre">{message}</SimpleText>
+          <Col maxHeight={maxHeight} scrollable="y">
+            <SimpleText whiteSpace="pre">{message}</SimpleText>
+          </Col>
         </Col>
         <Button
           size="xxs"

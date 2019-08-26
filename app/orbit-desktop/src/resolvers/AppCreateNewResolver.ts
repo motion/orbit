@@ -66,10 +66,16 @@ export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
     if (buildRes.type === 'error') {
       return buildRes
     }
+    /**
+     * TODO these next three calls are for now hardcoded and a bit weird
+     * If/when we refactor things in this area we can use this to understand how to improve it
+     */
     // this picks up new app meta
     await orbitDesktop.workspaceManager.appsManager.updateAppMeta()
     // then ensure everything built
     await orbitDesktop.workspaceManager.updateAppsBuilder()
+    // then update identifiers
+    await orbitDesktop.workspaceManager.updateDesktopState()
     return {
       type: 'success',
       message: `Created app.`,

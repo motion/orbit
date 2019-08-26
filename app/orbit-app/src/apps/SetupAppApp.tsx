@@ -133,6 +133,7 @@ function SetupAppCustom() {
               const name = form.getValue('name')
               const title = `Creating new app ${name}`
               const identifier = form.getValue('identifier')
+              let log = ``
 
               banner.set({
                 title,
@@ -150,7 +151,8 @@ function SetupAppCustom() {
                 },
                 {
                   onMessage: message => {
-                    banner.set({ title, message, loading: true })
+                    log += `${message}\n`
+                    banner.set({ title, message: log, loading: true })
                   },
                 },
               )
@@ -159,7 +161,7 @@ function SetupAppCustom() {
                 banner.set({
                   title,
                   type: 'error',
-                  message: res.message,
+                  message: `${log}\n${res.message}`,
                 })
                 return
               }

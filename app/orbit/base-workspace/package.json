@@ -6,5 +6,8 @@
   "config": {
     "orbitWorkspace": true
   },
+  "workspaces": [
+    "apps/*"
+  ],
   "dependencies": {}
 }

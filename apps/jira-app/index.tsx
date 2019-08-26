@@ -20,15 +20,15 @@ export default createApp<JiraAppData>({
   },
   setup: {
     domain: {
-      name: 'Domain',
+      label: 'Domain',
       required: true,
     },
     username: {
-      name: 'Username',
+      label: 'Username',
       required: true,
     },
     password: {
-      name: 'Password',
+      label: 'Password',
       required: true,
     },
   },

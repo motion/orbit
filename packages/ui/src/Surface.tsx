@@ -591,10 +591,6 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
         },
   }
 
-  if (props['debug']) {
-    console.log('box shadow now', res)
-  }
-
   return res
 })
 

@@ -8,7 +8,6 @@ import { AppsMainNew } from './AppsMainNew'
 
 export function AppsMainAddApp(props: { identifier: string }) {
   const banner = useBanner()
-
   return (
     <Suspense fallback={<Loading />}>
       <AppsMainAddAppContent banner={banner} {...props} />
@@ -75,6 +74,7 @@ export function AppsMainAddAppContent({
       subTitle={`Add ${def.name} app.`}
       titlePadding
       titleBorder
+      scrollable="y"
       afterTitle={
         <>
           {def.auth && (
@@ -101,10 +101,7 @@ export function AppsMainAddAppContent({
       {!!error && <Message alt="error">{error}</Message>}
 
       <SubSection title="Setup" titleSize="xs" subTitle="Customize and add app to workspace" space>
-        <AppsMainNew
-          customizeColor={!isDataDefinition(def)}
-          app={{ target: 'app', name: def.name, identifier: def.id }}
-        />
+        <AppsMainNew customizeColor={!isDataDefinition(def)} />
 
         {hasSetup && (
           <>

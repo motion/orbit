@@ -16,7 +16,6 @@ import { getSegmentedStyle } from './SegmentedRow'
 import { SizedSurfaceProps } from './SizedSurface'
 import { getSize } from './Sizes'
 import { Size, Space } from './Space'
-import { createSpacedChildren } from './SpaceGroup'
 import { scaledTextSizeTheme } from './text/SimpleText'
 import { Tooltip } from './Tooltip'
 import { getElevation } from './View/elevation'
@@ -437,7 +436,7 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
             disabled={disabled}
             elementTheme={elementTheme}
           >
-            {space ? createSpacedChildren({ children, space, spaceAround }) : children}
+            {children}
           </Element>
         )}
         {!!after && (
@@ -589,10 +588,6 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
           ...(!props.chromeless && themeStyle['&:hover']),
           ...propStyles['&:hover'],
         },
-  }
-
-  if (props['debug']) {
-    console.log('box shadow now', res)
   }
 
   return res

@@ -2,7 +2,7 @@ import { getAppInfo } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppMeta, CommandWsOptions } from '@o/models'
 import { stringToIdentifier } from '@o/utils'
-import { ensureDir, ensureSymlink, pathExists, readJSON } from 'fs-extra'
+import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
 import webpack from 'webpack'
 
@@ -47,25 +47,6 @@ export async function getAppsConfig(
   log.info(
     `dev ${options.dev} watch ${watch} ${directory}, apps ${apps.length} ${isInMonoRepo}`,
     options,
-  )
-
-  // link local apps into local node_modules
-  await ensureDir(join(directory, 'node_modules'))
-  await Promise.all(
-    apps
-      .filter(x => x.isLocal)
-      .map(async app => {
-        const where = join(
-          directory,
-          // FOR NOW lets link into monorepo root if need be
-          // need to figure out how to control dlls a bit better
-          ...(isInMonoRepo ? ['..', '..'] : []),
-          'node_modules',
-          ...app.packageId.split('/'),
-        )
-        log.info(`Ensuring symlink from ${app.directory} to ${where}`)
-        await ensureSymlink(app.directory, where)
-      }),
   )
 
   let dllReferences: DLLReferenceDesc[] = []

@@ -1,5 +1,5 @@
 import { isDefined } from '@o/utils'
-import { gloss, ThemeFn } from 'gloss'
+import { ThemeFn, useTheme } from 'gloss'
 import React, { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { isWebkit } from '../constants'
@@ -105,81 +105,81 @@ const inputSurfaceTheme: ThemeFn = (props, theme) => ({
   }),
 })
 
-const SimpleInput = gloss(
-  forwardRef(
-    (
-      {
-        placeholder,
-        tagName = 'input',
-        elementProps,
-        name,
-        type,
-        value,
-        onChange,
-        onKeyDown,
-        onKeyUp,
-        onKeyPress,
-        defaultValue,
-        ...props
-      }: SizedSurfaceProps & InputProps,
-      ref,
-    ) => {
-      const visible = useVisibility()
-      return (
-        <SizedSurface
-          elementProps={useMemo(
-            () => ({
-              ref,
-              placeholder,
-              tagName,
-              name,
-              type,
-              value,
-              defaultValue,
-              onChange,
-              onKeyDown,
-              onKeyUp,
-              onKeyPress,
-              ...elementProps,
-            }),
-            [ref, value, defaultValue, placeholder, tagName, elementProps],
-          )}
-          elementTheme={useCallback(
-            (p, theme) => ({
-              // apple selection color
-              '&::selection': {
-                color: theme.color.lighten(0.1),
-                background: theme.backgroundSelection || theme.backgroundStronger,
+const SimpleInput = forwardRef(
+  (
+    {
+      placeholder,
+      tagName = 'input',
+      elementProps,
+      name,
+      type,
+      value,
+      onChange,
+      onKeyDown,
+      onKeyUp,
+      onKeyPress,
+      defaultValue,
+      ...props
+    }: SizedSurfaceProps & InputProps,
+    ref,
+  ) => {
+    const visible = useVisibility()
+    const theme = useTheme()
+    return (
+      <SizedSurface
+        elementProps={useMemo(
+          () => ({
+            ref,
+            placeholder,
+            tagName,
+            name,
+            type,
+            value,
+            defaultValue,
+            onChange,
+            onKeyDown,
+            onKeyUp,
+            onKeyPress,
+            ...elementProps,
+          }),
+          [ref, value, defaultValue, placeholder, tagName, elementProps],
+        )}
+        elementTheme={useCallback(
+          (p, theme) => ({
+            // apple selection color
+            '&::selection': {
+              color: theme.color.lighten(0.1),
+              background: theme.backgroundSelection || theme.backgroundStronger,
+            },
+            // autofill keep proper color
+            ...(isWebkit && {
+              '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
+                WebkitTextFillColor: p.color || theme.color,
+                backgroundColor: 'transparent',
               },
-              // autofill keep proper color
-              ...(isWebkit && {
-                '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
-                  WebkitTextFillColor: p.color || theme.color,
-                  backgroundColor: 'transparent',
-                },
-              }),
             }),
-            [],
-          )}
-          type="input"
-          maxWidth="100%"
-          alignItems="center"
-          flexDirection="row"
-          subTheme="input"
-          pointerEvents={visible ? 'inherit' : 'none'}
-          sizeFont={0.9}
-          sizePadding
-          sizeHeight
-          sizeLineHeight
-          sizeRadius={0.75}
-          label={name}
-          activeStyle={null}
-          glint={false}
-          borderWidth={1}
-          {...props}
-          className={`ui-input ${props.className || ''}`}
-        />
-      )
-    },
-  ),
-).theme(inputSurfaceTheme)
+          }),
+          [],
+        )}
+        type="input"
+        maxWidth="100%"
+        alignItems="center"
+        flexDirection="row"
+        subTheme="input"
+        pointerEvents={visible ? 'inherit' : 'none'}
+        sizeFont={0.9}
+        sizePadding
+        sizeHeight
+        sizeLineHeight
+        sizeRadius={0.75}
+        label={name}
+        activeStyle={null}
+        glint={false}
+        borderWidth={1}
+        {...props}
+        className={`ui-input ${props.className || ''}`}
+        focusWithinStyle={inputSurfaceTheme(props, theme)}
+      />
+    )
+  },
+)

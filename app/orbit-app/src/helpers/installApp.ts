@@ -66,10 +66,18 @@ async function installApp(
       timeout: 6,
     })
 
-    const res = await command(AuthAppCommand, {
-      authKey: def.auth,
-      identifier: def.id,
-    })
+    const res = await command(
+      AuthAppCommand,
+      {
+        authKey: def.auth,
+        identifier: def.id,
+      },
+      {
+        onMessage: message => {
+          banner.set({ message, loading: true })
+        },
+      },
+    )
 
     if (res.type === 'error') {
       console.error('Error, TODO show banner!')
@@ -82,11 +90,21 @@ async function installApp(
       return res
     }
 
-    banner.set({ message: `Authenticated!`, timeout: 3 })
+    banner.set({ type: 'success', message: `Authenticated!`, timeout: 3 })
     return res
   }
 
-  const res = await command(AppInstallToWorkspaceCommand, { identifier: def.id })
+  const res = await command(
+    AppInstallToWorkspaceCommand,
+    {
+      identifier: def.id,
+    },
+    {
+      onMessage: message => {
+        banner.set({ message, loading: true })
+      },
+    },
+  )
 
   console.log('got response from install app command', res)
 
@@ -127,7 +145,7 @@ async function installApp(
         message,
       })
       return {
-        type: 'error' as const,
+        type: 'error',
         message,
       }
     }
@@ -140,7 +158,7 @@ async function installApp(
   banner.set({
     type: 'success',
     message,
-    timeout: 2,
+    timeout: 3,
   })
 
   if (appBit) {
@@ -150,7 +168,7 @@ async function installApp(
   }
 
   return {
-    type: 'success' as const,
+    type: 'success',
     message,
   }
 }

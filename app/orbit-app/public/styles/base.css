@@ -368,6 +368,13 @@ body.dragging * {
   }
 }
 
+i,
+b,
+em,
+strong {
+  display: inline-block;
+}
+
 input[type='checkbox'],
 input[type='radio'] {
   display: inline;

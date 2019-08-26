@@ -86,8 +86,10 @@ class FormStore {
     fields => {
       ensure('fields', !!fields)
       for (const key in fields) {
-        const fieldValue = fields[key].value
+        // default to string
+        const fieldValue = selectDefined(fields[key].value, '')
         // only update if the value changes
+        console.log('update from props', key, fieldValue)
         if (fieldValue !== this.lastPropValues[key]) {
           // dont worry about updating after weve edited a derived field
           if (typeof fieldValue === 'function' && this.hasEdited[key]) {
@@ -147,9 +149,13 @@ class FormStore {
     }
     if (this.values && !isEqual(next.value, this.simpleValues[key])) {
       this.values[key] = { ...this.values[key], ...next } as any
+      const nextValue =
+        typeof next.value === 'function'
+          ? next.value(this.simpleValues)
+          : selectDefined(next.value, '')
       this.simpleValues = {
         ...this.simpleValues,
-        [key]: typeof next.value === 'function' ? next.value(this.simpleValues) : next.value,
+        [key]: nextValue,
       }
     }
   }
@@ -310,7 +316,7 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
 })
 
 function useFormFields(store: FormStore, fields: FormFieldsObj): React.ReactNode {
-  const values = useReaction(() => store.derivedValues)
+  const values = useReaction(() => store.derivedValues, { defaultValue: store.derivedValues })
   return Object.keys(fields || {}).map(key => {
     const field = fields[key]
     return (
@@ -319,7 +325,7 @@ function useFormFields(store: FormStore, fields: FormFieldsObj): React.ReactNode
         label={field.label}
         name={key}
         type={DataType[field.type]}
-        defaultValue={selectDefined(values[key], fields[key].value)}
+        defaultValue={selectDefined(values ? values[key] : undefined, field.value, '')}
         description={'description' in field ? field.description : undefined}
         {...field.type === 'custom' && { children: field.children }}
       />

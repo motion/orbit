@@ -14,6 +14,7 @@ export type PseudoStyleProps = {
   activeStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
   focusStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
   disabledStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
+  focusWithinStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
 }
 
 export const psuedoStyleTheme: ThemeFn = (a, b, c) => {
@@ -44,6 +45,12 @@ const pseudos = {
     postfix: 'Focus',
     forceOnProp: 'focus',
     extraStyleProp: 'focusStyle',
+  },
+  focusWithin: {
+    pseudoKey: '&:focus-within',
+    postfix: 'FocusWithin',
+    forceOnProp: 'focusWithin',
+    extraStyleProp: 'focusWithinStyle',
   },
   active: {
     pseudoKey: '&:active',

@@ -246,11 +246,9 @@ const install = async projectRoot => {
 
   try {
     if (await shouldUseYarn()) {
-      await fs.remove(`package-lock.json`)
-      await spawnAndLog(`yarn install`)
+      await spawnAndLog(`yarn install`, { cwd: projectRoot })
     } else {
-      await fs.remove(`yarn.lock`)
-      await spawnAndLog(`npm install`)
+      await spawnAndLog(`npm install`, { cwd: projectRoot })
     }
   } finally {
     process.chdir(prevDir)

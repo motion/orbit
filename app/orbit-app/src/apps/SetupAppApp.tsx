@@ -137,12 +137,20 @@ function SetupAppCustom() {
                 message: `Creating app "${name}" with template "${template}".`,
               })
 
-              const res = await command(AppCreateNewCommand, {
-                template,
-                name,
-                identifier,
-                icon: 'blank',
-              })
+              const res = await command(
+                AppCreateNewCommand,
+                {
+                  template,
+                  name,
+                  identifier,
+                  icon: 'blank',
+                },
+                {
+                  onMessage: message => {
+                    banner.set({ message })
+                  },
+                },
+              )
 
               if (res.type === 'error') {
                 banner.set({

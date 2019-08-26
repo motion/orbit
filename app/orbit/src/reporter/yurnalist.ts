@@ -27,6 +27,7 @@ export default {
   info: reporter.info.bind(reporter),
   warn: reporter.warn.bind(reporter),
   log: reporter.log.bind(reporter),
+
   /**
    * Time an activity.
    * @param {string} name - Name of activity.

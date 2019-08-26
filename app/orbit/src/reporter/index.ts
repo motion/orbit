@@ -31,6 +31,7 @@ export const reporter: Reporter = {
     reporter.isVerbose = isVerbose
     reporterInstance.setVerbose(isVerbose)
   },
+
   /**
    * Turn off colors in error output.
    * @param {boolean} [isNoColor=false]
@@ -42,6 +43,7 @@ export const reporter: Reporter = {
       errorFormatter.withoutColors()
     }
   },
+
   /**
    * Log arguments and exit process with status 1.
    * @param {*} args
@@ -82,11 +84,13 @@ export const reporter: Reporter = {
   uptime(prefix) {
     this.verbose(`${prefix}: ${(process.uptime() * 1000).toFixed(3)}ms`)
   },
+
   success: reporterInstance.success,
   verbose: reporterInstance.verbose,
   info: reporterInstance.info,
   warn: reporterInstance.warn,
   log: reporterInstance.log,
+
   /**
    * Time an activity.
    * @param {string} name - Name of activity.

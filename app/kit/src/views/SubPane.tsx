@@ -5,7 +5,7 @@ import { throttle, pick } from 'lodash'
 import React, { memo, useEffect } from 'react'
 
 import { SubPaneStore } from '../stores/SubPaneStore'
-import { Col, ColProps, PaneProps } from '@o/ui'
+import { Col, ColProps, PaneProps, ProvideVisibility } from '@o/ui'
 
 export type SubPaneProps = PaneProps & {
   id: any
@@ -60,26 +60,28 @@ export const SubPane = memo(function SubPane(props: Props) {
       {typeof before === 'function' ? before(isActive) : before}
       {!!offsetY && <div style={{ height: offsetY, pointerEvents: 'none' }} />}
       <SubPaneInner ref={subPaneStore.innerPaneRef}>
-        <Pane
-          isActive={isActive}
-          isLeft={isLeft}
-          style={style}
-          height={height}
-          ref={subPaneStore.paneRef}
-          transition={transition}
-          {...fullHeight && { bottom: 0 }}
-          {...rest}
-        >
-          {/* used by SubPaneStore to find real content height */}
-          <PaneContentInner
-            style={{
-              maxHeight: fullHeight ? '100%' : subPaneStore.maxHeight,
-              flex: fullHeight ? 1 : 'none',
-            }}
+        <ProvideVisibility visible={isActive}>
+          <Pane
+            isActive={isActive}
+            isLeft={isLeft}
+            style={style}
+            height={height}
+            ref={subPaneStore.paneRef}
+            transition={transition}
+            {...fullHeight && { bottom: 0 }}
+            {...rest}
           >
-            {children}
-          </PaneContentInner>
-        </Pane>
+            {/* used by SubPaneStore to find real content height */}
+            <PaneContentInner
+              style={{
+                maxHeight: fullHeight ? '100%' : subPaneStore.maxHeight,
+                flex: fullHeight ? 1 : 'none',
+              }}
+            >
+              {children}
+            </PaneContentInner>
+          </Pane>
+        </ProvideVisibility>
       </SubPaneInner>
       {after}
     </SubPaneFrame>

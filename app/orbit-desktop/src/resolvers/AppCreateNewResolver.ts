@@ -1,5 +1,5 @@
 import { Logger } from '@o/logger'
-import { resolveCommand } from '@o/mediator'
+import { CommandOpts, resolveCommand } from '@o/mediator'
 import { AppCreateNewCommand, AppCreateNewOptions, Space, StatusReply } from '@o/models'
 import { pathExists } from 'fs-extra'
 import { commandNew } from 'orbit'
@@ -8,42 +8,47 @@ import sanitize from 'sanitize-filename'
 
 import { getCurrentWorkspace } from '../helpers/getCurrentWorkspace'
 import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
-import { statusReplyCommand } from '../WorkspaceManager/commandHelpers'
+import { attachLogToCommand, statusReplyCommand } from '../WorkspaceManager/commandHelpers'
 import { ensureWorkspaceModel } from '../WorkspaceManager/ensureWorkspaceModel'
 
 const log = new Logger('AppCreateNewCommand')
 
 export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
-  return resolveCommand(
-    AppCreateNewCommand,
-    statusReplyCommand(async props => {
-      const directory = props.projectRoot || (await getCurrentWorkspace()).directory
-      log.info(
-        `Creating new app ${props.name} ${props.identifier} ${props.template} in ${directory}`,
+  return resolveCommand(AppCreateNewCommand, statusReplyCommand(commandCreateNew))
+
+  async function commandCreateNew(props: AppCreateNewOptions, cmdOpts: CommandOpts) {
+    // pipe logs back to command
+    attachLogToCommand(log, cmdOpts)
+    // run command
+    const directory = props.projectRoot || (await getCurrentWorkspace()).directory
+    log.info(`Creating new app ${props.name} ${props.identifier} ${props.template} in ${directory}`)
+    if (!props.identifier || !props.name || !props.template) {
+      throw new Error(
+        `Missing some props, needs identifier + name + template ${JSON.stringify(props)}`,
       )
-      if (!props.identifier || !props.name || !props.template) {
-        throw new Error(
-          `Missing some props, needs identifier + name + template ${JSON.stringify(props)}`,
-        )
-      }
-      const ws = await ensureWorkspaceModel(directory)
-      return await createNewWorkspaceApp(ws, props)
-    }),
-  )
+    }
+    const ws = await ensureWorkspaceModel(directory)
+    return await createNewWorkspaceApp(ws, props, cmdOpts)
+  }
 
   async function createNewWorkspaceApp(
     space: Space,
     opts: AppCreateNewOptions,
+    cmdOpts: CommandOpts,
   ): Promise<StatusReply> {
+    log.verbose(`createNewWorkspaceApp() ${space.directory} ${!!opts} ${!!cmdOpts}`)
     const appsDir = join(space.directory, 'apps')
     const name = await findValidDirectoryName(appsDir, opts.identifier)
-    let res = await commandNew({
-      projectRoot: appsDir,
-      name,
-      template: opts.template,
-      icon: opts.icon,
-      identifier: opts.identifier,
-    })
+    let res = await commandNew(
+      {
+        projectRoot: appsDir,
+        name,
+        template: opts.template,
+        icon: opts.icon,
+        identifier: opts.identifier,
+      },
+      cmdOpts,
+    )
     if (res.type === 'error') {
       return res
     }

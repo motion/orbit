@@ -1,4 +1,5 @@
 import { configStore } from '@o/config'
+import { CommandOpts } from '@o/mediator'
 import { AppCreateNewCommand, AppCreateNewOptions, StatusReply } from '@o/models'
 import { trackCli, trackError } from '@o/telemetry'
 import { execSync } from 'child_process'
@@ -9,6 +10,7 @@ import isValid from 'is-valid-path'
 import { basename, join, resolve } from 'path'
 import prompts from 'prompts'
 import replaceInFile from 'replace-in-file'
+import { Stream } from 'stream'
 import url from 'url'
 
 import { getOrbitDesktop } from './getDesktop'
@@ -20,34 +22,69 @@ import { reporter } from './reporter'
 // The MIT License (MIT)
 // Copyright (c) 2015 Gatsbyjs
 
+let currentCommandOpts: CommandOpts | null = null
+
 /**
  * Main function that clones or copies the template.
  */
-export async function commandNew(options: AppCreateNewOptions): Promise<StatusReply> {
-  if (await isInWorkspace(options.projectRoot)) {
-    // inside orbit workspace, create app in it
-    reporter.info(`Creating app ${options.name} in workspace...`)
-    const { mediator, orbitProcess } = await getOrbitDesktop({
-      singleUseMode: true,
+export async function commandNew(
+  options: AppCreateNewOptions,
+  commandOpts?: CommandOpts,
+): Promise<StatusReply> {
+  commandOpts = commandOpts || null
+  reporter.verbose(`commandNew ${!!commandOpts}`)
+
+  try {
+    if (await isInWorkspace(options.projectRoot)) {
+      // inside orbit workspace, create app in it
+      reporter.info(`Creating app ${options.name} in workspace...`)
+      const { mediator, orbitProcess } = await getOrbitDesktop({
+        singleUseMode: true,
+      })
+      logStatusReply(
+        await mediator.command(AppCreateNewCommand, options, {
+          onMessage: reporter.info,
+        }),
+      )
+      orbitProcess && orbitProcess.kill()
+      process.exit(0)
+    }
+
+    return await copyTemplate(options, {
+      async preInstall({ path }) {
+        await replaceInFile({
+          files: join(path, '**'),
+          from: ['$ID', '$NAME', '$ICON'],
+          to: [options.identifier, options.name, options.icon],
+        })
+      },
     })
-    logStatusReply(
-      await mediator.command(AppCreateNewCommand, options, {
-        onMessage: reporter.info,
-      }),
-    )
-    orbitProcess && orbitProcess.kill()
-    process.exit(0)
+  } catch (err) {
+    reporter.error(err.message, err)
   }
 
-  return await copyTemplate(options, {
-    async preInstall({ path }) {
-      await replaceInFile({
-        files: join(path, '**'),
-        from: ['$ID', '$NAME', '$ICON'],
-        to: [options.identifier, options.name, options.icon],
-      })
-    },
+  commandOpts = null
+}
+
+function createWritableStream(onMessage: (message: string) => any) {
+  const stream = new Stream.Writable()
+  stream._write = (chunk, _encoding, next) => {
+    onMessage(chunk.toString())
+    next()
+  }
+  return stream
+}
+
+function spawnAndLog(cmd: string, options?: any) {
+  const [file, ...args] = cmd.split(/\s+/)
+  const execed = execa(file, args, options)
+  const stdoutStream = createWritableStream(message => {
+    if (currentCommandOpts) {
+      currentCommandOpts.sendMessage(message)
+    }
   })
+  execed.stdout.pipe(stdoutStream)
+  return execed
 }
 
 export async function copyTemplate(
@@ -98,6 +135,7 @@ export async function copyTemplate(
     await preInstall({
       path: appRoot,
     })
+
     await install(appRoot)
 
     return {
@@ -122,11 +160,6 @@ export async function isInWorkspace(directory: string) {
     return !!(pkg && pkg.config && pkg.config.orbitWorkspace)
   }
   return false
-}
-
-const spawn = (cmd: string, options?: any) => {
-  const [file, ...args] = cmd.split(/\s+/)
-  return execa(file, args, { stdio: `inherit`, ...options })
 }
 
 // Checks the existence of yarn package and user preference if it exists
@@ -175,7 +208,7 @@ export const promptPackageManager = async () => {
 const gitInit = async projectRoot => {
   reporter.info(`Initialising git in ${projectRoot}`)
 
-  return await spawn(`git init`, { cwd: projectRoot })
+  return await spawnAndLog(`git init`, { cwd: projectRoot })
 }
 
 // Create a .gitignore file if it is missing in the new directory
@@ -192,7 +225,7 @@ const maybeCreateGitIgnore = async projectRoot => {
 const createInitialGitCommit = async (projectRoot, templateUrl) => {
   reporter.info(`Create initial git commit in ${projectRoot}`)
 
-  await spawn(`git add -A`, { cwd: projectRoot })
+  await spawnAndLog(`git add -A`, { cwd: projectRoot })
   // use execSync instead of spawn to handle git clients using
   // pgp signatures (with password)
   execSync(`git commit -m "Initial commit from orbit: (${templateUrl})"`, {
@@ -210,10 +243,10 @@ const install = async projectRoot => {
   try {
     if (await shouldUseYarn()) {
       await fs.remove(`package-lock.json`)
-      await spawn(`yarn install`)
+      await spawnAndLog(`yarn install`)
     } else {
       await fs.remove(`yarn.lock`)
-      await spawn(`npm install`)
+      await spawnAndLog(`npm install`)
     }
   } finally {
     process.chdir(prevDir)
@@ -267,7 +300,7 @@ const clone = async (hostInfo: any, projectRoot: string) => {
 
   reporter.info(`Creating new app from git: ${url}`)
 
-  await spawn(`git clone ${branch} ${url} ${projectRoot} --single-branch`)
+  await spawnAndLog(`git clone ${branch} ${url} ${projectRoot} --single-branch`)
 
   reporter.success(`Created template directory layout`)
 

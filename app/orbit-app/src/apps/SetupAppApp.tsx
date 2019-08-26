@@ -170,6 +170,7 @@ function SetupAppCustom() {
               console.warn('should go to app')
               await createAppBitInActiveSpace({
                 identifier,
+                name,
               })
 
               banner.set({

@@ -24,10 +24,10 @@ export async function createAppBitInActiveSpace(
     const activeSpace = await getActiveSpace()
     const def = await getAppDefinition(appBit.identifier)
     const bit = {
-      ...newEmptyAppBit(def),
+      ...(def ? newEmptyAppBit(def) : null),
       spaceId: activeSpace.id,
       space: activeSpace,
-      name: newAppStore.app.name || def.name,
+      name: appBit.name || newAppStore.app.name || def.name,
       colors: newAppStore.app.colors,
       ...appBit,
     }

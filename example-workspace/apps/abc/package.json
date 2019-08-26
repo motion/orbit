@@ -1,0 +1,19 @@
+{
+  "name": "abc",
+  "description": "",
+  "version": "0.1.0",
+  "main": "./main.tsx",
+  "scripts": {
+    "start": "orbit dev",
+    "build": "orbit build",
+    "publish-app": "orbit publish"
+  },
+  "dependencies": {
+    "@o/kit": "^2.5.6",
+    "@o/ui": "^2.5.6",
+    "lodash": "4.17.11"
+  },
+  "config": {
+    "orbitApp": true
+  }
+}

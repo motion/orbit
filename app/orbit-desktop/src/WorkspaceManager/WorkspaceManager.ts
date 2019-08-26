@@ -3,6 +3,7 @@ import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveMany, resolveObserveOne } from '@o/mediator'
 import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppWorkspaceCommand, BuildStatusModel, CallAppBitApiMethodCommand, CommandWsOptions, Space, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop } from '@o/stores'
+import { sleep } from '@o/ui'
 import { always, decorate, ensure, react } from '@o/use-store'
 import { remove } from 'fs-extra'
 import _, { uniqBy } from 'lodash'
@@ -116,20 +117,20 @@ export class WorkspaceManager {
       this.graphServer.setupGraph(apps)
       // this is the main build action, no need to await here
       this.updateAppsBuilder()
-      this.updateDesktopState()
+      await this.updateDesktopState()
     },
   )
 
   // ensure we keep state up to date
   updateDesktopStateOnNewApps = react(
     () => always(this.appsManager.apps, this.appsBuilder.buildNameToAppMeta),
-    () => {
+    async () => {
       log.verbose(`Update desktop state via apps`)
-      this.updateDesktopState()
+      await this.updateDesktopState()
     },
   )
 
-  updateDesktopState() {
+  async updateDesktopState() {
     const identifiers = this.appsManager.apps.map(x => x.identifier)
     if (!identifiers.length) {
       log.info(`No apps to update...`)
@@ -154,6 +155,8 @@ export class WorkspaceManager {
         }),
       },
     })
+    // sleep because we have no good wait mechanism on setState there
+    await sleep(50)
   }
 
   private updateBuildMode() {

@@ -10,7 +10,6 @@ import { FlipAnimate, FlipAnimateItem } from './FlipAnimate'
 import { Portal } from './helpers/portal'
 import { useOnUnmount } from './hooks/useOnUnmount'
 import { useWindowSize } from './hooks/useWindowSize'
-import { Space } from './Space'
 import { Spinner } from './Spinner'
 import { Message, MessageProps } from './text/Message'
 import { SimpleText } from './text/SimpleText'
@@ -32,7 +31,7 @@ export type BannerProps = {
   onClose?: () => void
 }
 
-type BannerContent = Pick<BannerProps, 'title' | 'message' | 'type'>
+type BannerContent = Pick<BannerProps, 'title' | 'message' | 'type' | 'loading'>
 
 type BannerItem = BannerContent & {
   key: number
@@ -48,10 +47,24 @@ class BannerStore {
 
   set(key: number, props: Partial<BannerProps>) {
     let banner = this.banners.find(x => x.key === key)
+
+    const next = {
+      message: props.message,
+      loading:
+        // by default: change loading to false if we are setting error/success
+        props.type === 'error' || props.type === 'success'
+          ? false
+          : banner
+          ? // otherwise just load the previous loading state, or false
+            banner.loading
+          : false,
+      ...props,
+    }
+
     if (!!banner) {
-      this.banners = this.banners.map(x => (x === banner ? { ...x, ...props } : x))
+      this.banners = this.banners.map(x => (x === banner ? { ...x, ...next } : x))
     } else {
-      this.show({ ...props, message: props.message }, key)
+      this.show(next, key)
     }
   }
 
@@ -219,20 +232,8 @@ export const Banner = (props: BannerViewProps) => {
       background={useCallback(theme => theme.background, [])}
       {...rest}
     >
-      <Row
-        flex={1}
-        justifyContent="space-between"
-        alignItems="center"
-        afterSpace
-        beforeSpace
-        space="sm"
-      >
-        {!!loading && (
-          <>
-            <Spinner />
-            <Space size="xs" />
-          </>
-        )}
+      <Row flex={1} justifyContent="space-between" alignItems="center" afterSpace beforeSpace space>
+        {!!loading && <Spinner />}
         <Col flex={1} space="xs">
           <Message.Title>{title}</Message.Title>
           <SimpleText whiteSpace="pre">{message}</SimpleText>

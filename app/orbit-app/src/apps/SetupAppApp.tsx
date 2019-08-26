@@ -131,10 +131,13 @@ function SetupAppCustom() {
             onClick={async () => {
               const template = flow.data.selectedTemplate
               const name = form.getValue('name')
+              const title = `Creating new app ${name}`
               const identifier = form.getValue('identifier')
 
               banner.set({
+                title,
                 message: `Creating app "${name}" with template "${template}".`,
+                loading: true,
               })
 
               const res = await command(
@@ -147,13 +150,14 @@ function SetupAppCustom() {
                 },
                 {
                   onMessage: message => {
-                    banner.set({ message })
+                    banner.set({ title, message, loading: true })
                   },
                 },
               )
 
               if (res.type === 'error') {
                 banner.set({
+                  title,
                   type: 'error',
                   message: res.message,
                 })
@@ -167,6 +171,7 @@ function SetupAppCustom() {
               })
 
               banner.set({
+                title,
                 type: 'success',
                 message: `Successfully created, opening...`,
                 timeout: 2,

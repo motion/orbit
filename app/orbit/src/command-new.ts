@@ -31,7 +31,7 @@ export async function commandNew(
   options: AppCreateNewOptions,
   commandOpts?: CommandOpts,
 ): Promise<StatusReply> {
-  commandOpts = commandOpts || null
+  currentCommandOpts = commandOpts || null
   reporter.verbose(`commandNew ${!!commandOpts}`)
 
   try {
@@ -50,7 +50,7 @@ export async function commandNew(
       process.exit(0)
     }
 
-    return await copyTemplate(options, {
+    const res = await copyTemplate(options, {
       async preInstall({ path }) {
         await replaceInFile({
           files: join(path, '**'),
@@ -59,11 +59,13 @@ export async function commandNew(
         })
       },
     })
+
+    return res
   } catch (err) {
     reporter.error(err.message, err)
+  } finally {
+    currentCommandOpts = null
   }
-
-  commandOpts = null
 }
 
 function createWritableStream(onMessage: (message: string) => any) {

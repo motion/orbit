@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Node, Schema, Value } from 'slate'
 import { Editor as SlateEditor } from 'slate-react'
+import { ThemeProvider } from 'styled-components'
 
 import { commands } from './commands'
 import { Flex } from './components/Flex'
@@ -272,29 +273,31 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
         column
         auto
       >
-        <SlateEditor
-          ref={this.setEditorRef}
-          plugins={this.plugins}
-          value={this.state.editorValue}
-          commands={commands}
-          queries={queries}
-          placeholder={placeholder}
-          schema={this.getSchema()}
-          // onKeyDown={this.handleKeyDown}
-          onChange={this.handleChange}
-          onSave={onSave}
-          onSearchLink={onSearchLink}
-          onClickLink={onClickLink}
-          onImageUploadStart={onImageUploadStart}
-          onImageUploadStop={onImageUploadStop}
-          onShowToast={onShowToast}
-          readOnly={readOnly}
-          spellCheck={!readOnly}
-          uploadImage={uploadImage}
-          pretitle={pretitle}
-          options={defaultOptions}
-          {...rest}
-        />
+        <ThemeProvider theme={theme}>
+          <SlateEditor
+            ref={this.setEditorRef}
+            plugins={this.plugins}
+            value={this.state.editorValue}
+            commands={commands}
+            queries={queries}
+            placeholder={placeholder}
+            schema={this.getSchema()}
+            // onKeyDown={this.handleKeyDown}
+            onChange={this.handleChange}
+            onSave={onSave}
+            onSearchLink={onSearchLink}
+            onClickLink={onClickLink}
+            onImageUploadStart={onImageUploadStart}
+            onImageUploadStop={onImageUploadStop}
+            onShowToast={onShowToast}
+            readOnly={readOnly}
+            spellCheck={!readOnly}
+            uploadImage={uploadImage}
+            pretitle={pretitle}
+            options={defaultOptions}
+            {...rest}
+          />
+        </ThemeProvider>
       </Flex>
     )
   }

@@ -150,6 +150,8 @@ export class Toolbar extends React.Component<Props, State> {
       left: this.state.left,
     }
 
+    console.log('ok?', this.props)
+
     return (
       <Portal>
         <Menu active={this.state.active} ref={ref => (this.menu = ref)} style={style}>

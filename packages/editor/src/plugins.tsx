@@ -1,12 +1,3 @@
-import 'prismjs/components/prism-bash'
-import 'prismjs/components/prism-csharp'
-import 'prismjs/components/prism-java'
-import 'prismjs/components/prism-php'
-import 'prismjs/components/prism-powershell'
-import 'prismjs/components/prism-python'
-import 'prismjs/components/prism-ruby'
-import 'prismjs/components/prism-typescript'
-
 import EditTable from '@domoinc/slate-edit-table'
 import EditBlockquote from '@wikifactory/slate-edit-blockquote'
 import EditCode from '@wikifactory/slate-edit-code'
@@ -31,6 +22,15 @@ import { MarkdownPaste } from './plugins/MarkdownPaste'
 import { MarkdownShortcuts } from './plugins/MarkdownShortcuts'
 import { PlaceholderPlugin } from './plugins/Placeholder'
 import { TablePlugin } from './plugins/Table'
+
+require('prismjs/components/prism-bash')
+require('prismjs/components/prism-csharp')
+require('prismjs/components/prism-java')
+require('prismjs/components/prism-php')
+require('prismjs/components/prism-powershell')
+require('prismjs/components/prism-python')
+require('prismjs/components/prism-ruby')
+require('prismjs/components/prism-typescript')
 
 // additional language support based on the most popular programming languages
 export const createPlugins = ({

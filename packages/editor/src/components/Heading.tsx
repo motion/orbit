@@ -100,8 +100,9 @@ const Anchor = styled(CopyToClipboard)`
 export const StyledHeading = styled(Heading)`
   display: flex;
   align-items: center;
+  flex-flow: row;
   position: relative;
-  margin-left: -24px;
+  margin: 0.67em 0px 0.67em -24px;
 
   &:hover {
     ${CollapseToggle} {

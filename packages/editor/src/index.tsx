@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Node, Schema, Value } from 'slate'
 import { Editor as SlateEditor } from 'slate-react'
-import { ThemeProvider } from 'styled-components'
+import styled, { ThemeProvider } from 'styled-components'
 
 import { commands } from './commands'
 import { Flex } from './components/Flex'
@@ -49,7 +49,7 @@ export type EditorState = {
   editorValue: Value
 }
 
-export class Editor extends React.PureComponent<EditorProps, EditorState> {
+export class EditorComponent extends React.PureComponent<EditorProps, EditorState> {
   static defaultProps = {
     defaultValue: '',
     placeholder: 'Write something nice…',
@@ -121,7 +121,7 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
     }
   }
 
-  setEditorRef = (ref: Editor) => {
+  setEditorRef = (ref: EditorComponent) => {
     this.editor = ref
   }
 
@@ -302,3 +302,75 @@ export class Editor extends React.PureComponent<EditorProps, EditorState> {
     )
   }
 }
+
+export const Editor = styled(EditorComponent)`
+  color: ${props => props.theme.text};
+  background: ${props => props.theme.background};
+  font-family: ${props => props.theme.fontFamily};
+  font-weight: ${props => props.theme.fontWeight};
+  font-size: 1em;
+  line-height: 1.7em;
+  width: 100%;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 500;
+  }
+
+  ul,
+  ol {
+    margin: 0 0.1em;
+    padding-left: 1em;
+    ul,
+    ol {
+      margin: 0.1em;
+    }
+  }
+
+  p {
+    position: relative;
+    margin: 0;
+  }
+
+  a {
+    color: ${props => props.theme.link};
+  }
+
+  a:hover {
+    text-decoration: ${props => (props.readOnly ? 'underline' : 'none')};
+  }
+
+  li p {
+    display: inline;
+    margin: 0;
+  }
+  .todoList {
+    list-style: none;
+    padding-left: 0;
+    .todoList {
+      padding-left: 1em;
+    }
+  }
+
+  .todo {
+    span:last-child:focus {
+      outline: none;
+    }
+  }
+
+  blockquote {
+    border-left: 3px solid ${props => props.theme.quote};
+    margin: 0;
+    padding-left: 10px;
+    font-style: italic;
+  }
+
+  b,
+  strong {
+    font-weight: 600;
+  }
+`

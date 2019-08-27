@@ -26,6 +26,7 @@ export const MenuButton = memo(
           <>
             <Space size="sm" />
             <SimpleText>{children}</SimpleText>
+            <Space size="sm" />
           </>
         )}
         <Menu

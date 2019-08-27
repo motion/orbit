@@ -2440,6 +2440,21 @@
     universal-user-agent "^3.0.0"
     url-template "^2.0.8"
 
+"@popmotion/easing@^1.0.1", "@popmotion/easing@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/@popmotion/easing/-/easing-1.0.2.tgz#17d925c45b4bf44189e5a38038d149df42d8c0b4"
+  integrity sha512-IkdW0TNmRnWTeWI7aGQIVDbKXPWHVEYdGgd5ZR4SH/Ty/61p63jCjrPxX1XrR7IGkl08bjhJROStD7j+RKgoIw==
+
+"@popmotion/popcorn@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.npmjs.org/@popmotion/popcorn/-/popcorn-0.4.2.tgz#ff9f5334e8e808ed02237b7b9c928619d1eb68ff"
+  integrity sha512-wu0tEwK3KUZ9BoqfcqC3DfdfRDws/oHXwZKJMVtuhXSrF/PtqvilsPjAk93nh8M+orAnbe8ZyxQmop9+4oJs2g==
+  dependencies:
+    "@popmotion/easing" "^1.0.1"
+    framesync "^4.0.1"
+    hey-listen "^1.0.8"
+    style-value-types "^3.1.6"
+
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
   resolved "https://registry.npmjs.org/@protobufjs/aspromise/-/aspromise-1.1.2.tgz#9b8b0cc663d669a7d8f6f5d0893a14d348f30fbf"
@@ -10185,6 +10200,28 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
+framer-motion@^1.6.5:
+  version "1.6.5"
+  resolved "https://registry.npmjs.org/framer-motion/-/framer-motion-1.6.5.tgz#bb496b68f2f850506dbd08da27fa4a200f9c2b5d"
+  integrity sha512-Plg25ywwVI6bu2M/9Q9pIljudMRNDnlXF+wYOvZomxqzujqAL+dnMv9CxammZaDje88qMDULzuySFXxp2fcC0g==
+  dependencies:
+    "@popmotion/easing" "^1.0.2"
+    "@popmotion/popcorn" "^0.4.2"
+    framesync "^4.0.4"
+    hey-listen "^1.0.8"
+    popmotion "9.0.0-beta-8"
+    style-value-types "^3.1.6"
+    stylefire "^6.0.10"
+    tslib "^1.10.0"
+
+framesync@^4.0.0, framesync@^4.0.1, framesync@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.npmjs.org/framesync/-/framesync-4.0.4.tgz#79c42c0118f26821c078570db0ff81fb863516a2"
+  integrity sha512-mdP0WvVHe0/qA62KG2LFUAOiWLng5GLpscRlwzBxu2VXOp6B8hNs5C5XlFigsMgrfDrr2YbqTsgdWZTc4RXRMQ==
+  dependencies:
+    hey-listen "^1.0.8"
+    tslib "^1.10.0"
+
 fresh@0.5.2:
   version "0.5.2"
   resolved "https://registry.npmjs.org/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
@@ -11625,6 +11662,11 @@ hex-color-regex@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==
+
+hey-listen@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.npmjs.org/hey-listen/-/hey-listen-1.0.8.tgz#8e59561ff724908de1aa924ed6ecc84a56a9aa68"
+  integrity sha512-COpmrF2NOg4TBWUJ5UVyaCU2A88wEMkUPK4hNqyCkqHbxT92BbvfjoSozkAIIm6XhicGlJHhFdullInrdhwU8Q==
 
 highlight.js@^9.6.0:
   version "9.15.10"
@@ -17672,6 +17714,18 @@ pngquant-bin@^5.0.0:
     execa "^0.10.0"
     logalot "^2.0.0"
 
+popmotion@9.0.0-beta-8:
+  version "9.0.0-beta-8"
+  resolved "https://registry.npmjs.org/popmotion/-/popmotion-9.0.0-beta-8.tgz#f5a709f11737734e84f2a6b73f9bcf25ee30c388"
+  integrity sha512-6eQzqursPvnP7ePvdfPeY4wFHmS3OLzNP8rJRvmfFfEIfpFqrQgLsM50Gd9AOvGKJtYJOFknNG+dsnzCpgIdAA==
+  dependencies:
+    "@popmotion/easing" "^1.0.1"
+    "@popmotion/popcorn" "^0.4.2"
+    framesync "^4.0.4"
+    hey-listen "^1.0.8"
+    style-value-types "^3.1.6"
+    tslib "^1.10.0"
+
 portfinder@^1.0.21:
   version "1.0.23"
   resolved "https://registry.npmjs.org/portfinder/-/portfinder-1.0.23.tgz#894db4bcc5daf02b6614517ce89cd21a38226b82"
@@ -21541,6 +21595,13 @@ style-to-object@0.2.3, style-to-object@^0.2.1:
   dependencies:
     inline-style-parser "0.1.1"
 
+style-value-types@^3.1.6:
+  version "3.1.6"
+  resolved "https://registry.npmjs.org/style-value-types/-/style-value-types-3.1.6.tgz#6b1da918214d92c74dc7fc2d074013f372b47d76"
+  integrity sha512-AxcfUr/06AHyyyxkNB1O8ypvwa8/qK+sxwelxEN5x+jxW+RXutRE2TuHEQbFq9OBY7ym83CPKvVIsGd6lvKb0Q==
+  dependencies:
+    hey-listen "^1.0.8"
+
 styled-components@5.0.0-beta.0:
   version "5.0.0-beta.0"
   resolved "https://registry.npmjs.org/styled-components/-/styled-components-5.0.0-beta.0.tgz#47fd73c7efb4bfffbff68a92fdb7285f0b4bd602"
@@ -21570,6 +21631,16 @@ styled-jsx@^2.2.6:
     string-hash "1.1.3"
     stylis "3.5.1"
     stylis-rule-sheet "0.0.10"
+
+stylefire@^6.0.10:
+  version "6.0.10"
+  resolved "https://registry.npmjs.org/stylefire/-/stylefire-6.0.10.tgz#1100c63cf01b922f0db92e38a46297f3f1c2663d"
+  integrity sha512-SAJnUk4L9EKt/WSliztk1iZCzcNOJDR69xO8gblRjQwjybgMWONsY7KpcMBt65xU1UZaiyPDK5CoLf9wXLJldQ==
+  dependencies:
+    "@popmotion/popcorn" "^0.4.2"
+    framesync "^4.0.0"
+    hey-listen "^1.0.8"
+    style-value-types "^3.1.6"
 
 stylehacks@^4.0.0:
   version "4.0.3"
@@ -22367,7 +22438,7 @@ tsconfig-paths@^3.4.0:
     minimist "^1.2.0"
     strip-bom "^3.0.0"
 
-tslib@1.10.0, tslib@^1.5.0, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3:
+tslib@1.10.0, tslib@^1.10.0, tslib@^1.5.0, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3:
   version "1.10.0"
   resolved "https://registry.npmjs.org/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
   integrity sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==

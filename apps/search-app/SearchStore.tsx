@@ -45,12 +45,32 @@ export class SearchStore {
     if (query || all) {
       return this.allApps
     }
-    return this.allApps.slice(0, 8)
+    return this.allApps
   }
 
-  getQuickResults(query: string, all = false) {
+  getQuickResults(query: string, all = false): ListItemProps[] {
+    let results: ListItemProps[] = []
+
+    const appsFiltered = fuzzyFilter(query, [...this.getApps(query, all)])
+
+    if (query.length > 0) {
+      results = appsFiltered
+    } else {
+      const appResults = appsFiltered.slice(0, 7)
+      if (appsFiltered.length > 7) {
+        results = [
+          ...appResults,
+          {
+            title: `All apps (${appsFiltered.length})...`,
+          },
+        ]
+      } else {
+        results = appResults
+      }
+    }
+
     // TODO recent history
-    return fuzzyFilter(query, [...this.getApps(query, all)])
+    return results
   }
 
   get results() {

@@ -1,6 +1,6 @@
 import { AppBit, AppIcon, removeApp, useAppDefinition } from '@o/kit'
 import { getAppContextItems } from '@o/kit-internal'
-import { Button, IconLabeled, IconLabeledProps, SurfacePassProps, useContextMenu, useBanner } from '@o/ui'
+import { Button, IconLabeled, IconLabeledProps, SurfacePassProps, useBanner, useContextMenu } from '@o/ui'
 import { Box, gloss, Row, Theme } from 'gloss'
 import React, { memo } from 'react'
 
@@ -56,7 +56,7 @@ export const AppIconContainer = gloss<any>(Box, {
   position: 'relative',
   borderRadius: 10,
 }).theme(({ isSelected, isDraggable }, theme) => ({
-  background: theme.background,
+  background: isSelected ? theme.background : 'transparent',
   opacity: 2,
   '&:hover': {
     background: isSelected || !isDraggable ? theme.background : theme.backgroundStrong,

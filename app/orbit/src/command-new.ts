@@ -89,6 +89,7 @@ function spawnAndLog(cmd: string, options?: any) {
     }
   })
   execed.stdout.pipe(stdoutStream)
+  execed.stdout.pipe(process.stdout)
   return execed
 }
 
@@ -122,6 +123,8 @@ export async function copyTemplate(
 
   const hostedInfo = hostedGitInfo.fromUrl(options.template)
   trackCli(`NEW_PROJECT`, { templateName: options.template })
+
+  // clone
   try {
     if (hostedInfo) {
       reporter.info(`Cloning from git ${JSON.stringify(hostedInfo)}`)
@@ -136,11 +139,15 @@ export async function copyTemplate(
       }
       await copy(templatePath, appRoot)
     }
+  } catch (err) {
+    return await returnError(appRoot, err)
+  }
 
+  // install
+  try {
     await preInstall({
       path: appRoot,
     })
-
     await install(appRoot)
 
     return {
@@ -148,14 +155,18 @@ export async function copyTemplate(
       message: `Created app at ${appRoot}`,
     }
   } catch (err) {
-    try {
-      await remove(appRoot)
-    } catch {}
-    return {
-      type: 'error',
-      message: `Error copying template ${err.message}`,
-    }
+    return await returnError(appRoot, err)
   }
+}
+
+async function returnError(appRoot: string, error: any) {
+  try {
+    await remove(appRoot)
+  } catch {}
+  return {
+    type: 'error',
+    message: `Error copying template ${error.message}`,
+  } as const
 }
 
 export async function isInWorkspace(directory: string) {

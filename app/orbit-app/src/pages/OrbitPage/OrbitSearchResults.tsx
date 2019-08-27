@@ -5,18 +5,12 @@ import React, { memo, Suspense, useCallback, useMemo, useRef } from 'react'
 
 import { SearchResultsApp } from '../../apps/SearchResultsApp'
 import { om } from '../../om/om'
-import { SearchStore, SearchStoreStore } from '../../om/SearchStore'
+import { SearchStore } from '../../om/SearchStore'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarouselStore'
 import { appsDrawerStore } from './OrbitAppsDrawer'
 
 class OrbitSearchResultsStore {
-  // @ts-ignore
-  props: {
-    searchStore: SearchStoreStore
-  }
-
   searchState: SearchState | null = null
-
   setSearchState = next => {
     this.searchState = next
   }
@@ -26,7 +20,7 @@ class OrbitSearchResultsStore {
     async (next, { when }) => {
       if (next) {
         await when(() => this.isActive)
-        this.props.searchStore.setSearchState(next)
+        SearchStore.setSearchState(next)
       }
     },
   )
@@ -47,9 +41,27 @@ class OrbitSearchResultsStore {
     },
   )
 
-  selectedRows: ListItemProps[] = []
-  setRows(rows: ListItemProps[]) {
-    this.selectedRows = rows
+  selectedItem: { type: 'app' | 'content'; index: number } = { type: 'app', index: -1 }
+  setSelectedItem(item: ListItemProps, index: number) {
+    this.selectedItem = {
+      type: this.isApp(item) ? 'app' : 'content',
+      index,
+    }
+  }
+
+  get selectedRow() {
+    return SearchStore.results[this.selectedItem.index]
+  }
+
+  // we can select apps that aren't in the search results
+  // so this index may be -1, which is fine and wont break anything
+  setSelectedApp = (appId: number) => {
+    if (!SearchStore) return
+    const index = SearchStore.results.findIndex(x => x.extraData && +x.extraData.id === appId)
+    this.selectedItem = {
+      type: 'app',
+      index,
+    }
   }
 
   isApp(row: ListItemProps) {
@@ -59,11 +71,11 @@ class OrbitSearchResultsStore {
   // handlers for actions
   get shouldHandleEnter() {
     if (!this.isActiveRaw) return false
-    if (!this.selectedRows.length) return false
+    if (!this.selectedRow) return false
     return true
   }
   handleEnter() {
-    const row = this.selectedRows[0]
+    const row = this.selectedRow
     if (!row) return
     if (this.isApp(row)) {
       appsCarouselStore.zoomIntoCurrentApp()
@@ -82,45 +94,47 @@ class OrbitSearchResultsStore {
 
   get isSelectingContent() {
     if (!this.isActive) return false
-    if (!this.selectedRows.length) return false
-    return !this.isApp(this.selectedRows[0])
+    if (!this.selectedRow) return false
+    return !this.isApp(this.selectedRow)
   }
 
+  lastSelect = Date.now()
   reactToItem = react(
-    () => this.selectedRows,
-    async (rows, { sleep }) => {
-      const item = rows[0]
-      if (!item) return
-      // lets not be super greedy here
-      await sleep(100)
-      if (item.extraData && item.extraData.app) {
-        appsCarouselStore.setHidden(false)
-        // onSelect App
-        const app: AppBit = item.extraData.app
-        const carouselIndex = appsCarouselStore.apps.findIndex(x => x.id === app.id)
-        if (carouselIndex === -1) return
-        appsCarouselStore.animateAndScrollTo(carouselIndex)
-      } else {
+    () => this.selectedRow,
+    async (row, { sleep }) => {
+      const timeSinceLastSelect = Date.now() - this.lastSelect
+      this.lastSelect = Date.now()
+
+      // set hidden quickly because animations will start in this view
+      appsCarouselStore.setHidden(this.selectedItem.type !== 'app')
+
+      if (!row) {
+        return
+      }
+
+      if (timeSinceLastSelect < 100) {
+        await sleep(100)
+      }
+
+      if (this.isSelectingContent) {
         // onSelect Bit
-
-        appsCarouselStore.setHidden()
-
-        // to scroll to SearchResultsApp in carousel...
-        // const carouselIndex = appsCarouselStore.apps.findIndex(
-        //   x => x.identifier === 'searchResults',
-        // )
-        // if (carouselIndex === -1) return
-        // appsCarouselStore.animateAndScrollTo(carouselIndex)
-
         om.actions.setShare({
           id: `app-search-results`,
           value: {
-            id: +`${item.id}`,
+            id: +`${row.id}`,
             name: 'Search Results',
             identifier: 'searchResults',
-            items: rows,
+            items: [row],
           },
         })
+      } else {
+        if (row.extraData && row.extraData.app) {
+          // onSelect App
+          const app: AppBit = row.extraData.app
+          const carouselIndex = appsCarouselStore.apps.findIndex(x => x.id === app.id)
+          if (carouselIndex === -1) return
+          appsCarouselStore.animateAndScrollTo(carouselIndex)
+        }
       }
     },
     {
@@ -132,15 +146,12 @@ export const orbitSearchResultsStore = createUsableStore(OrbitSearchResultsStore
 window['orbitSearchResultsStore'] = orbitSearchResultsStore
 
 export const OrbitSearchResults = memo(() => {
+  const searchStore = SearchStore.useStore()
   const theme = useTheme()
-  const searchStore = SearchStore.useStore()!
   const searchResultsStore = orbitSearchResultsStore.useStore()
-  orbitSearchResultsStore.setProps({ searchStore })
   const isActive = searchResultsStore.isActive
   const carousel = useAppsCarousel()
   const listRef = useRef<SelectableStore>(null)
-
-  window['searchStore'] = searchStore
 
   useSearchState({
     includePrefix: true,
@@ -184,7 +195,7 @@ export const OrbitSearchResults = memo(() => {
   const ignoreNextSelect = useRef(false)
 
   // sync to carousel from selection
-  const handleSelect = useCallback(rows => {
+  const handleSelect = useCallback((rows, indices) => {
     // avoid when zoomed in or in drawer
     if (appsCarouselStore.zoomedIn || appsDrawerStore.isOpen) {
       return
@@ -198,7 +209,7 @@ export const OrbitSearchResults = memo(() => {
       ignoreNextSelect.current = false
       return
     }
-    searchResultsStore.setRows(rows)
+    searchResultsStore.setSelectedItem(item, indices[0])
   }, [])
 
   // sync from carousel to list

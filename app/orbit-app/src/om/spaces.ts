@@ -3,6 +3,7 @@ import { Space, SpaceModel, User } from '@o/models'
 import { Action, AsyncAction, Derive } from 'overmind'
 
 import { deepClone } from '../helpers'
+import { SearchStore } from './SearchStore'
 import { updatePaneSort } from './spaces/paneManagerEffects'
 
 export type SpacesState = {
@@ -27,6 +28,7 @@ const setSpaces: Action<Space[]> = (om, spaces) => {
   }
   om.state.spaces.spaces = spaces
   const activeSpace = deepClone(getActiveSpace({ spaces, activeUser: om.state.spaces.activeUser }))
+  SearchStore.setActiveSpace(activeSpace)
   om.actions.apps.setActiveSpace(activeSpace)
   om.effects.apps.updatePaneManagerPanes(om.state.apps.activeApps)
   om.effects.spaces.updatePaneSort(activeSpace, om.state.apps.activeApps)

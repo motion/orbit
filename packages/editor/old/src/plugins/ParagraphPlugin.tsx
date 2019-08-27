@@ -1,19 +1,18 @@
-// @flow
 import * as UI from '@o/ui'
 import React from 'react'
 import TrailingBlock from 'slate-trailing-block'
-import { BLOCKS } from '~/views/editor/constants'
-import node from '~/views/editor/node'
 
+import { BLOCKS } from '../constants'
+import Highlighter from '../helpers/highlighter'
+import { node } from '../node'
 import { createButton } from './helpers'
-import Highlighter from './helpers/highlighter'
 
 const PARAGRAPH_STYLE = {
   fontSize: 17,
   lineHeight: '24px',
 }
 
-export const Paragraph = node(({ editorStore, children, node, attributes }) => {
+export const ParagraphPlugin = node(({ editorStore, children, attributes }) => {
   const text = children[0].props.node.text
 
   if (editorStore.find && editorStore.find.length > 0 && text.trim().length > 0) {
@@ -41,7 +40,7 @@ export const Paragraph = node(({ editorStore, children, node, attributes }) => {
   )
 })
 
-export default class TextPlugin {
+export class TextPlugin {
   name = 'text'
   category = 'text'
 

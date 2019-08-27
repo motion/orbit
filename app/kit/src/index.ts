@@ -22,6 +22,7 @@ export * from '@o/use-store'
 export * from '@o/utils'
 export { isEqual } from '@o/fast-compare'
 export * from 'date-fns'
+export * from '@o/editor'
 
 module.hot && module.hot.accept()
 

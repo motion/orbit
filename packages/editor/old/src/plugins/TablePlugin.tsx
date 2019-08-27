@@ -1,5 +1,6 @@
 import EditTable from 'slate-edit-table'
-import { BLOCKS } from '~/views/editor/constants'
+
+import { BLOCKS } from '../constants'
 
 export class TablePlugin {
   name = 'table'

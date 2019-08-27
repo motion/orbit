@@ -15,6 +15,7 @@
     "@o/css": "^2.6.0",
     "@o/fast-compare": "^2.6.0",
     "@o/logger": "^2.6.0",
+    "@o/editor": "*",
     "@o/mediator": "^2.6.0",
     "@o/models": "^2.6.0",
     "@o/react-sortable-hoc": "*",

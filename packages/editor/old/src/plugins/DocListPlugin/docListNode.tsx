@@ -23,7 +23,7 @@ const getList = type => {
 }
 
 @view.attach('docStore')
-export const DocList = node(({ node, setContext, listType }) => {
+export const DocListNode = node(({ node, setContext, listType }) => {
   const listStore = useStore(DocListStore)
 
   useEffect(() => {

@@ -1,13 +1,13 @@
 // until next hotkeys patches types
 import pluralizeOg from 'pluralize'
 
+module.hot && module.hot.accept()
+
 export * from './helpers/configureHotKeys'
 export { default as allIcons } from './icons'
 
 export * from '@o/color'
 export * from '@o/utils'
-
-module.hot && module.hot.accept()
 
 // add types
 export const pluralize = (word: string, count: number, inclusize?: boolean) => {

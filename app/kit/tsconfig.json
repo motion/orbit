@@ -15,6 +15,7 @@
     { "path": "../../packages/fast-compare" },
     { "path": "../../packages/ui" },
     { "path": "../../packages/color" },
+    { "path": "../../packages/editor" },
     { "path": "../models" },
     { "path": "../stores" },
     { "path": "../bridge" }

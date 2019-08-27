@@ -2,16 +2,19 @@ import { Button, CardSimple, Col, Row } from '@o/ui'
 import _ from 'lodash'
 import * as React from 'react'
 
+import { TestUIEditor } from './TestUI/TestUIEditor'
+
 export function TestUI() {
   return (
     <Row flex={1} overflow="hidden" height="100%">
       {/* <TestUIPopovers /> */}
-      <TestUIGlossSpeed />
+      {/* <TestUIGlossSpeed /> */}
+      <TestUIEditor />
     </Row>
   )
 }
 
-function TestUIGlossSpeed() {
+export function TestUIGlossSpeed() {
   const [key, setKey] = React.useState(0)
   return (
     <Col space>

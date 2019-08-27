@@ -19,6 +19,7 @@ const LinkNode = props => {
     <a
       style={{ color: 'blue' }}
       target="_blank"
+      rel="noopener noreferrer"
       {...props.attributes}
       onClick={onClick}
       href={href}

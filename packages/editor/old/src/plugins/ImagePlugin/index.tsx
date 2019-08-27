@@ -5,7 +5,7 @@ import { BLOCKS } from '~/views/editor/constants'
 import { createButton } from '../helpers'
 import ImageNode from './imageNode'
 
-export default class ImagePlugin {
+export class ImagePlugin {
   name = 'image'
   category = 'blocks'
   barButtons = [createButton({ icon: 'media-image', type: BLOCKS.IMAGE, tooltip: 'Image' })]

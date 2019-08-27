@@ -1,8 +1,8 @@
-import { Change, Node } from 'slate'
+import { Block, Editor, SlateError } from 'slate'
 
-function removeInlines(change: Change, error: { code: string; node: Node; child: Node }) {
+function removeInlines(editor: Editor, error: SlateError) {
   if (error.code === 'child_object_invalid') {
-    change.unwrapInlineByKey(error.child.key, error.child.type)
+    editor.unwrapInlineByKey(error.child.key, error.child.type)
   }
 }
 
@@ -10,35 +10,42 @@ export const schema = {
   blocks: {
     heading1: {
       nodes: [{ match: { object: 'text' } }],
+      // @ts-ignore
       marks: [''],
       normalize: removeInlines,
     },
     heading2: {
       nodes: [{ match: { object: 'text' } }],
+      // @ts-ignore
       marks: [''],
       normalize: removeInlines,
     },
     heading3: {
       nodes: [{ match: { object: 'text' } }],
+      // @ts-ignore
       marks: [''],
       normalize: removeInlines,
     },
     heading4: {
       nodes: [{ match: { object: 'text' } }],
+      // @ts-ignore
       marks: [''],
       normalize: removeInlines,
     },
     heading5: {
       nodes: [{ match: { object: 'text' } }],
+      // @ts-ignore
       marks: [''],
       normalize: removeInlines,
     },
     heading6: {
       nodes: [{ match: { object: 'text' } }],
+      // @ts-ignore
       marks: [''],
       normalize: removeInlines,
     },
     code: {
+      // @ts-ignore
       marks: [''],
     },
     'horizontal-rule': {
@@ -70,7 +77,34 @@ export const schema = {
     },
   },
   document: {
+    // ensure header always there
+    normalize: (editor: Editor, error: SlateError) => {
+      switch (error.code) {
+        case 'child_max_invalid': {
+          return editor.setNodeByKey(error.child.key, error.index === 0 ? 'heading1' : 'paragraph')
+        }
+        case 'child_min_invalid': {
+          const missingTitle = error.index === 0
+          const firstNode = editor.value.document.nodes.get(0)
+          if (!firstNode) {
+            editor.insertNodeByKey(error.node.key, 0, Block.create('heading1'))
+          } else {
+            editor.setNodeByKey(firstNode.key, { type: 'heading1' })
+          }
+          const secondNode = editor.value.document.nodes.get(1)
+          if (!secondNode) {
+            editor.insertNodeByKey(error.node.key, 1, Block.create('paragraph'))
+          } else {
+            editor.setNodeByKey(secondNode.key, { type: 'paragraph' })
+          }
+          if (missingTitle) setImmediate(() => editor.moveFocusToStartOfDocument())
+          return editor
+        }
+        default:
+      }
+    },
     nodes: [
+      { match: { type: 'heading1' }, min: 1, max: 1 },
       {
         match: [
           { type: 'paragraph' },

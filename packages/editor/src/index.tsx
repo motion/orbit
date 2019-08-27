@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Node, Schema, Value } from 'slate'
+import { Node, SchemaProperties, Value } from 'slate'
 import { Editor as SlateEditor } from 'slate-react'
 import styled, { ThemeProvider } from 'styled-components'
 
@@ -7,6 +7,7 @@ import { commands } from './commands'
 import { Flex } from './components/Flex'
 import { getDataTransferFiles } from './helpers/getDataTransferFiles'
 import { createPlugins } from './plugins'
+import { PlaceholderPlugin } from './plugins/Placeholder'
 import { queries } from './queries'
 import { schema } from './schema'
 import { Markdown } from './serializer'
@@ -29,7 +30,7 @@ export type EditorProps = {
   headingsOffset?: number
   toc?: boolean
   dark?: boolean
-  schema?: Schema
+  schema?: SchemaProperties
   theme?: Object
   uploadImage?: (file: File) => Promise<string>
   onSave?: (args: { done?: boolean }) => void
@@ -55,14 +56,42 @@ export class EditorComponent extends React.PureComponent<EditorProps, EditorStat
     placeholder: 'Write something nice…',
     onImageUploadStart: () => {},
     onImageUploadStop: () => {},
-    plugins: [],
+    plugins: [
+      PlaceholderPlugin({
+        placeholder: 'Start with a title…',
+        when: (editor: SlateEditor, node: Node) => {
+          if (editor.readOnly) return false
+          if (node.object !== 'block') return false
+          if (node.type !== 'heading1') return false
+          if (node.text !== '') return false
+          if (editor.value.document.nodes.first() !== node) return false
+          return true
+        },
+      }),
+      PlaceholderPlugin({
+        placeholder: '…the rest is your canvas',
+        when: (editor: SlateEditor, node: Node) => {
+          if (editor.readOnly) return false
+          if (node.object !== 'block') return false
+          if (node.type !== 'paragraph') return false
+          if (node.text !== '') return false
+          if (editor.value.document.getDepth(node.key) !== 1) return false
+          if (editor.value.document.nodes.size > 2) return false
+          return true
+        },
+      }),
+    ],
     tooltip: 'span',
   }
 
   editor: SlateEditor
   plugins: Plugin[]
-  prevSchema: Schema | null = null
-  schema: Schema | null = null
+  prevSchema: SchemaProperties | null = null
+  schema: SchemaProperties | null = null
+
+  get readOnly() {
+    return this.props.readOnly
+  }
 
   constructor(props: EditorProps) {
     super(props)
@@ -125,7 +154,7 @@ export class EditorComponent extends React.PureComponent<EditorProps, EditorStat
     this.editor = ref
   }
 
-  value = (): string => {
+  value = () => {
     return Markdown.serialize(this.state.editorValue)
   }
 
@@ -229,6 +258,7 @@ export class EditorComponent extends React.PureComponent<EditorProps, EditorStat
 
   getSchema = () => {
     if (this.prevSchema !== this.props.schema) {
+      // @ts-ignore
       this.schema = {
         ...schema,
         ...(this.props.schema || {}),

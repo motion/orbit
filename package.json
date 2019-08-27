@@ -20,6 +20,7 @@
     "clean:build": "bin/clean --build",
     "clean:modules": "bin/clean --modules",
     "clean:data": "bin/clean --data",
+    "clean:devtools-extensions": "rm -r ~/Library/Application Support/Electron/extensions/*",
     "start": "yarn fix-permissions && cd example-workspace && orbit ws --logLevel 1",
     "start:dev": "yarn fix-permissions && cd example-workspace && orbit ws --dev --logLevel 4",
     "start:dev:clean": "cd example-workspace && orbit ws --dev --logLevel 2 --clean",

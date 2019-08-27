@@ -65,7 +65,7 @@ class OrbitSearchResultsStore {
   }
 
   isApp(row: ListItemProps) {
-    return row.extraData && row.extraData.app
+    return row && row.extraData && row.extraData.app
   }
 
   // handlers for actions

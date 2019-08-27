@@ -31,3 +31,7 @@ export const Stores = {
   newAppStore,
   paneManagerStore,
 }
+
+if (module['hot']) {
+  module['hot'].accept()
+}

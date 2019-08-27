@@ -64,12 +64,12 @@ class SearchStoreStore {
       results = appsFiltered
     } else {
       const appResults = appsFiltered.slice(0, 7)
-      if (appsFiltered.length > 7) {
+      if (appsFiltered.length > 8) {
         results = [
           ...appResults,
           {
             key: 'all-apps',
-            title: `All apps (${appsFiltered.length})...`,
+            title: `More apps (${appResults.length - appsFiltered.length})...`,
             extraData: {
               appIdentifier: 'apps',
             },

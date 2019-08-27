@@ -130,11 +130,15 @@ const changeAppDevelopmentMode: AsyncAction<{
   await om.actions.develop.loadAppDLL({ name, mode })
 }
 
-function replaceScript(id: string, src: string) {
+function loadOrReplaceScript(id: string, src: string) {
   const tag = document.getElementById(id)
-  if (!tag) return null
   return new Promise(res => {
-    tag.parentNode!.removeChild(tag)
+    if (!tag) {
+      console.warn('Loading new app', id)
+      return null
+    } else {
+      tag.parentNode!.removeChild(tag)
+    }
     const body = document.getElementsByTagName('body')[0]
     const script = document.createElement('script')
     script.id = id
@@ -146,7 +150,7 @@ function replaceScript(id: string, src: string) {
 }
 
 const loadAppDLL: AsyncAction<{ name: string; mode: DevMode }> = async (_, { name, mode }) => {
-  await replaceScript(`script_app_${name}`, `/${name}.${mode}.dll.js`)
+  await loadOrReplaceScript(`script_app_${name}`, `/${name}.${mode}.dll.js`)
 }
 
 export const loadApps: AsyncAction = async om => {

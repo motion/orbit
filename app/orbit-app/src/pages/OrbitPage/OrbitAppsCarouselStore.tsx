@@ -60,12 +60,21 @@ class OrbitAppsCarouselStore {
   get isAnimating() {
     return this.isScrolling || this.isZooming
   }
+
   get apps() {
     return this.props.apps
   }
-  get focusedApp() {
-    return this.apps[this.focusedIndex]
+
+  get focusedApp(): AppBit {
+    return (
+      this.apps[this.focusedIndex] || {
+        identifier: '',
+        id: -1,
+        name: '--empty--',
+      }
+    )
   }
+
   get searchableApps() {
     return this.apps.map(x => ({
       name: `${x.name} ${x.identifier}`,

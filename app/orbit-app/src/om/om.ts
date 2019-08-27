@@ -31,11 +31,9 @@ const config = merge(
 
 export type Om = Overmind<typeof config>
 
-export const om: Overmind<typeof config> =
-  window['om'] ||
-  createOvermind(config, {
-    logProxies: true,
-  })
+export const om: Overmind<typeof config> = createOvermind(config, {
+  logProxies: true,
+})
 
 export const useOm = createHook<typeof config>()
 
@@ -44,3 +42,5 @@ window['om'] = om
 declare module 'overmind' {
   interface Config extends IConfig<typeof config> {}
 }
+
+module['hot'].accept()

@@ -55,6 +55,7 @@ const updateStatus: AsyncAction<{
 }> = async (om, { status }) => {
   if (!om.state.develop.started) {
     om.state.develop.started = true
+    om.state.develop.buildStatus = status
     // avoid running update on inital load, we serve it in proper state already
     return
   }
@@ -78,10 +79,16 @@ const loadNewAppDLLs: AsyncAction<BuildStatus[]> = async (om, status) => {
   for (const identifier of toAdd) {
     console.debug(`Loading a new app DLL: ${identifier}`)
     const packageId = Desktop.state.workspaceState.identifierToPackageId[identifier]
-    if (!packageId) return
+    if (!packageId) {
+      console.error('Couldnt find it tho')
+      debugger
+      return
+    }
     const name = stringToIdentifier(packageId)
     // load the new script
     await om.actions.develop.loadAppDLL({ name, mode: 'production' })
+    // then load apps
+    await om.actions.develop.loadApps()
   }
 }
 
@@ -147,7 +154,6 @@ function loadOrReplaceScript(id: string, src: string) {
   return new Promise(res => {
     if (!tag) {
       console.warn('Loading new app', id)
-      return null
     } else {
       tag.parentNode!.removeChild(tag)
     }

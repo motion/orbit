@@ -43,6 +43,7 @@ export async function commandNew(
       })
       logStatusReply(
         await mediator.command(AppCreateNewCommand, options, {
+          timeout: 60 * 1000 * 10,
           onMessage: reporter.info,
         }),
       )

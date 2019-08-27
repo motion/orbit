@@ -1,7 +1,7 @@
+import { Portal } from '@o/ui'
 import { isEqual } from 'lodash'
 import { PlusIcon } from 'outline-icons'
 import * as React from 'react'
-import { Portal } from 'react-portal'
 import { Node } from 'slate'
 import { Editor, findDOMNode } from 'slate-react'
 import styled, { withTheme } from 'styled-components'
@@ -132,16 +132,19 @@ class BlockInsertComponent extends React.Component<Props, State> {
   render() {
     const { theme } = this.props
     const style = { top: `${this.state.top}px`, left: `${this.state.left}px` }
-
     return (
-      <React.Fragment>
+      <>
         <span ref={this.setRef} />
-        <Portal>
+        <Portal style={{ position: 'absolute', zIndex: 10, pointerEvents: 'auto' }}>
           <Trigger active={this.state.active} style={style}>
-            <PlusIcon onClick={this.handleClick} color={theme.blockToolbarTrigger} />
+            <PlusIcon
+              className="editor-insert"
+              onClick={this.handleClick}
+              color={theme.blockToolbarTrigger}
+            />
           </Trigger>
         </Portal>
-      </React.Fragment>
+      </>
     )
   }
 }

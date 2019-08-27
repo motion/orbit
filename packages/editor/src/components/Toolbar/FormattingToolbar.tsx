@@ -144,35 +144,35 @@ class FormattingToolbarComponent extends React.Component<Props> {
     const Tooltip = editor.props.tooltip
 
     return (
-      <React.Fragment>
+      <>
         {!isSelectionInHeading && (
-          <React.Fragment>
+          <>
             {this.renderMarkButton('bold', BoldIcon, 'Bold')}
             {this.renderMarkButton('italic', ItalicIcon, 'Italic')}
             {this.renderMarkButton('deleted', StrikethroughIcon, 'Strikethrough')}
             {this.renderMarkButton('code', CodeIcon, 'Code')}
-          </React.Fragment>
+          </>
         )}
         {!isSelectionInTable && (
-          <React.Fragment>
+          <>
             {!isSelectionInHeading && <Separator />}
             {this.renderBlockButton('heading1', Heading1Icon, 'Heading')}
             {this.renderBlockButton('heading2', Heading2Icon, 'Subheading')}
             {!isSelectionInHeading &&
               this.renderBlockButton('block-quote', BlockQuoteIcon, 'Quote')}
-          </React.Fragment>
+          </>
         )}
         {!isSelectionInHeading && (
-          <React.Fragment>
+          <>
             <Separator />
             <ToolbarButton onMouseDown={this.handleCreateLink}>
               <Tooltip tooltip="Create link" placement="top">
                 <LinkIcon color={this.props.theme.toolbarItem} />
               </Tooltip>
             </ToolbarButton>
-          </React.Fragment>
+          </>
         )}
-      </React.Fragment>
+      </>
     )
   }
 }

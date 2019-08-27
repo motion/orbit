@@ -204,6 +204,7 @@ const Separator = styled.div`
 
 const Bar = styled.div`
   display: flex;
+  flex-flow: row;
   z-index: ${props => {
     return props.theme.zIndex
   }};

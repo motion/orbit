@@ -120,7 +120,7 @@ class TableToolbarComponent extends React.Component<Props> {
     const Tooltip = this.props.editor.props.tooltip
 
     return (
-      <React.Fragment>
+      <>
         {isTableSelected && (
           <ToolbarButton onMouseDown={this.removeTable}>
             <Tooltip tooltip="Delete table" placement="top">
@@ -129,7 +129,7 @@ class TableToolbarComponent extends React.Component<Props> {
           </ToolbarButton>
         )}
         {isColumnSelected && (
-          <React.Fragment>
+          <>
             {this.renderAlignButton('left', AlignLeftIcon)}
             {this.renderAlignButton('center', AlignCenterIcon)}
             {this.renderAlignButton('right', AlignRightIcon)}
@@ -150,10 +150,10 @@ class TableToolbarComponent extends React.Component<Props> {
                 <InsertRightIcon color={this.props.theme.toolbarItem} />
               </Tooltip>
             </ToolbarButton>
-          </React.Fragment>
+          </>
         )}
         {isRowSelected && (
-          <React.Fragment>
+          <>
             <ToolbarButton onMouseDown={this.removeRow}>
               <Tooltip tooltip="Delete row" placement="top">
                 <TrashIcon color={this.props.theme.toolbarItem} />
@@ -170,9 +170,9 @@ class TableToolbarComponent extends React.Component<Props> {
                 <InsertBelowIcon color={this.props.theme.toolbarItem} />
               </Tooltip>
             </ToolbarButton>
-          </React.Fragment>
+          </>
         )}
-      </React.Fragment>
+      </>
     )
   }
 }

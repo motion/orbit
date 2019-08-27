@@ -52,12 +52,12 @@ export class Image extends React.Component<Props, State> {
     return (
       <CenteredImage contentEditable={false}>
         {this.state.hasError ? (
-          <React.Fragment>
+          <>
             <ErrorImg as="div" isSelected={isSelected} />
             <ErrorMessage>Could not load image</ErrorMessage>
-          </React.Fragment>
+          </>
         ) : (
-          <React.Fragment>
+          <>
             <HiddenImg src={src} onError={this.handleError} />
             {!readOnly ? (
               <StyledImg
@@ -95,7 +95,7 @@ export class Image extends React.Component<Props, State> {
                 async
               />
             )}
-          </React.Fragment>
+          </>
         )}
       </CenteredImage>
     )

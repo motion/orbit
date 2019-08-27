@@ -35,9 +35,9 @@ export class Cell extends React.Component<Props> {
         {...attributes}
       >
         {!readOnly && (
-          <React.Fragment>
+          <>
             {isFirstColumn && isFirstRow && (
-              <React.Fragment>
+              <>
                 <GripTable
                   contentEditable={false}
                   isSelected={isTableSelected}
@@ -53,10 +53,10 @@ export class Cell extends React.Component<Props> {
                   }}
                 />
                 <Toolbar editor={editor} cell={this.cell} active={isTableSelected} type="table" />
-              </React.Fragment>
+              </>
             )}
             {isFirstColumn && (
-              <React.Fragment>
+              <>
                 <GripRow
                   isFirstRow={isFirstRow}
                   isLastRow={isLastRow}
@@ -71,10 +71,10 @@ export class Cell extends React.Component<Props> {
                 {isActive && (
                   <Toolbar editor={editor} cell={this.cell} active={isRowSelected} type="row" />
                 )}
-              </React.Fragment>
+              </>
             )}
             {isFirstRow && (
-              <React.Fragment>
+              <>
                 <GripColumn
                   isFirstColumn={isFirstColumn}
                   isLastColumn={isLastColumn}
@@ -94,9 +94,9 @@ export class Cell extends React.Component<Props> {
                     type="column"
                   />
                 )}
-              </React.Fragment>
+              </>
             )}
-          </React.Fragment>
+          </>
         )}
 
         <RowContent align={node.data.get('align')}>{children}</RowContent>

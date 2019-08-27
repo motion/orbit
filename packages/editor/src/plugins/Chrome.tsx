@@ -9,14 +9,13 @@ import { Toolbar } from '../components/Toolbar'
 export function Chrome() {
   function renderEditor(props: EditorProps, editor: Editor, next: () => React.ReactNode) {
     const children = next()
-
     return (
-      <React.Fragment>
+      <>
         {!props.readOnly && <Toolbar value={editor.value} editor={editor} />}
         {!props.readOnly && <BlockInsert editor={editor} />}
         {props.toc && <Contents editor={editor} />}
         {children}
-      </React.Fragment>
+      </>
     )
   }
 

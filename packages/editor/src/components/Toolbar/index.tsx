@@ -66,7 +66,7 @@ export class Toolbar extends React.Component<Props, State> {
     this.update()
   }
 
-  showLinkToolbar = (ev: Event) => {
+  showLinkToolbar = (ev: React.PointerEvent) => {
     ev.preventDefault()
     ev.stopPropagation()
 

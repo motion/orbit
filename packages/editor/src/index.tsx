@@ -1,10 +1,10 @@
+import { Col } from '@o/ui'
 import * as React from 'react'
 import { Node, SchemaProperties, Value } from 'slate'
 import { Editor as SlateEditor } from 'slate-react'
 import styled, { ThemeProvider } from 'styled-components'
 
 import { commands } from './commands'
-import { Flex } from './components/Flex'
 import { getDataTransferFiles } from './helpers/getDataTransferFiles'
 import { createPlugins } from './plugins'
 import { PlaceholderPlugin } from './plugins/Placeholder'
@@ -292,16 +292,13 @@ export class EditorComponent extends React.PureComponent<EditorProps, EditorStat
     } = this.props
 
     return (
-      <Flex
+      <Col
         style={style}
         className={className}
         onDrop={this.handleDrop}
         onDragOver={this.cancelEvent}
         onDragEnter={this.cancelEvent}
-        align="flex-start"
-        justify="center"
-        column
-        auto
+        padding={[0, 40]}
       >
         <ThemeProvider theme={theme}>
           <SlateEditor
@@ -325,10 +322,11 @@ export class EditorComponent extends React.PureComponent<EditorProps, EditorStat
             uploadImage={uploadImage}
             pretitle={pretitle}
             options={defaultOptions}
+            width="100%"
             {...rest}
           />
         </ThemeProvider>
-      </Flex>
+      </Col>
     )
   }
 }

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { SlateNodeProps as Props } from '../types'
 
 export class TodoItem extends React.Component<Props> {
-  handleChange = (ev: Event) => {
+  handleChange = (ev: React.PointerEvent) => {
     // @ts-ignore
     const checked = ev.target.checked
     const { editor, node } = this.props

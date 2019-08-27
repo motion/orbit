@@ -75,7 +75,7 @@ class FormattingToolbarComponent extends React.Component<Props> {
     }
   }
 
-  handleCreateLink = (ev: Event) => {
+  handleCreateLink = (ev: React.PointerEvent) => {
     ev.preventDefault()
     ev.stopPropagation()
 

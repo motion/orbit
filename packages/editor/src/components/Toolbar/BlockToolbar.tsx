@@ -50,7 +50,7 @@ class BlockToolbarComponent extends React.Component<Props> {
   }
 
   @keydown('esc')
-  removeSelf(ev: Event) {
+  removeSelf(ev: any) {
     ev.preventDefault()
     ev.stopPropagation()
 
@@ -98,7 +98,7 @@ class BlockToolbarComponent extends React.Component<Props> {
       .focus()
   }
 
-  handleClickBlock = (ev: Event, type: string) => {
+  handleClickBlock = (ev: any, type: string) => {
     ev.preventDefault()
     ev.stopPropagation()
 

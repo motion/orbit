@@ -33,6 +33,10 @@ notes from onboarding andrew:
 
 ---
 
+- tree shaking kit or somehow lazy requiring it so it doesnt load so much in node mode would speed up startup
+
+---
+
 useState hooks:
 
 instead of useUserState / useAppState:

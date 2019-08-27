@@ -9,7 +9,7 @@ type Props = {
 }
 
 export class CopyToClipboard extends React.Component<Props> {
-  onClick = (ev: Event) => {
+  onClick = (ev: React.PointerEvent) => {
     const { text, onCopy, children } = this.props
     const elem = React.Children.only(children)
     copy(text)

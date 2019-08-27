@@ -34,7 +34,7 @@ export class Image extends React.Component<Props, State> {
     editor.setNodeByKey(node.key, { data: { ...data, alt } })
   }
 
-  handleClick = (ev: Event) => {
+  handleClick = (ev: React.PointerEvent) => {
     ev.stopPropagation()
   }
 

@@ -63,8 +63,6 @@ function ListsAppMain(props: AppViewProps) {
     },
   })
 
-  console.log('bit', bit)
-
   const ignoreFirst = useRef(true)
   const handleChange = useDebounce(getVal => {
     if (ignoreFirst.current) {
@@ -85,7 +83,7 @@ function ListsAppMain(props: AppViewProps) {
 
   return (
     <Col padding={[30, 0]}>
-      <Editor defaultValue={bit.body} onChange={handleChange} />
+      <Editor defaultValue={`${bit.body}`} onChange={handleChange} />
       {/* TODO put this in a modal when you click a plus here */}
       {/* <AppContentView {...props} /> */}
     </Col>

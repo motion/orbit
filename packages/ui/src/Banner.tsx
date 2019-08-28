@@ -116,6 +116,7 @@ export const ProvideBanner = memo(
             top="auto"
             zIndex={zIndex.Banner}
             alignItems="flex-end"
+            padding={[20, 10]}
           >
             <FlipAnimate>
               {bannerStore.banners.map((banner, index) => {

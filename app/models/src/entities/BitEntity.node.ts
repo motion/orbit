@@ -67,21 +67,23 @@ export class BitEntity extends BaseEntity implements Bit {
   @Column(() => LocationEntity)
   location?: LocationEntity
 
-  @Column({ nullable: true, default: new Date() })
+  @Index()
+  @Column({ nullable: true })
   bitCreatedAt?: number
 
-  @Column({ nullable: true, default: new Date() })
+  @Index()
+  @Column({ nullable: true })
   bitUpdatedAt?: number
 
   @Column({ default: false })
   crawled?: boolean
 
   @Index()
-  @CreateDateColumn({ default: new Date() })
+  @CreateDateColumn()
   createdAt?: Date
 
   @Index()
-  @UpdateDateColumn({ default: new Date() })
+  @UpdateDateColumn()
   updatedAt?: Date
 
   @ManyToOne(() => BitEntity)

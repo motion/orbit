@@ -33,7 +33,7 @@ export function AppsMainNew({
 
   const updateName = name => {
     if (!name) {
-      name = 'No title'
+      name = ''
     }
     newAppStore.update({ name })
     if (app) {

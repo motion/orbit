@@ -42,5 +42,3 @@ window['om'] = om
 declare module 'overmind' {
   interface Config extends IConfig<typeof config> {}
 }
-
-module['hot'].accept()

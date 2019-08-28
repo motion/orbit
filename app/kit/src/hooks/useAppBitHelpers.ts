@@ -22,7 +22,6 @@ export class BitHelpersStore {
     return {
       appId: app.id,
       appIdentifier: app.identifier,
-      // @ts-ignore
       spaceId: space.id,
     }
   }
@@ -32,11 +31,14 @@ export class BitHelpersStore {
   }
 
   update(bit: Partial<Bit> & Pick<Bit, 'originalId'>) {
-    return save(BitModel, {
-      ...bit,
+    return save(BitModel, { ...bit, ...this.getControlledBitProps(bit) })
+  }
+
+  getControlledBitProps(bit: Partial<Bit>) {
+    return {
       ...this.defaultBitProps,
       contentHash: bitContentHash(bit as any),
-    })
+    }
   }
 
   async createOrUpdate(bit: Partial<Bit> & Pick<Bit, 'originalId'>) {

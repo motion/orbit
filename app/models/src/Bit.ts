@@ -1,6 +1,7 @@
 import { AppBit } from './AppBit'
 import { BitContentType } from './BitContentType'
 import { Location } from './Location'
+import { Space } from './SpaceInterface'
 
 export interface Bit {
   /**
@@ -137,4 +138,8 @@ export interface Bit {
    * We store it on entity-level to improve selection performance for crawler.
    */
   crawled?: boolean
+
+  space?: Space
+
+  spaceId?: number
 }

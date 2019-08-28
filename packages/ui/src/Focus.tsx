@@ -21,9 +21,8 @@ type FocusProps = { focused: boolean }
 
 class FocusStore {
   props: FocusProps = {
-    focused: false,
+    focused: true,
   }
-
   get focused() {
     return this.props.focused
   }
@@ -34,10 +33,7 @@ const FocusContext = createStoreContext(FocusStore)
 // focus parents override children
 export const ProvideFocus = (props: FocusProps & { children: any }) => {
   const parent = FocusContext.useStore()
-  const focused =
-    !parent || parent.focused === true
-      ? selectDefined(props.focused, parent ? parent.focused : true)
-      : false
+  const focused = selectDefined(props.focused, parent ? selectDefined(parent.focused, true) : true)
   return <FocusContext.Provider focused={focused}>{props.children}</FocusContext.Provider>
 }
 

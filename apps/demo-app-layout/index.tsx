@@ -9,6 +9,9 @@ export default createApp({
   icon: 'layout',
   iconColors: ['rgb(177, 13, 201)', 'rgb(157, 13, 191)'],
   app: DemoLayoutApp,
+  viewConfig: {
+    transparentBackground: false,
+  },
 })
 
 const treeData = {

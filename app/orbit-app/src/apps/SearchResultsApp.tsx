@@ -1,4 +1,4 @@
-import { createApp, ensure, useReaction } from '@o/kit'
+import { AppMainView, createApp, ensure, useReaction } from '@o/kit'
 import { Card, CenteredText } from '@o/ui'
 import React from 'react'
 
@@ -29,5 +29,9 @@ export function SearchResultsApp() {
     )
   }
 
-  return <CenteredText>Nothing found</CenteredText>
+  if (item && item.extraData.appIdentifier) {
+    return <AppMainView identifier={item.extraData.appIdentifier} viewType="main" />
+  }
+
+  return <CenteredText>{(item && item.title) || 'Nothing found'}</CenteredText>
 }

@@ -8,7 +8,6 @@ import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo
 
 import { IS_ELECTRON, WINDOW_ID } from '../../constants'
 import { useOm } from '../../om/om'
-import { SearchStore } from '../../om/SearchStore'
 import { Stores, useThemeStore } from '../../om/stores'
 import { AppWrapper } from '../../views'
 import MainShortcutHandler from '../../views/MainShortcutHandler'
@@ -37,15 +36,13 @@ export default memo(function OrbitPage() {
 
   return (
     <ProvideStores stores={Stores}>
-      <SearchStore.Provider>
-        <AppWrapper className={`theme-${themeStore.themeColor}`} color={themeStore.theme.color}>
-          <OrbitPageInner />
-          {/* TODO: this wont load or will hit suspense/fallback if no messages are in queue i think */}
-          <Suspense fallback={null}>
-            <OrbitStatusMessages />
-          </Suspense>
-        </AppWrapper>
-      </SearchStore.Provider>
+      <AppWrapper className={`theme-${themeStore.themeColor}`} color={themeStore.theme.color}>
+        <OrbitPageInner />
+        {/* TODO: this wont load or will hit suspense/fallback if no messages are in queue i think */}
+        <Suspense fallback={null}>
+          <OrbitStatusMessages />
+        </Suspense>
+      </AppWrapper>
     </ProvideStores>
   )
 })

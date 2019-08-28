@@ -8,6 +8,9 @@ export default createApp({
   icon: 'tool',
   iconColors: ['rgb(240, 18, 190)', 'rgb(220, 5, 170)'],
   app: DemoAppUserManager,
+  viewConfig: {
+    transparentBackground: false,
+  },
 })
 
 const endpoint = 'https://jsonplaceholder.typicode.com'

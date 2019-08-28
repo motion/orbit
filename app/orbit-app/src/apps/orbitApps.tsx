@@ -1,8 +1,7 @@
-import { AppDefinition, configureKit, createApp, getApps, useAppDefinitions } from '@o/kit'
+import { AppDefinition, createApp, getApps, useAppDefinitions } from '@o/kit'
 import { Loading } from '@o/ui'
 import React from 'react'
 
-import { StoreContext } from '../StoreContext'
 import AppsApp from './apps/AppsApp'
 import BitApp from './BitApp'
 import ClipboardApp from './ClipboardApp'
@@ -72,17 +71,17 @@ export function useUserDataAppDefinitions() {
   return useUserAppDefinitions().filter(x => !!(x.api || x.graph))
 }
 
-if (module['hot']) {
-  module['hot'].addStatusHandler(status => {
-    // remove webpack bad compile message after hmr
-    const iframe = document.querySelector('body > iframe')
-    iframe && iframe.remove()
+// if (module['hot']) {
+//   module['hot'].addStatusHandler(status => {
+//     // remove webpack bad compile message after hmr
+//     const iframe = document.querySelector('body > iframe')
+//     iframe && iframe.remove()
 
-    // TODO may not be necessary anymore, check if HMR works without it
-    if (status === 'apply') {
-      configureKit({
-        StoreContext,
-      })
-    }
-  })
-}
+//     // TODO may not be necessary anymore, check if HMR works without it
+//     if (status === 'apply') {
+//       configureKit({
+//         StoreContext,
+//       })
+//     }
+//   })
+// }

@@ -44,8 +44,7 @@ const updateDevState: Action = () => {
   window.__DEV__ = Desktop.state.workspaceState.options.dev
 }
 
-const getDevelopingIdentifiers = (x: BuildStatus[]) =>
-  x.filter(x => x.mode === 'development').map(x => x.identifier)
+const getIdentifiers = (x: BuildStatus[]) => x.map(x => x.identifier)
 
 const isAppIdentifier = (id: string) => {
   return !!Desktop.state.workspaceState.identifierToPackageId[id]
@@ -56,17 +55,47 @@ const updateStatus: AsyncAction<{
 }> = async (om, { status }) => {
   if (!om.state.develop.started) {
     om.state.develop.started = true
+    om.state.develop.buildStatus = status
     // avoid running update on inital load, we serve it in proper state already
     return
   }
 
-  const current = getDevelopingIdentifiers(om.state.develop.buildStatus)
-  const next = getDevelopingIdentifiers(status)
+  // first, load new app js bundles if they were just added
+  await om.actions.develop.loadNewAppDLLs(status)
 
-  // update state
+  // next, check if we toggled from dev/prod and properly update
+  await om.actions.develop.updateAppsBuildMode(status)
+
+  // finally, persist the last buildStatus for next run
   om.state.develop.buildStatus = status
+}
 
-  // const mode: DevMode = !!next.length ? 'development' : 'production'
+const loadNewAppDLLs: AsyncAction<BuildStatus[]> = async (om, status) => {
+  const current = getIdentifiers(om.state.develop.buildStatus)
+  const next = getIdentifiers(status)
+  const toAdd = difference(next, current).filter(isAppIdentifier)
+  if (!toAdd.length) return
+  // loop and load new app dlls
+  for (const identifier of toAdd) {
+    console.debug(`Loading a new app DLL: ${identifier}`)
+    const packageId = Desktop.state.workspaceState.identifierToPackageId[identifier]
+    if (!packageId) {
+      console.error('Couldnt find it tho')
+      debugger
+      return
+    }
+    const name = stringToIdentifier(packageId)
+    // load the new script
+    await om.actions.develop.loadAppDLL({ name, mode: 'production' })
+    // then load apps
+    await om.actions.develop.loadApps()
+  }
+}
+
+const updateAppsBuildMode: AsyncAction<BuildStatus[]> = async (om, status) => {
+  const current = getIdentifiers(om.state.develop.buildStatus.filter(x => x.mode === 'development'))
+  const next = getIdentifiers(status.filter(x => x.mode === 'development'))
+
   // load new app scripts
   const toAdd = difference(next, current).filter(isAppIdentifier)
   const toRemove = difference(current, next).filter(isAppIdentifier)
@@ -89,14 +118,6 @@ const updateStatus: AsyncAction<{
 
   // we have an update
   await om.actions.develop.loadApps()
-
-  // and print out the message
-  // banner &&
-  //   banner.set({
-  //     type: 'success',
-  //     message: `Success!`,
-  //     timeout: 2,
-  //   })
 }
 
 const changeAppDevelopmentMode: AsyncAction<{
@@ -104,9 +125,7 @@ const changeAppDevelopmentMode: AsyncAction<{
   mode: 'development' | 'production'
 }> = async (om, { identifier, mode }) => {
   const packageId = Desktop.state.workspaceState.identifierToPackageId[identifier]
-  if (!packageId) {
-    return
-  }
+  if (!packageId) return
   const name = stringToIdentifier(packageId)
 
   // wait until new bundle loaded
@@ -130,11 +149,14 @@ const changeAppDevelopmentMode: AsyncAction<{
   await om.actions.develop.loadAppDLL({ name, mode })
 }
 
-function replaceScript(id: string, src: string) {
+function loadOrReplaceScript(id: string, src: string) {
   const tag = document.getElementById(id)
-  if (!tag) return null
   return new Promise(res => {
-    tag.parentNode!.removeChild(tag)
+    if (!tag) {
+      console.warn('Loading new app', id)
+    } else {
+      tag.parentNode!.removeChild(tag)
+    }
     const body = document.getElementsByTagName('body')[0]
     const script = document.createElement('script')
     script.id = id
@@ -146,7 +168,7 @@ function replaceScript(id: string, src: string) {
 }
 
 const loadAppDLL: AsyncAction<{ name: string; mode: DevMode }> = async (_, { name, mode }) => {
-  await replaceScript(`script_app_${name}`, `/${name}.${mode}.dll.js`)
+  await loadOrReplaceScript(`script_app_${name}`, `/${name}.${mode}.dll.js`)
 }
 
 export const loadApps: AsyncAction = async om => {
@@ -188,5 +210,7 @@ export const actions = {
   changeAppDevelopmentMode,
   loadAppDLL,
   loadApps,
+  loadNewAppDLLs,
   updateDevState,
+  updateAppsBuildMode,
 }

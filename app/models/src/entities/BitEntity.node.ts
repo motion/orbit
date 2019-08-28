@@ -39,7 +39,7 @@ export class BitEntity extends BaseEntity implements Bit {
   originalId?: string
 
   @Index()
-  @Column()
+  @Column({ default: 'Untitled' })
   title?: string
 
   @Column({ nullable: true })
@@ -52,7 +52,7 @@ export class BitEntity extends BaseEntity implements Bit {
   body?: string
 
   @Index()
-  @Column()
+  @Column({ default: '' })
   type?: BitContentType
 
   @Column({ nullable: true })
@@ -67,9 +67,11 @@ export class BitEntity extends BaseEntity implements Bit {
   @Column(() => LocationEntity)
   location?: LocationEntity
 
+  @Index()
   @Column({ nullable: true })
   bitCreatedAt?: number
 
+  @Index()
   @Column({ nullable: true })
   bitUpdatedAt?: number
 
@@ -100,5 +102,9 @@ export class BitEntity extends BaseEntity implements Bit {
   @ManyToOne(() => SpaceEntity)
   space?: Space
 
-  peopleCount?: number
+  @Column({ nullable: true })
+  spaceId?: number
+
+  @Column({ nullable: true })
+  icon?: string
 }

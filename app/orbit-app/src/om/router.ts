@@ -5,6 +5,7 @@ import queryString from 'query-string'
 
 import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarouselStore'
 import { headerStore } from '../pages/OrbitPage/OrbitHeader'
+import { orbitSearchResultsStore } from '../pages/OrbitPage/OrbitSearchResults'
 import { paneManagerStore } from './stores'
 
 export const urls = {
@@ -332,6 +333,8 @@ export const effects = {
 
   setPane(appId: string, opts: { avoidScroll?: boolean; avoidZoom?: boolean } = {}) {
     paneManagerStore.setPane(appId)
+    orbitSearchResultsStore.setSelectedApp(appId)
+
     // scroll to pane if its in carousel
     if (!opts.avoidScroll) {
       const index = appsCarouselStore.apps.findIndex(app => app.id === +appId)

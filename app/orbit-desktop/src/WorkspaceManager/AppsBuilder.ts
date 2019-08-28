@@ -1,7 +1,7 @@
 import { AppsManager } from '@o/apps-manager'
-import { decorate } from '@o/kit'
 import { Logger } from '@o/logger'
 import { AppMeta, BuildStatus, CommandWsOptions } from '@o/models'
+import { decorate } from '@o/use-store'
 import { stringToIdentifier } from '@o/utils'
 import historyAPIFallback from 'connect-history-api-fallback'
 import { Handler } from 'express'

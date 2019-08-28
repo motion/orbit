@@ -1,7 +1,9 @@
-import { always, appToListItem, createStoreContext, ensure, MarkType, react, searchBits, SearchQuery, SearchState, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
+import { always, appToListItem, createUsableStore, ensure, MarkType, react, searchBits, SearchQuery, SearchState } from '@o/kit'
+import { Space } from '@o/models'
 import { fuzzyFilter, ListItemProps } from '@o/ui'
 
 import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarouselStore'
+import { queryStore } from './stores'
 
 type SearchResults = {
   results: ListItemProps[]
@@ -9,23 +11,18 @@ type SearchResults = {
   query: string
 }
 
-export class SearchStoreStore {
-  hooks = useHooks(() => ({
-    stores: useStoresSimple(),
-    app: useAppBit()[0],
-    space: useActiveSpace()[0],
-  }))
-
+class SearchStoreStore {
   searchState: SearchState | null = null
+
+  activeSpace: Space | null = null
+  setActiveSpace(space: Space) {
+    this.activeSpace = space
+  }
 
   // we sync TO here not from here
   selectedItem: ListItemProps | null = null
   setSelectedItem(next: ListItemProps) {
     this.selectedItem = next
-  }
-
-  get stores() {
-    return this.hooks.stores
   }
 
   get apps() {
@@ -58,15 +55,33 @@ export class SearchStoreStore {
     return this.apps.map(appToListItem)
   }
 
-  getApps(query: string, all = false): ListItemProps[] {
-    if (query || all) {
-      return this.allApps
-    }
-    return this.allApps.slice(0, 8)
-  }
+  getQuickResults(query: string): ListItemProps[] {
+    let results: ListItemProps[] = []
 
-  getQuickResults(query: string, all = false) {
-    return fuzzyFilter(query, [...this.getApps(query, all)])
+    const appsFiltered = fuzzyFilter(query, this.allApps)
+
+    if (query.length > 0) {
+      results = appsFiltered
+    } else {
+      const appResults = appsFiltered.slice(0, 7)
+      if (appsFiltered.length > 8) {
+        results = [
+          ...appResults,
+          {
+            key: 'all-apps',
+            title: `More apps (${appResults.length - appsFiltered.length})...`,
+            extraData: {
+              appIdentifier: 'apps',
+            },
+          },
+        ]
+      } else {
+        results = appResults
+      }
+    }
+
+    // TODO recent history
+    return results
   }
 
   get results() {
@@ -90,15 +105,20 @@ export class SearchStoreStore {
       item.key ||
       (item.item && item.item.id) ||
       (() => {
-        throw new Error(`No valid key`)
+        throw new Error(`No valid key: ${JSON.stringify(item, null, 2)}`)
       })()
     )
   }
 
   state = react(
-    () => [this.hooks.space.id, this.query, this.hooks.app, always(this.apps), !!this.searchState],
-    async ([spaceId, query, app], { sleep, when, setValue }): Promise<SearchResults> => {
-      ensure('app', !!app)
+    () => [
+      this.activeSpace ? this.activeSpace.id : undefined,
+      this.query,
+      always(this.apps),
+      !!this.searchState,
+    ],
+    async ([spaceId, query], { sleep, when, setValue }): Promise<SearchResults> => {
+      ensure('spaceId', !!spaceId)
       ensure('this.searchState', !!this.searchState)
 
       const isItemFiltering = this.query[0] === '/'
@@ -154,7 +174,7 @@ export class SearchStoreStore {
         // short queries we dont need to wait
         if (query.length > 3) {
           // wait for nlp to give us results
-          await when(() => this.stores.queryStore!.nlpStore.nlp.query === query)
+          await when(() => queryStore.nlpStore.nlp.query === query)
         }
       }
 
@@ -186,7 +206,7 @@ export class SearchStoreStore {
           appFilters,
           peopleFilters,
           locationFilters,
-          skip: total + take,
+          skip: total,
           take,
         }
         total += take
@@ -229,4 +249,5 @@ export class SearchStoreStore {
   )
 }
 
-export const SearchStore = createStoreContext(SearchStoreStore)
+export const SearchStore = createUsableStore(SearchStoreStore)
+window['searchStore'] = SearchStore

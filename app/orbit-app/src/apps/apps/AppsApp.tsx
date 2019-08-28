@@ -96,10 +96,6 @@ function AppsIndex() {
 }
 
 function AppsMain(props: AppViewProps) {
-  if (props.subType === 'manage-apps') {
-    return <ManageApps />
-  }
-
   if (props.subType === 'add-app') {
     return <AppsMainAddApp identifier={props.subId || ''} />
   }
@@ -112,7 +108,7 @@ function AppsMain(props: AppViewProps) {
     )
   }
 
-  return null
+  return <ManageApps />
 }
 
 function AppSettings(props: { appId: number }) {

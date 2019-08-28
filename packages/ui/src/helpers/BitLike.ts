@@ -108,11 +108,6 @@ export interface Bit {
   bits?: Bit[]
 
   /**
-   * Related to this Bit number of people.
-   */
-  peopleCount?: number
-
-  /**
    * App is a Bit's owner.
    */
   app?: any

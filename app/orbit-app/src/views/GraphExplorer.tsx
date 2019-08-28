@@ -54,7 +54,7 @@ export function GraphExplorer({
   const { theme } = useThemeStore()
   return (
     <ShadowDOM.div style={{ pointerEvents: 'inherit', height: '100%' }}>
-      <div style={{ height: '100%' }}>
+      <div style={{ height: '100%', padding: 10 }}>
         <div
           style={{
             display: 'flex',

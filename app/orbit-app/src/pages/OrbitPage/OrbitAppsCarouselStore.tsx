@@ -60,12 +60,21 @@ class OrbitAppsCarouselStore {
   get isAnimating() {
     return this.isScrolling || this.isZooming
   }
+
   get apps() {
     return this.props.apps
   }
-  get focusedApp() {
-    return this.apps[this.focusedIndex]
+
+  get focusedApp(): AppBit {
+    return (
+      this.apps[this.focusedIndex] || {
+        identifier: '',
+        id: -1,
+        name: '--empty--',
+      }
+    )
   }
+
   get searchableApps() {
     return this.apps.map(x => ({
       name: `${x.name} ${x.identifier}`,
@@ -97,20 +106,21 @@ class OrbitAppsCarouselStore {
     return null
   }
 
+  onResize = () => {
+    if (this.currentNode) {
+      const x = this.currentNode.offsetLeft
+      this.props.setScrollSpring({ x, config: { duration: 0 } })
+    }
+  }
+
   ensureScrollLeftOnResize = react(
     () => this.zoomedIn,
     (zoomedIn, { useEffect }) => {
       ensure('zoomedIn', zoomedIn)
       useEffect(() => {
-        const onResize = () => {
-          if (this.currentNode) {
-            const x = this.currentNode.offsetLeft
-            this.props.setScrollSpring({ x, config: { duration: 0 } })
-          }
-        }
-        window.addEventListener('resize', onResize, { passive: true })
+        window.addEventListener('resize', this.onResize, { passive: true })
         return () => {
-          window.removeEventListener('resize', onResize)
+          window.removeEventListener('resize', this.onResize)
         }
       })
     },

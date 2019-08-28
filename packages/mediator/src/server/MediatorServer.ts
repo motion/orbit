@@ -218,29 +218,27 @@ export class MediatorServer {
     if (resolver) {
       // resolve a value
       let result: any = null
-      const resolveResult = () => {
-        try {
-          const name = 'model' in resolver ? resolver.model.name : resolver.command.name
-          const transport = this.options.transport
-          result = resolver.resolve(data.args, {
-            onFinishCommand(cb) {
-              onFinishCb.add(cb)
-            },
-            sendMessage(message: string) {
-              transport.send({
-                id: data.id,
-                message: true,
-                result: message,
-              })
-            },
-          })
-          log.verbose(`Resolving ${resolver.type}: ${name}`, data.args)
-        } catch (error) {
-          log.error('error executing resolver', error)
-          throw error
-        }
+
+      try {
+        const name = 'model' in resolver ? resolver.model.name : resolver.command.name
+        const transport = this.options.transport
+        result = resolver.resolve(data.args, {
+          onFinishCommand(cb) {
+            onFinishCb.add(cb)
+          },
+          sendMessage(message: string) {
+            transport.send({
+              id: data.id,
+              message: true,
+              result: message,
+            })
+          },
+        })
+        log.verbose(`Resolving ${resolver.type}: ${name}`, data.args)
+      } catch (error) {
+        log.error('error executing resolver', error)
+        throw error
       }
-      resolveResult()
 
       // additionally resolve properties
       // send result back over transport based on returned value
@@ -255,6 +253,7 @@ export class MediatorServer {
             console.log(
               '----- GOT UNDEFIEND NEXT, either typeorm or workers fallback responding with no resolver? ------',
             )
+            onSuccess(next)
           } else {
             onSuccess(next)
           }

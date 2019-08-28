@@ -1,5 +1,5 @@
 import { appToListItem, ensure, MarkType, react, searchBits, SearchQuery, SearchState, useActiveClientApps, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
-import { fuzzyFilter, ListItemProps } from '@o/ui'
+import { ListItemProps } from '@o/ui'
 
 type SearchResults = {
   results: ListItemProps[]
@@ -39,18 +39,6 @@ export class SearchStore {
 
   get allApps() {
     return this.hooks.apps.map(appToListItem)
-  }
-
-  getApps(query: string, all = false): ListItemProps[] {
-    if (query || all) {
-      return this.allApps
-    }
-    return this.allApps.slice(0, 8)
-  }
-
-  getQuickResults(query: string, all = false) {
-    // TODO recent history
-    return fuzzyFilter(query, [...this.getApps(query, all)])
   }
 
   get results() {
@@ -137,10 +125,6 @@ export class SearchStore {
         })
         return true
       }
-
-      // app search
-      results = this.getQuickResults(query)
-      setValue({ results, query, finished: false })
 
       // split into chunks to avoid heavy work
       // react concurrent + react window lazy loading could do this work better

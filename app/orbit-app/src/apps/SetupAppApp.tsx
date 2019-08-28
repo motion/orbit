@@ -150,6 +150,7 @@ function SetupAppCustom() {
                   icon: 'blank',
                 },
                 {
+                  timeout: 1000 * 60 * 10,
                   onMessage: message => {
                     log += `${message}\n`
                     banner.set({ title, message: log, loading: true })

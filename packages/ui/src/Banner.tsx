@@ -116,6 +116,7 @@ export const ProvideBanner = memo(
             top="auto"
             zIndex={zIndex.Banner}
             alignItems="flex-end"
+            padding={[20, 10]}
           >
             <FlipAnimate>
               {bannerStore.banners.map((banner, index) => {
@@ -234,7 +235,7 @@ export const Banner = (props: BannerViewProps) => {
     >
       <Row flex={1} justifyContent="space-between" alignItems="center" afterSpace beforeSpace space>
         {!!loading && <Spinner />}
-        <Col flex={1} space="xs">
+        <Col flex={1} space="sm">
           <Message.Title>{title}</Message.Title>
           <Col maxHeight={maxHeight} scrollable="y">
             <SimpleText whiteSpace="pre">{message}</SimpleText>

@@ -23,6 +23,8 @@ export * from '@o/utils'
 export { isEqual } from '@o/fast-compare'
 export * from 'date-fns'
 
+export { Editor, EditorProps } from '@o/editor'
+
 module.hot && module.hot.accept()
 
 export * from './OrbitHot'

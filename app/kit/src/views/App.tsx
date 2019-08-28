@@ -97,11 +97,11 @@ export const App = (props: AppProps) => {
   const appViewsContext = useContext(AppViewsContext)
   const {
     renderApp = defaultRenderApp,
-    Statusbar = IDView,
+    Statusbar,
     Main = IDView,
-    Sidebar = IDView,
-    Toolbar = IDView,
-    Actions = IDView,
+    Sidebar,
+    Toolbar,
+    Actions,
   } = appViewsContext
   const hasStatusbar = !!props.statusBar && !!Statusbar
   const hasMain = !!props.children && !!Main

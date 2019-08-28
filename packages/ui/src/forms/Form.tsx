@@ -89,7 +89,6 @@ class FormStore {
         // default to string
         const fieldValue = selectDefined(fields[key].value, '')
         // only update if the value changes
-        console.log('update from props', key, fieldValue)
         if (fieldValue !== this.lastPropValues[key]) {
           // dont worry about updating after weve edited a derived field
           if (typeof fieldValue === 'function' && this.hasEdited[key]) {

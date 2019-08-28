@@ -1,5 +1,5 @@
 import { Model } from '@o/mediator'
-import { ImmutableUpdateFn, isDefined, OR_TIMED_OUT, orTimeout, shouldDebug } from '@o/utils'
+import { ImmutableUpdateFn, isDefined, OR_TIMED_OUT, orTimeout, selectDefined, shouldDebug } from '@o/utils'
 import produce from 'immer'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -50,7 +50,7 @@ const runUseQuery = (model: any, type: string, query: Object, observe: boolean, 
 }
 
 const dispose = sub => {
-  sub.current && sub.current.unsubscribe()
+  sub && sub.unsubscribe()
 }
 
 // allow undefined for stuff like useBits() but dont allow useBits(null) useBits(false)
@@ -80,50 +80,57 @@ function use<ModelType, Args>(
 ): any {
   const key = getKey(model.name, type, JSON.stringify(query))
   const observeEnabled = !options || (options.observe === undefined || options.observe === true)
-  const curKey = useRef(key)
-  const valueRef = useRef(options ? options.defaultValue : undefined)
+  const defaultValue = selectDefined(
+    options ? options.defaultValue : undefined,
+    defaultValues[type],
+  )
   const forceUpdate = useForceUpdate()
-  const subscription = useRef<any>(null)
-  const waitForFirstResolve = useRef(false)
+  const state = useRef({
+    key,
+    value: defaultValue,
+    subscription: null,
+    waitForFirstResolve: false,
+    hasDoneInitialCheck: false,
+  })
 
   // they changed the key! we should reset valueRef.current
-  if (curKey.current !== key) {
-    curKey.current = key
-    valueRef.current = options ? options.defaultValue : undefined
+  if (state.current.key !== key) {
+    state.current.key = key
+    state.current.value = defaultValue
   }
 
   // unmount
-  useEffect(() => dispose(subscription), [])
+  useEffect(() => dispose(state.current.subscription), [])
 
   // on new query: subscribe, update
   useEffect(() => {
     if (!hasQuery(query)) return
-    if (waitForFirstResolve.current) return
+    if (state.current.waitForFirstResolve) return
 
     // unsubscribe from previous subscription
-    dispose(subscription)
+    dispose(state.current.subscription)
 
     let cancelled = false
     const update = next => {
       if (cancelled) return
-      if (next === valueRef.current) return
+      if (next === state.current.value) return
       if (next === undefined) return
-      valueRef.current = next
+      state.current.value = next
       if (process.env.NODE_ENV === 'development' && shouldDebug()) {
         console.log('useModel update', currentComponent(), key, next)
       }
       setTimeout(() => {
-        delete PromiseCache[curKey.current]
+        delete PromiseCache[state.current.key]
       }, 200)
       queueUpdate(forceUpdate)
     }
 
-    subscription.current = runUseQuery(model, type, query, observeEnabled, update)
+    state.current.subscription = runUseQuery(model, type, query, observeEnabled, update)
 
     return () => {
       cancelled = true
     }
-  }, [waitForFirstResolve.current, key, observeEnabled])
+  }, [state.current.waitForFirstResolve, key, observeEnabled])
 
   const valueUpdater: ImmutableUpdateFn<any> = useCallback(updaterFn => {
     const finish = (val: any) => {
@@ -131,7 +138,7 @@ function use<ModelType, Args>(
       if (process.env.NODE_ENV === 'development' && shouldDebug()) {
         console.debug(`useModel.save()`, model.name, next)
       }
-      delete PromiseCache[curKey.current]
+      delete PromiseCache[state.current.key]
       save(model, next as any)
     }
 
@@ -140,31 +147,35 @@ function use<ModelType, Args>(
     if (query && query['select']) {
       loadOne(model, { args: omit(query as any, 'select') }).then(finish)
     } else {
-      finish(valueRef.current)
+      finish(state.current.value)
     }
   }, [])
 
-  if (!isDefined(valueRef.current)) {
-    let cache = PromiseCache[key]
+  let cache = PromiseCache[key]
+
+  if (!state.current.hasDoneInitialCheck) {
+    state.current.hasDoneInitialCheck = true
 
     if (!hasQuery(query)) {
-      valueRef.current = defaultValues[type]
+      state.current.value = defaultValue
     } else {
       if (!cache) {
-        waitForFirstResolve.current = true
+        state.current.waitForFirstResolve = true
         let resolve
         let resolved = false
         const promise = new Promise(res => {
-          const finish = next => {
+          const finish = (response: any) => {
+            const next = selectDefined(response, defaultValue)
+            console.debug(`useModel() finish got`, response)
             clearTimeout(tm)
             if (!resolved) {
               resolved = true
-              valueRef.current = next
+              state.current.value = next
               cache.current = next
               if (process.env.NODE_ENV === 'development' && shouldDebug()) {
                 console.log('useModel.resolve', key, currentComponent(), next)
               }
-              waitForFirstResolve.current = false
+              state.current.waitForFirstResolve = false
               res()
             }
           }
@@ -172,10 +183,10 @@ function use<ModelType, Args>(
           // timeout
           let tm = setTimeout(() => {
             console.error(`Query timed out ${JSON.stringify(query)}`)
-            finish(defaultValues[type])
+            finish(defaultValue)
           }, 4000)
 
-          subscription.current = runUseQuery(model, type, query, observeEnabled, finish)
+          state.current.subscription = runUseQuery(model, type, query, observeEnabled, finish)
         })
         cache = {
           read: promise,
@@ -189,7 +200,7 @@ function use<ModelType, Args>(
       }
 
       if (isDefined(cache.current)) {
-        valueRef.current = cache.current
+        state.current.value = cache.current
       } else {
         if (cache.read) {
           throw cache.read
@@ -213,10 +224,10 @@ function use<ModelType, Args>(
   }
 
   if (type === 'one' || type === 'many') {
-    return [valueRef.current, valueUpdater]
+    return [state.current.value, valueUpdater]
   }
 
-  return valueRef.current
+  return state.current.value
 }
 
 export function useModel<ModelType, Args>(

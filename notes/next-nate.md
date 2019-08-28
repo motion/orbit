@@ -1,3 +1,7 @@
+
+
+---
+
 Weekend goals!!!!!!
 
 - [ ] Get ocr fully linked in with tray => Bit
@@ -20,21 +24,21 @@ Weekend goals!!!!!!
 
 notes from onboarding andrew:
 
-- adding app to local apps not reloading
 - reloading of apps would be important from the UI in case things dont work
 - return errors from app methods / postgres to UI
 - searchResults app shouldn't insert by default
 - make workers wait for app to finish startup before starting
 - node rebuilding slowly
 
----
+- need to refresh searchResults sometimes when youve added bits, dont do too smart just check for saves
+- SelectableStore should export themselves into a global, based on if they are visibile, and then esc can clear selection before doing anything else
 
-useState hooks:
+---
 
 instead of useUserState / useAppState:
 
 ```
-useAppState('id', defaultValue, {
+useData('id', defaultValue, {
   persist: 'user' | 'app' | 'memory',
 })
 ```
@@ -47,15 +51,8 @@ this lets it be configurable easily, see <Flow />.
 
 Lists:
 
-- Content type chooser:
-  - In lists when you create new item you can choose the content type:
-    - We can also allow folders, but content type chooser is a grid
-    - In the grid we show all content types Orbit understands and render them
-  - Then, we can have a WYSIWIG content type provided by an editor App.
-  - Or we can have a Code content type provided by a code app.
-
-
-- SelectableStore should export themselves into a global, based on if they are visibile, and then esc can clear selection before doing anything else
+- All wysiwig
+- Wysiwig can have a content chooser that shows it in modal
 
 ---
 

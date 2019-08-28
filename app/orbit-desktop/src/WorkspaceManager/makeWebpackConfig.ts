@@ -401,7 +401,9 @@ require('@o/kit').OrbitHot.fileLeave();
 
       hot &&
         new webpack.HotModuleReplacementPlugin({
-          multiStep: true,
+          // multiStep is faster for app HMR but slower when developing the big bundles
+          // so its good for production mode
+          multiStep: mode === 'production',
         }),
 
       // new (require('bundle-analyzer-plugin').default)({

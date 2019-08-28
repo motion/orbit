@@ -103,5 +103,8 @@ export class BitEntity extends BaseEntity implements Bit {
   space?: Space
 
   @Column({ nullable: true })
+  spaceId?: number
+
+  @Column({ nullable: true })
   icon?: string
 }

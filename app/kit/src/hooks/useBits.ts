@@ -54,6 +54,7 @@ export function useBit(
     return updateBitRaw(nextBit => {
       const res = updaterFn(nextBit)
       const ctrlProps = helpers.getControlledBitProps(nextBit)
+      debugger
       // handle both immer style returns
       if (!res) {
         for (const key in ctrlProps) {

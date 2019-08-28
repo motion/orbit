@@ -9,7 +9,7 @@ import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
-import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
+import { queryStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarouselStore'
 import { appsDrawerStore } from './OrbitAppsDrawer'
 import { orbitDockStore } from './OrbitDock'
@@ -302,11 +302,10 @@ const HomeButton = memo(
   forwardRef(function HomeButton(props: any, ref) {
     const { actions } = useOm()
     const theme = useTheme()
-    const newAppStore = useNewAppStore()
     const paneManager = usePaneManagerStore()
     const activePane = paneManager.activePaneSlow
     const activePaneType = activePane.type
-    const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
+    const icon = activePaneType
     return (
       <View ref={ref} {...props}>
         <AppIcon

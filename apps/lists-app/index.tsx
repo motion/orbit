@@ -1,5 +1,5 @@
 import { AppNavigator, AppStatusBar, AppViewProps, createApp, Editor, NavigatorProps, useBit, useSearchState } from '@o/kit'
-import { Breadcrumb, Breadcrumbs, Col, Dock, DockButton, randomAdjective, randomNoun, StatusBarText, TreeList, useDebounce, useTreeList, View } from '@o/ui'
+import { Breadcrumb, Breadcrumbs, Col, Dock, DockButton, ProvideTreeList, randomAdjective, randomNoun, StatusBarText, TreeList, useCreateTreeList, useDebounce, useTreeList, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import pluralize from 'pluralize'
 import React, { useCallback, useRef } from 'react'
@@ -12,13 +12,21 @@ export default createApp({
   icon: 'list',
   iconColors: ['rgb(57, 204, 204)', 'rgb(61, 153, 112)'],
   api: () => API,
-  app: () => <AppNavigator index={ListsAppIndex} detail={ListsAppMain} />,
+  app: () => {
+    const treeList = useCreateTreeList(id)
+    return (
+      <ProvideTreeList value={treeList}>
+        <AppNavigator index={ListsAppIndex} detail={ListsAppMain} />
+      </ProvideTreeList>
+    )
+  },
 })
 
 const id = 'lists'
 
 export function ListsAppIndex(props: NavigatorProps) {
-  const treeList = useTreeList(id)
+  const treeList = useTreeList()
+
   useSearchState({
     onChange(search) {
       if (search.query.length) {
@@ -27,6 +35,7 @@ export function ListsAppIndex(props: NavigatorProps) {
     },
     onEvent: 'enter',
   })
+
   return (
     <>
       <TreeList
@@ -57,6 +66,7 @@ export function ListsAppIndex(props: NavigatorProps) {
 }
 
 function ListsAppMain(props: AppViewProps) {
+  const treeList = useTreeList()
   const [bit, updateBit] = useBit(`main-content-${props.id}`, {
     defaultValue: {
       title: props.title,
@@ -71,9 +81,10 @@ function ListsAppMain(props: AppViewProps) {
     }
     const val = getVal()
     updateBit(next => {
-      console.log('update now to', val)
       next.body = val
-      next.title = val.split('\n')[0].slice(2, Infinity)
+      const title = val.split('\n')[0].slice(2, Infinity)
+      next.title = title
+      treeList.updateSelectedItem({ name: title })
     })
   }, 300)
 
@@ -91,7 +102,7 @@ function ListsAppMain(props: AppViewProps) {
 }
 
 function ListsAppMainFolder(props: AppViewProps) {
-  const treeList = useTreeList(id, {
+  const treeList = useCreateTreeList(id, {
     rootItemID: props.subId ? +props.subId : 0,
     persist: 'tree',
   })
@@ -111,7 +122,7 @@ function ListsAppMainFolder(props: AppViewProps) {
 }
 
 function ListAppStatusBar() {
-  const treeList = useTreeList(id)
+  const treeList = useCreateTreeList(id)
   const numItems = treeList.state.currentItem.children
     ? treeList.state.currentItem.children.length
     : 0

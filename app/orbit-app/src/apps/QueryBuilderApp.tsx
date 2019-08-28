@@ -1,6 +1,6 @@
 import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, query, react, Templates, TreeListStore, useActiveDataApps, useAppState, useAppWithDefinition, useBitHelpers, useCommand, useHooks, useStore } from '@o/kit'
 import { ApiArgType, AppMeta, AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
-import { Button, Card, CardProps, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, InputProps, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, TitleRow, Toggle, TreeList, useGet, useTheme, useTreeList, View } from '@o/ui'
+import { Button, Card, CardProps, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, InputProps, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, TitleRow, Toggle, TreeList, useCreateTreeList, useGet, useTheme, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -43,7 +43,7 @@ function QueryBuilderAppContent() {
   // current highlighted item
   const curItem = items[0]
   const id = (curItem && curItem.id) || -1
-  const treeList = useTreeList(treeId)
+  const treeList = useCreateTreeList(treeId)
 
   // TODO NEXT
   // want to persist queries to bits
@@ -61,7 +61,7 @@ function QueryBuilderAppContent() {
         })
       }
     }
-  }, [treeList.state.items])
+  }, [(treeList && treeList.state && treeList.state.items) || undefined])
 
   return (
     <App index={<QueryBuilderIndex treeList={treeList} setItems={setItems} />}>

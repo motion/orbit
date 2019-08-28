@@ -1,5 +1,5 @@
 import { arrayMove } from '@o/react-sortable-hoc'
-import { useStore } from '@o/use-store'
+import { createStoreContext } from '@o/use-store'
 import { ScopedState } from '@o/utils'
 import React, { Suspense, useCallback, useEffect, useRef } from 'react'
 
@@ -249,9 +249,14 @@ const getStateOptions = (stateType: 'tree' | 'user', props?: TreeListProps) => {
   }
 }
 
-// persists to app state
-export function useTreeList(subSelect: string | false, props?: TreeListProps): TreeListStore {
-  // const stores = useStoresSimple()
+const ContextualTreeListStore = createStoreContext(TreeListStore)
+export const ProvideTreeList = ContextualTreeListStore.SimpleProvider
+export const useTreeList = ContextualTreeListStore.useStore
+
+/**
+ * For creating a new treeList manually
+ */
+export function useCreateTreeList(subSelect: string | false, props?: TreeListProps): TreeListStore {
   const treeState = Config.useAppState<TreeStateStatic>(
     subSelect === false ? subSelect : `tl-${subSelect}`,
     {
@@ -264,7 +269,7 @@ export function useTreeList(subSelect: string | false, props?: TreeListProps): T
     defaultUserState,
     getStateOptions('user', props),
   )
-  const treeListStore = useStore(TreeListStore, { treeState, userState })
+  const treeListStore = ContextualTreeListStore.useCreateStore({ treeState, userState })
 
   useEffect(() => {
     if (props && props.rootItemID) {
@@ -319,7 +324,7 @@ export function TreeList(props: TreeListProps) {
 
 function TreeListInner(props: TreeListProps) {
   const { use, onChange, ...rest } = props
-  const internal = useTreeList(use ? false : 'state', props)
+  const internal = useCreateTreeList(use ? false : 'state', props)
   const useTree = use || internal
   const { currentItem, items } = useTree.state
   const [loadedItems, setLoadedItems] = useDeepEqualState<ListItemProps[]>([])

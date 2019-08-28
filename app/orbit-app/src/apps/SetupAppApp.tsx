@@ -2,7 +2,7 @@ import { AppIcon, command, createApp, getAppDefinition, useLocationLink, useSear
 import { AppCreateNewCommand, AppDefinition } from '@o/models'
 import { Button, Col, Flow, FlowLayoutInline, FlowProvide, Form, IconLabeled, List, ListItemProps, Scale, SectionPassProps, SelectableGrid, SelectableSurface, Text, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
 import { stringToIdentifier } from '@o/utils'
-import React, { memo, useLayoutEffect } from 'react'
+import React, { memo, useCallback, useLayoutEffect, useMemo } from 'react'
 
 import { createAppBitInActiveSpace, useInstallApp } from '../helpers/installApp'
 import { newAppStore } from '../om/stores'
@@ -254,21 +254,27 @@ export const SetupAppHome = memo((props: SetupAppHomeProps) => {
                 onQueryChange={search}
                 selectable
                 alwaysSelected
-                onSelect={rows => {
-                  console.log('selecting', rows)
+                onSelect={useCallback(rows => {
                   const row = rows[0]
                   if (row) {
                     flow.setData({ selectedAppIdentifier: row.identifier })
                     newAppStore.setApp(row.identifier)
                   }
-                }}
-                itemProps={{
-                  iconBefore: true,
-                  iconProps: {
-                    size: 44,
-                  },
-                }}
-                items={[...installedApps, ...searchedApps, ...topApps]}
+                }, [])}
+                itemProps={useMemo(
+                  () => ({
+                    iconBefore: true,
+                    iconProps: {
+                      size: 44,
+                    },
+                  }),
+                  [],
+                )}
+                items={useMemo(() => [...installedApps, ...searchedApps, ...topApps], [
+                  installedApps,
+                  searchedApps,
+                  topApps,
+                ])}
               />
             </Flow.Step>
             <Flow.Step title="Customize" subTitle="Name, theme and setup any options.">

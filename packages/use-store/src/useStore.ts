@@ -145,7 +145,6 @@ export function useHooks<A extends () => any>(hooks: A, store?: any): ReturnType
       )
     }
   }
-  const res = hooks()
   let __dispose
   if (trackProps.size) {
     __dispose = observe(store.props, change => {
@@ -157,12 +156,11 @@ export function useHooks<A extends () => any>(hooks: A, store?: any): ReturnType
   for (const dispose of disposeReads) {
     dispose()
   }
-  return shallow({
-    ...res,
+  return {
     __rerunHooks: hooks,
     __setUpdater,
     __dispose,
-  })
+  } as any
 }
 
 // // this is reactive so we can capture this.props and other reactive state inside hooks call
@@ -173,6 +171,8 @@ function setupReactiveStore<A>(Store: new () => A, props?: any): ReactiveStoreDe
 
   // capture hooks for this store, must be before new AutomagicStore()
   const store = new AutomagicStore()
+  const hasHooks = Object.keys(store).some(x => store[x] && !!store[x].__rerunHooks)
+
   if (config.onMount) {
     config.onMount(store)
   }
@@ -185,31 +185,30 @@ function setupReactiveStore<A>(Store: new () => A, props?: any): ReactiveStoreDe
     })
   }
 
-  const allHooks = Object.keys(store)
-    .map(key => store[key] && store[key].__rerunHooks && store[key])
-    .filter(Boolean)
-  const hooks = allHooks.length ? allHooks : null
-
   return {
     store,
-    hooks,
+    hasHooks,
     hasProps: !!props,
   }
 }
 
 type ReactiveStoreDesc = {
   store: any
-  hooks: HooksObject[] | null
+  hasHooks: boolean
   hasProps: boolean | null
 }
 
 type ReactiveStoreState = ReactiveStoreDesc & {
+  hooks: HooksObject[] | null
+  pendingHooks?: boolean
   initialState?: HydrationState | null
   id: any
 }
 
-const initialStoreState = {
+const initialStoreState: ReactiveStoreState = {
   id: '',
+  pendingHooks: false,
+  hasHooks: false,
   store: null,
   initialState: null,
   hooks: null,
@@ -219,7 +218,7 @@ const initialStoreState = {
 function useReactiveStore<A extends any>(
   Store: new () => A | false,
   props?: any,
-  options?: UseStoreOptions
+  options?: UseStoreOptions,
 ): { store: A; hasChangedSource: boolean; dispose: Function | null } | null {
   const forceUpdate = useForceUpdate()
   const state = useRef<ReactiveStoreState>(initialStoreState)
@@ -237,7 +236,9 @@ function useReactiveStore<A extends any>(
     return null
   }
 
-  if (!store || hasChangedSource) {
+  const shouldSetupStore = (!store && !state.current.pendingHooks) || hasChangedSource
+
+  if (shouldSetupStore) {
     // sets up store and does some hmr state preservation logic
     let previousState: HydrationState | null = null
     let previousInitialState: HydrationState | null = null
@@ -249,15 +250,10 @@ function useReactiveStore<A extends any>(
       disposeStore(state.current.store)
     }
     const next = setupReactiveStore(Store, props)
-    if (next.hooks) {
-      dispose = () => {
-        next.hooks!.forEach(hook => hook.__dispose && hook.__dispose())
-      }
-      next.hooks.forEach(hook => {
-        hook.__setUpdater(forceUpdate)
-      })
+    state.current = { ...state.current, ...next, id: options ? options.id : '' }
+    if (next.hasHooks) {
+      state.current.pendingHooks = true
     }
-    state.current = { ...next, id: options ? options.id : '' }
     if (process.env.NODE_ENV === 'development') {
       // set initial state for hmr purposes
       const requestIdleCallback =
@@ -272,7 +268,49 @@ function useReactiveStore<A extends any>(
     if (hasChangedSource && previousInitialState) {
       hydrate(state.current.store, previousInitialState, previousState)
     }
-  } else {
+  }
+
+  // handle hooks after construct to avoid re-constructing as hooks resolve
+  if (state.current.pendingHooks) {
+    let didThrowPromise = false
+    // run hooks after construct so props are there
+    let allHooks: HooksObject[] = []
+    try {
+      for (const key in store) {
+        if (store[key] && store[key].__rerunHooks) {
+          store[key] = shallow({
+            ...store[key],
+            ...store[key].__rerunHooks(),
+          })
+          allHooks.push(store[key])
+        }
+      }
+    } catch (err) {
+      if (err instanceof Promise) {
+        didThrowPromise = true
+      } else {
+        throw err
+      }
+    }
+    if (!didThrowPromise) {
+      state.current.pendingHooks = false
+      // add dispose
+      dispose = () => {
+        allHooks.forEach(hook => hook.__dispose && hook.__dispose())
+      }
+      // set the updater
+      allHooks.forEach(hook => {
+        hook.__setUpdater(forceUpdate)
+      })
+    }
+  }
+
+  // update props after first run, before hooks re-run
+  if (props && !!store) {
+    updateProps(store, props)
+  }
+
+  if (!shouldSetupStore) {
     // re-run hooks
     const hooks = state.current.hooks
     if (hooks && hooks.length) {
@@ -290,11 +328,6 @@ function useReactiveStore<A extends any>(
         }
       })
     }
-  }
-
-  // update props after first run
-  if (props && !!store) {
-    updateProps(store, props)
   }
 
   if (hasChangedSource) {
@@ -323,7 +356,7 @@ export function useStore<A extends ReactiveStore<any> | any>(
     shouldReact,
     isInstantiated,
     dispose: null as any,
-    id: options ? options.id : ''
+    id: options ? options.id : '',
   })
   let store: any = null
 

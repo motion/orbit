@@ -185,6 +185,7 @@ export class FlowStore {
       `flowdata-${this.props.id || ''}`,
       this.props.data || null,
     )
+    console.log('got flow', data)
     const [index, setIndex] = useState(0)
     return {
       data,
@@ -195,6 +196,7 @@ export class FlowStore {
   })
 
   get data() {
+    console.log('call getter', this.state)
     return this.state.data
   }
 

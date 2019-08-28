@@ -38,6 +38,7 @@ export function usePersistedScopedState<A>(
     const identifier = id === false ? false : `${scopedId}${id}`
 
     // ensure default state
+    console.log('using state', type, id, identifier, defaultState)
     useEnsureDefaultState<A>(identifier, type, defaultState)
 
     // state
@@ -53,9 +54,11 @@ export function usePersistedScopedState<A>(
           },
     )
 
+    console.log('now state is', state)
+
     if (!state || !state.data) {
       if (id === false) {
-        return [defaultState || null, useImmutableUpdateFn(update)]
+        return [null, null]
       }
       throw new Error(`Couldn't acquire state for ${type} ${id} ${identifier}`)
     }
@@ -79,7 +82,7 @@ function useEnsureDefaultState<A>(identifier: string | false, type: string, valu
     if (cache[key].resolved) {
       return
     }
-    throw cache[key].read
+    throw cache[key].promise
   }
 
   if (!isDefined(value)) {
@@ -88,8 +91,9 @@ function useEnsureDefaultState<A>(identifier: string | false, type: string, valu
 
   cache[key] = {
     resolved: false,
-    read: new Promise(res => {
+    promise: new Promise(res => {
       const finish = () => {
+        console.debug(`ensureDefaultState: finish`)
         cache[key].resolved = true
         res()
       }
@@ -107,7 +111,7 @@ function useEnsureDefaultState<A>(identifier: string | false, type: string, valu
       )
 
       const create = () => {
-        console.debug(`Inserting default state for ${identifier} ${type}`, value)
+        console.debug(`ensureDefaultState: Insert state for ${identifier} ${type}`, value)
         return save(StateModel, {
           type,
           identifier,
@@ -117,6 +121,7 @@ function useEnsureDefaultState<A>(identifier: string | false, type: string, valu
 
       load
         .then(row => {
+          console.debug(`ensureDefaultState: Got response`, row)
           if (!row || !isDefined(row.data)) {
             return create()
           }
@@ -133,7 +138,7 @@ function useEnsureDefaultState<A>(identifier: string | false, type: string, valu
     }),
   }
 
-  throw cache[key].read
+  throw cache[key].promise
 }
 
 function useImmutableUpdateFn(update: ImmutableUpdateFn<any>) {

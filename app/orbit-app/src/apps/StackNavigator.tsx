@@ -3,6 +3,7 @@ import { createStoreContext, ensure, react, useHooks, useReaction, useStore, use
 import { Loading, Slider, SliderPane } from '@o/ui'
 import { removeLast } from '@o/utils'
 import { last, pickBy } from 'lodash'
+import { toJS } from 'mobx'
 import React, { forwardRef, FunctionComponent, Suspense, useEffect, useMemo } from 'react'
 
 // TODO split into StackNavigator in UI
@@ -22,7 +23,7 @@ type BaseProps = {
 }
 
 type StackNavProps = BaseProps & {
-  id: string
+  id: string | false
   items: {
     [key: string]: FunctionComponent<NavigatorProps & any>
   }
@@ -37,7 +38,8 @@ export type StackNavViewProps =
 export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>((props, ref) => {
   const stackNavParent = useStore('useNavigator' in props ? props.useNavigator : null)
   // TODO our type intersections are odd
-  const id = props['id'] || 'default'
+  const id = 'id' in props ? props.id : false
+  console.log('id', id)
   const stackNavInternal = useCreateStackNavigator(
     'useNavigator' in props ? false : { id, items: props['items'], ...props },
   )
@@ -54,9 +56,12 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
   }, [stackNav, ref])
 
   useEffect(() => {
-    if (!stackNav || !props.defaultItem) return
+    if (!stackNav || !props.defaultItem || !id) {
+      return
+    }
+    console.warn('we have id', id)
     stackNav.updateDefaultItem(props.defaultItem)
-  }, [stackNav, props.defaultItem])
+  }, [stackNav, props.defaultItem, id])
 
   useReaction(
     () => stackNav && stackNav.currentItem,
@@ -97,6 +102,10 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
   )
 })
 
+StackNavigator.defaultProps = {
+  id: 'default',
+}
+
 type StackNavState = {
   stack: StackItem[]
 }
@@ -110,6 +119,7 @@ export class StackNavigatorStore {
 
   private hooks = useHooks(() => {
     const id = this.props.id ? `sn-${this.props.id}` : false
+    console.log('what is it', toJS(this.props), id)
     const [state, setState] = useUserState<StackNavState>(id, {
       stack: [],
     })
@@ -124,7 +134,7 @@ export class StackNavigatorStore {
   }
 
   get stack() {
-    return this.hooks.state.stack || []
+    return (this.hooks.state && this.hooks.state.stack) || []
   }
 
   get currentItem() {
@@ -133,7 +143,12 @@ export class StackNavigatorStore {
 
   propUpdateDefaultItem = react(
     () => [this.props.defaultItem, this.props.id, this.hooks.state],
-    ([item]) => item && this.updateDefaultItem(item),
+    ([item, id, state]) => {
+      ensure('id', !!id)
+      ensure('state', !!state)
+      console.log('updating', item, state)
+      item && this.updateDefaultItem(item)
+    },
   )
 
   updateDefaultItem(defaultItem: StackItem) {
@@ -189,7 +204,7 @@ const StackNavContext = createStoreContext(StackNavigatorStore)
 
 export const useCreateStackNavigator = (props: StackNavProps | false) => {
   // ensure we remount it on id change
-  return StackNavContext.useCreateStore(props, { id: props ? props.id : '' })
+  return StackNavContext.useCreateStore(props, { id: `${props ? props['id'] : false}` })
 }
 
 export const useStackNavigator = StackNavContext.useStore

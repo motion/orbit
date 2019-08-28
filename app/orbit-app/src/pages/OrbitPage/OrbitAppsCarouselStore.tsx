@@ -106,20 +106,21 @@ class OrbitAppsCarouselStore {
     return null
   }
 
+  onResize = () => {
+    if (this.currentNode) {
+      const x = this.currentNode.offsetLeft
+      this.props.setScrollSpring({ x, config: { duration: 0 } })
+    }
+  }
+
   ensureScrollLeftOnResize = react(
     () => this.zoomedIn,
     (zoomedIn, { useEffect }) => {
       ensure('zoomedIn', zoomedIn)
       useEffect(() => {
-        const onResize = () => {
-          if (this.currentNode) {
-            const x = this.currentNode.offsetLeft
-            this.props.setScrollSpring({ x, config: { duration: 0 } })
-          }
-        }
-        window.addEventListener('resize', onResize, { passive: true })
+        window.addEventListener('resize', this.onResize, { passive: true })
         return () => {
-          window.removeEventListener('resize', onResize)
+          window.removeEventListener('resize', this.onResize)
         }
       })
     },

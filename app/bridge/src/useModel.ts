@@ -166,6 +166,7 @@ function use<ModelType, Args>(
         const promise = new Promise(res => {
           const finish = (response: any) => {
             const next = selectDefined(response, defaultValue)
+            console.debug(`useModel() finish got`, response)
             clearTimeout(tm)
             if (!resolved) {
               resolved = true

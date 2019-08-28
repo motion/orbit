@@ -36,6 +36,9 @@ export type EditorProps = {
   onSave?: (args: { done?: boolean }) => void
   onCancel?: () => void
   onChange: (value: () => string) => void
+  onKey?: (keyStr: string) => void
+  onFocus?: (e: Event) => void
+  onBlur?: (e: Event) => void
   onImageUploadStart?: () => void
   onImageUploadStop?: () => void
   onSearchLink?: (term: string) => Promise<SearchResult[]>

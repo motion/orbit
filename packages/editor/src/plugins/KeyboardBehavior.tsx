@@ -6,6 +6,10 @@ export function KeyboardBehavior() {
   function onKeyDown(ev: React.KeyboardEvent, editor: Editor, next: Function) {
     if (isModKey(ev)) return next()
 
+    if (editor.props.onKey) {
+      editor.props.onKey(ev.key)
+    }
+
     switch (ev.key) {
       case 'Enter':
         return onEnter(ev, editor, next)

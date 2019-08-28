@@ -35,22 +35,27 @@ export function usePersistedScopedState<A>(
   } else {
     // scope state id
     const scopedId = useScopedStateId()
-    const identifier = `${scopedId}${id}`
+    const identifier = id === false ? false : `${scopedId}${id}`
 
     // ensure default state
     useEnsureDefaultState<A>(identifier, type, defaultState)
 
     // state
-    const [state, update] = useModel(StateModel, {
-      where: {
-        type,
-        identifier,
-      },
-    })
+    const [state, update] = useModel(
+      StateModel,
+      id === false
+        ? false
+        : {
+            where: {
+              type,
+              identifier,
+            },
+          },
+    )
 
     if (!state || !state.data) {
       if (id === false) {
-        return [null, null]
+        return [defaultState || null, null]
       }
       throw new Error(`Couldn't acquire state for ${type} ${id} ${identifier}`)
     }
@@ -63,7 +68,11 @@ export function usePersistedScopedState<A>(
 const cache = {}
 
 // has to be suspense style
-function useEnsureDefaultState<A>(identifier: string, type: string, value: A) {
+function useEnsureDefaultState<A>(identifier: string | false, type: string, value: A) {
+  if (identifier === false) {
+    return
+  }
+
   const key = `${identifier}${type}`
 
   if (cache[key]) {
@@ -98,6 +107,7 @@ function useEnsureDefaultState<A>(identifier: string, type: string, value: A) {
       )
 
       const create = () => {
+        console.debug(`Inserting default state for ${identifier} ${type}`, value)
         return save(StateModel, {
           type,
           identifier,

@@ -16,6 +16,7 @@ import { CollapsableHeadings } from './plugins/CollapsableHeadings'
 import { EditList } from './plugins/EditList'
 import { Ellipsis } from './plugins/Ellipsis'
 import { Embeds } from './plugins/Embeds'
+import { FocusPlugin } from './plugins/FocusPlugin'
 import { KeyboardBehavior } from './plugins/KeyboardBehavior'
 import { KeyboardShortcuts } from './plugins/KeyboardShortcuts'
 import { MarkdownPaste } from './plugins/MarkdownPaste'
@@ -58,6 +59,7 @@ export const createPlugins = ({
         return true
       },
     }),
+    FocusPlugin(),
     InsertImages({
       extensions: ['png', 'jpg', 'jpeg', 'gif', 'webp'],
       insertImage: (editor, file) => editor.insertImageFile(file),

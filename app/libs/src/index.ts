@@ -24,6 +24,7 @@ export function bitContentHash(bit: Bit): number {
         bit.id,
         bit.appId,
         bit.app ? bit.app.id : bit.appId,
+        bit.spaceId,
         bit.title,
         bit.body,
         bit.type,

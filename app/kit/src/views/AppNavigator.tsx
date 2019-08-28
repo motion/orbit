@@ -41,8 +41,8 @@ export const AppNavigator = memo((props: AppNavigatorProps) => {
         index={<IndexView {...navigatorProps} />}
       >
         <CardStack>
-          {items.map((item, index) => (
-            <DetailView key={index} {...navigatorProps} {...item} />
+          {items.map(item => (
+            <DetailView key={item.id} {...navigatorProps} {...item} />
           ))}
         </CardStack>
       </App>

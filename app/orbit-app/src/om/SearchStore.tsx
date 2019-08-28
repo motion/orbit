@@ -211,7 +211,6 @@ class SearchStoreStore {
         }
         total += take
         const nextResults = await searchBits(args)
-        console.log('nextResults', nextResults)
         await sleep(50)
         if (!nextResults.length) return false
         const next: ListItemProps[] = nextResults.map(item => ({

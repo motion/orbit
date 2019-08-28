@@ -30,6 +30,7 @@ const dockAppIdentifiers = [
   'query-builder',
   'graph',
   'settings',
+  'bits',
 ]
 
 export const state: AppsState = {

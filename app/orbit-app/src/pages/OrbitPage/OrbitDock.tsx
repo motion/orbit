@@ -178,7 +178,7 @@ export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
               x: size.width + 40,
             }
       }
-      transition="all ease 300ms"
+      transition={store.isOpen ? `all ease 300ms` : `all ease-out 300ms 150ms`}
       className="orbit-dock"
       bottom="auto"
     >
@@ -257,13 +257,14 @@ const OrbitDockButton = memo(function OrbitDockButton({
         label={app.name}
         ref={buttonRef}
         labelProps={{
-          transition: 'all ease 150ms 200ms',
+          transition: `all ease-out 80ms ${100 - index * 30}ms`,
           elevation: 1,
           opacity: 0,
           transform: {
             y: -10,
           },
           ...(dockStore.isOpen && {
+            transition: `all ease-out 400ms ${230 + index * 30}ms`,
             opacity: 1,
             transform: {
               y: 0,

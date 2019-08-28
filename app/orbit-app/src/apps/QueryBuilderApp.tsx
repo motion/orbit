@@ -25,7 +25,7 @@ function QueryBuilderApp() {
       <Scale size={0.8}>
         <Templates.Message
           title="No data apps"
-          subTitle="You haven't added any data apps to this workspace."
+          subTitle="Add data apps to use Query Builder."
         >
           <Button alt="action" onClick={() => om.actions.router.showAppPage({ id: 'apps' })}>
             Install apps

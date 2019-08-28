@@ -232,9 +232,15 @@ export class FlowStore {
     const { step } = this
     const nextStep = this.steps[nextIndex]
     if (!nextStep) return
-    const isValid = !step.validateFinished || (await step.validateFinished(this.state.data))
-    if (isValid) {
-      this.state.setIndex(nextIndex)
+    try {
+      const isValid = !step.validateFinished || (await step.validateFinished(this.state.data))
+      if (isValid === true) {
+        this.state.setIndex(nextIndex)
+      } else {
+        console.warn('TODO handle errors')
+      }
+    } catch (err) {
+      console.error('TODO handle errors', err)
     }
   }
 

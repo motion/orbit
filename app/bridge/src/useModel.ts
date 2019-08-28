@@ -144,70 +144,68 @@ function use<ModelType, Args>(
     }
   }, [])
 
-  if (!isDefined(valueRef.current)) {
-    let cache = PromiseCache[key]
+  let cache = PromiseCache[key]
 
-    if (!hasQuery(query)) {
-      valueRef.current = defaultValues[type]
-    } else {
-      if (!cache) {
-        waitForFirstResolve.current = true
-        let resolve
-        let resolved = false
-        const promise = new Promise(res => {
-          const finish = next => {
-            clearTimeout(tm)
-            if (!resolved) {
-              resolved = true
-              valueRef.current = next
-              cache.current = next
-              if (process.env.NODE_ENV === 'development' && shouldDebug()) {
-                console.log('useModel.resolve', key, currentComponent(), next)
-              }
-              waitForFirstResolve.current = false
-              res()
+  if (!hasQuery(query)) {
+    valueRef.current = defaultValues[type]
+  } else {
+    if (!cache) {
+      waitForFirstResolve.current = true
+      let resolve
+      let resolved = false
+      const promise = new Promise(res => {
+        const finish = next => {
+          clearTimeout(tm)
+          if (!resolved) {
+            resolved = true
+            valueRef.current = next
+            cache.current = next
+            if (process.env.NODE_ENV === 'development' && shouldDebug()) {
+              console.log('useModel.resolve', key, currentComponent(), next)
             }
+            waitForFirstResolve.current = false
+            res()
           }
-
-          // timeout
-          let tm = setTimeout(() => {
-            console.error(`Query timed out ${JSON.stringify(query)}`)
-            finish(defaultValues[type])
-          }, 4000)
-
-          subscription.current = runUseQuery(model, type, query, observeEnabled, finish)
-        })
-        cache = {
-          read: promise,
-          resolve,
-          current: undefined,
         }
-        PromiseCache[key] = cache
-        if (process.env.NODE_ENV === 'development') {
-          console.debug(`start query`, model.name, key)
-        }
+
+        // timeout
+        let tm = setTimeout(() => {
+          console.error(`Query timed out ${JSON.stringify(query)}`)
+          finish(defaultValues[type])
+        }, 4000)
+
+        subscription.current = runUseQuery(model, type, query, observeEnabled, finish)
+      })
+      cache = {
+        read: promise,
+        resolve,
+        current: undefined,
       }
+      PromiseCache[key] = cache
+      if (process.env.NODE_ENV === 'development') {
+        console.debug(`start query`, model.name, key)
+      }
+    }
 
-      if (isDefined(cache.current)) {
-        valueRef.current = cache.current
+    if (isDefined(cache.current)) {
+      valueRef.current = cache.current
+    } else {
+      if (cache.read) {
+        throw cache.read
       } else {
-        if (cache.read) {
-          throw cache.read
-        } else {
-          // todo we may not need this since we timeout the original query
-          throw new Promise((res, rej) => {
-            orTimeout(cache.read, 2000)
-              .then(res)
-              .catch(err => {
-                if (err === OR_TIMED_OUT) {
-                  console.warn('Model query timed out', model, query)
-                  cache.current = defaultValues[type]
-                } else {
-                  rej(err)
-                }
-              })
-          })
-        }
+        // todo we may not need this since we timeout the original query
+        throw new Promise((res, rej) => {
+          orTimeout(cache.read, 2000)
+            .then(res)
+            .catch(err => {
+              if (err === OR_TIMED_OUT) {
+                console.warn('Model query timed out', model, query)
+                cache.current = defaultValues[type]
+              } else {
+                rej(err)
+              }
+            })
+        })
       }
     }
   }

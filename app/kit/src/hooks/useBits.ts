@@ -37,7 +37,6 @@ export function useBit(query: FindOptions<Bit> | string | false, options: UseMod
   useEffect(() => {
     if (!findOptions) return
     loadOne(BitModel, { args: findOptions }).then(bit => {
-      console.log('got one', bit)
       if (!bit) {
         helpers.createOrUpdate({
           originalId: findOptions.where['originalId'],

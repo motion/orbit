@@ -1,9 +1,10 @@
 import { loadOne, save } from '@o/bridge'
 import { isEqual } from '@o/fast-compare'
 import { bitContentHash } from '@o/libs'
-import { AppBit, Bit, BitModel } from '@o/models'
+import { AppBit, Bit, BitModel, Space } from '@o/models'
 import { useStoreSimple } from '@o/use-store'
 
+import { useActiveSpace } from './useActiveSpace'
 import { useApp } from './useApp'
 
 // TODO this can be shared by workers-kit/syncers
@@ -12,14 +13,17 @@ export class BitHelpersStore {
   // @ts-ignore
   props: {
     app?: AppBit
+    space?: Space
   }
 
   get defaultBitProps(): Partial<Bit> {
-    const { app } = this.props
+    const { app, space } = this.props
     if (!app) return null
     return {
       appId: app.id,
       appIdentifier: app.identifier,
+      // @ts-ignore
+      spaceId: space.id,
     }
   }
 
@@ -29,9 +33,9 @@ export class BitHelpersStore {
 
   update(bit: Partial<Bit> & Pick<Bit, 'originalId'>) {
     return save(BitModel, {
-      contentHash: bitContentHash(bit as any),
       ...bit,
       ...this.defaultBitProps,
+      contentHash: bitContentHash(bit as any),
     })
   }
 
@@ -68,5 +72,6 @@ export class BitHelpersStore {
 
 export function useBitHelpers() {
   const app = useApp()
-  return useStoreSimple(BitHelpersStore, { app })
+  const [space] = useActiveSpace()
+  return useStoreSimple(BitHelpersStore, { app, space })
 }

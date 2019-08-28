@@ -87,7 +87,7 @@ function use<ModelType, Args>(
     value: defaultValue,
     subscription: null,
     waitForFirstResolve: false,
-    hasDoneInitialFetch: false,
+    hasDoneInitialCheck: false,
   })
 
   // they changed the key! we should reset valueRef.current
@@ -150,8 +150,8 @@ function use<ModelType, Args>(
 
   let cache = PromiseCache[key]
 
-  if (!state.current.hasDoneInitialFetch) {
-    state.current.hasDoneInitialFetch = true
+  if (!state.current.hasDoneInitialCheck) {
+    state.current.hasDoneInitialCheck = true
 
     if (!hasQuery(query)) {
       state.current.value = defaultValue

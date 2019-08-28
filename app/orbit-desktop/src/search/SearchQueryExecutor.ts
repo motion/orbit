@@ -45,7 +45,7 @@ export class SearchQueryExecutor {
    * Builds database query based on the search query args.
    * If count is set to true then count will be returned in the results.
    */
-  private buildDbQuery(args: SearchQuery, count: boolean): [string, any[]] {
+  buildDbQuery(args: SearchQuery, count: boolean): [string, any[]] {
     const joins: string[] = []
     const conditions: string[] = []
     const conditionParameters: any[] = []

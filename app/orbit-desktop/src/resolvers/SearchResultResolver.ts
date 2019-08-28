@@ -36,6 +36,7 @@ export class SearchResultResolver {
     this.cosalBitIds = await this.searchCosalIds()
     const bits = await this.searchBits()
     this.log.vtimer('search', bits.length)
+    this.log.verbose(`Search found ${bits.length}`)
     return bits
   }
 

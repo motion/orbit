@@ -36,13 +36,20 @@ export class GraphServer {
     this.server.use('/graphql/:workspaceId', bodyParser.json(), (req, res, next) => {
       const workspaceId = req.params['workspaceId']
       const middleware = this.graphMiddleware[workspaceId]
-      console.log('got req', !!middleware, workspaceId)
+      log.info('got req', !!middleware, workspaceId)
 
-      if (middleware) {
-        return middleware(req, res, next)
-      } else {
+      try {
+        if (middleware) {
+          return middleware(req, res, next)
+        } else {
+          res.json({
+            bad: 'is-bad-yea',
+          })
+        }
+      } catch (err) {
+        log.error(err.message, err.stack)
         res.json({
-          bad: 'is-bad-yea',
+          error: `${err.message}`,
         })
       }
     })

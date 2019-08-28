@@ -52,4 +52,5 @@ if (process.env.NODE_ENV === 'development' && module['hot']) {
       console.log('[HMR] finished')
     }
   })
+  module['hot'].accept()
 }

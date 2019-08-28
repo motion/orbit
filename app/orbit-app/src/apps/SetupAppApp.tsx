@@ -223,6 +223,9 @@ export const SetupAppHome = memo((props: SetupAppHomeProps) => {
       selectedAppIdentifier: null,
     },
   })
+  if (!flow.data) {
+    debugger
+  }
 
   useSearchState({
     onChange(state) {

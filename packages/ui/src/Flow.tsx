@@ -202,8 +202,12 @@ export class FlowStore {
     return this.state.index
   }
 
-  setData = this.state.setData
-  setIndex = this.state.setIndex
+  get setData() {
+    return this.state.setData
+  }
+  get setIndex() {
+    return this.state.setIndex
+  }
 
   get total() {
     return this.steps.length

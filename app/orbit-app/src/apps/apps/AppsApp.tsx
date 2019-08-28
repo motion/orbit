@@ -60,15 +60,6 @@ function AppsIndex() {
           subTitle: 'View, organize installed apps',
           subType: 'manage-apps',
         },
-        {
-          selectable: false,
-          padding: false,
-          children: (
-            <Col padding={[38, 8, 16]}>
-              <SubTitle>Installed Apps</SubTitle>
-            </Col>
-          ),
-        },
         ...(myApps.length
           ? myApps
           : [
@@ -83,7 +74,7 @@ function AppsIndex() {
           padding: false,
           children: (
             <Col padding={[38, 8, 16]}>
-              <SubTitle>Install Apps</SubTitle>
+              <SubTitle>Install</SubTitle>
             </Col>
           ),
         },

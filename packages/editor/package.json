@@ -3,6 +3,7 @@
   "version": "2.6.0",
   "description": "",
   "main": "_/Editor.js",
+  "ts:main": "src/Editor.ts",
   "source": "src/Editor.ts",
   "sideEffects": false,
   "author": "Nate Wienert",

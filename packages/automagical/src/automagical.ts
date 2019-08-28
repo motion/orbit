@@ -40,9 +40,9 @@ function constructWithProps(Store: any, args: any[], props?: Object) {
   const storeProps = Mobx.observable(
     { props },
     { props: Mobx.observable.shallow },
-    { name: Store.name },
+    { name: `${Store.name}.props` },
   )
-  let initialProps
+  let defaultProps
   // validate only after we constructor to avoid initial value problems
   const getProps = {
     configurable: true,
@@ -50,18 +50,23 @@ function constructWithProps(Store: any, args: any[], props?: Object) {
     // allows for class { props = {} } for initial props
     set(val: Object) {
       if (!val) return
-      if (initialProps) {
+      if (defaultProps) {
         // throw new Error(`Don't use this.props = to set, use this.setProps()`)
         // this was being called twice, why?
         return
       }
-      initialProps = val
+      defaultProps = val
     },
   }
   Object.defineProperty(Store.prototype, 'props', getProps)
   const instance = new Store()
-  if (initialProps) {
-    updateProps(instance, initialProps)
+  // these are props set initially on the store
+  if (defaultProps) {
+    for (const key in defaultProps) {
+      if (typeof storeProps.props[key] === 'undefined') {
+        storeProps.props[key] = defaultProps[key]
+      }
+    }
   }
   Object.defineProperty(instance, 'props', getProps)
   return instance

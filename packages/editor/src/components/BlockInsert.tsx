@@ -130,12 +130,20 @@ class BlockInsertComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { theme } = this.props
+    const { theme, editor } = this.props
     const style = { top: `${this.state.top}px`, left: `${this.state.left}px` }
+
     return (
       <>
         <span ref={this.setRef} />
-        <Portal style={{ position: 'absolute', zIndex: 10, pointerEvents: 'auto' }}>
+        <Portal
+          style={{
+            position: 'absolute',
+            zIndex: 10,
+            pointerEvents: 'auto',
+            display: editor.readOnly ? 'inherit' : 'none',
+          }}
+        >
           <Trigger active={this.state.active} style={style}>
             <PlusIcon
               className="editor-insert"

@@ -1,4 +1,4 @@
-import { Col } from '@o/ui'
+import { Col, useVisibility } from '@o/ui'
 import * as React from 'react'
 import { Node, SchemaProperties, Value } from 'slate'
 import { Editor as SlateEditor } from 'slate-react'
@@ -49,44 +49,11 @@ export type EditorProps = {
   style?: Object
 }
 
-export type EditorState = {
+type EditorState = {
   editorValue: Value
 }
 
-export class EditorComponent extends React.PureComponent<EditorProps, EditorState> {
-  static defaultProps = {
-    defaultValue: '',
-    placeholder: 'Write something nice…',
-    onImageUploadStart: () => {},
-    onImageUploadStop: () => {},
-    plugins: [
-      PlaceholderPlugin({
-        placeholder: 'Start with a title…',
-        when: (editor: SlateEditor, node: Node) => {
-          if (editor.readOnly) return false
-          if (node.object !== 'block') return false
-          if (node.type !== 'heading1') return false
-          if (node.text !== '') return false
-          if (editor.value.document.nodes.first() !== node) return false
-          return true
-        },
-      }),
-      PlaceholderPlugin({
-        placeholder: '…the rest is your canvas',
-        when: (editor: SlateEditor, node: Node) => {
-          if (editor.readOnly) return false
-          if (node.object !== 'block') return false
-          if (node.type !== 'paragraph') return false
-          if (node.text !== '') return false
-          if (editor.value.document.getDepth(node.key) !== 1) return false
-          if (editor.value.document.nodes.size > 2) return false
-          return true
-        },
-      }),
-    ],
-    tooltip: 'span',
-  }
-
+class EditorComponent extends React.PureComponent<EditorProps, EditorState> {
   editor: SlateEditor
   plugins: Plugin[]
   prevSchema: SchemaProperties | null = null
@@ -334,7 +301,7 @@ export class EditorComponent extends React.PureComponent<EditorProps, EditorStat
   }
 }
 
-export const Editor = styled(EditorComponent)`
+const StyledEditor = styled(EditorComponent)`
   color: ${props => props.theme.text};
   background: ${props => props.theme.background};
   font-family: ${props => props.theme.fontFamily};
@@ -405,3 +372,41 @@ export const Editor = styled(EditorComponent)`
     font-weight: 600;
   }
 `
+
+export function Editor(props: EditorProps) {
+  const visibility = useVisibility()
+  return <StyledEditor {...props} readOnly={visibility === false ? true : props.readOnly} />
+}
+
+Editor.defaultProps = {
+  defaultValue: '',
+  placeholder: 'Write something nice…',
+  onImageUploadStart: () => {},
+  onImageUploadStop: () => {},
+  plugins: [
+    PlaceholderPlugin({
+      placeholder: 'Start with a title…',
+      when: (editor: SlateEditor, node: Node) => {
+        if (editor.readOnly) return false
+        if (node.object !== 'block') return false
+        if (node.type !== 'heading1') return false
+        if (node.text !== '') return false
+        if (editor.value.document.nodes.first() !== node) return false
+        return true
+      },
+    }),
+    PlaceholderPlugin({
+      placeholder: '…the rest is your canvas',
+      when: (editor: SlateEditor, node: Node) => {
+        if (editor.readOnly) return false
+        if (node.object !== 'block') return false
+        if (node.type !== 'paragraph') return false
+        if (node.text !== '') return false
+        if (editor.value.document.getDepth(node.key) !== 1) return false
+        if (editor.value.document.nodes.size > 2) return false
+        return true
+      },
+    }),
+  ],
+  tooltip: 'span',
+}

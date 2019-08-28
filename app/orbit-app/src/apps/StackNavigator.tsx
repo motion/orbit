@@ -22,7 +22,7 @@ type BaseProps = {
 }
 
 type StackNavProps = BaseProps & {
-  id: string
+  id: string | false
   items: {
     [key: string]: FunctionComponent<NavigatorProps & any>
   }
@@ -37,7 +37,7 @@ export type StackNavViewProps =
 export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>((props, ref) => {
   const stackNavParent = useStore('useNavigator' in props ? props.useNavigator : null)
   // TODO our type intersections are odd
-  const id = props['id'] || 'default'
+  const id = 'id' in props ? props.id : false
   const stackNavInternal = useCreateStackNavigator(
     'useNavigator' in props ? false : { id, items: props['items'], ...props },
   )
@@ -54,9 +54,11 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
   }, [stackNav, ref])
 
   useEffect(() => {
-    if (!stackNav || !props.defaultItem) return
+    if (!stackNav || !props.defaultItem || !id) {
+      return
+    }
     stackNav.updateDefaultItem(props.defaultItem)
-  }, [stackNav, props.defaultItem])
+  }, [stackNav, props.defaultItem, id])
 
   useReaction(
     () => stackNav && stackNav.currentItem,
@@ -97,6 +99,10 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
   )
 })
 
+StackNavigator.defaultProps = {
+  id: 'default',
+}
+
 type StackNavState = {
   stack: StackItem[]
 }
@@ -124,7 +130,7 @@ export class StackNavigatorStore {
   }
 
   get stack() {
-    return this.hooks.state.stack || []
+    return (this.hooks.state && this.hooks.state.stack) || []
   }
 
   get currentItem() {
@@ -133,7 +139,11 @@ export class StackNavigatorStore {
 
   propUpdateDefaultItem = react(
     () => [this.props.defaultItem, this.props.id, this.hooks.state],
-    ([item]) => item && this.updateDefaultItem(item),
+    ([item, id, state]) => {
+      ensure('id', !!id)
+      ensure('state', !!state)
+      item && this.updateDefaultItem(item)
+    },
   )
 
   updateDefaultItem(defaultItem: StackItem) {
@@ -189,7 +199,7 @@ const StackNavContext = createStoreContext(StackNavigatorStore)
 
 export const useCreateStackNavigator = (props: StackNavProps | false) => {
   // ensure we remount it on id change
-  return StackNavContext.useCreateStore(props, { id: props ? props.id : '' })
+  return StackNavContext.useCreateStore(props, { id: `${props ? props['id'] : false}` })
 }
 
 export const useStackNavigator = StackNavContext.useStore

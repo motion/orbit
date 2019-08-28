@@ -22,7 +22,6 @@
     "@o/devcert": "^2.6.0",
     "@o/electron-sudo": "^2.6.0",
     "@o/graphql-nest-schema": "^2.6.0",
-    "@o/kit": "^2.6.0",
     "@o/libs": "^2.6.0",
     "@o/libs-node": "^2.6.0",
     "@o/logger": "^2.6.0",

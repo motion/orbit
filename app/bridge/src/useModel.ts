@@ -1,5 +1,5 @@
 import { Model } from '@o/mediator'
-import { ImmutableUpdateFn, isDefined, OR_TIMED_OUT, orTimeout, shouldDebug } from '@o/utils'
+import { ImmutableUpdateFn, isDefined, OR_TIMED_OUT, orTimeout, selectDefined, shouldDebug } from '@o/utils'
 import produce from 'immer'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -80,7 +80,10 @@ function use<ModelType, Args>(
 ): any {
   const key = getKey(model.name, type, JSON.stringify(query))
   const observeEnabled = !options || (options.observe === undefined || options.observe === true)
-  const defaultValue = options ? options.defaultValue : defaultValues[type]
+  const defaultValue = selectDefined(
+    options ? options.defaultValue : undefined,
+    defaultValues[type],
+  )
   const forceUpdate = useForceUpdate()
   const state = useRef({
     key,
@@ -161,7 +164,8 @@ function use<ModelType, Args>(
         let resolve
         let resolved = false
         const promise = new Promise(res => {
-          const finish = next => {
+          const finish = (response: any) => {
+            const next = selectDefined(response, defaultValue)
             clearTimeout(tm)
             if (!resolved) {
               resolved = true

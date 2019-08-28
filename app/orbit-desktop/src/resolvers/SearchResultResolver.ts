@@ -1,7 +1,7 @@
 import { Cosal } from '@o/cosal'
-import { subDays } from '@o/kit'
 import { Logger } from '@o/logger'
 import { AppEntity, Bit, BitEntity, SearchQuery } from '@o/models'
+import { subDays } from 'date-fns'
 import { uniqBy } from 'lodash'
 import { createQueryBuilder, getRepository, MoreThan } from 'typeorm'
 

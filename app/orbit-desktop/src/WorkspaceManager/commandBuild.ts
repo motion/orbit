@@ -1,6 +1,6 @@
 import { getAppInfo } from '@o/apps-manager'
 import { getGlobalConfig } from '@o/config'
-import { isEqual } from '@o/kit'
+import { isEqual } from '@o/fast-compare'
 import { isOrbitApp, readPackageJson } from '@o/libs-node'
 import { Logger } from '@o/logger'
 import { CommandOpts, resolveCommand } from '@o/mediator'

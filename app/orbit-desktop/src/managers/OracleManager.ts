@@ -1,5 +1,6 @@
 import { getGlobalConfig } from '@o/config'
-import { Logger, resolveObserveMany } from '@o/kit'
+import { Logger } from '@o/logger'
+import { resolveObserveMany } from '@o/mediator'
 import { OracleWordsFound, OracleWordsFoundModel } from '@o/models'
 import { Oracle, OracleMessageHandler, OracleMessages } from '@o/oracle'
 import { App, Desktop } from '@o/stores'

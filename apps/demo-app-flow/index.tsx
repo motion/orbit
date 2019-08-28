@@ -24,7 +24,7 @@ function DemoAppFlow() {
         title="Select Something"
         subTitle="Select your thing"
         validateFinished={data =>
-          data.rows.length > 0
+          data.rows && data.rows.length > 0
             ? true
             : {
                 rows: 'Need to select rows.',

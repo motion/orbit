@@ -1,5 +1,5 @@
 import { AppBit } from '@o/models'
-import { IconShape, IconShapeProps, SVG, toColor, useTheme } from '@o/ui'
+import { IconShape, IconShapeProps, toColor, useTheme } from '@o/ui'
 import { ThemeObject } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
@@ -46,7 +46,19 @@ export const AppIcon = memo(
 
     if (isSVGIcon) {
       const iconSrc = theme.background.isDark() ? iconLight || icon : icon
-      return <SVG fill={color} svg={iconSrc} width={`${rest.size}px`} height={`${rest.size}px`} />
+      return (
+        <svg
+          fill={color}
+          width={`${rest.size}px`}
+          height={`${rest.size}px`}
+          style={{
+            transform: 'translateZ(0)',
+          }}
+          dangerouslySetInnerHTML={{
+            __html: iconSrc,
+          }}
+        />
+      )
     }
 
     if (typeof icon !== 'string') {

@@ -23,6 +23,8 @@ const shapes = {
   circle: `M ${radius}, ${diameter} a ${radius},${radius} 0 1,1 ${diameter},0 a ${radius},${radius} 0 1,1 -${diameter},0`,
 }
 
+const cache = {}
+
 export const IconShape = memo(
   forwardRef(
     (
@@ -52,6 +54,9 @@ export const IconShape = memo(
 
       useLayoutEffect(() => {
         if (!iconPath) return
+        if (cache[iconPath]) {
+          return setSVGPath(cache[iconPath])
+        }
         const draw = SVG(id).size(diameter, diameter)
         const icon = draw.path(iconPath)
         const out = icon
@@ -61,7 +66,8 @@ export const IconShape = memo(
           .array()
           .toString()
 
-        setSVGPath(`${shapes[shape]} ${out}`)
+        cache[iconPath] = `${shapes[shape]} ${out}`
+        setSVGPath(cache[iconPath])
       }, [id, iconPath])
 
       const scale = size / 28
@@ -106,7 +112,7 @@ export const IconShape = memo(
             height={28}
             style={{
               transformOrigin: 'top left',
-              transform: `scale(${scale})`,
+              transform: `scale(${scale}) translateZ(0)`,
               overflow: 'visible',
               position: 'relative',
               zIndex: 1,

@@ -178,7 +178,8 @@ class AppCardStore {
       ensure('not animating', !isAnimating)
       ensure('is intersected', isIntersected)
       if (!zoomedIn) {
-        await sleep(150)
+        await whenIdle()
+        await sleep(20)
         await whenIdle()
       }
       this.shouldRender = true
@@ -317,7 +318,7 @@ const OrbitAppCard = memo(
               disableInteraction={disableInteraction}
               identifier={definition.id}
               appDef={definition}
-              shouldRenderApp={store.shouldRender}
+              shouldRenderApp={definition.id === 'setupApp' || store.shouldRender}
             />
           </Card>
         </View>

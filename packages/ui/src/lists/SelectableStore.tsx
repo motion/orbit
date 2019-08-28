@@ -210,11 +210,12 @@ export class SelectableStore {
     if (modifiers.shift === false) {
       next = []
     }
+    // only move if we found something to go to
     if (isDefined(found)) {
       next.push(this.getIndexKey(nextIndex))
+      this.setActive(next)
+      this.scrollToIndex(nextIndex)
     }
-    this.setActive(next)
-    this.scrollToIndex(nextIndex)
     return found
   }
 

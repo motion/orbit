@@ -55,7 +55,7 @@ export function usePersistedScopedState<A>(
 
     if (!state || !state.data) {
       if (id === false) {
-        return [defaultState || null, null]
+        return [defaultState || null, useImmutableUpdateFn(update)]
       }
       throw new Error(`Couldn't acquire state for ${type} ${id} ${identifier}`)
     }
@@ -116,15 +116,15 @@ function useEnsureDefaultState<A>(identifier: string | false, type: string, valu
       }
 
       load
-        .then(async row => {
+        .then(row => {
           if (!row || !isDefined(row.data)) {
-            return await create()
+            return create()
           }
         })
-        .catch(async err => {
+        .catch(err => {
           if (err === OR_TIMED_OUT) {
             console.error('timed out loading query', identifier, type, value)
-            return await create()
+            return create()
           } else {
             console.error(err)
           }
@@ -132,6 +132,8 @@ function useEnsureDefaultState<A>(identifier: string | false, type: string, valu
         .finally(finish)
     }),
   }
+
+  throw cache[key].read
 }
 
 function useImmutableUpdateFn(update: ImmutableUpdateFn<any>) {

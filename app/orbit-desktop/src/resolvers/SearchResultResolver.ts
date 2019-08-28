@@ -3,7 +3,7 @@ import { Logger } from '@o/logger'
 import { AppEntity, Bit, BitEntity, SearchQuery } from '@o/models'
 import { subDays } from 'date-fns'
 import { uniqBy } from 'lodash'
-import { createQueryBuilder, getRepository, MoreThan } from 'typeorm'
+import { createQueryBuilder, MoreThan } from 'typeorm'
 
 import { SearchQueryExecutor } from '../search/SearchQueryExecutor'
 
@@ -32,7 +32,6 @@ export class SearchResultResolver {
     this.log = new Logger('search (' + (args.query ? args.query + ', ' : '') + ')')
     this.queryExecutor = new SearchQueryExecutor(this.log)
     this.log.vtimer('search', this.args)
-    this.apps = await getRepository(AppEntity).find({ spaces: { id: this.args.spaceId } })
     this.cosalBitIds = await this.searchCosalIds()
     const bits = await this.searchBits()
     this.log.vtimer('search', bits.length)
@@ -67,7 +66,6 @@ export class SearchResultResolver {
    * Performs a database search on bits.
    */
   private async searchBits(): Promise<Bit[]> {
-    const appIds = this.apps.map(app => app.id)
     this.log.verbose(`search, num apps`, this.apps.length, this.args)
 
     // find exact matches
@@ -118,7 +116,6 @@ export class SearchResultResolver {
         endDate: this.endDate,
         query: undefined,
         ids: exactBitIds.map(x => x.id),
-        appIds,
         take: 10,
         skip: 0,
       }),
@@ -126,7 +123,6 @@ export class SearchResultResolver {
         ...this.args,
         startDate: this.startDate,
         endDate: this.endDate,
-        appIds,
         take: 60,
         skip: 0,
       }),
@@ -136,7 +132,6 @@ export class SearchResultResolver {
         endDate: this.endDate,
         query: undefined,
         ids: this.cosalBitIds,
-        appIds,
         take: 60,
         skip: 0,
       }),

@@ -98,7 +98,6 @@ function useEnsureDefaultState<A>(identifier: string, type: string, value: A) {
       )
 
       const create = () => {
-        debugger
         return save(StateModel, {
           type,
           identifier,
@@ -108,13 +107,6 @@ function useEnsureDefaultState<A>(identifier: string, type: string, value: A) {
 
       load
         .then(async row => {
-          if (!row) {
-            console.log({
-              type,
-              identifier,
-            })
-            debugger
-          }
           if (!row || !isDefined(row.data)) {
             return await create()
           }

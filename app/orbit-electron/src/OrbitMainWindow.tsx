@@ -34,7 +34,6 @@ class OrbitMainWindowStore {
     enabled: boolean
   }
 
-  orbitRef: BrowserWindow | null = null
   alwaysOnTop = true
   hasMoved = false
   isReady = false
@@ -43,6 +42,11 @@ class OrbitMainWindowStore {
   initialState = {
     size: [0, 0],
     position: [0, 0],
+  }
+
+  windowRef = null
+  get orbitRef(): BrowserWindow | null {
+    return (this.windowRef && this.windowRef.window) || null
   }
 
   updateSize = react(
@@ -75,7 +79,7 @@ class OrbitMainWindowStore {
 
   handleRef = ref => {
     if (!ref) return
-    this.orbitRef = ref.window
+    this.windowRef = ref
   }
 
   handleOrbitSpaceMove = react(

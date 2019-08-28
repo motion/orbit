@@ -81,8 +81,11 @@ class TreeListStore {
     return this.props.userState[1]
   }
 
-  get state(): TreeState {
+  get state(): TreeState | null {
     const { treeState, userState } = this
+    if (!treeState) {
+      return null
+    }
     const currentItem = treeState.items[userState.depth[userState.depth.length - 1].id]
     return {
       ...treeState,

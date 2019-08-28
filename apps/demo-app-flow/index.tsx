@@ -8,6 +8,9 @@ export default createApp({
   icon: 'flow',
   iconColors: ['rgb(255, 133, 27)', 'rgb(235, 123, 17)'],
   app: DemoAppFlow,
+  viewConfig: {
+    transparentBackground: false,
+  },
 })
 
 function DemoAppFlow() {

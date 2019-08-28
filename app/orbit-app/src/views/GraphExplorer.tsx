@@ -8,7 +8,6 @@ import ShadowDOM from 'react-shadow'
 
 import { useThemeStore } from '../om/stores'
 
-// @ts-ignore
 export const useGraphExplorer = () => {
   const [space] = useActiveSpace()
   const graphiql = useRef<any>(null)
@@ -20,18 +19,16 @@ export const useGraphExplorer = () => {
     query: '',
   })
   const { schema, query } = state
-  const fetcher = spaceFetcher.bind(null, space.id || -1)
-  // const parentRoot = useNode({ map: x => x.parentElement })
-  // const explorerLeft = (node && node!.querySelector('.graphiql-container')!['offsetLeft']) || 0
-  // const codeMirrorTop = (node && node!.querySelector('.query-editor')!['offsetTop']) || 0
-  // const explorerTop =
-  //   codeMirrorTop + ((parentRoot.current && parentRoot.current.getBoundingClientRect().y) || 0)
 
   useEffect(() => {
-    fetcher({
+    spaceFetcher(space.id || -1, {
       query: getIntrospectionQuery(),
     }).then(result => {
-      setState({ schema: buildClientSchema(result.data), query })
+      if (result.type === 'error') {
+        console.error(result.value)
+      } else {
+        setState({ schema: buildClientSchema(result.value.data), query })
+      }
     })
   }, [])
 
@@ -41,7 +38,7 @@ export const useGraphExplorer = () => {
     query,
     setState,
     state,
-    fetcher,
+    fetcher: (params: Object) => spaceFetcher(space.id || -1, params).then(x => x.value),
   }
 }
 
@@ -365,23 +362,25 @@ export function GraphQueryExplorer({
   )
 }
 
-function spaceFetcher(spaceId: number, params: Object) {
-  return fetch(`http://localhost:${getGlobalConfig().ports.graphServer}/graphql/${spaceId}`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(params),
+function spaceFetcher(
+  spaceId: number,
+  params: Object,
+): Promise<{ type: 'error' | 'success'; value: any }> {
+  return new Promise(finish => {
+    fetch(`http://localhost:${getGlobalConfig().ports.graphServer}/graphql/${spaceId}`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    })
+      .then(res => res.json())
+      .then(value => {
+        if (value.error) {
+          throw value.error
+        }
+        finish({ type: 'success', value })
+      })
   })
-    .then(function(response) {
-      return response.text()
-    })
-    .then(function(responseBody) {
-      try {
-        return JSON.parse(responseBody)
-      } catch (e) {
-        return responseBody
-      }
-    })
 }

@@ -49,11 +49,11 @@ export type EditorProps = {
   style?: Object
 }
 
-export type EditorState = {
+type EditorState = {
   editorValue: Value
 }
 
-export class EditorComponent extends React.PureComponent<EditorProps, EditorState> {
+class EditorComponent extends React.PureComponent<EditorProps, EditorState> {
   editor: SlateEditor
   plugins: Plugin[]
   prevSchema: SchemaProperties | null = null

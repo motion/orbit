@@ -7,18 +7,32 @@ import { useStoreSimple } from '@o/use-store'
 import { useApp } from './useApp'
 
 // TODO this can be shared by workers-kit/syncers
-class AppBitsStore {
+
+export class BitHelpersStore {
   // @ts-ignore
   props: {
     app?: AppBit
   }
 
+  get defaultBitProps(): Partial<Bit> {
+    const { app } = this.props
+    if (!app) return null
+    return {
+      appId: app.id,
+      appIdentifier: app.identifier,
+    }
+  }
+
   create(bit: Bit) {
-    return save(BitModel, bit)
+    return this.update(bit)
   }
 
   update(bit: Partial<Bit> & Pick<Bit, 'originalId'>) {
-    return save(BitModel, bit)
+    return save(BitModel, {
+      contentHash: bitContentHash(bit as any),
+      ...bit,
+      ...this.defaultBitProps,
+    })
   }
 
   async createOrUpdate(bit: Partial<Bit> & Pick<Bit, 'originalId'>) {
@@ -30,30 +44,19 @@ class AppBitsStore {
     if (!this.props.app) {
       throw new Error(`Must use within an app`)
     }
-
-    const appId = this.props.app.id
-    const appIdentifier = this.props.app.identifier
-
-    if (!appId || !appIdentifier) {
-      throw new Error(`Missing appId or appIdentifier`)
-    }
-
     const existing = await loadOne(BitModel, {
       args: {
         where: {
-          appId,
-          appIdentifier,
+          ...this.defaultBitProps,
           originalId: bit.originalId,
         },
       },
     })
     const next = {
-      appIdentifier,
-      appId,
+      ...this.defaultBitProps,
       ...(existing || null),
       ...bit,
     }
-
     if (!isEqual(existing, next)) {
       return await save(BitModel, {
         contentHash: bitContentHash(next),
@@ -63,7 +66,7 @@ class AppBitsStore {
   }
 }
 
-export function useAppBitHelpers() {
+export function useBitHelpers() {
   const app = useApp()
-  return useStoreSimple(AppBitsStore, { app })
+  return useStoreSimple(BitHelpersStore, { app })
 }

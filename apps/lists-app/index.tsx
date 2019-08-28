@@ -1,5 +1,5 @@
-import { AppNavigator, AppStatusBar, AppViewProps, createApp, Editor, NavigatorProps, useSearchState } from '@o/kit'
-import { Breadcrumb, Breadcrumbs, Dock, DockButton, randomAdjective, randomNoun, StatusBarText, TitleRow, TreeList, useTreeList, View } from '@o/ui'
+import { AppNavigator, AppStatusBar, AppViewProps, createApp, Editor, NavigatorProps, useBit, useSearchState } from '@o/kit'
+import { Breadcrumb, Breadcrumbs, Col, Dock, DockButton, randomAdjective, randomNoun, StatusBarText, TreeList, useTreeList, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import pluralize from 'pluralize'
 import React, { useCallback } from 'react'
@@ -57,16 +57,26 @@ export function ListsAppIndex(props: NavigatorProps) {
 }
 
 function ListsAppMain(props: AppViewProps) {
+  const [bit, setBit] = useBit(`main-content-${props.id}`, {
+    defaultValue: {
+      title: props.title,
+    },
+  })
+  console.log('bit', bit)
+  const handleChange = useCallback(getVal => {
+    const val = getVal()
+  }, [])
+
   if (props.subType === 'folder') {
     return <ListsAppMainFolder key={props.subId} {...props} />
   }
+
   return (
-    <>
-      <TitleRow padding bordered margin={0} title={props.title} />
-      <Editor defaultValue="" />
+    <Col padding={[30, 0]}>
+      <Editor defaultValue={`${props.title}`} onChange={handleChange} />
       {/* TODO put this in a modal when you click a plus here */}
       {/* <AppContentView {...props} /> */}
-    </>
+    </Col>
   )
 }
 

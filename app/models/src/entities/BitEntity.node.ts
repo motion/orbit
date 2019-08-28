@@ -39,7 +39,7 @@ export class BitEntity extends BaseEntity implements Bit {
   originalId?: string
 
   @Index()
-  @Column()
+  @Column({ default: 'Untitled' })
   title?: string
 
   @Column({ nullable: true })
@@ -52,7 +52,7 @@ export class BitEntity extends BaseEntity implements Bit {
   body?: string
 
   @Index()
-  @Column()
+  @Column({ default: '' })
   type?: BitContentType
 
   @Column({ nullable: true })
@@ -67,21 +67,21 @@ export class BitEntity extends BaseEntity implements Bit {
   @Column(() => LocationEntity)
   location?: LocationEntity
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: new Date() })
   bitCreatedAt?: number
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: new Date() })
   bitUpdatedAt?: number
 
   @Column({ default: false })
   crawled?: boolean
 
   @Index()
-  @CreateDateColumn()
+  @CreateDateColumn({ default: new Date() })
   createdAt?: Date
 
   @Index()
-  @UpdateDateColumn()
+  @UpdateDateColumn({ default: new Date() })
   updatedAt?: Date
 
   @ManyToOne(() => BitEntity)
@@ -100,5 +100,6 @@ export class BitEntity extends BaseEntity implements Bit {
   @ManyToOne(() => SpaceEntity)
   space?: Space
 
-  peopleCount?: number
+  @Column({ nullable: true })
+  icon?: string
 }

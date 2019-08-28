@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { Editor } from 'slate'
 
-import { EditorProps } from '..'
 import { BlockInsert } from '../components/BlockInsert'
 import { Contents } from '../components/Contents'
 import { Toolbar } from '../components/Toolbar'
+import { EditorProps } from '../Editor'
 
 export function Chrome() {
   function renderEditor(props: EditorProps, editor: Editor, next: () => React.ReactNode) {

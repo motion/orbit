@@ -17,7 +17,7 @@ export function useAppBit(
   // currently used by settings panes where appStore isn't loaded
   const curApp = CurrentAppBitContext.useProps()
   const curAppId = curApp ? curApp.id : undefined
-  const conditions = { where: where || { id: curAppId } }
+  const conditions = { where: { id: curAppId, ...where } }
 
   const [app, update] = useModel(AppModel, conditions)
 

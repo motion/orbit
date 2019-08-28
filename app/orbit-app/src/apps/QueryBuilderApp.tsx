@@ -1,4 +1,4 @@
-import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, query, react, Templates, TreeListStore, useActiveDataApps, useAppBitHelpers, useAppState, useAppWithDefinition, useCommand, useHooks, useStore } from '@o/kit'
+import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, query, react, Templates, TreeListStore, useActiveDataApps, useAppState, useAppWithDefinition, useBitHelpers, useCommand, useHooks, useStore } from '@o/kit'
 import { ApiArgType, AppMeta, AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
 import { Button, Card, CardProps, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, InputProps, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, TitleRow, Toggle, TreeList, useGet, useTheme, useTreeList, View } from '@o/ui'
 import { capitalize } from 'lodash'
@@ -47,7 +47,7 @@ function QueryBuilderAppContent() {
 
   // TODO NEXT
   // want to persist queries to bits
-  const appBitHelpers = useAppBitHelpers()
+  const appBitHelpers = useBitHelpers()
   useEffect(() => {
     for (const id of Object.keys(treeList.state!.items!)) {
       const item = treeList.state!.items![id]

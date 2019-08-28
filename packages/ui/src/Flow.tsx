@@ -185,7 +185,6 @@ export class FlowStore {
       `flowdata-${this.props.id || ''}`,
       this.props.data || null,
     )
-    console.log('got flow', data)
     const [index, setIndex] = useState(0)
     return {
       data,
@@ -196,7 +195,6 @@ export class FlowStore {
   })
 
   get data() {
-    console.log('call getter', this.state)
     return this.state.data
   }
 
@@ -204,8 +202,12 @@ export class FlowStore {
     return this.state.index
   }
 
-  setData = this.state.setData
-  setIndex = this.state.setIndex
+  get setData() {
+    return this.state.setData
+  }
+  get setIndex() {
+    return this.state.setIndex
+  }
 
   get total() {
     return this.steps.length

@@ -3,7 +3,6 @@ import { createStoreContext, ensure, react, useHooks, useReaction, useStore, use
 import { Loading, Slider, SliderPane } from '@o/ui'
 import { removeLast } from '@o/utils'
 import { last, pickBy } from 'lodash'
-import { toJS } from 'mobx'
 import React, { forwardRef, FunctionComponent, Suspense, useEffect, useMemo } from 'react'
 
 // TODO split into StackNavigator in UI
@@ -39,7 +38,6 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
   const stackNavParent = useStore('useNavigator' in props ? props.useNavigator : null)
   // TODO our type intersections are odd
   const id = 'id' in props ? props.id : false
-  console.log('id', id)
   const stackNavInternal = useCreateStackNavigator(
     'useNavigator' in props ? false : { id, items: props['items'], ...props },
   )
@@ -59,7 +57,6 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
     if (!stackNav || !props.defaultItem || !id) {
       return
     }
-    console.warn('we have id', id)
     stackNav.updateDefaultItem(props.defaultItem)
   }, [stackNav, props.defaultItem, id])
 
@@ -119,7 +116,6 @@ export class StackNavigatorStore {
 
   private hooks = useHooks(() => {
     const id = this.props.id ? `sn-${this.props.id}` : false
-    console.log('what is it', toJS(this.props), id)
     const [state, setState] = useUserState<StackNavState>(id, {
       stack: [],
     })
@@ -146,7 +142,6 @@ export class StackNavigatorStore {
     ([item, id, state]) => {
       ensure('id', !!id)
       ensure('state', !!state)
-      console.log('updating', item, state)
       item && this.updateDefaultItem(item)
     },
   )

@@ -156,11 +156,37 @@ export function useHooks<A extends () => any>(hooks: A, store?: any): ReturnType
   for (const dispose of disposeReads) {
     dispose()
   }
-  return {
-    __rerunHooks: hooks,
-    __setUpdater,
-    __dispose,
-  } as any
+
+  // why observable map? it triggers on key changes
+  // and we will add new keys as promises throw/update
+  const hooksData = observable.map({}, { deep: false })
+
+  // then use a proxy just so we can convert map back into object api
+  return new Proxy(
+    {
+      __hooksData: hooksData,
+      __rerunHooks: () => {
+        const res = hooks()
+        for (const key in res) {
+          hooksData.set(key, res[key])
+        }
+      },
+      __setUpdater,
+      __dispose,
+    },
+    {
+      get(target, key) {
+        if (Reflect.has(target, key)) {
+          return Reflect.get(target, key)
+        }
+        return hooksData.get(key)
+      },
+      set(_, key, value) {
+        hooksData.set(key, value)
+        return true
+      },
+    },
+  ) as any
 }
 
 // // this is reactive so we can capture this.props and other reactive state inside hooks call
@@ -270,29 +296,33 @@ function useReactiveStore<A extends any>(
     }
   }
 
-  // handle hooks after construct to avoid re-constructing as hooks resolve
+  // update after creation
+  store = state.current.store
+
+  // handle hooks after construct to avoid re-constructing store as hooks resolve
+  // we need this special case so we can properly set them up the first time
+  // so that the props on store are updated and then passed to hooks
   if (state.current.pendingHooks) {
     let didThrowPromise = false
     // run hooks after construct so props are there
     let allHooks: HooksObject[] = []
     try {
       for (const key in store) {
-        if (store[key] && store[key].__rerunHooks) {
-          store[key] = shallow({
-            ...store[key],
-            ...store[key].__rerunHooks(),
-          })
-          allHooks.push(store[key])
+        const hook = store[key]
+        if (hook && hook.__rerunHooks) {
+          hook.__rerunHooks()
+          allHooks.push(hook)
         }
       }
     } catch (err) {
       if (err instanceof Promise) {
         didThrowPromise = true
-      } else {
-        throw err
       }
+      throw err
     }
     if (!didThrowPromise) {
+      // set final state
+      state.current.hooks = allHooks
       state.current.pendingHooks = false
       // add dispose
       dispose = () => {
@@ -303,31 +333,32 @@ function useReactiveStore<A extends any>(
         hook.__setUpdater(forceUpdate)
       })
     }
-  }
-
-  // update props after first run, before hooks re-run
-  if (props && !!store) {
-    updateProps(store, props)
-  }
-
-  if (!shouldSetupStore) {
-    // re-run hooks
-    const hooks = state.current.hooks
-    if (hooks && hooks.length) {
-      transaction(function updateHooks() {
-        for (const hook of hooks) {
-          let next = hook.__rerunHooks()
-          if (next) {
-            for (const key in next) {
-              if (key[0] === '_' && key[1] === '_') continue
-              if (next[key] !== hooks[key]) {
-                hook[key] = next[key]
+  } else {
+    if (!shouldSetupStore) {
+      // re-run hooks
+      const hooks = state.current.hooks
+      if (hooks && hooks.length) {
+        transaction(function updateHooks() {
+          for (const hook of hooks) {
+            let next = hook.__rerunHooks()
+            if (next) {
+              for (const key in next) {
+                if (key[0] === '_' && key[1] === '_') continue
+                if (next[key] !== hooks[key]) {
+                  console.log('updating hooks', hook[key], next[key])
+                  hook[key] = next[key]
+                }
               }
             }
           }
-        }
-      })
+        })
+      }
     }
+  }
+
+  // update props after first run, before hooks re-run
+  if (props && !shouldSetupStore) {
+    updateProps(store, props)
   }
 
   if (hasChangedSource) {
@@ -335,7 +366,7 @@ function useReactiveStore<A extends any>(
     forceUpdate()
   }
 
-  return { store: state.current.store, hasChangedSource, dispose }
+  return { store, hasChangedSource, dispose }
 }
 
 // allows us to use instantiated or non-instantiated stores

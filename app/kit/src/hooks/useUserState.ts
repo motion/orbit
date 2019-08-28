@@ -38,7 +38,6 @@ export function usePersistedScopedState<A>(
     const identifier = id === false ? false : `${scopedId}${id}`
 
     // ensure default state
-    console.log('using state', type, id, identifier, defaultState)
     useEnsureDefaultState<A>(identifier, type, defaultState)
 
     // state
@@ -53,8 +52,6 @@ export function usePersistedScopedState<A>(
             },
           },
     )
-
-    console.log('now state is', state)
 
     if (!state || !state.data) {
       if (id === false) {

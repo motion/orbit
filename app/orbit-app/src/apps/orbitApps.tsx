@@ -4,6 +4,7 @@ import React from 'react'
 
 import AppsApp from './apps/AppsApp'
 import BitApp from './BitApp'
+import BitsApp from './BitsApp'
 import ClipboardApp from './ClipboardApp'
 import GraphApp from './GraphApp'
 import MessageApp from './MessageApp'
@@ -32,6 +33,7 @@ export const orbitStaticApps: AppDefinition[] = [
   SpacesApp,
   AppsApp,
   BitApp,
+  BitsApp,
   OnboardApp,
   SetupAppApp,
   MessageApp,

@@ -1,7 +1,7 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
-import { resolveObserveMany } from '@o/mediator'
-import { OracleWordsFound, OracleWordsFoundModel } from '@o/models'
+import { resolveObserveMany, MediatorClient } from '@o/mediator'
+import { OracleWordsFound, OracleWordsFoundModel, ToggleOrbitMainCommand } from '@o/models'
 import { Oracle, OracleMessageHandler, OracleMessages } from '@o/oracle'
 import { App, Desktop } from '@o/stores'
 import { throttle } from 'lodash'
@@ -21,7 +21,7 @@ type BoundsLike = {
 export class OracleManager {
   private oracle: Oracle
 
-  constructor() {
+  constructor(private electronMediator: MediatorClient) {
     this.oracle = new Oracle({
       port: getGlobalConfig().ports.ocrBridge,
       onMessage: this.handleMessage,
@@ -38,7 +38,7 @@ export class OracleManager {
 
   handleMessage: OracleMessageHandler = obj => {
     log.info('message', obj)
-    switch (obj.message) {
+    switch (obj.action) {
       case OracleMessages.words:
         for (const observer of this.wordObservers) {
           observer.update(obj.value)
@@ -48,10 +48,14 @@ export class OracleManager {
         Desktop.setState({ operatingSystem: { trayBounds: obj.value } })
         break
       case OracleMessages.trayClicked:
-        Desktop.setState({ operatingSystem: { trayClicked: Date.now() } })
+        if (obj.value.id === '0') {
+          log.info(`Toggle electron main`)
+          this.electronMediator.command(ToggleOrbitMainCommand)
+        }
+        Desktop.setState({ operatingSystem: { trayClicked: { at: Date.now(), ...obj.value } } })
         break
       case OracleMessages.trayHovered:
-        Desktop.setState({ operatingSystem: { trayHovered: Date.now() } })
+        Desktop.setState({ operatingSystem: { trayHovered: { at: Date.now(), ...obj.value } } })
         break
       case OracleMessages.mouseMoved:
         this.updateHoverState(obj.value.position)

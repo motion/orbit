@@ -137,6 +137,11 @@ export function OrbitMainWindow() {
   return (
     <OrbitAppWindow
       windowId={windowId}
+      locationQuery={{
+        ...(process.env.NODE_ENV !== 'development' && {
+          renderMode: 'react.concurrent',
+        }),
+      }}
       show={store.show}
       onReadyToShow={store.setIsReady}
       // TODO i think i need to make this toggle on show for a few ms, then go back to normal

@@ -14,12 +14,12 @@ export enum OracleMessages {
 }
 
 interface Message {
-  message: OracleMessages
+  action: OracleMessages
   value: any
 }
 
 export interface OracleTrayBoundsMessage extends Message {
-  message: OracleMessages.trayBounds
+  action: OracleMessages.trayBounds
   value: {
     position: [number, number]
     size: [number, number]
@@ -27,28 +27,28 @@ export interface OracleTrayBoundsMessage extends Message {
 }
 
 export interface OracleTrayHoveredMessage extends Message {
-  message: OracleMessages.trayHovered
+  action: OracleMessages.trayHovered
   value: {
     id: '0' | '1' | '2' | 'Out'
   }
 }
 
 export interface OracleTrayClickedMessage extends Message {
-  message: OracleMessages.trayClicked
+  action: OracleMessages.trayClicked
   value: {
     id: '0' | '1' | '2' | 'Out'
   }
 }
 
 export interface OracleMouseMovedMessage extends Message {
-  message: OracleMessages.mouseMoved
+  action: OracleMessages.mouseMoved
   value: {
     position: [number, number]
   }
 }
 
 export interface OracleWindowChangedMessage extends Message {
-  message: OracleMessages.windowChanged
+  action: OracleMessages.windowChanged
   value: {
     id: number
     title: string
@@ -58,7 +58,7 @@ export interface OracleWindowChangedMessage extends Message {
 }
 
 export interface OracleWindowMovedMessage extends Message {
-  message: OracleMessages.windowMoved
+  action: OracleMessages.windowMoved
   value: {
     id: number
     title: string
@@ -68,7 +68,7 @@ export interface OracleWindowMovedMessage extends Message {
 }
 
 export interface OracleWindowResizedMessage extends Message {
-  message: OracleMessages.windowResized
+  action: OracleMessages.windowResized
   value: {
     id: number
     title: string
@@ -83,7 +83,7 @@ export type OracleWordsFound = {
 }
 
 export interface OracleWordsFoundMessage extends Message {
-  message: OracleMessages.words
+  action: OracleMessages.words
   value: OracleWordsFound[]
 }
 

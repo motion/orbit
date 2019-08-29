@@ -6,6 +6,7 @@ import { react, useStore } from '@o/use-store'
 import { BrowserWindowConstructorOptions } from 'electron'
 import { join } from 'path'
 import * as React from 'react'
+import { stringify } from 'query-string'
 
 import { ROOT } from './constants'
 import { getDefaultAppBounds } from './helpers/getDefaultAppBounds'
@@ -64,12 +65,22 @@ type AppWindowProps = BrowserWindowConstructorOptions & {
   onPosition?: Function
   defaultPosition: number[]
   defaultSize: number[]
+  locationQuery?: Object
 }
 
-export function OrbitAppWindow({ windowId, forwardRef, ...windowProps }: AppWindowProps) {
+export function OrbitAppWindow({
+  windowId,
+  forwardRef,
+  locationQuery,
+  ...windowProps
+}: AppWindowProps) {
   const store = useStore(OrbitAppWindowStore, { windowId })
-  const appQuery = windowId === 0 ? '' : `/?id=${windowId}`
-  const url = `${Config.urls.server}${appQuery}`
+  const query = {
+    id: windowId,
+    ...locationQuery,
+  }
+  const url = `${Config.urls.server}/?${stringify(query)}`
+
   const size = windowProps.size || store.size
 
   log.info(`OrbitAppWindow ${windowId} ${url} ${size} ${store.position}`)

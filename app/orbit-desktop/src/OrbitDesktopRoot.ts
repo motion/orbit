@@ -131,6 +131,9 @@ export class OrbitDesktopRoot {
   resolveWaitForElectronMediator: Function | null = null
   databaseManager: DatabaseManager
   mediatorServer: MediatorServer
+  electronMainTransport: WebSocketClientTransport
+  electronMediator: MediatorClient
+  mediatorPort: number
 
   config = Config
   authServer: AuthServer
@@ -258,14 +261,31 @@ export class OrbitDesktopRoot {
                 await this.orbitDataManager.start()
               }
             },
+            // wait for electron mediator and then setup client
             async () => {
-              log.info(`process.env.ENABLE_OCR = ${process.env.ENABLE_OCR}`)
-              if (!singleUseMode && process.env.ENABLE_OCR) {
-                this.oracleManager = new OracleManager()
-                await this.oracleManager.start()
+              // pass dependencies into here as arguments to be clear
+              this.mediatorPort = this.registerMediatorServer()
+
+              if (!process.env.SINGLE_USE_MODE) {
+                // wait for electron to start its mediator
+                await new Promise(res => {
+                  this.resolveWaitForElectronMediator = res
+                })
+
+                this.electronMediator = new MediatorClient({
+                  transports: [this.electronMainTransport],
+                })
               }
             },
           ],
+        },
+        // ocr relies on mediator
+        async () => {
+          log.info(`process.env.ENABLE_OCR = ${process.env.ENABLE_OCR}`)
+          if (!singleUseMode && process.env.ENABLE_OCR) {
+            this.oracleManager = new OracleManager(this.electronMediator)
+            await this.oracleManager.start()
+          }
         },
       ],
       {
@@ -273,21 +293,12 @@ export class OrbitDesktopRoot {
       },
     )
 
-    // pass dependencies into here as arguments to be clear
-    const mediatorPort = this.registerMediatorServer()
-
-    if (!process.env.SINGLE_USE_MODE) {
-      await new Promise(res => {
-        this.resolveWaitForElectronMediator = res
-      })
-    }
-
-    log.verbose(`Starting Bonjour service on ${mediatorPort}`)
+    log.verbose(`Starting Bonjour service on ${this.mediatorPort}`)
     this.bonjour = bonjour()
     this.bonjourService = this.bonjour.publish({
       name: 'orbitDesktop',
       type: 'orbitDesktop',
-      port: mediatorPort,
+      port: this.mediatorPort,
     })
     this.bonjourService.start()
 
@@ -433,23 +444,23 @@ export class OrbitDesktopRoot {
         (() => {
           let lastUsed = 0
           return resolveCommand(NewFallbackServerPortCommand, () => {
-            if (this.resolveWaitForElectronMediator) {
-              this.resolveWaitForElectronMediator()
-              this.resolveWaitForElectronMediator = null
-            }
             const port = Config.ports.electronMediators[lastUsed]
             lastUsed++
             const server = global.mediatorServer as MediatorServer
             // mutate, bad for now but we'd need to refactor MediatorServer
-            server.options.fallbackClient.options.transports.push(
-              new WebSocketClientTransport(
-                'electron',
-                new ReconnectingWebSocket(`ws://localhost:${port}`, [], {
-                  WebSocket,
-                  minReconnectionDelay: 1,
-                }),
-              ),
+            const transport = new WebSocketClientTransport(
+              'electron',
+              new ReconnectingWebSocket(`ws://localhost:${port}`, [], {
+                WebSocket,
+                minReconnectionDelay: 1,
+              }),
             )
+            this.electronMainTransport = this.electronMainTransport || transport
+            server.options.fallbackClient.options.transports.push(transport)
+            if (this.resolveWaitForElectronMediator) {
+              this.resolveWaitForElectronMediator()
+              this.resolveWaitForElectronMediator = null
+            }
             return port
           })
         })(),

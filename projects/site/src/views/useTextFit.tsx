@@ -30,7 +30,12 @@ export function useTextFit({
     },
     [min, max, height],
   )
-  const measure = useThrottledFn(() => updateScale(scale, ref.current, setScaleBounded), {
+  const measureFn = useCallback(() => updateScale(scale, ref.current, setScaleBounded), [
+    setScaleBounded,
+    scale,
+    ref.current,
+  ])
+  const measure = useThrottledFn(measureFn, {
     amount: throttle,
   })
 

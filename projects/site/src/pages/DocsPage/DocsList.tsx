@@ -8,6 +8,7 @@ const avatar = (
 )
 
 const rows = employees.map(x => ({
+  key: `${x.email}${x.dob}${x.name.first}`,
   title: x.name.first + ' ' + x.name.last,
   subTitle: x.email,
   icon: x.gender ? 'man' : 'woman',
@@ -60,7 +61,8 @@ export let OrderFilter = (
   <List
     items={rows.slice(0, 200)}
     // filter by "St"
-    search="St"
+    searchable
+    query="St"
     // then sort by subTitle
     sortBy={x => x.subTitle}
     height={300}
@@ -97,7 +99,8 @@ export let MultipleSelection = (
     // allows multiple selection
     selectable="multi"
     items={rows.slice(0, 20)}
-    height={300}
+    height={400}
+    sortable
   />
 )
 

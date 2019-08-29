@@ -4,9 +4,10 @@ import { mount, route } from 'navi'
 import React from 'react'
 
 import confettiImage from '../../public/images/confetti.jpg'
+import { fontProps } from '../constants'
 import { scrollTo } from '../etc/helpers'
-import { useScreenSize } from '../hooks/useScreenSize'
 import { Header } from '../Header'
+import { useScreenSize } from '../hooks/useScreenSize'
 import { linkProps } from '../LinkState'
 import { FadeChild, useFadePage } from '../views/FadeIn'
 import { SectionContent } from '../views/SectionContent'
@@ -55,7 +56,7 @@ export function AboutPage() {
                     <Space size={35} />
                     <PassProps
                       titleProps={{ fontSize: 18, padding: [10, 20], textAlign: 'right' }}
-                      fontFamily="GT Eesti"
+                      {...fontProps.TitleFont}
                     >
                       <ListItemSimple
                         onClick={() => {

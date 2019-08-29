@@ -52,11 +52,11 @@ const { useProps } = createContextualProps<Partial<VirtualListProps>>()
 const ListRow = memo(
   forwardRef((props: any, ref) => {
     const { data, index, style } = props
-    const { selectableStore, items, listProps } = data
+    const { items, listProps } = data
+    const selectableStore: SelectableStore = data.selectableStore
     const { getItemProps, ItemView, sortable, onSelect, onOpen, itemProps } = listProps
     const item = items[index]
     const dynamicProps = getItemProps && getItemProps(item, index, items)
-    const mouseDownTm = useRef(null)
     const finishSelect = useRef(false)
     const onMouseUp = selectDefined(
       dynamicProps ? dynamicProps.onMouseUp : undefined,
@@ -88,7 +88,6 @@ const ListRow = memo(
         {...dynamicProps}
         // our overrides that fallback
         onMouseUp={useCallback(e => {
-          clearTimeout(mouseDownTm.current)
           if (finishSelect.current) {
             finishSelect.current = false
             selectableStore && selectableStore.setRowActive(index, e)
@@ -98,7 +97,6 @@ const ListRow = memo(
         onMouseDown={useCallback(
           e => {
             e.persist()
-            clearTimeout(mouseDownTm.current)
             // add delay when sortable
             const setRowActive = () => {
               selectableStore && selectableStore.setRowMouseDown(index, e)
@@ -106,10 +104,8 @@ const ListRow = memo(
             }
             if (sortable) {
               finishSelect.current = true
-              mouseDownTm.current = setTimeout(setRowActive, getPressDelay(listProps))
-            } else {
-              setRowActive()
             }
+            setRowActive()
             onMouseDown(e)
           },
           [sortable, onMouseDown],

@@ -1,8 +1,10 @@
 import { SimpleText } from '@o/ui'
 import { gloss } from 'gloss'
 
+import { fontProps } from '../constants'
+
 export const Text = gloss(SimpleText, {
-  fontFamily: 'GT Eesti',
+  ...fontProps.BodyFont,
 }).withConfig({
   defaultProps: {
     tagName: 'p',

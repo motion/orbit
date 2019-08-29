@@ -1,17 +1,16 @@
 import * as LernaProject from '@lerna/project'
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 import * as Fs from 'fs'
+import { pathExistsSync } from 'fs-extra'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-import { pathExistsSync } from 'fs-extra'
 
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
-const safePostCssParser = require('postcss-safe-parser')
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+// const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
@@ -124,6 +123,14 @@ const optimization = {
             chunks: 'async',
             name: false,
           },
+          // cacheGroups: {
+          //   styles: {
+          //     name: 'styles',
+          //     test: /\.css$/,
+          //     chunks: 'all',
+          //     enforce: true,
+          //   },
+          // },
         }),
     minimizer: [
       new TerserPlugin({
@@ -150,16 +157,14 @@ const optimization = {
           },
         },
       }),
-      target !== 'node' &&
-        new OptimizeCSSAssetsPlugin({
-          cssProcessorOptions: {
-            parser: safePostCssParser,
-            map: {
-              inline: false,
-              annotation: true,
-            },
-          },
-        }),
+      // target !== 'node' &&
+      //   new OptimizeCSSAssetsPlugin({
+      //     cssProcessor: require('cssnano'),
+      //     cssProcessorPluginOptions: {
+      //       preset: ['default', { discardComments: { removeAll: true } }],
+      //     },
+      //     canPrint: true,
+      //   }),
     ].filter(Boolean),
   },
   dev: {
@@ -284,10 +289,11 @@ async function makeConfig() {
           use: [
             shouldExtractCSS && {
               loader: MiniCssExtractPlugin.loader,
+              options: {
+                hmr: process.env.NODE_ENV === 'development',
+              },
             },
-            !shouldExtractCSS && {
-              loader: 'style-loader',
-            },
+            !shouldExtractCSS && 'style-loader',
             'css-loader',
           ].filter(Boolean),
         },
@@ -346,7 +352,8 @@ async function makeConfig() {
 
       target !== 'node' && new webpack.IgnorePlugin(/electron-log/),
 
-      tsConfigExists && !isProd &&
+      tsConfigExists &&
+        !isProd &&
         new ForkTsCheckerWebpackPlugin({
           useTypescriptIncrementalApi: true,
         }),

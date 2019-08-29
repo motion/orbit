@@ -138,11 +138,9 @@ export class SelectableStore {
     }
 
     const nextActive = new Set<string | number>(nextFiltered)
-
     if (isEqual(this.active, nextActive)) {
       return
     }
-
     this.active = nextActive
     this.updateActiveAndKeyToIndex(next, false)
   }
@@ -305,13 +303,41 @@ export class SelectableStore {
     //   2: still select this row if they drag down for multiple, and therefore avoid mouseup
 
     if (this.props.sortable) {
+      if (this.sortableMouseDownIndex !== index) {
+        this.clearOnSelectOrSortWatchers()
+      }
+
       this.sortableMouseDownIndex = index
 
-      // finally, we also want to select this row once the pressDelay window has passed, for good UX
+      // ok now we want to trigger selection mode in two cases:
+      //  1. if they move their mouse more than distance
+      const start = [e.pageX, e.pageY]
+      const checkForDistanceSelect = e => {
+        if (this.isSorting && this.clearMouseMoveWatcher) {
+          return this.clearMouseMoveWatcher()
+        }
+        const cur = [e.pageX, e.pageY]
+        if (
+          Math.abs(cur[0] - start[0]) > 14 ||
+          Math.abs(cur[0] + start[0]) > 14 ||
+          Math.abs(cur[1] - start[1]) > 14 ||
+          Math.abs(cur[1] + start[1]) > 14
+        ) {
+          this.setRowActive(index)
+          this.clearOnSelectOrSortWatchers()
+        }
+      }
+      window.addEventListener('mousemove', checkForDistanceSelect)
+      this.clearMouseMoveWatcher = () => {
+        window.removeEventListener('mousemove', checkForDistanceSelect)
+      }
+
+      //  2. once the pressDelay window has passed, which may be same as #1 need to test
       this.sortableMouseDownTm = setTimeout(() => {
         // but only if we dont start sorting
         if (!this.isSorting) {
           this.setRowActive(index)
+          this.clearOnSelectOrSortWatchers()
         }
       }, selectDefined(this.props.pressDelay, defaultSortPressDelay) + 10)
     } else {
@@ -319,8 +345,14 @@ export class SelectableStore {
     }
   }
 
-  private onStopDragSelecting = () => {
+  private clearMouseMoveWatcher = null
+  private clearOnSelectOrSortWatchers = () => {
     clearTimeout(this.sortableMouseDownTm)
+    this.clearMouseMoveWatcher && this.clearMouseMoveWatcher()
+  }
+
+  private onStopDragSelecting = () => {
+    this.clearOnSelectOrSortWatchers()
     document.body.classList.remove('selectable-mouse-down')
     this.dragStartIndex = null
 
@@ -339,6 +371,9 @@ export class SelectableStore {
   }
 
   onHoverRow(index: number) {
+    // prevent race, this makes it not clear after initial multi-select w/sortable list
+    this.clearOnSelectOrSortWatchers()
+
     if (this.isSorting) {
       console.debug('Preventing selection while sorting')
       return

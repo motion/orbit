@@ -13,7 +13,8 @@ const backgroundStrong = lightBackground.darken(0.025)
 const backgroundStronger = lightBackground.darken(0.05)
 const backgroundStrongest = lightBackground.darken(0.075)
 
-export const light: ThemeObject = {
+export const light: ThemeObject = Object.freeze({
+  _name: 'light',
   alternates,
   cardShadow: [0, 6, 14, [0, 0, 0, 0.058]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
@@ -70,4 +71,4 @@ export const light: ThemeObject = {
     orbitInputBackgroundEditing: [0, 0, 0, 0.2],
     separatorBackground: backgroundStrong.setAlpha(0.5),
   }),
-}
+})

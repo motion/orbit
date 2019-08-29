@@ -2,6 +2,7 @@ import { Col, Scale, Space, SurfacePassProps, Theme, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
+import { fontProps } from '../../constants'
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
 import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
@@ -153,7 +154,7 @@ const HeadJoin = memo(() => {
   return (
     <View flex={1} width="100%" position="absolute" bottom="15%" alignItems="center">
       <FadeChild {...fadeUpProps} delay={500}>
-        <SurfacePassProps elevation={5} fontFamily="GT Eesti">
+        <SurfacePassProps elevation={5} {...fontProps.TitleFont}>
           <Theme name="orbitOneDark">
             <Scale size={useScreenVal(0.8, 1, 1.1)}>
               <Join

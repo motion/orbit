@@ -3,6 +3,7 @@ import { gloss, Paragraph, Space, Tag } from '@o/ui'
 import React from 'react'
 
 import componentNames from '../../tmp/componentNames.json'
+import { fontProps } from '../constants'
 import { linkProps } from '../LinkState'
 import { Navigation } from '../Navigation'
 import { Example } from '../pages/DocsPage/Example'
@@ -107,7 +108,7 @@ export const components = {
   blockquote: props => (
     <>
       <Paragraph
-        fontFamily="GT Eesti"
+        {...fontProps.TitleFont}
         padding={[8, 20, 0]}
         margin={20}
         borderLeft={theme => [2, theme.borderColor]}

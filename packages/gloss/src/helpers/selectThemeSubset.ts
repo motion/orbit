@@ -1,4 +1,5 @@
 import { ThemeObject } from '@o/css'
+
 import { ThemeSelect } from '../theme/Theme'
 
 type PartialTheme = Partial<ThemeObject>

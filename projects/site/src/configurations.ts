@@ -1,6 +1,6 @@
 import 'requestidlecallback-polyfill'
 
-import { configureHotKeys, configureUI, toColor } from '@o/ui'
+import { configureHotKeys, configureUI, debug, toColor } from '@o/ui'
 import { configureUseStore, debugUseStore, IS_STORE } from '@o/use-store'
 import { setConfig } from 'react-hot-loader'
 import ResizeObserver from 'resize-observer-polyfill'
@@ -18,6 +18,9 @@ function configure() {
   const hasConfigured = window['hasConfigured']
   window['hasConfigured'] = true
   if (hasConfigured) return
+
+  window['enableLog'] = false
+  window['debug'] = debug
 
   // required in production
   window['ResizeObserver'] = ResizeObserver

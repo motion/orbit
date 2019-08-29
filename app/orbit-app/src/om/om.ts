@@ -36,4 +36,11 @@ declare module 'overmind' {
   interface Config extends IConfig<typeof config> {}
 }
 
-export const om = window['om']
+export const om = new Proxy(
+  {},
+  {
+    get(_, key) {
+      return window['om'][key]
+    },
+  },
+)

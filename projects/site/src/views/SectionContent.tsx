@@ -43,7 +43,7 @@ export const SectionContent = ({
     >
       {outside}
       <SectionContentChrome flex={flex} {...props}>
-        <div style={{ display: 'flex', ...style }}>{children}</div>
+        <div style={{ display: 'flex', flexFlow: 'column', ...style }}>{children}</div>
       </SectionContentChrome>
     </Section>
   )

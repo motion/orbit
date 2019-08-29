@@ -105,6 +105,8 @@ export const ParallaxLayer = React.memo(
       <AnimatedView
         {...rest}
         style={{
+          display: 'flex',
+          flexFlow: 'column',
           position: 'absolute',
           backgroundSize: 'auto',
           backgroundRepeat: 'no-repeat',
@@ -280,6 +282,8 @@ export const Parallax = React.memo(
             onWheel={enabled ? state.stop : null}
             onTouchStart={enabled ? state.stop : null}
             style={{
+              display: 'flex',
+              flexFlow: 'column',
               WebkitOverflowScrolling: 'touch',
               WebkitTransform: START_TRANSLATE,
               MsTransform: START_TRANSLATE,
@@ -291,6 +295,8 @@ export const Parallax = React.memo(
               <SpringView
                 ref={contentRef}
                 style={{
+                  display: 'flex',
+                  flexFlow: 'column',
                   [horizontal ? 'height' : 'width']: '100%',
                   position: 'absolute',
                   overflow: 'hidden',

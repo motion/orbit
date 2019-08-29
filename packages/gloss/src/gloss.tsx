@@ -1,11 +1,4 @@
-import {
-  CSSPropertySet,
-  CSSPropertySetLoose,
-  cssString,
-  styleToClassName,
-  ThemeObject,
-  validCSSAttr,
-} from '@o/css'
+import { CSSPropertySet, CSSPropertySetLoose, cssString, styleToClassName, ThemeObject, validCSSAttr } from '@o/css'
 import { createElement, isValidElement, useEffect, useRef } from 'react'
 
 import { Config } from './config'

@@ -80,6 +80,8 @@ export const FadeChild = memo(
     const off = selectDefined(springProps.off, fadeContext.off, false)
     const springStyle = useSimpleFade({ shown, from, to, ...springProps, off })
     const styleFin = {
+      display: 'flex',
+      flexFlow: 'column',
       justifyContent: 'inherit',
       alignItems: 'inherit',
       ...(typeof style === 'function' ? style(springStyle) : style),
@@ -87,7 +89,17 @@ export const FadeChild = memo(
       ...(fullscreen && fullscreenStyle),
     }
     if (isTiny) {
-      return <div style={typeof style !== 'function' ? style : null}>{children}</div>
+      return (
+        <div
+          style={{
+            display: 'flex',
+            flexFlow: 'column',
+            ...(typeof style !== 'function' ? style : {}),
+          }}
+        >
+          {children}
+        </div>
+      )
     }
     return (
       <animated.div className={willAnimateOnHover ? `hover-will-transform` : null} style={styleFin}>

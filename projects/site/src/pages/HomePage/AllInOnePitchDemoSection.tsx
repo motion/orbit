@@ -1,6 +1,6 @@
 import { Button, Col, FullScreen, gloss, Image, Row, Space, useGetFn, useIntersectionObserver, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
-import { Inline } from 'gloss'
+import { Box, Inline } from 'gloss'
 import React, { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
 
@@ -19,6 +19,37 @@ import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 import { TitleTextSub } from './TitleTextSub'
 
 const SubSection = props => <Flex minWidth={200} alignItems="center" padding {...props} />
+
+const useIntersectedOnce = () => {
+  const ref = useRef(null)
+  const [val, setVal] = useState(false)
+  const entries = useIntersectionObserver({ ref })
+  const isIntersecting = entries && entries[0].isIntersecting
+  useEffect(() => {
+    if (isIntersecting && !val) {
+      setVal(true)
+    }
+  }, [val, isIntersecting])
+  return [ref, val]
+}
+
+const fastConfig = {
+  mass: 0.5,
+  tension: 150,
+  friction: 12,
+}
+
+const slowConfig = {
+  mass: 0.5,
+  tension: 120,
+  friction: 12,
+}
+
+const slowestConfig = {
+  mass: 0.5,
+  tension: 120,
+  friction: 12,
+}
 
 const Dot = gloss(Box, {
   borderRadius: 100,
@@ -107,37 +138,6 @@ const elements = [
     link: '/docs/grid',
   },
 ]
-
-const useIntersectedOnce = () => {
-  const ref = useRef(null)
-  const [val, setVal] = useState(false)
-  const entries = useIntersectionObserver({ ref })
-  const isIntersecting = entries && entries[0].isIntersecting
-  useEffect(() => {
-    if (isIntersecting && !val) {
-      setVal(true)
-    }
-  }, [val, isIntersecting])
-  return [ref, val]
-}
-
-const fastConfig = {
-  mass: 0.5,
-  tension: 150,
-  friction: 12,
-}
-
-const slowConfig = {
-  mass: 0.5,
-  tension: 120,
-  friction: 12,
-}
-
-const slowestConfig = {
-  mass: 0.5,
-  tension: 120,
-  friction: 12,
-}
 
 type AnimateTo = (config: any, delay: any) => (next: any, cancel: any) => any
 
@@ -490,6 +490,7 @@ export default function NeckSection() {
 
       <Page.Parallax speed={0.24} zIndex={-1}>
         <FullScreen
+          className="glow-one"
           opacity={0.22}
           transform={{ y: '-45%', x: '-35%', scale: 1.5 }}
           background="radial-gradient(circle closest-side, #F64097, transparent)"
@@ -498,6 +499,7 @@ export default function NeckSection() {
 
       <Page.Parallax speed={-0.4} zIndex={-1}>
         <FullScreen
+          className="glow-two"
           opacity={0.25}
           transform={{ y: '30%', x: '40%', scale: 1.68 }}
           background="radial-gradient(circle closest-side, #00E5FF, transparent)"

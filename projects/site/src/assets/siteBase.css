@@ -22,6 +22,11 @@ body {
   text-rendering: optimizelegibility;
 }
 
+.main-contents {
+  display: flex;
+  flex-flow: column;
+}
+
 .will-load .main-contents {
   opacity: 1;
   transition: all ease 500ms !important;
@@ -72,15 +77,6 @@ small {
 
 img {
   border: none;
-}
-
-.parallaxLayer {
-  pointer-events: none;
-  position: relative;
-}
-
-.parallaxLayer > * {
-  pointer-events: auto;
 }
 
 @keyframes orbit {

@@ -3,9 +3,9 @@ import { gloss, Paragraph, Space, Tag } from '@o/ui'
 import React from 'react'
 
 import componentNames from '../../tmp/componentNames.json'
+import { linkProps } from '../LinkState'
 import { Navigation } from '../Navigation'
 import { Example } from '../pages/DocsPage/Example'
-import { linkProps } from "../LinkState";
 import { CodeBlock } from './CodeBlock'
 import { IntroText } from './IntroText'
 import { Key } from './Key'
@@ -69,7 +69,7 @@ export const components = {
     </>
   ),
 
-  a: props => {
+  a: ({ tagName: _ignore, ...props }) => {
     return <a {...linkProps(props.href)} {...props} />
   },
 

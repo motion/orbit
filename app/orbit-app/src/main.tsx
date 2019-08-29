@@ -2,6 +2,7 @@ import '../public/styles/base.css'
 import 'react-hot-loader'
 
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
+import { Provider } from 'overmind-react'
 
 import { IS_ELECTRON } from './constants'
 import { sleep } from './helpers'
@@ -96,7 +97,15 @@ async function main() {
 
   // start om first so it inits before showing
   // console.time('loadOm')
-  const { om } = require('./om/om')
+  const { createOvermind } = require('overmind')
+  const { config } = require('./om/om')
+  const om = createOvermind(config, {
+    logProxies: true,
+  })
+
+  // for now we are hacking around overmind
+  window['om'] = om
+
   await om.initialized
   // console.timeEnd('loadOm')
 
@@ -126,7 +135,11 @@ async function startApp(forceRefresh: boolean | 'mode' = false) {
   // re-require for hmr to capture new value
   const { OrbitRoot } = require('./OrbitRoot')
 
-  let elements = <OrbitRoot />
+  let elements = (
+    <Provider value={window['om']}>
+      <OrbitRoot />
+    </Provider>
+  )
 
   if (window.location.search.indexOf('react.profile') > 0) {
     elements = (

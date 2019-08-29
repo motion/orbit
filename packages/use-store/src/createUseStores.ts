@@ -2,7 +2,7 @@ import { useCurrentComponent } from '@o/automagical'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 
 import { setupTrackableStore } from './setupTrackableStore'
-import { useForceUpdate } from './useStore'
+import { useForceUpdate } from './useForceUpdate'
 
 // for use in children
 // tracks every store used and updates if necessary

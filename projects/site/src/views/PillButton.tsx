@@ -9,7 +9,7 @@ export function PillButton({ children, ...props }: ButtonProps) {
       sizeRadius={100}
       background="linear-gradient(to right, #B65138, #BE0DBE)"
       color={theme => theme.background}
-      {...fontProps.GTEesti}
+      {...fontProps.TitleFont}
       fontWeight={600}
       fontSize={12}
       letterSpacing={3}

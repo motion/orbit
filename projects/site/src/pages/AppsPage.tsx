@@ -1,20 +1,6 @@
-import {
-  Col,
-  FullScreen,
-  fuzzyFilter,
-  gloss,
-  Grid,
-  HotKeys,
-  Image,
-  SimpleText,
-  SizedSurface,
-  Space,
-  SubTitle,
-  Theme,
-  Title,
-  View,
-} from '@o/ui'
+import { Col, FullScreen, fuzzyFilter, gloss, Grid, HotKeys, Image, SimpleText, SizedSurface, Space, SubTitle, Theme, Title, View } from '@o/ui'
 import { createStoreContext } from '@o/use-store'
+import { Box } from 'gloss'
 import { mount, route } from 'navi'
 import React, { memo, useCallback, useMemo } from 'react'
 
@@ -237,7 +223,7 @@ const FAQItem = ({ main, paragraphs, question }) => {
             alpha={0.65}
             fontWeight={100}
             sizeLineHeight={1.25}
-            {...fontProps.Colfax}
+            {...fontProps.BodyFont}
           >
             {p}
           </Title>
@@ -299,7 +285,7 @@ const AppSearch = memo(() => {
   )
 })
 
-const AppItem = gloss({
+const AppItem = gloss(Box, {
   width: dim,
   height: dim,
   borderRadius: 10,

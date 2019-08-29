@@ -3,7 +3,7 @@ import * as Mobx from 'mobx'
 import { automagicConfig } from './AutomagicalConfiguration'
 import { ReactionRejectionError, ReactionTimeoutError } from './constants'
 import { getReactionOptions, log, logGroup } from './helpers'
-import { SHARED_REJECTION_ERROR } from './react'
+import { SHARED_REJECTION_ERROR } from './SHARED_REJECTION_ERROR'
 import { EffectCallback, ReactionHelpers, ReactionOptions } from './types'
 
 const voidFn = () => void 0

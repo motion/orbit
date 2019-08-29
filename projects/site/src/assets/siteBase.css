@@ -247,21 +247,6 @@ select {
     'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
-body,
-body * {
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  flex-flow: column;
-  align-items: stretch;
-  box-sizing: border-box;
-  /* flex-wrap: nowrap;*/
-  flex-shrink: 0;
-  -webkit-flex-flow: column;
-  -webkit-align-items: stretch;
-  outline: 0;
-}
-
 style {
   display: none;
 }

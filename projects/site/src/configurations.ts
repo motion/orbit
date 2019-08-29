@@ -27,7 +27,7 @@ function configure() {
     defaultProps: {
       title: {
         selectable: true,
-        ...fontProps.GTEesti,
+        ...fontProps.TitleFont,
       },
     },
   })

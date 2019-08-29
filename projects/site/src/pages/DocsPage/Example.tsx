@@ -1,4 +1,5 @@
 import { Button, Card, Col, gloss, Icon, Loading, Row, SimpleText, Space, View } from '@o/ui'
+import { Box } from 'gloss'
 import { capitalize } from 'lodash'
 import React, { createElement, isValidElement, memo, Suspense, useRef, useState } from 'react'
 
@@ -131,7 +132,7 @@ export const Example = memo(
   },
 )
 
-const AccidentalScrollPrevent = gloss({
+const AccidentalScrollPrevent = gloss(Box, {
   position: 'absolute',
   top: 0,
   left: 0,

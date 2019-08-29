@@ -18,6 +18,46 @@ import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 import { TitleTextSub } from './TitleTextSub'
 
+const SubSection = props => <Flex minWidth={200} alignItems="center" padding {...props} />
+
+const Dot = gloss(Box, {
+  borderRadius: 100,
+  width: 9,
+  height: 9,
+  border: [5, 'transparent'],
+  margin: [0, 10],
+  background: [255, 255, 255, 0.5],
+  opacity: 0.5,
+  cursor: 'pointer',
+  transition: 'all ease 300ms',
+
+  active: {
+    opacity: 1,
+  },
+
+  '&:hover': {
+    opacity: 0.8,
+  },
+})
+
+const CenterText = props => (
+  <Paragraph
+    {...{
+      selectable: true,
+      sizeLineHeight: 1.2,
+      size: 1.15,
+      alpha: 0.68,
+      textAlign: 'center',
+    }}
+    {...props}
+  />
+)
+
+const Flex = gloss(View, {
+  position: 'relative',
+  flex: 1,
+})
+
 const nextStyle = {
   opacity: 0,
   transform: `translate3d(20px,0,0)`,
@@ -466,47 +506,3 @@ export default function NeckSection() {
     </Fade.FadeProvide>
   )
 }
-
-const Dot = gloss({
-  borderRadius: 100,
-  width: 9,
-  height: 9,
-  border: [5, 'transparent'],
-  margin: [0, 10],
-  background: [255, 255, 255, 0.5],
-  opacity: 0.5,
-  cursor: 'pointer',
-  transition: 'all ease 300ms',
-
-  active: {
-    opacity: 1,
-  },
-
-  '&:hover': {
-    opacity: 0.8,
-  },
-})
-
-const CenterText = gloss(
-  props => (
-    <Paragraph
-      {...{
-        selectable: true,
-        sizeLineHeight: 1.2,
-        size: 1.15,
-        alpha: 0.68,
-      }}
-      {...props}
-    />
-  ),
-  {
-    textAlign: 'center',
-  },
-)
-
-const Flex = gloss(View, {
-  position: 'relative',
-  flex: 1,
-})
-
-const SubSection = gloss(props => <Flex minWidth={200} alignItems="center" padding {...props} />)

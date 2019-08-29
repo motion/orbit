@@ -17,7 +17,7 @@ const style = {
   flexWrap: 'inherit',
   alignItems: 'inherit',
   justifyContent: 'inherit',
-}
+} as const
 
 export const SectionContent = ({
   outside,
@@ -43,7 +43,7 @@ export const SectionContent = ({
     >
       {outside}
       <SectionContentChrome flex={flex} {...props}>
-        <div style={style as any}>{children}</div>
+        <div style={{ display: 'flex', ...style }}>{children}</div>
       </SectionContentChrome>
     </Section>
   )

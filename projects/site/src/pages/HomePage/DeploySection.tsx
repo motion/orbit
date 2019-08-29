@@ -90,7 +90,7 @@ export default function ShoulderSection() {
 
             <Col space flex={2} minWidth={300} maxWidth={340}>
               <FadeChild delay={500}>
-                <ParagraphIntro {...fontProps.GTEesti} sizeLineHeight={1.1} size={1.5}>
+                <ParagraphIntro {...fontProps.TitleFont} sizeLineHeight={1.1} size={1.5}>
                   From idea to deploy - you control the data, the code that runs it, and where it
                   runs.
                 </ParagraphIntro>

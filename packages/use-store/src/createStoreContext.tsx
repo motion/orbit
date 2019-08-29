@@ -1,6 +1,7 @@
 import React, { createContext, useContext } from 'react'
 
-import { unwrapProxy, useStore, UseStoreOptions } from './useStore'
+import { unwrapProxy } from './unwrapProxy'
+import { useStore, UseStoreOptions } from './useStore'
 
 // Just unwraps the store so it doesn't keep tracking observables on accident
 // makes it easier to create/pass through context

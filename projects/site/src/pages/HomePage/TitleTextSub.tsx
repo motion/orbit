@@ -11,7 +11,7 @@ export const TitleTextSub = forwardRef<any, TextProps>((props, ref) => (
       sizeLineHeight={1.35}
       fontWeight={300}
       alpha={0.65}
-      {...fontProps.Colfax}
+      {...fontProps.BodyFont}
       {...props}
     />
   </View>

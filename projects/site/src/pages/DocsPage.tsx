@@ -1,5 +1,5 @@
 import { BorderRight, Button, Col, gloss, List, Portal, Row, Sidebar, Space } from '@o/ui'
-import { createStoreContext, useForceUpdate, useReaction } from '@o/use-store'
+import { useForceUpdate, useReaction } from '@o/use-store'
 import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
@@ -21,32 +21,9 @@ import DocsStart from './DocsPage/DocsStart.mdx'
 import { Example } from './DocsPage/Example'
 import { DocsPageHeader } from './DocsPageHeader'
 import { docsNavigate, loadDocsPage, navTm, preloadItem } from './docsPageHelpers'
+import { DocsStoreContext } from './DocsStore'
 import { NotFoundPage } from './NotFoundPage'
 import { useStickySidebar } from './useStickySidebar'
-
-const getInitialIndex = () => {
-  const initialPath = window.location.pathname.replace('/docs/', '')
-  return initialPath ? docsItems.all.findIndex(x => x['id'] === initialPath) : 1
-}
-
-class DocsStore {
-  initialIndex = getInitialIndex()
-  search = ''
-  section = 'all'
-
-  setSearch = next => {
-    this.search = next
-    this.initialIndex = 0
-  }
-
-  setSection = next => {
-    this.section = next
-  }
-
-  toggleSection = val => this.setSection(this.section === val ? 'all' : val)
-}
-
-export const DocsStoreContext = createStoreContext(DocsStore)
 
 const itemProps = {
   hideBorder: true,
@@ -349,7 +326,7 @@ function DocsChromeSimple({ children }) {
           Back to Docs
         </Button>
       </Row>
-      {children}
+      <Col padding>{children}</Col>
     </>
   )
 }

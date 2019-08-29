@@ -1,12 +1,12 @@
 @font-face {
   font-family: 'GTEesti';
-  src: url('./GT-Eesti-Display-Thin.eot');
-  src: url('./GT-Eesti-Display-Thin.eot') format('embedded-opentype'),
-    url('./GT-Eesti-Display-Thin.woff2') format('woff2'),
-    url('./GT-Eesti-Display-Thin.woff') format('woff'),
-    url('./GT-Eesti-Display-Thin.ttf') format('truetype');
-  font-weight: 300;
-  font-style: 300;
+  src: url('./GT-Eesti-Display-Bold.eot');
+  src: url('./GT-Eesti-Display-Bold.eot') format('embedded-opentype'),
+    url('./GT-Eesti-Display-Bold.woff2') format('woff2'),
+    url('./GT-Eesti-Display-Bold.woff') format('woff'),
+    url('./GT-Eesti-Display-Bold.ttf') format('truetype');
+  font-weight: 500;
+  font-style: 500;
 }
 
 @font-face {
@@ -22,11 +22,11 @@
 
 @font-face {
   font-family: 'GTEesti';
-  src: url('./GT-Eesti-Display-Bold.eot');
-  src: url('./GT-Eesti-Display-Bold.eot') format('embedded-opentype'),
-    url('./GT-Eesti-Display-Bold.woff2') format('woff2'),
-    url('./GT-Eesti-Display-Bold.woff') format('woff'),
-    url('./GT-Eesti-Display-Bold.ttf') format('truetype');
-  font-weight: 500;
-  font-style: 500;
+  src: url('./GT-Eesti-Display-Thin.eot');
+  src: url('./GT-Eesti-Display-Thin.eot') format('embedded-opentype'),
+    url('./GT-Eesti-Display-Thin.woff2') format('woff2'),
+    url('./GT-Eesti-Display-Thin.woff') format('woff'),
+    url('./GT-Eesti-Display-Thin.ttf') format('truetype');
+  font-weight: 300;
+  font-style: 300;
 }

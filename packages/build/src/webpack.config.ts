@@ -1,16 +1,15 @@
 import * as LernaProject from '@lerna/project'
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 import * as Fs from 'fs'
+import { pathExistsSync } from 'fs-extra'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-import { pathExistsSync } from 'fs-extra'
 
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
-const safePostCssParser = require('postcss-safe-parser')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -152,13 +151,11 @@ const optimization = {
       }),
       target !== 'node' &&
         new OptimizeCSSAssetsPlugin({
-          cssProcessorOptions: {
-            parser: safePostCssParser,
-            map: {
-              inline: false,
-              annotation: true,
-            },
+          cssProcessor: require('cssnano'),
+          cssProcessorPluginOptions: {
+            preset: ['default', { discardComments: { removeAll: true } }],
           },
+          canPrint: true,
         }),
     ].filter(Boolean),
   },
@@ -346,7 +343,8 @@ async function makeConfig() {
 
       target !== 'node' && new webpack.IgnorePlugin(/electron-log/),
 
-      tsConfigExists && !isProd &&
+      tsConfigExists &&
+        !isProd &&
         new ForkTsCheckerWebpackPlugin({
           useTypescriptIncrementalApi: true,
         }),

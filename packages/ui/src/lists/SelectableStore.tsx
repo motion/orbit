@@ -400,6 +400,7 @@ export class SelectableStore {
   }
 
   private scrollToIndex(index: number) {
+    console.log('this.listRef', this.listRef)
     if (!this.listRef) return
     if (index < 0) return
     if (!isDefined(index)) return

@@ -1,7 +1,7 @@
 import { VariableSizeList } from '@o/react-window'
 import * as ReactWindow from '@o/react-window'
 import { gloss } from 'gloss'
-import React, { memo, RefObject } from 'react'
+import React, { forwardRef, memo, RefObject } from 'react'
 import { VariableSizeListProps } from 'react-window'
 
 import { useNodeSize } from '../hooks/useNodeSize'
@@ -21,20 +21,21 @@ export type DynamicListProps = Omit<VariableSizeListProps, 'itemSize' | 'height'
   height?: number
   width?: number
   disableMeasure?: boolean
-  listRef?: RefObject<DynamicListControlled>
 }
 
-export const DynamicList = memo(({ disableMeasure, ...props }: DynamicListProps) => {
-  const { ref, width, height } = useNodeSize({
-    disable: disableMeasure,
-  })
+export const DynamicList = forwardRef(
+  memo(({ disableMeasure, ...props }: DynamicListProps, listRef) => {
+    const { ref, width, height } = useNodeSize({
+      disable: disableMeasure,
+    })
 
-  return (
-    <DynamicListChrome nodeRef={ref}>
-      <DynamicSizeList ref={props.listRef} width={width} height={height} {...props} />
-    </DynamicListChrome>
-  )
-})
+    return (
+      <DynamicListChrome nodeRef={ref}>
+        <DynamicSizeList ref={listRef} width={width} height={height} {...props} />
+      </DynamicListChrome>
+    )
+  }),
+)
 
 const DynamicListChrome = gloss(View, {
   overflow: 'hidden',

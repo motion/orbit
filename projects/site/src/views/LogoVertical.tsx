@@ -43,7 +43,7 @@ export const LogoVertical = memo(
       >
         <BrandMark id="orbit-mark" />
         <Space size={12} />
-        <BrandWords fill={theme.color} width={1441 * 0.068} height={442 * 0.068} />
+        <BrandWords fill={theme.color} width={1441 * 0.08} height={372 * 0.08} />
       </View>
     )
   },
@@ -80,7 +80,9 @@ export const BrandMark = memo((props: any) => {
   )
 })
 
-let cleanBrand = words
+const wordsLines = `${words}`.split('\n')
+wordsLines.splice(15, 4)
+const cleanBrand = wordsLines.join('')
 
 export const BrandWords = memo(({ fill, ...props }: any) => {
   const theme = useTheme()

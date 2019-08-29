@@ -6,8 +6,8 @@ export const fontProps = {
   GTEesti: {
     fontFamily: 'GT Eesti',
   },
-  Nunito: {
-    fontFamily: 'Nunito Sans',
+  Colfax: {
+    fontFamily: 'Colfax',
   },
 }
 

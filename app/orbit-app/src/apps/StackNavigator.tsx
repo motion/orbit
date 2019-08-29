@@ -119,7 +119,6 @@ export class StackNavigatorStore {
     const [state, setState] = useUserState<StackNavState>(id, {
       stack: [],
     })
-    console.log('were seeing something else', { ...this.props }, state, setState)
     return {
       state,
       setState,

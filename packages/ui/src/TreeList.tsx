@@ -1,11 +1,12 @@
 import { arrayMove } from '@o/react-sortable-hoc'
 import { createStoreContext } from '@o/use-store'
 import { ScopedState } from '@o/utils'
-import React, { Suspense, useCallback, useEffect, useRef } from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useRef } from 'react'
 
 import { Button } from './buttons/Button'
 import { Config } from './helpers/configureUI'
 import { filterCleanObject } from './helpers/filterCleanObject'
+import { memoIsEqualDeep } from './helpers/memoHelpers'
 import { useDeepEqualState } from './hooks/useDeepEqualState'
 import { useGet } from './hooks/useGet'
 import { List, ListProps } from './lists/List'
@@ -314,18 +315,26 @@ async function loadTreeListItemProps(item?: TreeItem): Promise<ListItemProps> {
 const findAttribute = (item: TreeItem, key: string) =>
   (item.attributes && item.attributes.find(x => x.value === key).value) || ''
 
-export function TreeList(props: TreeListProps) {
-  return (
-    <Suspense fallback={<Loading />}>
-      <TreeListInner {...props} />
-    </Suspense>
-  )
-}
+export const TreeList = memoIsEqualDeep(
+  (props: TreeListProps) => {
+    return (
+      <Suspense fallback={<Loading />}>
+        <TreeListInner {...props} />
+      </Suspense>
+    )
+  },
+  {
+    simpleCompareKeys: {
+      items: true,
+    },
+  },
+)
 
 function TreeListInner(props: TreeListProps) {
   const { use, onChange, ...rest } = props
   const internal = useCreateTreeList(use ? false : 'state', props)
   const useTree = use || internal
+  console.log('useTree', useTree)
   const { currentItem, items } = useTree.state
   const [loadedItems, setLoadedItems] = useDeepEqualState<ListItemProps[]>([])
   const getOnChange = useGet(onChange)

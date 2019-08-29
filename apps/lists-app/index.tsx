@@ -2,7 +2,7 @@ import { AppNavigator, AppStatusBar, AppViewProps, createApp, Editor, NavigatorP
 import { Breadcrumb, Breadcrumbs, Col, Dock, DockButton, ProvideTreeList, randomAdjective, randomNoun, StatusBarText, TreeList, useCreateTreeList, useDebounce, useTreeList, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import pluralize from 'pluralize'
-import React, { useCallback, useRef } from 'react'
+import React, { memo, useCallback, useRef } from 'react'
 
 import { API } from './api.node'
 
@@ -36,6 +36,8 @@ export function ListsAppIndex(props: NavigatorProps) {
     onEvent: 'enter',
   })
 
+  console.warn('redering index')
+
   return (
     <>
       <TreeList
@@ -54,11 +56,11 @@ export function ListsAppIndex(props: NavigatorProps) {
         <DockButton
           id="add"
           icon="plus"
-          onClick={() => {
+          onClick={useCallback(() => {
             treeList.addItem({
               name: `${capitalize(randomAdjective())} ${capitalize(randomNoun())}`,
             })
-          }}
+          }, [])}
         />
       </Dock>
     </>
@@ -121,7 +123,7 @@ function ListsAppMainFolder(props: AppViewProps) {
   )
 }
 
-function ListAppStatusBar() {
+const ListAppStatusBar = memo(() => {
   const treeList = useCreateTreeList(id)
   const numItems = treeList.state.currentItem.children
     ? treeList.state.currentItem.children.length
@@ -141,4 +143,4 @@ function ListAppStatusBar() {
       </StatusBarText>
     </AppStatusBar>
   )
-}
+})

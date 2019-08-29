@@ -28,7 +28,6 @@ export const OrbitHot = {
     this.appHandler = null
   },
   fileEnter(props: OrbitHotProps) {
-    log.verbose(`createHotHandler`, props)
     this.appHandler = entry => {
       const hotEntry = hot(props.module)(entry)
       return hotEntry

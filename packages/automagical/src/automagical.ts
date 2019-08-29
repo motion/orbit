@@ -66,7 +66,6 @@ function constructWithProps(Store: any, args: any[], props?: Object) {
   if (defaultProps) {
     for (const key in defaultProps) {
       if (typeof props[key] === 'undefined' && typeof defaultProps[key] !== 'undefined') {
-        console.log('setting it to', props[key], defaultProps[key])
         storeProps.props[key] = defaultProps[key]
       }
     }

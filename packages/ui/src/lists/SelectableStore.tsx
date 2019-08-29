@@ -316,12 +316,13 @@ export class SelectableStore {
         if (this.isSorting && this.clearMouseMoveWatcher) {
           return this.clearMouseMoveWatcher()
         }
+        // if we moved enough, consider it a select not sort
         const cur = [e.pageX, e.pageY]
         if (
-          Math.abs(cur[0] - start[0]) > 14 ||
-          Math.abs(cur[0] + start[0]) > 14 ||
-          Math.abs(cur[1] - start[1]) > 14 ||
-          Math.abs(cur[1] + start[1]) > 14
+          Math.abs(cur[0] - start[0]) > 16 ||
+          Math.abs(cur[0] + start[0]) > 16 ||
+          Math.abs(cur[1] - start[1]) > 16 ||
+          Math.abs(cur[1] + start[1]) > 16
         ) {
           this.setRowActive(index)
           this.clearOnSelectOrSortWatchers()

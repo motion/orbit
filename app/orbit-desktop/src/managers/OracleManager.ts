@@ -1,7 +1,7 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
-import { resolveObserveMany } from '@o/mediator'
-import { OracleWordsFound, OracleWordsFoundModel } from '@o/models'
+import { resolveObserveMany, MediatorServer } from '@o/mediator'
+import { OracleWordsFound, OracleWordsFoundModel, ToggleOrbitMainCommand } from '@o/models'
 import { Oracle, OracleMessageHandler, OracleMessages } from '@o/oracle'
 import { App, Desktop } from '@o/stores'
 import { throttle } from 'lodash'
@@ -21,7 +21,7 @@ type BoundsLike = {
 export class OracleManager {
   private oracle: Oracle
 
-  constructor() {
+  constructor(private mediatorServer: MediatorServer) {
     this.oracle = new Oracle({
       port: getGlobalConfig().ports.ocrBridge,
       onMessage: this.handleMessage,
@@ -48,10 +48,13 @@ export class OracleManager {
         Desktop.setState({ operatingSystem: { trayBounds: obj.value } })
         break
       case OracleMessages.trayClicked:
-        Desktop.setState({ operatingSystem: { trayClicked: Date.now() } })
+        if (obj.value.id === '0') {
+          this.mediatorServer.sendRemoteCommand(ToggleOrbitMainCommand)
+        }
+        Desktop.setState({ operatingSystem: { trayClicked: { at: Date.now(), ...obj.value } } })
         break
       case OracleMessages.trayHovered:
-        Desktop.setState({ operatingSystem: { trayHovered: Date.now() } })
+        Desktop.setState({ operatingSystem: { trayHovered: { at: Date.now(), ...obj.value } } })
         break
       case OracleMessages.mouseMoved:
         this.updateHoverState(obj.value.position)

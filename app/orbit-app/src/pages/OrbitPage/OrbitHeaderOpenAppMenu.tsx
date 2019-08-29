@@ -97,6 +97,7 @@ export const OrbitHeaderOpenAppMenu = memo(
                       icon="code"
                       circular
                       tooltip="Open in VSCode"
+                      margin={[-5, 0]}
                     />
                   </Row>
                 ),

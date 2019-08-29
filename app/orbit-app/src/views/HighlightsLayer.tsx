@@ -125,7 +125,7 @@ export class HighlightsLayer extends React.Component<Props, State> {
     const { highlights } = this.state
     return (
       <UI.View position="relative">
-        <UI.FullScreen ref={this.frameRef} pointerEvents="none" zIndex={-1}>
+        <UI.FullScreen nodeRef={this.frameRef} pointerEvents="none" zIndex={-1}>
           {highlights.map(({ x, y, width, height }, index) => {
             return (
               <Highlight

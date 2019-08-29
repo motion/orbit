@@ -122,7 +122,7 @@ export const OrbitAppsDrawer = memo(() => {
   return (
     <FullScreen pointerEvents="none" className="orbit-apps-drawer" zIndex={1000}>
       <Card
-        ref={frameRef}
+        nodeRef={frameRef}
         background={theme.backgroundStronger}
         boxShadow={[
           {

@@ -68,7 +68,7 @@ export function MonacoEditor({ width, height, noGutter, padding, ...props }: Mon
   return (
     <View
       background={background}
-      ref={node}
+      nodeRef={node}
       position="relative"
       overflow="hidden"
       width={width}

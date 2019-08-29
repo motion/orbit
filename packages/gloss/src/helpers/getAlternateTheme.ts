@@ -1,4 +1,3 @@
-import { toColor } from '@o/color'
 import { ThemeObject } from '@o/css'
 
 // this lets you do simple subsets using syntax:
@@ -52,9 +51,8 @@ function createAlternateTheme(theme: ThemeObject, alt: string): ThemeObject {
   const next = theme.alternates[alt]
   const altTheme = typeof next === 'function' ? next(theme) : next
 
+  // @ts-ignore
   return {
-    background: altTheme.background || toColor('#000'),
-    color: altTheme.color || toColor('#fff'),
     ...altTheme,
     _alternateName: alt,
     _isAlternate: true,

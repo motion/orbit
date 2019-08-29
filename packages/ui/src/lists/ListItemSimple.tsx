@@ -268,6 +268,7 @@ const ListItemInner = memoIsEqualDeep(function ListItemInner(props: ListItemSimp
 
   const hasAfterTitle = isDefined(props.afterTitle, afterHeaderElement)
   const altTheme = isSelected ? (isFocused ? 'selected' : 'selectedInactive') : null
+  console.log('it is', theme, isSelected)
 
   // its a lot easier at times to just get the props from the click event
   const handleClick = useCallback(

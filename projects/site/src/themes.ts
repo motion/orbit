@@ -11,7 +11,6 @@ const selectedTheme = KitThemes.light.alternates.selected as ThemeObject
 const transparent = 'transparent'
 
 const selectedMinimal = {
-  fontWeight: 800,
   ...colorize({
     color: selectedTheme.background,
     background: transparent,
@@ -24,7 +23,7 @@ const light = {
   ...KitThemes.light,
   alternates: {
     ...KitThemes.light.alternates,
-    selected: selectedMinimal,
+    selectedMinimal,
   },
   ...colorize({
     color: '#000',
@@ -35,7 +34,7 @@ const dark = {
   ...KitThemes.dark,
   alternates: {
     ...KitThemes.dark.alternates,
-    selected: selectedMinimal,
+    selectedMinimal,
   },
   ...colorize({
     background: '#111',
@@ -58,21 +57,6 @@ export const themes = {
     buttonBackground: buttonBackground,
     buttonBackgroundHover: buttonBackground.adjust(c => toColor(c).lighten(0.035)),
     color: '#fff',
-  }),
-
-  orbitOne: fromStyles({
-    background: '#fff',
-    color: colors.purple,
-  }),
-
-  orbitTwo: fromStyles({
-    background: colors.red,
-    color: colors.purple,
-  }),
-
-  orbitThree: fromStyles({
-    background: colors.purple,
-    color: colors.red,
   }),
 
   light,

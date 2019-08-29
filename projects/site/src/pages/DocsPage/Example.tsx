@@ -1,4 +1,4 @@
-import { Button, Card, Col, gloss, Icon, Loading, Row, SimpleText, Space, View } from '@o/ui'
+import { Button, Card, Col, gloss, Icon, Loading, Row, SimpleText, Space, useIntersectionObserver, View } from '@o/ui'
 import { Box } from 'gloss'
 import { capitalize } from 'lodash'
 import React, { createElement, isValidElement, memo, Suspense, useRef, useState } from 'react'
@@ -46,7 +46,19 @@ export const Example = memo(
 
     const exampleElement = isValidElement(examples[id]) ? examples[id] : createElement(examples[id])
 
-    const contents = (
+    const exampleRef = useRef()
+    const [hasIntersected, setHasIntersected] = useState(false)
+    useIntersectionObserver({
+      disable: hasIntersected,
+      ref: exampleRef,
+      onChange(entries) {
+        if (entries.some(x => x.isIntersecting)) {
+          setHasIntersected(true)
+        }
+      },
+    })
+
+    const contents = hasIntersected && (
       <Col space {...props}>
         {!onlySource && (
           <SubCard
@@ -85,54 +97,56 @@ export const Example = memo(
     )
 
     return (
-      <Suspense fallback={<Loading />}>
-        {chromeless ? (
-          <>{contents}</>
-        ) : (
-          <>
-            <Space />
-            <Card
-              elevation={1}
-              pad
-              titlePadding="sm"
-              background={theme => theme.backgroundStrong}
-              title={name || capitalize(id)}
-              afterTitle={
-                <Row space alignItems="center">
-                  {parentId && (
-                    <Button
-                      chromeless
-                      size={0.5}
-                      sizePadding={0}
-                      iconSize={12}
-                      icon="share"
-                      color={[150, 150, 150, 0.5]}
-                      tooltip="Open in own window"
-                      {...linkProps(`/docs/${parentId}/isolate/${id}`, { isExternal: true })}
+      <Col className="example" nodeRef={exampleRef}>
+        <Suspense fallback={<Loading />}>
+          {chromeless ? (
+            <>{contents}</>
+          ) : (
+            <>
+              <Space />
+              <Card
+                elevation={1}
+                pad
+                titlePadding="sm"
+                background={theme => theme.backgroundStrong}
+                title={name || capitalize(id)}
+                afterTitle={
+                  <Row space alignItems="center">
+                    {parentId && (
+                      <Button
+                        chromeless
+                        size={0.5}
+                        sizePadding={0}
+                        iconSize={12}
+                        icon="share"
+                        color={[150, 150, 150, 0.5]}
+                        tooltip="Open in own window"
+                        {...linkProps(`/docs/${parentId}/isolate/${id}`, { isExternal: true })}
+                      />
+                    )}
+                    <Icon
+                      size={16}
+                      name="code"
+                      color={showSource ? '#B65138' : [150, 150, 150, 0.5]}
                     />
-                  )}
-                  <Icon
-                    size={16}
-                    name="code"
-                    color={showSource ? '#B65138' : [150, 150, 150, 0.5]}
-                  />
-                </Row>
-              }
-              onClickTitle={() => {
-                setShowSource(!showSource)
-              }}
-            >
-              {contents}
-            </Card>
-            <Space size="xl" />
-          </>
-        )}
-      </Suspense>
+                  </Row>
+                }
+                onClickTitle={() => {
+                  setShowSource(!showSource)
+                }}
+              >
+                {contents}
+              </Card>
+              <Space size="xl" />
+            </>
+          )}
+        </Suspense>
+      </Col>
     )
   },
 )
 
-const AccidentalScrollPrevent = gloss(Box, {
+const AccidentalScrollPrevent = gloss<any>(Box, {
   position: 'absolute',
   top: 0,
   left: 0,

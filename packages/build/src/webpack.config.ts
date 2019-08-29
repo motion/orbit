@@ -10,7 +10,7 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+// const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
@@ -123,6 +123,14 @@ const optimization = {
             chunks: 'async',
             name: false,
           },
+          // cacheGroups: {
+          //   styles: {
+          //     name: 'styles',
+          //     test: /\.css$/,
+          //     chunks: 'all',
+          //     enforce: true,
+          //   },
+          // },
         }),
     minimizer: [
       new TerserPlugin({
@@ -149,14 +157,14 @@ const optimization = {
           },
         },
       }),
-      target !== 'node' &&
-        new OptimizeCSSAssetsPlugin({
-          cssProcessor: require('cssnano'),
-          cssProcessorPluginOptions: {
-            preset: ['default', { discardComments: { removeAll: true } }],
-          },
-          canPrint: true,
-        }),
+      // target !== 'node' &&
+      //   new OptimizeCSSAssetsPlugin({
+      //     cssProcessor: require('cssnano'),
+      //     cssProcessorPluginOptions: {
+      //       preset: ['default', { discardComments: { removeAll: true } }],
+      //     },
+      //     canPrint: true,
+      //   }),
     ].filter(Boolean),
   },
   dev: {
@@ -281,10 +289,11 @@ async function makeConfig() {
           use: [
             shouldExtractCSS && {
               loader: MiniCssExtractPlugin.loader,
+              options: {
+                hmr: process.env.NODE_ENV === 'development',
+              },
             },
-            !shouldExtractCSS && {
-              loader: 'style-loader',
-            },
+            !shouldExtractCSS && 'style-loader',
             'css-loader',
           ].filter(Boolean),
         },

@@ -21,3 +21,5 @@ export const themes: { [key: string]: ThemeObject } = {
     separatorBackground: 'rgba(30,30,30)',
   }),
 }
+
+console.log('ok', light.alternates.selected)

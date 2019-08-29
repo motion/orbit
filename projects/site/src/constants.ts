@@ -5,9 +5,11 @@ export const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgen
 export const fontProps = {
   TitleFont: {
     fontFamily: 'GTEesti',
+    WebkitFontSmoothing: 'initial',
   },
   BodyFont: {
     fontFamily: 'Colfax',
+    WebkitFontSmoothing: 'antialiased',
   },
 }
 

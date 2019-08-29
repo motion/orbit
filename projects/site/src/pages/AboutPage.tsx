@@ -4,6 +4,7 @@ import { mount, route } from 'navi'
 import React from 'react'
 
 import confettiImage from '../../public/images/confetti.jpg'
+import { fontProps } from '../constants'
 import { scrollTo } from '../etc/helpers'
 import { Header } from '../Header'
 import { useScreenSize } from '../hooks/useScreenSize'
@@ -55,7 +56,7 @@ export function AboutPage() {
                     <Space size={35} />
                     <PassProps
                       titleProps={{ fontSize: 18, padding: [10, 20], textAlign: 'right' }}
-                      fontFamily="GTEesti"
+                      {...fontProps.TitleFont}
                     >
                       <ListItemSimple
                         onClick={() => {

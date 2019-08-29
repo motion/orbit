@@ -138,7 +138,7 @@ export function OrbitMainWindow() {
     <OrbitAppWindow
       windowId={windowId}
       locationQuery={{
-        ...(process.env.NODE_ENV === 'production' && {
+        ...(process.env.NODE_ENV !== 'development' && {
           renderMode: 'react.concurrent',
         }),
       }}

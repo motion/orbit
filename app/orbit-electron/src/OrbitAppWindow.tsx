@@ -79,7 +79,7 @@ export function OrbitAppWindow({
     id: windowId,
     ...locationQuery,
   }
-  const url = `${Config.urls.server}?${stringify(query)}`
+  const url = `${Config.urls.server}/?${stringify(query)}`
 
   const size = windowProps.size || store.size
 

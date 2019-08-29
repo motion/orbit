@@ -1,11 +1,5 @@
 import { spy } from 'mobx'
 
-if (typeof window !== 'undefined') {
-  if (localStorage.getItem('enableLog')) {
-    debug(+localStorage.getItem('enableLog')! || 0)
-  }
-}
-
 let spyOff: any = null
 export function debug(level?: number) {
   let next = 0
@@ -26,6 +20,12 @@ export function debug(level?: number) {
     spyOff = spy(logMobxEvent)
   } else {
     spyOff && spyOff()
+  }
+}
+
+if (typeof window !== 'undefined') {
+  if (localStorage.getItem('enableLog')) {
+    debug(+localStorage.getItem('enableLog')! || 0)
   }
 }
 

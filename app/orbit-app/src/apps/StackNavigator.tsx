@@ -119,11 +119,12 @@ export class StackNavigatorStore {
     const [state, setState] = useUserState<StackNavState>(id, {
       stack: [],
     })
+    console.log('were seeing something else', { ...this.props }, state, setState)
     return {
       state,
       setState,
     }
-  }, this)
+  })
 
   get items() {
     return this.props.items
@@ -165,6 +166,9 @@ export class StackNavigatorStore {
     item: StackItem,
     { forcePush = false, replaceAll = false }: { forcePush?: boolean; replaceAll?: boolean } = {},
   ) {
+    if (!this.hooks.setState) {
+      debugger
+    }
     this.hooks.setState(current => {
       if (!current) return
       if (!current.stack) {

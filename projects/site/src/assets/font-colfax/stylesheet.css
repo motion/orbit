@@ -1,0 +1,35 @@
+@font-face {
+  font-family: 'Colfax';
+  src: url('./ColfaxWebBold.eot');
+  src: url('./ColfaxWebBold.eot?#iefix') format('embedded-opentype'),
+    url('./ColfaxWebBold.woff2') format('woff2'), url('ColfaxWebBold.woff') format('woff');
+  font-weight: 600;
+  font-style: 600;
+}
+
+@font-face {
+  font-family: 'Colfax';
+  src: url('./ColfaxWebMedium.eot');
+  src: url('./ColfaxWebMedium.eot?#iefix') format('embedded-opentype'),
+    url('./ColfaxWebMedium.woff2') format('woff2'), url('./ColfaxWebMedium.woff') format('woff');
+  font-weight: 500;
+  font-style: 500;
+}
+
+@font-face {
+  font-family: 'Colfax';
+  src: url('./ColfaxWebRegular.eot');
+  src: url('./ColfaxWebRegular.eot?#iefix') format('embedded-opentype'),
+    url('./ColfaxWebRegular.woff2') format('woff2'), url('./ColfaxWebRegular.woff') format('woff');
+  font-weight: 400;
+  font-style: 400;
+}
+
+@font-face {
+  font-family: 'Colfax';
+  src: url('./ColfaxWebLight.eot');
+  src: url('./ColfaxWebLight.eot?#iefix') format('embedded-opentype'),
+    url('./ColfaxWebLight.woff2') format('woff2'), url('./ColfaxWebLight.woff') format('woff');
+  font-weight: 300;
+  font-style: 300;
+}

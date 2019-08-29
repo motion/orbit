@@ -3,7 +3,7 @@ html {
 }
 
 body {
-  font-family: 'Nunito Sans', 'system-ui', 'BlinkMacSystemFont', 'Helvetica Neue', 'Helvetica',
+  font-family: 'Colfax', 'system-ui', 'BlinkMacSystemFont', 'Helvetica Neue', 'Helvetica',
     sans-serif;
   margin: 0;
   padding: 0;
@@ -11,12 +11,15 @@ body {
   background: #000;
   font-size: 14px;
   line-height: 1.3rem;
-  font-weight: 300;
+  font-weight: 400;
   -webkit-overflow-scrolling: touch;
   -webkit-text-size-adjust: 100%;
-  font-kerning: auto;
   pointer-events: none;
   min-height: 100vh;
+
+  font-kerning: auto;
+  font-feature-settings: 'liga', 'kern';
+  text-rendering: optimizelegibility;
 }
 
 .will-load .main-contents {
@@ -541,9 +544,9 @@ main a:hover {
 
 .theme-dark .body-text,
 .theme-home .body-text {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .theme-light .body-text {
-  color: rgba(0, 0, 0, 0.8);
+  color: rgba(0, 0, 0, 0.9);
 }

@@ -1,4 +1,19 @@
-import { Col, FullScreen, fuzzyFilter, gloss, Grid, HotKeys, Image, SimpleText, SizedSurface, Space, SubTitle, Theme, Title, View } from '@o/ui'
+import {
+  Col,
+  FullScreen,
+  fuzzyFilter,
+  gloss,
+  Grid,
+  HotKeys,
+  Image,
+  SimpleText,
+  SizedSurface,
+  Space,
+  SubTitle,
+  Theme,
+  Title,
+  View,
+} from '@o/ui'
 import { createStoreContext } from '@o/use-store'
 import { mount, route } from 'navi'
 import React, { memo, useCallback, useMemo } from 'react'
@@ -222,7 +237,7 @@ const FAQItem = ({ main, paragraphs, question }) => {
             alpha={0.65}
             fontWeight={100}
             sizeLineHeight={1.25}
-            {...fontProps.Nunito}
+            {...fontProps.Colfax}
           >
             {p}
           </Title>

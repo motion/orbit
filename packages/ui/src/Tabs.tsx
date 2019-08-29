@@ -161,7 +161,7 @@ function TabsControlled({
           {label}
           {closable && (
             <CloseButton
-              ref={ref => (closeButton = ref)}
+              nodeRef={ref => (closeButton = ref)}
               onClick={() => {
                 if (isActive && onChange) {
                   const idx = keys.indexOf(id)

@@ -7,13 +7,6 @@ const titleProps = {
   selectable: true,
 }
 
-export const TitleText = forwardRef((props: TitleProps, ref) => (
-  <Title
-    ref={ref}
-    className="font-smooth"
-    selectable
-    sizeLineHeight={1.1}
-    {...titleProps}
-    {...props}
-  />
-))
+export const TitleText = (props: TitleProps) => (
+  <Title className="font-smooth" selectable sizeLineHeight={1.1} {...titleProps} {...props} />
+)

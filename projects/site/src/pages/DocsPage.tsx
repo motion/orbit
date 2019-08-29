@@ -192,7 +192,7 @@ const DocsPage = memo((props: { children?: any }) => {
             <Row id="main" className="main">
               {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
               <Col
-                ref={Fade.ref}
+                nodeRef={Fade.ref}
                 flex={1}
                 overflow="hidden"
                 className="content"

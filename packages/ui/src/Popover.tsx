@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { isEqual } from '@o/fast-compare'
 import { on } from '@o/utils'
-import { gloss, Theme, ThemeContext } from 'gloss'
+import { Box, gloss, Theme, ThemeContext } from 'gloss'
 import { Cancelable, debounce, isNumber, last, pick } from 'lodash'
 import * as React from 'react'
 import { animated, AnimatedProps } from 'react-spring'
@@ -114,7 +114,12 @@ export type PopoverProps = Omit<SizedSurfaceProps, 'background' | 'style'> & {
 
   /** Helps you see forgiveness zone */
   showForgiveness?: boolean
+
+  /** Get ref to the Popover class */
   popoverRef?: Function
+
+  /** Get ref to the popover element */
+  nodeRef?: Function
 
   /** Portal styling */
   portalStyle?: Object
@@ -445,14 +450,26 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
   setPopoverRef = (ref: HTMLElement) => {
     if (ref) {
       this.popoverRef = ref
-      if (this.props.popoverRef) {
-        this.props.popoverRef(ref)
+      if (this.props.nodeRef) {
+        this.props.nodeRef(ref)
       }
     }
   }
 
   componentDidMount() {
-    const { openOnClick, closeOnClick, closeOnClickAway, closeOnEsc, open, target } = this.props
+    const {
+      openOnClick,
+      closeOnClick,
+      closeOnClickAway,
+      closeOnEsc,
+      open,
+      target,
+      popoverRef,
+    } = this.props
+
+    if (popoverRef) {
+      popoverRef(this)
+    }
 
     if (openOnClick || closeOnClick || closeOnClickAway) {
       this.listenForClickAway()
@@ -949,7 +966,8 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
     const targetProps = {
       active: undefined,
       className: `${target.props['className'] || ''} popover-target`,
-      ref: this.targetRef,
+      nodeRef: this.targetRef,
+      // ref: this.targetRef,
     }
     if (this.props.passActive) {
       targetProps.active = this.showPopover
@@ -1047,7 +1065,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
       >
         {!!overlay && (
           <Overlay
-            ref={this.overlayRef}
+            nodeRef={this.overlayRef}
             isShown={showPopover && !closing}
             onClick={e => this.handleOverlayClick(e)}
             overlay={overlay}
@@ -1055,7 +1073,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
         )}
         <PopoverWrap
           {...popoverProps}
-          ref={this.setPopoverRef}
+          nodeRef={this.setPopoverRef}
           distance={distance}
           forgiveness={forgiveness}
           showForgiveness={showForgiveness}
@@ -1182,7 +1200,7 @@ const PopoverContainer = gloss<AnimatedDivProps & { isOpen?: boolean; isTouchabl
   },
 })
 
-const Overlay = gloss({
+const Overlay = gloss<any>(Box, {
   position: 'absolute',
   top: 0,
   left: 0,
@@ -1201,7 +1219,7 @@ const Overlay = gloss({
   background: overlay === true ? 'rgba(0,0,0,0.2)' : overlay,
 }))
 
-const PopoverWrap = gloss({
+const PopoverWrap = gloss<any>(Box, {
   position: 'absolute',
   pointerEvents: 'none',
   zIndex: -1,

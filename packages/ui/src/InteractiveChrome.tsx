@@ -39,7 +39,7 @@ export const InteractiveChrome = ({ resizingSides, parent, ...rest }: Interactiv
     <FullScreen
       className="interactive-chrome"
       pointerEvents="none"
-      ref={parentRef}
+      nodeRef={parentRef}
       onMouseEnter={measure}
     >
       <FloatingChrome

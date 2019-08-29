@@ -1,6 +1,6 @@
 import { isDefined, selectDefined } from '@o/utils'
 import { Base, Theme } from 'gloss'
-import React, { forwardRef, useRef } from 'react'
+import React, { useRef } from 'react'
 
 import { BorderBottom } from './Border'
 import { splitCollapseProps, useCollapse } from './Collapsable'
@@ -82,7 +82,7 @@ export const useSectionProps = useProps
 // more padded above title
 const defaultTitlePaddingAmount = [1.5, 1, 0]
 
-export const Section = forwardRef(function Section(direct: SectionProps, ref) {
+export function Section(direct: SectionProps) {
   const allProps = useProps(direct)
   const [collapseProps, props] = splitCollapseProps(allProps)
   const {
@@ -127,6 +127,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     className,
     droppable,
     onDrop,
+    nodeRef,
     ...viewProps
   } = props
   const sectionInnerRef = useRef<HTMLElement>(null)
@@ -209,7 +210,6 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   return (
     <SizedSurface
       className={`ui-section ${className}`}
-      ref={ref}
       hoverStyle={null}
       activeStyle={null}
       sizeRadius={bordered ? 1 : 0}
@@ -237,6 +237,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       size={size}
       fontSize="inherit"
       lineHeight="inherit"
+      nodeRef={nodeRef}
     >
       {showTitleAbove && titleEl}
       <Reset>
@@ -244,7 +245,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         <Col
           maxHeight={maxInnerHeight}
           flex={1}
-          ref={composeRefs(sectionInnerRef, innerRef)}
+          nodeRef={composeRefs(sectionInnerRef, innerRef)}
           space={spaceSize}
           spaceAround={spaceAround}
           flexDirection={flexDirection}
@@ -264,4 +265,4 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       {below}
     </SizedSurface>
   )
-})
+}

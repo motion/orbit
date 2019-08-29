@@ -183,7 +183,6 @@ export class FilterToken extends PureComponent {
       background: 'red' || background || theme.backgroundStrong,
       color: '#fff',
     })
-    console.log('filterTheme', filterTheme)
 
     return (
       <Theme theme={filterTheme}>
@@ -197,7 +196,7 @@ export class FilterToken extends PureComponent {
               tabIndex={-1}
               onMouseDown={this.onMouseDown}
               focused={this.props.focused}
-              ref={this.setRef}
+              nodeRef={this.setRef}
               size={0.8}
               sizeIcon={1.2}
               icon="chevron-down"

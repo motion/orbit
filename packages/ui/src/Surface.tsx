@@ -2,7 +2,7 @@ import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
 import Gloss, { Base, Box, gloss, propsToStyles, psuedoStyleTheme, useTheme } from 'gloss'
-import React, { forwardRef, HTMLProps, useEffect, useMemo, useState } from 'react'
+import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
@@ -194,7 +194,7 @@ type ThroughProps = Pick<
 const acceptsIcon = child =>
   child && child.type.acceptsProps && child.type.acceptsProps.icon === true
 
-export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
+export function Surface(direct: SurfaceProps) {
   const props = SizedSurfacePropsContext.useProps(direct) as SurfaceProps
   const crumb = useBreadcrumb()
   const [tooltipState, setTooltipState] = useState({ id: null, show: false })
@@ -474,7 +474,6 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
 
   const surfaceFrameProps: SurfaceFrameProps = {
     className: `${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`,
-    ref,
     subTheme,
     lineHeight,
     padding,
@@ -504,7 +503,7 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
       </IconPropsContext.Provider>
     </SizedSurfacePropsContext.Reset>
   )
-})
+}
 
 const hasChildren = (children: React.ReactNode) => {
   if (Array.isArray(children)) {

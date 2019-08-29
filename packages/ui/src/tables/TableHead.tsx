@@ -12,7 +12,14 @@ import { ContextMenu } from '../ContextMenu'
 import { Interactive } from '../Interactive'
 import { SimpleText } from '../text/SimpleText'
 import { DataColumns, DataType } from '../types'
-import { DEFAULT_ROW_HEIGHT, SortOrder, TableColumnOrder, TableColumnSizes, TableOnColumnResize, TableOnSort } from './types'
+import {
+  DEFAULT_ROW_HEIGHT,
+  SortOrder,
+  TableColumnOrder,
+  TableColumnSizes,
+  TableOnColumnResize,
+  TableOnSort,
+} from './types'
 import { isPercentage, normaliseColumnWidth } from './utils'
 
 const TableHeaderArrow = gloss(SimpleText, {
@@ -191,7 +198,7 @@ class TableHeadColumn extends React.PureComponent<{
         height={height}
         width={width}
         onClick={sortable === true ? this.onClick : undefined}
-        ref={this.setRef}
+        nodeRef={this.setRef}
       >
         {children}
       </TableHeadColumnContainer>

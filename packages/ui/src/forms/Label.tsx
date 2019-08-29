@@ -3,7 +3,9 @@ import { HTMLProps } from 'react'
 
 import { SimpleText, SimpleTextProps } from '../text/SimpleText'
 
-export const Label = gloss<SimpleTextProps & HTMLProps<HTMLLabelElement>>(SimpleText)
+export type LabelProps = SimpleTextProps & HTMLProps<HTMLLabelElement>
+
+export const Label = gloss<LabelProps>(SimpleText)
 
 Label.defaultProps = {
   tagName: 'label',

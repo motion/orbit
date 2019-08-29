@@ -52,14 +52,13 @@ Page.Parallax = ({
   )
 }
 
-Page.Content = forwardRef((props: SectionContentProps, ref) => {
+Page.Content = (props: SectionContentProps) => {
   const parallax = useProps()
   const zIndex = parallax.zIndex + +(props.zIndex || 0) + 2
   const siteStore = useSiteStore()
   const isTiny = useIsTiny()
   return (
     <SectionContent
-      forwardRef={ref}
       className="page-content"
       height={siteStore.sectionHeight * (props.pages || 1)}
       paddingTop={30}
@@ -73,7 +72,7 @@ Page.Content = forwardRef((props: SectionContentProps, ref) => {
       }}
     />
   )
-})
+}
 
 Page.Background = ({ speed = 0, ...props }: ViewProps & { speed?: number }) => {
   const { zIndex, offset } = useProps()

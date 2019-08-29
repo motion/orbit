@@ -1,4 +1,4 @@
-import React, { forwardRef, isValidElement } from 'react'
+import React, { isValidElement } from 'react'
 
 import { ListItem, ListItemProps } from './lists/ListItem'
 import { Popover, PopoverProps } from './Popover'
@@ -10,41 +10,42 @@ export type MenuProps = PopoverProps & {
   scrollable?: ColProps['scrollable']
 }
 
-export const Menu = forwardRef(
-  (
-    { items, borderRadius = 8, maxHeight = 450, scrollable = 'y', children, ...props }: MenuProps,
-    ref,
-  ) => {
-    return (
-      <Popover
-        ref={ref}
-        popoverTheme="tooltip"
-        openOnClick
-        closeOnClickAway
-        closeOnClick
-        width={300}
-        background
+export const Menu = ({
+  items,
+  borderRadius = 8,
+  maxHeight = 450,
+  scrollable = 'y',
+  children,
+  ...props
+}: MenuProps) => {
+  return (
+    <Popover
+      popoverTheme="tooltip"
+      openOnClick
+      closeOnClickAway
+      closeOnClick
+      width={300}
+      background
+      borderRadius={borderRadius}
+      elevation={4}
+      {...props}
+    >
+      <Col
+        scrollable={scrollable}
+        overflow="hidden"
         borderRadius={borderRadius}
-        elevation={4}
-        {...props}
+        flex={1}
+        maxHeight={maxHeight}
+        elevation={3}
       >
-        <Col
-          scrollable={scrollable}
-          overflow="hidden"
-          borderRadius={borderRadius}
-          flex={1}
-          maxHeight={maxHeight}
-          elevation={3}
-        >
-          {children ||
-            items.map((item, index) => {
-              if (isValidElement(item)) {
-                return item
-              }
-              return <ListItem key={item['id'] || index} {...item as any} />
-            })}
-        </Col>
-      </Popover>
-    )
-  },
-)
+        {children ||
+          items.map((item, index) => {
+            if (isValidElement(item)) {
+              return item
+            }
+            return <ListItem key={item['id'] || index} {...item as any} />
+          })}
+      </Col>
+    </Popover>
+  )
+}

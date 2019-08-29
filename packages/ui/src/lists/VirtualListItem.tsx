@@ -40,7 +40,7 @@ export class VirtualListItemInner extends React.Component<VirtualListItemProps<a
   render() {
     const { realIndex, ItemView, forwardRef, ...rest } = this.props
     const View = ItemView || ListItem
-    return <View ref={forwardRef} index={realIndex} {...rest} />
+    return <View nodeRef={forwardRef} index={realIndex} {...rest} />
   }
 }
 

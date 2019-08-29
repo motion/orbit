@@ -230,7 +230,7 @@ export const GridLayoutChildren = memo((props: GridLayoutPropsChildren) => {
     )
   }
   return (
-    <Contents ref={ref}>
+    <Contents nodeRef={ref}>
       <SimpleProvider value={gridStore}>{children}</SimpleProvider>
     </Contents>
   )

@@ -163,16 +163,13 @@ export type ListItemSimpleProps = Omit<SizedSurfaceProps, 'onClick'> &
 
 // this wrapper required for virtualization to measure/style */}
 // prevents hard re-renders on resize by taking out the style prop
-export const ListItemSimple = React.forwardRef(function ListItemSimple(
-  { style, ...listProps }: ListItemSimpleProps,
-  ref,
-) {
+export function ListItemSimple({ style, nodeRef, ...listProps }: ListItemSimpleProps) {
   return (
-    <div style={style} ref={ref as any}>
+    <div style={style} ref={nodeRef}>
       <ListItemInner {...listProps} />
     </div>
   )
-})
+}
 
 // TODO re-check if this memo is worth perf
 const ListItemInner = memoIsEqualDeep(function ListItemInner(props: ListItemSimpleProps) {

@@ -437,7 +437,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         overflow={viewProps.overflow}
         width={width}
         height={height}
-        ref={containerRef}
+        nodeRef={containerRef}
       >
         <TableHead
           columnOrder={columnOrder}

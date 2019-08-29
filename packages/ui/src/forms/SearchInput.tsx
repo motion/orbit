@@ -1,6 +1,6 @@
 import { selectDefined } from '@o/utils'
 import { gloss, useTheme } from 'gloss'
-import React, { forwardRef } from 'react'
+import React from 'react'
 
 import { Button, ButtonProps } from '../buttons/Button'
 import { FilterToken } from '../tables/FilterToken'
@@ -17,30 +17,26 @@ export type SearchInputProps = InputProps & {
   clearable?: boolean
 }
 
-export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(function SearchInput(
-  {
-    width = '100%',
-    before = null,
-    placeholder = null,
-    after = null,
-    actions = null,
-    filters = [],
-    onClickClear = null,
-    focusedToken = null,
-    filterProps = null,
-    value = null,
-    flex = null,
-    padding = 0,
-    clearable,
-    ...props
-  },
-  ref,
-) {
+export function SearchInput({
+  width = '100%',
+  before = null,
+  placeholder = null,
+  after = null,
+  actions = null,
+  filters = [],
+  onClickClear = null,
+  focusedToken = null,
+  filterProps = null,
+  value = null,
+  flex = null,
+  padding = 0,
+  clearable,
+  ...props
+}: SearchInputProps) {
   const clearVisible = typeof clearable === 'boolean' ? clearable : value && !!value.length
   const theme = useTheme()
   return (
     <Input
-      ref={ref}
       sizeRadius={selectDefined(theme.searchInputSizeRadius, 3)}
       flex={1}
       icon="search"
@@ -72,7 +68,7 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
       {...props}
     />
   )
-})
+}
 
 export const ClearButton = gloss<ButtonProps & { invisible?: boolean }>(Button, {
   opacity: 1,

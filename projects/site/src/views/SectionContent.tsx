@@ -1,5 +1,5 @@
-import { gloss } from 'gloss'
 import { View, ViewProps } from '@o/ui'
+import { gloss } from 'gloss'
 import React from 'react'
 
 import * as Constants from '../constants'
@@ -39,7 +39,7 @@ export const SectionContent = ({
       height={height}
       flex={flex}
       minHeight={minHeight}
-      ref={forwardRef}
+      nodeRef={forwardRef}
     >
       {outside}
       <SectionContentChrome flex={flex} {...props}>

@@ -20,7 +20,7 @@ export type TextProps = CSSPropertySetStrict &
     onStartEdit?: () => any
     onFinishEdit?: (value: string, event: any) => any
     onCancelEdit?: (value: string, event: any) => any
-    forwardRef?: React.RefObject<HTMLElement>
+    nodeRef?: React.RefObject<HTMLElement>
     ellipse?: boolean | number
     tagName?: string
     lines?: number
@@ -71,7 +71,7 @@ export class Text extends React.PureComponent<TextProps> {
   ref = React.createRef<HTMLDivElement>()
 
   get nodeRef() {
-    return this.props.forwardRef || this.ref
+    return this.props.nodeRef || this.ref
   }
 
   get node() {

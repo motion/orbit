@@ -1,6 +1,6 @@
 import { selectDefined } from '@o/utils'
 import { gloss } from 'gloss'
-import React, { forwardRef, isValidElement } from 'react'
+import React, { isValidElement } from 'react'
 
 import { BorderBottom } from './Border'
 import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
@@ -64,81 +64,75 @@ export type TitleRowSpecificProps = ThemeableProps &
 export type TitleRowProps = Omit<RowProps, 'size' | 'children'> & TitleRowSpecificProps
 
 export const TitleRow = themeable(
-  forwardRef(
-    (
-      {
-        before,
-        borderSize = 1,
-        bordered,
-        after,
-        size = 'md',
-        subTitle,
-        backgrounded,
-        below,
-        above,
-        icon,
-        title,
-        children,
-        titleProps,
-        space,
-        selectable,
-        ...allProps
-      }: TitleRowProps,
-      ref,
-    ) => {
-      const scale = useScale()
-      const iconSize = 32 * scale
-      const spaceSize = getSpaceSize(selectDefined(space, size))
-      const [collapseProps, rowProps] = splitCollapseProps(allProps)
-      const collapse = useCollapse(collapseProps)
-      const titleElement =
-        !!title &&
-        (isValidElement(title) ? (
-          title
-        ) : (
-            <Title size={size} selectable={selectable} ellipse {...titleProps}>
-              {title}
-            </Title>
-          ))
+  ({
+    before,
+    borderSize = 1,
+    bordered,
+    after,
+    size = 'md',
+    subTitle,
+    backgrounded,
+    below,
+    above,
+    icon,
+    title,
+    children,
+    titleProps,
+    space,
+    selectable,
+    ...allProps
+  }: TitleRowProps) => {
+    const scale = useScale()
+    const iconSize = 32 * scale
+    const spaceSize = getSpaceSize(selectDefined(space, size))
+    const [collapseProps, rowProps] = splitCollapseProps(allProps)
+    const collapse = useCollapse(collapseProps)
+    const titleElement =
+      !!title &&
+      (isValidElement(title) ? (
+        title
+      ) : (
+        <Title size={size} selectable={selectable} ellipse {...titleProps}>
+          {title}
+        </Title>
+      ))
 
-      return (
-        <TitleRowChrome
-          onDoubleClick={(collapse.isCollapsable && collapse.toggle) || undefined}
-          background={backgrounded ? titleRowBg : null}
-          ref={ref}
-          space={space}
-          {...rowProps}
-        >
-          {above}
-          <Row alignItems="center" space={size}>
-            {collapse.isCollapsable && <CollapseArrow useCollapse={collapse} />}
-            {before}
-            {typeof icon === 'string' ? (
-              <Icon alignSelf="center" name={icon} size={iconSize} />
-            ) : React.isValidElement(icon) ? (
-              React.cloneElement(icon as any, { size: iconSize })
-            ) : (
-                  icon || null
-                )}
-            <Col space={spaceSize} flex={1} alignItems="flex-start">
-              {titleElement}
-              {!!subTitle && (
-                <SubTitle selectable={selectable} ellipse marginBottom={0}>
-                  {subTitle}
-                </SubTitle>
-              )}
-              {children}
-            </Col>
-            <Row alignItems="center" space>
-              {after}
-            </Row>
+    return (
+      <TitleRowChrome
+        onDoubleClick={(collapse.isCollapsable && collapse.toggle) || undefined}
+        background={backgrounded ? titleRowBg : null}
+        space={space}
+        {...rowProps}
+      >
+        {above}
+        <Row alignItems="center" space={size}>
+          {collapse.isCollapsable && <CollapseArrow useCollapse={collapse} />}
+          {before}
+          {typeof icon === 'string' ? (
+            <Icon alignSelf="center" name={icon} size={iconSize} />
+          ) : React.isValidElement(icon) ? (
+            React.cloneElement(icon as any, { size: iconSize })
+          ) : (
+            icon || null
+          )}
+          <Col space={spaceSize} flex={1} alignItems="flex-start">
+            {titleElement}
+            {!!subTitle && (
+              <SubTitle selectable={selectable} ellipse marginBottom={0}>
+                {subTitle}
+              </SubTitle>
+            )}
+            {children}
+          </Col>
+          <Row alignItems="center" space>
+            {after}
           </Row>
-          {below}
-          {bordered && <BorderBottom height={borderSize} />}
-        </TitleRowChrome>
-      )
-    },
-  ),
+        </Row>
+        {below}
+        {bordered && <BorderBottom height={borderSize} />}
+      </TitleRowChrome>
+    )
+  },
 )
 
 const titleRowBg = theme => theme.backgroundStrong

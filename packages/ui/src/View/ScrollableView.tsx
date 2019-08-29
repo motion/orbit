@@ -1,6 +1,6 @@
 import { isDefined } from '@o/utils'
 import { gloss } from 'gloss'
-import React, { forwardRef } from 'react'
+import React from 'react'
 
 import { PaddedView } from './PaddedView'
 import { ScrollableViewProps } from './types'
@@ -18,7 +18,7 @@ const isOnlyChildrenDefined = props => {
   return true
 }
 
-export const ScrollableView = forwardRef(function ScrollableView(props: ScrollableViewProps, ref) {
+export function ScrollableView(props: ScrollableViewProps) {
   // likely not great pattern, was testing spacing elements using descendent selectors
   if (isOnlyChildrenDefined(props)) {
     return <>{props.children}</>
@@ -64,7 +64,6 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
 
   return (
     <ScrollableChrome
-      ref={ref}
       scrollable={scrollable}
       scrollTop={scrollTop}
       scrollLeft={scrollLeft}
@@ -76,7 +75,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
       {content}
     </ScrollableChrome>
   )
-})
+}
 
 const ScrollableChrome = gloss<ScrollableViewProps>(View, {
   boxSizing: 'content-box',

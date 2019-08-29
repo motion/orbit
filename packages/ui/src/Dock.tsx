@@ -27,18 +27,16 @@ export const DockStoreContext = createStoreContext(DockStore)
 
 export type DockProps = RowProps
 
-export const Dock = memo(
-  forwardRef((props: DockProps, ref) => {
-    const dockStore = useStore(DockStore)
-    return (
-      <DockStoreContext.SimpleProvider value={dockStore}>
-        <Flipper flipKey={dockStore.key}>
-          <Row ref={ref} position="absolute" bottom={20} right={20} zIndex={100000000} {...props} />
-        </Flipper>
-      </DockStoreContext.SimpleProvider>
-    )
-  }),
-)
+export const Dock = memo((props: DockProps) => {
+  const dockStore = useStore(DockStore)
+  return (
+    <DockStoreContext.SimpleProvider value={dockStore}>
+      <Flipper flipKey={dockStore.key}>
+        <Row position="absolute" bottom={20} right={20} zIndex={100000000} {...props} />
+      </Flipper>
+    </DockStoreContext.SimpleProvider>
+  )
+})
 
 // DockButton
 
@@ -52,7 +50,7 @@ export type DockButtonProps = ButtonProps & {
 const DockButtonPropsContext = createContextualProps<DockButtonProps>()
 export const DockButtonPassProps = DockButtonPropsContext.PassProps
 
-export const DockButton = forwardRef((props: DockButtonProps, ref) => {
+export const DockButton = (props: DockButtonProps) => {
   const { visible = true, id, label, labelProps, ...buttonProps } = DockButtonPropsContext.useProps(
     props,
   )
@@ -76,7 +74,6 @@ export const DockButton = forwardRef((props: DockButtonProps, ref) => {
         space={12}
       >
         <Button
-          ref={ref}
           size="xl"
           width={40}
           height={40}
@@ -103,7 +100,7 @@ export const DockButton = forwardRef((props: DockButtonProps, ref) => {
       </Row>
     </Flipped>
   )
-})
+}
 
 type TagLabelProps = TagProps & {
   arrowSize?: number

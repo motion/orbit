@@ -1,6 +1,6 @@
 import { isDefined, selectDefined } from '@o/utils'
 import { Theme, useThemeContext } from 'gloss'
-import React, { forwardRef, useCallback } from 'react'
+import React, { useCallback } from 'react'
 
 import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
 import { ListItemProps } from './lists/ListItem'
@@ -20,7 +20,7 @@ export type CardProps = SizedSurfaceSpecificProps &
     titlePadding?: Sizes
   }
 
-export const Card = forwardRef(function Card(props: CardProps, ref) {
+export function Card(props: CardProps) {
   const [collapseProps, rest] = splitCollapseProps(props)
   const {
     padding,
@@ -62,7 +62,6 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
   return (
     <Theme alt={isSelected ? 'selected' : alt || null}>
       <SizedSurface
-        ref={ref}
         data-is="Card"
         borderWidth={1}
         overflow={isDefined(scrollable, maxHeight) ? 'hidden' : 'hidden'}
@@ -144,7 +143,7 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
       </SizedSurface>
     </Theme>
   )
-})
+}
 
 // @ts-ignore
 Card.accepts = {

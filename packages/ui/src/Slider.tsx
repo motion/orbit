@@ -77,7 +77,7 @@ export const Slider = memo((props: SliderProps) => {
   const height = rest.height || currentHeight
 
   return (
-    <SliderContainer height={height} ref={frameRef} {...rest}>
+    <SliderContainer height={height} nodeRef={frameRef} {...rest}>
       {React.Children.map(children, (child, index) => {
         if (!isValidElement(child)) {
           throw new Error(`Must pass <SliderPane /> to <Slider />`)

@@ -1,6 +1,6 @@
 import { isDefined } from '@o/utils'
 import { Box, gloss, Theme } from 'gloss'
-import React, { forwardRef, useCallback, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 
 import { useDraggable } from '../Draggable'
 import { ProvideFocus } from '../Focus'
@@ -54,7 +54,7 @@ export type ListItemProps = ListItemSimpleProps &
     showFullContent?: boolean
   }
 
-export const ListItem = forwardRef((props: ListItemProps, ref) => {
+export const ListItem = (props: ListItemProps) => {
   const {
     item,
     itemViewProps,
@@ -63,6 +63,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
     alt,
     draggable,
     showFullContent,
+    nodeRef,
     ...rest
   } = props
   const selectableStore = useSelectableStore()
@@ -159,7 +160,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
     <ProvideFocus focused={isEditing === true ? false : undefined}>
       <Theme alt={alt}>
         <ListItemSimple
-          ref={composeRefs(listItemRef, ref)}
+          ref={composeRefs(listItemRef, nodeRef)}
           {...itemProps}
           {...rest}
           onStartEdit={onStartEditCb}
@@ -177,7 +178,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
       </Theme>
     </ProvideFocus>
   )
-})
+}
 
 const Bottom = gloss(Box, {
   flexFlow: 'row',

@@ -2,7 +2,7 @@ import { isEqual } from '@o/fast-compare'
 import { createStoreContext, ensure, react, shallow, useReaction, useStore } from '@o/use-store'
 import { selectDefined } from '@o/utils'
 import { flatten } from 'lodash'
-import React, { forwardRef, HTMLProps, useCallback } from 'react'
+import React, { HTMLProps, Ref, useCallback } from 'react'
 
 import { Button } from '../buttons/Button'
 import { Section, SectionProps } from '../Section'
@@ -13,8 +13,9 @@ import { DataType } from '../types'
 import { FormField } from './FormField'
 import { InputType } from './Input'
 
-export type FormProps<A extends FormFieldsObj> = Omit<SectionProps, 'children'> &
+export type FormProps<A extends FormFieldsObj> = Omit<SectionProps, 'children' | 'nodeRef'> &
   Pick<HTMLProps<HTMLFormElement>, 'action' | 'method' | 'target' | 'name'> & {
+    nodeRef?: Ref<HTMLFormElement>
     submitButton?: string | boolean
     fields?: A
     errors?: FormErrors<any>
@@ -197,22 +198,20 @@ const FormContext = createStoreContext(FormStore)
 export const useCreateForm = FormContext.useCreateStore
 export const useParentForm = FormContext.useStore
 
-export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(function Form(
-  {
-    children,
-    useForm: parentUseForm,
-    onSubmit,
-    errors,
-    fields,
-    submitButton,
-    action,
-    method,
-    target,
-    name,
-    ...sectionProps
-  },
-  ref,
-) {
+export function Form({
+  children,
+  useForm: parentUseForm,
+  onSubmit,
+  errors,
+  fields,
+  submitButton,
+  action,
+  method,
+  target,
+  name,
+  nodeRef,
+  ...sectionProps
+}: FormProps<FormFieldsObj>) {
   const formStore = parentUseForm ? useStore(parentUseForm) : useCreateForm({ fields, errors })
   const finalFields = formStore.props ? formStore.props.fields : undefined
   let elements = children
@@ -275,7 +274,7 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
 
   return (
     <form
-      ref={ref}
+      ref={nodeRef}
       style={{ display: 'contents' }}
       onSubmit={onSubmitInner}
       {...{ action, method, target, name }}
@@ -312,7 +311,7 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
       </FormContext.SimpleProvider>
     </form>
   )
-})
+}
 
 function useFormFields(store: FormStore, fields: FormFieldsObj): React.ReactNode {
   const values = useReaction(() => store.derivedValues, { defaultValue: store.derivedValues })

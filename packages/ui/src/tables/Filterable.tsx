@@ -271,7 +271,7 @@ export const FilterableSearchInput = memo(
     return (
       <SearchInput
         placeholder="Search..."
-        ref={useFilterable.ref}
+        nodeRef={useFilterable.ref}
         clearable={!!store.query}
         onClickClear={store.clear}
         focusedToken={store.focusedToken}

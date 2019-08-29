@@ -448,16 +448,15 @@ export class OrbitDesktopRoot {
             lastUsed++
             const server = global.mediatorServer as MediatorServer
             // mutate, bad for now but we'd need to refactor MediatorServer
-            this.electronMainTransport =
-              this.electronMainTransport ||
-              new WebSocketClientTransport(
-                'electron',
-                new ReconnectingWebSocket(`ws://localhost:${port}`, [], {
-                  WebSocket,
-                  minReconnectionDelay: 1,
-                }),
-              )
-            server.options.fallbackClient.options.transports.push(this.electronMainTransport)
+            const transport = new WebSocketClientTransport(
+              'electron',
+              new ReconnectingWebSocket(`ws://localhost:${port}`, [], {
+                WebSocket,
+                minReconnectionDelay: 1,
+              }),
+            )
+            this.electronMainTransport = this.electronMainTransport || transport
+            server.options.fallbackClient.options.transports.push(transport)
             if (this.resolveWaitForElectronMediator) {
               this.resolveWaitForElectronMediator()
               this.resolveWaitForElectronMediator = null

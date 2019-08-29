@@ -1,5 +1,11 @@
 import { spy } from 'mobx'
 
+if (typeof window !== 'undefined') {
+  if (localStorage.getItem('enableLog')) {
+    debug(+localStorage.getItem('enableLog')! || 0)
+  }
+}
+
 let spyOff: any = null
 export function debug(level?: number) {
   let next = 0
@@ -21,10 +27,6 @@ export function debug(level?: number) {
   } else {
     spyOff && spyOff()
   }
-}
-
-if (localStorage.getItem('enableLog')) {
-  debug(+localStorage.getItem('enableLog')! || 0)
 }
 
 function lightLog(val: any) {

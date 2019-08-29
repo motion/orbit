@@ -80,7 +80,7 @@ export class Oracle {
       throw new Error('Call `.stop()` first')
     }
     const binDir = this.options.binPath ? Path.join(this.options.binPath, '..') : RELEASE_PATH
-    log.info(`Start on port ${bin} at path ${binDir}`)
+    log.info(`Start oracle "${bin}" port "${this.options.port}" at path "${binDir}"`)
     try {
       this.process = spawn(Path.join(binDir, bin), [], {
         env: {

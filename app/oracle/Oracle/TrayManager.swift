@@ -42,8 +42,8 @@ class TrayManager {
         let button = statusItem.button!
         button.image = NSImage(named:NSImage.Name("tray"))
         button.action = #selector(self.handleTrayClick(_:))
-        
-        button.sendAction(on: [.leftMouseUp])
+        button.target = self
+
 
         // setup hover events
         let throttleHoverQueue = DispatchQueue.global(qos: .background)
@@ -78,6 +78,7 @@ class TrayManager {
             }
 
             self.lastHoverEvent = self.trayLocation
+            print("last location \(self.lastHoverEvent)")
 
             switch self.trayLocation {
             case "Out":
@@ -100,13 +101,14 @@ class TrayManager {
     }
 
     @objc func handleTrayClick(_ sender: Any?) {
-        print("trayLocation \(trayLocation)")
+        print("handleTrayClick \(trayLocation)")
         if trayLocation != "Out" {
             Socket.send(.trayClicked(id: trayLocation))
         }
     }
 
     func handleTrayHover(id: String) {
+        print("handleTrayHover \(id)")
         Socket.send(.trayHovered(id: id))
     }
     

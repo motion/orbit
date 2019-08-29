@@ -5,17 +5,9 @@ import { IS_ELECTRON } from '../../constants'
 import { useMenuStore } from './MenuStore'
 
 export function BrowserDebugTray({ children }: any) {
-  const menuStore = useMenuStore()
-
   if (IS_ELECTRON) {
     return children
   }
-
-  // set open the first menu by default for dev
-  React.useEffect(() => {
-    menuStore
-    // .setPinnedOpen(1, true)
-  })
 
   return (
     <Absolute top={0} left={0} right={0}>

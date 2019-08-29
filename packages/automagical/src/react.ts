@@ -1,10 +1,7 @@
 import Observable from 'zen-observable'
 
-import { ReactionRejectionError } from './constants'
 import { createReaction } from './createReaction'
 import { MagicalObject, ReactionHelpers, ReactionOptions } from './types'
-
-export const SHARED_REJECTION_ERROR = new ReactionRejectionError()
 
 export type UnwrapObservable<A> = A extends Observable<infer U> ? U : A
 

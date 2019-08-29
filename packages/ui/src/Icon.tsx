@@ -12,7 +12,7 @@ import { Tooltip } from './Tooltip'
 import { ViewProps } from './View/types'
 import { View } from './View/View'
 
-export { IconName }
+export { IconName } from '@blueprintjs/icons'
 
 export type IconProps = ViewProps & {
   size?: number

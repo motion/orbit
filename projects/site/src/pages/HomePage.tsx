@@ -137,6 +137,7 @@ function loadOnIntersect(LazyComponent) {
           <div
             className="intersect-div"
             style={{
+              display: 'flex',
               zIndex: 1000000000000,
               // background: 'red',
               width: 2,

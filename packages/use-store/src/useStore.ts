@@ -2,16 +2,18 @@ import { AutomagicStore, configureAutomagical, CurrentComponent, decorate, updat
 import { isEqual } from '@o/fast-compare'
 import { debounce } from 'lodash'
 import { _interceptReads, observable, observe, transaction } from 'mobx'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { config } from './configure'
 import { debugEmit } from './debugUseStore'
 import { dehydrate, hydrate, HydrationState } from './hydration'
-import { GET_STORE } from './mobxProxyWorm'
 import { queueUpdate, removeUpdate } from './queueUpdate'
 import { useTrackableStore } from './setupTrackableStore'
 import { ReactiveStore } from './Store'
+import { useForceUpdate } from './useForceUpdate'
 
+export { unwrapProxy } from './unwrapProxy'
+export { useForceUpdate } from './useForceUpdate'
 export {
   always,
   cancel,
@@ -80,10 +82,6 @@ export function createUsableStore<T, Props extends InferProps<T>>(
   StoreCache[hmrKey] = store
   StoreCacheInitialProps[hmrKey] = initialProps
   return store
-}
-
-export const unwrapProxy = (store: any) => {
-  return store ? store[GET_STORE] || store : store
 }
 
 // helpers for deep/shallow objects, which dont mess up types
@@ -476,11 +474,4 @@ export function useStoreDebug() {
   setTimeout(() => {
     component.__debug = false
   }, 1000)
-}
-
-export function useForceUpdate() {
-  const setState = useState(0)[1]
-  return useCallback(() => {
-    setState(Math.random())
-  }, [])
 }

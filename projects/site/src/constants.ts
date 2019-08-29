@@ -3,10 +3,10 @@ import { toColor } from '@o/ui'
 export const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
 export const fontProps = {
-  GTEesti: {
+  TitleFont: {
     fontFamily: 'GT Eesti',
   },
-  Colfax: {
+  BodyFont: {
     fontFamily: 'Colfax',
   },
 }

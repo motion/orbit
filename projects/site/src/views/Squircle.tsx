@@ -43,7 +43,7 @@ export const Squircle = ({
       margin,
     }}
   >
-    <animated.div style={{ ...style, zIndex: 2 }}>
+    <animated.div style={{ ...style, display: 'flex', flexFlow: 'column', zIndex: 2 }}>
       <View
         width={width}
         height={height}

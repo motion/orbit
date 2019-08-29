@@ -1,4 +1,5 @@
 import { gloss, Row, useTheme, View } from '@o/ui'
+import { Box } from 'gloss'
 import React from 'react'
 
 import { useSiteStore } from '../SiteStore'
@@ -29,22 +30,22 @@ const Square = gloss(View)
 
 const bg = (_, theme) => ({ background: theme.background })
 
-const Above = gloss({
+const Above = gloss(Box, {
   flex: 1,
   zIndex: 10,
 }).theme(bg)
 
-const Below = gloss({
+const Below = gloss(Box, {
   flex: 1,
   zIndex: 10,
 }).theme(bg)
 
-const Left = gloss({
+const Left = gloss(Box, {
   flex: 1,
   zIndex: 10,
 }).theme(bg)
 
-const Right = gloss({
+const Right = gloss(Box, {
   flex: 1,
   zIndex: 10,
 }).theme(bg)

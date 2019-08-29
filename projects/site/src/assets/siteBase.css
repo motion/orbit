@@ -22,6 +22,11 @@ body {
   text-rendering: optimizelegibility;
 }
 
+.main-contents {
+  display: flex;
+  flex-flow: column;
+}
+
 .will-load .main-contents {
   opacity: 1;
   transition: all ease 500ms !important;
@@ -72,15 +77,6 @@ small {
 
 img {
   border: none;
-}
-
-.parallaxLayer {
-  pointer-events: none;
-  position: relative;
-}
-
-.parallaxLayer > * {
-  pointer-events: auto;
 }
 
 @keyframes orbit {
@@ -245,21 +241,6 @@ textarea,
 select {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
     'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
-}
-
-body,
-body * {
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  flex-flow: column;
-  align-items: stretch;
-  box-sizing: border-box;
-  /* flex-wrap: nowrap;*/
-  flex-shrink: 0;
-  -webkit-flex-flow: column;
-  -webkit-align-items: stretch;
-  outline: 0;
 }
 
 style {

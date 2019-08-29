@@ -5,7 +5,7 @@ import { FadeChild } from '../views/FadeIn'
 import { Key } from '../views/Key'
 import { ListSubTitle } from '../views/ListSubTitle'
 import { SearchInput } from '../views/SearchInput'
-import { DocsStoreContext } from './DocsPage'
+import { DocsStoreContext } from './DocsStore'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 
 export const DocsPageHeader = memo(

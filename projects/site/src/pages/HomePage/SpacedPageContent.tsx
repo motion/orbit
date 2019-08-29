@@ -16,12 +16,12 @@ export const SpacedPageContent = forwardRef(
         space={useScreenHeightVal('xl', 'xxl')}
         {...props}
       >
-        <div style={{ flex: 1 }} />
+        <div style={{ display: 'flex', flex: 1 }} />
         <Col space="xl" alignItems="center">
           {header}
         </Col>
         {children}
-        <div style={{ flex: 1 }} />
+        <div style={{ display: 'flex', flex: 1 }} />
       </Col>
     )
   },

@@ -3,8 +3,8 @@ import React, { CSSProperties, useContext, useEffect, useImperativeHandle, useLa
 import { animated, config as configs, Controller, Globals, SpringConfig } from 'react-spring'
 import { useMemoOne } from 'use-memo-one'
 
-const { defaultElement: View, requestAnimationFrame } = Globals
-const AnimatedView = animated(View as any)
+const { defaultElement: SpringView, requestAnimationFrame } = Globals
+const AnimatedView = animated(SpringView as any)
 
 const ParentContext = React.createContext<any>(null)
 
@@ -105,6 +105,8 @@ export const ParallaxLayer = React.memo(
       <AnimatedView
         {...rest}
         style={{
+          display: 'flex',
+          flexFlow: 'column',
           position: 'absolute',
           backgroundSize: 'auto',
           backgroundRepeat: 'no-repeat',
@@ -274,12 +276,14 @@ export const Parallax = React.memo(
 
       return (
         <>
-          <View
+          <SpringView
             {...rest}
             // ref={containerRef}
             onWheel={enabled ? state.stop : null}
             onTouchStart={enabled ? state.stop : null}
             style={{
+              display: 'flex',
+              flexFlow: 'column',
               WebkitOverflowScrolling: 'touch',
               WebkitTransform: START_TRANSLATE,
               MsTransform: START_TRANSLATE,
@@ -288,9 +292,11 @@ export const Parallax = React.memo(
             }}
           >
             {ready && (
-              <View
-                nodeRef={contentRef}
+              <SpringView
+                ref={contentRef}
                 style={{
+                  display: 'flex',
+                  flexFlow: 'column',
                   [horizontal ? 'height' : 'width']: '100%',
                   position: 'absolute',
                   overflow: 'hidden',
@@ -302,9 +308,9 @@ export const Parallax = React.memo(
                 }}
               >
                 <ParentContext.Provider value={state}>{rest.children}</ParentContext.Provider>
-              </View>
+              </SpringView>
             )}
-          </View>
+          </SpringView>
           {!showAbsolute && <div style={{ height: state.space * pages }} />}
         </>
       )

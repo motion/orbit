@@ -7,7 +7,7 @@ import { useEffect, useLayoutEffect, useRef } from 'react'
 import { debugEmit } from './debugUseStore'
 import { mobxProxyWorm, ProxyWorm } from './mobxProxyWorm'
 import { queueUpdate, removeUpdate } from './queueUpdate'
-import { unwrapProxy } from './useStore'
+import { unwrapProxy } from './unwrapProxy'
 
 type TrackableStoreOptions = {
   component: any

@@ -1,6 +1,6 @@
 import { Button, Col, FullScreen, gloss, Image, Row, Space, useGetFn, useIntersectionObserver, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
-import { Inline } from 'gloss'
+import { Box, Inline } from 'gloss'
 import React, { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
 
@@ -17,6 +17,77 @@ import { TiltSquircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 import { TitleTextSub } from './TitleTextSub'
+
+const SubSection = props => <Flex minWidth={200} alignItems="center" padding {...props} />
+
+const useIntersectedOnce = () => {
+  const ref = useRef(null)
+  const [val, setVal] = useState(false)
+  const entries = useIntersectionObserver({ ref })
+  const isIntersecting = entries && entries[0].isIntersecting
+  useEffect(() => {
+    if (isIntersecting && !val) {
+      setVal(true)
+    }
+  }, [val, isIntersecting])
+  return [ref, val]
+}
+
+const fastConfig = {
+  mass: 0.5,
+  tension: 150,
+  friction: 12,
+}
+
+const slowConfig = {
+  mass: 0.5,
+  tension: 120,
+  friction: 12,
+}
+
+const slowestConfig = {
+  mass: 0.5,
+  tension: 120,
+  friction: 12,
+}
+
+const Dot = gloss(Box, {
+  borderRadius: 100,
+  width: 9,
+  height: 9,
+  border: [5, 'transparent'],
+  margin: [0, 10],
+  background: [255, 255, 255, 0.5],
+  opacity: 0.5,
+  cursor: 'pointer',
+  transition: 'all ease 300ms',
+
+  active: {
+    opacity: 1,
+  },
+
+  '&:hover': {
+    opacity: 0.8,
+  },
+})
+
+const CenterText = props => (
+  <Paragraph
+    {...{
+      selectable: true,
+      sizeLineHeight: 1.2,
+      size: 1.15,
+      alpha: 0.68,
+      textAlign: 'center',
+    }}
+    {...props}
+  />
+)
+
+const Flex = gloss(View, {
+  position: 'relative',
+  flex: 1,
+})
 
 const nextStyle = {
   opacity: 0,
@@ -67,37 +138,6 @@ const elements = [
     link: '/docs/grid',
   },
 ]
-
-const useIntersectedOnce = () => {
-  const ref = useRef(null)
-  const [val, setVal] = useState(false)
-  const entries = useIntersectionObserver({ ref })
-  const isIntersecting = entries && entries[0].isIntersecting
-  useEffect(() => {
-    if (isIntersecting && !val) {
-      setVal(true)
-    }
-  }, [val, isIntersecting])
-  return [ref, val]
-}
-
-const fastConfig = {
-  mass: 0.5,
-  tension: 150,
-  friction: 12,
-}
-
-const slowConfig = {
-  mass: 0.5,
-  tension: 120,
-  friction: 12,
-}
-
-const slowestConfig = {
-  mass: 0.5,
-  tension: 120,
-  friction: 12,
-}
 
 type AnimateTo = (config: any, delay: any) => (next: any, cancel: any) => any
 
@@ -450,6 +490,7 @@ export default function NeckSection() {
 
       <Page.Parallax speed={0.24} zIndex={-1}>
         <FullScreen
+          className="glow-one"
           opacity={0.22}
           transform={{ y: '-45%', x: '-35%', scale: 1.5 }}
           background="radial-gradient(circle closest-side, #F64097, transparent)"
@@ -458,6 +499,7 @@ export default function NeckSection() {
 
       <Page.Parallax speed={-0.4} zIndex={-1}>
         <FullScreen
+          className="glow-two"
           opacity={0.25}
           transform={{ y: '30%', x: '40%', scale: 1.68 }}
           background="radial-gradient(circle closest-side, #00E5FF, transparent)"
@@ -466,47 +508,3 @@ export default function NeckSection() {
     </Fade.FadeProvide>
   )
 }
-
-const Dot = gloss({
-  borderRadius: 100,
-  width: 9,
-  height: 9,
-  border: [5, 'transparent'],
-  margin: [0, 10],
-  background: [255, 255, 255, 0.5],
-  opacity: 0.5,
-  cursor: 'pointer',
-  transition: 'all ease 300ms',
-
-  active: {
-    opacity: 1,
-  },
-
-  '&:hover': {
-    opacity: 0.8,
-  },
-})
-
-const CenterText = gloss(
-  props => (
-    <Paragraph
-      {...{
-        selectable: true,
-        sizeLineHeight: 1.2,
-        size: 1.15,
-        alpha: 0.68,
-      }}
-      {...props}
-    />
-  ),
-  {
-    textAlign: 'center',
-  },
-)
-
-const Flex = gloss(View, {
-  position: 'relative',
-  flex: 1,
-})
-
-const SubSection = gloss(props => <Flex minWidth={200} alignItems="center" padding {...props} />)

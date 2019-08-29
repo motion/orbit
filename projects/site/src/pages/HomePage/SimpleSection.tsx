@@ -1,5 +1,6 @@
 import { Col, gloss, Icon, Row, Space, View } from '@o/ui'
 import { isDefined } from '@o/utils'
+import { Box } from 'gloss'
 import React from 'react'
 
 import { useScreenSize } from '../../hooks/useScreenSize'
@@ -91,7 +92,7 @@ const Badge = gloss(View, {
   // border: [1, theme.color.setAlpha(0.1)],
 }))
 
-const BadgeText = gloss({
+const BadgeText = gloss(Box, {
   transform: {
     y: '15%',
     x: '55%',

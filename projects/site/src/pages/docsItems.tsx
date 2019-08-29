@@ -4,7 +4,7 @@ import { fontProps } from '../constants'
 import { ListSubTitle } from '../views/ListSubTitle'
 
 const titleItem = {
-  titleProps: { size: 1.1, ...fontProps.Nunito, className: '' },
+  titleProps: { size: 1.1, ...fontProps.BodyFont, className: '' },
 }
 
 const guides = [
@@ -109,9 +109,8 @@ const uikit = [
   { id: 'statusbar', title: 'StatusBar', icon: 'bar', group: 'Toolbars' },
   { id: 'toolbar', title: 'Toolbar', icon: 'bottom' },
 
-  { id: 'form', title: 'Form', icon: 'form', group: 'Forms' },
+  { id: 'form', title: 'Forms', icon: 'form', group: 'Forms' },
   { id: 'flow', title: 'Flow + Form', icon: 'chevron-right', indent: 1 },
-  { id: 'form', title: 'Form Elements', icon: 'widget' },
   { id: 'select', title: 'Select', icon: 'multi-select', indent: 1 },
   { id: 'input', title: 'Input', icon: 'text-highlight', indent: 1 },
 
@@ -331,5 +330,12 @@ export const docsViews = {
     examplesSource: () => import('!raw-loader!./DocsPage/DocsBanner'),
     source: () => import('!raw-loader!@o/ui/src/Banner'),
     types: () => import('../../tmp/Banner.json'),
+  },
+  form: {
+    page: () => import('./DocsPage/DocsForm.mdx'),
+    examples: () => import('./DocsPage/DocsForm'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsForm'),
+    source: () => import('!raw-loader!@o/ui/src/forms/Form'),
+    types: () => import('../../tmp/Form.json'),
   },
 }

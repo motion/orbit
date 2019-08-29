@@ -107,7 +107,7 @@ export const components = {
   blockquote: props => (
     <>
       <Paragraph
-        fontFamily="GT Eesti"
+        fontFamily="GTEesti"
         padding={[8, 20, 0]}
         margin={20}
         borderLeft={theme => [2, theme.borderColor]}

@@ -1,5 +1,5 @@
 @font-face {
-  font-family: 'GT Eesti';
+  font-family: 'GTEesti';
   src: url('./GT-Eesti-Display-Thin.eot');
   src: url('./GT-Eesti-Display-Thin.eot') format('embedded-opentype'),
     url('./GT-Eesti-Display-Thin.woff2') format('woff2'),
@@ -10,7 +10,7 @@
 }
 
 @font-face {
-  font-family: 'GT Eesti';
+  font-family: 'GTEesti';
   src: url('./GT-Eesti-Display-Light.eot');
   src: url('./GT-Eesti-Display-Light.eot') format('embedded-opentype'),
     url('./GT-Eesti-Display-Light.woff2') format('woff2'),
@@ -21,7 +21,7 @@
 }
 
 @font-face {
-  font-family: 'GT Eesti';
+  font-family: 'GTEesti';
   src: url('./GT-Eesti-Display-Bold.eot');
   src: url('./GT-Eesti-Display-Bold.eot') format('embedded-opentype'),
     url('./GT-Eesti-Display-Bold.woff2') format('woff2'),

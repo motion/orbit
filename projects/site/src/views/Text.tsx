@@ -2,7 +2,7 @@ import { SimpleText } from '@o/ui'
 import { gloss } from 'gloss'
 
 export const Text = gloss(SimpleText, {
-  fontFamily: 'GT Eesti',
+  fontFamily: 'GTEesti',
 }).withConfig({
   defaultProps: {
     tagName: 'p',

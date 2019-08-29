@@ -153,7 +153,7 @@ const HeadJoin = memo(() => {
   return (
     <View flex={1} width="100%" position="absolute" bottom="15%" alignItems="center">
       <FadeChild {...fadeUpProps} delay={500}>
-        <SurfacePassProps elevation={5} fontFamily="GT Eesti">
+        <SurfacePassProps elevation={5} fontFamily="GTEesti">
           <Theme name="orbitOneDark">
             <Scale size={useScreenVal(0.8, 1, 1.1)}>
               <Join

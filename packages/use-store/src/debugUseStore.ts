@@ -50,7 +50,7 @@ const allStores = new Set()
 const sendStateUpdate = throttle(() => {
   const value = simpleObject(allStores)
   debugFns.forEach(fn => fn({ type: 'state', value }))
-})
+}, 100)
 
 export function debugEmit(event: UseStoreDebugEvent, options?: { debug?: boolean }) {
   const component: CurrentComponent = event['component']

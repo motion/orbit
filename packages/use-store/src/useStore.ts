@@ -127,6 +127,7 @@ type HooksObject = {
   __rerunHooks: () => any
   __setUpdater: Function
   __dispose?: Function
+  __stopCheckingPropRead?: Function
 }
 
 export function useHooks<A extends () => any>(hooks: A, store?: any): ReturnType<A> & HooksObject {
@@ -153,9 +154,6 @@ export function useHooks<A extends () => any>(hooks: A, store?: any): ReturnType
       }
     })
   }
-  for (const dispose of disposeReads) {
-    dispose()
-  }
 
   // why observable map? it triggers on key changes
   // and we will add new keys as promises throw/update
@@ -173,6 +171,11 @@ export function useHooks<A extends () => any>(hooks: A, store?: any): ReturnType
       },
       __setUpdater,
       __dispose,
+      __stopCheckingPropRead() {
+        for (const dispose of disposeReads) {
+          dispose()
+        }
+      },
     },
     {
       get(target, key) {
@@ -311,6 +314,7 @@ function useReactiveStore<A extends any>(
         const hook = store[key]
         if (hook && hook.__rerunHooks) {
           hook.__rerunHooks()
+          hook.__stopCheckingPropRead()
           allHooks.push(hook)
         }
       }

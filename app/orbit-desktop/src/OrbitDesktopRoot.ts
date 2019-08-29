@@ -131,6 +131,7 @@ export class OrbitDesktopRoot {
   resolveWaitForElectronMediator: Function | null = null
   databaseManager: DatabaseManager
   mediatorServer: MediatorServer
+  electronMainTransport: WebSocketClientTransport
   electronMediator: MediatorClient
   mediatorPort: number
 
@@ -272,19 +273,7 @@ export class OrbitDesktopRoot {
                 })
 
                 this.electronMediator = new MediatorClient({
-                  transports: [
-                    new WebSocketClientTransport(
-                      'orbit-desktop',
-                      new ReconnectingWebSocket(
-                        `ws://localhost:${Config.ports.electronMediators}`,
-                        [],
-                        {
-                          WebSocket,
-                          minReconnectionDelay: 1,
-                        },
-                      ),
-                    ),
-                  ],
+                  transports: [this.electronMainTransport],
                 })
               }
             },
@@ -455,23 +444,24 @@ export class OrbitDesktopRoot {
         (() => {
           let lastUsed = 0
           return resolveCommand(NewFallbackServerPortCommand, () => {
-            if (this.resolveWaitForElectronMediator) {
-              this.resolveWaitForElectronMediator()
-              this.resolveWaitForElectronMediator = null
-            }
             const port = Config.ports.electronMediators[lastUsed]
             lastUsed++
             const server = global.mediatorServer as MediatorServer
             // mutate, bad for now but we'd need to refactor MediatorServer
-            server.options.fallbackClient.options.transports.push(
+            this.electronMainTransport =
+              this.electronMainTransport ||
               new WebSocketClientTransport(
                 'electron',
                 new ReconnectingWebSocket(`ws://localhost:${port}`, [], {
                   WebSocket,
                   minReconnectionDelay: 1,
                 }),
-              ),
-            )
+              )
+            server.options.fallbackClient.options.transports.push(this.electronMainTransport)
+            if (this.resolveWaitForElectronMediator) {
+              this.resolveWaitForElectronMediator()
+              this.resolveWaitForElectronMediator = null
+            }
             return port
           })
         })(),

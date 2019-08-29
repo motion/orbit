@@ -318,10 +318,10 @@ export class SelectableStore {
         }
         const cur = [e.pageX, e.pageY]
         if (
-          Math.abs(cur[0] - start[0]) > 12 ||
-          Math.abs(cur[0] + start[0]) > 12 ||
-          Math.abs(cur[1] - start[1]) > 12 ||
-          Math.abs(cur[1] + start[1]) > 12
+          Math.abs(cur[0] - start[0]) > 14 ||
+          Math.abs(cur[0] + start[0]) > 14 ||
+          Math.abs(cur[1] - start[1]) > 14 ||
+          Math.abs(cur[1] + start[1]) > 14
         ) {
           this.setRowActive(index)
           this.clearOnSelectOrSortWatchers()

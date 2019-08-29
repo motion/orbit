@@ -1,9 +1,22 @@
 import { command, createApp, createStoreContext, save, useActiveSpace } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, Space, SpaceModel } from '@o/models'
-import { Button, Card, Col, Flow, FlowProvide, gloss, Icon, Paragraph, Scale, Text, Toolbar, useCreateFlow, useFlow, View } from '@o/ui'
+import {
+  Button,
+  Card,
+  Col,
+  Flow,
+  FlowProvide,
+  gloss,
+  Icon,
+  Paragraph,
+  Scale,
+  Text,
+  Toolbar,
+  useCreateFlow,
+  useFlow,
+  View,
+} from '@o/ui'
 import React, { useEffect } from 'react'
-
-import { om } from '../om/om'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
 import { SpaceEdit } from './SpacesApp'
 
@@ -34,7 +47,7 @@ class OnboardStore {
   }
 
   finishOnboard = async () => {
-    const space = om.state.spaces.activeSpace
+    const space = window['om'].state.spaces.activeSpace
     await save(SpaceModel, {
       ...space,
       onboarded: true,
@@ -47,7 +60,7 @@ class OnboardStore {
     //     hasOnboarded: true,
     //   },
     // })
-    om.actions.router.showAppPage({ id: 'apps' })
+    window['om'].actions.router.showAppPage({ id: 'apps' })
   }
 }
 

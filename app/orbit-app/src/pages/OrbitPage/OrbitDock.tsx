@@ -1,11 +1,34 @@
-import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction, useStore } from '@o/kit'
+import {
+  AppBit,
+  AppLoadContext,
+  AppMainViewProps,
+  AppViewsContext,
+  createUsableStore,
+  getAppDefinition,
+  react,
+  RenderAppProps,
+  useReaction,
+  useStore,
+} from '@o/kit'
 import { App } from '@o/stores'
-import { ActiveDraggables, Col, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
+import {
+  ActiveDraggables,
+  Col,
+  Dock,
+  DockButton,
+  DockButtonProps,
+  FloatingCard,
+  ListPassProps,
+  useDebounceValue,
+  useNodeSize,
+  usePosition,
+  useWindowSize,
+} from '@o/ui'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
 import { partition } from 'lodash'
 import React, { memo, useContext, useMemo, useRef } from 'react'
 
-import { om, useOm } from '../../om/om'
+import { useOm } from '../../om/om'
 import { paneManagerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
 import { appsDrawerStore } from './OrbitAppsDrawer'
@@ -234,6 +257,7 @@ const OrbitDockButton = memo(function OrbitDockButton({
   const dockStore = orbitDockStore.useStore()
   const definition = getAppDefinition(app.identifier!)
   const buttonRef = useRef(null)
+  const om = useOm()
   const fullyOpened = useDebounceValue(dockStore.isOpen, 300)
   const nodePosition = usePosition({
     measureKey: fullyOpened,
@@ -363,6 +387,8 @@ const DockAppRender = (props: RenderAppProps) => {
 
 const DockSidebarView = (props: AppMainViewProps) => {
   const { id } = useContext(AppLoadContext)
+  const om = useOm()
+
   return (
     <ListPassProps
       itemProps={useMemo(

@@ -4,7 +4,6 @@ import { log } from '../common/logger'
 import { ResolveInterface } from './ResolveInterface'
 import { ServerTransport } from './ServerTransport'
 
-// import { isEqual } from '@o/fast-compare'
 export interface MediatorServerOptions {
   transport: ServerTransport
   fallbackClient?: MediatorClient

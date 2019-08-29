@@ -131,6 +131,8 @@ export class OrbitDesktopRoot {
   resolveWaitForElectronMediator: Function | null = null
   databaseManager: DatabaseManager
   mediatorServer: MediatorServer
+  electronMediator: MediatorClient
+  mediatorPort: number
 
   config = Config
   authServer: AuthServer
@@ -258,10 +260,39 @@ export class OrbitDesktopRoot {
                 await this.orbitDataManager.start()
               }
             },
+            // wait for electron mediator and then setup client
+            async () => {
+              // pass dependencies into here as arguments to be clear
+              this.mediatorPort = this.registerMediatorServer()
+
+              if (!process.env.SINGLE_USE_MODE) {
+                // wait for electron to start its mediator
+                await new Promise(res => {
+                  this.resolveWaitForElectronMediator = res
+                })
+
+                this.electronMediator = new MediatorClient({
+                  transports: [
+                    new WebSocketClientTransport(
+                      'orbit-desktop',
+                      new ReconnectingWebSocket(
+                        `ws://localhost:${Config.ports.electronMediators}`,
+                        [],
+                        {
+                          WebSocket,
+                          minReconnectionDelay: 1,
+                        },
+                      ),
+                    ),
+                  ],
+                })
+              }
+            },
+            // ocr relies on mediator
             async () => {
               log.info(`process.env.ENABLE_OCR = ${process.env.ENABLE_OCR}`)
               if (!singleUseMode && process.env.ENABLE_OCR) {
-                this.oracleManager = new OracleManager(this.mediatorServer)
+                this.oracleManager = new OracleManager(this.electronMediator)
                 await this.oracleManager.start()
               }
             },
@@ -273,21 +304,12 @@ export class OrbitDesktopRoot {
       },
     )
 
-    // pass dependencies into here as arguments to be clear
-    const mediatorPort = this.registerMediatorServer()
-
-    if (!process.env.SINGLE_USE_MODE) {
-      await new Promise(res => {
-        this.resolveWaitForElectronMediator = res
-      })
-    }
-
-    log.verbose(`Starting Bonjour service on ${mediatorPort}`)
+    log.verbose(`Starting Bonjour service on ${this.mediatorPort}`)
     this.bonjour = bonjour()
     this.bonjourService = this.bonjour.publish({
       name: 'orbitDesktop',
       type: 'orbitDesktop',
-      port: mediatorPort,
+      port: this.mediatorPort,
     })
     this.bonjourService.start()
 

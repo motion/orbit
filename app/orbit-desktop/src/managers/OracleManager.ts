@@ -1,6 +1,6 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
-import { resolveObserveMany, MediatorServer } from '@o/mediator'
+import { resolveObserveMany, MediatorServer, MediatorClient } from '@o/mediator'
 import { OracleWordsFound, OracleWordsFoundModel, ToggleOrbitMainCommand } from '@o/models'
 import { Oracle, OracleMessageHandler, OracleMessages } from '@o/oracle'
 import { App, Desktop } from '@o/stores'
@@ -21,7 +21,7 @@ type BoundsLike = {
 export class OracleManager {
   private oracle: Oracle
 
-  constructor(private mediatorServer: MediatorServer) {
+  constructor(private electronMediator: MediatorClient) {
     this.oracle = new Oracle({
       port: getGlobalConfig().ports.ocrBridge,
       onMessage: this.handleMessage,
@@ -49,7 +49,8 @@ export class OracleManager {
         break
       case OracleMessages.trayClicked:
         if (obj.value.id === '0') {
-          this.mediatorServer.sendRemoteCommand(ToggleOrbitMainCommand)
+          log.info(`Toggle electron main`)
+          this.electronMediator.command(ToggleOrbitMainCommand)
         }
         Desktop.setState({ operatingSystem: { trayClicked: { at: Date.now(), ...obj.value } } })
         break

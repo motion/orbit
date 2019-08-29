@@ -288,15 +288,15 @@ export class OrbitDesktopRoot {
                 })
               }
             },
-            // ocr relies on mediator
-            async () => {
-              log.info(`process.env.ENABLE_OCR = ${process.env.ENABLE_OCR}`)
-              if (!singleUseMode && process.env.ENABLE_OCR) {
-                this.oracleManager = new OracleManager(this.electronMediator)
-                await this.oracleManager.start()
-              }
-            },
           ],
+        },
+        // ocr relies on mediator
+        async () => {
+          log.info(`process.env.ENABLE_OCR = ${process.env.ENABLE_OCR}`)
+          if (!singleUseMode && process.env.ENABLE_OCR) {
+            this.oracleManager = new OracleManager(this.electronMediator)
+            await this.oracleManager.start()
+          }
         },
       ],
       {

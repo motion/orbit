@@ -38,7 +38,7 @@ export class OracleManager {
 
   handleMessage: OracleMessageHandler = obj => {
     log.info('message', obj)
-    switch (obj.message) {
+    switch (obj.action) {
       case OracleMessages.words:
         for (const observer of this.wordObservers) {
           observer.update(obj.value)

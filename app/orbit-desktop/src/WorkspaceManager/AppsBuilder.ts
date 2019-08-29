@@ -658,7 +658,8 @@ function createEventStream(heartbeat: number) {
       client.write('data: \uD83D\uDC93\n\n')
     })
   }, heartbeat)
-  interval.unref()
+  // node only TODO fix ts types
+  interval['unref']()
   return {
     close: function() {
       clearInterval(interval)

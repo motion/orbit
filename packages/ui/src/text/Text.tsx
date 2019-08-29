@@ -234,13 +234,15 @@ export class Text extends React.PureComponent<TextProps> {
         finalProps = {
           children: children.map((child, index) => {
             if (typeof child === 'string') {
-              return (
-                <HTMLBlock key={index}>
-                  {`${index > 0 ? ' ' : ''}${highlightText({ ...highlight, text: `${child}` })}${
-                    index === children.length - 1 ? ' ' : ''
-                  }`}
-                </HTMLBlock>
-              )
+              const childString = `${index > 0 ? ' ' : ''}${highlightText({
+                ...highlight,
+                text: `${child}`,
+              })}${index === children.length - 1 ? ' ' : ''}`
+              // only do dangerous if necessary
+              if (childString.includes('<')) {
+                return <HTMLBlock key={index}>{childString}</HTMLBlock>
+              }
+              return childString
             } else {
               return child
             }
@@ -250,10 +252,15 @@ export class Text extends React.PureComponent<TextProps> {
         __html = highlightText({ ...highlight, text: `${children}` })
       }
       if (__html) {
-        finalProps = {
-          dangerouslySetInnerHTML: {
-            __html,
-          },
+        // only do dangerous if necessary
+        if (__html.includes('<')) {
+          finalProps = {
+            dangerouslySetInnerHTML: {
+              __html,
+            },
+          }
+        } else {
+          finalProps = { children: __html }
         }
       }
     } else if (renderAsHtml) {
@@ -297,7 +304,7 @@ export class Text extends React.PureComponent<TextProps> {
         selectable={selectable}
         oneLineEllipse={oneLineEllipse}
         suppressContentEditableWarning={editable}
-        ref={this.nodeRef}
+        nodeRef={this.nodeRef}
         ignoreColor={ignoreColor}
         color={color}
         ellipse={ellipse}

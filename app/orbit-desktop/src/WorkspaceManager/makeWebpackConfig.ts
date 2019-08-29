@@ -323,10 +323,11 @@ require('@o/kit').OrbitHot.fileLeave();
     },
     plugins: [
       new HardSourceWebpackPlugin({
-        cacheDirectory: '.cache/hard-source/[confighash]',
+        // cacheDirectory: '.cache/hard-source/[confighash]',
         environmentHash: {
           root: process.cwd(),
           version: require('../../package.json').version,
+          ...process.env,
         },
         info: {
           mode: 'none',

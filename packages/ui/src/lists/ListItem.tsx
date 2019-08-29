@@ -160,7 +160,7 @@ export const ListItem = (props: ListItemProps) => {
     <ProvideFocus focused={isEditing === true ? false : undefined}>
       <Theme alt={alt}>
         <ListItemSimple
-          ref={composeRefs(listItemRef, nodeRef)}
+          nodeRef={composeRefs(listItemRef, nodeRef)}
           {...itemProps}
           {...rest}
           onStartEdit={onStartEditCb}

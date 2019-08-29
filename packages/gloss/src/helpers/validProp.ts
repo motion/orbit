@@ -174,10 +174,9 @@ export const HTMLPropNames = [
   'wmode',
 ]
 
-const toLower = str => (!str ? null : str.toLowerCase())
-const mergedProps = SVGPropNames.concat(EventPropNames, HTMLPropNames).map(propName =>
-  toLower(propName),
-)
+const ReactPropNames = ['dangerouslySetInnerHTML']
+
+const mergedProps = [...SVGPropNames, ...EventPropNames, ...HTMLPropNames, ...ReactPropNames]
 export const ValidProps = mergedProps.reduce((acc, cur) => {
   acc[cur] = true
   return acc

@@ -81,13 +81,18 @@ export const OrbitHeaderOpenAppMenu = memo(
                   <Row space>
                     <Toggle checked={isDeveloping} />
                     <Button
-                      alt="flat"
-                      margin={-4}
-                      sizeIcon={1.2}
+                      chromeless
+                      sizeIcon={1.5}
                       size="sm"
-                      onClick={e => {
+                      onClick={async e => {
                         e.stopPropagation()
-                        openInEditor({ path: `/Users/nw/motion/orbit` })
+                        const res = await openInEditor({ path: `/Users/nw/motion/orbit` })
+                        if (res.type !== 'success') {
+                          banner.set({
+                            type: 'error',
+                            message: res.message,
+                          })
+                        }
                       }}
                       icon="code"
                       circular

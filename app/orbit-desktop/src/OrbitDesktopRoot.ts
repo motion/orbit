@@ -46,10 +46,11 @@ import {
   BuildStatusModel,
   WorkspaceInfoModel,
   OracleWordsFoundModel,
+  StatusReply,
 } from '@o/models'
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
-import { writeJSONSync } from 'fs-extra'
+import { writeJSONSync, pathExists } from 'fs-extra'
 import global from 'global'
 import open from 'open'
 import * as Path from 'path'
@@ -524,8 +525,16 @@ async function openCommand({ url }: { url: string }) {
   }
 }
 
-async function editCommand({ path, app }: EditCommandProps) {
+async function editCommand({ path, app }: EditCommandProps): Promise<StatusReply> {
   log.info(`Opening path ${path}`)
+
+  if (!(await pathExists(path))) {
+    return {
+      type: 'error',
+      message: `Path doesn't exist: ${path}`,
+    }
+  }
+
   const EDITOR = process.env.EDITOR
   const defaultIsVsCode = EDITOR === 'code' || EDITOR === 'code-insiders'
 
@@ -542,10 +551,16 @@ async function editCommand({ path, app }: EditCommandProps) {
 
     log.info(`Opening with ${binPath}`)
     // default to vscode
-    open(path, { app: binPath })
-    return true
+    await open(path, { app: binPath })
+    return {
+      type: 'success',
+      message: `Opened Successfully`,
+    }
   } catch (err) {
-    console.log('error opening', err)
-    return false
+    log.error('error opening', err)
+    return {
+      type: 'error',
+      message: err.message,
+    }
   }
 }

@@ -24,6 +24,8 @@ import {
   GetPIDCommand,
   CosalTopWordsModel,
   OpenCommand,
+  EditCommand,
+  EditCommandProps,
   SalientWordsModel,
   SearchByTopicModel,
   SearchLocationsModel,
@@ -44,10 +46,11 @@ import {
   BuildStatusModel,
   WorkspaceInfoModel,
   OracleWordsFoundModel,
+  StatusReply,
 } from '@o/models'
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
-import { writeJSONSync } from 'fs-extra'
+import { writeJSONSync, pathExists } from 'fs-extra'
 import global from 'global'
 import open from 'open'
 import * as Path from 'path'
@@ -81,6 +84,8 @@ import { orTimeout, OR_TIMED_OUT } from '@o/utils'
 import { interceptStdOut } from './helpers/interceptStdOut'
 import { appStatusManager, AppStatusManager } from './managers/AppStatusManager'
 import { OracleManager } from './managers/OracleManager'
+import appPath from 'app-path'
+import { execa } from '@o/libs-node'
 
 const log = new Logger('OrbitDesktopRoot')
 const Config = getGlobalConfig()
@@ -471,7 +476,7 @@ export class OrbitDesktopRoot {
             }
           }
           const url = `${Config.urls.auth}/auth/${authKey}`
-          const didOpenAuthUrl = await openUrl({ url })
+          const didOpenAuthUrl = await openCommand({ url })
           if (!didOpenAuthUrl) {
             return {
               type: 'error' as const,
@@ -493,7 +498,8 @@ export class OrbitDesktopRoot {
           return success
         }),
 
-        resolveCommand(OpenCommand, openUrl),
+        resolveCommand(OpenCommand, openCommand),
+        resolveCommand(EditCommand, editCommand),
       ],
     })
 
@@ -508,12 +514,53 @@ export class OrbitDesktopRoot {
   }
 }
 
-async function openUrl({ url }: { url: string }) {
+async function openCommand({ url }: { url: string }) {
   try {
+    log.info(`Opening url ${url}`)
     open(url)
     return true
   } catch (err) {
     console.log('error opening', err)
     return false
+  }
+}
+
+async function editCommand({ path, app }: EditCommandProps): Promise<StatusReply> {
+  log.info(`Opening path ${path}`)
+
+  if (!(await pathExists(path))) {
+    return {
+      type: 'error',
+      message: `Path doesn't exist: ${path}`,
+    }
+  }
+
+  const EDITOR = process.env.EDITOR
+  const defaultIsVsCode = EDITOR === 'code' || EDITOR === 'code-insiders'
+
+  try {
+    if (!app && defaultIsVsCode) {
+      log.info(`Opening in VSCode (default editor): ${EDITOR}`)
+      await execa(EDITOR, [path])
+    } else {
+      const binPath =
+        (await appPath(app || 'com.microsoft.VSCodeInsiders')) ||
+        (await appPath('com.microsoft.VSCode'))
+
+      log.info(`Opening with ${binPath}`)
+      // default to vscode
+      await open(path, { app: binPath })
+    }
+
+    return {
+      type: 'success',
+      message: `Opened Successfully`,
+    }
+  } catch (err) {
+    log.error('error opening', err)
+    return {
+      type: 'error',
+      message: err.message,
+    }
   }
 }

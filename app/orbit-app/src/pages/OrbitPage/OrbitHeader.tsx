@@ -1,7 +1,16 @@
 import { AppIcon, useModels, useStore } from '@o/kit'
 import { BuildStatusModel } from '@o/models'
 import { App, Electron } from '@o/stores'
-import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
+import {
+  BorderBottom,
+  Button,
+  Popover,
+  PopoverProps,
+  Row,
+  RowProps,
+  SurfacePassProps,
+  View,
+} from '@o/ui'
 import { createUsableStore, ensure, react, useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
 import { createRef, useRef } from 'react'
@@ -129,8 +138,9 @@ export const OrbitHeader = memo(() => {
   // perhaps we can have a generic react hook/pattern here to handle the optimistic updates
   const [buildStatus] = useModels(BuildStatusModel)
   const [isDeveloping, setIsDeveloping] = useState(false)
+  const identifier = focusedApp ? focusedApp.identifier! : ''
   const serverIsDeveloping = buildStatus.some(
-    s => s.identifier === (focusedApp ? focusedApp.identifier! : '') && s.mode === 'development',
+    s => s.identifier === identifier && s.mode === 'development',
   )
   useEffect(() => {
     setIsDeveloping(serverIsDeveloping)
@@ -307,7 +317,7 @@ const HomeButton = memo(
     const activePaneType = activePane.type
     const icon = activePaneType
     return (
-      <View ref={ref} {...props}>
+      <View ref={ref} WebkitAppRegion="no-drag" {...props}>
         <AppIcon
           cutout
           colors={[theme.color.toString(), theme.color.toString()] as any}

@@ -165,6 +165,9 @@ export class Toolbar extends React.Component<Props, State> {
 }
 
 export const Menu = styled.div`
+  display: flex;
+  flex-flow: row;
+  align-items: center;
   padding: 8px 16px;
   position: absolute;
   z-index: ${props => {

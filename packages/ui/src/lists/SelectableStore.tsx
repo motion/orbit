@@ -138,11 +138,9 @@ export class SelectableStore {
     }
 
     const nextActive = new Set<string | number>(nextFiltered)
-
     if (isEqual(this.active, nextActive)) {
       return
     }
-
     this.active = nextActive
     this.updateActiveAndKeyToIndex(next, false)
   }
@@ -339,6 +337,9 @@ export class SelectableStore {
   }
 
   onHoverRow(index: number) {
+    // prevent race, this makes it not clear after initial multi-select w/sortable list
+    clearTimeout(this.sortableMouseDownTm)
+
     if (this.isSorting) {
       console.debug('Preventing selection while sorting')
       return

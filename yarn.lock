@@ -3831,6 +3831,13 @@ app-builder-lib@20.38.5, app-builder-lib@~20.38.5:
     semver "^5.6.0"
     temp-file "^3.3.2"
 
+app-path@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.npmjs.org/app-path/-/app-path-3.2.0.tgz#06d426e0c988885264e0aa0a766dfa2723491633"
+  integrity sha512-PQPaKXi64FZuofJkrtaO3I5RZESm9Yjv7tkeJaDz4EZMeBBfGtr5MyQ3m5AC7F0HVrISBLatPxAAAgvbe418fQ==
+  dependencies:
+    execa "^1.0.0"
+
 app-root-path@^2.0.1:
   version "2.2.1"
   resolved "https://registry.npmjs.org/app-root-path/-/app-root-path-2.2.1.tgz#d0df4a682ee408273583d43f6f79e9892624bc9a"
@@ -19208,7 +19215,7 @@ react-svg-inline@^2.1.0, react-svg-inline@^2.1.1:
     classnames "^2.2.1"
     prop-types "^15.5.8"
 
-react-switch@^5.0.0:
+react-switch@5.0.1:
   version "5.0.1"
   resolved "https://registry.npmjs.org/react-switch/-/react-switch-5.0.1.tgz#449277f4c3aed5286fffd0f50d5cbc2a23330406"
   integrity sha512-Pa5kvqRfX85QUCK1Jv0rxyeElbC3aNpCP5hV0LoJpU/Y6kydf0t4kRriQ6ZYA4kxWwAYk/cH51T4/sPzV9mCgQ==

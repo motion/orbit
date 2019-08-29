@@ -1,7 +1,7 @@
 import { command, openItem, useReaction, useStore } from '@o/kit'
 import { AppDevCloseCommand, AppDevOpenCommand } from '@o/models'
 import { App } from '@o/stores'
-import { Icon, ListSeparator, MenuButton, Row, Toggle, useBanner, useDebounceValue } from '@o/ui'
+import { Button, ListSeparator, MenuButton, Row, Toggle, useBanner, useDebounceValue } from '@o/ui'
 import React, { memo, useMemo } from 'react'
 
 import { om, useOm } from '../../om/om'
@@ -80,12 +80,17 @@ export const OrbitHeaderOpenAppMenu = memo(
                 after: (
                   <Row space>
                     <Toggle checked={isDeveloping} />
-                    <Icon
+                    <Button
+                      alt="flat"
+                      margin={-4}
+                      sizeIcon={1.2}
+                      size="sm"
                       onClick={e => {
                         e.stopPropagation()
-                        openItem(`file://Users/nw/motion/orbit`)
+                        openItem(`/Users/nw/motion/orbit`)
                       }}
-                      name="code"
+                      icon="code"
+                      circular
                       tooltip="Open in VSCode"
                     />
                   </Row>
@@ -103,7 +108,7 @@ export const OrbitHeaderOpenAppMenu = memo(
           : []),
         ...constantMenuItems,
       ]
-    }, [isOnOpenableApp, constantMenuItems])
+    }, [isDeveloping, isOnOpenableApp, constantMenuItems])
 
     if (appRole === 'torn' || appRole === 'editing') {
       return (

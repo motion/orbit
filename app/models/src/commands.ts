@@ -30,6 +30,8 @@ export const AuthAppCommand = new Command<StatusReply, { authKey: string; identi
 )
 
 export const OpenCommand = new Command<boolean, { url: string }>('OpenCommand')
+export type EditCommandProps = { path: string; app?: string }
+export const EditCommand = new Command<boolean, EditCommandProps>('EditCommand')
 
 export const ToggleOrbitMainCommand = new Command<undefined, boolean | undefined>(
   'ToggleOrbitMainCommand',

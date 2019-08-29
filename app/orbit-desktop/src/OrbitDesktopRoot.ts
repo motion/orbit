@@ -24,6 +24,8 @@ import {
   GetPIDCommand,
   CosalTopWordsModel,
   OpenCommand,
+  EditCommand,
+  EditCommandProps,
   SalientWordsModel,
   SearchByTopicModel,
   SearchLocationsModel,
@@ -81,6 +83,8 @@ import { orTimeout, OR_TIMED_OUT } from '@o/utils'
 import { interceptStdOut } from './helpers/interceptStdOut'
 import { appStatusManager, AppStatusManager } from './managers/AppStatusManager'
 import { OracleManager } from './managers/OracleManager'
+import appPath from 'app-path'
+import { execa } from '@o/libs-node'
 
 const log = new Logger('OrbitDesktopRoot')
 const Config = getGlobalConfig()
@@ -471,7 +475,7 @@ export class OrbitDesktopRoot {
             }
           }
           const url = `${Config.urls.auth}/auth/${authKey}`
-          const didOpenAuthUrl = await openUrl({ url })
+          const didOpenAuthUrl = await openCommand({ url })
           if (!didOpenAuthUrl) {
             return {
               type: 'error' as const,
@@ -493,7 +497,8 @@ export class OrbitDesktopRoot {
           return success
         }),
 
-        resolveCommand(OpenCommand, openUrl),
+        resolveCommand(OpenCommand, openCommand),
+        resolveCommand(EditCommand, editCommand),
       ],
     })
 
@@ -508,9 +513,34 @@ export class OrbitDesktopRoot {
   }
 }
 
-async function openUrl({ url }: { url: string }) {
+async function openCommand({ url }: { url: string }) {
   try {
+    log.info(`Opening url ${url}`)
     open(url)
+    return true
+  } catch (err) {
+    console.log('error opening', err)
+    return false
+  }
+}
+
+async function editCommand({ path, app }: EditCommandProps) {
+  log.info(`Opening path ${path}`)
+  const EDITOR = process.env.EDITOR
+  const defaultIsVsCode = EDITOR === 'code' || EDITOR === 'code-insiders'
+
+  if (defaultIsVsCode) {
+    await execa(EDITOR, [path])
+    return true
+  }
+
+  const binPath =
+    (await appPath(app || 'com.microsoft.VSCodeInsiders')) ||
+    (await appPath('com.microsoft.VSCode'))
+
+  try {
+    // default to vscode
+    open(path, { app: binPath })
     return true
   } catch (err) {
     console.log('error opening', err)

@@ -129,8 +129,9 @@ export const OrbitHeader = memo(() => {
   // perhaps we can have a generic react hook/pattern here to handle the optimistic updates
   const [buildStatus] = useModels(BuildStatusModel)
   const [isDeveloping, setIsDeveloping] = useState(false)
+  const identifier = focusedApp ? focusedApp.identifier! : ''
   const serverIsDeveloping = buildStatus.some(
-    s => s.identifier === (focusedApp ? focusedApp.identifier! : '') && s.mode === 'development',
+    s => s.identifier === identifier && s.mode === 'development',
   )
   useEffect(() => {
     setIsDeveloping(serverIsDeveloping)

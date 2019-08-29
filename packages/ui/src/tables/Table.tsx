@@ -124,7 +124,7 @@ export const Table = (tableProps: TableProps) => {
         maxWidth,
         parentNodeSize.width === 0 ? undefined : parentNodeSize.width,
       )}
-      ref={parentNodeSize.ref}
+      nodeRef={parentNodeSize.ref}
       belowTitle={searchable && <FilterableSearchInput useFilterable={filterable} />}
     >
       <ManagedTable

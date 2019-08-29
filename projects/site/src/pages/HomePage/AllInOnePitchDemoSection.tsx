@@ -218,7 +218,7 @@ export default function NeckSection() {
 
   return (
     <Fade.FadeProvide>
-      <Page.Content ref={Fade.ref}>
+      <Page.Content nodeRef={Fade.ref}>
         <SpacedPageContent
           header={
             <>
@@ -228,7 +228,7 @@ export default function NeckSection() {
               <FadeChild delay={200}>
                 <TitleText size={useScreenVal('lg', 'xl', 'xxl')}>All together</TitleText>
               </FadeChild>
-              <TitleTextSub ref={ref as any} margin="auto" minWidth={320}>
+              <TitleTextSub nodeRef={ref as any} margin="auto" minWidth={320}>
                 <FadeChild style={screen === 'small' ? { display: 'inline' } : null} delay={300}>
                   &nbsp;Orbit gives you everything you need to create custom apps.&nbsp;
                 </FadeChild>

@@ -1,14 +1,15 @@
 /* eslint-disable react/prop-types */
+import React, { Component } from 'react'
+import { Picker, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 
 import Benchmark from './Benchmark'
-import { Picker, StyleSheet, ScrollView, TouchableOpacity, View } from 'react-native'
-import React, { Component } from 'react'
 import Button from './Button'
 import { IconClear, IconEye } from './Icons'
+import Layout from './Layout'
 import ReportCard from './ReportCard'
 import Text from './Text'
-import Layout from './Layout'
 import { colors } from './theme'
+
 
 const Overlay = () => <View style={[StyleSheet.absoluteFill, { zIndex: 2 }]} />
 

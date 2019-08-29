@@ -1,5 +1,12 @@
-import { CSSPropertySet, CSSPropertySetLoose, cssString, styleToClassName, ThemeObject, validCSSAttr } from '@o/css'
-import { createElement, forwardRef, isValidElement, useEffect, useRef } from 'react'
+import {
+  CSSPropertySet,
+  CSSPropertySetLoose,
+  cssString,
+  styleToClassName,
+  ThemeObject,
+  validCSSAttr,
+} from '@o/css'
+import { createElement, isValidElement, useEffect, useRef } from 'react'
 
 import { Config } from './config'
 import { useTheme } from './helpers/useTheme'
@@ -24,7 +31,7 @@ export type GlossProps<Props> = Props & {
   className?: string
   tagName?: string
   children?: React.ReactNode
-  ref?: any
+  nodeRef?: any
   style?: any
   alt?: string
   subTheme?: ThemeSelect
@@ -145,7 +152,7 @@ export function gloss<Props = any, ThemeProps = Props>(
    *
    *
    */
-  function GlossView(props: GlossProps<Props>, ref: any) {
+  function GlossView(props: GlossProps<Props>) {
     // compile on first run to avoid extra work
     if (!hasCompiled) {
       hasCompiled = true
@@ -202,16 +209,16 @@ export function gloss<Props = any, ThemeProps = Props>(
     // set up final props with filtering for various attributes
     let finalProps: any = {}
 
-    if (ref) {
-      finalProps.ref = ref
-    }
-
     if (isDOMElement) {
       for (const key in props) {
         if (ignoreAttrs && ignoreAttrs[key]) continue
         if (conditionalStyles && conditionalStyles[key]) continue
         // TODO: need to figure out this use case: when a valid prop attr, but invalid val
         if (key === 'size' && typeof props[key] !== 'string') continue
+        if (key === 'nodeRef') {
+          finalProps.ref = props.nodeRef
+          continue
+        }
         if (!validProp(key)) continue
         finalProps[key] = finalProps[key] || props[key]
       }
@@ -288,7 +295,7 @@ export function gloss<Props = any, ThemeProps = Props>(
 }
 
 function createGlossView<Props>(GlossView: any, config) {
-  const res: GlossView<Props> = forwardRef<HTMLDivElement, GlossProps<Props>>(GlossView) as any
+  const res: GlossView<Props> = GlossView
   res.internal = config
   res[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
   res.theme = (...themeFns) => {

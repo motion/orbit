@@ -122,7 +122,7 @@ const LayoutSidebar = memo(() => {
     <Portal prepend style={{ zIndex: 100000000 }}>
       <Theme name="home">
         <View
-          ref={Fade.ref}
+          nodeRef={Fade.ref}
           pointerEvents="auto"
           position="fixed"
           top={0}

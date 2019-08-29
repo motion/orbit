@@ -209,7 +209,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       {!isOnIsolateApp && <OrbitHeader />}
       {!isOnIsolateApp && <OrbitDock />}
       <OrbitDraggableOverlay />
-      <OrbitInnerChrome ref={innerRef} torn={isEditing}>
+      <OrbitInnerChrome nodeRef={innerRef} torn={isEditing}>
         <OrbitContentArea>
           <ListPassProps onOpen={onOpen}>{contentArea}</ListPassProps>
         </OrbitContentArea>

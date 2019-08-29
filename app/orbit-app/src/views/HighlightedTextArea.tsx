@@ -188,7 +188,7 @@ export class HighlightedTextArea extends React.Component<Props> {
         {/* highlights layer */}
         <Block
           {...props as any}
-          ref={this.highlights}
+          nodeRef={this.highlights}
           dangerouslySetInnerHTML={{ __html: this.getHighlights() }}
           color="transparent"
           overflowX="scroll"
@@ -207,7 +207,7 @@ export class HighlightedTextArea extends React.Component<Props> {
           onChange={this.handleInputChange}
           onScroll={this.handleScroll}
           value={this.state.value}
-          ref={forwardRef}
+          nodeRef={forwardRef}
           className="hide-scrollbars"
         />
       </TextAreaOuter>

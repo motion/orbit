@@ -52,7 +52,7 @@ export const Layout = memo((props: LayoutProps) => {
 
   return (
     <View
-      ref={ref}
+      nodeRef={ref}
       data-is="Layout"
       flex={1}
       overflow="hidden"
@@ -97,7 +97,7 @@ const FlexLayout = memo(({ children, type, ...colProps }: LayoutProps) => {
         minHeight={size.height || 'auto'}
         maxHeight={size.height || '100%'}
         overflow="hidden"
-        ref={ref}
+        nodeRef={ref}
         {...colProps}
       >
         {childElements}
@@ -110,7 +110,7 @@ const FlexLayout = memo(({ children, type, ...colProps }: LayoutProps) => {
       minHeight={size.height || 'auto'}
       maxHeight={size.height || '100%'}
       overflow="hidden"
-      ref={ref}
+      nodeRef={ref}
       {...colProps}
     >
       {childElements}

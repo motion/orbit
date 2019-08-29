@@ -14,62 +14,58 @@ export type AppIconProps = Omit<IconShapeProps, 'color' | 'gradient'> & {
   colors?: string[]
 }
 
-export const AppIcon = memo(
-  forwardRef((props: AppIconProps, ref) => {
-    const theme = useTheme({ ignoreAlternate: true })
-    const { app, ...rest } = props
-    let icon = props.icon || props.identifier || ''
-    let iconLight = ''
-    const colors =
-      props.colors ||
-      (props.app && props.app.colors) ||
-      (theme.background.isDark() ? ['#111', '#000'] : ['#fff', '#f9f9f9'])
-    const identifier = props.identifier || (props.app && props.app.identifier) || ''
-    const definition = useAppDefinition(identifier)
+export const AppIcon = memo((props: AppIconProps) => {
+  const theme = useTheme({ ignoreAlternate: true })
+  const { app, ...rest } = props
+  let icon = props.icon || props.identifier || ''
+  let iconLight = ''
+  const colors =
+    props.colors ||
+    (props.app && props.app.colors) ||
+    (theme.background.isDark() ? ['#111', '#000'] : ['#fff', '#f9f9f9'])
+  const identifier = props.identifier || (props.app && props.app.identifier) || ''
+  const definition = useAppDefinition(identifier)
 
-    if (identifier && definition) {
-      icon = definition.icon || props.identifier || ''
-      iconLight = definition.iconLight || ''
-    }
+  if (identifier && definition) {
+    icon = definition.icon || props.identifier || ''
+    iconLight = definition.iconLight || ''
+  }
 
-    if (!icon) {
-      console.debug('no icon for', rest)
-      icon = 'home'
-    }
+  if (!icon) {
+    console.debug('no icon for', rest)
+    icon = 'home'
+  }
 
-    const isSVGIcon =
-      icon
-        .slice(0, 20)
-        .trim()
-        .indexOf('<svg') > -1
-    const color = getIconColor(props, theme)
+  const isSVGIcon =
+    icon
+      .slice(0, 20)
+      .trim()
+      .indexOf('<svg') > -1
+  const color = getIconColor(props, theme)
 
-    if (isSVGIcon) {
-      const iconSrc = theme.background.isDark() ? iconLight || icon : icon
-      return (
-        <svg
-          fill={color}
-          width={`${rest.size}px`}
-          height={`${rest.size}px`}
-          style={{
-            transform: 'translateZ(0)',
-          }}
-          dangerouslySetInnerHTML={{
-            __html: iconSrc,
-          }}
-        />
-      )
-    }
-
-    if (typeof icon !== 'string') {
-      throw new Error(`Icon isn't a string ${icon}`)
-    }
-
+  if (isSVGIcon) {
+    const iconSrc = theme.background.isDark() ? iconLight || icon : icon
     return (
-      <IconShape ref={ref} gradient={colors} size={48} shape="squircle" name={icon} {...rest} />
+      <svg
+        fill={color}
+        width={`${rest.size}px`}
+        height={`${rest.size}px`}
+        style={{
+          transform: 'translateZ(0)',
+        }}
+        dangerouslySetInnerHTML={{
+          __html: iconSrc,
+        }}
+      />
     )
-  }),
-)
+  }
+
+  if (typeof icon !== 'string') {
+    throw new Error(`Icon isn't a string ${icon}`)
+  }
+
+  return <IconShape gradient={colors} size={48} shape="squircle" name={icon} {...rest} />
+})
 
 // @ts-ignore
 AppIcon.acceptsProps = {

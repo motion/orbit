@@ -8,7 +8,7 @@ export const SpacedPageContent = forwardRef(
     const width = useScreenSize()
     return (
       <Col
-        ref={ref}
+        nodeRef={ref}
         width="100%"
         margin={width === 'small' ? 0 : ['auto', 0]}
         // minHeight="80vh"

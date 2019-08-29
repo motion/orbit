@@ -120,7 +120,7 @@ export const FadeParent = memo(({ children, ...props }: UseFadePageProps & { chi
   const Fade = useFadePage(props)
   return (
     <Fade.FadeProvide>
-      <Col ref={Fade.ref}>{children}</Col>
+      <Col nodeRef={Fade.ref}>{children}</Col>
     </Fade.FadeProvide>
   )
 })

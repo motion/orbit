@@ -58,7 +58,7 @@ export function Tree(props: TreeProps) {
   })
   const scale = useScale()
   return (
-    <TreeChrome ref={ref}>
+    <TreeChrome nodeRef={ref}>
       <TreeItems
         width={width}
         height={height}

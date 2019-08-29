@@ -59,14 +59,14 @@ export const SubPane = memo(function SubPane(props: Props) {
     >
       {typeof before === 'function' ? before(isActive) : before}
       {!!offsetY && <div style={{ height: offsetY, pointerEvents: 'none' }} />}
-      <SubPaneInner ref={subPaneStore.innerPaneRef}>
+      <SubPaneInner nodeRef={subPaneStore.innerPaneRef}>
         <ProvideVisibility visible={isActive}>
           <Pane
             isActive={isActive}
             isLeft={isLeft}
             style={style}
             height={height}
-            ref={subPaneStore.paneRef}
+            nodeRef={subPaneStore.paneRef}
             transition={transition}
             {...fullHeight && { bottom: 0 }}
             {...rest}

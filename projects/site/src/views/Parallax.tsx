@@ -289,7 +289,7 @@ export const Parallax = React.memo(
           >
             {ready && (
               <View
-                ref={contentRef}
+                nodeRef={contentRef}
                 style={{
                   [horizontal ? 'height' : 'width']: '100%',
                   position: 'absolute',

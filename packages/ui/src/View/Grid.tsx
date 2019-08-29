@@ -1,7 +1,8 @@
 import { px } from '@o/css'
-import { Base } from 'gloss'
 import { isDefined } from '@o/utils'
-import React, { forwardRef } from 'react'
+import { Base } from 'gloss'
+import React from 'react'
+
 import { getSpaceSize, Size } from '../Space'
 import { Col, ColProps } from './Col'
 
@@ -14,9 +15,9 @@ export type GridProps = ColProps & {
   itemMaxHeight?: number | string
 }
 
-export const Grid = forwardRef((props: GridProps, ref) => (
-  <Col ref={ref} display="grid" {...sizeGaps(autoGridLayout(props))} />
-))
+export const Grid = (props: GridProps) => (
+  <Col display="grid" {...sizeGaps(autoGridLayout(props))} />
+)
 
 // for gloss parents
 // @ts-ignore

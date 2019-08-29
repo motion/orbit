@@ -50,7 +50,7 @@ export default memo(function DataAppKitFeaturesSection() {
           </Page.Parallax>
         )}
 
-        <Page.Content ref={FadeDataApps.ref} height={sectionHeight * 2}>
+        <Page.Content nodeRef={FadeDataApps.ref} height={sectionHeight * 2}>
           <SpacedPageContent
             maxHeight={100000}
             margin={isTiny ? 0 : screen === 'small' ? ['-33%', 0, '10%'] : 0}
@@ -147,7 +147,7 @@ export default memo(function DataAppKitFeaturesSection() {
 
             <View flex={1} />
             <Grid
-              ref={Fade.ref}
+              nodeRef={Fade.ref}
               alignItems="start"
               space={screen === 'small' ? 30 : '20% 15%'}
               itemMinWidth={280}

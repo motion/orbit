@@ -102,7 +102,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
       >
         <Col
           scrollable="y"
-          ref={store.popoverContentRef}
+          nodeRef={store.popoverContentRef}
           borderRadius={borderRadius}
           flex={1}
           maxHeight={window.innerHeight - 120}

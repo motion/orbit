@@ -6,6 +6,7 @@ import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+import { pathExistsSync } from 'fs-extra'
 
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
@@ -80,6 +81,7 @@ const devtool = flags.devtool || isProd ? 'source-map' : 'cheap-module-eval-sour
 
 // const appSrc = Path.join(entry, '..')
 const tsConfig = Path.join(cwd, 'tsconfig.json')
+const tsConfigExists = pathExistsSync(tsConfig)
 const outputPath = Path.join(cwd, 'dist')
 
 const buildNodeModules = [
@@ -344,7 +346,7 @@ async function makeConfig() {
 
       target !== 'node' && new webpack.IgnorePlugin(/electron-log/),
 
-      !isProd &&
+      tsConfigExists && !isProd &&
         new ForkTsCheckerWebpackPlugin({
           useTypescriptIncrementalApi: true,
         }),

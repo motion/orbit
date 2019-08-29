@@ -61,7 +61,7 @@ export const SliderPane = memo(
         <SliderPaneChrome
           width={width}
           height={fixHeightToTallest && currentHeight ? currentHeight : '100%'}
-          ref={ref}
+          nodeRef={ref}
           padding={[verticalPad, framePad, verticalPad]}
           isActive={isActive}
           display={display}

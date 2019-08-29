@@ -107,7 +107,7 @@ export const OrbitNav = memo(
     const maxWidth = pinnedItemsWidth + extraButtonsWidth
 
     return (
-      <OrbitNavChrome ref={ref}>
+      <OrbitNavChrome nodeRef={ref}>
         <Row
           transition="opacity ease 300ms"
           padding={5}

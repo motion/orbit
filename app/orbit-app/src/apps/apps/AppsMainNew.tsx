@@ -64,7 +64,7 @@ export function AppsMainNew({
     <Col space>
       <FormField label="Name">
         <Input
-          ref={inputRef}
+          nodeRef={inputRef}
           size={1.5}
           placeholder={app ? app.name : newAppStore.app.name}
           margin={['auto', 0]}

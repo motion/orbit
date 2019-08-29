@@ -101,7 +101,7 @@ export const OrbitAppsCarousel = memo(() => {
         width="100%"
         height="100%"
         overflow="hidden"
-        ref={frameRef}
+        nodeRef={frameRef}
         transition="all ease 200ms"
         {...hidden && {
           pointerEvents: 'none',
@@ -130,7 +130,7 @@ export const OrbitAppsCarousel = memo(() => {
           }}
           scrollLeft={scrollSpring.x}
           animated
-          ref={appsCarouselStore.setRowNode}
+          nodeRef={appsCarouselStore.setRowNode}
           perspective="1000px"
           {...bind()}
         >
@@ -289,7 +289,7 @@ const OrbitAppCard = memo(
           </Row>
           <Card
             data-is="OrbitAppCard"
-            ref={cardRef}
+            nodeRef={cardRef}
             borderWidth={0}
             background={
               isFocusZoomed

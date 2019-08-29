@@ -3,9 +3,8 @@ import React, { forwardRef, useCallback } from 'react'
 
 // TODO: replace into ui kit
 
-export const SearchInput = forwardRef((props: InputProps, ref) => (
+export const SearchInput = (props: InputProps) => (
   <Input
-    ref={ref}
     sizeRadius={10}
     size="lg"
     iconSize={16}
@@ -21,4 +20,4 @@ export const SearchInput = forwardRef((props: InputProps, ref) => (
     }, [])}
     {...props}
   />
-))
+)

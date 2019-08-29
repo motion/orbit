@@ -1,6 +1,6 @@
 import { isDefined } from '@o/utils'
 import { gloss } from 'gloss'
-import { forwardRef, FunctionComponent } from 'react'
+import { FunctionComponent } from 'react'
 import React from 'react'
 
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
@@ -13,17 +13,17 @@ type MessageView = FunctionComponent<SizedSurfaceProps> & {
 
 export type MessageProps = SizedSurfaceProps & { title?: string }
 
-export const Message: MessageView = forwardRef((props: MessageProps, ref) => {
+export const Message: MessageView = (props: MessageProps) => {
   if (isDefined(props.title)) {
     return (
-      <MessageChrome ref={ref} {...props}>
+      <MessageChrome {...props}>
         <MessageTitle>{props.title}</MessageTitle>
         {props.children}
       </MessageChrome>
     )
   }
   return <MessageChrome {...props} />
-}) as any
+}
 
 export const MessageTitle = SubTitle
 Message.Title = MessageTitle

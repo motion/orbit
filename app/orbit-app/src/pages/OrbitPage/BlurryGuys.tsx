@@ -63,7 +63,7 @@ const Blur = gloss<any>(View, {
 export default function BlurryGuys() {
   const store = useStore(BlurryStore)
   return (
-    <FullScreen ref={store.handleRef}>
+    <FullScreen nodeRef={store.handleRef}>
       {store.guys.map((guy, index) => {
         return <Blur key={index} at={guy} background={colors[index]} opacity={0.15} />
       })}

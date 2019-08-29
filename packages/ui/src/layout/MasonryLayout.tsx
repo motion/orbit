@@ -19,7 +19,7 @@ export function MasonryLayout({ children, padding, ...props }: MasonryLayoutProp
     disable: !visible,
   })
   return (
-    <View ref={size.ref} padding={padding} flex={1}>
+    <View nodeRef={size.ref} padding={padding} flex={1}>
       <SortableResponsive
         sortable
         transitionDuration={0.5}

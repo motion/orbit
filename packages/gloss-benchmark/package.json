@@ -7,10 +7,8 @@
     "benchmark:headless": "node ./run-headless",
     "benchmark": "open ./dist/index.html"
   },
-  "workspaces": {
-    "nohoist": [
-      "**"
-    ]
+  "resolutions": {
+    "react-native-web": "0.11.4"
   },
   "dependencies": {
     "aphrodite": "^2.2.0",
@@ -33,21 +31,13 @@
     "styletron-react": "^4.3.5"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.5",
-    "babel-plugin-react-native-web": "0.11.4",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-transform-react-remove-prop-types": "^0.4.14",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-flow": "^6.23.0",
-    "babel-preset-react": "^6.24.1",
-    "css-loader": "^1.0.0",
-    "style-loader": "^0.22.1",
-    "url-loader": "^1.0.1",
-    "webpack": "4.39.2",
-    "webpack-bundle-analyzer": "^2.11.1",
-    "webpack-cli": "^3.3.6"
+    "@o/babel-preset-motion": "2.6.0",
+    "css-loader": "2.1.1",
+    "style-loader": "^1.0.0",
+    "url-loader": "^2.1.0",
+    "webpack": "^4.39.2",
+    "webpack-bundle-analyzer": "^3.4.1",
+    "webpack-cli": "^3.3.7"
   },
   "sideEffects": false
 }

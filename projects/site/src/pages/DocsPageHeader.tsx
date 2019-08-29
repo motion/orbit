@@ -26,7 +26,7 @@ export const DocsPageHeader = memo(
               justifyContent="center"
             >
               <SearchInput
-                ref={inputRef}
+                nodeRef={inputRef}
                 onChange={e => docsStore.setSearch(e.target.value)}
                 maxWidth="calc(55% - 20px)"
                 flex={1}

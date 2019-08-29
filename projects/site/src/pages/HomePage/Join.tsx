@@ -59,7 +59,7 @@ export class Join extends React.Component<any> {
           id="mc-embedded-subscribe-form-1"
           name="mc-embedded-subscribe-form"
           target="_blank"
-          ref={this.form}
+          nodeRef={this.form}
           onSubmit={this.submit}
           {...props}
         >
@@ -67,7 +67,7 @@ export class Join extends React.Component<any> {
 
           <Input
             type="email"
-            ref={this.email}
+            nodeRef={this.email}
             name="EMAIL"
             id="mce-EMAIL"
             placeholder="Email address..."

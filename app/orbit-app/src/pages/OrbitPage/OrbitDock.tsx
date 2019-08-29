@@ -167,7 +167,7 @@ export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
     <Dock
       position="relative"
       flexDirection="column"
-      ref={dockRef}
+      nodeRef={dockRef}
       pointerEvents={store.state === 'closed' ? 'none' : 'inherit'}
       transform={
         store.isOpen
@@ -255,7 +255,7 @@ const OrbitDockButton = memo(function OrbitDockButton({
         }}
         icon={definition.icon || 'layers'}
         label={app.name}
-        ref={buttonRef}
+        nodeRef={buttonRef}
         labelProps={{
           transition: `all ease-out 80ms ${100 - index * 30}ms`,
           elevation: 1,

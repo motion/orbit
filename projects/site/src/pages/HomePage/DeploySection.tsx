@@ -43,7 +43,7 @@ export default function ShoulderSection() {
         />
       </Page.Parallax>
 
-      <Page.Content ref={Fade.ref}>
+      <Page.Content nodeRef={Fade.ref}>
         <SpacedPageContent
           transform={{
             y: useScreenVal(0, '-10%', '-10%'),

@@ -1,5 +1,5 @@
 import { Base } from 'gloss'
-import React, { forwardRef, Suspense } from 'react'
+import React, { Suspense } from 'react'
 
 import { Breadcrumbs } from '../Breadcrumbs'
 import { CollapsableProps, createCollapsableChildren, splitCollapseProps } from '../Collapsable'
@@ -22,7 +22,7 @@ export type ColProps = CollapsableProps &
 export const Col = createBaseView({ flexDirection: 'column', 'data-is': 'Col' })
 
 export function createBaseView(defaultProps: any) {
-  const View = forwardRef((colProps: ColProps, ref) => {
+  const View = (colProps: ColProps) => {
     if (!colProps.children) {
       return null
     }
@@ -65,11 +65,11 @@ export function createBaseView(defaultProps: any) {
 
     // scrollable
     return (
-      <ScrollableView ref={ref} {...defaultProps} parentSpacing={space} {...props}>
+      <ScrollableView {...defaultProps} parentSpacing={space} {...props}>
         {suspense ? <Suspense fallback={suspense}>{element}</Suspense> : element}
       </ScrollableView>
     )
-  })
+  }
 
   // for gloss parents
   // @ts-ignore

@@ -15,7 +15,7 @@ export function useAppIcon(props: IconProps) {
     iconImg = isDark ? def.iconLight || def.icon : def.icon
   }
   if (iconImg) {
-    return <SVG svg={iconImg} cleanup={['width', 'height']} {...props} />
+    return <SVG svg={iconImg} cleanup={['width', 'height']} {...props as any} />
   }
   return null
 }

@@ -1,6 +1,6 @@
 import { BorderBottom, Button, Row, RowProps } from '@o/ui'
 import { Box, gloss, useTheme } from 'gloss'
-import React, { memo, useState, useLayoutEffect } from 'react'
+import React, { memo, useLayoutEffect, useState } from 'react'
 
 import { useIsTiny, useScreenSize } from './hooks/useScreenSize'
 import { LinkState } from './LinkState'
@@ -66,7 +66,7 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
       <Fade.FadeProvide>
         {menuElement}
         <Row
-          ref={Fade.ref}
+          nodeRef={Fade.ref}
           pointerEvents="auto"
           background={theme.background.lighten(0.05)}
           position="relative"
@@ -93,7 +93,7 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
       <Fade.FadeProvide>
         {menuElement}
         <Row
-          ref={Fade.ref}
+          nodeRef={Fade.ref}
           position={isTiny ? 'relative' : 'absolute'}
           top={0}
           left={0}

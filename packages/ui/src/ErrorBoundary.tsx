@@ -54,7 +54,7 @@ function ErrorMessage({ error, name, setError, displayInline }) {
   const { ref } = useNode({ map: x => x.parentElement })
   const content = (
     <Section
-      ref={ref}
+      nodeRef={ref}
       background="darkorange"
       color="white"
       title={`${name}: ${error.message || 'Error'}`}

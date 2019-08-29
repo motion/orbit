@@ -1,6 +1,6 @@
 import { isDefined, selectDefined } from '@o/utils'
 import { Theme, useTheme } from 'gloss'
-import React, { forwardRef, memo, useCallback } from 'react'
+import React, { memo, useCallback } from 'react'
 
 import { useUncontrolled } from '../helpers/useUncontrolled'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
@@ -26,11 +26,10 @@ const activeStyle = {
   opacity: 0.8,
 }
 
-const ButtonInner = forwardRef((props: ButtonProps, ref) => {
+const ButtonInner = (props: ButtonProps) => {
   const theme = useTheme()
   return (
     <SizedSurface
-      ref={ref}
       borderPosition="inside"
       userSelect="none"
       tagName="button"
@@ -60,22 +59,20 @@ const ButtonInner = forwardRef((props: ButtonProps, ref) => {
       {...props}
     />
   )
-})
+}
 
-export const Button = memo(
-  forwardRef((buttonProps: ButtonProps, ref) => {
-    const props = useSurfaceProps(buttonProps)
-    const { alt, theme, subTheme, ...rest } = props
-    const controlledProps = useUncontrolled(rest, {
-      active: 'onChangeActive',
-    })
-    return (
-      <Theme subTheme={subTheme} alt={alt} theme={theme}>
-        <ButtonInner ref={ref} {...rest} {...controlledProps} />
-      </Theme>
-    )
-  }),
-)
+export const Button = (buttonProps: ButtonProps) => {
+  const props = useSurfaceProps(buttonProps)
+  const { alt, theme, subTheme, ...rest } = props
+  const controlledProps = useUncontrolled(rest, {
+    active: 'onChangeActive',
+  })
+  return (
+    <Theme subTheme={subTheme} alt={alt} theme={theme}>
+      <ButtonInner {...rest} {...controlledProps} />
+    </Theme>
+  )
+}
 
 Button['defaultProps'] = {
   subTheme: 'button',

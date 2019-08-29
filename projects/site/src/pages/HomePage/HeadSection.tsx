@@ -57,7 +57,7 @@ const HeadContent = memo(() => {
       alignItems="center"
     >
       <TitleText
-        ref={titleFit.ref}
+        nodeRef={titleFit.ref}
         style={titleFit.style}
         fontWeight={100}
         alignSelf="center"
@@ -135,7 +135,7 @@ const HeadContent = memo(() => {
         {/* this is just to measure */}
         <Paragraph
           className="measure-p"
-          ref={pFit.ref}
+          nodeRef={pFit.ref}
           opacity={0}
           fontSize={40}
           position="absolute"
@@ -211,7 +211,7 @@ export function HeadSection() {
           margin={['auto', 0]}
         >
           <Space size="xxxl" />
-          <Col ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
+          <Col nodeRef={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
             <HeadContent />
           </Col>
           <Space size="xxxl" />

@@ -675,7 +675,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
         >
           <InteractiveContainer
             hidden={this.props.hidden}
-            ref={this.ref}
+            nodeRef={this.ref}
             {...listenerProps}
             {...props}
           >

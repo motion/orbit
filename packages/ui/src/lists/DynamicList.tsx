@@ -23,8 +23,8 @@ export type DynamicListProps = Omit<VariableSizeListProps, 'itemSize' | 'height'
   disableMeasure?: boolean
 }
 
-export const DynamicList = forwardRef(
-  memo(({ disableMeasure, ...props }: DynamicListProps, listRef) => {
+export const DynamicList = memo(
+  forwardRef(({ disableMeasure, ...props }: DynamicListProps, listRef) => {
     const { ref, width, height } = useNodeSize({
       disable: disableMeasure,
     })

@@ -529,16 +529,18 @@ async function editCommand({ path, app }: EditCommandProps) {
   const EDITOR = process.env.EDITOR
   const defaultIsVsCode = EDITOR === 'code' || EDITOR === 'code-insiders'
 
-  if (defaultIsVsCode) {
-    await execa(EDITOR, [path])
-    return true
-  }
-
-  const binPath =
-    (await appPath(app || 'com.microsoft.VSCodeInsiders')) ||
-    (await appPath('com.microsoft.VSCode'))
-
   try {
+    if (!app && defaultIsVsCode) {
+      log.info(`Opening in VSCode (default editor): ${EDITOR}`)
+      await execa(EDITOR, [path])
+      return true
+    }
+
+    const binPath =
+      (await appPath(app || 'com.microsoft.VSCodeInsiders')) ||
+      (await appPath('com.microsoft.VSCode'))
+
+    log.info(`Opening with ${binPath}`)
     // default to vscode
     open(path, { app: binPath })
     return true

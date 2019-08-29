@@ -1,4 +1,4 @@
-import { command, openItem, useReaction, useStore } from '@o/kit'
+import { command, openInEditor, useReaction, useStore } from '@o/kit'
 import { AppDevCloseCommand, AppDevOpenCommand } from '@o/models'
 import { App } from '@o/stores'
 import { Button, ListSeparator, MenuButton, Row, Toggle, useBanner, useDebounceValue } from '@o/ui'
@@ -87,7 +87,7 @@ export const OrbitHeaderOpenAppMenu = memo(
                       size="sm"
                       onClick={e => {
                         e.stopPropagation()
-                        openItem(`/Users/nw/motion/orbit`)
+                        openInEditor({ path: `/Users/nw/motion/orbit` })
                       }}
                       icon="code"
                       circular

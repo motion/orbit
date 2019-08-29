@@ -35,3 +35,5 @@ export const useOm = createHook<typeof config>()
 declare module 'overmind' {
   interface Config extends IConfig<typeof config> {}
 }
+
+export const om = window['om']

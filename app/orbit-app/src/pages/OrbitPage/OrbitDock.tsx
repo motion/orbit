@@ -1,29 +1,6 @@
-import {
-  AppBit,
-  AppLoadContext,
-  AppMainViewProps,
-  AppViewsContext,
-  createUsableStore,
-  getAppDefinition,
-  react,
-  RenderAppProps,
-  useReaction,
-  useStore,
-} from '@o/kit'
+import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import {
-  ActiveDraggables,
-  Col,
-  Dock,
-  DockButton,
-  DockButtonProps,
-  FloatingCard,
-  ListPassProps,
-  useDebounceValue,
-  useNodeSize,
-  usePosition,
-  useWindowSize,
-} from '@o/ui'
+import { ActiveDraggables, Col, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
 import { partition } from 'lodash'
 import React, { memo, useContext, useMemo, useRef } from 'react'

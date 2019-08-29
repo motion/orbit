@@ -1,10 +1,13 @@
 import '../public/styles/base.css'
 import 'react-hot-loader'
-import { Provider } from 'overmind-react'
+
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
+import { createOvermind } from 'overmind'
+import { Provider } from 'overmind-react'
 
 import { IS_ELECTRON } from './constants'
 import { sleep } from './helpers'
+import { config } from './om/om'
 
 /**
  * Warning: I ran into a bug importing @/kit or @/ui here (or anything from the base DLL)
@@ -48,6 +51,14 @@ async function fetchInitialConfig() {
 window['rerender'] = (force = true) => {
   startApp(force)
 }
+
+// start om first so it inits before showing
+// console.time('loadOm')
+const om = createOvermind(config, {
+  logProxies: true,
+})
+// for now we are hacking around overmind
+window['om'] = om
 
 // setup for app
 async function main() {
@@ -94,16 +105,6 @@ async function main() {
   document.body.style.overflow = 'hidden'
   document.documentElement.style.overflow = 'hidden'
 
-  // start om first so it inits before showing
-  // console.time('loadOm')
-  const { createOvermind } = require('overmind')
-  const { config } = require('./om/om')
-  const om = createOvermind(config, {
-    logProxies: true,
-  })
-
-  window['om'] = om
-
   await om.initialized
   // console.timeEnd('loadOm')
 
@@ -134,7 +135,7 @@ async function startApp(forceRefresh: boolean | 'mode' = false) {
   const { OrbitRoot } = require('./OrbitRoot')
 
   let elements = (
-    <Provider value={window['om']}>
+    <Provider value={om}>
       <OrbitRoot />
     </Provider>
   )

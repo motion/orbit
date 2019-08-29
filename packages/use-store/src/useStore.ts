@@ -12,6 +12,8 @@ import { useTrackableStore } from './setupTrackableStore'
 import { ReactiveStore } from './Store'
 import { useForceUpdate } from './useForceUpdate'
 
+export { unwrapProxy } from './unwrapProxy'
+export { useForceUpdate } from './useForceUpdate'
 export {
   always,
   cancel,

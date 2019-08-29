@@ -12,7 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "target": "es2016",
     "noImplicitAny": false,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "noEmitOnError": false,
     "strictNullChecks": false,

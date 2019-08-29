@@ -86,7 +86,7 @@ export const OrbitHeaderOpenAppMenu = memo(
                       size="sm"
                       onClick={async e => {
                         e.stopPropagation()
-                        const res = await openInEditor({ path: `/Users/nw/motion/orbit` })
+                        const res = await openInEditor({ path: `/Users/nw/projects/motion/orbit` })
                         if (res.type !== 'success') {
                           banner.set({
                             type: 'error',

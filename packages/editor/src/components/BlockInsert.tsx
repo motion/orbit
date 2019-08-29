@@ -130,7 +130,7 @@ class BlockInsertComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { theme, editor } = this.props
+    const { theme } = this.props
     const style = { top: `${this.state.top}px`, left: `${this.state.left}px` }
 
     return (
@@ -141,10 +141,9 @@ class BlockInsertComponent extends React.Component<Props, State> {
             position: 'absolute',
             zIndex: 10,
             pointerEvents: 'auto',
-            display: editor.readOnly ? 'inherit' : 'none',
           }}
         >
-          <Trigger active={this.state.active} style={style}>
+          <Trigger active={this.state.active} style={style} theme={theme}>
             <PlusIcon
               className="editor-insert"
               onClick={this.handleClick}

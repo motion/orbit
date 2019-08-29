@@ -326,6 +326,7 @@ require('@o/kit').OrbitHot.fileLeave();
         cacheDirectory: '.cache/hard-source/[confighash]',
         environmentHash: {
           root: process.cwd(),
+          version: require('../../package.json').version,
         },
         info: {
           mode: 'none',
@@ -403,7 +404,8 @@ require('@o/kit').OrbitHot.fileLeave();
         new webpack.HotModuleReplacementPlugin({
           // multiStep is faster for app HMR but slower when developing the big bundles
           // so its good for production mode
-          multiStep: mode === 'production',
+          // disbling again, its really slow on big bundles
+          // multiStep: mode === 'production',
         }),
 
       // new (require('bundle-analyzer-plugin').default)({

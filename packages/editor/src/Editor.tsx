@@ -1,4 +1,4 @@
-import { Col, useVisibility } from '@o/ui'
+import { Col, useTheme, useVisibility } from '@o/ui'
 import * as React from 'react'
 import { Node, SchemaProperties, Value } from 'slate'
 import { Editor as SlateEditor } from 'slate-react'
@@ -11,10 +11,9 @@ import { PlaceholderPlugin } from './plugins/Placeholder'
 import { queries } from './queries'
 import { schema } from './schema'
 import { Markdown } from './serializer'
-import { light } from './theme'
+import { dark, light } from './theme'
 import { Plugin, SearchResult } from './types'
 
-export const theme = light
 export { schema } from './schema'
 
 const defaultOptions = {}
@@ -258,6 +257,7 @@ class EditorComponent extends React.PureComponent<EditorProps, EditorState> {
       defaultValue,
       autoFocus,
       plugins,
+      theme,
       ...rest
     } = this.props
 
@@ -302,12 +302,6 @@ class EditorComponent extends React.PureComponent<EditorProps, EditorState> {
 }
 
 const StyledEditor = styled(EditorComponent)`
-  color: ${props => props.theme.text};
-  background: ${props => props.theme.background};
-  font-family: ${props => props.theme.fontFamily};
-  font-weight: ${props => props.theme.fontWeight};
-  font-size: 1em;
-  line-height: 1.7em;
   width: 100%;
 
   h1,
@@ -374,8 +368,15 @@ const StyledEditor = styled(EditorComponent)`
 `
 
 export function Editor(props: EditorProps) {
+  const theme = useTheme()
   const visibility = useVisibility()
-  return <StyledEditor {...props} readOnly={visibility === false ? true : props.readOnly} />
+  return (
+    <StyledEditor
+      theme={theme.background.isDark() ? dark : light}
+      {...props}
+      readOnly={visibility === false ? true : props.readOnly}
+    />
+  )
 }
 
 Editor.defaultProps = {

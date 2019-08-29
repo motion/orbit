@@ -80,10 +80,10 @@ export const dark: Theme = {
   toolbarInput: colors.black10,
   toolbarItem: colors.lightBlack,
 
-  blockToolbarBackground: colors.white,
-  blockToolbarTrigger: colors.almostWhite,
-  blockToolbarTriggerIcon: colors.almostBlack,
-  blockToolbarItem: colors.lightBlack,
+  blockToolbarBackground: colors.almostBlack,
+  blockToolbarTrigger: colors.almostBlack,
+  blockToolbarTriggerIcon: colors.white,
+  blockToolbarItem: colors.white,
 
   tableDivider: colors.lightBlack,
   tableSelected: colors.primary,

@@ -16,7 +16,7 @@ let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'A smart operating system for work222',
+  large: 'A smart operating system for work',
   medium: 'A smart operating system for work',
   small: 'The data-driven app platform',
 }

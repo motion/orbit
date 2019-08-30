@@ -20,6 +20,8 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
       const props = getAnimatedProps(curProps)
       if (props) {
         Object.assign(nextProps, props)
+        // ensure will-change transform
+        // nextProps.style = { ...nextProps.style, willChange: 'transform' }
       }
     },
     isDOMElement: true,

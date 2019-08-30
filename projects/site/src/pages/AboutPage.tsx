@@ -97,23 +97,19 @@ export function AboutPage() {
                   overflow="hidden"
                   className="content"
                 >
-                  <BigTitle size={2.5}>
+                  <BigTitle size={2}>
                     Making it easy to build beautiful apps that work for the user first.
                   </BigTitle>
 
                   <BigParagraph>
-                    Developers spend too much time re-inventing the wheel, and not enough time
-                    building higher level, richer and more powerful platforms.
+                    We're rethinking how operating systems work, starting by giving you a magical
+                    workspace where you can create apps with ease, import and move data between
+                    them, and publish them for anyone else.
                   </BigParagraph>
 
                   <BigParagraph>
-                    Developers spend too much time re-inventing the wheel, and not enough time
-                    building higher level, richer and more powerful platforms.
-                  </BigParagraph>
-
-                  <BigParagraph>
-                    Developers spend too much time re-inventing the wheel, and not enough time
-                    building higher level, richer and more powerful platforms.
+                    It's a new type of thing: an app platform that runs for you personally, but is
+                    powerful enough to build custom tools for you and your team.
                   </BigParagraph>
 
                   <Space size="xxxl" />
@@ -168,7 +164,7 @@ export function AboutPage() {
 }
 
 const BigParagraph = (props: TextProps) => (
-  <Title selectable size={1.1} alpha={0.6} fontWeight={100} sizeLineHeight={1.35} {...props} />
+  <Title selectable size={0.8} alpha={0.6} fontWeight={100} sizeLineHeight={1.35} {...props} />
 )
 
 const BigTitle = (props: TextProps) => <Title selectable size={2.25} fontWeight={100} {...props} />

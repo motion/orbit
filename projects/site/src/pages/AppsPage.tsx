@@ -258,7 +258,7 @@ const AppSearch = memo(() => {
   )
 
   return (
-    <HotKeys keyMap={keyMap} handlers={handlers}>
+    <HotKeys keyMap={keyMap} handlers={handlers} style={{ display: 'flex', flexFlow: 'column' }}>
       <View margin={[0, 'auto']}>
         <SearchInput
           width={450}

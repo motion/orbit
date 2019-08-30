@@ -27,26 +27,26 @@ export const components = {
 
   h1: props => (
     <>
-      <TitleText size="xl" {...props} />
+      <TitleText size="lg" {...props} />
       <Space />
     </>
   ),
   h2: props => (
     <>
-      <TitleText marginTop={16} size="lg" {...props} />
+      <TitleText marginTop={16} size="md" {...props} />
       <Space size="lg" />
     </>
   ),
   h3: props => (
     <>
       <Space />
-      <TitleText marginTop={16} size="md" {...props} />
+      <TitleText marginTop={16} size="sm" {...props} />
       <Space />
     </>
   ),
   h4: props => (
     <>
-      <TitleText size="sm" {...props} />
+      <TitleText size="xs" {...props} />
       <Space />
     </>
   ),

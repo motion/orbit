@@ -37,6 +37,7 @@ const DocsList = memo(() => {
   return (
     <List
       query={docsStore.search}
+      searchable
       selectable
       alwaysSelected
       defaultSelected={docsStore.initialIndex}

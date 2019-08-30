@@ -386,7 +386,7 @@ export class WorkspaceManager {
 
       resolveCommand(AppDevCloseCommand, async ({ identifier }) => {
         log.info(`Stopping development ${identifier}`)
-        const packageId = this.appsManager.identifierToPackageId(identifier)
+        const packageId = this.appsManager.identifierToPackageId[identifier]
         if (!packageId) {
           return {
             type: 'error',

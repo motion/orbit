@@ -528,7 +528,7 @@ export class AppsBuilder {
       return index.replace('<!-- orbit-scripts -->', `${scriptsPre}${scriptsPost}`)
     } else if (req.path.indexOf('/isolate') > -1) {
       const identifier = req.path.split('/')[2]
-      const packageId = this.appsManager.identifierToPackageId(identifier)
+      const packageId = this.appsManager.identifierToPackageId[identifier]
       const app = this.apps.find(x => x.packageId === packageId)
       console.log('identifier', identifier)
       return index.replace(

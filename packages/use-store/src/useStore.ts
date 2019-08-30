@@ -1,7 +1,6 @@
 import { AutomagicStore, configureAutomagical, CurrentComponent, decorate, updateProps, useCurrentComponent } from '@o/automagical'
 import { isEqual } from '@o/fast-compare'
-import { debounce } from 'lodash'
-import { _interceptReads, observable, observe, transaction } from 'mobx'
+import { observable, transaction } from 'mobx'
 import { useEffect, useRef } from 'react'
 
 import { config } from './configure'
@@ -123,71 +122,48 @@ export function disposeStore(store: any, component?: CurrentComponent) {
 
 type HooksObject = {
   __rerunHooks: () => any
-  __setUpdater: Function
-  __dispose?: Function
-  __stopCheckingPropRead?: Function
+  __hooksData: any
+  // __setUpdater: Function
+  // __dispose?: Function
+  // __stopCheckingPropRead?: Function
 }
 
-export function useHooks<A extends () => any>(hooks: A, store?: any): ReturnType<A> & HooksObject {
-  let updater: Function | null = null
-  const __setUpdater = cb => {
-    updater = debounce(cb)
-  }
-  let trackProps = new Set<string>()
-  let disposeReads: any[] = []
-  if (store) {
-    for (const prop in store.props) {
-      disposeReads.push(
-        _interceptReads(store.props, prop, () => {
-          trackProps.add(prop)
-        }),
-      )
-    }
-  }
-  let __dispose
-  if (trackProps.size) {
-    __dispose = observe(store.props, change => {
-      if (updater && trackProps.has(change['name'])) {
-        updater()
-      }
-    })
-  }
-
+export function useHooks<A extends () => any>(
+  hooks: A,
+  // store?: any,
+): ReturnType<A> & HooksObject {
   // why observable map? it triggers on key changes
   // and we will add new keys as promises throw/update
   const hooksData = observable.map({}, { deep: false })
 
-  // then use a proxy just so we can convert map back into object api
-  return new Proxy(
-    {
-      __hooksData: hooksData,
-      __rerunHooks: () => {
-        const res = hooks()
+  const hooksObject: HooksObject = {
+    __hooksData: hooksData,
+    __rerunHooks: () => {
+      const res = hooks()
+      transaction(() => {
         for (const key in res) {
+          // set it here so its responsive
           hooksData.set(key, res[key])
+          // set it on here so we can see it in console
+          hooksObject[key] = res[key]
         }
-      },
-      __setUpdater,
-      __dispose,
-      __stopCheckingPropRead() {
-        for (const dispose of disposeReads) {
-          dispose()
-        }
-      },
+      })
     },
-    {
-      get(target, key) {
-        if (Reflect.has(target, key)) {
-          return Reflect.get(target, key)
-        }
-        return hooksData.get(key)
-      },
-      set(_, key, value) {
-        hooksData.set(key, value)
-        return true
-      },
+  }
+
+  // then use a proxy just so we can convert map back into object api
+  return new Proxy(hooksObject, {
+    get(target, key) {
+      if (Reflect.has(target, key)) {
+        return Reflect.get(target, key)
+      }
+      return hooksData.get(key)
     },
-  ) as any
+    set(_, key, value) {
+      hooksData.set(key, value)
+      return true
+    },
+  }) as ReturnType<A> & HooksObject
 }
 
 // // this is reactive so we can capture this.props and other reactive state inside hooks call
@@ -304,38 +280,27 @@ function useReactiveStore<A extends any>(
   // we need this special case so we can properly set them up the first time
   // so that the props on store are updated and then passed to hooks
   if (state.current.pendingHooks) {
-    let didThrowPromise = false
     // run hooks after construct so props are there
     let allHooks: HooksObject[] = []
-    try {
-      for (const key in store) {
-        const hook = store[key]
-        if (hook && hook.__rerunHooks) {
-          hook.__rerunHooks()
-          hook.__stopCheckingPropRead()
-          allHooks.push(hook)
-        }
+    for (const key in store) {
+      const hook = store[key]
+      if (hook && hook.__rerunHooks) {
+        hook.__rerunHooks()
+        // hook.__stopCheckingPropRead()
+        allHooks.push(hook)
       }
-    } catch (err) {
-      if (err instanceof Promise) {
-        didThrowPromise = true
-      }
-      throw err
     }
-    if (!didThrowPromise) {
-      // set final state
-      state.current.hooks = allHooks
-      state.current.pendingHooks = false
-      // add dispose
-      dispose = () => {
-        allHooks.forEach(hook => hook.__dispose && hook.__dispose())
-      }
-      // set the updater
-      allHooks.forEach(hook => {
-        hook.__setUpdater(forceUpdate)
-      })
-    }
-  } else {
+    // set final state
+    state.current.hooks = allHooks
+    state.current.pendingHooks = false
+  }
+
+  // update props after first run, before hooks re-run
+  if (props && !shouldSetupStore) {
+    updateProps(store, props)
+  }
+
+  if (!state.current.pendingHooks) {
     if (!shouldSetupStore) {
       // re-run hooks
       const hooks = state.current.hooks
@@ -356,11 +321,6 @@ function useReactiveStore<A extends any>(
         })
       }
     }
-  }
-
-  // update props after first run, before hooks re-run
-  if (props && !shouldSetupStore) {
-    updateProps(store, props)
   }
 
   if (hasChangedSource) {

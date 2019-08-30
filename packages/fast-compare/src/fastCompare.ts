@@ -5,14 +5,17 @@ const hasElementType = typeof Element !== 'undefined'
 
 export const EQUALITY_KEY = Symbol('EQUALITY_KEY')
 
-type IgnoreKeys = { [key: string]: boolean }
+export type IsEqualOptions = {
+  ignoreKeys?: { [key: string]: boolean }
+  simpleCompareKeys?: { [key: string]: boolean }
+}
 
-export function isEqual(a, b, ignoreKeys?: IgnoreKeys) {
+export function isEqual(a: any, b: any, options?: IsEqualOptions) {
   if (process.env.NODE_ENV !== 'development') {
-    return isEqualInner(a, b, ignoreKeys)
+    return isEqualInner(a, b, options)
   }
   try {
-    return isEqualInner(a, b, ignoreKeys)
+    return isEqualInner(a, b, options)
   } catch (err) {
     if ((err.message && err.message.match(/stack|recursion/i)) || err.number === -2146828260) {
       // warn on circular references, don't crash
@@ -43,7 +46,7 @@ export function isEqual(a, b, ignoreKeys?: IgnoreKeys) {
 //   return false
 // }
 
-function isEqualInner(a, b, ignoreKeys?: IgnoreKeys) {
+function isEqualInner(a: any, b: any, options?: IsEqualOptions) {
   // fast-deep-equal index.js 2.0.1
   if (a === b) return true
 
@@ -108,8 +111,13 @@ function isEqualInner(a, b, ignoreKeys?: IgnoreKeys) {
     // custom handling for React
     for (i = length; i-- !== 0; ) {
       key = keys[i]
-      if (ignoreKeys && ignoreKeys[key]) {
-        continue
+      if (options) {
+        if (options.ignoreKeys && options.ignoreKeys[key]) {
+          continue
+        }
+        if (options.simpleCompareKeys && options.simpleCompareKeys[key]) {
+          return a[key] === b[key]
+        }
       }
       if (key === '_owner' && a.$$typeof) {
         // React-specific: avoid traversing React elements' _owner.

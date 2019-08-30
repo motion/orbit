@@ -46,7 +46,9 @@ function constructWithProps(Store: any, args: any[], props?: Object) {
   // validate only after we constructor to avoid initial value problems
   const getProps = {
     configurable: true,
-    get: () => storeProps.props,
+    get: () => {
+      return storeProps.props
+    },
     // allows for class { props = {} } for initial props
     set(val: Object) {
       if (!val) return
@@ -63,7 +65,7 @@ function constructWithProps(Store: any, args: any[], props?: Object) {
   // these are props set initially on the store
   if (defaultProps) {
     for (const key in defaultProps) {
-      if (typeof storeProps.props[key] === 'undefined') {
+      if (typeof props[key] === 'undefined' && typeof defaultProps[key] !== 'undefined') {
         storeProps.props[key] = defaultProps[key]
       }
     }

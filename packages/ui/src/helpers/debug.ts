@@ -23,8 +23,10 @@ export function debug(level?: number) {
   }
 }
 
-if (localStorage.getItem('enableLog')) {
-  debug(+localStorage.getItem('enableLog')! || 0)
+if (typeof window !== 'undefined') {
+  if (localStorage.getItem('enableLog')) {
+    debug(+localStorage.getItem('enableLog')! || 0)
+  }
 }
 
 function lightLog(val: any) {

@@ -23,10 +23,7 @@ function QueryBuilderApp() {
   if (!dataApps.length) {
     return (
       <Scale size={0.8}>
-        <Templates.Message
-          title="No data apps"
-          subTitle="Add data apps to use Query Builder."
-        >
+        <Templates.Message title="No data apps" subTitle="Add data apps to use Query Builder.">
           <Button alt="action" onClick={() => om.actions.router.showAppPage({ id: 'apps' })}>
             Install apps
           </Button>
@@ -279,7 +276,7 @@ class QueryBuilderStore {
       query,
       setQuery,
     }
-  }, this)
+  })
 
   method = ''
   placeholders: PlaceHolder[] = []

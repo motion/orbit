@@ -1158,6 +1158,7 @@ export type GenerateCSSPropertySet<A extends true | false> = {
   voiceVolume?: CSSPropertyVal<voiceVolume, A>
   zoom?: CSSPropertyVal<zoom, A>
   WebkitAppRegion?: string
+  WebkitFontSmoothing?: string
 }
 
 export type GlossCSSProperties = {

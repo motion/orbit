@@ -50,6 +50,8 @@ type Modifiers = {
   option?: boolean
 }
 
+type SelectState = 'inactive' | 'selecting' | 'sorting'
+
 export class SelectableStore {
   props: SelectableProps
 
@@ -57,7 +59,7 @@ export class SelectableStore {
   active = new Set<string | number>()
   lastEnter = -1
   listRef: DynamicListControlled = null
-  isSorting = false
+  state: SelectState = 'inactive'
   private keyToIndex = {}
   rows = []
 
@@ -313,10 +315,11 @@ export class SelectableStore {
       //  1. if they move their mouse more than distance
       const start = [e.pageX, e.pageY]
       const checkForDistanceSelect = e => {
-        if (this.isSorting && this.clearMouseMoveWatcher) {
+        if (this.state === 'sorting' && this.clearMouseMoveWatcher) {
           return this.clearMouseMoveWatcher()
         }
         // if we moved enough, consider it a select not sort
+        // distance move until cancel
         const cur = [e.pageX, e.pageY]
         if (
           Math.abs(cur[0] - start[0]) > 16 ||
@@ -324,6 +327,7 @@ export class SelectableStore {
           Math.abs(cur[1] - start[1]) > 16 ||
           Math.abs(cur[1] + start[1]) > 16
         ) {
+          this.state = 'selecting'
           this.setRowActive(index)
           this.clearOnSelectOrSortWatchers()
         }
@@ -336,12 +340,14 @@ export class SelectableStore {
       //  2. once the pressDelay window has passed, which may be same as #1 need to test
       this.sortableMouseDownTm = setTimeout(() => {
         // but only if we dont start sorting
-        if (!this.isSorting) {
+        if (this.state === 'sorting') {
+          this.state = 'selecting'
           this.setRowActive(index)
           this.clearOnSelectOrSortWatchers()
         }
       }, selectDefined(this.props.pressDelay, defaultSortPressDelay) + 10)
     } else {
+      this.state = 'selecting'
       this.setRowActive(index, e)
     }
   }
@@ -358,7 +364,7 @@ export class SelectableStore {
     this.dragStartIndex = null
 
     // onMouseUp, finish selecting this row! (see #sorting)
-    if (this.isSorting) {
+    if (this.state === 'sorting') {
       // we did a sort, so ignore the original select
       this.sortableMouseDownIndex = -1
     } else {
@@ -368,6 +374,7 @@ export class SelectableStore {
       }
     }
 
+    this.state = 'inactive'
     document.removeEventListener('mouseup', this.onStopDragSelecting)
   }
 
@@ -375,7 +382,7 @@ export class SelectableStore {
     // prevent race, this makes it not clear after initial multi-select w/sortable list
     this.clearOnSelectOrSortWatchers()
 
-    if (this.isSorting) {
+    if (this.state === 'sorting') {
       console.debug('Preventing selection while sorting')
       return
     }
@@ -428,7 +435,8 @@ export class SelectableStore {
   }
 
   setSorting = async (val: boolean) => {
-    this.isSorting = val
+    this.state = val ? 'sorting' : 'inactive'
+    this.onStopDragSelecting()
   }
 
   private getIndexKey(index: number) {

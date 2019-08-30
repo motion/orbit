@@ -36,8 +36,6 @@ export function ListsAppIndex(props: NavigatorProps) {
     onEvent: 'enter',
   })
 
-  console.warn('redering index')
-
   return (
     <>
       <TreeList

@@ -251,7 +251,7 @@ class OrbitAppsCarouselStore {
   outScaler = numberScaler(0, 1, 0.55, 0.6)
   inScaler = numberScaler(0, 1, 0.9, 1)
   opacityScaler = numberScaler(1, 0, 1.2, 0)
-  boundRotation = numberBounder(-5, 5)
+  boundRotation = numberBounder(-3.5, 3.5)
   boundOpacity = numberBounder(0, 1)
   getSpring = (i: number) => {
     const { zoomedIn } = this

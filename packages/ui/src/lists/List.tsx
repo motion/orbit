@@ -6,6 +6,7 @@ import { HotKeys, HotKeysProps } from 'react-hotkeys'
 import { Center } from '../Center'
 import { splitCollapseProps } from '../Collapsable'
 import { createContextualProps } from '../helpers/createContextualProps'
+import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { ProvideHighlight } from '../Highlight'
 import { useFilter, UseFilterProps } from '../hooks/useFilter'
 import { useGet, useGetFn } from '../hooks/useGet'
@@ -77,7 +78,7 @@ export type HandleOrbitSelect = (index: number, extraData: any) => any
 
 const nullFn = () => null
 
-export const List = memo(
+export const List = memoIsEqualDeep(
   forwardRef<SelectableStore, ListProps>((allProps, ref) => {
     const [collapseProps, allListProps] = splitCollapseProps(allProps)
     const { onSelect: extraOnSelect, itemProps: extraItemProps } =
@@ -275,6 +276,11 @@ export const List = memo(
       </Section>
     )
   }),
+  {
+    simpleCompareKeys: {
+      items: true,
+    },
+  },
 )
 
 function ListPlaceholder(props: ListProps) {

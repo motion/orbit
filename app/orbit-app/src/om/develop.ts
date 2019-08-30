@@ -60,29 +60,35 @@ const updateStatus: AsyncAction<{
     return
   }
 
-  // first, load new app js bundles if they were just added
-  await om.actions.develop.loadNewAppDLLs(status)
+  const current = om.state.develop.buildStatus
+  const next = status
 
-  // next, check if we toggled from dev/prod and properly update
-  await om.actions.develop.updateAppsBuildMode(status)
-
-  // finally, persist the last buildStatus for next run
+  // persist the last buildStatus immediately
+  // this will be sure we don't redo things unecessarily if called in quick succession
+  // as it does when webpack sees a few build events come in at once
   om.state.develop.buildStatus = status
+
+  // then, load new app js bundles if they were just added
+  await om.actions.develop.loadNewAppDLLs({ current, next })
+
+  // then, check if we toggled from dev/prod and properly update
+  await om.actions.develop.updateAppsBuildMode({ current, next })
 }
 
-const loadNewAppDLLs: AsyncAction<BuildStatus[]> = async (om, status) => {
-  const current = getIdentifiers(om.state.develop.buildStatus)
-  const next = getIdentifiers(status)
-  const toAdd = difference(next, current).filter(isAppIdentifier)
-  debugger
+type UpdateBuildStatusDesc = { current: BuildStatus[]; next: BuildStatus[] }
+
+const loadNewAppDLLs: AsyncAction<UpdateBuildStatusDesc> = async (om, { current, next }) => {
+  const currentIds = getIdentifiers(current)
+  const nextIds = getIdentifiers(next)
+  const toAdd = difference(nextIds, currentIds).filter(isAppIdentifier)
   if (!toAdd.length) return
   // loop and load new app dlls
+  // TODO promise.all this probably
   for (const identifier of toAdd) {
     console.debug(`Loading a new app DLL: ${identifier}`)
     const packageId = Desktop.state.workspaceState.identifierToPackageId[identifier]
     if (!packageId) {
       console.error('Couldnt find it tho')
-      debugger
       return
     }
     const name = stringToIdentifier(packageId)
@@ -93,13 +99,13 @@ const loadNewAppDLLs: AsyncAction<BuildStatus[]> = async (om, status) => {
   }
 }
 
-const updateAppsBuildMode: AsyncAction<BuildStatus[]> = async (om, status) => {
-  const current = getIdentifiers(om.state.develop.buildStatus.filter(x => x.mode === 'development'))
-  const next = getIdentifiers(status.filter(x => x.mode === 'development'))
+const updateAppsBuildMode: AsyncAction<UpdateBuildStatusDesc> = async (om, { current, next }) => {
+  const currentIds = getIdentifiers(current.filter(x => x.mode === 'development'))
+  const nextIds = getIdentifiers(next.filter(x => x.mode === 'development'))
 
   // load new app scripts
-  const toAdd = difference(next, current).filter(isAppIdentifier)
-  const toRemove = difference(current, next).filter(isAppIdentifier)
+  const toAdd = difference(nextIds, currentIds).filter(isAppIdentifier)
+  const toRemove = difference(currentIds, nextIds).filter(isAppIdentifier)
 
   if (!toAdd.length && !toRemove.length) {
     return

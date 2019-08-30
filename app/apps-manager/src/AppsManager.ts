@@ -162,10 +162,11 @@ export class AppsManager {
 
   updateAppMetaWatcher = react(
     () => [this.activeSpace, this.nodeAppDefinitions, this.packageJsonUpdate, this.localAppsUpdate],
-    async ([activeSpace, appDefs], { when }) => {
+    async ([activeSpace, appDefs], { sleep, when }) => {
       ensure('this.started', this.started)
       await when(() => this.updatePackagesVersion !== 0)
       ensure('info', !!activeSpace && !!appDefs)
+      await sleep(100) // debounce 100
       await this.updateAppMeta()
     },
   )
@@ -204,13 +205,19 @@ export class AppsManager {
         let watcher = watch([appsDir], {
           persistent: true,
           awaitWriteFinish: true,
+          ignoreInitial: true,
           // just watch the base directory for new folders
           depth: 0,
         })
-        watcher.on('change', () => {
-          log.info('got local apps dir change')
-          this.localAppsUpdate = Math.random()
-        })
+        watcher
+          .on('add', () => {
+            log.info('added an app dir')
+            this.localAppsUpdate = Math.random()
+          })
+          .on('unlink', () => {
+            log.info('removed an app dir')
+            this.localAppsUpdate = Math.random()
+          })
         return () => {
           watcher.close()
         }

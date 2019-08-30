@@ -47,7 +47,6 @@ export function useFilter(props: UseFilterProps<ListItemSimpleProps>) {
     disabled: isDefined(props.query) || !props.searchable,
   })
   const query = selectDefined(props.query, activeQuery)
-  console.log('waht', query)
 
   useEffect(() => {
     if (initialQuery.current) {

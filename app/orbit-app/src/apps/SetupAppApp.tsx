@@ -1,4 +1,4 @@
-import { AppIcon, command, createApp, getAppDefinition, useLocationLink, useSearchState } from '@o/kit'
+import { App, AppIcon, command, createApp, getAppDefinition, useLocationLink, useSearchState } from '@o/kit'
 import { AppCreateNewCommand, AppDefinition } from '@o/models'
 import { Button, Col, Flow, FlowLayoutInline, FlowProvide, Form, IconLabeled, List, ListItemProps, Scale, SectionPassProps, SelectableGrid, SelectableSurface, Text, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
 import { stringToIdentifier } from '@o/utils'
@@ -10,7 +10,7 @@ import { useSearchAppStoreApps } from './apps/AppsApp'
 import { AppsMainNew } from './apps/AppsMainNew'
 import { useTopAppStoreApps } from './apps/useTopAppStoreApps'
 import { useUserVisualAppDefinitions } from './orbitApps'
-import { StackNavigator, useStackNavigator } from './StackNavigator'
+import { StackNavigator, useCreateStackNavigator, useStackNavigator } from './StackNavigator'
 
 export default createApp({
   id: 'setupApp',
@@ -23,17 +23,42 @@ export default createApp({
 })
 
 function SetupAppMain() {
+  const stackNav = useCreateStackNavigator({
+    id: 'setupApp',
+    defaultItem: {
+      id: 'SetupAppHome',
+      props: {},
+    },
+    items: {
+      SetupAppHome,
+      SetupAppCustom,
+    },
+  })
+
   return (
-    <StackNavigator
-      defaultItem={{
-        id: 'SetupAppHome',
-        props: {},
-      }}
-      items={{
-        SetupAppHome,
-        SetupAppCustom,
-      }}
-    />
+    <App
+      actions={useMemo(
+        () => (
+          <>
+            <Button
+              alt="action"
+              onClick={() => {
+                stackNav.navigateTo({
+                  id: 'SetupAppCustom',
+                })
+              }}
+              icon="plus"
+              tooltip="Create new custom app"
+            >
+              Create Custom App
+            </Button>
+          </>
+        ),
+        [],
+      )}
+    >
+      <StackNavigator useNavigator={stackNav} />
+    </App>
   )
 }
 
@@ -297,20 +322,6 @@ const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
   return (
     <Scale size="lg">
       <Toolbar>
-        {!props.isEmbedded && (
-          <Button
-            alt="action"
-            onClick={() => {
-              stackNav.navigateTo({
-                id: 'SetupAppCustom',
-              })
-            }}
-            icon="plus"
-            tooltip="Create new custom app"
-          >
-            Create Custom App
-          </Button>
-        )}
         <View flex={1} />
         {flow.data.selected && (
           <View>

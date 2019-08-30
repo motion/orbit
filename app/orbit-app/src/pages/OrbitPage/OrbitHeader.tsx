@@ -4,8 +4,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react, useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
+import { createRef, useRef } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
@@ -174,35 +174,40 @@ export const OrbitHeader = memo(() => {
         <HeaderContain space spaceAround isActive={false} isDeveloping={isDeveloping}>
           <OrbitHeaderInput fontSize={slim ? 16 : 18} />
 
-          <Row
-            space
-            transition="all ease 300ms"
-            {...!isOnTearablePane && zoomedIn && { pointerEvents: 'none', opacity: 0.3 }}
-          >
+          <Row space transition="all ease 300ms">
             <SurfacePassProps sizeRadius={1.5} sizeHeight={0.9} sizeIcon={1.1} sizePadding={1.2}>
               {orbitStore.activeActions}
             </SurfacePassProps>
-            {!isTorn && (
-              <Button
-                circular
-                tooltip="Add app to workspace"
-                tooltipProps={{
-                  distance: 16,
-                }}
-                alt="flat"
-                icon="plus"
-                size="sm"
-                sizeIcon={1.6}
-                glint={false}
-                glintBottom={false}
-                opacity={0.5}
-                hoverStyle={{
-                  opacity: 0.75,
-                }}
-                onClick={om.actions.router.toggleSetupAppPage}
+
+            <Row
+              space
+              {...!isOnTearablePane && zoomedIn && { pointerEvents: 'none', opacity: 0.3 }}
+            >
+              {!isTorn && (
+                <Button
+                  circular
+                  tooltip="Add app to workspace"
+                  tooltipProps={{
+                    distance: 16,
+                  }}
+                  alt="flat"
+                  icon="plus"
+                  size="sm"
+                  sizeIcon={1.6}
+                  glint={false}
+                  glintBottom={false}
+                  opacity={0.5}
+                  hoverStyle={{
+                    opacity: 0.75,
+                  }}
+                  onClick={om.actions.router.toggleSetupAppPage}
+                />
+              )}
+              <OrbitHeaderOpenAppMenu
+                isDeveloping={isDeveloping}
+                setIsDeveloping={setIsDeveloping}
               />
-            )}
-            <OrbitHeaderOpenAppMenu isDeveloping={isDeveloping} setIsDeveloping={setIsDeveloping} />
+            </Row>
           </Row>
         </HeaderContain>
 

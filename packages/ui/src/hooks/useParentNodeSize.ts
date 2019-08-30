@@ -19,7 +19,7 @@ export function useParentNodeSize(props?: UseNodeSizeProps) {
       parent = parent.parentElement
     }
     setParentNode({ current: parent })
-  }, [ref])
+  }, [ref.current])
 
   return {
     ...sizer,

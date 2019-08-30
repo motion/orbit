@@ -239,7 +239,9 @@ export const Banner = (props: BannerViewProps) => {
         <Col flex={1} space="sm">
           <Message.Title>{title}</Message.Title>
           <Col maxHeight={maxHeight} scrollable="y">
-            <SimpleText whiteSpace="pre">{message}</SimpleText>
+            <SimpleText whiteSpace="pre" overflow="auto">
+              {message}
+            </SimpleText>
           </Col>
         </Col>
         <Button

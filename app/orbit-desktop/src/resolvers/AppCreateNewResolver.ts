@@ -52,6 +52,8 @@ export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
       cmdOpts,
     )
 
+    // start watching here because it will pick up right away
+
     if (res.type === 'error') {
       return res
     }
@@ -70,8 +72,7 @@ export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
       return buildRes
     }
 
-    // wait for build complete
-    await orbitDesktop.workspaceManager.appsBuilder.onBuildComplete(opts.identifier)
+    await orbitDesktop.workspaceManager.updateAppsAfterNewApp(opts.identifier)
 
     return {
       type: 'success',

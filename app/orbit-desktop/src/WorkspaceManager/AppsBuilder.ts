@@ -361,7 +361,7 @@ export class AppsBuilder {
     await new Promise(res => {
       const observable = this.observeBuildStatus().subscribe(next => {
         const buildStatus = next.find(x => x.identifier === identifier)
-        log.verbose(`Got build status`, buildStatus)
+        log.verbose(`Got build status ${buildStatus ? buildStatus.status : 'none'}`)
         if (buildStatus && buildStatus.status === 'complete') {
           observable.unsubscribe()
           res()

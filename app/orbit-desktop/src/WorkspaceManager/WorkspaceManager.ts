@@ -225,6 +225,21 @@ export class WorkspaceManager {
     return observable
   }
 
+  /**
+   * TODO these final steps shouldn't be so explicit / here
+   * Lets redo this at some point and fix
+   */
+  async updateAppsAfterNewApp(identifier: string) {
+    // i added this because it was not picking it up because appsManager wasn't watching build,
+    // just watching the app directory being added, it should probably verify the build is added
+    await this.appsManager.updateAppMeta()
+    // wait for build complete
+    await this.appsBuilder.onBuildComplete(identifier)
+    // sleep after update desktop state to ensure it syncs..... lame
+    await this.updateDesktopState()
+    await sleep(200)
+  }
+
   private setBuildMode(appMeta: AppMeta, mode: 'development' | 'production') {
     log.verbose(`setBuildMode ${appMeta.packageId} ${mode}`)
     // TODO this is here because we'll have "external" app you can build

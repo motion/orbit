@@ -71,6 +71,8 @@ const updateStatus: AsyncAction<{
   // this will be sure we don't redo things unecessarily if called in quick succession
   // as it does when webpack sees a few build events come in at once
   om.state.develop.buildStatus = status
+    // filter out ones we can't use yet because they are building...
+    .filter(x => isAppIdentifier(x.identifier))
 
   // then, load new app js bundles if they were just added
   await om.actions.develop.loadNewAppDLLs({ current, next })

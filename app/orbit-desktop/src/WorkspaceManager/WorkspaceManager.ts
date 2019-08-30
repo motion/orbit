@@ -239,13 +239,12 @@ export class WorkspaceManager {
   async updateAppsAfterNewApp(identifier: string) {
     // by now we've built the app entirely, so refresh the appsMeta
     await this.appsManager.updateAppMeta()
+    // update nameRegistry (TODO remove nameRegistry for something nicer)
+    await this.updateDesktopState()
     // then, re-run AppsBuilder.update, because that will pick up new packageId/identifier in BuildStatus
     await this.updateAppsBuilder()
     // wait for build complete
     await this.appsBuilder.onBuildComplete(identifier)
-    // update nameRegistry (TODO remove nameRegistry for something nicer)
-    await this.updateDesktopState()
-    await sleep(400) // bugfix stupid thign
   }
 
   private setBuildMode(appMeta: AppMeta, mode: 'development' | 'production') {

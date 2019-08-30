@@ -227,6 +227,7 @@ export const Banner = (props: BannerViewProps) => {
       margin="md"
       marginTop={0}
       overflow="hidden"
+      padding
       elevation={2}
       alignSelf="flex-end"
       maxWidth={Math.max(200, width * 0.33)}

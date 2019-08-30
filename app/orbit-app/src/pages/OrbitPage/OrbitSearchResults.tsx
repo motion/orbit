@@ -320,7 +320,6 @@ const OrbitSearchedItem = gloss<BoxProps & { visible: boolean }>(Box, {
 
 function ListSeparatorLarge(props: { children: string }) {
   const theme = useTheme()
-  console.log('theme', theme)
   return (
     <View padding={[38, 8, 16]}>
       <SubTitle>{props.children}</SubTitle>

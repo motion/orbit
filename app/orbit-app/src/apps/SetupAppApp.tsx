@@ -37,25 +37,23 @@ function SetupAppMain() {
 
   return (
     <App
-      actions={useMemo(
-        () => (
-          <>
-            <Button
-              alt="action"
-              onClick={() => {
-                stackNav.navigateTo({
-                  id: 'SetupAppCustom',
-                })
-              }}
-              icon="plus"
-              tooltip="Create new custom app"
-            >
-              Create Custom App
-            </Button>
-          </>
-        ),
-        [],
-      )}
+      actions={
+        <>
+          <Button
+            disabled={stackNav.currentItem && stackNav.currentItem.id === 'SetupAppCustom'}
+            alt="action"
+            onClick={() => {
+              stackNav.navigateTo({
+                id: 'SetupAppCustom',
+              })
+            }}
+            icon="plus"
+            tooltip="Create new custom app"
+          >
+            Create Custom App
+          </Button>
+        </>
+      }
     >
       <StackNavigator useNavigator={stackNav} />
     </App>
@@ -133,7 +131,6 @@ function SetupAppCustom() {
                     )}
                     onSelect={items => {
                       const item = items[0]
-                      console.log('set item', item)
                       setData({ selectedTemplate: item.template })
                     }}
                   />
@@ -314,10 +311,8 @@ export const SetupAppHome = memo((props: SetupAppHomeProps) => {
   )
 })
 
-const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
+const SetupAppHomeToolbar = memo((_props: SetupAppHomeProps) => {
   const flow = useFlow()
-  const stackNav = useStackNavigator()!
-  // const definition = useAppDefinition(flow.data.selectedAppIdentifier)
   const installApp = useInstallApp()
   return (
     <Scale size="lg">

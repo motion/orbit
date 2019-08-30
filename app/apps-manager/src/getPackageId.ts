@@ -4,17 +4,13 @@ import { ApiSearchItem } from '@o/models'
 import { apiUrl } from './getRegistryLatestVersion'
 import { updateWorkspacePackageIds } from './updateWorkspacePackageIds'
 
-const identifierToPackageId: { [key: string]: string } = {}
+export const identifierToPackageId: { [key: string]: string } = {}
 
 const log = new Logger('getPackageId')
 
 export function setIdentifierToPackageId(identifier: string, packageId: string) {
   log.verbose(`setIdentifierToPackageId ${identifier} ${packageId}`)
   identifierToPackageId[identifier] = packageId
-}
-
-export function getIdentifierToPackageId(identifier: string) {
-  return identifierToPackageId[identifier] || ''
 }
 
 export async function getPackageId(

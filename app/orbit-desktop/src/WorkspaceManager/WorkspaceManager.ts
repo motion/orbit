@@ -132,6 +132,22 @@ export class WorkspaceManager {
     },
   )
 
+  /**
+   * Run after adding new local app
+   * TODO these final steps shouldn't be so explicit / here
+   * Lets redo this at some point and fix
+   */
+  async updateAppsAfterNewApp(identifier: string) {
+    // by now we've built the app entirely, so refresh the appsMeta
+    await this.appsManager.updateAppMeta()
+    // update nameRegistry (TODO remove nameRegistry for something nicer)
+    await this.updateDesktopState()
+    // then, re-run AppsBuilder.update, because that will pick up new packageId/identifier in BuildStatus
+    await this.updateAppsBuilder()
+    // wait for build complete
+    await this.appsBuilder.onBuildComplete(identifier)
+  }
+
   async updateDesktopState() {
     const identifiers = this.appsManager.apps.map(x => x.identifier)
     if (!identifiers.length) {
@@ -143,10 +159,7 @@ export class WorkspaceManager {
       workspaceState: {
         options: this.options,
         appMeta: this.activeAppsMeta,
-        identifierToPackageId: identifiers.reduce((acc, identifier) => {
-          acc[identifier] = this.appsManager.identifierToPackageId(identifier)
-          return acc
-        }, {}),
+        identifierToPackageId: this.appsManager.identifierToPackageId,
         nameRegistry: Object.keys(this.appsBuilder.buildNameToAppMeta).map(buildName => {
           const appMeta = this.appsBuilder.buildNameToAppMeta[buildName]
           const { packageId } = appMeta
@@ -230,21 +243,6 @@ export class WorkspaceManager {
       })
     })
     return observable
-  }
-
-  /**
-   * TODO these final steps shouldn't be so explicit / here
-   * Lets redo this at some point and fix
-   */
-  async updateAppsAfterNewApp(identifier: string) {
-    // by now we've built the app entirely, so refresh the appsMeta
-    await this.appsManager.updateAppMeta()
-    // update nameRegistry (TODO remove nameRegistry for something nicer)
-    await this.updateDesktopState()
-    // then, re-run AppsBuilder.update, because that will pick up new packageId/identifier in BuildStatus
-    await this.updateAppsBuilder()
-    // wait for build complete
-    await this.appsBuilder.onBuildComplete(identifier)
   }
 
   private setBuildMode(appMeta: AppMeta, mode: 'development' | 'production') {

@@ -9,7 +9,7 @@ import { getRepository } from 'typeorm'
 
 import { downloadAppDefinition } from './downloadAppDefinition'
 import { findPackage } from './findPackage'
-import { getIdentifierFromPackageId, getIdentifierToPackageId } from './getPackageId'
+import { getIdentifierFromPackageId, identifierToPackageId } from './getPackageId'
 import { getRegistryLatestVersion } from './getRegistryLatestVersion'
 import { getWorkspaceApps } from './getWorkspaceApps'
 import { isInstalled } from './isInstalled'
@@ -49,9 +49,9 @@ export class AppsManager {
   user: User | null = null
   appMeta: AppMetaDict = shallow({})
   apps: AppBit[] = []
+  identifierToPackageId = identifierToPackageId
 
   // globalize on here this helps for REPL usage
-  identifierToPackageId = getIdentifierToPackageId
   getIdentifierFromPackageId = getIdentifierFromPackageId
   requireWorkspaceDefinitions = requireWorkspaceDefinitions
   getWorkspaceApps = getWorkspaceApps

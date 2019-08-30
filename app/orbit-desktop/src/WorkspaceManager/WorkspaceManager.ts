@@ -138,7 +138,7 @@ export class WorkspaceManager {
       log.info(`No apps to update...`)
       return
     }
-    log.info(`Updating desktop state`)
+    log.info(`Updating desktop state: ${identifiers.join(', ')}`)
     Desktop.setState({
       workspaceState: {
         options: this.options,
@@ -162,7 +162,7 @@ export class WorkspaceManager {
       },
     })
     // sleep because we have no good wait mechanism on setState there
-    await sleep(50)
+    await sleep(100)
   }
 
   private updateBuildMode() {
@@ -245,7 +245,7 @@ export class WorkspaceManager {
     await this.appsBuilder.onBuildComplete(identifier)
     // update nameRegistry (TODO remove nameRegistry for something nicer)
     await this.updateDesktopState()
-    await sleep(200) // because we have to do arbitrary wait...
+    await sleep(400) // bugfix stupid thign
   }
 
   private setBuildMode(appMeta: AppMeta, mode: 'development' | 'production') {

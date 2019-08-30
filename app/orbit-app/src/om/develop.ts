@@ -129,10 +129,8 @@ const updateAppsBuildMode: AsyncAction<UpdateBuildStatusDesc> = async (om, { cur
   await om.actions.develop.loadApps()
 }
 
-const changeAppDevelopmentMode: AsyncAction<BuildStatus> = async (
-  om,
-  { identifier, mode, packageId },
-) => {
+const changeAppDevelopmentMode: AsyncAction<BuildStatus> = async (om, { identifier, mode }) => {
+  const packageId = Desktop.state.workspaceState.identifierToPackageId[identifier]
   if (!packageId) return
   const name = stringToIdentifier(packageId)
 
@@ -182,8 +180,6 @@ const loadAppDLL: AsyncAction<{ name: string; mode: DevMode }> = async (_, { nam
 export const loadApps: AsyncAction = async om => {
   // writing our own little System loader
   let nameRegistry = Desktop.state.workspaceState.nameRegistry
-
-  console.log('COMPARE', nameRegistry, om.state.develop.buildStatus)
 
   // isolate mode load just one
   if (window.location.pathname.indexOf('/isolate') === 0) {

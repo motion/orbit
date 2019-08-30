@@ -28,5 +28,5 @@ export function useStickySidebar({ condition = true, id, ...rest }) {
     return () => {
       sidebar.destroy()
     }
-  }, [screen])
+  }, [])
 }

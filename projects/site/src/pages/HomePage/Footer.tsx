@@ -14,7 +14,8 @@ export const Footer = () => {
       flexWrap="wrap"
       flex={8}
       space="lg"
-      pad
+      padding
+      width="100%"
       alignItems="flex-end"
       scrollable="y"
     >

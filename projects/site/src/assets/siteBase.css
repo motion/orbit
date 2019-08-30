@@ -20,7 +20,7 @@ body {
   font-kerning: auto;
   font-feature-settings: 'liga', 'kern';
   text-rendering: optimizelegibility;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: subpixel-antialiased;
 }
 
 .main-contents {

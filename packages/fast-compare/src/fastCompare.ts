@@ -108,7 +108,6 @@ function isEqualInner(a: any, b: any, options?: IsEqualOptions) {
     // custom handling for DOM elements
     if (hasElementType && a instanceof Element && b instanceof Element) return a === b
 
-    // custom handling for React
     for (i = length; i-- !== 0; ) {
       key = keys[i]
       if (options) {
@@ -116,9 +115,14 @@ function isEqualInner(a: any, b: any, options?: IsEqualOptions) {
           continue
         }
         if (options.simpleCompareKeys && options.simpleCompareKeys[key]) {
-          return a[key] === b[key]
+          if (a[key] === b[key]) {
+            continue
+          } else {
+            return false
+          }
         }
       }
+      // custom handling for React
       if (key === '_owner' && a.$$typeof) {
         // React-specific: avoid traversing React elements' _owner.
         //  _owner contains circular references

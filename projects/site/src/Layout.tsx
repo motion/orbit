@@ -91,7 +91,8 @@ export const Layout = memo((props: any) => {
         transition={transition}
         style={{
           maxHeight,
-          transform: `translateX(${siteStore.showSidebar ? -sidebarWidth : 0}px)`,
+          // WARNING dont have translate here it ruins sticky sidebar
+          transform: siteStore.showSidebar ? `translateX(${-sidebarWidth}px)` : ``,
         }}
       >
         <ErrorBoundary name="Site Error">

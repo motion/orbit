@@ -4,6 +4,7 @@ import produce from 'immer'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { queueUpdate } from './batchUpdate'
 import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from './Mediator'
 
 export type UseModelOptions = {
@@ -121,7 +122,7 @@ function use<ModelType, Args>(
       setTimeout(() => {
         delete PromiseCache[state.current.key]
       }, 200)
-      forceUpdate()
+      queueUpdate(forceUpdate)
     }
 
     state.current.subscription = runUseQuery(model, type, query, observeEnabled, update)

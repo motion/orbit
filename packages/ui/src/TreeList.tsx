@@ -1,7 +1,7 @@
 import { arrayMove } from '@o/react-sortable-hoc'
-import { createStoreContext } from '@o/use-store'
+import { createStoreContext, useStore } from '@o/use-store'
 import { ScopedState } from '@o/utils'
-import React, { memo, Suspense, useCallback, useEffect, useRef } from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { Button } from './buttons/Button'
 import { Config } from './helpers/configureUI'
@@ -298,6 +298,7 @@ async function loadTreeListItemProps(item?: TreeItem): Promise<ListItemProps> {
     case 'bit':
       if (Config.loadBit) {
         return {
+          id: `${item.id}`,
           item: await Config.loadBit(+item.id),
         }
       }
@@ -333,11 +334,19 @@ export const TreeList = memoIsEqualDeep(
 function TreeListInner(props: TreeListProps) {
   const { use, onChange, ...rest } = props
   const internal = useCreateTreeList(use ? false : 'state', props)
-  const useTree = use || internal
-  console.log('useTree', useTree)
+  const external = useStore(use || false)
+  const useTree = external || internal
   const { currentItem, items } = useTree.state
   const [loadedItems, setLoadedItems] = useDeepEqualState<ListItemProps[]>([])
   const getOnChange = useGet(onChange)
+  const curItemKey = JSON.stringify(currentItem)
+
+  // this should update quickly on sort changes, preserving last loaded items
+  const finalItems = useMemo(() => {
+    return items[currentItem.id].children
+      .map(id => loadedItems.find(item => `${id}` === item.id))
+      .filter(Boolean)
+  }, [items, loadedItems, curItemKey])
 
   useEffect(() => {
     if (!currentItem) return
@@ -352,7 +361,7 @@ function TreeListInner(props: TreeListProps) {
     return () => {
       cancel = true
     }
-  }, [items, currentItem && currentItem.id, (currentItem.children || []).join('')])
+  }, [items, curItemKey])
 
   // onChange callback
   const ignoreInitial = useRef(true)
@@ -425,7 +434,7 @@ function TreeListInner(props: TreeListProps) {
       onSelect={handleSelect}
       onDelete={handleDelete}
       onDrop={handleDrop as any}
-      items={loadedItems}
+      items={finalItems}
     />
   )
 }

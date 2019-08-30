@@ -24,7 +24,9 @@ import { ensureWorkspaceModel } from './ensureWorkspaceModel'
 
 const log = new Logger('WorkspaceManager')
 
-export type AppBuildModeDict = { [name: string]: 'development' | 'production' }
+export type AppBuildModeDict = {
+  [name: string]: 'development' | 'production'
+}
 
 @decorate
 export class WorkspaceManager {

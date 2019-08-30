@@ -53,9 +53,13 @@ export const SearchResultModel = new Model<Bit, SearchQuery>('SearchResult')
  */
 export type BuildStatus = {
   // id per-message to determine if it changes
+  scriptName: string
   identifier: string
+  packageId: string
+  entryPathRelative: string
   status: 'complete' | 'building' | 'error'
   mode: 'production' | 'development'
+  env: 'node' | 'client'
   message?: string
 }
 export const BuildStatusModel = new Model<BuildStatus, { identifier?: string }>('BuildStatusModel')

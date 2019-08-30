@@ -9,7 +9,7 @@ import { Dictionary, Request } from 'express-serve-static-core'
 import { readFile } from 'fs-extra'
 import { chunk } from 'lodash'
 import hashObject from 'node-object-hash'
-import { join } from 'path'
+import { join, relative } from 'path'
 import { parse } from 'url'
 import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
@@ -466,23 +466,46 @@ export class AppsBuilder {
       this.updateCompletedFirstBuild(name, status)
 
       // report to appStatus bus
-      const identifier = appMeta ? this.appsManager.packageIdToIdentifier(appMeta.packageId) : name
-      const mode = this.buildMode[appMeta ? appMeta.packageId : 'main']
+      const packageId = appMeta.packageId
+      const identifier = appMeta ? this.appsManager.packageIdToIdentifier(packageId) : name
+      const mode = this.buildMode[appMeta ? packageId : 'main']
+      const entryPath = join(appMeta.directory, appMeta.packageJson.main)
+      let entryPathRelative = relative(this.wsOptions.workspaceRoot, entryPath)
+      // bugfix: local workspace apps looked like `apps/abc/main.tsx` which broke webpack expectations of moduleId
+      if (entryPathRelative[0] !== '.') {
+        entryPathRelative = `./${entryPathRelative}`
+      }
 
       if (!state) {
-        this.setBuildStatus({ identifier, status: 'building', mode })
+        this.setBuildStatus({
+          scriptName: name,
+          entryPathRelative,
+          packageId,
+          identifier,
+          status: 'building',
+          mode,
+          env: 'client',
+        })
         return
       }
       if (stats.hasErrors()) {
         this.setBuildStatus({
+          scriptName: name,
+          entryPathRelative,
+          packageId,
           mode,
           identifier,
           status: 'error',
           message: stats.toString(middlewareOptions.stats),
+          env: 'client',
         })
         return
       }
       this.setBuildStatus({
+        scriptName: name,
+        entryPathRelative,
+        packageId,
+        env: 'client',
         mode,
         identifier,
         status: 'complete',

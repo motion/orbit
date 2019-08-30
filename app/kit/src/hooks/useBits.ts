@@ -71,7 +71,7 @@ export function useBit(
 export function useBits(query: FindOptions<Bit> | false, options: UseModelOptions = {}) {
   const findOptions = getBitFindOptions(query)
   const models = useModels(BitModel, findOptions, options)
-  return [models[0], useBitHelpers()]
+  return [models[0], useBitHelpers()] as const
 }
 
 export function useBitsCounts(query: FindOptions<Bit>) {

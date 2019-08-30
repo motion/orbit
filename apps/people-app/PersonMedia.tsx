@@ -1,13 +1,13 @@
-import { Bit, openItem, useBit, useBits, useNLPTopics, useStores } from '@o/kit'
+import { AppViewProps, Bit, openItem, useBit, useBits, useNLPTopics, useStores } from '@o/kit'
 import { Avatar, gloss, ListItem, RoundButton, Row, Section, Space, SubSection, TitleRow } from '@o/ui'
 import React from 'react'
 
-export function PersonMedia({ id }: { id: number }) {
+export function PersonMedia({ id }: AppViewProps) {
   const { queryStore } = useStores()
   const [person] = useBit({
     where: {
       type: 'person',
-      id,
+      id: +id,
     },
   })
   const [recentBits] = useBits(

@@ -16140,70 +16140,56 @@ output-file-sync@^2.0.0:
     is-plain-obj "^1.1.0"
     mkdirp "^0.5.1"
 
-overmind-devtools-client@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.npmjs.org/overmind-devtools-client/-/overmind-devtools-client-2.0.1.tgz#e84f65c165fbc07bd9275af68e1dc23e21b1087f"
-  integrity sha512-btM/QvOatX2oQ0bM7UmSrUHucMbM3y9H7vsop75DgAVmiV57hlpijeX0PXD337gZagqu/cbZxr3vKEA9rfYn5Q==
+overmind-devtools-client@2.1.2:
+  version "2.1.2"
+  resolved "https://registry.npmjs.org/overmind-devtools-client/-/overmind-devtools-client-2.1.2.tgz#92df6ef66d54081678ab25eac3bf267c46810394"
+  integrity sha512-PBS58y7pP8L6SaIhJsM4eFXsZ5zrX4/1ZiuZOlj9ED3kvadoUAbqdwgsKQIsnTpu1uiDjf3HYOhUfrKrb1W/BQ==
   dependencies:
     emotion "^9.2.12"
     lodash.throttle "^4.1.1"
-    overmind-react "20.0.1"
-    overmind-themes next
+    overmind-react "20.1.1"
+    overmind-themes "1.0.2"
     react "16.8.1"
     react-dom "16.8.1"
     ws "^7.0.0"
 
-overmind-devtools@20.0.1:
-  version "20.0.1"
-  resolved "https://registry.npmjs.org/overmind-devtools/-/overmind-devtools-20.0.1.tgz#471491f6f03d43f92b3c46e8f4a26f1a5d0a1457"
-  integrity sha512-r4KCb4TUotjgghBxIGGHU5Ewan//WZVUBDY+z3A7uLtVlMzj4wLg7sBlBHFQpaTp/3MDjCOtgCapJVIRFb69og==
+overmind-devtools@20.1.2:
+  version "20.1.2"
+  resolved "https://registry.npmjs.org/overmind-devtools/-/overmind-devtools-20.1.2.tgz#f2af90a3e15e3ff06146d3e8e2217ecda99e07d3"
+  integrity sha512-94y2BPAzX4Ms4S3paIgClCOB+2sbFHVjpfxTo+zA6sQpMe6P/n/7nEEUKOk69VpDAh5zGF9uxU3dCqKb5IYVgw==
   dependencies:
     color "^3.0.0"
     color-hash "^1.0.3"
     electron "^2.0.8"
     electron-json-storage "^4.1.0"
     electron-prompt "^1.3.1"
-    overmind-devtools-client "2.0.1"
+    overmind-devtools-client "2.1.2"
     ws "^7.0.0"
 
-overmind-react@20.0.1:
-  version "20.0.1"
-  resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-20.0.1.tgz#17bd6bbb05199d07e3345e82e2ce705aecdcad07"
-  integrity sha512-z5ozk+U1t3gv69Cy0XR+bzdusNt5VTQdc1qhEKw99jRebg1EUZzm2kAwtzp+P5iCbnjuZ1cMRmzo4gn+qF1liA==
+overmind-react@20.1.1:
+  version "20.1.1"
+  resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-20.1.1.tgz#7cf60f885ea47d5a47e045b23a61e810c5a0cb52"
+  integrity sha512-2qZmjiihnn+tRpkD97TYm1OuVPpEC7Fsle80PUj7XZL6hrENdmY1BwoOMZfLhuhscgjaFUXtQGayVZ1WPfSjbg==
   dependencies:
-    overmind "19.0.1"
+    overmind "19.1.1"
 
-overmind-react@20.1.0:
-  version "20.1.0"
-  resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-20.1.0.tgz#fdf9a4e534876b122c7b4a3fb2c385316886a2f6"
-  integrity sha512-z9lfTnt4KalRxZEhkmtOuG6/bU9nUKF9MUqzwhz8OAGxJjs6cLQosNLE3Ut2dNwy5Ue5aUMawZSwkKHZXG/BKA==
+overmind-themes@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/overmind-themes/-/overmind-themes-1.0.2.tgz#80e46f0bb5e2ad34f18a087618195f9c84a5c111"
+  integrity sha512-dLcou3m7OURReZMbOgYhk3PQxrY605Sr8U2AFEer0ivh0itF/T6eNIZUQv7q8pJmN1XLiM9+YX08lFnhzqW0Mw==
   dependencies:
-    overmind "19.1.0"
-
-overmind-themes@next:
-  version "1.0.2-1566495846191"
-  resolved "https://registry.npmjs.org/overmind-themes/-/overmind-themes-1.0.2-1566495846191.tgz#11ae9791048b48c3c9473ba21999ffaf4932c45a"
-  integrity sha512-57oLq6d6iTJdVyJhIRyjPQQTXwwZHCxa5umDTvnxyF3/HMDycRpLN4gSRpv+s+s6FyVa+e3uQgMG+JtQnq8eeg==
-  dependencies:
+    "@types/node" "^10.5.1"
     color "^3.0.0"
+    tslib "^1.9.3"
 
-overmind@19.0.1:
-  version "19.0.1"
-  resolved "https://registry.npmjs.org/overmind/-/overmind-19.0.1.tgz#9e9c12c4433e0892222b32335cd4d05117d4f57a"
-  integrity sha512-CcNDDQpsxq/h5F+BJC+c97x0m7DELYiHKdHJfencX6YmxSX8/TRwhdRJFs5tsn+UkXva1j9eeR4gxF0hnP3mGA==
+overmind@19.1.1:
+  version "19.1.1"
+  resolved "https://registry.npmjs.org/overmind/-/overmind-19.1.1.tgz#aab60547f611c1a05bc036c568b0557e8fd522d2"
+  integrity sha512-XxDJGY6rZRdhurLuuuawrkTZw9uV+2sAL5ee/oL/P1LccoEfDznaWaY8Ky6+mXRi8MZrN9VVAnsIhHnZD0WNdQ==
   dependencies:
     betsy "1.0.2"
     is-plain-obj "^1.1.0"
-    proxy-state-tree "4.4.1"
-
-overmind@19.1.0:
-  version "19.1.0"
-  resolved "https://registry.npmjs.org/overmind/-/overmind-19.1.0.tgz#ff18d5e62b95d3cded16438eb5eb42fd51fed1f8"
-  integrity sha512-jhF0WGceRr9YKGNpl9i5+DHroXzCNOmbA0Rbc4VTMvPSFDeNxlUM6+nlQKUGZljGQfbxWJPoWa3b2otxGrD84Q==
-  dependencies:
-    betsy "1.0.2"
-    is-plain-obj "^1.1.0"
-    proxy-state-tree "4.4.2"
+    proxy-state-tree "4.4.3"
 
 p-cancelable@^0.3.0:
   version "0.3.0"
@@ -17773,17 +17759,10 @@ proxy-from-env@^1.0.0:
   resolved "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.0.0.tgz#33c50398f70ea7eb96d21f7b817630a55791c7ee"
   integrity sha1-M8UDmPcOp+uW0h97gXYwpVeRx+4=
 
-proxy-state-tree@4.4.1:
-  version "4.4.1"
-  resolved "https://registry.npmjs.org/proxy-state-tree/-/proxy-state-tree-4.4.1.tgz#92fefb199425acd192e3d05bfd0ec4b5c1a46e8d"
-  integrity sha512-ZsdMGhrUcFMziOboUIknjmnLHefthk7GxuxWKC6aGrpa8KXR6ODa2EPk+cwyvt7Iss2tYDbkMlNc+nYmHgcIgA==
-  dependencies:
-    is-plain-obj "^1.1.0"
-
-proxy-state-tree@4.4.2:
-  version "4.4.2"
-  resolved "https://registry.npmjs.org/proxy-state-tree/-/proxy-state-tree-4.4.2.tgz#9aa5530ceedd2c5b9386360df046f8550a78b151"
-  integrity sha512-kSn78uW+Aty0hsXee/EL3iheXnkTMoC75SoHZ6yiYlMc09DvNjfX5fSAflpro3wVNCpbVt5q17jpYmiWsBeFzw==
+proxy-state-tree@4.4.3:
+  version "4.4.3"
+  resolved "https://registry.npmjs.org/proxy-state-tree/-/proxy-state-tree-4.4.3.tgz#b3d127085f1e98ec533f1ddfa8a2a8e6b43bdb19"
+  integrity sha512-ucXlGp6fVCLhiwA+Gx8ePvA47S+JFTgJbj7gHBPr2vyaDX1RXrAjmy1OwdChsL3/3ogLc2xkJGn9p+p2DaIC7Q==
   dependencies:
     is-plain-obj "^1.1.0"
 

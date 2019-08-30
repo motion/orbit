@@ -142,6 +142,8 @@ const getPressDelay = (props: VirtualListProps) =>
 export const VirtualList = memo((virtualProps: VirtualListProps) => {
   const props = useProps(virtualProps)
   const { onSortStart, onSortEnd, selectableStore } = props
+  const sortableContainerRef = useRef(null)
+  const isForcingSortEnd = useRef(false)
 
   // key safety
   if (process.env.NODE_ENV === 'development' && props.sortable) {
@@ -154,16 +156,23 @@ export const VirtualList = memo((virtualProps: VirtualListProps) => {
 
   return (
     <SortableList
+      ref={sortableContainerRef}
       selectableStore={selectableStore}
       itemCount={props.items.length}
       itemData={createItemData(props.items, selectableStore, props)}
-      shouldCancelStart={isRightClick}
       lockAxis="y"
       helperClass="sortableHelper"
       {...props}
       pressDelay={getPressDelay(props)}
+      // see selectableStore "// distance move until cancel"
+      // pressThreshold={8}
       onSortStart={useCallback(
         (sort, event) => {
+          if (selectableStore.state === 'selecting') {
+            isForcingSortEnd.current = true
+            sortableContainerRef.current.handleSortEnd()
+            return event.preventDefault()
+          }
           selectableStore && selectableStore.setSorting(true)
           onSortStart && onSortStart(sort, event)
         },
@@ -171,11 +180,22 @@ export const VirtualList = memo((virtualProps: VirtualListProps) => {
       )}
       onSortEnd={useCallback(
         (sort, event) => {
+          if (isForcingSortEnd.current) {
+            isForcingSortEnd.current = false
+            return
+          }
           selectableStore && selectableStore.setSorting(false)
+          if (selectableStore.state === 'selecting') return
           onSortEnd && onSortEnd(sort, event)
         },
         [onSortStart],
       )}
+      shouldCancelStart={useCallback(e => {
+        if (isRightClick(e)) {
+          return true
+        }
+        return selectableStore && selectableStore.state === 'selecting'
+      }, [])}
     >
       {ListRow as any}
     </SortableList>

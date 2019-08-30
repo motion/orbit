@@ -2357,10 +2357,19 @@
     codemirror-graphql "^0.8.3"
     markdown-it "^8.4.2"
 
-"@o/react-sortable-hoc@*", "@o/react-sortable-hoc@1.6.5":
+"@o/react-sortable-hoc@*":
   version "1.6.5"
   resolved "https://registry.npmjs.org/@o/react-sortable-hoc/-/react-sortable-hoc-1.6.5.tgz#7c49e2177dee2a67d812a299c04e55ae1045b03a"
   integrity sha512-c5X5SFjqWLRYcXoA7BXtmmOxjMU9NDfx83rRL4ATvlQX+DMiNSCv85t38bZvG6Af0qK6HrYWY9kzgWUVvTe7Zw==
+  dependencies:
+    "@babel/runtime" "^7.2.0"
+    invariant "^2.2.4"
+    prop-types "^15.5.7"
+
+"@o/react-sortable-hoc@1.10.2":
+  version "1.10.2"
+  resolved "https://registry.npmjs.org/@o/react-sortable-hoc/-/react-sortable-hoc-1.10.2.tgz#fda7bbb195a6746a1f70c53f50be448540041299"
+  integrity sha512-8YHpFW9DpFN0QX1e1qxMo6ExY8mzQI55O/wKGWigIH9Xs8qVCb08oAertnPQ8Z2Bi+5Oa1Kw7GmcbO3AO3RJGw==
   dependencies:
     "@babel/runtime" "^7.2.0"
     invariant "^2.2.4"

@@ -8,7 +8,7 @@ export const isBrowser = !isNode && !isNative
 export const isWebkit =
   typeof document !== 'undefined' && 'webkitLineBreak' in document.documentElement.style
 
-export const defaultSortPressDelay = 350
+export const defaultSortPressDelay = 340
 
 // sort these from highest to lowest
 // TODO this be done nicer

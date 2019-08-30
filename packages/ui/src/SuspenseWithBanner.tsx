@@ -17,7 +17,9 @@ export class SuspenseWithBanner extends React.Component<SuspenseProps, { error: 
   }
 
   clearError = () => {
-    this.setState({ error: null })
+    if (this.state.error) {
+      this.setState({ error: null })
+    }
   }
 
   componentDidCatch(error) {
@@ -28,7 +30,7 @@ export class SuspenseWithBanner extends React.Component<SuspenseProps, { error: 
   render() {
     if (this.state.error) {
       return (
-        <ErrorHandler error={this.state.error} onClose={() => this.setState({ error: null })}>
+        <ErrorHandler error={this.state.error} onClose={this.clearError}>
           <Center>
             <SubTitle>Error loading content</SubTitle>
           </Center>

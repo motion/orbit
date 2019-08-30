@@ -294,7 +294,9 @@ const ListItemInner = memoIsEqualDeep(function ListItemInner(props: ListItemSimp
       {above}
       {/* unset the theme for the separator */}
       {!!separator && (
-        <Theme name={activeThemeName}>
+        // remove any special indicator we add for alt themes
+        // TODO this is awkward (the split)
+        <Theme name={activeThemeName.split('.')[0]}>
           {isValidElement(separator) ? (
             separator
           ) : (

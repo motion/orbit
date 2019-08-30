@@ -87,7 +87,7 @@ export class WorkspaceManager {
   /**
    * Combines active workspaces apps + any apps in dev mode
    */
-  get activeApps(): AppMeta[] {
+  get appsManagerAppsMeta(): AppMeta[] {
     const wsAppsMeta = this.appsManager.appMeta
     return uniqBy(
       [
@@ -105,7 +105,7 @@ export class WorkspaceManager {
    * watches options and apps and updates the webpack/graph.
    */
   update = react(
-    () => [this.started, this.activeApps, this.options, this.buildMode],
+    () => [this.started, this.appsManagerAppsMeta, this.options, this.buildMode],
     async ([started], { sleep }) => {
       ensure('started', started)
       ensure('directory', !!this.options.workspaceRoot)
@@ -140,7 +140,7 @@ export class WorkspaceManager {
     Desktop.setState({
       workspaceState: {
         options: this.options,
-        appMeta: this.activeApps,
+        appMeta: this.appsManagerAppsMeta,
         identifierToPackageId: identifiers.reduce((acc, identifier) => {
           acc[identifier] = this.appsManager.identifierToPackageId(identifier)
           return acc
@@ -166,7 +166,7 @@ export class WorkspaceManager {
   private updateBuildMode() {
     // update buildMode first
     this.buildMode.main = this.options.dev ? 'development' : 'production'
-    for (const app of this.activeApps) {
+    for (const app of this.appsManagerAppsMeta) {
       // apps always default to production mode
       this.buildMode[app.packageId] = this.options.dev
         ? 'development'
@@ -182,7 +182,7 @@ export class WorkspaceManager {
   lastBuildConfig = ''
   async updateAppsBuilder() {
     this.updateBuildMode()
-    const { options, activeApps, buildMode } = this
+    const { options, appsManagerAppsMeta: activeApps, buildMode } = this
 
     if (options.action === 'new') {
       return

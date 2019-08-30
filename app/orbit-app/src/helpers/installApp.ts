@@ -106,8 +106,6 @@ async function installApp(
     },
   )
 
-  console.log('got response from install app command', res)
-
   if (res.type === 'error') {
     banner.set({
       type: 'error',
@@ -115,9 +113,6 @@ async function installApp(
     })
     return res
   }
-
-  debugger
-  // await om.actions.develop.loadNewAppDLLs
 
   let appBit
 

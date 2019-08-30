@@ -206,5 +206,4 @@ export const stringToIdentifier = (x: string, separator = '_') =>
   x
     .replace(/[^a-z0-9]/gi, separator)
     .replace(new RegExp(`${separator}{2,}`, 'g'), separator)
-    .replace(/^[^a-z]/i, '')
-    .replace(/[^a-z]$/i, '')
+    .replace(/^[^a-z0-9]/i, '')

@@ -355,6 +355,22 @@ export class AppsBuilder {
   }
 
   /**
+   * Helper to resolve a promise when a build completes
+   */
+  async onBuildComplete(identifier: string) {
+    await new Promise(res => {
+      const observable = this.observeBuildStatus().subscribe(next => {
+        const buildStatus = next.find(x => x.identifier === identifier)
+        log.verbose(`Got build status`, buildStatus)
+        if (buildStatus && buildStatus.status === 'complete') {
+          observable.unsubscribe()
+          res()
+        }
+      })
+    })
+  }
+
+  /**
    * Returns Observable for the current workspace information
    */
   observables = new Set<{ update: (next: any) => void; observable: Observable<BuildStatus[]> }>()

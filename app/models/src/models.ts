@@ -55,7 +55,6 @@ export type BuildStatus = {
   // id per-message to determine if it changes
   scriptName: string
   identifier: string
-  packageId: string
   entryPathRelative: string
   status: 'complete' | 'building' | 'error'
   mode: 'production' | 'development'

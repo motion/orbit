@@ -99,7 +99,7 @@ export class AppsManager {
         return identifier
       }
     }
-    throw new Error(`No packageId found for identifer`)
+    throw new Error(`No identifer for packageId ${packageId}`)
   }
 
   get activeSpace() {

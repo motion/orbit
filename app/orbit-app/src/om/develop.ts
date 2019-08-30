@@ -97,7 +97,7 @@ const loadNewAppDLLs: AsyncAction<UpdateBuildStatusDesc> = async (om, { current,
     }
     const name = stringToIdentifier(packageId)
     // load the new script
-    const buildInfo = current.find(x => x.identifier === identifier)!
+    const buildInfo = next.find(x => x.identifier === identifier)!
     await om.actions.develop.loadAppDLL({ name, mode: buildInfo.mode })
     // then load apps
     await om.actions.develop.loadApps()

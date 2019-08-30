@@ -63,7 +63,7 @@ type WebpackAppsDesc = {
 type AppsBuilderUpdate = {
   options: CommandWsOptions
   buildMode: AppBuildModeDict
-  activeApps: AppMeta[]
+  activeAppsMeta: AppMeta[]
 }
 
 @decorate
@@ -95,12 +95,12 @@ export class AppsBuilder {
     })
   }
 
-  async update({ buildMode, options, activeApps }: AppsBuilderUpdate) {
+  async update({ buildMode, options, activeAppsMeta }: AppsBuilderUpdate) {
     this.wsOptions = options
 
-    const buildConfigs = await getAppsConfig(activeApps, buildMode, options)
+    const buildConfigs = await getAppsConfig(activeAppsMeta, buildMode, options)
     const { clientConfigs, nodeConfigs, buildNameToAppMeta } = buildConfigs
-    log.verbose(`update() ${activeApps.length}`, buildConfigs)
+    log.verbose(`update() ${activeAppsMeta.length}`, buildConfigs)
     this.buildNameToAppMeta = buildNameToAppMeta
     this.apps = Object.keys(buildNameToAppMeta).map(k => buildNameToAppMeta[k])
 
@@ -122,7 +122,7 @@ export class AppsBuilder {
     // ensure builds have run for each app
     try {
       let builds = []
-      const chunks = chunk(activeApps, 2)
+      const chunks = chunk(activeAppsMeta, 2)
       for (const apps of chunks) {
         log.verbose(
           `Building apps. num chunks ${chunks.length}, cur chunk ${apps
@@ -466,51 +466,43 @@ export class AppsBuilder {
       this.updateCompletedFirstBuild(name, status)
 
       // report to appStatus bus
-      const packageId = appMeta.packageId
-      const identifier = appMeta ? this.appsManager.packageIdToIdentifier(packageId) : name
-      const mode = this.buildMode[appMeta ? packageId : 'main']
-      const entryPath = join(appMeta.directory, appMeta.packageJson.main)
-      let entryPathRelative = relative(this.wsOptions.workspaceRoot, entryPath)
-      // bugfix: local workspace apps looked like `apps/abc/main.tsx` which broke webpack expectations of moduleId
-      if (entryPathRelative[0] !== '.') {
-        entryPathRelative = `./${entryPathRelative}`
+      let identifier = name
+      let entryPathRelative = ''
+      if (appMeta) {
+        const entryPath = join(appMeta.directory, appMeta.packageJson.main)
+        entryPathRelative = relative(this.wsOptions.workspaceRoot, entryPath)
+        // bugfix: local workspace apps looked like `apps/abc/main.tsx` which broke webpack expectations of moduleId
+        if (entryPathRelative[0] !== '.') {
+          entryPathRelative = `./${entryPathRelative}`
+        }
       }
+
+      const baseBuildStatus = {
+        mode: this.buildMode[appMeta ? appMeta.packageId : 'main'],
+        env: 'client',
+        scriptName: name,
+        entryPathRelative,
+        identifier,
+      } as const
 
       if (!state) {
         this.setBuildStatus({
-          scriptName: name,
-          entryPathRelative,
-          packageId,
-          identifier,
+          ...baseBuildStatus,
           status: 'building',
-          mode,
-          env: 'client',
         })
-        return
-      }
-      if (stats.hasErrors()) {
+      } else if (stats.hasErrors()) {
         this.setBuildStatus({
-          scriptName: name,
-          entryPathRelative,
-          packageId,
-          mode,
-          identifier,
+          ...baseBuildStatus,
           status: 'error',
           message: stats.toString(middlewareOptions.stats),
-          env: 'client',
         })
-        return
+      } else {
+        this.setBuildStatus({
+          ...baseBuildStatus,
+          status: 'complete',
+          message: stats.toString(middlewareOptions.stats),
+        })
       }
-      this.setBuildStatus({
-        scriptName: name,
-        entryPathRelative,
-        packageId,
-        env: 'client',
-        mode,
-        identifier,
-        status: 'complete',
-        message: stats.toString(middlewareOptions.stats),
-      })
     }
   }
 

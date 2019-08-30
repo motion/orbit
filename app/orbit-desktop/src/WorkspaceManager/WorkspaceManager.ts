@@ -89,7 +89,7 @@ export class WorkspaceManager {
   /**
    * Combines active workspaces apps + any apps in dev mode
    */
-  get appsManagerAppsMeta(): AppMeta[] {
+  get activeAppsMeta(): AppMeta[] {
     const wsAppsMeta = this.appsManager.appMeta
     return uniqBy(
       [
@@ -107,7 +107,7 @@ export class WorkspaceManager {
    * watches options and apps and updates the webpack/graph.
    */
   update = react(
-    () => [this.started, this.appsManagerAppsMeta, this.options, this.buildMode],
+    () => [this.started, this.activeAppsMeta, this.options, this.buildMode],
     async ([started], { sleep }) => {
       ensure('started', started)
       ensure('directory', !!this.options.workspaceRoot)
@@ -142,7 +142,7 @@ export class WorkspaceManager {
     Desktop.setState({
       workspaceState: {
         options: this.options,
-        appMeta: this.appsManagerAppsMeta,
+        appMeta: this.activeAppsMeta,
         identifierToPackageId: identifiers.reduce((acc, identifier) => {
           acc[identifier] = this.appsManager.identifierToPackageId(identifier)
           return acc
@@ -168,7 +168,7 @@ export class WorkspaceManager {
   private updateBuildMode() {
     // update buildMode first
     this.buildMode.main = this.options.dev ? 'development' : 'production'
-    for (const app of this.appsManagerAppsMeta) {
+    for (const app of this.activeAppsMeta) {
       // apps always default to production mode
       this.buildMode[app.packageId] = this.options.dev
         ? 'development'
@@ -184,14 +184,19 @@ export class WorkspaceManager {
   lastBuildConfig = ''
   async updateAppsBuilder() {
     this.updateBuildMode()
-    const { options, appsManagerAppsMeta: activeApps, buildMode } = this
+    const { options, activeAppsMeta, buildMode } = this
 
     if (options.action === 'new') {
       return
     }
 
-    log.info(`Start building workspace, building ${activeApps.length} apps...`, options, activeApps)
-    if (!activeApps.length) {
+    log.info(
+      `Start building workspace, building ${activeAppsMeta.length} apps...`,
+      options,
+      activeAppsMeta,
+    )
+
+    if (!activeAppsMeta.length) {
       log.error(`Must have more than one app, workspace didn't detect any.`)
       return
     }
@@ -202,7 +207,7 @@ export class WorkspaceManager {
         options,
         // this update is weird
         buildMode,
-        activeApps,
+        activeAppsMeta,
       })
     } catch (err) {
       log.error(`Error running workspace: ${err.message}\n${err.stack}`)
@@ -232,14 +237,15 @@ export class WorkspaceManager {
    * Lets redo this at some point and fix
    */
   async updateAppsAfterNewApp(identifier: string) {
-    // i added this because it was not picking it up because appsManager wasn't watching build,
-    // just watching the app directory being added, it should probably verify the build is added
+    // by now we've built the app entirely, so refresh the appsMeta
     await this.appsManager.updateAppMeta()
+    // then, re-run AppsBuilder.update, because that will pick up new packageId/identifier in BuildStatus
+    await this.updateAppsBuilder()
     // wait for build complete
     await this.appsBuilder.onBuildComplete(identifier)
-    // sleep after update desktop state to ensure it syncs..... lame
+    // update nameRegistry (TODO remove nameRegistry for something nicer)
     await this.updateDesktopState()
-    await sleep(200)
+    await sleep(200) // because we have to do arbitrary wait...
   }
 
   private setBuildMode(appMeta: AppMeta, mode: 'development' | 'production') {

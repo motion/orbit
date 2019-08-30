@@ -64,6 +64,7 @@ export class AppsManager {
   getRegistryLatestVersion = getRegistryLatestVersion
 
   private packageJsonUpdate = 0
+  private localAppsUpdate = 0
   private updatePackagesVersion = 0
   private fetchedAppsMeta = false
   private resolvedApps = false
@@ -160,7 +161,7 @@ export class AppsManager {
   }
 
   updateAppMetaWatcher = react(
-    () => [this.activeSpace, this.nodeAppDefinitions, this.packageJsonUpdate],
+    () => [this.activeSpace, this.nodeAppDefinitions, this.packageJsonUpdate, this.localAppsUpdate],
     async ([activeSpace, appDefs], { when }) => {
       ensure('this.started', this.started)
       await when(() => this.updatePackagesVersion !== 0)
@@ -170,11 +171,11 @@ export class AppsManager {
   )
 
   updatePackageJsonVersionWatcher = react(
-    () => this.activeSpace && this.activeSpace.directory,
-    async (directory, { useEffect }) => {
-      ensure('directory', !!directory)
+    () => [this.activeSpace, this.started],
+    async ([space], { useEffect }) => {
+      ensure('directory', space && !!space.directory)
       ensure('this.started', this.started)
-      const pkg = join(directory || '', 'package.json')
+      const pkg = join(space.directory || '', 'package.json')
       log.info('watching package.json for changes', pkg)
       useEffect(() => {
         let watcher = watch(pkg, {
@@ -184,6 +185,31 @@ export class AppsManager {
         watcher.on('change', () => {
           log.info('got package.json change')
           this.packageJsonUpdate = Math.random()
+        })
+        return () => {
+          watcher.close()
+        }
+      })
+    },
+  )
+
+  updateLocalAppsWatcher = react(
+    () => [this.activeSpace, this.started],
+    async ([space], { useEffect }) => {
+      ensure('directory', space && !!space.directory)
+      ensure('this.started', this.started)
+      const appsDir = join(space.directory || '', 'apps')
+      log.info('watching local apps for changes', appsDir)
+      useEffect(() => {
+        let watcher = watch([appsDir], {
+          persistent: true,
+          awaitWriteFinish: true,
+          // just watch the base directory for new folders
+          depth: 0,
+        })
+        watcher.on('change', () => {
+          log.info('got local apps dir change')
+          this.localAppsUpdate = Math.random()
         })
         return () => {
           watcher.close()

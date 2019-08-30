@@ -116,6 +116,9 @@ async function installApp(
     return res
   }
 
+  debugger
+  // await om.actions.develop.loadNewAppDLLs
+
   let appBit
 
   // create AppBit

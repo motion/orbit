@@ -74,6 +74,7 @@ const loadNewAppDLLs: AsyncAction<BuildStatus[]> = async (om, status) => {
   const current = getIdentifiers(om.state.develop.buildStatus)
   const next = getIdentifiers(status)
   const toAdd = difference(next, current).filter(isAppIdentifier)
+  debugger
   if (!toAdd.length) return
   // loop and load new app dlls
   for (const identifier of toAdd) {

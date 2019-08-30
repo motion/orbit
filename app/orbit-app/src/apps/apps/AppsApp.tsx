@@ -1,8 +1,10 @@
-import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, CurrentAppBitContext, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppWithDefinition } from '@o/kit'
-import { ApiSearchItem } from '@o/models'
-import { Button, Card, Col, Icon, List, ListItemProps, Section, SubTitle, useAsyncFn, useBanner } from '@o/ui'
+import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, command, createApp, CurrentAppBitContext, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppWithDefinition } from '@o/kit'
+import { ApiSearchItem, AppBuildCommand } from '@o/models'
+import { Desktop } from '@o/stores'
+import { Button, Card, CenteredText, Col, Icon, List, ListItemProps, Section, SubTitle, useAsyncFn, useBanner } from '@o/ui'
 import React, { useCallback, useState } from 'react'
 
+import { useOm } from '../../om/om'
 import { ManageApps } from '../../views/ManageApps'
 import { useUserAppDefinitions } from '../orbitApps'
 import { AppSetupForm } from './AppSetupForm'
@@ -105,8 +107,13 @@ function AppsMain(props: AppViewProps) {
 function AppSettings(props: { appId: number }) {
   const [app, definition] = useAppWithDefinition(props.appId)
   const banner = useBanner()
+  const om = useOm()
+  const buildStatus = om.state.develop.buildStatus.find(x => x.identifier === app!.identifier)
+  console.log('buildStatus', buildStatus, definition, om.state.develop.buildStatus)
 
-  if (!app || !definition) return null
+  if (!app || !definition) {
+    return <CenteredText>No app/definition</CenteredText>
+  }
 
   return (
     <Section
@@ -116,8 +123,8 @@ function AppSettings(props: { appId: number }) {
       icon={<AppIcon identifier={app.identifier} colors={app.colors} />}
       space
       padding
-      title="App Settings"
-      subTitle={`${app.name} · ${definition.name}`}
+      title={`App: ${app.name}`}
+      subTitle={`Name: ${app.name} · Definition name: ${definition.name}`}
       afterTitle={
         app &&
         app.tabDisplay !== 'permanent' && (
@@ -134,6 +141,35 @@ function AppSettings(props: { appId: number }) {
       {!!definition.app && (
         <Card title="Customize" padding>
           <AppsMainNew customizeColor app={app} />
+        </Card>
+      )}
+
+      {!!buildStatus && (
+        <Card
+          title="Build"
+          padding
+          afterTitle={
+            <Button
+              onClick={() => {
+                command(
+                  AppBuildCommand,
+                  {
+                    projectRoot: Desktop.state.workspaceState.appMeta[app.identifier!].directory,
+                  },
+                  {
+                    onMessage(message) {
+                      console.log('TODO write to banner', message)
+                    },
+                  },
+                )
+              }}
+            >
+              Rebuild
+            </Button>
+          }
+        >
+          hello?
+          {JSON.stringify(buildStatus)}
         </Card>
       )}
 

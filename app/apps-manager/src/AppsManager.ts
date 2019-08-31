@@ -9,7 +9,7 @@ import { getRepository } from 'typeorm'
 
 import { downloadAppDefinition } from './downloadAppDefinition'
 import { findPackage } from './findPackage'
-import { getIdentifierFromPackageId, getIdentifierToPackageId } from './getPackageId'
+import { getIdentifierFromPackageId, identifierToPackageId } from './getPackageId'
 import { getRegistryLatestVersion } from './getRegistryLatestVersion'
 import { getWorkspaceApps } from './getWorkspaceApps'
 import { isInstalled } from './isInstalled'
@@ -49,9 +49,9 @@ export class AppsManager {
   user: User | null = null
   appMeta: AppMetaDict = shallow({})
   apps: AppBit[] = []
+  identifierToPackageId = identifierToPackageId
 
   // globalize on here this helps for REPL usage
-  identifierToPackageId = getIdentifierToPackageId
   getIdentifierFromPackageId = getIdentifierFromPackageId
   requireWorkspaceDefinitions = requireWorkspaceDefinitions
   getWorkspaceApps = getWorkspaceApps
@@ -64,6 +64,7 @@ export class AppsManager {
   getRegistryLatestVersion = getRegistryLatestVersion
 
   private packageJsonUpdate = 0
+  private localAppsUpdate = 0
   private updatePackagesVersion = 0
   private fetchedAppsMeta = false
   private resolvedApps = false
@@ -98,7 +99,7 @@ export class AppsManager {
         return identifier
       }
     }
-    throw new Error(`No packageId found for identifer`)
+    throw new Error(`No identifer for packageId ${packageId}`)
   }
 
   get activeSpace() {
@@ -160,21 +161,22 @@ export class AppsManager {
   }
 
   updateAppMetaWatcher = react(
-    () => [this.activeSpace, this.nodeAppDefinitions, this.packageJsonUpdate],
-    async ([activeSpace, appDefs], { when }) => {
+    () => [this.activeSpace, this.nodeAppDefinitions, this.packageJsonUpdate, this.localAppsUpdate],
+    async ([activeSpace, appDefs], { sleep, when }) => {
       ensure('this.started', this.started)
       await when(() => this.updatePackagesVersion !== 0)
       ensure('info', !!activeSpace && !!appDefs)
+      await sleep(100) // debounce 100
       await this.updateAppMeta()
     },
   )
 
   updatePackageJsonVersionWatcher = react(
-    () => this.activeSpace && this.activeSpace.directory,
-    async (directory, { useEffect }) => {
-      ensure('directory', !!directory)
+    () => [this.activeSpace, this.started],
+    async ([space], { useEffect }) => {
+      ensure('directory', space && !!space.directory)
       ensure('this.started', this.started)
-      const pkg = join(directory || '', 'package.json')
+      const pkg = join(space.directory || '', 'package.json')
       log.info('watching package.json for changes', pkg)
       useEffect(() => {
         let watcher = watch(pkg, {
@@ -185,6 +187,37 @@ export class AppsManager {
           log.info('got package.json change')
           this.packageJsonUpdate = Math.random()
         })
+        return () => {
+          watcher.close()
+        }
+      })
+    },
+  )
+
+  updateLocalAppsWatcher = react(
+    () => [this.activeSpace, this.started],
+    async ([space], { useEffect }) => {
+      ensure('directory', space && !!space.directory)
+      ensure('this.started', this.started)
+      const appsDir = join(space.directory || '', 'apps')
+      log.info('watching local apps for changes', appsDir)
+      useEffect(() => {
+        let watcher = watch([appsDir], {
+          persistent: true,
+          awaitWriteFinish: true,
+          ignoreInitial: true,
+          // just watch the base directory for new folders
+          depth: 0,
+        })
+        watcher
+          .on('add', () => {
+            log.info('added an app dir')
+            this.localAppsUpdate = Math.random()
+          })
+          .on('unlink', () => {
+            log.info('removed an app dir')
+            this.localAppsUpdate = Math.random()
+          })
         return () => {
           watcher.close()
         }

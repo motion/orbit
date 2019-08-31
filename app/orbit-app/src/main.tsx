@@ -150,6 +150,7 @@ async function startApp(forceRefresh: boolean | 'mode' = false) {
   }
 
   if (window.location.search.indexOf('react.concurrent') > 0) {
+    console.debug('Concurrent mode enabled')
     ReactDOM.unstable_createRoot(RootNode).render(
       <React.unstable_ConcurrentMode>{elements}</React.unstable_ConcurrentMode>,
     )

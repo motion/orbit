@@ -9,7 +9,7 @@ import { Dictionary, Request } from 'express-serve-static-core'
 import { readFile } from 'fs-extra'
 import { chunk } from 'lodash'
 import hashObject from 'node-object-hash'
-import { join } from 'path'
+import { join, relative } from 'path'
 import { parse } from 'url'
 import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
@@ -63,7 +63,7 @@ type WebpackAppsDesc = {
 type AppsBuilderUpdate = {
   options: CommandWsOptions
   buildMode: AppBuildModeDict
-  activeApps: AppMeta[]
+  activeAppsMeta: AppMeta[]
 }
 
 @decorate
@@ -95,12 +95,12 @@ export class AppsBuilder {
     })
   }
 
-  async update({ buildMode, options, activeApps }: AppsBuilderUpdate) {
+  async update({ buildMode, options, activeAppsMeta }: AppsBuilderUpdate) {
     this.wsOptions = options
 
-    const buildConfigs = await getAppsConfig(activeApps, buildMode, options)
+    const buildConfigs = await getAppsConfig(activeAppsMeta, buildMode, options)
     const { clientConfigs, nodeConfigs, buildNameToAppMeta } = buildConfigs
-    log.verbose(`update() ${activeApps.length}`, buildConfigs)
+    log.verbose(`update() ${activeAppsMeta.length}`, buildConfigs)
     this.buildNameToAppMeta = buildNameToAppMeta
     this.apps = Object.keys(buildNameToAppMeta).map(k => buildNameToAppMeta[k])
 
@@ -122,7 +122,7 @@ export class AppsBuilder {
     // ensure builds have run for each app
     try {
       let builds = []
-      const chunks = chunk(activeApps, 2)
+      const chunks = chunk(activeAppsMeta, 2)
       for (const apps of chunks) {
         log.verbose(
           `Building apps. num chunks ${chunks.length}, cur chunk ${apps
@@ -355,6 +355,22 @@ export class AppsBuilder {
   }
 
   /**
+   * Helper to resolve a promise when a build completes
+   */
+  async onBuildComplete(identifier: string) {
+    await new Promise(res => {
+      const observable = this.observeBuildStatus().subscribe(next => {
+        const buildStatus = next.find(x => x.identifier === identifier)
+        log.verbose(`Got build status ${buildStatus ? buildStatus.status : 'none'}`)
+        if (buildStatus && buildStatus.status === 'complete') {
+          observable.unsubscribe()
+          res()
+        }
+      })
+    })
+  }
+
+  /**
    * Returns Observable for the current workspace information
    */
   observables = new Set<{ update: (next: any) => void; observable: Observable<BuildStatus[]> }>()
@@ -450,28 +466,44 @@ export class AppsBuilder {
       this.updateCompletedFirstBuild(name, status)
 
       // report to appStatus bus
-      const identifier = appMeta ? this.appsManager.packageIdToIdentifier(appMeta.packageId) : name
-      const mode = this.buildMode[appMeta ? appMeta.packageId : 'main']
+      let identifier = name
+      let entryPathRelative = ''
+      if (appMeta) {
+        identifier = this.appsManager.packageIdToIdentifier(appMeta.packageId) || ''
+        const entryPath = join(appMeta.directory, appMeta.packageJson.main)
+        entryPathRelative = relative(this.wsOptions.workspaceRoot, entryPath)
+        // bugfix: local workspace apps looked like `apps/abc/main.tsx` which broke webpack expectations of moduleId
+        if (entryPathRelative[0] !== '.') {
+          entryPathRelative = `./${entryPathRelative}`
+        }
+      }
+
+      const baseBuildStatus = {
+        mode: this.buildMode[appMeta ? appMeta.packageId : 'main'],
+        env: 'client',
+        scriptName: name,
+        entryPathRelative,
+        identifier,
+      } as const
 
       if (!state) {
-        this.setBuildStatus({ identifier, status: 'building', mode })
-        return
-      }
-      if (stats.hasErrors()) {
         this.setBuildStatus({
-          mode,
-          identifier,
+          ...baseBuildStatus,
+          status: 'building',
+        })
+      } else if (stats.hasErrors()) {
+        this.setBuildStatus({
+          ...baseBuildStatus,
           status: 'error',
           message: stats.toString(middlewareOptions.stats),
         })
-        return
+      } else {
+        this.setBuildStatus({
+          ...baseBuildStatus,
+          status: 'complete',
+          message: stats.toString(middlewareOptions.stats),
+        })
       }
-      this.setBuildStatus({
-        mode,
-        identifier,
-        status: 'complete',
-        message: stats.toString(middlewareOptions.stats),
-      })
     }
   }
 
@@ -497,7 +529,7 @@ export class AppsBuilder {
       return index.replace('<!-- orbit-scripts -->', `${scriptsPre}${scriptsPost}`)
     } else if (req.path.indexOf('/isolate') > -1) {
       const identifier = req.path.split('/')[2]
-      const packageId = this.appsManager.identifierToPackageId(identifier)
+      const packageId = this.appsManager.identifierToPackageId[identifier]
       const app = this.apps.find(x => x.packageId === packageId)
       console.log('identifier', identifier)
       return index.replace(

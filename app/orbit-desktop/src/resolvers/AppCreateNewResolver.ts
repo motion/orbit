@@ -40,6 +40,7 @@ export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
     log.verbose(`createNewWorkspaceApp() ${space.directory} ${!!opts} ${!!cmdOpts}`)
     const appsDir = join(space.directory, 'apps')
     const name = await findValidDirectoryName(appsDir, opts.identifier)
+
     let res = await commandNew(
       {
         projectRoot: appsDir,
@@ -50,9 +51,13 @@ export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
       },
       cmdOpts,
     )
+
+    // start watching here because it will pick up right away
+
     if (res.type === 'error') {
       return res
     }
+
     // ensure we update the workspace with new package id
     log.verbose(`Setup app successfully, ensuring built`)
     // build this app once
@@ -66,16 +71,9 @@ export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
     if (buildRes.type === 'error') {
       return buildRes
     }
-    /**
-     * TODO these next three calls are for now hardcoded and a bit weird
-     * If/when we refactor things in this area we can use this to understand how to improve it
-     */
-    // this picks up new app meta
-    await orbitDesktop.workspaceManager.appsManager.updateAppMeta()
-    // then ensure everything built
-    await orbitDesktop.workspaceManager.updateAppsBuilder()
-    // then update identifiers, had to add this to ensure it ran before return...
-    await orbitDesktop.workspaceManager.updateDesktopState()
+
+    await orbitDesktop.workspaceManager.updateAppsAfterNewApp(opts.identifier)
+
     return {
       type: 'success',
       message: `Created app.`,

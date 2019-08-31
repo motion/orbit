@@ -106,8 +106,6 @@ async function installApp(
     },
   )
 
-  console.log('got response from install app command', res)
-
   if (res.type === 'error') {
     banner.set({
       type: 'error',

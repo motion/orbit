@@ -24,7 +24,9 @@ import { ensureWorkspaceModel } from './ensureWorkspaceModel'
 
 const log = new Logger('WorkspaceManager')
 
-export type AppBuildModeDict = { [name: string]: 'development' | 'production' }
+export type AppBuildModeDict = {
+  [name: string]: 'development' | 'production'
+}
 
 @decorate
 export class WorkspaceManager {
@@ -87,7 +89,7 @@ export class WorkspaceManager {
   /**
    * Combines active workspaces apps + any apps in dev mode
    */
-  get activeApps(): AppMeta[] {
+  get activeAppsMeta(): AppMeta[] {
     const wsAppsMeta = this.appsManager.appMeta
     return uniqBy(
       [
@@ -105,7 +107,7 @@ export class WorkspaceManager {
    * watches options and apps and updates the webpack/graph.
    */
   update = react(
-    () => [this.started, this.activeApps, this.options, this.buildMode],
+    () => [this.started, this.activeAppsMeta, this.options, this.buildMode],
     async ([started], { sleep }) => {
       ensure('started', started)
       ensure('directory', !!this.options.workspaceRoot)
@@ -130,21 +132,39 @@ export class WorkspaceManager {
     },
   )
 
+  /**
+   * Run after adding new local app
+   * TODO these final steps shouldn't be so explicit / here
+   * Lets redo this at some point and fix
+   */
+  async updateAppsAfterNewApp(identifier: string) {
+    // by now we've built the app entirely, so refresh the appsMeta
+    await this.appsManager.updateAppMeta()
+    // update nameRegistry (TODO remove nameRegistry for something nicer)
+    await this.updateDesktopState()
+    // then, re-run AppsBuilder.update, because that will pick up new packageId/identifier in BuildStatus
+    await this.updateAppsBuilder()
+    // wait for build complete
+    await this.appsBuilder.onBuildComplete(identifier)
+  }
+
   async updateDesktopState() {
     const identifiers = this.appsManager.apps.map(x => x.identifier)
     if (!identifiers.length) {
       log.info(`No apps to update...`)
       return
     }
-    log.info(`Updating desktop state`)
+    log.info(`Updating desktop state: ${identifiers.join(', ')}`)
     Desktop.setState({
       workspaceState: {
         options: this.options,
-        appMeta: this.activeApps,
-        identifierToPackageId: identifiers.reduce((acc, identifier) => {
-          acc[identifier] = this.appsManager.identifierToPackageId(identifier)
+        // dict style
+        appMeta: this.activeAppsMeta.reduce((acc, meta) => {
+          const identifier = this.appsManager.packageIdToIdentifier(meta.packageId)
+          acc[identifier] = meta
           return acc
         }, {}),
+        identifierToPackageId: this.appsManager.identifierToPackageId,
         nameRegistry: Object.keys(this.appsBuilder.buildNameToAppMeta).map(buildName => {
           const appMeta = this.appsBuilder.buildNameToAppMeta[buildName]
           const { packageId } = appMeta
@@ -160,13 +180,13 @@ export class WorkspaceManager {
       },
     })
     // sleep because we have no good wait mechanism on setState there
-    await sleep(50)
+    await sleep(100)
   }
 
   private updateBuildMode() {
     // update buildMode first
     this.buildMode.main = this.options.dev ? 'development' : 'production'
-    for (const app of this.activeApps) {
+    for (const app of this.activeAppsMeta) {
       // apps always default to production mode
       this.buildMode[app.packageId] = this.options.dev
         ? 'development'
@@ -182,14 +202,19 @@ export class WorkspaceManager {
   lastBuildConfig = ''
   async updateAppsBuilder() {
     this.updateBuildMode()
-    const { options, activeApps, buildMode } = this
+    const { options, activeAppsMeta, buildMode } = this
 
     if (options.action === 'new') {
       return
     }
 
-    log.info(`Start building workspace, building ${activeApps.length} apps...`, options, activeApps)
-    if (!activeApps.length) {
+    log.info(
+      `Start building workspace, building ${activeAppsMeta.length} apps...`,
+      options,
+      activeAppsMeta,
+    )
+
+    if (!activeAppsMeta.length) {
       log.error(`Must have more than one app, workspace didn't detect any.`)
       return
     }
@@ -200,7 +225,7 @@ export class WorkspaceManager {
         options,
         // this update is weird
         buildMode,
-        activeApps,
+        activeAppsMeta,
       })
     } catch (err) {
       log.error(`Error running workspace: ${err.message}\n${err.stack}`)
@@ -366,7 +391,7 @@ export class WorkspaceManager {
 
       resolveCommand(AppDevCloseCommand, async ({ identifier }) => {
         log.info(`Stopping development ${identifier}`)
-        const packageId = this.appsManager.identifierToPackageId(identifier)
+        const packageId = this.appsManager.identifierToPackageId[identifier]
         if (!packageId) {
           return {
             type: 'error',

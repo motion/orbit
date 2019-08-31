@@ -28,17 +28,18 @@ export async function commandBuild(
   options?: CommandOpts,
 ): Promise<StatusReply> {
   attachLogToCommand(log, options)
+  const appRoot = props.projectRoot
 
-  log.info(`Running build in ${props.projectRoot}`)
+  log.info(`Running build in ${appRoot}`)
 
-  if (!(await isOrbitApp(props.projectRoot))) {
+  if (!(await isOrbitApp(appRoot))) {
     return {
       type: 'error',
-      message: `\nNot inside an orbit app, add "config": { "orbitApp": true } } to the package.json`,
+      message: `\nNot inside an orbit app ${appRoot}, add "config": { "orbitApp": true } } to the package.json`,
     }
   }
 
-  const pkg = await readPackageJson(props.projectRoot)
+  const pkg = await readPackageJson(appRoot)
   if (!pkg) {
     return {
       type: 'error',
@@ -46,7 +47,7 @@ export async function commandBuild(
     }
   }
 
-  const entry = await getAppEntry(props.projectRoot)
+  const entry = await getAppEntry(appRoot)
   if (!entry || !(await pathExists(entry))) {
     return {
       type: 'error',
@@ -54,9 +55,9 @@ export async function commandBuild(
     }
   }
 
-  await ensureDir(join(props.projectRoot, 'dist'))
+  await ensureDir(join(appRoot, 'dist'))
 
-  if (!(await shouldRebuildApp(props.projectRoot))) {
+  if (!(await shouldRebuildApp(appRoot))) {
     log.info(`App hasn't changed, not rebuilding. To force build, run: orbit build --force`)
     return {
       type: 'success',
@@ -68,9 +69,9 @@ export async function commandBuild(
     bundleApp(props),
     commandGenTypes(
       {
-        projectRoot: props.projectRoot,
+        projectRoot: appRoot,
         projectEntry: entry,
-        out: join(props.projectRoot, 'dist', 'api.json'),
+        out: join(appRoot, 'dist', 'api.json'),
       },
       options,
     ),

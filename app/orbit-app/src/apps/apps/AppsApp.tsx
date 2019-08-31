@@ -1,8 +1,10 @@
-import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, CurrentAppBitContext, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppWithDefinition } from '@o/kit'
-import { ApiSearchItem } from '@o/models'
-import { Button, Card, Col, Icon, List, ListItemProps, Section, SubTitle, useAsyncFn, useBanner } from '@o/ui'
+import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, command, createApp, CurrentAppBitContext, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppWithDefinition } from '@o/kit'
+import { ApiSearchItem, AppBit, AppBuildCommand } from '@o/models'
+import { Desktop } from '@o/stores'
+import { Button, Card, CenteredText, Col, createBanner, DefinitionList, Icon, List, ListItemProps, Section, SubTitle, useAsyncFn, useBanner } from '@o/ui'
 import React, { useCallback, useState } from 'react'
 
+import { useOm } from '../../om/om'
 import { ManageApps } from '../../views/ManageApps'
 import { useUserAppDefinitions } from '../orbitApps'
 import { AppSetupForm } from './AppSetupForm'
@@ -102,11 +104,43 @@ function AppsMain(props: AppViewProps) {
   return <ManageApps />
 }
 
+let isRebuilding = {}
+async function rebuildApp(app: AppBit) {
+  if (isRebuilding[app.identifier!]) return
+  isRebuilding[app.identifier!] = true
+  const banner = createBanner()
+  const title = `Rebulding ${app.name}`
+  const res = await command(
+    AppBuildCommand,
+    {
+      projectRoot: Desktop.state.workspaceState.appMeta[app.identifier!].directory,
+      force: true,
+    },
+    {
+      onMessage(message) {
+        banner.set({ title, message })
+      },
+    },
+  )
+  banner.set({
+    title,
+    type: res.type,
+    message: res.message,
+    timeout: res.type === 'success' ? 5 : Infinity,
+  })
+  isRebuilding[app.identifier!] = false
+}
+
 function AppSettings(props: { appId: number }) {
   const [app, definition] = useAppWithDefinition(props.appId)
   const banner = useBanner()
+  const om = useOm()
+  const buildStatus = om.state.develop.buildStatus.find(x => x.identifier === app!.identifier)
+  console.log('buildStatus', buildStatus, definition, om.state.develop.buildStatus)
 
-  if (!app || !definition) return null
+  if (!app || !definition) {
+    return <CenteredText>No app/definition</CenteredText>
+  }
 
   return (
     <Section
@@ -116,8 +150,8 @@ function AppSettings(props: { appId: number }) {
       icon={<AppIcon identifier={app.identifier} colors={app.colors} />}
       space
       padding
-      title="App Settings"
-      subTitle={`${app.name} · ${definition.name}`}
+      title={`App: ${app.name}`}
+      subTitle={`Name: ${app.name} · Definition name: ${definition.name}`}
       afterTitle={
         app &&
         app.tabDisplay !== 'permanent' && (
@@ -134,6 +168,16 @@ function AppSettings(props: { appId: number }) {
       {!!definition.app && (
         <Card title="Customize" padding>
           <AppsMainNew customizeColor app={app} />
+        </Card>
+      )}
+
+      {!!buildStatus && (
+        <Card
+          title="Build"
+          padding
+          afterTitle={<Button onClick={() => rebuildApp(app)}>Rebuild</Button>}
+        >
+          <DefinitionList row={buildStatus} />
         </Card>
       )}
 

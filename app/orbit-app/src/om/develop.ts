@@ -20,6 +20,15 @@ export const state: DevelopState = {
 }
 
 const start: AsyncAction = async om => {
+  // load buildStatus at least once before starting
+  await new Promise(res => {
+    // observe changes
+    observeMany(BuildStatusModel).subscribe(status => {
+      om.actions.develop.updateStatus({ status })
+      res()
+    })
+  })
+
   // setup apps
   await om.actions.develop.loadApps()
 
@@ -32,11 +41,6 @@ const start: AsyncAction = async om => {
       fireImmediately: true,
     },
   )
-
-  // observe changes
-  observeMany(BuildStatusModel).subscribe(status => {
-    om.actions.develop.updateStatus({ status })
-  })
 }
 
 const updateDevState: Action = () => {
@@ -60,59 +64,66 @@ const updateStatus: AsyncAction<{
     return
   }
 
-  // first, load new app js bundles if they were just added
-  await om.actions.develop.loadNewAppDLLs(status)
+  const current = om.state.develop.buildStatus
+  const next = status
 
-  // next, check if we toggled from dev/prod and properly update
-  await om.actions.develop.updateAppsBuildMode(status)
-
-  // finally, persist the last buildStatus for next run
+  // persist the last buildStatus immediately
+  // this will be sure we don't redo things unecessarily if called in quick succession
+  // as it does when webpack sees a few build events come in at once
   om.state.develop.buildStatus = status
+    // filter out ones we can't use yet because they are building...
+    .filter(x => isAppIdentifier(x.identifier))
+
+  // then, load new app js bundles if they were just added
+  await om.actions.develop.loadNewAppDLLs({ current, next })
+
+  // then, check if we toggled from dev/prod and properly update
+  await om.actions.develop.updateAppsBuildMode({ current, next })
 }
 
-const loadNewAppDLLs: AsyncAction<BuildStatus[]> = async (om, status) => {
-  const current = getIdentifiers(om.state.develop.buildStatus)
-  const next = getIdentifiers(status)
-  const toAdd = difference(next, current).filter(isAppIdentifier)
+type UpdateBuildStatusDesc = { current: BuildStatus[]; next: BuildStatus[] }
+
+const loadNewAppDLLs: AsyncAction<UpdateBuildStatusDesc> = async (om, { current, next }) => {
+  const currentIds = getIdentifiers(current)
+  const nextIds = getIdentifiers(next)
+  const toAdd = difference(nextIds, currentIds).filter(isAppIdentifier)
   if (!toAdd.length) return
   // loop and load new app dlls
+  // TODO promise.all this probably
   for (const identifier of toAdd) {
     console.debug(`Loading a new app DLL: ${identifier}`)
     const packageId = Desktop.state.workspaceState.identifierToPackageId[identifier]
     if (!packageId) {
       console.error('Couldnt find it tho')
-      debugger
       return
     }
     const name = stringToIdentifier(packageId)
     // load the new script
-    await om.actions.develop.loadAppDLL({ name, mode: 'production' })
+    const buildInfo = next.find(x => x.identifier === identifier)!
+    await om.actions.develop.loadAppDLL({ name, mode: buildInfo.mode })
     // then load apps
     await om.actions.develop.loadApps()
   }
 }
 
-const updateAppsBuildMode: AsyncAction<BuildStatus[]> = async (om, status) => {
-  const current = getIdentifiers(om.state.develop.buildStatus.filter(x => x.mode === 'development'))
-  const next = getIdentifiers(status.filter(x => x.mode === 'development'))
+const updateAppsBuildMode: AsyncAction<UpdateBuildStatusDesc> = async (om, { current, next }) => {
+  const currentIds = getIdentifiers(current.filter(x => x.mode === 'development'))
+  const nextIds = getIdentifiers(next.filter(x => x.mode === 'development'))
 
   // load new app scripts
-  const toAdd = difference(next, current).filter(isAppIdentifier)
-  const toRemove = difference(current, next).filter(isAppIdentifier)
+  const toAdd = difference(nextIds, currentIds).filter(isAppIdentifier)
+  const toRemove = difference(currentIds, nextIds).filter(isAppIdentifier)
 
   if (!toAdd.length && !toRemove.length) {
     return
   }
 
+  const all = [...current, ...next]
+
   await Promise.all([
-    ...toAdd.map(identifier => {
-      return om.actions.develop.changeAppDevelopmentMode({
-        identifier,
-        mode: 'development',
-      })
-    }),
-    ...toRemove.map(identifier => {
-      om.actions.develop.changeAppDevelopmentMode({ identifier, mode: 'production' })
+    [...toAdd, ...toRemove].map(identifier => {
+      const buildStatus = all.find(x => x.identifier === identifier)!
+      om.actions.develop.changeAppDevelopmentMode(buildStatus)
     }),
   ])
 
@@ -120,10 +131,7 @@ const updateAppsBuildMode: AsyncAction<BuildStatus[]> = async (om, status) => {
   await om.actions.develop.loadApps()
 }
 
-const changeAppDevelopmentMode: AsyncAction<{
-  identifier: string
-  mode: 'development' | 'production'
-}> = async (om, { identifier, mode }) => {
+const changeAppDevelopmentMode: AsyncAction<BuildStatus> = async (om, { identifier, mode }) => {
   const packageId = Desktop.state.workspaceState.identifierToPackageId[identifier]
   if (!packageId) return
   const name = stringToIdentifier(packageId)

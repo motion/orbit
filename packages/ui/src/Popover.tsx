@@ -966,8 +966,9 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
     const targetProps = {
       active: undefined,
       className: `${target.props['className'] || ''} popover-target`,
+      // both so we support regular dom and gloss-style
       nodeRef: this.targetRef,
-      // ref: this.targetRef,
+      ref: this.targetRef,
     }
     if (this.props.passActive) {
       targetProps.active = this.showPopover

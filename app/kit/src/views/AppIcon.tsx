@@ -51,7 +51,7 @@ export const AppIcon = memo((props: AppIconProps) => {
         width={`${rest.size}px`}
         height={`${rest.size}px`}
         style={{
-          transform: 'translateZ(0)',
+          transform: 'translate3d(0.1%, 0.1%, 0.1%)',
         }}
         dangerouslySetInnerHTML={{
           __html: iconSrc,

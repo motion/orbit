@@ -2,7 +2,7 @@
   "name": "@o/graphql-source-app",
   "description": "Add a remote GraphQL API into your local graph.",
   "version": "2.6.0",
-  "main": "index.tsx",
+  "main": "index.ts",
   "config": {
     "orbitApp": true
   },

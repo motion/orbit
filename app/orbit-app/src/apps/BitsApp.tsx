@@ -1,6 +1,6 @@
-import { createApp, useBitSearch } from '@o/kit'
-import { Table, useActiveSearchQuery } from '@o/ui'
-import React from 'react'
+import { Bit, createApp, useBitSearch, useStore } from '@o/kit'
+import { CardStack, DefinitionList, Form, FormFieldsObj, Layout, Pane, Table, useActiveSearchQuery } from '@o/ui'
+import React, { useMemo } from 'react'
 
 /**
  * TODO we need a decent manager for bits in one location
@@ -14,8 +14,30 @@ export default createApp({
   app: BitsApp,
 })
 
+class BitsAppStore {
+  selected: Bit[] = []
+  onSelect(rows: Bit[]) {
+    this.selected = rows
+  }
+
+  get selectedField(): FormFieldsObj | null {
+    const cur = this.selected[0]
+    if (!cur) return null
+    return Object.keys(cur).reduce((acc, key) => {
+      return {
+        ...acc,
+        [key]: {
+          label: key,
+          value: cur[key],
+        },
+      }
+    }, {})
+  }
+}
+
 function BitsApp() {
-  const bits = useBitSearch()
+  const bits = useBitSearch({ take: 5000 })
+  const store = useStore(BitsAppStore)
 
   // const searchState = useSearchState()
   // const searchString = useDebounceValue(searchState.query, 200)
@@ -26,46 +48,65 @@ function BitsApp() {
   // })
 
   return (
-    <Table
-      searchable
-      query={useActiveSearchQuery()}
-      selectable="multi"
-      shareable
-      items={bits.slice(0, 5000)}
-      columns={{
-        id: {
-          value: 'ID',
-        },
-        title: {
-          value: 'title',
-          flex: 2,
-        },
-        body: {
-          value: 'Body',
-          flex: 2,
-        },
-        appId: {
-          value: 'appId',
-        },
-        authorId: {
-          value: 'authorId',
-        },
-        photo: {
-          value: 'Photo',
-        },
-        email: {
-          value: 'Email',
-        },
-        data: {
-          value: 'Data',
-        },
-        createdAt: {
-          value: 'Created',
-        },
-        updatedAt: {
-          value: 'Updated',
-        },
-      }}
-    />
+    <Layout type="column">
+      <Pane resizable>
+        <Table
+          searchable
+          query={useActiveSearchQuery()}
+          selectable="multi"
+          onSelect={store.onSelect}
+          shareable
+          items={bits}
+          columns={{
+            id: {
+              value: 'ID',
+            },
+            title: {
+              value: 'title',
+              flex: 2,
+            },
+            body: {
+              value: 'Body',
+              flex: 2,
+            },
+            appId: {
+              value: 'appId',
+            },
+            authorId: {
+              value: 'authorId',
+            },
+            photo: {
+              value: 'Photo',
+            },
+            email: {
+              value: 'Email',
+            },
+            data: {
+              value: 'Data',
+            },
+            createdAt: {
+              value: 'Created',
+            },
+            updatedAt: {
+              value: 'Updated',
+            },
+          }}
+        />
+      </Pane>
+      <Pane flex={1.3}>
+        <Layout type="row">
+          <Pane title="Selected Bits" padding overflow="hidden">
+            <CardStack>
+              {store.selected.map((item, index) => (
+                <DefinitionList key={item.id || index} row={item} />
+              ))}
+            </CardStack>
+          </Pane>
+          <Pane title="Selected Bits" padding>
+            {store.selectedField && <Form fields={store.selectedField} />}
+          </Pane>
+        </Layout>
+      </Pane>
+    </Layout>
   )
 }

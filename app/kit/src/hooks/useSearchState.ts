@@ -54,17 +54,14 @@ export function useSearchState({
 
   return useReaction(
     () => {
-      if (getVis() === false) {
-        return
-      }
       if (onEvent === 'enter') {
         return queryStore!.lastCommand.at
       } else {
         return getSearchState(queryStore!, includePrefix)
       }
     },
-    status => {
-      ensure('is visible', getVis())
+    (status, { state }) => {
+      ensure('not invisible, after resolved once', !state.hasResolvedOnce || getVis())
       if (onEvent === 'enter') {
         ensure('last command', queryStore!.lastCommand.name === 'enter')
       }

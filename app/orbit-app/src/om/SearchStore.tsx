@@ -69,7 +69,7 @@ class SearchStoreStore {
           ...appResults,
           {
             key: 'all-apps',
-            title: `More apps (${appResults.length - appsFiltered.length})...`,
+            title: `More apps (${appsFiltered.length - appResults.length})...`,
             extraData: {
               appIdentifier: 'apps',
             },

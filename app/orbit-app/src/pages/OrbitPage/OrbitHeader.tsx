@@ -7,9 +7,11 @@ import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
 import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 
+import { sleep } from '../../helpers'
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
 import { queryStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
+import { whenIdle } from './OrbitApp'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarouselStore'
 import { appsDrawerStore } from './OrbitAppsDrawer'
 import { orbitDockStore } from './OrbitDock'
@@ -64,15 +66,19 @@ class HeaderStore {
     queryStore.setQuery(this.inputRef.current.innerText)
   }
 
-  focus = () => {
-    if (!this.inputRef || !this.inputRef.current) {
-      return
-    }
-    if (document.activeElement === this.inputRef.current) {
-      return
-    }
-    this.inputRef.current.focus()
+  isFocusing = false
+  focus = async () => {
+    if (!this.inputRef || !this.inputRef.current) return
+    if (document.activeElement === this.inputRef.current) return
+    if (this.isFocusing) return
+    this.isFocusing = true
+    await whenIdle()
+    await sleep(50)
+    await whenIdle()
+    // this causes re-paints, dont do it too eagerly
+    this.inputRef.current!.focus()
     moveCursorToEndOfTextarea(this.inputRef.current)
+    this.isFocusing = false
   }
 
   focusInputOnVisible = react(
@@ -174,35 +180,40 @@ export const OrbitHeader = memo(() => {
         <HeaderContain space spaceAround isActive={false} isDeveloping={isDeveloping}>
           <OrbitHeaderInput fontSize={slim ? 16 : 18} />
 
-          <Row
-            space
-            transition="all ease 300ms"
-            {...!isOnTearablePane && zoomedIn && { pointerEvents: 'none', opacity: 0.3 }}
-          >
+          <Row space transition="all ease 300ms">
             <SurfacePassProps sizeRadius={1.5} sizeHeight={0.9} sizeIcon={1.1} sizePadding={1.2}>
               {orbitStore.activeActions}
             </SurfacePassProps>
-            {!isTorn && (
-              <Button
-                circular
-                tooltip="Add app to workspace"
-                tooltipProps={{
-                  distance: 16,
-                }}
-                alt="flat"
-                icon="plus"
-                size="sm"
-                sizeIcon={1.6}
-                glint={false}
-                glintBottom={false}
-                opacity={0.5}
-                hoverStyle={{
-                  opacity: 0.75,
-                }}
-                onClick={om.actions.router.toggleSetupAppPage}
+
+            <Row
+              space
+              {...!isOnTearablePane && zoomedIn && { pointerEvents: 'none', opacity: 0.3 }}
+            >
+              {!isTorn && (
+                <Button
+                  circular
+                  tooltip="Add app to workspace"
+                  tooltipProps={{
+                    distance: 16,
+                  }}
+                  alt="flat"
+                  icon="plus"
+                  size="sm"
+                  sizeIcon={1.6}
+                  glint={false}
+                  glintBottom={false}
+                  opacity={0.5}
+                  hoverStyle={{
+                    opacity: 0.75,
+                  }}
+                  onClick={om.actions.router.toggleSetupAppPage}
+                />
+              )}
+              <OrbitHeaderOpenAppMenu
+                isDeveloping={isDeveloping}
+                setIsDeveloping={setIsDeveloping}
               />
-            )}
-            <OrbitHeaderOpenAppMenu isDeveloping={isDeveloping} setIsDeveloping={setIsDeveloping} />
+            </Row>
           </Row>
         </HeaderContain>
 

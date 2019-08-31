@@ -1,6 +1,6 @@
 import { AutomagicStore, configureAutomagical, CurrentComponent, decorate, updateProps, useCurrentComponent } from '@o/automagical'
 import { isEqual } from '@o/fast-compare'
-import { observable, transaction } from 'mobx'
+import { get, observable, set, transaction } from 'mobx'
 import { useEffect, useRef } from 'react'
 
 import { config } from './configure'
@@ -123,47 +123,28 @@ export function disposeStore(store: any, component?: CurrentComponent) {
 type HooksObject = {
   __rerunHooks: () => any
   __hooksData: any
-  // __setUpdater: Function
-  // __dispose?: Function
-  // __stopCheckingPropRead?: Function
 }
 
-export function useHooks<A extends () => any>(
-  hooks: A,
-  // store?: any,
-): ReturnType<A> & HooksObject {
-  // why observable map? it triggers on key changes
-  // and we will add new keys as promises throw/update
-  const hooksData = observable.map({}, { deep: false })
-
-  const hooksObject: HooksObject = {
-    __hooksData: hooksData,
-    __rerunHooks: () => {
-      const res = hooks()
-      transaction(() => {
-        for (const key in res) {
-          // set it here so its responsive
-          hooksData.set(key, res[key])
-          // set it on here so we can see it in console
-          hooksObject[key] = res[key]
-        }
-      })
+export function useHooks<A extends () => any>(hooks: A): ReturnType<A> & HooksObject {
+  const object = observable.object(
+    {
+      __rerunHooks: () => {
+        const res = hooks()
+        transaction(() => {
+          for (const key in res) {
+            set(object, key, res[key])
+          }
+        })
+      },
     },
-  }
-
-  // then use a proxy just so we can convert map back into object api
-  return new Proxy(hooksObject, {
-    get(target, key) {
-      if (Reflect.has(target, key)) {
-        return Reflect.get(target, key)
-      }
-      return hooksData.get(key)
+    undefined,
+    { deep: false },
+  ) as any
+  return new Proxy(object, {
+    get(_, key) {
+      return get(object, key)
     },
-    set(_, key, value) {
-      hooksData.set(key, value)
-      return true
-    },
-  }) as ReturnType<A> & HooksObject
+  })
 }
 
 // // this is reactive so we can capture this.props and other reactive state inside hooks call

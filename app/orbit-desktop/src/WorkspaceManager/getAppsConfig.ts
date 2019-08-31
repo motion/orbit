@@ -95,7 +95,7 @@ export async function getAppsConfig(
     output: {
       library: 'base',
     },
-    dll: join(outputDir, 'manifest-baseDev.json'),
+    dll: join(outputDir, 'orbit-manifest-shared.json'),
   }
   const baseDevConfig = await addDLL(baseDevParams)
   clientConfigs.baseDev = baseDevConfig
@@ -336,7 +336,7 @@ async function getBaseDllParams(params: WebpackParams): Promise<WebpackParams> {
     output: {
       library: 'shared',
     },
-    dll: join(params.outputDir, 'manifest-base.json'),
+    dll: join(params.outputDir, 'orbit-manifest-shared.json'),
     ...params,
   }
 }

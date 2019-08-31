@@ -201,13 +201,19 @@ let defaultBaseDll
 if (process.env.NODE_ENV === 'production') {
   const Config = getGlobalConfig()
   defaultBaseDll = {
-    manifest: join(Config.paths.desktopRoot, 'dist', 'manifest-base.json'),
+    manifest: join(Config.paths.desktopRoot, 'dist', 'orbit-manifest-shared.json'),
     filepath: join(Config.paths.desktopRoot, 'dist', 'baseDev.dll.js'),
   }
 } else {
   const monoRoot = join(__dirname, '..', '..', '..', '..')
   defaultBaseDll = {
-    manifest: join(monoRoot, 'example-workspace', 'dist', 'production', 'manifest-base.json'),
+    manifest: join(
+      monoRoot,
+      'example-workspace',
+      'dist',
+      'production',
+      'orbit-manifest-shared.json',
+    ),
     filepath: join(monoRoot, 'example-workspace', 'dist', 'production', 'baseDev.dll.js'),
   }
 }

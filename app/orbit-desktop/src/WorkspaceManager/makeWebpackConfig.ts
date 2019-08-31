@@ -58,7 +58,7 @@ export function makeWebpackConfig(
   } = params
 
   // optimize react
-  // process.env.OPTIMIZE_REACT = mode === 'development' ? undefined : 'true'
+  process.env.OPTIMIZE_REACT = mode === 'development' ? undefined : 'true'
 
   // entry dir is the path above the entry file, this could be better...
   // const entryDir = Path.join(params.entry[0], '..')

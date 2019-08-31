@@ -95,32 +95,37 @@ export class AppsBuilder {
     })
   }
 
+  isUpdating = false
   async update({ buildMode, options, activeAppsMeta }: AppsBuilderUpdate) {
     this.wsOptions = options
-
-    const buildConfigs = await getAppsConfig(activeAppsMeta, buildMode, options)
-    const { clientConfigs, nodeConfigs, buildNameToAppMeta } = buildConfigs
-    log.verbose(`update() ${activeAppsMeta.length}`, buildConfigs)
-    this.buildNameToAppMeta = buildNameToAppMeta
-    this.apps = Object.keys(buildNameToAppMeta).map(k => buildNameToAppMeta[k])
-
-    if (!clientConfigs && !nodeConfigs) {
-      log.error('No config')
-      return
+    if (this.isUpdating) {
+      console.warn('!!!!!!!!!!!!!!!!!!!!!!!! what')
     }
-
-    // for build mode, ensure we re-run the dll builds first
-    if (options.action === 'build') {
-      const { base } = clientConfigs
-      log.info(`Building ${Object.keys(clientConfigs).join(', ')}...`)
-      // build base dll first to ensure it feeds into rest
-      await webpackPromise([base], {
-        loud: true,
-      })
-    }
+    this.isUpdating = true
 
     // ensure builds have run for each app
     try {
+      const buildConfigs = await getAppsConfig(activeAppsMeta, buildMode, options)
+      const { clientConfigs, nodeConfigs, buildNameToAppMeta } = buildConfigs
+      log.verbose(`update() ${activeAppsMeta.length}`, buildConfigs)
+      this.buildNameToAppMeta = buildNameToAppMeta
+      this.apps = Object.keys(buildNameToAppMeta).map(k => buildNameToAppMeta[k])
+
+      if (!clientConfigs && !nodeConfigs) {
+        log.error('No config')
+        return
+      }
+
+      // for build mode, ensure we re-run the dll builds first
+      if (options.action === 'build') {
+        const { base } = clientConfigs
+        log.info(`Building ${Object.keys(clientConfigs).join(', ')}...`)
+        // build base dll first to ensure it feeds into rest
+        await webpackPromise([base], {
+          loud: true,
+        })
+      }
+
       let builds = []
       const chunks = chunk(activeAppsMeta, 2)
       for (const apps of chunks) {
@@ -152,13 +157,15 @@ export class AppsBuilder {
       } else {
         log.info(`Finished apps initial build, success`)
       }
+
+      if (options.action === 'run') {
+        this.state = await this.updateBuild(buildConfigs)
+        return
+      }
     } catch (err) {
       log.error(`Error running initial builds ${err.message}\n${err.stack}`)
-    }
-
-    if (options.action === 'run') {
-      this.state = await this.updateBuild(buildConfigs)
-      return
+    } finally {
+      this.isUpdating = false
     }
   }
 

@@ -65,7 +65,7 @@ export async function getAppsConfig(
     })
     // ensure built
     if (options.clean || !(await pathExists(params.dll))) {
-      log.info(`Ensuring config built once: ${params.name} at ${params.dll}`)
+      log.info(`Ensuring config built once: ${params.name} at ${params.dll}`, params)
       const buildOnceConfig = await makeWebpackConfig({
         ...params,
         hot: true,
@@ -155,25 +155,23 @@ export async function getAppsConfig(
   )
   const buildNameToAppMeta: { [name: string]: AppMeta } = {}
   const appInfos = await Promise.all(apps.map(x => getAppInfo(x.directory)))
-  await Promise.all(
-    appParams.map(async (params, index) => {
-      const appMeta = apps[index]
-      const appInfo = appInfos[index]
-      const config = await addDLL({
-        ...getAppParams(params),
-        // only watch apps for updates in development mode
-        watch: buildMode[appMeta.packageId] === 'development',
+  for (const [index, params] of appParams.entries()) {
+    const appMeta = apps[index]
+    const appInfo = appInfos[index]
+    const config = await addDLL({
+      ...getAppParams(params),
+      // only watch apps for updates in development mode
+      watch: buildMode[appMeta.packageId] === 'development',
+    })
+    buildNameToAppMeta[params.name] = appMeta
+    clientConfigs[params.name] = config
+    if (!!appInfo.workers) {
+      nodeConfigs[params.name] = await getNodeAppConfig(appMeta.directory, appMeta.packageId, {
+        watch: options.action === 'build' ? false : true,
+        projectRoot: appMeta.directory,
       })
-      buildNameToAppMeta[params.name] = appMeta
-      clientConfigs[params.name] = config
-      if (!!appInfo.workers) {
-        nodeConfigs[params.name] = await getNodeAppConfig(appMeta.directory, appMeta.packageId, {
-          watch: options.action === 'build' ? false : true,
-          projectRoot: appMeta.directory,
-        })
-      }
-    }),
-  )
+    }
+  }
 
   /**
    * Only needed when developing orbit itself.

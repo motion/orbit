@@ -23,7 +23,10 @@ export * from '@o/utils'
 export { isEqual } from '@o/fast-compare'
 export * from 'date-fns'
 
-export { Editor, EditorProps } from '@o/editor'
+// for now bugfix node apps
+export function getEditor() {
+  return require('@o/editor').Editor
+}
 
 module.hot && module.hot.accept()
 

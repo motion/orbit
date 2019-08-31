@@ -14,6 +14,13 @@ export default createApp({
   app: OnboardApp,
 })
 
+const Centered = gloss(Col, {
+  margin: 'auto',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
+})
+
 class OnboardStore {
   proxyStatus: 'waiting' | 'valid' | 'error' = 'waiting'
   space: Partial<Space> = {
@@ -199,10 +206,3 @@ const setupContent = {
     ),
   },
 }
-
-const Centered = gloss(Col, {
-  margin: 'auto',
-  alignItems: 'center',
-  justifyContent: 'center',
-  textAlign: 'center',
-})

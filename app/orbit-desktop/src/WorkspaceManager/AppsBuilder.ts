@@ -99,7 +99,8 @@ export class AppsBuilder {
   async update({ buildMode, options, activeAppsMeta }: AppsBuilderUpdate) {
     this.wsOptions = options
     if (this.isUpdating) {
-      console.warn('!!!!!!!!!!!!!!!!!!!!!!!! what')
+      console.warn('!!!!!!!!!!!!!!!!!!!!!!!! what TODO cancel current and re-run')
+      return
     }
     this.isUpdating = true
 

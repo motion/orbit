@@ -1,6 +1,6 @@
 import { Logger } from '@o/logger'
 import { BrowserWindow } from 'electron'
-import isEqual from 'lodash.isequal'
+import { isEqual } from 'lodash'
 
 import { BaseComponent } from './BaseComponent'
 

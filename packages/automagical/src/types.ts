@@ -26,6 +26,7 @@ export type ReactionOptions = {
   defaultValue?: any
   lazy?: boolean
   name?: string
+  priority?: 1 | 2 | 3 | 4
 }
 
 export interface MagicalObject {

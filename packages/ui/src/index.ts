@@ -1,10 +1,10 @@
 // until next hotkeys patches types
 import pluralizeOg from 'pluralize'
 
-module.hot && module.hot.accept()
+process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()
 
 export * from './helpers/configureHotKeys'
-export { default as allIcons } from './icons'
+export { allIcons } from './icons'
 
 export * from '@o/color'
 export * from '@o/utils'

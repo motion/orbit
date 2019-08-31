@@ -3,7 +3,7 @@ import { SVG, View, ViewProps } from '@o/ui'
 import { gloss, useTheme } from 'gloss'
 import React, { memo } from 'react'
 
-import { useLink } from '../LinkState'
+import { useLink } from '../useLink'
 
 export const LogoHorizontal = memo((props: ViewProps & { slim?: boolean }) => {
   const theme = useTheme()

@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events'
-import isEqual from 'lodash.isequal'
+import { isEqual } from 'lodash'
+
 import configureEventHandler from '../utils/configureEventHandler'
 
 // sort of like our own mini react API

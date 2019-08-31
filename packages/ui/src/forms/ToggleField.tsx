@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { SimpleFormField, SimpleFormFieldProps } from './FormField'
+import { SimpleFormField, SimpleFormFieldProps } from './SimpleFormField'
 import { Toggle, ToggleProps } from './Toggle'
 
 export function ToggleField({

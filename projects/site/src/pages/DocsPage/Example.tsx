@@ -3,7 +3,7 @@ import { Box } from 'gloss'
 import { capitalize } from 'lodash'
 import React, { createElement, isValidElement, memo, Suspense, useRef, useState } from 'react'
 
-import { linkProps } from '../../LinkState'
+import { linkProps } from '../../useLink'
 import { CodeBlock } from '../../views/CodeBlock'
 
 export type ExampleProps = {

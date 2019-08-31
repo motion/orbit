@@ -2,6 +2,7 @@ import { isDefined } from '@o/utils'
 import AddAssetHtmlPlugin from 'add-asset-html-webpack-plugin'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
 import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
+import IgnoreNotFoundExportPlugin from 'ignore-not-found-export-webpack-plugin'
 import * as Path from 'path'
 import TerserPlugin from 'terser-webpack-plugin'
 import TimeFixPlugin from 'time-fix-plugin'
@@ -322,6 +323,8 @@ require('@o/kit').OrbitHot.fileLeave();
       ].filter(Boolean),
     },
     plugins: [
+      new IgnoreNotFoundExportPlugin(),
+
       new HardSourceWebpackPlugin({
         // cacheDirectory: '.cache/hard-source/[confighash]',
         environmentHash: {

@@ -1,12 +1,9 @@
-import 'requestidlecallback-polyfill'
-
-import { configureHotKeys, configureUI, debug, toColor } from '@o/ui'
+import { configureUI, debug, toColor } from '@o/ui'
 import { configureUseStore, debugUseStore, IS_STORE } from '@o/use-store'
 import { setConfig } from 'react-hot-loader'
 import ResizeObserver from 'resize-observer-polyfill'
 
 import { fontProps } from './constants'
-import { ResizeSensor } from './pages/DocsPage/ResizeSensor'
 import { themes } from './themes'
 
 if (process.env.NODE_ENV === 'development') {
@@ -20,11 +17,11 @@ function configure() {
   if (hasConfigured) return
 
   window['enableLog'] = false
+  // @ts-ignore
   window['debug'] = debug
 
   // required in production
   window['ResizeObserver'] = ResizeObserver
-  window['ResizeSensor'] = ResizeSensor
 
   configureUI({
     defaultProps: {
@@ -33,10 +30,6 @@ function configure() {
         ...fontProps.TitleFont,
       },
     },
-  })
-
-  configureHotKeys({
-    ignoreTags: [],
   })
 
   if (process.env.NODE_ENV === 'development') {
@@ -77,6 +70,4 @@ function configure() {
 
 configure()
 
-if (module['hot']) {
-  module['hot'].accept()
-}
+process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()

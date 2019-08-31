@@ -32,6 +32,4 @@ export const Stores = {
   paneManagerStore,
 }
 
-if (module['hot']) {
-  module['hot'].accept()
-}
+process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()

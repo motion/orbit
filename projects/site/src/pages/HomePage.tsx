@@ -14,25 +14,51 @@ import { LoadingPage } from './LoadingPage'
 import { ParallaxContext } from './ParallaxContext'
 
 const DeploySection = loadOnIntersect(
-  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/DeploySection'))),
+  lazy(() =>
+    retry(() => import(/* webpackChunkName: "DeploySection" */ './HomePage/DeploySection')),
+  ),
 )
 const AllInOnePitchDemoSection = loadOnIntersect(
-  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/AllInOnePitchDemoSection'))),
+  lazy(() =>
+    retry(() =>
+      import(
+        /* webpackChunkName: "AllInOnePitchDemoSection" */ './HomePage/AllInOnePitchDemoSection'
+      ),
+    ),
+  ),
 )
 const DataAppKitFeaturesSection = loadOnIntersect(
-  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/DataAppKitFeaturesSection'))),
+  lazy(() =>
+    retry(() =>
+      import(
+        /* webpackChunkName: "DataAppKitFeaturesSection" */ './HomePage/DataAppKitFeaturesSection'
+      ),
+    ),
+  ),
 )
 const FeetSection = loadOnIntersect(
-  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/FooterSection'))),
+  lazy(() =>
+    retry(() => import(/* webpackChunkName: "FooterSection" */ './HomePage/FooterSection')),
+  ),
 )
 const MissionMottoSection = loadOnIntersect(
-  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/MissionMottoSection'))),
+  lazy(() =>
+    retry(() =>
+      import(/* webpackChunkName: "MissionMottoSection" */ './HomePage/MissionMottoSection'),
+    ),
+  ),
 )
 const SecuritySection = loadOnIntersect(
-  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/SecuritySection'))),
+  lazy(() =>
+    retry(() => import(/* webpackChunkName: "SecuritySection" */ './HomePage/SecuritySection')),
+  ),
 )
 const EarlyAccessBetaSection = loadOnIntersect(
-  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/EarlyAccessBetaSection'))),
+  lazy(() =>
+    retry(() =>
+      import(/* webpackChunkName: "EarlyAccessBetaSection" */ './HomePage/EarlyAccessBetaSection'),
+    ),
+  ),
 )
 
 export const HomePage = memo(() => {

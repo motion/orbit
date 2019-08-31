@@ -8,9 +8,9 @@ import { NotFoundBoundary, View } from 'react-navi'
 import { Header } from '../Header'
 import { useScreenSize } from '../hooks/useScreenSize'
 import { usePageTheme } from '../Layout'
-import { linkProps } from '../LinkState'
 import { Navigation } from '../Navigation'
 import { useSiteStore } from '../SiteStore'
+import { linkProps } from '../useLink'
 import { ContentSection } from '../views/ContentSection'
 import { FadeChild, useFadePage } from '../views/FadeIn'
 import { SectionContent } from '../views/SectionContent'
@@ -19,11 +19,14 @@ import { DocsContents } from './DocsContents'
 import { docsItems, docsViews } from './docsItems'
 import DocsStart from './DocsPage/DocsStart.mdx'
 import { Example } from './DocsPage/Example'
+import { ResizeSensor } from './DocsPage/ResizeSensor'
 import { DocsPageHeader } from './DocsPageHeader'
-import { docsNavigate, loadDocsPage, navTm, preloadItem } from './docsPageHelpers'
+import { docsNavigate, loadDocsPage, preloadItem } from './docsPageHelpers'
 import { DocsStoreContext } from './DocsStore'
 import { NotFoundPage } from './NotFoundPage'
 import { useStickySidebar } from './useStickySidebar'
+
+window['ResizeSensor'] = ResizeSensor
 
 const itemProps = {
   hideBorder: true,
@@ -80,8 +83,6 @@ const DocsPage = memo((props: { children?: any }) => {
 
   useEffect(() => {
     let sub = Navigation.subscribe(() => {
-      clearTimeout(navTm)
-
       if (document.activeElement !== inputRef.current) {
         inputRef.current.focus()
       }

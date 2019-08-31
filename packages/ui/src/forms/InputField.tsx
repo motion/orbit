@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { SimpleFormField, SimpleFormFieldProps } from './FormField'
 import { Input, InputProps } from './Input'
+import { SimpleFormField, SimpleFormFieldProps } from './SimpleFormField'
 
 export function InputField({
   name,

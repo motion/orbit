@@ -7,22 +7,19 @@ import IgnoreNotFoundExportPlugin from 'ignore-not-found-export-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
-const { BundleStatsWebpackPlugin } = require('bundle-stats')
-
-const LodashWebpackPlugin = require('lodash-webpack-plugin')
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
 // const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
-// const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin')
+const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const WebpackNotifierPlugin = require('webpack-notifier')
 const TerserPlugin = require('terser-webpack-plugin')
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-const CircularDependencyPlugin = require('circular-dependency-plugin')
+// const CircularDependencyPlugin = require('circular-dependency-plugin')
 
 const cwd = process.cwd()
 // TODO: this doesn't seem to be the correct way to get the monorepo root.
@@ -64,9 +61,7 @@ if (flags.prod) {
 
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
-const entry = {
-  main: process.env.ENTRY || flags.entry || readPackage('main') || './src/index.ts',
-}
+const entry = process.env.ENTRY || flags.entry || readPackage('main') || './src/index.ts'
 
 const NO_OPTIMIZE = process.env.NO_OPTIMIZE
 const IS_RUNNING = process.env.IS_RUNNING
@@ -113,42 +108,46 @@ console.log(
 
 const optimization = {
   prod: {
-    nodeEnv: 'production',
-    namedChunks: true,
     usedExports: true,
     sideEffects: true,
-    minimize: true,
-    concatenateModules: true,
     ...(target === 'node'
       ? {
           splitChunks: false,
         }
       : {
-          // runtimeChunk: true,
+          runtimeChunk: true,
+          mangleExports: true,
           splitChunks: {
-            chunks: 'all',
-            // name: true,
-            // minSize: 10000,
-            // minChunks: 1,
-            // maxAsyncRequests: 50,
-            // maxInitialRequests: 10,
-            // automaticNameDelimiter: '~',
-            // automaticNameMaxLength: 30,
-            // cacheGroups: {
-            //   default: false,
-            //   vendors: false,
-            //   vendor: false,
-            // },
-            // cacheGroups: {
-            //   default: false,
-            //   vendors: false,
-            //   zero: {
-            //     maxSize: 180000,
-            //   },
-            // },
+            chunks: 'async',
+            name: false,
           },
         }),
-    // minimizer: [
+    // minimizer: false,
+    // [
+    //   new TerserPlugin({
+    //     sourceMap: true,
+    //     cache: true,
+    //     parallel: true,
+    //     terserOptions: {
+    //       parse: {
+    //         ecma: 8,
+    //       },
+    //       compress: {
+    //         ecma: 6,
+    //         warnings: false,
+    //       },
+    //       mangle: {
+    //         safari10: true,
+    //       },
+    //       keep_classnames: true,
+    //       output: {
+    //         ecma: 6,
+    //         comments: false,
+    //         beautify: false,
+    //         ascii_only: true,
+    //       },
+    //     },
+    //   }),
     //   // target !== 'node' &&
     //   //   new OptimizeCSSAssetsPlugin({
     //   //     cssProcessor: require('cssnano'),
@@ -172,7 +171,7 @@ const alias = {
   // 'react-dom': 'react-dom/profiling',
   // 'schedule/tracking': 'schedule/tracking-profiling',
   'react-dom': mode === 'production' ? 'react-dom' : '@hot-loader/react-dom',
-  'lodash.isequal': 'lodash/isEqual',
+  lodash: 'lodash',
 }
 
 const babelrcOptions = {
@@ -279,12 +278,12 @@ async function makeConfig() {
         {
           test: /\.css$/,
           use: [
-            shouldExtractCSS && {
-              loader: MiniCssExtractPlugin.loader,
-              options: {
-                hmr: process.env.NODE_ENV === 'development',
-              },
-            },
+            // shouldExtractCSS && {
+            //   loader: MiniCssExtractPlugin.loader,
+            //   options: {
+            //     hmr: process.env.NODE_ENV === 'development',
+            //   },
+            // },
             !shouldExtractCSS && 'style-loader',
             'css-loader',
           ].filter(Boolean),
@@ -323,7 +322,7 @@ async function makeConfig() {
               loader: 'babel-loader',
               options: {
                 plugins: [],
-                presets: ['@o/babel-preset-motion'],
+                presets: ['@babel/env', '@babel/preset-react'],
               },
             },
             {
@@ -338,8 +337,6 @@ async function makeConfig() {
       ].filter(Boolean),
     },
     plugins: [
-      new LodashWebpackPlugin(),
-
       new IgnoreNotFoundExportPlugin(),
 
       new WebpackNotifierPlugin({ excludeWarnings: true }),
@@ -356,9 +353,9 @@ async function makeConfig() {
 
       target !== 'node' &&
         new HtmlWebpackPlugin({
-          chunksSortMode: 'none',
           favicon: 'public/favicon.png',
           template: 'public/index.html',
+          // chunksSortMode: 'manual',
           ...(isProd &&
             !NO_OPTIMIZE && {
               minify: {
@@ -384,31 +381,31 @@ async function makeConfig() {
       //   rel: 'preload',
       // }),
 
-      // target !== 'node' &&
-      //   isProd &&
-      //   new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
+      target !== 'node' &&
+        isProd &&
+        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
 
-      shouldExtractCSS && // dont extract css when running directly
-        new MiniCssExtractPlugin({
-          filename: 'static/css/[name].[contenthash:8].css',
-          chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
-        }),
-
-      // shouldExtractCSS &&
-      //   target === 'web' &&
-      //   new HtmlCriticalWebpackPlugin({
-      //     base: outputPath,
-      //     src: 'index.html',
-      //     dest: 'index.html',
-      //     inline: true,
-      //     minify: true,
-      //     extract: true,
-      //     width: 375,
-      //     height: 565,
-      //     // penthouse: {
-      //     //   blockJSRequests: false,
-      //     // },
+      // shouldExtractCSS && // dont extract css when running directly
+      //   new MiniCssExtractPlugin({
+      //     filename: 'static/css/[name].[contenthash:8].css',
+      //     chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
       //   }),
+
+      shouldExtractCSS &&
+        target === 'web' &&
+        new HtmlCriticalWebpackPlugin({
+          base: outputPath,
+          src: 'index.html',
+          dest: 'index.html',
+          inline: true,
+          minify: true,
+          extract: true,
+          width: 375,
+          height: 565,
+          penthouse: {
+            blockJSRequests: false,
+          },
+        }),
 
       !!process.env['ANALYZE_BUNDLE'] &&
         new BundleAnalyzerPlugin({
@@ -421,28 +418,28 @@ async function makeConfig() {
           verbose: true,
         }),
 
-      // !!process.env['ANALYZE_BUNDLE'] && new WebpackVisualizerPlugin(),
-
-      !!process.env['ANALYZE_BUNDLE'] &&
-        new BundleStatsWebpackPlugin({
-          outDir: outputPath,
-          baseline: true,
-          compare: false,
-        }),
-
       !isProd && new webpack.NamedModulesPlugin(),
 
       isProd && new DuplicatePackageCheckerPlugin(),
 
-      new CircularDependencyPlugin({
-        // failOnError: true,
-      }),
+      // new CircularDependencyPlugin({
+      //   // failOnError: true,
+      // }),
 
       flags.executable &&
         new webpack.BannerPlugin({
           banner: '#!/usr/bin/env node',
           raw: true,
         }),
+
+      // !process.env['ANALYZE_BUNDLE'] &&
+      //   isProd &&
+      //   new PrepackPlugin({
+      //     reactEnabled: true,
+      //     compatibility: 'node-react',
+      //     // avoid worker modules
+      //     test: /^(?!.*worker\.[tj]sx?)$/i,
+      //   }),
     ].filter(Boolean),
   }
 

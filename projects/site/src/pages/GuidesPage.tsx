@@ -1,20 +1,20 @@
-import { Space, gloss, ColProps, Col, Grid } from '@o/ui'
+import { Col, ColProps, Grid, Space } from '@o/ui'
 import { compose, mount, route, withView } from 'navi'
 import React from 'react'
 import { View } from 'react-navi'
 
+import { colors } from '../colors'
 import { Header } from '../Header'
+import { linkProps } from '../useLink'
 import { ContentSection } from '../views/ContentSection'
-import { FadeParent, FadeChild } from '../views/FadeIn'
+import { FadeChild, FadeParent } from '../views/FadeIn'
 import { MDX } from '../views/MDX'
 import { SectionContent } from '../views/SectionContent'
 import { TitleText } from '../views/TitleText'
-import { guides, GuideEntry } from './GuidesPage/guides'
+import { GuideEntry, guides } from './GuidesPage/guides'
 import { AboveFooter } from './HomePage/AboveFooter'
 import { Footer } from './HomePage/Footer'
-import { linkProps } from '../LinkState'
 import { useScreenVal } from './HomePage/SpacedPageContent'
-import { colors } from '../constants'
 
 export default compose(
   withView(() => {

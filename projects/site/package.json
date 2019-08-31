@@ -5,7 +5,7 @@
   "main": "./src/index.tsx",
   "scripts": {
     "start": "mcro-build --port 5000 --target web",
-    "build": "ANALYZE_BUNDLE=1 mcro-build --prod --build --target web",
+    "build": "OPTIMIZE_REACT=1 ANALYZE_BUNDLE=1 mcro-build --prod --build --target web",
     "build:simple": "mcro-build --prod --build --target web",
     "start:prod": "mcro-build --prod --port 5000 --report --target web",
     "serve:prod": "static-server -p 3999 -n dist/index.html dist",
@@ -35,7 +35,7 @@
     "query-string": "6.2.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-hot-loader": "4.12.10",
+    "react-hot-loader": "4.12.12",
     "react-navi": "0.12.4",
     "react-spring": "9.0.0-beta.31",
     "requestidlecallback-polyfill": "1.0.2",

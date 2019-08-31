@@ -16,11 +16,12 @@ module.exports = function(_, givenOpts) {
 
   const config = {
     plugins: [
+      // plug('babel-plugin-lodash'),
       isDev && plug('react-hot-loader/babel'),
-      plug('babel-plugin-react-native-web', {
-        commonjs: true,
-      }),
-      plug('./babel-plugin-react-displayname.js'),
+      // plug('babel-plugin-react-native-web', {
+      //   commonjs: true,
+      // }),
+      isDev && plug('./babel-plugin-react-displayname.js'),
       plug('@babel/plugin-syntax-dynamic-import'),
       plug('@babel/plugin-transform-runtime', {
         regenerator: false,
@@ -44,7 +45,7 @@ module.exports = function(_, givenOpts) {
     presets:
       opts.presets ||
       [
-        plug('gloss/babel', opts.glossConfig || {}),
+        isDev && plug('gloss/babel', opts.glossConfig || {}),
         plug('@babel/preset-react', {
           pragmaFrag: 'React.Fragment',
         }),

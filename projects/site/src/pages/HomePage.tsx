@@ -13,26 +13,22 @@ import { HeadSection } from './HomePage/HeadSection'
 import { LoadingPage } from './LoadingPage'
 import { ParallaxContext } from './ParallaxContext'
 
-const DeploySection = loadOnIntersect(
-  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/DeploySection'))),
-)
+const DeploySection = loadOnIntersect(lazy(() => retry(() => import('./HomePage/DeploySection'))))
 const AllInOnePitchDemoSection = loadOnIntersect(
-  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/AllInOnePitchDemoSection'))),
+  lazy(() => retry(() => import('./HomePage/AllInOnePitchDemoSection'))),
 )
 const DataAppKitFeaturesSection = loadOnIntersect(
-  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/DataAppKitFeaturesSection'))),
+  lazy(() => retry(() => import('./HomePage/DataAppKitFeaturesSection'))),
 )
-const FeetSection = loadOnIntersect(
-  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/FooterSection'))),
-)
+const FeetSection = loadOnIntersect(lazy(() => retry(() => import('./HomePage/FooterSection'))))
 const MissionMottoSection = loadOnIntersect(
-  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/MissionMottoSection'))),
+  lazy(() => retry(() => import('./HomePage/MissionMottoSection'))),
 )
 const SecuritySection = loadOnIntersect(
-  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/SecuritySection'))),
+  lazy(() => retry(() => import('./HomePage/SecuritySection'))),
 )
 const EarlyAccessBetaSection = loadOnIntersect(
-  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/EarlyAccessBetaSection'))),
+  lazy(() => retry(() => import('./HomePage/EarlyAccessBetaSection'))),
 )
 
 export const HomePage = memo(() => {

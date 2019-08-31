@@ -57,7 +57,7 @@ export async function commandBuild(
 
   await ensureDir(join(appRoot, 'dist'))
 
-  if (!(await shouldRebuildApp(appRoot))) {
+  if (!props.force && !(await shouldRebuildApp(appRoot))) {
     log.info(`App hasn't changed, not rebuilding. To force build, run: orbit build --force`)
     return {
       type: 'success',
@@ -202,7 +202,7 @@ if (process.env.NODE_ENV === 'production') {
   const Config = getGlobalConfig()
   defaultBaseDll = {
     manifest: join(Config.paths.desktopRoot, 'dist', 'orbit-manifest-shared.json'),
-    filepath: join(Config.paths.desktopRoot, 'dist', 'baseDev.dll.js'),
+    filepath: join(Config.paths.desktopRoot, 'dist', 'shared.dll.js'),
   }
 } else {
   const monoRoot = join(__dirname, '..', '..', '..', '..')
@@ -214,7 +214,7 @@ if (process.env.NODE_ENV === 'production') {
       'production',
       'orbit-manifest-shared.json',
     ),
-    filepath: join(monoRoot, 'example-workspace', 'dist', 'production', 'baseDev.dll.js'),
+    filepath: join(monoRoot, 'example-workspace', 'dist', 'production', 'shared.dll.js'),
   }
 }
 

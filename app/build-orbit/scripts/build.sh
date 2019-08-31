@@ -213,9 +213,9 @@ function ensure-dlls() {
   cd ../orbit-desktop
     mkdir dist || true
     rm dist/orbit-manifest-shared.json || true
-    rm dist/baseDev.dll.js || true
+    rm dist/shared.dll.js || true
     cp ../../example-workspace/dist/production/orbit-manifest-shared.json dist/orbit-manifest-shared.json
-    cp ../../example-workspace/dist/production/baseDev.dll.js dist/baseDev.dll.js
+    cp ../../example-workspace/dist/production/shared.dll.js dist/shared.dll.js
   cd -
 }
 ensure-dlls

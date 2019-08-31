@@ -514,7 +514,7 @@ export class AppsBuilder {
     const desktopRoot = join(require.resolve('@o/orbit-desktop'), '..', '..')
     const index = await readFile(join(desktopRoot, 'index.html'), 'utf8')
     const scriptsPre = `
-    <script id="script_base" src="/baseDev.dll.js"></script>
+    <script id="script_base" src="/shared.dll.js"></script>
     <script id="script_shared" src="/shared.dll.js"></script>
 `
     const scriptsPost = `

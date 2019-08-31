@@ -91,6 +91,10 @@ export function makeWebpackConfig(
       sideEffects: false,
       concatenateModules: true,
       splitChunks: false,
+      // much smaller bundles
+      ...(target === 'node' && {
+        sideEffects: true,
+      }),
     },
     development: {
       minimize: minify,

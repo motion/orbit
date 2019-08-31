@@ -91,7 +91,7 @@ export async function getAppsConfig(
     context: directory,
     outputDir,
     publicPath: '/',
-    outputFile: 'baseDev.dll.js',
+    outputFile: 'shared.dll.js',
     output: {
       library: 'base',
     },
@@ -292,6 +292,7 @@ async function getBaseDllParams(params: WebpackParams): Promise<WebpackParams> {
     '@o/use-store',
     '@babel/runtime',
     'node-libs-browser',
+    'querystring',
   ]
 
   // gather all packages we want included in base dll

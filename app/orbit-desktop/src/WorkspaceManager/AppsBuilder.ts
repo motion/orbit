@@ -469,7 +469,7 @@ export class AppsBuilder {
       let identifier = name
       let entryPathRelative = ''
       if (appMeta) {
-        identifier = this.appsManager.packageIdToIdentifier[appMeta.packageId] || ''
+        identifier = this.appsManager.packageIdToIdentifier(appMeta.packageId) || ''
         const entryPath = join(appMeta.directory, appMeta.packageJson.main)
         entryPathRelative = relative(this.wsOptions.workspaceRoot, entryPath)
         // bugfix: local workspace apps looked like `apps/abc/main.tsx` which broke webpack expectations of moduleId

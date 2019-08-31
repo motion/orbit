@@ -120,7 +120,7 @@ export async function getAppsConfig(
   if (isInMonoRepo) {
     sharedParams.mode = mode
     sharedParams.watch = watch
-    clientConfigs.base = await addDLL(sharedParams)
+    clientConfigs.shared = await addDLL(sharedParams)
   }
   const sharedDllReference = {
     manifest: sharedParams.dll,

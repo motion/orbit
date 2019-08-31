@@ -102,8 +102,8 @@ export async function getAppsConfig(
     },
     dll: join(outputDir, 'orbit-manifest-base.json'),
   }
-  const baseDevConfig = await addDLL(baseDllParams)
-  clientConfigs.baseDev = baseDevConfig
+  const baseConfig = await addDLL(baseDllParams)
+  clientConfigs.base = baseConfig
   const baseDllReference = {
     manifest: baseDllParams.dll,
     filepath: join(outputDir, baseDllParams.outputFile),

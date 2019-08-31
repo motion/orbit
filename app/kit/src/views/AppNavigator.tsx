@@ -1,5 +1,5 @@
 import { AppViewProps } from '@o/models'
-import { Card } from '@o/ui'
+import { CardStack } from '@o/ui'
 import { createStoreContext } from '@o/use-store'
 import React, { Children, FunctionComponent, memo, useEffect, useMemo, useState } from 'react'
 
@@ -40,7 +40,7 @@ export const AppNavigator = memo((props: AppNavigatorProps) => {
         toolBar={appChildViews.toolBar}
         index={<IndexView {...navigatorProps} />}
       >
-        <CardStack>
+        <CardStack showSinglePlain>
           {items.map(item => (
             <DetailView key={item.id} {...navigatorProps} {...item} />
           ))}
@@ -62,50 +62,3 @@ class AppChildViewsStore {
 }
 
 export const AppChildViews = createStoreContext(AppChildViewsStore)
-
-// TODO move into UI
-const CardStack = (props: { children: any }) => {
-  const all = Children.toArray(props.children)
-  const [focused, setFocused] = useState(all.length - 1)
-
-  useEffect(() => {
-    setFocused(all.length - 1)
-  }, [all.length])
-
-  if (all.length <= 1) {
-    return <>{all}</>
-  }
-
-  return (
-    <>
-      {/* show no more than ten at once */}
-      {all.slice(0, 10).map((item, index) => (
-        <Card
-          position="absolute"
-          top={0}
-          left={0}
-          right={0}
-          bottom={0}
-          elevation={4}
-          {...cardPositionalProps(index, all.length)}
-          key={item.props.id || index}
-          onClick={() => setFocused(index)}
-        >
-          {focused === index && item}
-        </Card>
-      ))}
-    </>
-  )
-}
-
-const cardPositionalProps = (index: number, total: number) => {
-  const mid = Math.round(total / 2)
-  const distanceFromMid = index - mid
-  return {
-    transform: {
-      scale: 0.8,
-      x: distanceFromMid * 10,
-      rotate: `${distanceFromMid * 2.5}deg`,
-    },
-  }
-}

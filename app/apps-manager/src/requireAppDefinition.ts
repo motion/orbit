@@ -53,6 +53,6 @@ export async function requireAppDefinition({
 
   return {
     type: 'error',
-    message: `No definition found at `,
+    message: `No definition found!`,
   }
 }

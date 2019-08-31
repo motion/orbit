@@ -46,7 +46,9 @@ export async function getAppsConfig(
   const outputDir = join(directory, 'dist', mode)
 
   log.info(
-    `dev ${options.dev} watch ${watch} ${directory}, apps ${apps.length} ${isInMonoRepo}`,
+    `dev ${options.dev} mode ${mode} watch ${watch} ${directory}, apps ${
+      apps.length
+    } ${isInMonoRepo}`,
     options,
   )
 

@@ -97,6 +97,7 @@ export class AppsBuilder {
 
   isUpdating = false
   async update({ buildMode, options, activeAppsMeta }: AppsBuilderUpdate) {
+    log.info(`update()`)
     this.wsOptions = options
     if (this.isUpdating) {
       console.warn('!!!!!!!!!!!!!!!!!!!!!!!! what TODO cancel current and re-run')

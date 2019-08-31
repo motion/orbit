@@ -16,8 +16,14 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   const monoRoot = join(__dirname, '..', '..', '..', '..')
   defaultBaseDll = {
-    manifest: join(monoRoot, 'example-workspace', 'dist', 'production', 'orbit-manifest-base.json'),
-    filepath: join(monoRoot, 'example-workspace', 'dist', 'production', 'base.dll.js'),
+    manifest: join(
+      monoRoot,
+      'example-workspace',
+      'dist',
+      'development',
+      'orbit-manifest-base.json',
+    ),
+    filepath: join(monoRoot, 'example-workspace', 'dist', 'development', 'base.dll.js'),
   }
 }
 

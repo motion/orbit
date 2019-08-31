@@ -20,6 +20,7 @@ function configure() {
   if (hasConfigured) return
 
   window['enableLog'] = false
+  // @ts-ignore
   window['debug'] = debug
 
   // required in production

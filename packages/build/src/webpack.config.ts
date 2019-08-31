@@ -113,52 +113,28 @@ const optimization = {
     nodeEnv: 'production',
     usedExports: true,
     sideEffects: true,
-    // concatenateModules: false,
+    minimize: true,
+    concatenateModules: true,
     ...(target === 'node'
       ? {
           splitChunks: false,
         }
       : {
-          runtimeChunk: true,
+          // runtimeChunk: true,
           splitChunks: {
-            chunks: 'async',
-            name: false,
+            chunks: 'all',
           },
         }),
-    // minimizer: [
-    //   new TerserPlugin({
-    //     sourceMap: true,
-    //     cache: true,
-    //     parallel: true,
-    //     terserOptions: {
-    //       parse: {
-    //         ecma: 8,
-    //       },
-    //       compress: {
-    //         ecma: 6,
-    //         warnings: false,
-    //       },
-    //       mangle: {
-    //         safari10: true,
-    //       },
-    //       keep_classnames: true,
-    //       output: {
-    //         ecma: 6,
-    //         comments: false,
-    //         beautify: false,
-    //         ascii_only: true,
-    //       },
-    //     },
-    //   }),
-    //   // target !== 'node' &&
-    //   //   new OptimizeCSSAssetsPlugin({
-    //   //     cssProcessor: require('cssnano'),
-    //   //     cssProcessorPluginOptions: {
-    //   //       preset: ['default', { discardComments: { removeAll: true } }],
-    //   //     },
-    //   //     canPrint: true,
-    //   //   }),
-    // ].filter(Boolean),
+    minimizer: [
+      // target !== 'node' &&
+      //   new OptimizeCSSAssetsPlugin({
+      //     cssProcessor: require('cssnano'),
+      //     cssProcessorPluginOptions: {
+      //       preset: ['default', { discardComments: { removeAll: true } }],
+      //     },
+      //     canPrint: true,
+      //   }),
+    ].filter(Boolean),
   },
   dev: {
     noEmitOnErrors: true,

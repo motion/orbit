@@ -102,8 +102,8 @@ export async function getAppsConfig(
     },
     dll: join(outputDir, 'orbit-manifest-base.json'),
   }
-  const baseDevConfig = await addDLL(baseDllParams)
-  clientConfigs.baseDev = baseDevConfig
+  const baseConfig = await addDLL(baseDllParams)
+  clientConfigs.base = baseConfig
   const baseDllReference = {
     manifest: baseDllParams.dll,
     filepath: join(outputDir, baseDllParams.outputFile),
@@ -120,7 +120,7 @@ export async function getAppsConfig(
   if (isInMonoRepo) {
     sharedParams.mode = mode
     sharedParams.watch = watch
-    clientConfigs.base = await addDLL(sharedParams)
+    clientConfigs.shared = await addDLL(sharedParams)
   }
   const sharedDllReference = {
     manifest: sharedParams.dll,

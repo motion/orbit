@@ -214,7 +214,9 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   updateList = throttle(() => {
-    this.listRef.current.resetAfterIndex(0, true)
+    if (this.listRef.current) {
+      this.listRef.current.resetAfterIndex(0, true)
+    }
   }, 30)
 
   componentDidUpdate(prevProps: ManagedTableProps) {

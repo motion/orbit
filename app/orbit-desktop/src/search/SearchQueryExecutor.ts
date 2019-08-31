@@ -194,7 +194,7 @@ export class SearchQueryExecutor {
         bitCreatedAt: rawBit.bitCreatedAt,
         bitUpdatedAt: rawBit.bitCreatedAt,
         // slice it so its not super long
-        body: rawBit.body.slice(0, 500),
+        body: `${rawBit.body || ''}`.slice(0, 500),
         contentHash: rawBit.contentHash,
         createdAt: new Date(rawBit.createdAt),
         data: rawBit.data ? JSON.parse(rawBit.data) : undefined,

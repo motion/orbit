@@ -166,6 +166,7 @@ export class AppsBuilder {
     } catch (err) {
       log.error(`Error running initial builds ${err.message}\n${err.stack}`)
     } finally {
+      log.info(`update() finish`)
       this.isUpdating = false
     }
   }
@@ -198,6 +199,7 @@ export class AppsBuilder {
         if (running && running.close) {
           running.close()
         }
+        log.info(`Building node app ${name}`)
         const packer = await webpackPromise([config], { loud: true })
         if (packer.type !== 'watch') {
           throw new Error(`Shouldn't ever get here`)

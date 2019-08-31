@@ -58,6 +58,7 @@ export async function getAppsConfig(
    * This inline function just ensures we build + reference them.
    */
   async function addDLL(params: WebpackParams): Promise<webpack.Configuration> {
+    log.info(`Adding dll: ${params.entry[0]}`)
     // add to dlls
     dllReferences.unshift({
       manifest: params.dll,
@@ -65,12 +66,13 @@ export async function getAppsConfig(
     })
     // ensure built
     if (options.clean || !(await pathExists(params.dll))) {
-      log.info(`Ensuring config built once: ${params.name} at ${params.dll}`, params)
-      const buildOnceConfig = await makeWebpackConfig({
+      const buildOnceParams = {
         ...params,
         hot: true,
         watch: false,
-      })
+      }
+      log.info(`Ensuring config built once: ${params.name} at ${params.dll}`, buildOnceParams)
+      const buildOnceConfig = await makeWebpackConfig(buildOnceParams)
       await webpackPromise([buildOnceConfig], { loud: true })
     }
     return await makeWebpackConfig({

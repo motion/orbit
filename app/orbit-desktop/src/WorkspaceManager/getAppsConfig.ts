@@ -96,7 +96,7 @@ export async function getAppsConfig(
     context: directory,
     outputDir,
     publicPath: '/',
-    outputFile: 'shared.dll.js',
+    outputFile: 'base.dll.js',
     output: {
       library: 'base',
     },

@@ -3,6 +3,7 @@ import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plu
 import * as Fs from 'fs'
 import { pathExistsSync } from 'fs-extra'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
+import IgnoreNotFoundExportPlugin from 'ignore-not-found-export-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
@@ -14,13 +15,9 @@ const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
-// const Critters = require('critters-webpack-plugin')
-// const PreloadWebpackPlugin = require('preload-webpack-plugin')
 const WebpackNotifierPlugin = require('webpack-notifier')
 const TerserPlugin = require('terser-webpack-plugin')
-// const RehypePrism = require('@mapbox/rehype-prism')
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
-// const { PrepackPlugin } = require('prepack-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const CircularDependencyPlugin = require('circular-dependency-plugin')
 
@@ -346,6 +343,8 @@ async function makeConfig() {
       ].filter(Boolean),
     },
     plugins: [
+      new IgnoreNotFoundExportPlugin(),
+
       new WebpackNotifierPlugin({ excludeWarnings: true }),
 
       new webpack.DefinePlugin(defines),

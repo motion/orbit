@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 
 import orbits from '../../../public/images/orbits.svg'
 import { useIsTiny, useScreenHeight, useScreenSize } from '../../hooks/useScreenSize'
-import { linkProps } from '../../LinkState'
+import { linkProps } from '../../useLink'
 import { useSiteStore } from '../../SiteStore'
 import { FadeChild, fadeLeftProps, fadeRightProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'

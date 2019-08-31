@@ -5,7 +5,7 @@
   "main": "./src/index.tsx",
   "scripts": {
     "start": "mcro-build --port 5000 --target web",
-    "build": "OPTIMIZE_REACT=1 ANALYZE_BUNDLE=1 mcro-build --prod --build --target web",
+    "build": "NODE_ENV=production OPTIMIZE_REACT=1 ANALYZE_BUNDLE=1 mcro-build --prod --build --target web",
     "build:simple": "mcro-build --prod --build --target web",
     "start:prod": "mcro-build --prod --port 5000 --report --target web",
     "serve:prod": "static-server -p 3999 -n dist/index.html dist",

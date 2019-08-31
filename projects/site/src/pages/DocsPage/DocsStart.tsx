@@ -1,7 +1,7 @@
 import { Button, CardProps, Col, Divider, Grid, Icon, Section, Space, TiltCard } from '@o/ui'
 import React from 'react'
 
-import { linkProps } from '../../LinkState'
+import { linkProps } from '../../useLink'
 import { themes } from '../../themes'
 
 const examples = [

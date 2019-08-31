@@ -11,6 +11,7 @@ import webpack from 'webpack'
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { BundleStatsWebpackPlugin } = require('bundle-stats')
 
+const LodashWebpackPlugin = require('lodash-webpack-plugin')
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
 // const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
@@ -63,7 +64,9 @@ if (flags.prod) {
 
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
-const entry = process.env.ENTRY || flags.entry || readPackage('main') || './src/index.ts'
+const entry = {
+  main: process.env.ENTRY || flags.entry || readPackage('main') || './src/index.ts',
+}
 
 const NO_OPTIMIZE = process.env.NO_OPTIMIZE
 const IS_RUNNING = process.env.IS_RUNNING
@@ -122,7 +125,26 @@ const optimization = {
       : {
           // runtimeChunk: true,
           splitChunks: {
-            chunks: 'all',
+            chunks: 'async',
+            // minSize: 10000,
+            // maxSize: 80000,
+            // minChunks: 1,
+            // maxAsyncRequests: 50,
+            // maxInitialRequests: 10,
+            // automaticNameDelimiter: '~',
+            // automaticNameMaxLength: 30,
+            // name: true,
+            // cacheGroups: {
+            //   vendors: {
+            //     test: /[\\/]node_modules[\\/]/,
+            //     priority: -10,
+            //   },
+            //   default: {
+            //     minChunks: 2,
+            //     priority: -20,
+            //     reuseExistingChunk: true,
+            //   },
+            // },
           },
         }),
     minimizer: [
@@ -315,7 +337,7 @@ async function makeConfig() {
       ].filter(Boolean),
     },
     plugins: [
-      // new LodashWebpackPlugin(),
+      new LodashWebpackPlugin(),
 
       new IgnoreNotFoundExportPlugin(),
 

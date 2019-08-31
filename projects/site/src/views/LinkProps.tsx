@@ -2,7 +2,7 @@ import { SimpleText, SimpleTextProps } from '@o/ui'
 import React from 'react'
 
 import { fontProps } from '../constants'
-import { useLink } from '../LinkState'
+import { useLink } from '../useLink'
 import { LinkText } from './LinkText'
 
 export type LinkProps = SimpleTextProps & {

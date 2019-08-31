@@ -13,22 +13,52 @@ import { HeadSection } from './HomePage/HeadSection'
 import { LoadingPage } from './LoadingPage'
 import { ParallaxContext } from './ParallaxContext'
 
-const DeploySection = loadOnIntersect(lazy(() => retry(() => import('./HomePage/DeploySection'))))
+const DeploySection = loadOnIntersect(
+  lazy(() =>
+    retry(() => import(/* webpackChunkName: "DeploySection" */ './HomePage/DeploySection')),
+  ),
+)
 const AllInOnePitchDemoSection = loadOnIntersect(
-  lazy(() => retry(() => import('./HomePage/AllInOnePitchDemoSection'))),
+  lazy(() =>
+    retry(() =>
+      import(
+        /* webpackChunkName: "AllInOnePitchDemoSection" */ './HomePage/AllInOnePitchDemoSection'
+      ),
+    ),
+  ),
 )
 const DataAppKitFeaturesSection = loadOnIntersect(
-  lazy(() => retry(() => import('./HomePage/DataAppKitFeaturesSection'))),
+  lazy(() =>
+    retry(() =>
+      import(
+        /* webpackChunkName: "DataAppKitFeaturesSection" */ './HomePage/DataAppKitFeaturesSection'
+      ),
+    ),
+  ),
 )
-const FeetSection = loadOnIntersect(lazy(() => retry(() => import('./HomePage/FooterSection'))))
+const FeetSection = loadOnIntersect(
+  lazy(() =>
+    retry(() => import(/* webpackChunkName: "FooterSection" */ './HomePage/FooterSection')),
+  ),
+)
 const MissionMottoSection = loadOnIntersect(
-  lazy(() => retry(() => import('./HomePage/MissionMottoSection'))),
+  lazy(() =>
+    retry(() =>
+      import(/* webpackChunkName: "MissionMottoSection" */ './HomePage/MissionMottoSection'),
+    ),
+  ),
 )
 const SecuritySection = loadOnIntersect(
-  lazy(() => retry(() => import('./HomePage/SecuritySection'))),
+  lazy(() =>
+    retry(() => import(/* webpackChunkName: "SecuritySection" */ './HomePage/SecuritySection')),
+  ),
 )
 const EarlyAccessBetaSection = loadOnIntersect(
-  lazy(() => retry(() => import('./HomePage/EarlyAccessBetaSection'))),
+  lazy(() =>
+    retry(() =>
+      import(/* webpackChunkName: "EarlyAccessBetaSection" */ './HomePage/EarlyAccessBetaSection'),
+    ),
+  ),
 )
 
 export const HomePage = memo(() => {

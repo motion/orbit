@@ -2,7 +2,7 @@ import { Avatar, gloss, Row, Space, View } from '@o/ui'
 import React from 'react'
 
 import { colors } from '../../constants'
-import { linkProps } from '../../LinkState'
+import { linkProps } from '../../useLink'
 import { FadeChild } from '../../views/FadeIn'
 import { TitleText } from '../../views/TitleText'
 import { useScreenVal } from '../HomePage/SpacedPageContent'

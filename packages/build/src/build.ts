@@ -1,4 +1,5 @@
 import { writeJSON } from 'fs-extra'
+import { join } from 'path'
 import webpack from 'webpack'
 
 import makeConfig from './webpack.config'
@@ -26,7 +27,7 @@ async function main() {
       }),
     )
 
-    await writeJSON('/tmp/stats.json', stats.toJson())
+    await writeJSON(join(finalConfig.output.path, 'stats.json'), stats.toJson())
 
     process.exit(0)
   })

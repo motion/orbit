@@ -58,7 +58,7 @@ export function makeWebpackConfig(
   } = params
 
   // optimize react
-  process.env.OPTIMIZE_REACT = mode === 'development' ? undefined : 'true'
+  // process.env.OPTIMIZE_REACT = mode === 'development' ? undefined : 'true'
 
   // entry dir is the path above the entry file, this could be better...
   // const entryDir = Path.join(params.entry[0], '..')
@@ -395,16 +395,6 @@ require('@o/kit').OrbitHot.fileLeave();
             }),
         )) ||
         []),
-
-      // inject dll references into index.html
-      // ...((hasDLLReferences &&
-      //   dllReferences.map(
-      //     ({ filepath }) =>
-      //       new AddAssetHtmlPlugin({
-      //         filepath,
-      //       }),
-      //   )) ||
-      //   []),
 
       hot &&
         new webpack.HotModuleReplacementPlugin({

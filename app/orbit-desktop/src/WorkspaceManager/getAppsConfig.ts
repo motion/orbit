@@ -85,8 +85,8 @@ export async function getAppsConfig(
   const clientConfigs: { [key: string]: webpack.Configuration } = {}
 
   // contains react-hot-loader, always in development
-  const baseDevParams: WebpackParams = {
-    name: `baseDev`,
+  const baseDllParams: WebpackParams = {
+    name: `base`,
     entry: ['react', 'react-dom', 'react-hot-loader'],
     watch,
     target: 'web',
@@ -98,21 +98,21 @@ export async function getAppsConfig(
     output: {
       library: 'base',
     },
-    dll: join(outputDir, 'orbit-manifest-shared.json'),
+    dll: join(outputDir, 'orbit-manifest-base.json'),
   }
-  const baseDevConfig = await addDLL(baseDevParams)
+  const baseDevConfig = await addDLL(baseDllParams)
   clientConfigs.baseDev = baseDevConfig
-  const baseDevDllReference = {
-    manifest: baseDevParams.dll,
-    filepath: join(outputDir, baseDevParams.outputFile),
+  const baseDllReference = {
+    manifest: baseDllParams.dll,
+    filepath: join(outputDir, baseDllParams.outputFile),
   }
 
   // contains most dependencies
-  const sharedParams = await getBaseDllParams({
+  const sharedParams = await getSharedDllParams({
     outputDir,
     context: directory,
     mode,
-    dllReferences: [baseDevDllReference],
+    dllReferences: [baseDllReference],
   })
 
   if (isInMonoRepo) {
@@ -150,7 +150,7 @@ export async function getAppsConfig(
         watch: appMode === 'development',
         dll: dllFile,
         // apps use the base dll
-        dllReferences: [baseDevDllReference, sharedDllReference],
+        dllReferences: [baseDllReference, sharedDllReference],
       }
       return params
     }),
@@ -276,7 +276,7 @@ export function getAppParams(props: WebpackParams): WebpackParams {
   }
 }
 
-async function getBaseDllParams(params: WebpackParams): Promise<WebpackParams> {
+async function getSharedDllParams(params: WebpackParams): Promise<WebpackParams> {
   const basePackages = [
     '@o/kit',
     '@o/ui',
@@ -325,7 +325,7 @@ async function getBaseDllParams(params: WebpackParams): Promise<WebpackParams> {
       x !== 'typeorm',
   )
 
-  // base dll with shared libraries
+  // shared libraries
   return {
     name: `shared`,
     injectHot: join(require.resolve('@o/kit'), '..', '..', 'src', 'index.ts'),

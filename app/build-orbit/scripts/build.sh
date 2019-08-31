@@ -212,9 +212,9 @@ function ensure-dlls() {
   echo "ensuring dlls..."
   cd ../orbit-desktop
     mkdir dist || true
-    rm dist/orbit-manifest-shared.json || true
+    rm dist/orbit-manifest-base.json || true
     rm dist/shared.dll.js || true
-    cp ../../example-workspace/dist/production/orbit-manifest-shared.json dist/orbit-manifest-shared.json
+    cp ../../example-workspace/dist/production/orbit-manifest-base.json dist/orbit-manifest-base.json
     cp ../../example-workspace/dist/production/shared.dll.js dist/shared.dll.js
   cd -
 }

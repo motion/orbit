@@ -35,7 +35,7 @@ export async function commandBuild(
   if (!(await isOrbitApp(appRoot))) {
     return {
       type: 'error',
-      message: `\nNot inside an orbit app, add "config": { "orbitApp": true } } to the package.json`,
+      message: `\nNot inside an orbit app ${appRoot}, add "config": { "orbitApp": true } } to the package.json`,
     }
   }
 

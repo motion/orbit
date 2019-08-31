@@ -1,5 +1,4 @@
 import { isDefined } from '@o/utils'
-import AddAssetHtmlPlugin from 'add-asset-html-webpack-plugin'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
 import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
 import IgnoreNotFoundExportPlugin from 'ignore-not-found-export-webpack-plugin'
@@ -398,14 +397,14 @@ require('@o/kit').OrbitHot.fileLeave();
         []),
 
       // inject dll references into index.html
-      ...((hasDLLReferences &&
-        dllReferences.map(
-          ({ filepath }) =>
-            new AddAssetHtmlPlugin({
-              filepath,
-            }),
-        )) ||
-        []),
+      // ...((hasDLLReferences &&
+      //   dllReferences.map(
+      //     ({ filepath }) =>
+      //       new AddAssetHtmlPlugin({
+      //         filepath,
+      //       }),
+      //   )) ||
+      //   []),
 
       hot &&
         new webpack.HotModuleReplacementPlugin({

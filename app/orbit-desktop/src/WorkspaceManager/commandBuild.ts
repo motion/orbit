@@ -1,5 +1,4 @@
 import { getAppInfo } from '@o/apps-manager'
-import { getGlobalConfig } from '@o/config'
 import { isEqual } from '@o/fast-compare'
 import { isOrbitApp, readPackageJson } from '@o/libs-node'
 import { Logger } from '@o/logger'
@@ -195,22 +194,6 @@ async function shouldRebuildApp(appRoot: string) {
 
 const hasKey = (appInfo: AppDefinition, ...keys: string[]) =>
   Object.keys(appInfo).some(x => keys.some(key => x === key))
-
-// default base dll
-let defaultBaseDll
-if (process.env.NODE_ENV === 'production') {
-  const Config = getGlobalConfig()
-  defaultBaseDll = {
-    manifest: join(Config.paths.desktopRoot, 'dist', 'orbit-manifest-base.json'),
-    filepath: join(Config.paths.desktopRoot, 'dist', 'base.dll.js'),
-  }
-} else {
-  const monoRoot = join(__dirname, '..', '..', '..', '..')
-  defaultBaseDll = {
-    manifest: join(monoRoot, 'example-workspace', 'dist', 'production', 'orbit-manifest-base.json'),
-    filepath: join(monoRoot, 'example-workspace', 'dist', 'production', 'base.dll.js'),
-  }
-}
 
 export async function getAppEntry(appRoot: string, packageJson?: any) {
   const pkg = packageJson || (await readJSON(join(appRoot, 'package.json')))

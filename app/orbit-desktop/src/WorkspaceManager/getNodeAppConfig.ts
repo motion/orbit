@@ -1,7 +1,25 @@
+import { getGlobalConfig } from '@o/config'
 import { CommandBuildOptions } from '@o/models'
+import { join } from 'path'
 
 import { getAppParams } from './getAppsConfig'
 import { makeWebpackConfig } from './makeWebpackConfig'
+
+// default base dll
+export let defaultBaseDll
+if (process.env.NODE_ENV === 'production') {
+  const Config = getGlobalConfig()
+  defaultBaseDll = {
+    manifest: join(Config.paths.desktopRoot, 'dist', 'orbit-manifest-base.json'),
+    filepath: join(Config.paths.desktopRoot, 'dist', 'base.dll.js'),
+  }
+} else {
+  const monoRoot = join(__dirname, '..', '..', '..', '..')
+  defaultBaseDll = {
+    manifest: join(monoRoot, 'example-workspace', 'dist', 'production', 'orbit-manifest-base.json'),
+    filepath: join(monoRoot, 'example-workspace', 'dist', 'production', 'base.dll.js'),
+  }
+}
 
 class IgnoreIfNotNodeEntryImport {
   constructor(private options: { file: string }) {}
@@ -44,13 +62,16 @@ export async function getNodeAppConfig(entry: string, name: any, options: Comman
       target: 'node',
       outputFile: 'index.node.js',
       watch: options.watch,
-      mode: 'production',
-      // dllReferences: [defaultBaseDll],
-      plugins: [
-        new IgnoreIfNotNodeEntryImport({
-          file: entry,
-        }),
-      ],
+      // for non-treeshaking
+      mode: 'development',
+      dllReferences: [defaultBaseDll],
+      // for tree-shaking...
+      // mode: 'production',
+      // plugins: [
+      //   new IgnoreIfNotNodeEntryImport({
+      //     file: entry,
+      //   }),
+      // ],
     }),
     {
       node: {

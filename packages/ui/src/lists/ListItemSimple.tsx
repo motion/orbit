@@ -516,6 +516,7 @@ export function useIsSelected(props: Pick<ListItemSimpleProps, 'isSelected' | 'i
     },
     {
       name: 'useIsSelected',
+      priority: 2,
     },
     [props.isSelected],
   )

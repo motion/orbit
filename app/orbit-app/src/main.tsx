@@ -7,6 +7,11 @@ import { Provider } from 'overmind-react'
 import { IS_ELECTRON } from './constants'
 import { sleep } from './helpers'
 
+const SearchOptions = {
+  profile: window.location.search.includes('react.profile'),
+  concurrent: window.location.search.includes('react.concurrent'),
+}
+
 /**
  * Warning: I ran into a bug importing @/kit or @/ui here (or anything from the base DLL)
  * It causes many imports that shouldn't be undefined to be undefined.
@@ -141,7 +146,7 @@ async function startApp(forceRefresh: boolean | 'mode' = false) {
     </Provider>
   )
 
-  if (window.location.search.indexOf('react.profile') > 0) {
+  if (SearchOptions.profile) {
     elements = (
       <React.unstable_Profiler id="Application" onRender={console.log.bind(console)}>
         {elements}
@@ -149,10 +154,12 @@ async function startApp(forceRefresh: boolean | 'mode' = false) {
     )
   }
 
-  if (window.location.search.indexOf('react.concurrent') > 0) {
-    console.debug('Concurrent mode enabled')
+  if (SearchOptions.concurrent) {
+    console.warn('Concurrent mode enabled')
     ReactDOM.unstable_createRoot(RootNode).render(
+      // <React.StrictMode>
       <React.unstable_ConcurrentMode>{elements}</React.unstable_ConcurrentMode>,
+      // </React.StrictMode>,
     )
   } else {
     ReactDOM.render(elements, RootNode)

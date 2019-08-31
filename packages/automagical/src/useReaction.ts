@@ -1,4 +1,5 @@
 import { CompositeDisposable } from 'event-kit'
+import * as React from 'react'
 import { MutableRefObject, RefObject, useCallback, useEffect, useRef, useState } from 'react'
 
 import { automagicConfig } from './AutomagicalConfiguration'
@@ -115,6 +116,13 @@ const createComponentReaction = (
       }
       state.current = next
       if (!firstMount.current) {
+        if (opts && opts.priority) {
+          // @ts-ignore
+          React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.Scheduler.unstable_runWithPriority(
+            opts.priority,
+            forceUpdate,
+          )
+        }
         // use the configured queueUpdate if given
         if (automagicConfig.queueUpdate) {
           automagicConfig.queueUpdate(forceUpdate)

@@ -12,8 +12,7 @@ import webpack from 'webpack'
 import { buildAppInfo } from './buildAppInfo'
 import { commandGenTypes } from './commandGenTypes'
 import { attachLogToCommand, statusReplyCommand } from './commandHelpers'
-import { getAppParams } from './getAppsConfig'
-import { makeWebpackConfig } from './makeWebpackConfig'
+import { getNodeAppConfig } from './getNodeAppConfig'
 import { webpackPromise } from './webpackPromise'
 
 export const log = new Logger('commandBuild')
@@ -216,46 +215,6 @@ if (process.env.NODE_ENV === 'production') {
     ),
     filepath: join(monoRoot, 'example-workspace', 'dist', 'production', 'shared.dll.js'),
   }
-}
-
-export async function getNodeAppConfig(entry: string, name: any, options: CommandBuildOptions) {
-  return await makeWebpackConfig(
-    getAppParams({
-      name,
-      context: options.projectRoot,
-      entry: [entry],
-      target: 'node',
-      outputFile: 'index.node.js',
-      watch: options.watch,
-      mode: 'production',
-      // dllReferences: [defaultBaseDll],
-    }),
-    {
-      node: {
-        __dirname: false,
-        __filename: false,
-      },
-      externals: [
-        // externalize everything but local files
-        function(_context, request, callback) {
-          // and our nice tree-shakeable libraries
-          // WE cant do this until we can ignore non-node files from just entrypoint, loaders cant test like that
-          // would have to be a webpack plugin
-          // if (request === '@o/kit' || request === '@o/worker-kit' || request === '@o/ui') {
-          //   // @ts-ignore
-          //   return callback()
-          // }
-
-          const isLocal = request[0] === '.' || request === entry
-          if (!isLocal) {
-            return callback(null, 'commonjs ' + request)
-          }
-          // @ts-ignore
-          callback()
-        },
-      ],
-    },
-  )
 }
 
 export async function getAppEntry(appRoot: string, packageJson?: any) {

@@ -15,17 +15,22 @@ export async function webpackPromise(
         return
       }
       if (options.loud) {
-        console.log(
-          stats.toString({
-            chunks: false,
-            builtAt: false,
-            warnings: false,
-            moduleTrace: false,
-            colors: true,
-            // LOG ALL
-            all: +process.env.LOG_LEVEL > 4,
-          }),
-        )
+        const logLevel = +process.env.LOG_LEVEL
+        if (logLevel > 1) {
+          console.log(
+            stats.toString(
+              logLevel > 4
+                ? { all: true }
+                : {
+                    chunks: false,
+                    builtAt: false,
+                    warnings: false,
+                    moduleTrace: false,
+                    colors: true,
+                  },
+            ),
+          )
+        }
       }
       res({
         type: configs.some(x => x.watch) ? 'watch' : 'build',

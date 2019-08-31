@@ -1,6 +1,5 @@
 import { isDefined } from '@o/utils'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
-import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
 import IgnoreNotFoundExportPlugin from 'ignore-not-found-export-webpack-plugin'
 import * as Path from 'path'
 import TerserPlugin from 'terser-webpack-plugin'
@@ -29,6 +28,7 @@ export type WebpackParams = {
   hot?: boolean
   minify?: boolean
   devtool?: webpack.Configuration['devtool']
+  plugins?: webpack.Configuration['plugins']
 }
 
 export function makeWebpackConfig(
@@ -55,6 +55,7 @@ export function makeWebpackConfig(
     name,
     devtool,
     injectHot,
+    plugins,
   } = params
 
   // optimize react
@@ -335,25 +336,27 @@ require('@o/kit').OrbitHot.fileLeave();
       ].filter(Boolean),
     },
     plugins: [
+      ...(plugins || []),
+
       new IgnoreNotFoundExportPlugin(),
 
-      new HardSourceWebpackPlugin({
-        // cacheDirectory: '.cache/hard-source/[confighash]',
-        environmentHash: {
-          root: process.cwd(),
-          version: require('../../package.json').version,
-          mode,
-          ...process.env,
-        },
-        info: {
-          mode: 'none',
-          level: 'error', // warn to debug if its slow
-        },
-        cachePrune: {
-          maxAge: 10 * 24 * 60 * 60 * 1000,
-          sizeThreshold: 50 * 1024 * 1024,
-        },
-      }),
+      // new HardSourceWebpackPlugin({
+      //   // cacheDirectory: '.cache/hard-source/[confighash]',
+      //   environmentHash: {
+      //     root: process.cwd(),
+      //     version: require('../../package.json').version,
+      //     mode,
+      //     ...process.env,
+      //   },
+      //   info: {
+      //     mode: 'none',
+      //     level: 'error', // warn to debug if its slow
+      //   },
+      //   cachePrune: {
+      //     maxAge: 10 * 24 * 60 * 60 * 1000,
+      //     sizeThreshold: 50 * 1024 * 1024,
+      //   },
+      // }),
 
       new TimeFixPlugin(),
 

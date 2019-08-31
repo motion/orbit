@@ -3,7 +3,7 @@ import { AppDefinition } from '@o/models'
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
 
-const log = new Logger('loadAppEntry')
+const log = new Logger('loadAppEntry()')
 
 const entryFileNames = {
   node: 'index.node.js',
@@ -16,16 +16,15 @@ export async function loadAppEntry(
 ): Promise<AppDefinition | null> {
   try {
     const path = join(directory, 'dist', entryFileNames[entryType])
-    log.verbose(`path for ${entryType}: ${path}`)
+    log.verbose(`entryType ${entryType}: ${path}`)
     if (await pathExists(path)) {
       return require(path).default
     } else {
-      log.info(`No entry found`)
+      log.info(`No entry found: ${path}`)
       return null
     }
   } catch (err) {
-    console.log('error', err.message, err.stack)
-    log.error(`Error loading entry`, err)
+    log.error(`Error loading entry`, err.message, err.stack)
     return null
   }
 }

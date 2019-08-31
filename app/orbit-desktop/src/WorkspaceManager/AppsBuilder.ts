@@ -183,7 +183,7 @@ export class AppsBuilder {
     clientConfigs,
     buildNameToAppMeta,
   }: AppBuildConfigs): Promise<WebpackAppsDesc[]> {
-    log.verbose(`configs ${Object.keys(clientConfigs).join(', ')}`, clientConfigs)
+    log.verbose(`updateBuild() configs ${Object.keys(clientConfigs).join(', ')}`, clientConfigs)
 
     const { main, ...rest } = clientConfigs
     let res: WebpackAppsDesc[] = []
@@ -218,10 +218,13 @@ export class AppsBuilder {
       }
     }
 
+    log.info(`updateBuild() Finished updating node apps`)
+
     // you have to do it this janky ass way because webpack just isnt really great at
     // doing multi-config hmr, and this makes sure the 404 hot-update bug is fixed (google)
     const clientDescs: WebpackAppsDesc[] = []
     for (const name in rest) {
+      console.log('name', name)
       const config = rest[name]
       const devName = `${name}-client`
       const current = this.state.find(x => x.name === devName)

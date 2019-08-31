@@ -12,6 +12,7 @@ class IgnoreIfNotNodeEntryImport {
     if (!result) return result
     // if entry === file, ok
     if (result.request === this.options.file) {
+      this.directDependencies = new Set()
       return result
     }
     // if issuer === file, ok if .node

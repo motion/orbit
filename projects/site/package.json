@@ -49,6 +49,6 @@
     "@babel/core": "^7.4.4",
     "@babel/preset-env": "*",
     "@babel/preset-react": "*",
-    "react-docgen-typescript": "1.12.3"
+    "react-docgen-typescript": "1.14.0"
   }
 }

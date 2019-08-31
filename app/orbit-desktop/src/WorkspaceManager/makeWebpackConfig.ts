@@ -190,6 +190,7 @@ export function makeWebpackConfig(
           oneOf: [
             // fixed graphql errors https://github.com/graphql/graphiql/issues/617
             { test: /\.flow$/, loader: 'ignore-loader' },
+
             target !== 'node' && {
               test: /.worker\.[jt]sx?$/,
               use: [
@@ -210,11 +211,13 @@ export function makeWebpackConfig(
               ],
               exclude: /node_modules/,
             },
+
             // ignore .node.js modules in web modes
             target !== 'node' && {
               test: /\.node.[jt]sx?/,
               use: 'ignore-loader',
             },
+
             !!ignore.length && {
               use: 'ignore-loader',
               test: x => {
@@ -225,6 +228,7 @@ export function makeWebpackConfig(
                 return false
               },
             },
+
             // ignore non-.node.js modules in node mode
             // target === 'node' && {
             //   test: path => {
@@ -242,6 +246,7 @@ export function makeWebpackConfig(
             //   },
             //   use: 'ignore-loader',
             // },
+
             // ignore .electron.js modules if in web mode
             target !== 'electron-renderer' && {
               test: /\.electron.[jt]sx?/,
@@ -291,6 +296,7 @@ require('@o/kit').OrbitHot.fileLeave();
                           [
                             require.resolve('@o/babel-preset-motion'),
                             {
+                              mode,
                               disable: target === 'node' ? ['react-hot-loader/babel'] : [],
                             },
                           ],
@@ -336,6 +342,7 @@ require('@o/kit').OrbitHot.fileLeave();
         environmentHash: {
           root: process.cwd(),
           version: require('../../package.json').version,
+          mode,
           ...process.env,
         },
         info: {

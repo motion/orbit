@@ -1,7 +1,7 @@
 module.exports = function(_, givenOpts) {
-  const isDev = process.env.NODE_ENV !== 'production'
   const opts = givenOpts || {}
   const disable = opts.disable || []
+  const isDev = opts.mode === 'production' ? false : process.env.NODE_ENV !== 'production'
 
   let names = []
 

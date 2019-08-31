@@ -227,8 +227,8 @@ export async function getNodeAppConfig(entry: string, name: any, options: Comman
       target: 'node',
       outputFile: 'index.node.js',
       watch: options.watch,
-      mode: 'development',
-      dllReferences: [defaultBaseDll],
+      mode: 'production',
+      // dllReferences: [defaultBaseDll],
     }),
     {
       node: {
@@ -238,6 +238,14 @@ export async function getNodeAppConfig(entry: string, name: any, options: Comman
       externals: [
         // externalize everything but local files
         function(_context, request, callback) {
+          // and our nice tree-shakeable libraries
+          // WE cant do this until we can ignore non-node files from just entrypoint, loaders cant test like that
+          // would have to be a webpack plugin
+          // if (request === '@o/kit' || request === '@o/worker-kit' || request === '@o/ui') {
+          //   // @ts-ignore
+          //   return callback()
+          // }
+
           const isLocal = request[0] === '.' || request === entry
           if (!isLocal) {
             return callback(null, 'commonjs ' + request)

@@ -17,13 +17,13 @@ export async function webpackPromise(
       if (options.loud) {
         console.log(
           stats.toString({
-            // make it a bit quieter
             chunks: false,
             builtAt: false,
             warnings: false,
-            // children: false,
             moduleTrace: false,
             colors: true,
+            // LOG ALL
+            all: +process.env.LOG_LEVEL > 4,
           }),
         )
       }

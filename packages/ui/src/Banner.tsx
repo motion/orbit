@@ -93,6 +93,13 @@ class BannerStore {
 
 const BannerManager = createStoreContext(BannerStore)
 
+let GlobalBannerStore: BannerStore | null = null
+
+// allows creation and use of banners outside React
+export function createBanner() {
+  return createBannerHandle(GlobalBannerStore!, { current: null })
+}
+
 export const ProvideBanner = memo(
   ({
     children,
@@ -102,6 +109,7 @@ export const ProvideBanner = memo(
     template?: FunctionComponent<BannerViewProps>
   }) => {
     const bannerStore = BannerManager.useCreateStore()
+    GlobalBannerStore = bannerStore
     const BannerView = template
 
     return (
@@ -148,39 +156,51 @@ export const ProvideBanner = memo(
 
 export type BannerHandle = Pick<BannerItem, 'close' | 'set'>
 
+function createBannerHandle(store: BannerStore, bannerRef: { current?: BannerItem }): BannerHandle {
+  return {
+    set: (props: Partial<BannerProps>) => {
+      if (!store) {
+        console.error('No banner store!')
+        return
+      }
+      if (bannerRef.current) {
+        bannerRef.current.set(props)
+      } else {
+        bannerRef.current = store.show({
+          message: '',
+          ...props,
+        })
+      }
+    },
+    close: () => {
+      if (bannerRef.current) {
+        bannerRef.current.close()
+      }
+    },
+  }
+}
+
 /**
  * Use a single banner with helpers to manage it in the view its used
  */
 export function useBanner(): BannerHandle {
   const bannerStore = BannerManager.useStore()
-  const banner = useRef<BannerItem>(null)
+  const bannerRef = useRef<BannerItem>(null)
+  const res = useRef(null)
+
+  if (!res.current) {
+    res.current = createBannerHandle(bannerStore, bannerRef)
+  }
 
   useOnUnmount(() => {
-    if (banner.current) {
-      banner.current.close()
+    if (bannerRef.current) {
+      bannerRef.current.close()
     }
   })
 
   return {
-    set: useCallback((props: Partial<BannerProps>) => {
-      if (!bannerStore) {
-        console.error('No banner store!')
-        return
-      }
-      if (banner.current) {
-        banner.current.set(props)
-      } else {
-        banner.current = bannerStore.show({
-          message: '',
-          ...props,
-        })
-      }
-    }, []),
-    close: useCallback(() => {
-      if (banner.current) {
-        banner.current.close()
-      }
-    }, []),
+    set: useCallback(res.current.set, []),
+    close: useCallback(res.current.close, []),
   }
 }
 

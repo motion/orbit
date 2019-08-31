@@ -158,7 +158,12 @@ export class WorkspaceManager {
     Desktop.setState({
       workspaceState: {
         options: this.options,
-        appMeta: this.activeAppsMeta,
+        // dict style
+        appMeta: this.activeAppsMeta.reduce((acc, meta) => {
+          const identifier = this.appsManager.packageIdToIdentifier(meta.packageId)
+          acc[identifier] = meta
+          return acc
+        }, {}),
         identifierToPackageId: this.appsManager.identifierToPackageId,
         nameRegistry: Object.keys(this.appsBuilder.buildNameToAppMeta).map(buildName => {
           const appMeta = this.appsBuilder.buildNameToAppMeta[buildName]

@@ -1,7 +1,7 @@
 import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, command, createApp, CurrentAppBitContext, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppWithDefinition } from '@o/kit'
-import { ApiSearchItem, AppBuildCommand } from '@o/models'
+import { ApiSearchItem, AppBit, AppBuildCommand } from '@o/models'
 import { Desktop } from '@o/stores'
-import { Button, Card, CenteredText, Col, Icon, List, ListItemProps, Section, SubTitle, useAsyncFn, useBanner } from '@o/ui'
+import { Button, Card, CenteredText, Col, createBanner, DefinitionList, Icon, List, ListItemProps, Section, SubTitle, useAsyncFn, useBanner } from '@o/ui'
 import React, { useCallback, useState } from 'react'
 
 import { useOm } from '../../om/om'
@@ -104,6 +104,33 @@ function AppsMain(props: AppViewProps) {
   return <ManageApps />
 }
 
+let isRebuilding = {}
+async function rebuildApp(app: AppBit) {
+  if (isRebuilding[app.identifier!]) return
+  isRebuilding[app.identifier!] = true
+  const banner = createBanner()
+  const title = `Rebulding ${app.name}`
+  const res = await command(
+    AppBuildCommand,
+    {
+      projectRoot: Desktop.state.workspaceState.appMeta[app.identifier!].directory,
+      force: true,
+    },
+    {
+      onMessage(message) {
+        banner.set({ title, message })
+      },
+    },
+  )
+  banner.set({
+    title,
+    type: res.type,
+    message: res.message,
+    timeout: res.type === 'success' ? 5 : Infinity,
+  })
+  isRebuilding[app.identifier!] = false
+}
+
 function AppSettings(props: { appId: number }) {
   const [app, definition] = useAppWithDefinition(props.appId)
   const banner = useBanner()
@@ -148,28 +175,9 @@ function AppSettings(props: { appId: number }) {
         <Card
           title="Build"
           padding
-          afterTitle={
-            <Button
-              onClick={() => {
-                command(
-                  AppBuildCommand,
-                  {
-                    projectRoot: Desktop.state.workspaceState.appMeta[app.identifier!].directory,
-                  },
-                  {
-                    onMessage(message) {
-                      console.log('TODO write to banner', message)
-                    },
-                  },
-                )
-              }}
-            >
-              Rebuild
-            </Button>
-          }
+          afterTitle={<Button onClick={() => rebuildApp(app)}>Rebuild</Button>}
         >
-          hello?
-          {JSON.stringify(buildStatus)}
+          <DefinitionList row={buildStatus} />
         </Card>
       )}
 

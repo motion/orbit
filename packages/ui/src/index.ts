@@ -1,7 +1,9 @@
 // until next hotkeys patches types
 import pluralizeOg from 'pluralize'
 
-process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()
+if (process.env.NODE_ENV === 'development') {
+  module.hot && module.hot.accept()
+}
 
 export * from './helpers/configureHotKeys'
 export { allIcons } from './icons'

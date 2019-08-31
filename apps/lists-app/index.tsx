@@ -1,10 +1,12 @@
-import { AppNavigator, AppStatusBar, AppViewProps, createApp, Editor, NavigatorProps, useBit, useSearchState } from '@o/kit'
+import { AppNavigator, AppStatusBar, AppViewProps, createApp, getEditor, NavigatorProps, useBit, useSearchState } from '@o/kit'
 import { Breadcrumb, Breadcrumbs, Col, Dock, DockButton, ProvideTreeList, randomAdjective, randomNoun, StatusBarText, TreeList, useCreateTreeList, useDebounce, useTreeList, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import pluralize from 'pluralize'
 import React, { memo, useCallback, useRef } from 'react'
 
 import { API } from './api.node'
+
+const Editor = getEditor()
 
 export default createApp({
   id: 'lists',

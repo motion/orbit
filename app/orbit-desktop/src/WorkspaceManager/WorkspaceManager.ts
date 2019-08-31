@@ -208,11 +208,8 @@ export class WorkspaceManager {
       return
     }
 
-    log.info(
-      `Start building workspace, building ${activeAppsMeta.length} apps...`,
-      options,
-      activeAppsMeta,
-    )
+    log.info(`Start building workspace`, options)
+    log.verbose(`building ${activeAppsMeta.length} apps...`, activeAppsMeta)
 
     if (!activeAppsMeta.length) {
       log.error(`Must have more than one app, workspace didn't detect any.`)

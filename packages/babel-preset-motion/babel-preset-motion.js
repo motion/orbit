@@ -1,7 +1,7 @@
 module.exports = function(_, givenOpts) {
-  const isDev = process.env.NODE_ENV !== 'production'
   const opts = givenOpts || {}
   const disable = opts.disable || []
+  const isDev = opts.mode === 'production' ? false : process.env.NODE_ENV !== 'production'
 
   let names = []
 
@@ -63,13 +63,13 @@ module.exports = function(_, givenOpts) {
       ].filter(Boolean),
   }
 
-  if (!isDev) {
-    console.log(`
-  Babel config
-    disabled: ${disable.join(' ')}
-    used:     ${names.join(' ')}
-  `)
-  }
+  // if (!isDev) {
+  //   console.log(`
+  // Babel config
+  //   disabled: ${disable.join(' ')}
+  //   used:     ${names.join(' ')}
+  // `)
+  // }
 
   return config
 }

@@ -10,7 +10,7 @@ export async function buildWorkspaceAppsInfo(
   { watch = false }: { watch?: boolean } = {},
 ) {
   const paths = await getWorkspaceApps(workspaceRoot)
-  log.info(`building app info`, paths)
+  log.info(`building app info ${paths.length}`)
   return await Promise.all(
     paths.map(path => {
       return buildAppInfo({

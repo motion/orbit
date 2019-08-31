@@ -23,7 +23,7 @@ export function debug(level?: number) {
   }
 }
 
-if (typeof window !== 'undefined') {
+if (typeof localStorage !== 'undefined') {
   if (localStorage.getItem('enableLog')) {
     debug(+localStorage.getItem('enableLog')! || 0)
   }

@@ -95,32 +95,39 @@ export class AppsBuilder {
     })
   }
 
+  isUpdating = false
   async update({ buildMode, options, activeAppsMeta }: AppsBuilderUpdate) {
+    log.info(`update()`)
     this.wsOptions = options
-
-    const buildConfigs = await getAppsConfig(activeAppsMeta, buildMode, options)
-    const { clientConfigs, nodeConfigs, buildNameToAppMeta } = buildConfigs
-    log.verbose(`update() ${activeAppsMeta.length}`, buildConfigs)
-    this.buildNameToAppMeta = buildNameToAppMeta
-    this.apps = Object.keys(buildNameToAppMeta).map(k => buildNameToAppMeta[k])
-
-    if (!clientConfigs && !nodeConfigs) {
-      log.error('No config')
+    if (this.isUpdating) {
+      console.warn('!!!!!!!!!!!!!!!!!!!!!!!! what TODO cancel current and re-run')
       return
     }
-
-    // for build mode, ensure we re-run the dll builds first
-    if (options.action === 'build') {
-      const { base } = clientConfigs
-      log.info(`Building ${Object.keys(clientConfigs).join(', ')}...`)
-      // build base dll first to ensure it feeds into rest
-      await webpackPromise([base], {
-        loud: true,
-      })
-    }
+    this.isUpdating = true
 
     // ensure builds have run for each app
     try {
+      const buildConfigs = await getAppsConfig(activeAppsMeta, buildMode, options)
+      const { clientConfigs, nodeConfigs, buildNameToAppMeta } = buildConfigs
+      log.verbose(`update() ${activeAppsMeta.length}`, buildConfigs)
+      this.buildNameToAppMeta = buildNameToAppMeta
+      this.apps = Object.keys(buildNameToAppMeta).map(k => buildNameToAppMeta[k])
+
+      if (!clientConfigs && !nodeConfigs) {
+        log.error('No config')
+        return
+      }
+
+      // for build mode, ensure we re-run the dll builds first
+      if (options.action === 'build') {
+        const { base } = clientConfigs
+        log.info(`Building ${Object.keys(clientConfigs).join(', ')}...`)
+        // build base dll first to ensure it feeds into rest
+        await webpackPromise([base], {
+          loud: true,
+        })
+      }
+
       let builds = []
       const chunks = chunk(activeAppsMeta, 2)
       for (const apps of chunks) {
@@ -152,13 +159,16 @@ export class AppsBuilder {
       } else {
         log.info(`Finished apps initial build, success`)
       }
+
+      if (options.action === 'run') {
+        this.state = await this.updateBuild(buildConfigs)
+        return
+      }
     } catch (err) {
       log.error(`Error running initial builds ${err.message}\n${err.stack}`)
-    }
-
-    if (options.action === 'run') {
-      this.state = await this.updateBuild(buildConfigs)
-      return
+    } finally {
+      log.info(`update() finish`)
+      this.isUpdating = false
     }
   }
 
@@ -174,7 +184,7 @@ export class AppsBuilder {
     clientConfigs,
     buildNameToAppMeta,
   }: AppBuildConfigs): Promise<WebpackAppsDesc[]> {
-    log.verbose(`configs ${Object.keys(clientConfigs).join(', ')}`, clientConfigs)
+    log.verbose(`updateBuild() configs ${Object.keys(clientConfigs).join(', ')}`, clientConfigs)
 
     const { main, ...rest } = clientConfigs
     let res: WebpackAppsDesc[] = []
@@ -190,6 +200,7 @@ export class AppsBuilder {
         if (running && running.close) {
           running.close()
         }
+        log.info(`Building node app ${name}`)
         const packer = await webpackPromise([config], { loud: true })
         if (packer.type !== 'watch') {
           throw new Error(`Shouldn't ever get here`)
@@ -208,10 +219,13 @@ export class AppsBuilder {
       }
     }
 
+    log.info(`updateBuild() Finished updating node apps`)
+
     // you have to do it this janky ass way because webpack just isnt really great at
     // doing multi-config hmr, and this makes sure the 404 hot-update bug is fixed (google)
     const clientDescs: WebpackAppsDesc[] = []
     for (const name in rest) {
+      console.log('name', name)
       const config = rest[name]
       const devName = `${name}-client`
       const current = this.state.find(x => x.name === devName)
@@ -514,7 +528,7 @@ export class AppsBuilder {
     const desktopRoot = join(require.resolve('@o/orbit-desktop'), '..', '..')
     const index = await readFile(join(desktopRoot, 'index.html'), 'utf8')
     const scriptsPre = `
-    <script id="script_base" src="/baseDev.dll.js"></script>
+    <script id="script_base" src="/base.dll.js"></script>
     <script id="script_shared" src="/shared.dll.js"></script>
 `
     const scriptsPost = `

@@ -1,5 +1,4 @@
 import { getAppInfo } from '@o/apps-manager'
-import { getGlobalConfig } from '@o/config'
 import { isEqual } from '@o/fast-compare'
 import { isOrbitApp, readPackageJson } from '@o/libs-node'
 import { Logger } from '@o/logger'
@@ -12,8 +11,7 @@ import webpack from 'webpack'
 import { buildAppInfo } from './buildAppInfo'
 import { commandGenTypes } from './commandGenTypes'
 import { attachLogToCommand, statusReplyCommand } from './commandHelpers'
-import { getAppParams } from './getAppsConfig'
-import { makeWebpackConfig } from './makeWebpackConfig'
+import { getNodeAppConfig } from './getNodeAppConfig'
 import { webpackPromise } from './webpackPromise'
 
 export const log = new Logger('commandBuild')
@@ -57,7 +55,7 @@ export async function commandBuild(
 
   await ensureDir(join(appRoot, 'dist'))
 
-  if (!(await shouldRebuildApp(appRoot))) {
+  if (!props.force && !(await shouldRebuildApp(appRoot))) {
     log.info(`App hasn't changed, not rebuilding. To force build, run: orbit build --force`)
     return {
       type: 'success',
@@ -91,6 +89,7 @@ export async function commandBuild(
 }
 
 export async function bundleApp(options: CommandBuildOptions): Promise<StatusReply> {
+  log.info(`Writing app info...`)
   const verbose = true // !
   const entry = await getAppEntry(options.projectRoot)
   const pkg = await readPackageJson(options.projectRoot)
@@ -112,13 +111,13 @@ export async function bundleApp(options: CommandBuildOptions): Promise<StatusRep
   // }
 
   if (hasKey(appInfo, 'graph', 'workers', 'api')) {
-    log.info(`Has node app...`)
+    log.info(`Found node entry...`)
     nodeConf = await getNodeAppConfig(entry, pkg.name, options)
   }
 
   const configs = [webConf, nodeConf].filter(Boolean)
   if (configs.length) {
-    log.info(`Building...`)
+    log.info(`Building app...`)
     await webpackPromise(configs, {
       loud: verbose,
     })
@@ -195,54 +194,6 @@ async function shouldRebuildApp(appRoot: string) {
 
 const hasKey = (appInfo: AppDefinition, ...keys: string[]) =>
   Object.keys(appInfo).some(x => keys.some(key => x === key))
-
-// default base dll
-let defaultBaseDll
-if (process.env.NODE_ENV === 'production') {
-  const Config = getGlobalConfig()
-  defaultBaseDll = {
-    manifest: join(Config.paths.desktopRoot, 'dist', 'manifest-base.json'),
-    filepath: join(Config.paths.desktopRoot, 'dist', 'baseDev.dll.js'),
-  }
-} else {
-  const monoRoot = join(__dirname, '..', '..', '..', '..')
-  defaultBaseDll = {
-    manifest: join(monoRoot, 'example-workspace', 'dist', 'production', 'manifest-base.json'),
-    filepath: join(monoRoot, 'example-workspace', 'dist', 'production', 'baseDev.dll.js'),
-  }
-}
-
-export async function getNodeAppConfig(entry: string, name: any, options: CommandBuildOptions) {
-  return await makeWebpackConfig(
-    getAppParams({
-      name,
-      context: options.projectRoot,
-      entry: [entry],
-      target: 'node',
-      outputFile: 'index.node.js',
-      watch: options.watch,
-      mode: 'development',
-      dllReferences: [defaultBaseDll],
-    }),
-    {
-      node: {
-        __dirname: false,
-        __filename: false,
-      },
-      externals: [
-        // externalize everything but local files
-        function(_context, request, callback) {
-          const isLocal = request[0] === '.' || request === entry
-          if (!isLocal) {
-            return callback(null, 'commonjs ' + request)
-          }
-          // @ts-ignore
-          callback()
-        },
-      ],
-    },
-  )
-}
 
 export async function getAppEntry(appRoot: string, packageJson?: any) {
   const pkg = packageJson || (await readJSON(join(appRoot, 'package.json')))

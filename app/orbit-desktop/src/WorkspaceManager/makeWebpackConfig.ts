@@ -1,5 +1,4 @@
 import { isDefined } from '@o/utils'
-import AddAssetHtmlPlugin from 'add-asset-html-webpack-plugin'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
 import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
 import IgnoreNotFoundExportPlugin from 'ignore-not-found-export-webpack-plugin'
@@ -57,6 +56,9 @@ export function makeWebpackConfig(
     devtool,
     injectHot,
   } = params
+
+  // optimize react
+  // process.env.OPTIMIZE_REACT = mode === 'development' ? undefined : 'true'
 
   // entry dir is the path above the entry file, this could be better...
   // const entryDir = Path.join(params.entry[0], '..')
@@ -390,16 +392,6 @@ require('@o/kit').OrbitHot.fileLeave();
             new webpack.DllReferencePlugin({
               manifest,
               context,
-            }),
-        )) ||
-        []),
-
-      // inject dll references into index.html
-      ...((hasDLLReferences &&
-        dllReferences.map(
-          ({ filepath }) =>
-            new AddAssetHtmlPlugin({
-              filepath,
             }),
         )) ||
         []),

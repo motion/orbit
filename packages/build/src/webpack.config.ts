@@ -114,6 +114,7 @@ console.log(
 const optimization = {
   prod: {
     nodeEnv: 'production',
+    namedChunks: true,
     usedExports: true,
     sideEffects: true,
     minimize: true,
@@ -125,38 +126,38 @@ const optimization = {
       : {
           // runtimeChunk: true,
           splitChunks: {
-            chunks: 'async',
+            chunks: 'all',
+            // name: true,
             // minSize: 10000,
-            // maxSize: 80000,
             // minChunks: 1,
             // maxAsyncRequests: 50,
             // maxInitialRequests: 10,
             // automaticNameDelimiter: '~',
             // automaticNameMaxLength: 30,
-            // name: true,
             // cacheGroups: {
-            //   vendors: {
-            //     test: /[\\/]node_modules[\\/]/,
-            //     priority: -10,
-            //   },
-            //   default: {
-            //     minChunks: 2,
-            //     priority: -20,
-            //     reuseExistingChunk: true,
+            //   default: false,
+            //   vendors: false,
+            //   vendor: false,
+            // },
+            // cacheGroups: {
+            //   default: false,
+            //   vendors: false,
+            //   zero: {
+            //     maxSize: 180000,
             //   },
             // },
           },
         }),
-    minimizer: [
-      // target !== 'node' &&
-      //   new OptimizeCSSAssetsPlugin({
-      //     cssProcessor: require('cssnano'),
-      //     cssProcessorPluginOptions: {
-      //       preset: ['default', { discardComments: { removeAll: true } }],
-      //     },
-      //     canPrint: true,
-      //   }),
-    ].filter(Boolean),
+    // minimizer: [
+    //   // target !== 'node' &&
+    //   //   new OptimizeCSSAssetsPlugin({
+    //   //     cssProcessor: require('cssnano'),
+    //   //     cssProcessorPluginOptions: {
+    //   //       preset: ['default', { discardComments: { removeAll: true } }],
+    //   //     },
+    //   //     canPrint: true,
+    //   //   }),
+    // ].filter(Boolean),
   },
   dev: {
     noEmitOnErrors: true,
@@ -171,7 +172,7 @@ const alias = {
   // 'react-dom': 'react-dom/profiling',
   // 'schedule/tracking': 'schedule/tracking-profiling',
   'react-dom': mode === 'production' ? 'react-dom' : '@hot-loader/react-dom',
-  // lodash: 'lodash',
+  'lodash.isequal': 'lodash/isEqual',
 }
 
 const babelrcOptions = {
@@ -322,7 +323,7 @@ async function makeConfig() {
               loader: 'babel-loader',
               options: {
                 plugins: [],
-                presets: ['@babel/env', '@babel/preset-react'],
+                presets: ['@o/babel-preset-motion'],
               },
             },
             {
@@ -355,9 +356,9 @@ async function makeConfig() {
 
       target !== 'node' &&
         new HtmlWebpackPlugin({
+          chunksSortMode: 'none',
           favicon: 'public/favicon.png',
           template: 'public/index.html',
-          // chunksSortMode: 'manual',
           ...(isProd &&
             !NO_OPTIMIZE && {
               minify: {
@@ -393,21 +394,21 @@ async function makeConfig() {
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         }),
 
-      shouldExtractCSS &&
-        target === 'web' &&
-        new HtmlCriticalWebpackPlugin({
-          base: outputPath,
-          src: 'index.html',
-          dest: 'index.html',
-          inline: true,
-          minify: true,
-          extract: true,
-          width: 375,
-          height: 565,
-          penthouse: {
-            blockJSRequests: false,
-          },
-        }),
+      // shouldExtractCSS &&
+      //   target === 'web' &&
+      //   new HtmlCriticalWebpackPlugin({
+      //     base: outputPath,
+      //     src: 'index.html',
+      //     dest: 'index.html',
+      //     inline: true,
+      //     minify: true,
+      //     extract: true,
+      //     width: 375,
+      //     height: 565,
+      //     // penthouse: {
+      //     //   blockJSRequests: false,
+      //     // },
+      //   }),
 
       !!process.env['ANALYZE_BUNDLE'] &&
         new BundleAnalyzerPlugin({

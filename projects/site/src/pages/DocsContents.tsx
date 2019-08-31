@@ -1,10 +1,10 @@
 import GithubIcon from '!raw-loader!../../public/logos/github.svg'
-import { themes } from '@o/kit/themes'
+import { themes } from '@o/kit'
 import { Button, gloss, Icon, Row, Section, Space, SurfacePassProps, Tag, Title } from '@o/ui'
 import { ThemeProvide } from 'gloss'
 import React, { memo } from 'react'
 
-import { colors } from '../constants'
+import { colors } from '../colors'
 import { scrollTo } from '../etc/helpers'
 import { Navigation } from '../Navigation'
 import { linkProps } from '../useLink'

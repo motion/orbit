@@ -3,7 +3,7 @@ import { compose, mount, route, withView } from 'navi'
 import React from 'react'
 import { View } from 'react-navi'
 
-import { colors } from '../constants'
+import { colors } from '../colors'
 import { Header } from '../Header'
 import { linkProps } from '../useLink'
 import { ContentSection } from '../views/ContentSection'

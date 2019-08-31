@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@o/logger": "^2.6.0",
-    "lodash.isequal": "^4.5.0",
+    "lodash": "^4.17.15",
     "react-reconciler": "0.19.1",
     "scheduler": "0.13.0",
     "electron-devtools-installer": "2.2.4"

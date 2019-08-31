@@ -1,9 +1,9 @@
-import { themes as KitThemes } from '@o/kit/themes'
+import { themes as KitThemes } from '@o/kit'
 import { linearGradient, toColor } from '@o/ui'
 import { ThemeObject } from 'gloss'
 import { colorize, fromStyles } from 'gloss-theme'
 
-import { colors } from './constants'
+import { colors } from './colors'
 
 const buttonBackground = linearGradient(colors.purple.lighten(0.035), colors.purple)
 

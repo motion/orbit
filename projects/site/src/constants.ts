@@ -1,5 +1,3 @@
-import { toColor } from '@o/ui'
-
 export const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
 export const fontProps = {
@@ -11,12 +9,6 @@ export const fontProps = {
     fontFamily: 'Colfax',
     WebkitFontSmoothing: 'antialiased',
   },
-}
-
-export const colors = {
-  orange: toColor('#F3C95F'),
-  red: toColor('#FE5A59'),
-  purple: toColor('#8C60F8'),
 }
 
 export const widths = {

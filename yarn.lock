@@ -9861,7 +9861,7 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
-framer-motion@^1.6.5:
+framer-motion@1.6.7, framer-motion@^1.6.5:
   version "1.6.7"
   resolved "https://registry.npmjs.org/framer-motion/-/framer-motion-1.6.7.tgz#faba70c1654e95f825052ea20c506c5d8138a1c4"
   integrity sha512-1tAqvyf70jj1b7ue86iDYEQ5ShwH4Ge6y+slAmkGrxPn9y+BgdZDP3pG10Gs6GgpNalNglKH9hRb8Uw75SwHog==

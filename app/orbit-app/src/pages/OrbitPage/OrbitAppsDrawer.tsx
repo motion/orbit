@@ -151,7 +151,7 @@ export const OrbitAppsDrawer = memo(() => {
           return (
             <FullScreen
               key={app.id}
-              bottom={boxShadowSize}
+              bottom={yOffset}
               opacity={0}
               transform={{
                 y: frameSize.height,

@@ -288,9 +288,9 @@ const OrbitDockButton = memo(function OrbitDockButton({
         }}
         {...rest}
       />
-      {nodePosition && nodePosition.rect && (
+      {nodePosition && (
         <FloatingAppWindow
-          buttonRect={nodePosition.rect}
+          buttonRect={nodePosition}
           showMenu={showMenu}
           definition={definition}
           app={app}

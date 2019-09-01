@@ -19,7 +19,7 @@ export const FloatingChrome = (props: FloatingChromeProps) => {
 
   usePosition({
     ref: target,
-    onChange: x => x.visible && x.rect && setPos(x.rect),
+    onChange: x => x && setPos(x),
   })
 
   useEffect(() => {

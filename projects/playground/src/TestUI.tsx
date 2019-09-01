@@ -1,4 +1,4 @@
-import { Button, CardSimple, Col, gloss, Row, View } from '@o/ui'
+import { Button, CardSimple, Col, gloss, Row, usePosition, View } from '@o/ui'
 import { motion, useMotionValue, useSpring, useTransform, useViewportScroll } from 'framer-motion'
 import _ from 'lodash'
 import * as React from 'react'
@@ -22,7 +22,7 @@ export function TestUIParallax() {
   const y2 = useParallaxLayer({ ref: ref2, offset: 1.5 })
   return (
     <>
-      <Layer nodeRef={ref} height={window.innerHeight} background="orange">
+      <Layer nodeRef={ref} height="100vh" background="orange">
         <motion.div
           style={{
             position: 'absolute',
@@ -35,7 +35,7 @@ export function TestUIParallax() {
           }}
         />
       </Layer>
-      <Layer nodeRef={ref2} height={window.innerHeight} background="red">
+      <Layer nodeRef={ref2} height="100vh" background="red">
         <motion.div
           style={{
             position: 'absolute',
@@ -48,7 +48,7 @@ export function TestUIParallax() {
           }}
         />
       </Layer>
-      <Layer height={window.innerHeight} background="lightgreen" />
+      <Layer height="100vh" background="lightgreen" />
     </>
   )
 }
@@ -62,18 +62,19 @@ function useParallaxLayer({
   offset?: number
   speed?: number
 }) {
-  const [elementTop, setElementTop] = React.useState(0)
+  const position = usePosition({ ref })
   const { scrollY } = useViewportScroll()
-  const motionOffset = useTransform(scrollY, [elementTop, elementTop + 1], [0, -(1 + offset)], {
-    clamp: false,
-  })
+  const motionOffset = useTransform(
+    scrollY,
+    position ? [position.top, position.top + 1] : [0, -1],
+    [0, -(1 + offset)],
+    {
+      clamp: false,
+    },
+  )
   const motionSpeed = useTransform(motionOffset, [0, -(1 + offset)], [0, speed], {
     clamp: false,
   })
-  React.useLayoutEffect(() => {
-    const element = ref.current
-    setElementTop(element.offsetTop)
-  }, [ref])
   return motionSpeed
 }
 

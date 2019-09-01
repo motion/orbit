@@ -35,23 +35,15 @@ export function TestUIMotion() {
     >
       {[0, 1, 2, 3, 4, 5].map(i => (
         <Card key={i} index={i} total={5} scrollXProgress={scrollXProgress} />
+        // <Card rotateY={ref => ref.geometry.intersectionWithFrame().transform([0, 1], [-10, 10])} />
       ))}
     </motion.div>
   )
-  // return (
-  //   <Row
-  //     flex={1}
-  //     scrollable="x"
-  //     perspective="1000px"
-  //     scrollSnapType="x mandatory"
-  //     scrollSnapPointsX="repeat(100%)"
-  //   >
-  //     {[0, 1, 2, 3, 4, 5].map(i => (
-  //       <Card key={i} index={i} total={5} scrollXProgress={scrollXProgress} />
-  //     ))}
-  //   </Row>
-  // )
 }
+
+// geometry.intersectionWithFrame().transform([0, 1], [-10, 10])
+//   => Springy
+//      UI kit uses it internally to convert it into:
 
 function Card(props: any) {
   const ry1 = useTransform(props.scrollXProgress, x => {

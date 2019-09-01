@@ -1,4 +1,5 @@
-import { Button, CardSimple, Col, gloss, Row, usePosition, View } from '@o/ui'
+import { createStoreContext } from '@o/kit'
+import { Button, CardSimple, Col, Row, usePosition, View, ViewProps } from '@o/ui'
 import { motion, useMotionValue, useSpring, useTransform, useViewportScroll } from 'framer-motion'
 import _ from 'lodash'
 import * as React from 'react'
@@ -16,69 +17,106 @@ export function TestUI() {
 }
 
 export function TestUIParallax() {
-  const ref = React.useRef(null)
-  const ref2 = React.useRef(null)
-  const y = useParallaxLayer({ ref })
-  const y2 = useParallaxLayer({ ref: ref2, offset: 1.5 })
   return (
     <>
-      <Layer nodeRef={ref} height="100vh" background="orange">
-        <motion.div
-          style={{
-            position: 'absolute',
-            y,
-            background: 'yellow',
-            top: 0,
-            left: 20,
-            width: 100,
-            height: 100,
-          }}
+      <Parallax.Container height="100vh" background="orange">
+        <Parallax.View
+          position="absolute"
+          background="yellow"
+          top={0}
+          left={20}
+          width={100}
+          height={100}
         />
-      </Layer>
-      <Layer nodeRef={ref2} height="100vh" background="red">
-        <motion.div
-          style={{
-            position: 'absolute',
-            y: y2,
-            background: 'yellow',
-            top: 0,
-            left: 20,
-            width: 100,
-            height: 100,
-          }}
+      </Parallax.Container>
+      <Parallax.Container height="100vh" background="red">
+        <Parallax.View
+          offset={1.5}
+          position="absolute"
+          background="yellow"
+          top={0}
+          left={20}
+          width={100}
+          height={100}
         />
-      </Layer>
-      <Layer height="100vh" background="lightgreen" />
+      </Parallax.Container>
+      <Parallax.Container height="100vh" background="lightgreen" />
     </>
   )
 }
 
-function useParallaxLayer({
-  ref,
-  offset = 0,
-  speed = -1,
-}: {
-  ref: React.MutableRefObject<HTMLElement>
-  offset?: number
-  speed?: number
-}) {
-  const position = usePosition({ ref })
-  const { scrollY } = useViewportScroll()
-  const motionOffset = useTransform(
-    scrollY,
-    position ? [position.top, position.top + 1] : [0, -1],
-    [0, -(1 + offset)],
-    {
-      clamp: false,
+const ParallaxContainerStore = createStoreContext(
+  class {
+    top = 0
+    left = 0
+  },
+)
+
+function ParallaxContainer(props: ViewProps) {
+  const ref = React.useRef(null)
+  const store = ParallaxContainerStore.useCreateStore()
+  usePosition({
+    ref,
+    onChange(pos) {
+      if (!pos) return
+      store.top = pos.top
+      store.left = pos.left
     },
-  )
-  const motionSpeed = useTransform(motionOffset, [0, -(1 + offset)], [0, speed], {
-    clamp: false,
   })
-  return motionSpeed
+  return (
+    <ParallaxContainerStore.ProvideStore value={store}>
+      <View {...props} nodeRef={ref} />
+    </ParallaxContainerStore.ProvideStore>
+  )
 }
 
-const Layer = gloss(View, { width: '100%', position: 'relative' })
+function ParallaxView({
+  offset = 0,
+  speed = -1,
+  direction = 'y',
+  ...viewProps
+}: Omit<ViewProps, 'direction'> & { offset?: number; speed?: number; direction?: 'x' | 'y' }) {
+  const store = ParallaxContainerStore.useStore()
+  const { scrollY } = useViewportScroll()
+  const key = direction === 'y' ? 'top' : 'left'
+  const motionOffset = useTransform(scrollY, [store[key], store[key] + 1], [0, -(1 + offset)], {
+    clamp: false,
+  })
+  const pos = useTransform(motionOffset, [0, -(1 + offset)], [0, speed], {
+    clamp: false,
+  })
+  return <View {...viewProps} transform={{ [direction]: pos }} />
+}
+
+const Parallax = {
+  Container: ParallaxContainer,
+  View: ParallaxView,
+}
+
+// function useParallaxLayer({
+//   ref,
+//   offset = 0,
+//   speed = -1,
+// }: {
+//   ref: React.MutableRefObject<HTMLElement>
+//   offset?: number
+//   speed?: number
+// }) {
+//   const position = usePosition({ ref })
+//   const { scrollY } = useViewportScroll()
+//   const motionOffset = useTransform(
+//     scrollY,
+//     position ? [position.top, position.top + 1] : [0, -1],
+//     [0, -(1 + offset)],
+//     {
+//       clamp: false,
+//     },
+//   )
+//   const motionSpeed = useTransform(motionOffset, [0, -(1 + offset)], [0, speed], {
+//     clamp: false,
+//   })
+//   return motionSpeed
+// }
 
 export function TestUIMotion() {
   const ref = React.useRef(null)

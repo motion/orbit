@@ -257,7 +257,7 @@ const FlowStoreContext = createStoreContext(FlowStore)
 
 export const useCreateFlow = FlowStoreContext.useCreateStore
 export const useFlow = FlowStoreContext.useStore
-export const FlowProvide = FlowStoreContext.SimpleProvider
+export const FlowProvide = FlowStoreContext.ProvideStore
 
 export const Flow: FlowComponent<FlowProps> = memo(
   ({
@@ -314,7 +314,7 @@ export const Flow: FlowComponent<FlowProps> = memo(
     }
 
     return (
-      <FlowStoreContext.SimpleProvider value={flowStore}>
+      <FlowStoreContext.ProvideStore value={flowStore}>
         <Layout
           Toolbar={Toolbar}
           total={total}
@@ -328,7 +328,7 @@ export const Flow: FlowComponent<FlowProps> = memo(
         >
           <ScopeState id="flow">{stepsRef.current}</ScopeState>
         </Layout>
-      </FlowStoreContext.SimpleProvider>
+      </FlowStoreContext.ProvideStore>
     )
   },
 ) as any

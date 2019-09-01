@@ -279,7 +279,7 @@ export function Form({
       onSubmit={onSubmitInner}
       {...{ action, method, target, name }}
     >
-      <FormContext.SimpleProvider value={formStore}>
+      <FormContext.ProvideStore value={formStore}>
         <Section background="transparent" flex={1} {...sectionProps}>
           {formStore.globalError && (
             <>
@@ -308,7 +308,7 @@ export function Form({
             </>
           )}
         </Section>
-      </FormContext.SimpleProvider>
+      </FormContext.ProvideStore>
     </form>
   )
 }

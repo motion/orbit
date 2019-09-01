@@ -52,7 +52,7 @@ const BContext = createStoreContext(BreadcrumbStore)
 
 export function Breadcrumbs({ separator, children }: BreadcrumbsProps) {
   const store = BContext.useCreateStore({ separator })
-  return <BContext.SimpleProvider value={store}>{children}</BContext.SimpleProvider>
+  return <BContext.ProvideStore value={store}>{children}</BContext.ProvideStore>
 }
 
 export function Breadcrumb({
@@ -82,7 +82,7 @@ export function Breadcrumb({
 
 // recommended to use below each breadcrumb to avoid accidental nesting
 export function BreadcrumbReset(props: { children: any }) {
-  return <BContext.SimpleProvider value={null}>{props.children}</BContext.SimpleProvider>
+  return <BContext.ProvideStore value={null}>{props.children}</BContext.ProvideStore>
 }
 
 export type BreadcrumbInfo = {

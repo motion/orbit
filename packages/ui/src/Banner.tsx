@@ -113,7 +113,7 @@ export const ProvideBanner = memo(
     const BannerView = template
 
     return (
-      <BannerManager.SimpleProvider value={bannerStore}>
+      <BannerManager.ProvideStore value={bannerStore}>
         {children}
 
         {/* default to a bottom fixed position, we can make this customizable */}
@@ -143,7 +143,7 @@ export const ProvideBanner = memo(
             </FlipAnimate>
           </FullScreen>
         </Portal>
-      </BannerManager.SimpleProvider>
+      </BannerManager.ProvideStore>
     )
   },
 )

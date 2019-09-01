@@ -362,7 +362,7 @@ const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
   }
 
   return (
-    <QueryBuilder.SimpleProvider value={queryBuilder}>
+    <QueryBuilder.ProvideStore value={queryBuilder}>
       <Section
         flex={1}
         overflow="hidden"
@@ -426,7 +426,7 @@ const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
           )}
         </Suspense>
       </Section>
-    </QueryBuilder.SimpleProvider>
+    </QueryBuilder.ProvideStore>
   )
 })
 

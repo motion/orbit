@@ -499,7 +499,7 @@ export class SelectableStore {
 
 const Context = createStoreContext(SelectableStore)
 
-export const SelectableStoreProvider = Context.SimpleProvider
+export const SelectableStoreProvider = Context.ProvideStore
 
 // will grab the parent store if its provided, otherwise create its own
 export function useCreateSelectableStore(props?: SelectableProps, options = { react: false }) {

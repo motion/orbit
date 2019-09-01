@@ -107,7 +107,7 @@ Object.assign(
     orbitLauncherBackground: [0, 0, 0, 0],
     sidebarBorderColor: '#444',
     headerBorderBottom: '#151515',
-    headerBackground: linearGradient([0, 0, 0, 0.2], [0, 0, 0, 0.3]),
+    headerBackground: linearGradient([0, 0, 0, 0], [0, 0, 0, 0.05]),
     headerBackgroundOpaque: linearGradient('#222', '#252525'),
     orbitHeaderBackgroundEditing: linearGradient(
       selectedColor.lighten(0.1).setAlpha(0.5),

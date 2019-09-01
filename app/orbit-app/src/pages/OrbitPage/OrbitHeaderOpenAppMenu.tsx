@@ -1,7 +1,7 @@
 import { command, openInEditor, useReaction, useStore } from '@o/kit'
 import { AppDevCloseCommand, AppDevOpenCommand } from '@o/models'
 import { App } from '@o/stores'
-import { Button, ListSeparator, MenuButton, Row, Toggle, useBanner, useDebounceValue } from '@o/ui'
+import { Button, ListSeparator, MenuButton, Row, Theme, Toggle, useBanner, useDebounceValue } from '@o/ui'
 import React, { memo, useMemo } from 'react'
 
 import { om, useOm } from '../../om/om'
@@ -123,26 +123,28 @@ export const OrbitHeaderOpenAppMenu = memo(
     }
 
     return (
-      <MenuButton
-        alt="action"
-        size={1}
-        sizeRadius={1.6}
-        tooltip="Open to desktop (⌘ + ⏎)"
-        onClick={effects.openCurrentApp}
-        elevation={3}
-        elevationShadowOpacity={0.2}
-        disabled={disabled}
-        opacity={disabled ? 0.5 : 1}
-        openIconProps={useMemo(
-          () => ({
-            name: isDeveloping ? 'edit' : 'chevron-down',
-          }),
-          [isDeveloping],
-        )}
-        items={items}
-      >
-        Open
-      </MenuButton>
+      <Theme name="tooltip">
+        <MenuButton
+          alt="tooltip"
+          size={1}
+          sizeRadius={1.6}
+          tooltip="Open to desktop (⌘ + ⏎)"
+          onClick={effects.openCurrentApp}
+          elevation={3}
+          elevationShadowOpacity={0.2}
+          disabled={disabled}
+          opacity={disabled ? 0.5 : 1}
+          openIconProps={useMemo(
+            () => ({
+              name: isDeveloping ? 'edit' : 'chevron-down',
+            }),
+            [isDeveloping],
+          )}
+          items={items}
+        >
+          Open
+        </MenuButton>
+      </Theme>
     )
   },
 )

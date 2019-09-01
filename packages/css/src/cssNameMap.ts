@@ -158,6 +158,13 @@ export const CAMEL_TO_SNAKE = {
   gridTemplateColumns: 'grid-template-columns',
   gridTemplateRows: 'grid-template-rows',
   gridAutoRows: 'grid-auto-rows',
+  scrollSnapCoordinate: 'scroll-snap-coordinate',
+  scrollSnapDestination: 'scroll-snap-destination',
+  scrollSnapPointsX: 'scroll-snap-points-x',
+  scrollSnapPointsY: 'scroll-snap-points-y',
+  scrollSnapType: 'scroll-snap-type',
+  scrollSnapTypeX: 'scroll-snap-type-x',
+  scrollSnapTypeY: 'scroll-snap-type-y',
 }
 
 export const SNAKE_TO_CAMEL = Object.keys(CAMEL_TO_SNAKE).reduce(

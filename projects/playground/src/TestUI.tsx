@@ -1,18 +1,83 @@
-import { Button, CardSimple, Col, Row, View } from '@o/ui'
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { Button, CardSimple, Col, gloss, Row, View } from '@o/ui'
+import { motion, useMotionValue, useSpring, useTransform, useViewportScroll } from 'framer-motion'
 import _ from 'lodash'
 import * as React from 'react'
 
 export function TestUI() {
   return (
-    <Row overflow="hidden" height="100%">
+    <>
       {/* <TestUIPopovers /> */}
       {/* <TestUIGlossSpeed /> */}
       {/* <TestUIEditor /> */}
-      <TestUIMotion />
-    </Row>
+      {/* <TestUIMotion /> */}
+      <TestUIParallax />
+    </>
   )
 }
+
+export function TestUIParallax() {
+  const ref = React.useRef(null)
+  const ref2 = React.useRef(null)
+  const y = useParallaxLayer({ ref })
+  const y2 = useParallaxLayer({ ref: ref2, offset: 1.5 })
+  return (
+    <>
+      <Layer nodeRef={ref} height={window.innerHeight} background="orange">
+        <motion.div
+          style={{
+            position: 'absolute',
+            y,
+            background: 'yellow',
+            top: 0,
+            left: 20,
+            width: 100,
+            height: 100,
+          }}
+        />
+      </Layer>
+      <Layer nodeRef={ref2} height={window.innerHeight} background="red">
+        <motion.div
+          style={{
+            position: 'absolute',
+            y: y2,
+            background: 'yellow',
+            top: 0,
+            left: 20,
+            width: 100,
+            height: 100,
+          }}
+        />
+      </Layer>
+      <Layer height={window.innerHeight} background="lightgreen" />
+    </>
+  )
+}
+
+function useParallaxLayer({
+  ref,
+  offset = 0,
+  speed = -1,
+}: {
+  ref: React.MutableRefObject<HTMLElement>
+  offset?: number
+  speed?: number
+}) {
+  const [elementTop, setElementTop] = React.useState(0)
+  const { scrollY } = useViewportScroll()
+  const motionOffset = useTransform(scrollY, [elementTop, elementTop + 1], [0, -(1 + offset)], {
+    clamp: false,
+  })
+  const motionSpeed = useTransform(motionOffset, [0, -(1 + offset)], [0, speed], {
+    clamp: false,
+  })
+  React.useLayoutEffect(() => {
+    const element = ref.current
+    setElementTop(element.offsetTop)
+  }, [ref])
+  return motionSpeed
+}
+
+const Layer = gloss(View, { width: '100%', position: 'relative' })
 
 export function TestUIMotion() {
   const ref = React.useRef(null)
@@ -21,23 +86,25 @@ export function TestUIMotion() {
   })
 
   return (
-    <motion.div
-      ref={ref}
-      style={{
-        display: 'flex',
-        flex: 1,
-        flexFlow: 'row',
-        perspective: '1000px',
-        overflowX: 'auto',
-        scrollSnapType: 'x mandatory',
-        scrollSnapPointsX: 'repeat(100%)',
-      }}
-    >
-      {[0, 1, 2, 3, 4, 5].map(i => (
-        <Card key={i} index={i} total={5} scrollXProgress={scrollXProgress} />
-        // <Card rotateY={ref => ref.geometry.intersectionWithFrame().transform([0, 1], [-10, 10])} />
-      ))}
-    </motion.div>
+    <Row overflow="hidden" height="100%">
+      <motion.div
+        ref={ref}
+        style={{
+          display: 'flex',
+          flex: 1,
+          flexFlow: 'row',
+          perspective: '1200px',
+          overflowX: 'auto',
+          scrollSnapType: 'x mandatory',
+          scrollSnapPointsX: 'repeat(100%)',
+        }}
+      >
+        {[0, 1, 2, 3, 4, 5].map(i => (
+          <Card key={i} index={i} total={5} scrollXProgress={scrollXProgress} />
+          // <Card rotateY={ref => ref.geometry.intersectionWithFrame().transform([0, 1], [-10, 10])} />
+        ))}
+      </motion.div>
+    </Row>
   )
 }
 

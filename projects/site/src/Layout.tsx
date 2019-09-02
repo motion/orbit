@@ -38,10 +38,10 @@ export const usePageTheme = () => {
   ]
 }
 
-const PageLoading = () => {
+const PageLoading = memo(() => {
   const loadingRoute = useLoadingRoute()
   return <BusyIndicator color="#FE5C58" isBusy={!!loadingRoute} delayMs={50} />
-}
+})
 
 export const Layout = memo((props: any) => {
   const forceUpdate = useForceUpdate()

@@ -97,6 +97,4 @@ export type ScrollableViewProps = Omit<ViewProps, 'flexFlow'> & {
   scrollable?: boolean | 'x' | 'y'
   parentSpacing?: Size
   animated?: boolean
-  scrollLeft?: SpringValue<number> // TODO | number requires a custom hook
-  scrollTop?: SpringValue<number>
 }

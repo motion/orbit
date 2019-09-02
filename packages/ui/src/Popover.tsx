@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { isEqual } from '@o/fast-compare'
 import { on } from '@o/utils'
-import { Box, gloss, Theme, ThemeContext } from 'gloss'
+import { Box, gloss, isGlossView, Theme, ThemeContext } from 'gloss'
 import { Cancelable, debounce, isNumber, last, pick } from 'lodash'
 import * as React from 'react'
 
@@ -962,8 +962,13 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
       active: undefined,
       className: `${target.props['className'] || ''} popover-target`,
       // both so we support regular dom and gloss-style
-      nodeRef: this.targetRef,
-      ref: this.targetRef,
+      ...(typeof target.type === 'function' || isGlossView(target.type)
+        ? {
+            nodeRef: this.targetRef,
+          }
+        : {
+            ref: this.targetRef,
+          }),
     }
     if (this.props.passActive) {
       targetProps.active = this.showPopover

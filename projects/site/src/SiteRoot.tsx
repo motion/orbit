@@ -8,12 +8,13 @@ import { Navigation } from './Navigation'
 import { SiteStoreContext } from './SiteStore'
 
 export const SiteRoot = hot(() => {
+  console.warn('render site root')
   return (
     <ErrorBoundary name="Site Root">
       <SiteStoreContext.Provider>
         {/* this key helps HMR for lazy imports... */}
         <Router
-          key={process.env.NODE_ENV === 'development' ? Math.random() : 0}
+          // key={process.env.NODE_ENV === 'development' ? Math.random() : 0}
           navigation={Navigation}
         >
           <Layout>

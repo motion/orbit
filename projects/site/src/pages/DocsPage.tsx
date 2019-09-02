@@ -1,4 +1,4 @@
-import { BorderRight, Button, Col, gloss, List, Portal, Row, Sidebar, Space } from '@o/ui'
+import { BorderRight, Button, Col, gloss, List, Portal, Row, Sidebar, sleep, Space, useOnMount, whenIdle } from '@o/ui'
 import { useForceUpdate, useReaction } from '@o/use-store'
 import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
@@ -37,6 +37,18 @@ const itemProps = {
 
 const DocsList = memo(() => {
   const docsStore = DocsStoreContext.useStore()
+  const [mounted, setMounted] = useState(false)
+
+  useOnMount(async () => {
+    await whenIdle()
+    await sleep(20)
+    await whenIdle()
+    await sleep(20)
+    await whenIdle()
+    await sleep(20)
+    setMounted(true)
+  })
+
   return (
     <List
       query={docsStore.search}
@@ -44,7 +56,7 @@ const DocsList = memo(() => {
       selectable
       alwaysSelected
       defaultSelected={docsStore.initialIndex}
-      overscanCount={500}
+      overscanCount={mounted ? 500 : 0}
       items={docsItems[docsStore.section]}
       itemProps={itemProps}
       getItemProps={preloadItem}
@@ -52,7 +64,6 @@ const DocsList = memo(() => {
         if (!rows[0]) {
           console.warn('no row on select!', rows)
         } else {
-          console.log('docsNavigate', rows[0])
           docsNavigate(rows[0].id)
         }
       }, [])}

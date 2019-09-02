@@ -38,6 +38,7 @@
     "react-navi": "0.12.4",
     "requestidlecallback-polyfill": "1.0.2",
     "resize-observer-polyfill": "1.5.1",
+    "@welldone-software/why-did-you-render": "3.3.3",
     "static-mock-data": "4.0.0",
     "sticky-sidebar": "3.3.1",
     "use-memo-one": "^1.1.0",

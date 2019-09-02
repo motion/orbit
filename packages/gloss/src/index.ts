@@ -22,7 +22,7 @@ export * from './blocks/InlineFlex'
 export * from './blocks/Row'
 // configureGloss
 export { configureGloss } from './config'
-export { gloss, GlossProps, GlossView, ThemeFn } from './gloss'
+export * from './gloss'
 export { colorToString } from './helpers/helpers'
 export { preProcessTheme } from './helpers/preProcessTheme'
 export { selectThemeSubset } from './helpers/selectThemeSubset'

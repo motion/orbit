@@ -1,4 +1,5 @@
-import { Col, createContextualProps, useDebounce, useDebounceValue, useGet, useIntersectionObserver, View, ViewProps } from '@o/ui'
+import { createStoreContext } from '@o/kit'
+import { useDebounce, useDebounceValue, useGet, useIntersectionObserver, View, ViewProps } from '@o/ui'
 import { selectDefined } from '@o/utils'
 import React, { memo, useCallback, useRef, useState } from 'react'
 
@@ -94,7 +95,12 @@ export const fadeAnimations = {
   },
 }
 
-const FadeContext = createContextualProps({ shown: undefined, off: false })
+const FadeContext = createStoreContext(
+  class FadeContextStore {
+    shown = undefined
+    off = false
+  },
+)
 
 type FadeChildProps = ViewProps & {
   delay?: number
@@ -114,7 +120,7 @@ export const FadeChild = memo(
     ...rest
   }: FadeChildProps) => {
     const isTiny = useIsTiny()
-    const fadeContext = FadeContext.useProps()
+    const fadeContext = FadeContext.useStore()
     const shown = !!useDebounceValue(
       !disable && !window['recentHMR'] && selectDefined(fadeContext.shown, true),
       delay,
@@ -172,12 +178,12 @@ export const useFadePage = ({
   ...props
 }: UseFadePageProps = {}) => {
   const { ref, shown } = useDebouncedIntersection({ delay, threshold, ...props })
-  const getShown = useGet(selectDefined(props.shown, shown))
-  const getOff = useGet(off)
+  const shownFinal = selectDefined(props.shown, shown)
+  const getProps = useGet({ shown, off })
   return {
     ref,
-    FadeProvide: useCallback((p: { children: any }) => {
-      return <FadeContext.PassProps shown={getShown()} off={getOff()} {...p} />
+    FadeProvide: useCallback(props => {
+      return <FadeContext.Provider {...props} {...getProps()} />
     }, []),
   }
 }
@@ -186,7 +192,7 @@ export const FadeParent = memo(({ children, ...props }: UseFadePageProps & { chi
   const Fade = useFadePage(props)
   return (
     <Fade.FadeProvide>
-      <Col nodeRef={Fade.ref}>{children}</Col>
+      <View nodeRef={Fade.ref}>{children}</View>
     </Fade.FadeProvide>
   )
 })

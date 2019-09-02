@@ -2,6 +2,7 @@ import { Navigation } from '../Navigation'
 import { docsViews } from './docsItems'
 
 const emptyPromise = () => Promise.resolve({ default: null })
+
 export const loadDocsPage = async view => {
   return await Promise.all([
     view.page().then(x => x.default),
@@ -11,23 +12,27 @@ export const loadDocsPage = async view => {
     (view.types || emptyPromise)().then(x => x.default),
   ])
 }
+
 let last = Date.now()
-export let navTm = null
+let navTm = null
 export const docsNavigate = id => {
   clearTimeout(navTm)
   const isRecent = Date.now() - last < 100
   navTm = setTimeout(
     () => {
-      const next = `/docs/${id}`
+      const next = `/docs${id ? `/${id}` : ''}`
       if (window.location.pathname === next) {
         return
       }
+      console.warn('NAV', window.location.pathname, next)
       Navigation.navigate(next, { replace: true })
     },
     isRecent ? 150 : 50,
   )
 }
+
 let tms = {}
+
 const loadDocPage = (id: string) => {
   tms[id] = setTimeout(() => {
     if (docsViews[id]) {
@@ -35,6 +40,7 @@ const loadDocPage = (id: string) => {
     }
   }, 50)
 }
+
 export const preloadItem = item => {
   return {
     onMouseEnter() {

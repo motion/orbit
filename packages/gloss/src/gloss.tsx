@@ -11,6 +11,10 @@ import { ThemeSelect } from './theme/Theme'
 // so you can reference in postProcessProps
 export { StyleTracker } from './stylesheet/gc'
 
+export const isGlossView = (view: any): boolean => {
+  return view && !!view[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+}
+
 export const baseIgnoreAttrs = {
   ...validCSSAttr,
   width: false,

@@ -143,6 +143,7 @@ export class SelectableStore {
     if (isEqual(this.active, nextActive)) {
       return
     }
+
     this.active = nextActive
     this.updateActiveAndKeyToIndex(next, false)
   }
@@ -503,6 +504,7 @@ export const SelectableStoreProvider = Context.ProvideStore
 
 // will grab the parent store if its provided, otherwise create its own
 export function useCreateSelectableStore(props?: SelectableProps, options = { react: false }) {
+  console.log('we got', inactive, props)
   const inactive = !!props.selectableStore || !props.selectable
   const newStore = useStore(inactive ? false : SelectableStore, props, options)
   return props.selectableStore || newStore

@@ -22,7 +22,7 @@
     "@o/ui": "^2.6.0",
     "@o/use-store": "^2.6.0",
     "@o/utils": "^2.6.0",
-    "@welldone-software/why-did-you-render": "3.2.1",
+    "@welldone-software/why-did-you-render": "3.3.3",
     "date-fns": "2.0.0-alpha.7",
     "electron-context-menu": "0.11.0",
     "event-kit": "^2.5.0",

@@ -70,8 +70,9 @@ export const components = {
     </>
   ),
 
-  a: ({ tagName: _ignore, ...props }) => {
-    return <a {...linkProps(props.href)} {...props} />
+  a: props => {
+    const { tagName, ...lp } = linkProps(props.href)
+    return <a {...lp} {...props} />
   },
 
   ol: props => (

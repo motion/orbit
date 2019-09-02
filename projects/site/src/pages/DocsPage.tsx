@@ -41,11 +41,13 @@ const DocsList = memo(() => {
 
   useOnMount(async () => {
     await whenIdle()
-    await sleep(20)
+    await sleep(50)
     await whenIdle()
-    await sleep(20)
+    await sleep(50)
     await whenIdle()
-    await sleep(20)
+    await sleep(50)
+    await whenIdle()
+    console.log('MOUNT')
     setMounted(true)
   })
 

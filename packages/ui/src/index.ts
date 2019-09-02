@@ -1,4 +1,5 @@
 // until next hotkeys patches types
+import * as popcorn from '@popmotion/popcorn'
 import pluralizeOg from 'pluralize'
 
 if (process.env.NODE_ENV === 'development') {
@@ -10,6 +11,15 @@ export { allIcons } from './icons'
 
 export * from '@o/color'
 export * from '@o/utils'
+
+export { AnimatePresence } from 'framer-motion'
+
+/**
+ * The "lodash" of animation primitives.
+ * Used by framer motion internally, or in examples at least:
+ * https://popmotion.io/popcorn/
+ */
+export const animation = popcorn
 
 // add types
 export const pluralize = (word: string, count: number, inclusize?: boolean) => {

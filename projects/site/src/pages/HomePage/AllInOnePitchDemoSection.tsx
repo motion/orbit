@@ -159,10 +159,10 @@ export default function NeckSection() {
               <TitleText size={useScreenVal('lg', 'xl', 'xxl')}>All together</TitleText>
             </FadeChild>
             <TitleTextSub nodeRef={ref as any} margin="auto" minWidth={320}>
-              <FadeChild style={screen === 'small' ? { display: 'inline' } : null} delay={300}>
+              <FadeChild {...(screen === 'small' ? { display: 'inline' } : null)} delay={300}>
                 &nbsp;Orbit gives you everything you need to create custom apps.&nbsp;
               </FadeChild>
-              <FadeChild style={screen === 'small' ? { display: 'inline' } : null} delay={450}>
+              <FadeChild {...(screen === 'small' ? { display: 'inline' } : null)} delay={450}>
                 With data sources, views and more, you control the code.
               </FadeChild>
             </TitleTextSub>

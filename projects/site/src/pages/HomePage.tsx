@@ -2,13 +2,11 @@ import { ErrorBoundary, Loading, Theme, useIntersectionObserver } from '@o/ui'
 import { once } from 'lodash'
 import React, { lazy, memo, Suspense, useEffect, useRef, useState } from 'react'
 
-import { bodyElement } from '../constants'
 import { requestIdleCallback } from '../etc/requestIdle'
 import { Header } from '../Header'
 import { useIsTiny } from '../hooks/useScreenSize'
 import { useSiteStore } from '../SiteStore'
 import { Page } from '../views/Page'
-import { Parallax } from '../views/Parallax'
 import { HeadSection } from './HomePage/HeadSection'
 import { LoadingPage } from './LoadingPage'
 import { ParallaxContext } from './ParallaxContext'
@@ -71,41 +69,36 @@ export const HomePage = memo(() => {
       <LoadingPage />
       <Header />
       <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
-        <Parallax
-          disable={isTiny}
-          ref={setParallax}
-          pages={9}
-          scrollingElement={(window as any) as HTMLElement}
-          container={bodyElement}
-          pageHeight={siteStore.sectionHeight}
-        >
-          <Page offset={0} zIndex={0}>
-            <HeadSection />
-          </Page>
-          <Page offset={1}>
-            <AllInOnePitchDemoSection />
-          </Page>
-          <Page offset={2}>
-            <DeploySection />
-          </Page>
-          <Page offset={3}>
-            <DataAppKitFeaturesSection pages={2} />
-          </Page>
-          <Page offset={5} zIndex={1}>
-            <EarlyAccessBetaSection />
-          </Page>
-          <Page offset={6}>
-            <SecuritySection />
-          </Page>
-          <Page offset={7}>
-            <MissionMottoSection />
-          </Page>
-          <Page offset={8}>
-            <Theme name="home">
-              <FeetSection />
-            </Theme>
-          </Page>
-        </Parallax>
+        <Page>
+          <HeadSection />
+        </Page>
+        <Page>
+          <AllInOnePitchDemoSection />
+        </Page>
+        <Page>
+          <DeploySection />
+        </Page>
+        {false && (
+          <>
+            <Page>
+              <DataAppKitFeaturesSection pages={2} />
+            </Page>
+            <Page>
+              <EarlyAccessBetaSection />
+            </Page>
+            <Page>
+              <SecuritySection />
+            </Page>
+            <Page>
+              <MissionMottoSection />
+            </Page>
+            <Page>
+              <Theme name="home">
+                <FeetSection />
+              </Theme>
+            </Page>
+          </>
+        )}
       </main>
     </ParallaxContext.PassProps>
   )
@@ -159,23 +152,21 @@ function loadOnIntersect(LazyComponent) {
 
     const fallback = (
       <Page {...props}>
-        <Page.Content pages={props.pages}>
-          <div
-            className="intersect-div"
-            style={{
-              display: 'flex',
-              zIndex: 1000000000000,
-              // background: 'red',
-              width: 2,
-              position: 'absolute',
-              // makes it load "before/after" by this px
-              top: -400,
-              bottom: -400,
-            }}
-            ref={ref}
-          />
-          <Loading />
-        </Page.Content>
+        <div
+          className="intersect-div"
+          style={{
+            display: 'flex',
+            zIndex: 1000000000000,
+            // background: 'red',
+            width: 2,
+            position: 'absolute',
+            // makes it load "before/after" by this px
+            top: -400,
+            bottom: -400,
+          }}
+          ref={ref}
+        />
+        <Loading />
       </Page>
     )
 

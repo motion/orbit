@@ -5,7 +5,6 @@ import React, { memo } from 'react'
 import { fontProps } from '../../constants'
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
 import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeIn'
-import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 import { useTextFit } from '../../views/useTextFit'
@@ -204,22 +203,20 @@ export function HeadSection() {
 
   return (
     <Fade.FadeProvide>
-      <Page.Content>
-        <Col
-          right={useScreenHeightVal(40, 0)}
-          left={useScreenHeightVal(40, 0)}
-          opacity={fontsLoaded ? 1 : 0}
-          margin={['auto', 0]}
-        >
-          <Space size="xxxl" />
-          <Col nodeRef={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
-            <HeadContent />
-          </Col>
-          <Space size="xxxl" />
-          <View flex={1} />
-          <HeadJoin />
+      <Col
+        right={useScreenHeightVal(40, 0)}
+        left={useScreenHeightVal(40, 0)}
+        opacity={fontsLoaded ? 1 : 0}
+        margin={['auto', 0]}
+      >
+        <Space size="xxxl" />
+        <Col nodeRef={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
+          <HeadContent />
         </Col>
-      </Page.Content>
+        <Space size="xxxl" />
+        <View flex={1} />
+        <HeadJoin />
+      </Col>
     </Fade.FadeProvide>
   )
 }

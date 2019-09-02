@@ -83,10 +83,12 @@ export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
   MarginProps &
   PaddingProps &
   /** Accept the motion props */
-  MotionProps &
+  Omit<MotionProps, 'animate'> &
   MotionTransform & {
     // could make this better done in terms of type flow, its for <Input labels...
     label?: React.ReactNode
+    // allow boolean toggle animate too
+    animate?: boolean & MotionProps['animate']
   }
 
 export type ViewProps = ViewBaseProps &

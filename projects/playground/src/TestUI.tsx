@@ -21,6 +21,11 @@ export function TestUIParallax() {
     <>
       <Parallax.Container height="100vh" background="orange">
         <Parallax.View
+          offset={1.5}
+          speed={0.5}
+          style={{
+            x: 100,
+          }}
           position="absolute"
           background="yellow"
           top={0}
@@ -31,7 +36,6 @@ export function TestUIParallax() {
       </Parallax.Container>
       <Parallax.Container height="100vh" background="red">
         <Parallax.View
-          offset={1.5}
           position="absolute"
           background="yellow"
           top={0}
@@ -85,7 +89,7 @@ function ParallaxView({
   const pos = useTransform(motionOffset, [0, -(1 + offset)], [0, speed], {
     clamp: false,
   })
-  return <View {...viewProps} transform={{ [direction]: pos }} />
+  return <View {...viewProps} animate style={{ [direction]: pos }} />
 }
 
 const Parallax = {

@@ -1,4 +1,5 @@
 import { GlossPropertySet } from '@o/css'
+import { MotionProps } from 'framer-motion'
 import { AlphaColorProps, CSSPropertySet, CSSPropertySetStrict, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
 import React from 'react'
 import { SpringValue } from 'react-spring'
@@ -63,23 +64,28 @@ type CommonHTMLProps = Omit<
   | 'color'
 >
 
+type MotionCompatCommonProps = Omit<
+  CommonHTMLProps,
+  'onDrag' | 'onDragStart' | 'onDragEnd' | 'style'
+>
+
 // BUT WERE CHANGING IT TO ACCEPT ANIMATED VALUES FOR ANY CSS PROPERTY
 // WE DONT PASS THIS TO THEMES
 type CSSPropertyStrictWithAnimation = {
   [P in keyof CSSPropertySetStrict]?: CSSPropertySetStrict[P] | SpringValue
 }
 
-export type ViewBaseProps = GlossProps<CommonHTMLProps> &
+export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
   PseudoStyleProps &
   TextSizeProps &
   AlphaColorProps &
   ElevatableProps &
   MarginProps &
-  PaddingProps & {
+  PaddingProps &
+  /** Accept the motion props */
+  MotionProps & {
     // could make this better done in terms of type flow, its for <Input labels...
     label?: React.ReactNode
-    /** Will take animated springs used as properties and apply them as animations */
-    animated?: boolean
   }
 
 export type ViewProps = ViewBaseProps &

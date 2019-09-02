@@ -1,12 +1,6 @@
 import { isEqual } from '@o/fast-compare'
 import { AppViewProps } from '@o/models'
-import {
-  ErrorBoundary,
-  ErrorMessage,
-  ItemPropsProviderSmall,
-  Loading,
-  memoIsEqualDeep,
-} from '@o/ui'
+import { ErrorBoundary, ErrorMessage, ItemPropsProviderSmall, Loading, memoIsEqualDeep } from '@o/ui'
 import { Contents } from 'gloss'
 import { capitalize } from 'lodash'
 import React, { createContext, Suspense, useContext, useMemo, useRef } from 'react'

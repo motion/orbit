@@ -1,7 +1,7 @@
 import { GlossPropertySet } from '@o/css'
 import { AnimatedInterpolation, AnimatedValue } from '@react-spring/animated'
+import { motion } from 'framer-motion'
 import { Base, gloss } from 'gloss'
-import { animated } from 'react-spring'
 
 import { Sizes } from '../Space'
 import { getElevation } from './elevation'
@@ -15,18 +15,17 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
 })
   .theme(getMargin, usePadding, getElevation)
   .withConfig({
-    modifyProps(curProps, nextProps) {
-      if (!curProps.animated) return
-      const props = getAnimatedProps(curProps)
-      if (props) {
-        Object.assign(nextProps, props)
-        // ensure will-change transform
-        // nextProps.style = { ...nextProps.style, willChange: 'transform' }
-      }
-    },
+    // postProcessProps(curProps, nextProps) {
+    //   if (!curProps.animate) return
+    //   const style = getAnimatedProps(curProps)
+    //   if (props) {
+    //     Object.assign(nextProps, props)
+    //   }
+    // },
     isDOMElement: true,
     getElement(props) {
-      return props.animated ? animated[props.tagName] || animated.div : props.tagName || 'div'
+      // todo make it not require animate
+      return props.animate ? motion[props.tagName] || motion.div : props.tagName || 'div'
     },
   })
 

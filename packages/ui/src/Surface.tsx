@@ -472,6 +472,7 @@ export function Surface(direct: SurfaceProps) {
     }
   }, [alt, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
 
+  // @ts-ignore
   const surfaceFrameProps: SurfaceFrameProps = {
     className: `${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`,
     subTheme,
@@ -523,7 +524,7 @@ const defaultTextTheme = {
 }
 
 // fontFamily: inherit on both fixes elements
-type SurfaceFrameProps = ThroughProps & SurfaceProps
+type SurfaceFrameProps = SurfaceProps & ThroughProps
 const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   display: 'flex', // in case they change tagName
   fontFamily: 'inherit',

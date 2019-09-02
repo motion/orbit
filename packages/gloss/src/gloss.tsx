@@ -40,7 +40,7 @@ export type GlossConfig<Props> = {
   displayName?: string
   ignoreAttrs?: { [key: string]: boolean }
   defaultProps?: Partial<Props>
-  modifyProps?: (curProps: Props, nextProps: any) => any
+  postProcessProps?: (curProps: Props, nextProps: any) => any
   getElement?: (props: Props) => any
   isDOMElement?: boolean
 }
@@ -213,12 +213,12 @@ export function gloss<Props = any, ThemeProps = Props>(
           continue
         }
         if (!validProp(key)) continue
-        finalProps[key] = finalProps[key] || props[key]
+        finalProps[key] = props[key]
       }
     } else {
       for (const key in props) {
         if (conditionalStyles && conditionalStyles[key]) continue
-        finalProps[key] = finalProps[key] || props[key]
+        finalProps[key] = props[key]
       }
     }
 
@@ -227,9 +227,9 @@ export function gloss<Props = any, ThemeProps = Props>(
     finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
 
     // hook: setting your own props
-    const modifyProps = config && config.modifyProps
-    if (modifyProps) {
-      modifyProps(props, finalProps)
+    const postProcessProps = config && config.postProcessProps
+    if (postProcessProps) {
+      postProcessProps(props, finalProps)
     }
 
     return createElement(element, finalProps, props.children)
@@ -547,7 +547,7 @@ function getAllStyles(
 
 /**
  * We need to compile a few things to get the config right:
- *   1. get all the parents modifyProps until:
+ *   1. get all the parents postProcessProps until:
  *   2. encounter a parent with getElement (and use that isDOMElement)
  *   3. stop there, don't keep going higher
  */
@@ -560,15 +560,15 @@ function getCompiledConfig(
   while (cur) {
     const curConf = cur.internal.getConfig().config
     if (curConf) {
-      if (curConf.modifyProps) {
-        // merge the modifyProps
-        const og = compiledConf.modifyProps
-        compiledConf.modifyProps = og
+      if (curConf.postProcessProps) {
+        // merge the postProcessProps
+        const og = compiledConf.postProcessProps
+        compiledConf.postProcessProps = og
           ? (a, b) => {
               og(a, b)
-              curConf.modifyProps!(a, b)
+              curConf.postProcessProps!(a, b)
             }
-          : curConf.modifyProps
+          : curConf.postProcessProps
       }
       // find the first getElement and break here
       if (curConf.getElement) {

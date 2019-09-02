@@ -2,16 +2,16 @@ import { Box } from 'gloss'
 import React, { HTMLAttributes, RefObject, useEffect, useMemo, useState } from 'react'
 
 import { getRect, Rect, usePosition } from '../hooks/usePosition'
+import { ViewProps } from '../View/types'
+import { View } from '../View/View'
 import { Portal } from './portal'
 
 // puts an item on top of render stack, but pinned to another items location
 
-export type FloatingChromeProps = {
-  zIndex?: number
+export type FloatingChromeProps = ViewProps & {
   target: RefObject<HTMLElement>
-  style?: any
   measureKey?: number
-} & HTMLAttributes<HTMLDivElement>
+}
 
 export const FloatingChrome = (props: FloatingChromeProps) => {
   const { target, style, measureKey, zIndex = 150000000, ...rest } = props
@@ -30,7 +30,7 @@ export const FloatingChrome = (props: FloatingChromeProps) => {
   return (
     <Portal style={useMemo(() => ({ zIndex }), [zIndex])}>
       <Box style={fullScreen}>
-        <Box
+        <View
           style={{
             position: 'absolute',
             zIndex,

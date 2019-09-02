@@ -1,6 +1,6 @@
 import { GlossPropertySet } from '@o/css'
 import { MotionProps, MotionTransform } from 'framer-motion'
-import { AlphaColorProps, CSSPropertySet, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
+import { AlphaColorProps, CSSPropertySet, CSSPropertySetStrict, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
 import React from 'react'
 
 import { Size } from '../Space'
@@ -86,7 +86,7 @@ export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
 
 export type ViewProps = ViewBaseProps &
   // be sure to omit margin/padding
-  Omit<CSSPropertyStrict, 'margin' | 'padding'>
+  Omit<CSSPropertySetStrict, 'margin' | 'padding'>
 
 export type ViewThemeProps = ViewBaseProps & GlossPropertySet
 

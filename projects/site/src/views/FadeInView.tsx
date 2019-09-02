@@ -1,6 +1,5 @@
-import { Col, createContextualProps, useDebounce, useDebounceValue, useGet, useIntersectionObserver, ViewProps } from '@o/ui'
+import { Col, createContextualProps, useDebounce, useDebounceValue, useGet, useIntersectionObserver, View, ViewProps } from '@o/ui'
 import { selectDefined } from '@o/utils'
-import { motion } from 'framer-motion'
 import React, { memo, useCallback, useRef, useState } from 'react'
 
 import { useIsTiny } from '../hooks/useScreenSize'
@@ -123,8 +122,6 @@ export const FadeChild = memo(
     const styleFin = {
       display: 'flex',
       flexFlow: 'column',
-      justifyContent: 'inherit',
-      alignItems: 'inherit',
       ...style,
       ...(fullscreen && fullscreenStyle),
     }
@@ -145,14 +142,15 @@ export const FadeChild = memo(
       )
     }
     return (
-      <motion.div
+      <View
+        data-is="FadeChild"
         style={styleFin}
         animate={shown ? animate : undefined}
         transition={transition}
         {...rest}
       >
         {children}
-      </motion.div>
+      </View>
     )
   },
 )

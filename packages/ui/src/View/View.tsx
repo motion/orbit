@@ -91,7 +91,6 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
         }
         outProps.className = finalClassName
         outProps.style = style
-        console.log('now', outProps)
       }
     },
     isDOMElement: true,

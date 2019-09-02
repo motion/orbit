@@ -209,7 +209,7 @@ export default function NeckSection() {
 
           <Row space>
             <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
-              <FadeChild key={index} {...fadeAnimations.left} delay={700}>
+              <FadeChild {...fadeAnimations.left} delay={700}>
                 <Image
                   userSelect="none"
                   alignSelf="center"
@@ -219,7 +219,7 @@ export default function NeckSection() {
                 />
               </FadeChild>
               <Space size="xxl" />
-              <FadeChild key={index} delay={800}>
+              <FadeChild key={index} {...fadeAnimations.left} delay={800}>
                 <Image
                   userSelect="none"
                   opacity={0.5}
@@ -230,7 +230,12 @@ export default function NeckSection() {
                 />
               </FadeChild>
             </Flex>
-            <Flex flex={2} position="relative" margin={useScreenVal([0, '-5%'], 0, 0)}>
+            <Flex
+              flex={2}
+              alignItems="center"
+              position="relative"
+              margin={useScreenVal([0, '-5%'], 0, 0)}
+            >
               <FadeChild delay={300}>
                 <Button
                   alt="flat"
@@ -292,14 +297,21 @@ export default function NeckSection() {
                 </TiltSquircle>
               </FadeChild>
 
-              <FadeChild transition={transitions.slowNotBouncy} {...fadeAnimations.up} delay={800}>
+              <FadeChild
+                transition={transitions.slowNotBouncy}
+                {...fadeAnimations.up}
+                delay={800}
+                width={400}
+                height={300}
+                position="relative"
+              >
                 <AnimatePresence initial={false} custom={direction}>
                   <View
                     key={index}
                     custom={direction}
                     variants={variants}
                     width="100%"
-                    height={300}
+                    height="100%"
                     minWidth={350}
                     borderRadius={22}
                     background="#000"

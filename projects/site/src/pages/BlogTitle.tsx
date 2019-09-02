@@ -2,7 +2,7 @@ import { Absolute, Col } from '@o/ui'
 import React from 'react'
 import { Link } from 'react-navi'
 
-import { FadeChild } from '../views/FadeIn'
+import { FadeChild } from '../views/FadeInView'
 import { SectionContent } from '../views/SectionContent'
 import { TitleText } from '../views/TitleText'
 import { Wavy } from './HomePage/purpleWaveUrl'

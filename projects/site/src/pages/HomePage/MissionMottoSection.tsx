@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 
 import earth from '../../../public/images/earth.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
-import { FadeChild, FadeParent } from '../../views/FadeIn'
+import { FadeChild, FadeParent } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'

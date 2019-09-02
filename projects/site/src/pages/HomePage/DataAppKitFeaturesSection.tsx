@@ -5,7 +5,7 @@ import orbits from '../../../public/images/orbits.svg'
 import { useIsTiny, useScreenHeight, useScreenSize } from '../../hooks/useScreenSize'
 import { useSiteStore } from '../../SiteStore'
 import { linkProps } from '../../useLink'
-import { FadeChild, fadeLeftProps, fadeRightProps, useFadePage } from '../../views/FadeIn'
+import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -245,7 +245,10 @@ export default memo(function DataAppKitFeaturesSection() {
 })
 
 const Integration = memoIsEqualDeep(({ icon, title, index, ...props }: any) => (
-  <FadeChild {...(index % 1 == 0 ? fadeLeftProps : fadeRightProps)} delay={index * 50 + 100}>
+  <FadeChild
+    {...(index % 1 == 0 ? fadeAnimations.left : fadeAnimations.right)}
+    delay={index * 50 + 100}
+  >
     <View
       userSelect="none"
       height={150}

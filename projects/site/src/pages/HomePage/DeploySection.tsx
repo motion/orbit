@@ -5,7 +5,7 @@ import appScreenshot from '../../../public/images/app-screenshot.jpg'
 import arrow from '../../../public/images/callout-arrow.svg'
 import codeScreenshot from '../../../public/images/code-screenshot.jpg'
 import { fontProps } from '../../constants'
-import { FadeChild, fadeLeftProps, fadeRightProps, useFadePage } from '../../views/FadeIn'
+import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { ParagraphIntro } from '../../views/ParagraphIntro'
@@ -70,7 +70,7 @@ export default function ShoulderSection() {
         <Space size={60} />
         <Row space={60} margin={[0, '-180%']}>
           <Col flex={2} alignItems="flex-end" justifyContent="center">
-            <FadeChild {...fadeLeftProps} delay={450}>
+            <FadeChild {...fadeAnimations.left} delay={450}>
               <View
                 borderRadius={10}
                 elevation={3}
@@ -136,7 +136,7 @@ export default function ShoulderSection() {
           </Col>
 
           <Col flex={2} alignItems="flex-start" justifyContent="center">
-            <FadeChild {...fadeRightProps} delay={800}>
+            <FadeChild {...fadeAnimations.right} delay={800}>
               <View
                 borderRadius={10}
                 elevation={3}

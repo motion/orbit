@@ -1,7 +1,7 @@
 import { Absolute, ListItem, ListShortcuts, Popover, Portal, RoundButton, Row, SurfacePassProps } from '@o/ui'
 import React, { memo } from 'react'
 
-import { FadeChild } from '../views/FadeIn'
+import { FadeChild } from '../views/FadeInView'
 import { Key } from '../views/Key'
 import { ListSubTitle } from '../views/ListSubTitle'
 import { SearchInput } from '../views/SearchInput'

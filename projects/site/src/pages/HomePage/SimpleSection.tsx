@@ -4,7 +4,7 @@ import { Box } from 'gloss'
 import React from 'react'
 
 import { useScreenSize } from '../../hooks/useScreenSize'
-import { FadeChild, fadeLeftProps, fadeRightProps } from '../../views/FadeIn'
+import { FadeChild, fadeLeftProps, fadeRightProps } from '../../views/FadeInView'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 

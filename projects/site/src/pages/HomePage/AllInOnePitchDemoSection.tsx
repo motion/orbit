@@ -8,7 +8,7 @@ import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { linkProps } from '../../useLink'
-import { FadeChild, fadeLeftProps, fadeRightProps, fadeUpProps, slowConfigLessBounce, useFadePage } from '../../views/FadeIn'
+import { fadeAnimations, FadeChild, transitions, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -283,7 +283,7 @@ export default function NeckSection() {
           {screen !== 'small' && (
             <Row space>
               <SubSection maxWidth="33%">
-                <FadeChild {...fadeLeftProps} delay={400}>
+                <FadeChild {...fadeAnimations.left} delay={400}>
                   <PillButtonDark>Import</PillButtonDark>
                   <Space />
                   <CenterText>
@@ -303,7 +303,7 @@ export default function NeckSection() {
                 </FadeChild>
               </SubSection>
               <SubSection maxWidth="33%">
-                <FadeChild {...fadeRightProps} delay={600}>
+                <FadeChild {...fadeAnimations.right} delay={600}>
                   <PillButtonDark>Export</PillButtonDark>
                   <Space />
                   <CenterText>
@@ -320,7 +320,7 @@ export default function NeckSection() {
           <Row space>
             <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
               <animated.div style={springFast}>
-                <FadeChild {...fadeLeftProps} delay={700}>
+                <FadeChild {...fadeAnimations.left} delay={700}>
                   <Image
                     userSelect="none"
                     alignSelf="center"
@@ -375,7 +375,7 @@ export default function NeckSection() {
               </FadeChild>
 
               <animated.div style={{ ...springSlowest, margin: 'auto' }}>
-                <FadeChild config={slowConfigLessBounce} delay={500}>
+                <FadeChild transition={transitions.slowNotBouncy} delay={500}>
                   <TiltSquircle
                     {...linkProps(elements[cur].link)}
                     tagName="div"
@@ -413,7 +413,11 @@ export default function NeckSection() {
                   zIndex: -1,
                 }}
               >
-                <FadeChild config={slowConfigLessBounce} {...fadeUpProps} delay={800}>
+                <FadeChild
+                  transition={transitions.slowNotBouncy}
+                  {...fadeAnimations.up}
+                  delay={800}
+                >
                   <View
                     width="100%"
                     height={300}
@@ -437,7 +441,7 @@ export default function NeckSection() {
             </Flex>
 
             <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
-              <FadeChild {...fadeRightProps} delay={400}>
+              <FadeChild {...fadeAnimations.right} delay={400}>
                 <animated.div style={springSlowest}>
                   <Image
                     userSelect="none"

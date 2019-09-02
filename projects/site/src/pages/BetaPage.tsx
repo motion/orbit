@@ -3,7 +3,7 @@ import { mount, route } from 'navi'
 import React from 'react'
 
 import { Header } from '../Header'
-import { FadeChild, FadeParent } from '../views/FadeIn'
+import { FadeChild, FadeParent } from '../views/FadeInView'
 import { SectionContent } from '../views/SectionContent'
 import { EarlyAccessContent } from './HomePage/EarlyAccessContent'
 import { Footer } from './HomePage/Footer'

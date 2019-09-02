@@ -69,9 +69,11 @@ export const HomePage = memo(() => {
       <LoadingPage />
       <Header />
       <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
-        <Page>
-          <HeadSection />
-        </Page>
+        {false && (
+          <Page>
+            <HeadSection />
+          </Page>
+        )}
         <Page>
           <AllInOnePitchDemoSection />
         </Page>

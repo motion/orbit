@@ -4,7 +4,7 @@ import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
-import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeIn'
+import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeInView'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 import { useTextFit } from '../../views/useTextFit'

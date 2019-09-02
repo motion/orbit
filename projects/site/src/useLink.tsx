@@ -29,7 +29,7 @@ const createPreloadLink = memoize(href => () => {
 })
 
 export const useLink = (href: string) => {
-  const header = HeaderContext.useProps()
+  const header = HeaderContext.useStore()
   const isActive = useIsActiveRoute(href)
   return {
     ...linkProps(href, { header, isActive }),

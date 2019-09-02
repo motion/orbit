@@ -1,6 +1,10 @@
-import { createContextualProps } from '@o/ui'
+import { createStoreContext } from '@o/kit'
 
-export const HeaderContext = createContextualProps<{
-  setShown?: Function
-  shown?: boolean
-}>()
+export const HeaderContext = createStoreContext(
+  class HeaderStore {
+    shown = true
+    setShown(next: boolean) {
+      this.shown = next
+    }
+  },
+)

@@ -6,7 +6,7 @@ import { HeaderContext } from './HeaderContext'
 import { Link } from './LinkProps'
 
 export const HeaderLink = ({ delay, children, ...props }: any) => {
-  const header = HeaderContext.useProps()
+  const header = HeaderContext.useStore()
   const leaving = header && header.shown === false
   return (
     <Link width="33%" fontWeight={400} fontSize={14} {...props}>

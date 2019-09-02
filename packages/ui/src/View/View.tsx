@@ -71,7 +71,6 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
           for (const name of outProps.className.split(' ')) {
             if (tracker.has(name)) {
               const rules = tracker.get(name).rules
-              console.log('name is', name, rules, tracker)
               Object.assign(style, rules)
             } else {
               finalClassName += ` ${name}`

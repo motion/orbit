@@ -55,6 +55,7 @@
 		"webpack-dev-server": "^3.8.0",
 		"webpack-merge": "^4.2.2",
 		"webpack-notifier": "1.8.0",
+		"webpack-common-shake": "^2.1.0",
 		"workerize-loader": "1.1.0"
 	},
 	"gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"

@@ -8,6 +8,8 @@ import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
 
+// reduced a 5mb bundle by 0.01mb...
+// const ShakePlugin = require('webpack-common-shake').Plugin
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { BundleStatsWebpackPlugin } = require('bundle-stats')
 
@@ -433,6 +435,8 @@ async function makeConfig() {
       !isProd && new webpack.NamedModulesPlugin(),
 
       isProd && new DuplicatePackageCheckerPlugin(),
+
+      // isProd && new ShakePlugin(),
 
       new CircularDependencyPlugin({
         // failOnError: true,

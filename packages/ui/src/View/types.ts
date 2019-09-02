@@ -1,5 +1,5 @@
 import { GlossPropertySet } from '@o/css'
-import { MotionProps } from 'framer-motion'
+import { MotionProps, MotionTransform } from 'framer-motion'
 import { AlphaColorProps, CSSPropertySet, CSSPropertySetStrict, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
 import React from 'react'
 import { SpringValue } from 'react-spring'
@@ -83,7 +83,8 @@ export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
   MarginProps &
   PaddingProps &
   /** Accept the motion props */
-  MotionProps & {
+  MotionProps &
+  MotionTransform & {
     // could make this better done in terms of type flow, its for <Input labels...
     label?: React.ReactNode
   }

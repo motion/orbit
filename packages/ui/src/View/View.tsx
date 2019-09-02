@@ -1,4 +1,4 @@
-import { GlossPropertySet } from '@o/css'
+import { GlossPropertySet, validCSSAttr } from '@o/css'
 import { AnimatedInterpolation, AnimatedValue } from '@react-spring/animated'
 import { motion } from 'framer-motion'
 import { Base, gloss } from 'gloss'
@@ -9,19 +9,67 @@ import { getSizableValue } from './getSizableValue'
 import { usePadding } from './PaddedView'
 import { SizesObject, ViewProps, ViewThemeProps } from './types'
 
+// includes motion styles too
+const motionProps = {
+  x: true,
+  y: true,
+  z: true,
+  translateX: true,
+  translateY: true,
+  translateZ: true,
+  rotate: true,
+  rotateX: true,
+  rotateY: true,
+  rotateZ: true,
+  scale: true,
+  scaleX: true,
+  scaleY: true,
+  scaleZ: true,
+  skew: true,
+  skewX: true,
+  skewY: true,
+  originX: true,
+  originY: true,
+  originZ: true,
+  perspective: true,
+}
+const validStyleAttr = {
+  ...validCSSAttr,
+  ...motionProps,
+}
+
 // regular view
 export const View = gloss<ViewProps, ViewThemeProps>(Base, {
   display: 'flex',
 })
   .theme(getMargin, usePadding, getElevation)
   .withConfig({
-    // postProcessProps(curProps, nextProps) {
-    //   if (!curProps.animate) return
-    //   const style = getAnimatedProps(curProps)
-    //   if (props) {
-    //     Object.assign(nextProps, props)
-    //   }
-    // },
+    postProcessProps(inProps, outProps, tracker) {
+      if (inProps.animate) {
+        let style = inProps.style || {}
+        let finalClassName = inProps.className
+        // parse style back from classname to style tag for motion
+        if (outProps.className) {
+          finalClassName = ''
+          for (const name of outProps.className.split(' ')) {
+            if (tracker.has(name)) {
+              Object.assign(style, tracker.get(name).rules)
+            } else {
+              finalClassName += ` ${name}`
+            }
+          }
+
+          for (const key in inProps) {
+            if (motionProps[key]) {
+              style[key] = inProps[key]
+              delete outProps[key]
+            }
+          }
+        }
+        outProps.className = finalClassName
+        outProps.style = style
+      }
+    },
     isDOMElement: true,
     getElement(props) {
       // todo make it not require animate

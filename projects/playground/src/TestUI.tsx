@@ -23,9 +23,7 @@ export function TestUIParallax() {
         <Parallax.View
           speed={0.5}
           offset={0.5}
-          style={{
-            x: 100,
-          }}
+          x={100}
           position="absolute"
           background="yellow"
           top={0}
@@ -127,9 +125,7 @@ function ParallaxView({
     }
   }, [shouldSwap])
 
-  return (
-    <View nodeRef={ref} {...viewProps} animate style={{ ...viewProps.style, [direction]: val }} />
-  )
+  return <View nodeRef={ref} {...viewProps} animate {...{ [direction]: val }} />
 }
 
 const Parallax = {

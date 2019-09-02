@@ -8,6 +8,9 @@ import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
 import { ThemeSelect } from './theme/Theme'
 
+// so you can reference in postProcessProps
+export { StyleTracker } from './stylesheet/gc'
+
 export const baseIgnoreAttrs = {
   ...validCSSAttr,
   width: false,
@@ -40,7 +43,7 @@ export type GlossConfig<Props> = {
   displayName?: string
   ignoreAttrs?: { [key: string]: boolean }
   defaultProps?: Partial<Props>
-  postProcessProps?: (curProps: Props, nextProps: any) => any
+  postProcessProps?: (curProps: Props, nextProps: any, tracker: StyleTracker) => any
   getElement?: (props: Props) => any
   isDOMElement?: boolean
 }
@@ -192,12 +195,12 @@ export function gloss<Props = any, ThemeProps = Props>(
     let element = typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
 
     // helper for element
-    const getEl = config && config.getElement
+    const getEl = config!.getElement
     if (getEl) {
       element = getEl(props)
     }
 
-    const isDOMElement = typeof element === 'string' || (config && config.isDOMElement)
+    const isDOMElement = typeof element === 'string' || config!.isDOMElement
 
     // set up final props with filtering for various attributes
     let finalProps: any = {}
@@ -227,9 +230,9 @@ export function gloss<Props = any, ThemeProps = Props>(
     finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
 
     // hook: setting your own props
-    const postProcessProps = config && config.postProcessProps
+    const postProcessProps = config!.postProcessProps
     if (postProcessProps) {
-      postProcessProps(props, finalProps)
+      postProcessProps(props, finalProps, tracker)
     }
 
     return createElement(element, finalProps, props.children)
@@ -324,7 +327,7 @@ function addStyles(
     if (!rules) continue
 
     // add the stylesheets and classNames
-    // TODO this could do a simple "diff" so that fast-changing styles only change the "changing" props
+    // TODO could do a simple "diff" so that fast-changing styles only change the "changing" props
     // it would likely help things like when you animate based on mousemove, may be slower in default case
     const className = addRules(displayName, rules, key, tagName, moreSpecific)
     classNames = classNames || []
@@ -563,12 +566,14 @@ function getCompiledConfig(
       if (curConf.postProcessProps) {
         // merge the postProcessProps
         const og = compiledConf.postProcessProps
-        compiledConf.postProcessProps = og
-          ? (a, b) => {
-              og(a, b)
-              curConf.postProcessProps!(a, b)
-            }
-          : curConf.postProcessProps
+        if (curConf.postProcessProps !== og) {
+          compiledConf.postProcessProps = og
+            ? (a, b) => {
+                og(a, b, tracker)
+                curConf.postProcessProps!(a, b, tracker)
+              }
+            : curConf.postProcessProps
+        }
       }
       // find the first getElement and break here
       if (curConf.getElement) {

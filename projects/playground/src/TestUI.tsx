@@ -1,5 +1,5 @@
-import { createStoreContext } from '@o/kit'
-import { Button, CardSimple, Col, Row, usePosition, View, ViewProps } from '@o/ui'
+import { createStoreContext, useForceUpdate } from '@o/kit'
+import { Button, CardSimple, Col, Rect, Row, usePosition, View, ViewProps } from '@o/ui'
 import { motion, useMotionValue, useSpring, useTransform, useViewportScroll } from 'framer-motion'
 import _ from 'lodash'
 import * as React from 'react'
@@ -21,8 +21,8 @@ export function TestUIParallax() {
     <>
       <Parallax.Container height="100vh" background="orange">
         <Parallax.View
-          offset={1.5}
-          speed={0.5}
+          speed={2}
+          offset={0.5}
           style={{
             x: 100,
           }}
@@ -50,9 +50,19 @@ export function TestUIParallax() {
 }
 
 const ParallaxContainerStore = createStoreContext(
-  class {
+  class ParallaxContainerStore {
+    key = 0
     top = 0
     left = 0
+    height = 0
+    width = 0
+    update(pos: Rect) {
+      this.top = pos.top
+      this.left = pos.left
+      this.height = pos.height
+      this.width = pos.width
+      this.key = Math.random()
+    }
   },
 )
 
@@ -63,8 +73,7 @@ function ParallaxContainer(props: ViewProps) {
     ref,
     onChange(pos) {
       if (!pos) return
-      store.top = pos.top
-      store.left = pos.left
+      store.update(pos)
     },
   })
   return (
@@ -81,15 +90,33 @@ function ParallaxView({
   ...viewProps
 }: Omit<ViewProps, 'direction'> & { offset?: number; speed?: number; direction?: 'x' | 'y' }) {
   const store = ParallaxContainerStore.useStore()
+  const forceUpdate = useForceUpdate()
+  const lastKey = React.useRef(store.key)
+  const emptyMotion = useMotionValue(0)
   const { scrollY } = useViewportScroll()
-  const key = direction === 'y' ? 'top' : 'left'
-  const motionOffset = useTransform(scrollY, [store[key], store[key] + 1], [0, -(1 + offset)], {
+  const dirVal = store[direction === 'y' ? 'top' : 'left']
+
+  let shouldSwap = false
+  if (lastKey.current !== store.key) {
+    shouldSwap = true
+    lastKey.current = store.key
+  }
+
+  let val = useTransform(shouldSwap ? emptyMotion : scrollY, [dirVal, dirVal + 1], [0, -1], {
     clamp: false,
   })
-  const pos = useTransform(motionOffset, [0, -(1 + offset)], [0, speed], {
+  val = useTransform(val, [0, -1], [0, speed], {
     clamp: false,
   })
-  return <View {...viewProps} animate style={{ [direction]: pos }} />
+  val = useTransform(val, x => x + offset * store[direction === 'y' ? 'height' : 'width'])
+
+  React.useLayoutEffect(() => {
+    if (shouldSwap) {
+      forceUpdate()
+    }
+  }, [shouldSwap])
+
+  return <View {...viewProps} animate style={{ ...viewProps.style, [direction]: val }} />
 }
 
 const Parallax = {

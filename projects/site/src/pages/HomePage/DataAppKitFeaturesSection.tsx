@@ -35,16 +35,15 @@ export default memo(function DataAppKitFeaturesSection() {
           <Page.BackgroundParallax
             speed={-0.05}
             zIndex={-2}
-            offset={-0.85}
+            offset={-0.1}
             scale={0.5}
             transformOrigin="bottom center"
           >
-            <FadeChild delay={300} style={{ width: '100%', height: '100%' }}>
+            <FadeChild delay={300} height="100%" width="100%">
               <FullScreen
                 left={-100}
                 right={-100}
-                top="auto"
-                height="50%"
+                maxHeight={450}
                 className="orbitals"
                 backgroundImage={`url(${orbits})`}
                 backgroundPosition="top center"
@@ -67,7 +66,7 @@ export default memo(function DataAppKitFeaturesSection() {
               </FadeChild>
               <FadeChild delay={100}>
                 <TitleText textAlign="center" size="xl">
-                  IFFT, meet custom apps.
+                  An ecosystem of data plugins.
                 </TitleText>
               </FadeChild>
               <TitleTextSub>
@@ -150,14 +149,15 @@ export default memo(function DataAppKitFeaturesSection() {
             }
           />
 
-          <View flex={1} />
+          <View flex={1} maxHeight={50} />
+
           <Grid
             nodeRef={Fade.ref}
             alignItems="start"
             space={screen === 'small' ? 30 : '20% 15%'}
             itemMinWidth={280}
             maxWidth={800}
-            margin="auto"
+            margin={[0, 'auto']}
           >
             <PassProps
               getChildProps={(_, index) => ({

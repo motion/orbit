@@ -21,17 +21,17 @@ export const transitions = {
   slowConfig: {
     type: 'spring',
     damping: 20,
-    stiffness: 150,
+    stiffness: 140,
   },
   normal: {
     type: 'spring',
-    damping: 10,
-    stiffness: 100,
+    damping: 20,
+    stiffness: 180,
   },
   fast: {
     type: 'spring',
-    damping: 8,
-    stiffness: 120,
+    damping: 20,
+    stiffness: 250,
   },
   fastStatic: {
     duration: 30,

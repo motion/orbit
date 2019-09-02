@@ -9,8 +9,7 @@ import { getSizableValue } from './getSizableValue'
 import { usePadding } from './PaddedView'
 import { SizesObject, ViewProps, ViewThemeProps } from './types'
 
-// includes motion styles too
-export const motionProps = {
+export const motionStyleProps = {
   x: true,
   y: true,
   z: true,
@@ -32,6 +31,25 @@ export const motionProps = {
   originY: true,
   originZ: true,
   perspective: true,
+}
+
+const motionExtraProps = {
+  animate: true,
+  exit: true,
+  drag: true,
+  dragConstraints: true,
+  dragElastic: true,
+  onDragEnd: true,
+  variants: true,
+  custom: true,
+  initial: true,
+  transition: true,
+}
+
+// includes motion styles too
+export const motionProps = {
+  ...motionStyleProps,
+  ...motionExtraProps,
 }
 const validStyleAttr = {
   ...validCSSAttr,
@@ -60,14 +78,21 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
           }
 
           for (const key in inProps) {
-            if (motionProps[key]) {
+            if (motionStyleProps[key]) {
               style[key] = inProps[key]
               delete outProps[key]
+            }
+            if (motionExtraProps[key]) {
+              if (key === 'animate' && outProps[key] === true) {
+                continue
+              }
+              outProps[key] = inProps[key]
             }
           }
         }
         outProps.className = finalClassName
         outProps.style = style
+        console.log('now', outProps)
       }
     },
     isDOMElement: true,

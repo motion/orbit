@@ -106,7 +106,7 @@ const elements = [
 
 const variants = {
   enter: (direction: number) => ({
-    x: direction < 0 ? 1000 : -1000,
+    x: direction < 0 ? 800 : -800,
     opacity: 0,
   }),
   center: {
@@ -116,7 +116,7 @@ const variants = {
   },
   exit: (direction: number) => ({
     zIndex: 0,
-    x: direction < 0 ? 1000 : -1000,
+    x: direction < 0 ? 800 : -800,
     opacity: 0,
   }),
 }
@@ -147,8 +147,8 @@ export default function NeckSection() {
   const index = animation.wrap(0, elements.length, page)
 
   return (
-    <Fade.FadeProvide>
-      <AnimatePresence initial={false} custom={direction}>
+    <>
+      <Fade.FadeProvide>
         <SpacedPageContent
           nodeRef={Fade.ref}
           header={
@@ -303,45 +303,48 @@ export default function NeckSection() {
                   {...fadeAnimations.up}
                   delay={800}
                 >
-                  <View
-                    key={index}
-                    custom={direction}
-                    variants={variants}
-                    width="100%"
-                    height={300}
-                    minWidth={350}
-                    borderRadius={22}
-                    background="#000"
-                    boxShadow={[[0, 10, 30, [0, 0, 0]]]}
-                    overflow="hidden"
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{
-                      x: { type: 'spring', stiffness: 300, damping: 200 },
-                      opacity: { duration: 0.2 },
-                    }}
-                    drag="x"
-                    dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={1}
-                    onDragEnd={(e, { offset, velocity }) => {
-                      const swipe = swipePower(offset.x, velocity.x)
-                      if (swipe < -swipeConfidenceThreshold) {
-                        paginate(1)
-                      } else if (swipe > swipeConfidenceThreshold) {
-                        paginate(-1)
-                      }
-                    }}
-                  >
-                    <Image
-                      className="carousel-image"
-                      userSelect="none"
-                      src={elements[index].image}
+                  <AnimatePresence initial={false} custom={direction}>
+                    <View
+                      key={index}
+                      custom={direction}
+                      variants={variants}
                       width="100%"
-                      height="auto"
-                      opacity={0.45}
-                    />
-                  </View>
+                      height={300}
+                      minWidth={350}
+                      borderRadius={22}
+                      background="#000"
+                      boxShadow={[[0, 10, 30, [0, 0, 0]]]}
+                      overflow="hidden"
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{
+                        x: { type: 'spring', stiffness: 100, damping: 200 },
+                        opacity: { duration: 0.2 },
+                      }}
+                      drag="x"
+                      dragConstraints={{ left: 0, right: 0 }}
+                      dragElastic={1}
+                      position="absolute"
+                      onDragEnd={(e, { offset, velocity }) => {
+                        const swipe = swipePower(offset.x, velocity.x)
+                        if (swipe < -swipeConfidenceThreshold) {
+                          paginate(1)
+                        } else if (swipe > swipeConfidenceThreshold) {
+                          paginate(-1)
+                        }
+                      }}
+                    >
+                      <Image
+                        className="carousel-image"
+                        userSelect="none"
+                        src={elements[index].image}
+                        width="100%"
+                        height="auto"
+                        opacity={0.45}
+                      />
+                    </View>
+                  </AnimatePresence>
                 </FadeChild>
               </Flex>
 
@@ -383,27 +386,27 @@ export default function NeckSection() {
             </Row>
           </Col>
         </SpacedPageContent>
-      </AnimatePresence>
 
-      <Page.BackgroundParallax
-        speed={0.4}
-        offset={0.45}
-        x="-35%"
-        scale={1.5}
-        className="glow-one"
-        opacity={0.22}
-        background="radial-gradient(circle closest-side, #F64097, transparent)"
-      />
+        <Page.BackgroundParallax
+          speed={0.4}
+          offset={0.45}
+          x="-35%"
+          scale={1.5}
+          className="glow-one"
+          opacity={0.22}
+          background="radial-gradient(circle closest-side, #F64097, transparent)"
+        />
 
-      <Page.BackgroundParallax
-        speed={0.4}
-        offset={0.3}
-        x="40%"
-        scale={1.68}
-        className="glow-two"
-        opacity={0.25}
-        background="radial-gradient(circle closest-side, #00E5FF, transparent)"
-      />
-    </Fade.FadeProvide>
+        <Page.BackgroundParallax
+          speed={0.4}
+          offset={0.3}
+          x="40%"
+          scale={1.68}
+          className="glow-two"
+          opacity={0.25}
+          background="radial-gradient(circle closest-side, #00E5FF, transparent)"
+        />
+      </Fade.FadeProvide>
+    </>
   )
 }

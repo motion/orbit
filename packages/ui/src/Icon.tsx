@@ -7,7 +7,6 @@ import React, { createContext, forwardRef, memo, useContext } from 'react'
 
 import { Config } from './helpers/configureUI'
 import { useScale } from './Scale'
-import { SVG } from './SVG'
 import { Tooltip } from './Tooltip'
 import { ViewProps } from './View/types'
 import { View } from './View/View'
@@ -107,8 +106,7 @@ export const PlainIcon = ({
         opacity={opacity}
         {...props}
       >
-        <SVG
-          svg={svg}
+        <svg
           width={`${size}px`}
           height={`${size}px`}
           style={{
@@ -120,9 +118,9 @@ export const PlainIcon = ({
             height: size,
             ...style,
           }}
-          cleanup={[ignoreColor ? null : 'fill', 'title', 'desc', 'width', 'height'].filter(
-            Boolean,
-          )}
+          dangerouselySetInnerHTML={{
+            __html: svg,
+          }}
         />
       </View>
     )

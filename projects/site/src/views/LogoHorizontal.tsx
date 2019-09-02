@@ -1,5 +1,5 @@
 import orbit from '!raw-loader!../../public/images/logomark-solid.svg'
-import { SVG, View, ViewProps } from '@o/ui'
+import { View, ViewProps } from '@o/ui'
 import { gloss, useTheme } from 'gloss'
 import React, { memo } from 'react'
 
@@ -30,10 +30,12 @@ export const LogoHorizontal = memo((props: ViewProps & { slim?: boolean }) => {
       {...useLink('/')}
       {...props}
     >
-      <SVG
+      <svg
         width={`${w}px`}
         height={`${h}px`}
-        svg={orbit.replace('fill="#000000"', 'fill="currentColor"')}
+        dangerouslySetInnerHTML={{
+          __html: orbit.replace('fill="#000000"', 'fill="currentColor"'),
+        }}
       />
     </View>
   )

@@ -1,5 +1,5 @@
 import words from '!raw-loader!../../public/images/logomark-solid.svg'
-import { Space, SVG, View, ViewProps } from '@o/ui'
+import { Space, View, ViewProps } from '@o/ui'
 import { gloss, useTheme } from 'gloss'
 import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'
@@ -87,7 +87,7 @@ const cleanBrand = wordsLines.join('')
 export const BrandWords = memo(({ fill, ...props }: any) => {
   const theme = useTheme()
   const f = fill || theme.color
-  return <SVG svg={cleanBrand} cleanup fill={f} {...props} />
+  return <svg cleanup fill={f} {...props} dangerouslySetInnerHTML={{ __html: cleanBrand }} />
 })
 
 const Image = gloss(View)

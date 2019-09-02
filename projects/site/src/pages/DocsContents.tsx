@@ -26,7 +26,8 @@ export const DocsContents = memo(
       <>
         <SurfacePassProps
           alt="bordered"
-          size={2}
+          size={1.5}
+          sizeFont={0.75}
           flex={1}
           ellipse
           cursor="pointer"

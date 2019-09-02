@@ -9,7 +9,6 @@ export const ContentSection = (props: ColProps) => {
       padding={['xxxl', 'sm']}
       width="100%"
       maxWidth={760}
-      margin="auto"
       fontSize={16}
       lineHeight={28}
       color={theme.color.setAlpha(0.85)}

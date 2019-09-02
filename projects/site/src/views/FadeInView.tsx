@@ -134,8 +134,11 @@ export const FadeChild = memo(
           style={{
             display: 'flex',
             flexFlow: 'column',
-            ...(typeof style !== 'function' ? style : {}),
+            justifyContent: 'inherit',
+            alignItems: 'inherit',
+            ...style,
           }}
+          {...rest}
         >
           {children}
         </div>

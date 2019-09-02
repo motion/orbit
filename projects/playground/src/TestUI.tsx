@@ -1,5 +1,5 @@
 import { createStoreContext, useForceUpdate } from '@o/kit'
-import { Button, CardSimple, Col, Rect, Row, usePosition, View, ViewProps } from '@o/ui'
+import { Button, CardSimple, Col, Rect, Row, useNodeSize, usePosition, View, ViewProps } from '@o/ui'
 import { motion, useMotionValue, useSpring, useTransform, useViewportScroll } from 'framer-motion'
 import _ from 'lodash'
 import * as React from 'react'
@@ -21,7 +21,7 @@ export function TestUIParallax() {
     <>
       <Parallax.Container height="100vh" background="orange">
         <Parallax.View
-          speed={2}
+          speed={0.5}
           offset={0.5}
           style={{
             x: 100,
@@ -89,18 +89,26 @@ function ParallaxView({
   direction = 'y',
   ...viewProps
 }: Omit<ViewProps, 'direction'> & { offset?: number; speed?: number; direction?: 'x' | 'y' }) {
+  const ref = React.useRef(null)
   const store = ParallaxContainerStore.useStore()
   const forceUpdate = useForceUpdate()
-  const lastKey = React.useRef(store.key)
+  const nodeSize = useNodeSize({
+    ref,
+  })
+  const getKey = () => `${store.key}${nodeSize.height}${nodeSize.width}`
+  const lastKey = React.useRef(getKey())
   const emptyMotion = useMotionValue(0)
   const { scrollY } = useViewportScroll()
   const dirVal = store[direction === 'y' ? 'top' : 'left']
 
   let shouldSwap = false
-  if (lastKey.current !== store.key) {
+  const key = getKey()
+  if (lastKey.current !== key) {
     shouldSwap = true
-    lastKey.current = store.key
+    lastKey.current = key
   }
+
+  const pctHeight = (store.height - nodeSize.height) / store.height
 
   let val = useTransform(shouldSwap ? emptyMotion : scrollY, [dirVal, dirVal + 1], [0, -1], {
     clamp: false,
@@ -108,7 +116,10 @@ function ParallaxView({
   val = useTransform(val, [0, -1], [0, speed], {
     clamp: false,
   })
-  val = useTransform(val, x => x + offset * store[direction === 'y' ? 'height' : 'width'])
+  val = useTransform(
+    val,
+    x => x + offset * pctHeight * store[direction === 'y' ? 'height' : 'width'],
+  )
 
   React.useLayoutEffect(() => {
     if (shouldSwap) {
@@ -116,7 +127,9 @@ function ParallaxView({
     }
   }, [shouldSwap])
 
-  return <View {...viewProps} animate style={{ ...viewProps.style, [direction]: val }} />
+  return (
+    <View nodeRef={ref} {...viewProps} animate style={{ ...viewProps.style, [direction]: val }} />
+  )
 }
 
 const Parallax = {

@@ -1,8 +1,7 @@
 import { GlossPropertySet } from '@o/css'
 import { MotionProps, MotionTransform } from 'framer-motion'
-import { AlphaColorProps, CSSPropertySet, CSSPropertySetStrict, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
+import { AlphaColorProps, CSSPropertySet, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
 import React from 'react'
-import { SpringValue } from 'react-spring'
 
 import { Size } from '../Space'
 import { CommonViewProps } from './CommonViewProps'
@@ -69,12 +68,6 @@ type MotionCompatCommonProps = Omit<
   'onDrag' | 'onDragStart' | 'onDragEnd' | 'style'
 >
 
-// BUT WERE CHANGING IT TO ACCEPT ANIMATED VALUES FOR ANY CSS PROPERTY
-// WE DONT PASS THIS TO THEMES
-type CSSPropertyStrictWithAnimation = {
-  [P in keyof CSSPropertySetStrict]?: CSSPropertySetStrict[P] | SpringValue
-}
-
 export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
   PseudoStyleProps &
   TextSizeProps &
@@ -93,7 +86,7 @@ export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
 
 export type ViewProps = ViewBaseProps &
   // be sure to omit margin/padding
-  Omit<CSSPropertyStrictWithAnimation, 'margin' | 'padding'>
+  Omit<CSSPropertyStrict, 'margin' | 'padding'>
 
 export type ViewThemeProps = ViewBaseProps & GlossPropertySet
 

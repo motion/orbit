@@ -147,266 +147,255 @@ export default function NeckSection() {
   const index = animation.wrap(0, elements.length, page)
 
   return (
-    <>
-      <Fade.FadeProvide>
-        <SpacedPageContent
-          nodeRef={Fade.ref}
-          header={
-            <>
-              <FadeChild delay={0}>
-                <PillButton>How</PillButton>
+    <Fade.FadeProvide>
+      <SpacedPageContent
+        nodeRef={Fade.ref}
+        header={
+          <>
+            <FadeChild delay={0}>
+              <PillButton>How</PillButton>
+            </FadeChild>
+            <FadeChild delay={200}>
+              <TitleText size={useScreenVal('lg', 'xl', 'xxl')}>All together</TitleText>
+            </FadeChild>
+            <TitleTextSub nodeRef={ref as any} margin="auto" minWidth={320}>
+              <FadeChild style={screen === 'small' ? { display: 'inline' } : null} delay={300}>
+                &nbsp;Orbit gives you everything you need to create custom apps.&nbsp;
               </FadeChild>
-              <FadeChild delay={200}>
-                <TitleText size={useScreenVal('lg', 'xl', 'xxl')}>All together</TitleText>
+              <FadeChild style={screen === 'small' ? { display: 'inline' } : null} delay={450}>
+                With data sources, views and more, you control the code.
               </FadeChild>
-              <TitleTextSub nodeRef={ref as any} margin="auto" minWidth={320}>
-                <FadeChild style={screen === 'small' ? { display: 'inline' } : null} delay={300}>
-                  &nbsp;Orbit gives you everything you need to create custom apps.&nbsp;
-                </FadeChild>
-                <FadeChild style={screen === 'small' ? { display: 'inline' } : null} delay={450}>
-                  With data sources, views and more, you control the code.
-                </FadeChild>
-              </TitleTextSub>
-            </>
-          }
-        >
-          <Col maxWidth="100%" margin={[0, 'auto', 0, 0]}>
-            {screen !== 'small' && (
-              <Row space>
-                <SubSection maxWidth="33%">
-                  <FadeChild {...fadeAnimations.left} delay={400}>
-                    <PillButtonDark>Import</PillButtonDark>
-                    <Space />
-                    <CenterText>
-                      Plug in the <Inline color="#E01C5A">{elements[index].beforeName}</Inline> data
-                      app with a click.
-                    </CenterText>
-                  </FadeChild>
-                </SubSection>
-                <SubSection flex={2} padding={[true, 'xxl']}>
-                  <FadeChild delay={500}>
-                    <PillButtonDark>Display</PillButtonDark>
-                    <Space />
-                    <CenterText maxWidth={400} margin={[0, 'auto']}>
-                      Develop using powerful, simple views built on React and Typescript, all
-                      without setting up a build environment.
-                    </CenterText>
-                  </FadeChild>
-                </SubSection>
-                <SubSection maxWidth="33%">
-                  <FadeChild {...fadeAnimations.right} delay={600}>
-                    <PillButtonDark>Export</PillButtonDark>
-                    <Space />
-                    <CenterText>
-                      Install <Inline color="#F14336">{elements[index].afterName}</Inline>, use it's
-                      simple API to send your results out.
-                    </CenterText>
-                  </FadeChild>
-                </SubSection>
-              </Row>
-            )}
-
-            <Space />
-
+            </TitleTextSub>
+          </>
+        }
+      >
+        <Col maxWidth="100%" margin={[0, 'auto', 0, 0]}>
+          {screen !== 'small' && (
             <Row space>
-              <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
-                <FadeChild {...fadeAnimations.left} delay={700}>
-                  <Image
-                    key={index}
-                    custom={direction}
-                    variants={variants}
-                    userSelect="none"
-                    alignSelf="center"
-                    width={80}
-                    height={80}
-                    src={elements[index].iconBefore}
-                  />
+              <SubSection maxWidth="33%">
+                <FadeChild {...fadeAnimations.left} delay={400}>
+                  <PillButtonDark>Import</PillButtonDark>
+                  <Space />
+                  <CenterText>
+                    Plug in the <Inline color="#E01C5A">{elements[index].beforeName}</Inline> data
+                    app with a click.
+                  </CenterText>
                 </FadeChild>
-                <Space size="xxl" />
-                <View key={index} custom={direction} variants={variants}>
-                  <FadeChild delay={800}>
-                    <Image
-                      userSelect="none"
-                      opacity={0.5}
-                      src={require('../../../public/images/curve-arrow.svg')}
-                      transform={{
-                        scale: 0.8,
-                      }}
-                    />
-                  </FadeChild>
-                </View>
-              </Flex>
-              <Flex flex={2} position="relative" margin={useScreenVal([0, '-5%'], 0, 0)}>
-                <FadeChild delay={300}>
-                  <Button
-                    alt="flat"
-                    cursor="pointer"
-                    size={1.9}
-                    iconSize={20}
-                    circular
-                    zIndex={100}
-                    position="absolute"
-                    top={-4}
-                    left={5}
-                    icon="chevron-left"
-                    onClick={() => paginate(-1)}
-                  />
-                  <Button
-                    alt="flat"
-                    cursor="pointer"
-                    size={1.9}
-                    iconSize={20}
-                    circular
-                    zIndex={100}
-                    position="absolute"
-                    top={-4}
-                    right={5}
-                    icon="chevron-right"
-                    onClick={() => paginate(1)}
-                  />
+              </SubSection>
+              <SubSection flex={2} padding={[true, 'xxl']}>
+                <FadeChild delay={500}>
+                  <PillButtonDark>Display</PillButtonDark>
+                  <Space />
+                  <CenterText maxWidth={400} margin={[0, 'auto']}>
+                    Develop using powerful, simple views built on React and Typescript, all without
+                    setting up a build environment.
+                  </CenterText>
                 </FadeChild>
+              </SubSection>
+              <SubSection maxWidth="33%">
+                <FadeChild {...fadeAnimations.right} delay={600}>
+                  <PillButtonDark>Export</PillButtonDark>
+                  <Space />
+                  <CenterText>
+                    Install <Inline color="#F14336">{elements[index].afterName}</Inline>, use it's
+                    simple API to send your results out.
+                  </CenterText>
+                </FadeChild>
+              </SubSection>
+            </Row>
+          )}
 
-                <FadeChild transition={transitions.slowNotBouncy} delay={500}>
-                  <TiltSquircle
-                    {...linkProps(elements[index].link)}
-                    tagName="div"
-                    width={280}
-                    height={280}
-                    background={`linear-gradient(125deg, #78009F, #4C1966)`}
-                    boxShadow="0 20px 50px rgba(0,0,0,0.6)"
-                    padding={30}
-                    cursor="pointer"
-                    key={index}
-                    custom={direction}
-                    variants={variants}
-                  >
-                    <TitleText
-                      fontSize={18}
-                      margin={[0, 'auto']}
-                      letterSpacing={2}
-                      alpha={0.4}
-                      textTransform="uppercase"
-                      color="#fff"
-                      cursor="inherit"
-                    >
-                      {`<${elements[index].title} />`}
-                    </TitleText>
-                    <Space />
-                    <Paragraph cursor="inherit" sizeLineHeight={1.2} size={1.2} alpha={0.8}>
-                      {elements[index].body}
-                    </Paragraph>
-                  </TiltSquircle>
-                </FadeChild>
+          <Space />
 
-                <FadeChild
-                  transition={transitions.slowNotBouncy}
-                  {...fadeAnimations.up}
-                  delay={800}
+          <Row space>
+            <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
+              <FadeChild key={index} {...fadeAnimations.left} delay={700}>
+                <Image
+                  userSelect="none"
+                  alignSelf="center"
+                  width={80}
+                  height={80}
+                  src={elements[index].iconBefore}
+                />
+              </FadeChild>
+              <Space size="xxl" />
+              <FadeChild key={index} delay={800}>
+                <Image
+                  userSelect="none"
+                  opacity={0.5}
+                  src={require('../../../public/images/curve-arrow.svg')}
+                  transform={{
+                    scale: 0.8,
+                  }}
+                />
+              </FadeChild>
+            </Flex>
+            <Flex flex={2} position="relative" margin={useScreenVal([0, '-5%'], 0, 0)}>
+              <FadeChild delay={300}>
+                <Button
+                  alt="flat"
+                  cursor="pointer"
+                  size={1.9}
+                  iconSize={20}
+                  circular
+                  zIndex={100}
+                  position="absolute"
+                  top={-4}
+                  left={5}
+                  icon="chevron-left"
+                  onClick={() => paginate(-1)}
+                />
+                <Button
+                  alt="flat"
+                  cursor="pointer"
+                  size={1.9}
+                  iconSize={20}
+                  circular
+                  zIndex={100}
+                  position="absolute"
+                  top={-4}
+                  right={5}
+                  icon="chevron-right"
+                  onClick={() => paginate(1)}
+                />
+              </FadeChild>
+
+              <FadeChild transition={transitions.slowNotBouncy} delay={500}>
+                <TiltSquircle
+                  {...linkProps(elements[index].link)}
+                  tagName="div"
+                  width={280}
+                  height={280}
+                  background={`linear-gradient(125deg, #78009F, #4C1966)`}
+                  boxShadow="0 20px 50px rgba(0,0,0,0.6)"
+                  padding={30}
+                  cursor="pointer"
+                  key={index}
+                  custom={direction}
+                  variants={variants}
                 >
-                  <AnimatePresence initial={false} custom={direction}>
-                    <View
-                      key={index}
-                      custom={direction}
-                      variants={variants}
-                      width="100%"
-                      height={300}
-                      minWidth={350}
-                      borderRadius={22}
-                      background="#000"
-                      boxShadow={[[0, 10, 30, [0, 0, 0]]]}
-                      overflow="hidden"
-                      initial="enter"
-                      animate="center"
-                      exit="exit"
-                      transition={{
-                        x: { type: 'spring', stiffness: 100, damping: 200 },
-                        opacity: { duration: 0.2 },
-                      }}
-                      drag="x"
-                      dragConstraints={{ left: 0, right: 0 }}
-                      dragElastic={1}
-                      position="absolute"
-                      onDragEnd={(e, { offset, velocity }) => {
-                        const swipe = swipePower(offset.x, velocity.x)
-                        if (swipe < -swipeConfidenceThreshold) {
-                          paginate(1)
-                        } else if (swipe > swipeConfidenceThreshold) {
-                          paginate(-1)
-                        }
-                      }}
-                    >
-                      <Image
-                        className="carousel-image"
-                        userSelect="none"
-                        src={elements[index].image}
-                        width="100%"
-                        height="auto"
-                        opacity={0.45}
-                      />
-                    </View>
-                  </AnimatePresence>
-                </FadeChild>
-              </Flex>
+                  <TitleText
+                    fontSize={18}
+                    margin={[0, 'auto']}
+                    letterSpacing={2}
+                    alpha={0.4}
+                    textTransform="uppercase"
+                    color="#fff"
+                    cursor="inherit"
+                  >
+                    {`<${elements[index].title} />`}
+                  </TitleText>
+                  <Space />
+                  <Paragraph cursor="inherit" sizeLineHeight={1.2} size={1.2} alpha={0.8}>
+                    {elements[index].body}
+                  </Paragraph>
+                </TiltSquircle>
+              </FadeChild>
 
-              <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
-                <FadeChild {...fadeAnimations.right} delay={400}>
-                  <Image
-                    userSelect="none"
-                    alignSelf="center"
-                    width={80}
-                    height={80}
+              <FadeChild transition={transitions.slowNotBouncy} {...fadeAnimations.up} delay={800}>
+                <AnimatePresence initial={false} custom={direction}>
+                  <View
                     key={index}
                     custom={direction}
                     variants={variants}
-                    src={elements[index].iconAfter}
-                  />
-                </FadeChild>
-                <Space size="xxl" />
-                <FadeChild delay={600}>
-                  <Image
-                    key={index}
-                    custom={direction}
-                    variants={variants}
-                    userSelect="none"
-                    opacity={0.5}
-                    transform={{
-                      rotate: '275deg',
-                      scale: 0.8,
+                    width="100%"
+                    height={300}
+                    minWidth={350}
+                    borderRadius={22}
+                    background="#000"
+                    boxShadow={[[0, 10, 30, [0, 0, 0]]]}
+                    overflow="hidden"
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{
+                      x: { type: 'spring', stiffness: 100, damping: 200 },
+                      opacity: { duration: 0.2 },
                     }}
-                    src={require('../../../public/images/curve-arrow.svg')}
-                  />
-                </FadeChild>
-              </Flex>
-            </Row>
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={1}
+                    position="absolute"
+                    onDragEnd={(e, { offset, velocity }) => {
+                      const swipe = swipePower(offset.x, velocity.x)
+                      if (swipe < -swipeConfidenceThreshold) {
+                        paginate(1)
+                      } else if (swipe > swipeConfidenceThreshold) {
+                        paginate(-1)
+                      }
+                    }}
+                  >
+                    <Image
+                      className="carousel-image"
+                      userSelect="none"
+                      src={elements[index].image}
+                      width="100%"
+                      height="auto"
+                      opacity={0.45}
+                    />
+                  </View>
+                </AnimatePresence>
+              </FadeChild>
+            </Flex>
 
-            <Row margin={[32, 'auto', 0]}>
-              {[0, 1, 2].map(x => (
-                <Dot key={x} active={x === index} onClick={() => goTo(x)} />
-              ))}
-            </Row>
-          </Col>
-        </SpacedPageContent>
+            <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
+              <FadeChild {...fadeAnimations.right} delay={400}>
+                <Image
+                  userSelect="none"
+                  alignSelf="center"
+                  width={80}
+                  height={80}
+                  key={index}
+                  custom={direction}
+                  variants={variants}
+                  src={elements[index].iconAfter}
+                />
+              </FadeChild>
+              <Space size="xxl" />
+              <FadeChild delay={600}>
+                <Image
+                  key={index}
+                  custom={direction}
+                  variants={variants}
+                  userSelect="none"
+                  opacity={0.5}
+                  transform={{
+                    rotate: '275deg',
+                    scale: 0.8,
+                  }}
+                  src={require('../../../public/images/curve-arrow.svg')}
+                />
+              </FadeChild>
+            </Flex>
+          </Row>
 
-        <Page.BackgroundParallax
-          speed={0.4}
-          offset={0.45}
-          x="-35%"
-          scale={1.5}
-          className="glow-one"
-          opacity={0.22}
-          background="radial-gradient(circle closest-side, #F64097, transparent)"
-        />
+          <Row margin={[32, 'auto', 0]}>
+            {[0, 1, 2].map(x => (
+              <Dot key={x} active={x === index} onClick={() => goTo(x)} />
+            ))}
+          </Row>
+        </Col>
+      </SpacedPageContent>
 
-        <Page.BackgroundParallax
-          speed={0.4}
-          offset={0.3}
-          x="40%"
-          scale={1.68}
-          className="glow-two"
-          opacity={0.25}
-          background="radial-gradient(circle closest-side, #00E5FF, transparent)"
-        />
-      </Fade.FadeProvide>
-    </>
+      <Page.BackgroundParallax
+        speed={0.4}
+        offset={0.45}
+        x="-35%"
+        scale={1.5}
+        className="glow-one"
+        opacity={0.22}
+        background="radial-gradient(circle closest-side, #F64097, transparent)"
+      />
+
+      <Page.BackgroundParallax
+        speed={0.4}
+        offset={0.3}
+        x="40%"
+        scale={1.68}
+        className="glow-two"
+        opacity={0.25}
+        background="radial-gradient(circle closest-side, #00E5FF, transparent)"
+      />
+    </Fade.FadeProvide>
   )
 }

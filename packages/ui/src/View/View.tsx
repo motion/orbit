@@ -1,5 +1,4 @@
 import { GlossPropertySet, validCSSAttr } from '@o/css'
-import { AnimatedInterpolation, AnimatedValue } from '@react-spring/animated'
 import { motion } from 'framer-motion'
 import { Base, gloss } from 'gloss'
 
@@ -83,7 +82,7 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
               delete outProps[key]
             }
             if (motionExtraProps[key]) {
-              if (key === 'animate' && outProps[key] === true) {
+              if (key === 'animate' && inProps.animate === true) {
                 continue
               }
               outProps[key] = inProps[key]
@@ -110,22 +109,4 @@ export function getMargin(props: MarginProps) {
   if (props.margin) {
     return { margin: getSizableValue(props.margin) }
   }
-}
-
-// find react-spring animated props
-const isAnimatedVal = x => x instanceof AnimatedInterpolation || x instanceof AnimatedValue
-export const getAnimatedProps = props => {
-  let next = null
-  for (const key in props) {
-    if (props[key] && isAnimatedVal(props[key])) {
-      next = next || {}
-      if (key === 'scrollLeft' || key === 'scrollTop') {
-        next[key] = props[key]
-      } else {
-        next.style = next.style || props.style || {}
-        next.style[key] = props[key]
-      }
-    }
-  }
-  return next
 }

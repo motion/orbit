@@ -4,7 +4,6 @@ import { on } from '@o/utils'
 import { Box, gloss, Theme, ThemeContext } from 'gloss'
 import { Cancelable, debounce, isNumber, last, pick } from 'lodash'
 import * as React from 'react'
-import { animated, AnimatedProps } from 'react-spring'
 
 import { Arrow } from './Arrow'
 import { BreadcrumbReset } from './Breadcrumbs'
@@ -14,13 +13,12 @@ import { Portal } from './helpers/portal'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { SurfacePassPropsReset } from './Surface'
 import { getElevation } from './View/elevation'
+import { ViewProps } from './View/types'
 import { View } from './View/View'
 
 const acceptsProps = (x, val) => x.type.acceptsProps && x.type.acceptsProps[val]
 
-type AnimatedDivProps = AnimatedProps<React.HTMLAttributes<HTMLDivElement>>
-
-export type PopoverProps = Omit<SizedSurfaceProps, 'background' | 'style'> & {
+export type PopoverProps = Omit<SizedSurfaceProps, 'background'> & {
   /** Custom theme for just the popover content */
   popoverTheme?: string
 
@@ -123,9 +121,6 @@ export type PopoverProps = Omit<SizedSurfaceProps, 'background' | 'style'> & {
 
   /** Portal styling */
   portalStyle?: Object
-
-  /** Allows spring animations passed into style */
-  style?: AnimatedDivProps['style']
 }
 
 const defaultProps = {
@@ -1172,29 +1167,26 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
 
 const themeBg = theme => theme.background
 
-const PopoverContainer = gloss<AnimatedDivProps & { isOpen?: boolean; isTouchable?: boolean }>(
-  animated.div,
-  {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 5000,
-    pointerEvents: 'none',
+const PopoverContainer = gloss<ViewProps & { isOpen?: boolean; isTouchable?: boolean }>(View, {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 5000,
+  pointerEvents: 'none',
+  '& > *': {
+    pointerEvents: 'none !important',
+  },
+  isOpen: {
+    opacity: 1,
+  },
+  isTouchable: {
     '& > *': {
-      pointerEvents: 'none !important',
-    },
-    isOpen: {
-      opacity: 1,
-    },
-    isTouchable: {
-      '& > *': {
-        pointerEvents: 'all !important',
-      },
+      pointerEvents: 'all !important',
     },
   },
-).withConfig({
+}).withConfig({
   ignoreAttrs: {
     isOpen: true,
     isTouchable: true,

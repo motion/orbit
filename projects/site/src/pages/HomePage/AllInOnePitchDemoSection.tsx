@@ -219,7 +219,7 @@ export default function NeckSection() {
                 />
               </FadeChild>
               <Space size="xxl" />
-              <FadeChild key={index} {...fadeAnimations.left} delay={800}>
+              <FadeChild key={index} {...fadeAnimations.left} delay={800} alignSelf="flex-end">
                 <Image
                   userSelect="none"
                   opacity={0.5}
@@ -236,7 +236,7 @@ export default function NeckSection() {
               position="relative"
               margin={useScreenVal([0, '-5%'], 0, 0)}
             >
-              <FadeChild delay={300}>
+              <FadeChild width="100%" delay={300}>
                 <Button
                   alt="flat"
                   cursor="pointer"
@@ -265,7 +265,7 @@ export default function NeckSection() {
                 />
               </FadeChild>
 
-              <FadeChild transition={transitions.slowNotBouncy} delay={500}>
+              <FadeChild transition={transitions.slowNotBouncy} delay={500} marginBottom={-200}>
                 <TiltSquircle
                   {...linkProps(elements[index].link)}
                   tagName="div"
@@ -278,6 +278,7 @@ export default function NeckSection() {
                   key={index}
                   custom={direction}
                   variants={variants}
+                  zIndex={10}
                 >
                   <TitleText
                     fontSize={18}
@@ -364,7 +365,7 @@ export default function NeckSection() {
                 />
               </FadeChild>
               <Space size="xxl" />
-              <FadeChild delay={600}>
+              <FadeChild delay={600} alignSelf="flex-start">
                 <Image
                   key={index}
                   custom={direction}

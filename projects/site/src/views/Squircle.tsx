@@ -16,13 +16,22 @@ export const TiltSquircle = ({ style, ...rest }: ViewProps) => {
   return <Squircle whileHover={{}} {...rest} />
 }
 
-export const Squircle = ({ boxShadow, width, height, position, margin, ...props }: ViewProps) => (
+export const Squircle = ({
+  boxShadow,
+  width,
+  height,
+  position,
+  margin,
+  zIndex,
+  ...props
+}: ViewProps) => (
   <View
     {...{
       width,
       height,
       position,
       margin,
+      zIndex,
     }}
   >
     <View

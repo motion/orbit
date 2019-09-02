@@ -9,14 +9,14 @@ import { blackWavePattern } from './purpleWaveUrl'
 export default memo(function FeetSection() {
   return (
     <>
-      <Page.Content padding="xxl" justifyContent="space-between" alignItems="center">
+      <View padding="xxl" justifyContent="space-between" alignItems="center">
         <Space size="xl" />
         <AboveFooter />
         <View flex={1} />
         <Footer />
-      </Page.Content>
+      </View>
 
-      <Page.Background
+      <Page.BackgroundParallax
         speed={0.1}
         zIndex={-10}
         bottom="-110%"

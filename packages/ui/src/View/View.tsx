@@ -10,7 +10,7 @@ import { usePadding } from './PaddedView'
 import { SizesObject, ViewProps, ViewThemeProps } from './types'
 
 // includes motion styles too
-const motionProps = {
+export const motionProps = {
   x: true,
   y: true,
   z: true,

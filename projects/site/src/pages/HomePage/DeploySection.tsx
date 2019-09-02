@@ -1,4 +1,4 @@
-import { Col, FullScreen, Image, Row, Space, toColor, View } from '@o/ui'
+import { Col, Image, Row, Space, toColor, View } from '@o/ui'
 import React from 'react'
 
 import appScreenshot from '../../../public/images/app-screenshot.jpg'
@@ -19,29 +19,35 @@ export default function ShoulderSection() {
   const Fade = useFadePage()
   return (
     <Fade.FadeProvide>
-      <Page.Parallax speed={0.8} zIndex={-2}>
-        <FullScreen
-          opacity={0.26}
-          transform={{ y: '-30%', x: '30%', scale: 1.6 }}
-          background="radial-gradient(circle closest-side, #4A00A8, transparent)"
-        />
-      </Page.Parallax>
+      <Page.BackgroundParallax
+        speed={0.8}
+        zIndex={-2}
+        opacity={0.26}
+        offset={0.3}
+        x="30%"
+        scale={1.6}
+        background="radial-gradient(circle closest-side, #4A00A8, transparent)"
+      />
 
-      <Page.Parallax speed={-0.25} zIndex={-1}>
-        <FullScreen
-          opacity={0.22}
-          transform={{ y: '40%', x: '-40%', scale: 3.2 }}
-          background="radial-gradient(circle closest-side, #AD3BFF, transparent)"
-        />
-      </Page.Parallax>
+      <Page.BackgroundParallax
+        speed={-0.25}
+        zIndex={-1}
+        opacity={0.22}
+        offset={0.4}
+        x="-40%"
+        scale={3.2}
+        background="radial-gradient(circle closest-side, #AD3BFF, transparent)"
+      />
 
-      <Page.Parallax speed={-0.25} zIndex={-1}>
-        <FullScreen
-          opacity={0.5}
-          transform={{ y: '110%', x: '55%', scale: 2.5 }}
-          background="radial-gradient(circle closest-side, #441316, transparent)"
-        />
-      </Page.Parallax>
+      <Page.BackgroundParallax
+        speed={-0.25}
+        zIndex={-1}
+        opacity={0.5}
+        offset={1.1}
+        x="55%"
+        scale={2.2}
+        background="radial-gradient(circle closest-side, #441316, transparent)"
+      />
 
       <SpacedPageContent
         nodeRef={Fade.ref}

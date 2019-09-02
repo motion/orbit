@@ -78,27 +78,23 @@ export const HomePage = memo(() => {
         <Page>
           <DeploySection />
         </Page>
-        {false && (
-          <>
-            <Page>
-              <DataAppKitFeaturesSection pages={2} />
-            </Page>
-            <Page>
-              <EarlyAccessBetaSection />
-            </Page>
-            <Page>
-              <SecuritySection />
-            </Page>
-            <Page>
-              <MissionMottoSection />
-            </Page>
-            <Page>
-              <Theme name="home">
-                <FeetSection />
-              </Theme>
-            </Page>
-          </>
-        )}
+        <Page>
+          <DataAppKitFeaturesSection pages={2} />
+        </Page>
+        <Page>
+          <EarlyAccessBetaSection />
+        </Page>
+        <Page>
+          <SecuritySection />
+        </Page>
+        <Page>
+          <MissionMottoSection />
+        </Page>
+        <Page>
+          <Theme name="home">
+            <FeetSection />
+          </Theme>
+        </Page>
       </main>
     </ParallaxContext.PassProps>
   )

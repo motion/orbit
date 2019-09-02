@@ -1,4 +1,4 @@
-import { Button, Col, FullScreen, gloss, Image, Row, Space, useGetFn, useIntersectionObserver, View } from '@o/ui'
+import { Button, Col, gloss, Image, Row, Space, useGetFn, useIntersectionObserver, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import { Box, Inline } from 'gloss'
 import React, { useEffect, useRef, useState } from 'react'
@@ -473,23 +473,25 @@ export default function NeckSection() {
         </Col>
       </SpacedPageContent>
 
-      <Page.Parallax speed={0.24} zIndex={-1}>
-        <FullScreen
-          className="glow-one"
-          opacity={0.22}
-          transform={{ y: '-45%', x: '-35%', scale: 1.5 }}
-          background="radial-gradient(circle closest-side, #F64097, transparent)"
-        />
-      </Page.Parallax>
+      <Page.BackgroundParallax
+        speed={0.4}
+        offset={0.45}
+        x="-35%"
+        scale={1.5}
+        className="glow-one"
+        opacity={0.22}
+        background="radial-gradient(circle closest-side, #F64097, transparent)"
+      />
 
-      <Page.Parallax speed={-0.4} zIndex={-1}>
-        <FullScreen
-          className="glow-two"
-          opacity={0.25}
-          transform={{ y: '30%', x: '40%', scale: 1.68 }}
-          background="radial-gradient(circle closest-side, #00E5FF, transparent)"
-        />
-      </Page.Parallax>
+      <Page.BackgroundParallax
+        speed={0.4}
+        offset={0.3}
+        x="40%"
+        scale={1.68}
+        className="glow-two"
+        opacity={0.25}
+        background="radial-gradient(circle closest-side, #00E5FF, transparent)"
+      />
     </Fade.FadeProvide>
   )
 }

@@ -1,14 +1,4 @@
-import {
-  Col,
-  FullScreen,
-  Grid,
-  ListItem,
-  SimpleText,
-  SpaceGroup,
-  TextProps,
-  Theme,
-  View,
-} from '@o/ui'
+import { Col, Grid, ListItem, SimpleText, SpaceGroup, TextProps, Theme, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import earth from '../../../public/images/earth.jpg'
@@ -35,25 +25,20 @@ export const SubParagraph = (props: TextProps) => (
 export default function LegsSection() {
   return (
     <Theme name="home">
-      <Page.Content>
-        <View height={70} />
-        <AboutSection />
-      </Page.Content>
+      <View height={70} />
+      <AboutSection />
 
-      <Page.Parallax speed={0.075} zIndex={-1}>
-        <FullScreen
-          className="earth"
-          backgroundImage={`url(${earth})`}
-          backgroundSize="contain"
-          backgroundPosition="center center"
-          backgroundRepeat="no-repeat"
-          transform={{
-            scale: 1,
-            x: '6%',
-            y: '-5%',
-          }}
-        />
-      </Page.Parallax>
+      <Page.BackgroundParallax
+        speed={0.075}
+        zIndex={-1}
+        className="earth"
+        backgroundImage={`url(${earth})`}
+        backgroundSize="contain"
+        backgroundPosition="center center"
+        backgroundRepeat="no-repeat"
+        x="6%"
+        offset={-0.05}
+      />
     </Theme>
   )
 }

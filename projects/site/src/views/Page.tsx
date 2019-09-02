@@ -1,4 +1,4 @@
-import { createContextualProps, FullScreen, Parallax, ViewProps } from '@o/ui'
+import { createContextualProps, Parallax, ParallaxViewProps } from '@o/ui'
 import { selectDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 
@@ -35,17 +35,7 @@ export function Page(props: SectionContentProps) {
   )
 }
 
-Page.Parallax = ({
-  overflow,
-  zIndex,
-  style,
-  ...props
-}: {
-  children: any
-  zIndex?: number
-  overflow?: any
-  style?: Object
-}) => {
+Page.Parallax = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) => {
   const parallax = useProps()
   const isTiny = useIsTiny()
   if (isTiny) {
@@ -66,11 +56,20 @@ Page.Parallax = ({
   )
 }
 
-Page.Background = ({ speed = 0, ...props }: ViewProps & { speed?: number }) => {
+Page.BackgroundParallax = (props: ParallaxViewProps) => {
   const { zIndex, offset } = useProps()
   return (
-    <Page.Parallax offset={offset} speed={speed} zIndex={(props.zIndex || 0) + zIndex - 2}>
-      <FullScreen transition="all ease 1000ms" className="page-background" {...props} />
-    </Page.Parallax>
+    <Page.Parallax
+      width="100%"
+      height="100%"
+      zIndex={(props.zIndex || 0) + zIndex - 2}
+      className="page-background"
+      position="absolute"
+      top={0}
+      left={0}
+      right={0}
+      bottom={0}
+      {...props}
+    />
   )
 }

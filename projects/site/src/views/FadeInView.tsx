@@ -1,6 +1,5 @@
 import { createStoreContext } from '@o/kit'
 import { useDebounce, useDebounceValue, useGet, useIntersectionObserver, View, ViewProps } from '@o/ui'
-import { selectDefined } from '@o/utils'
 import React, { memo, useCallback, useRef, useState } from 'react'
 
 import { useIsTiny } from '../hooks/useScreenSize'
@@ -97,8 +96,16 @@ export const fadeAnimations = {
 
 const FadeContext = createStoreContext(
   class FadeContextStore {
-    shown = undefined
-    off = false
+    props: {
+      shown: boolean
+      off: boolean
+    }
+    get shown() {
+      return this.props.shown
+    }
+    get off() {
+      return this.props.off
+    }
   },
 )
 
@@ -122,7 +129,7 @@ export const FadeChild = memo(
     const isTiny = useIsTiny()
     const fadeContext = FadeContext.useStore()
     const shown = !!useDebounceValue(
-      !disable && !window['recentHMR'] && selectDefined(fadeContext.shown, true),
+      !disable && !window['recentHMR'] && (fadeContext.shown !== null ? fadeContext.shown : false),
       delay,
     )
     const styleFin = {
@@ -177,12 +184,13 @@ export const useFadePage = ({
   off,
   ...props
 }: UseFadePageProps = {}) => {
-  const { ref, shown } = useDebouncedIntersection({ delay, threshold, ...props })
-  const shownFinal = selectDefined(props.shown, shown)
+  const intersection = useDebouncedIntersection({ delay, threshold, ...props })
+  const shown = props.shown || intersection.shown || false
   const getProps = useGet({ shown, off })
   return {
-    ref,
+    ref: intersection.ref,
     FadeProvide: useCallback(props => {
+      console.log('showns', getProps().shown)
       return <FadeContext.Provider {...props} {...getProps()} />
     }, []),
   }

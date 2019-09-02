@@ -23,12 +23,12 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Build and collaborate on apps that power your company.`,
-    `Orbit is an open, data-first Work OS.`,
+    `Create apps for yourself, your team, or to sell to others.`,
+    `The new app platform that gets out of your way.`,
   ],
   medium: [
-    `Build and collaborate on apps that power your company.`,
-    `Orbit is an open, data-first Work OS.`,
+    `Create apps for yourself, your team, or to sell to others.`,
+    `The new app platform that gets out of your way.`,
   ],
   small: [`Build apps that power your company.`, `The data-first Work OS.`],
 }
@@ -96,7 +96,7 @@ const HeadContent = memo(() => {
         maxWidth="80%"
       >
         <Paragraph
-          fontWeight={100}
+          fontWeight={400}
           tagName="div"
           style={{
             ...pFit.style,

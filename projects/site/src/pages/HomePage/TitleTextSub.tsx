@@ -9,7 +9,7 @@ export const TitleTextSub = forwardRef<any, TextProps>((props, ref) => (
     <TitleText
       size="xxs"
       sizeLineHeight={1.35}
-      fontWeight={300}
+      fontWeight={400}
       alpha={0.65}
       {...fontProps.BodyFont}
       {...props}

@@ -9,7 +9,7 @@ export const HeaderLink = ({ delay, children, ...props }: any) => {
   const header = HeaderContext.useStore()
   const leaving = header && header.shown === false
   return (
-    <Link width="33%" fontWeight={400} fontSize={14} {...props}>
+    <Link width="33%" fontWeight={400} fontSize={15} {...props}>
       <FadeChild
         off={!LinkState.didAnimateOut}
         delay={leaving ? 0 : delay}

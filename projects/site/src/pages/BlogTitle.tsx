@@ -15,7 +15,7 @@ export const BlogTitle = (props: any) => (
           <FadeChild>
             <TitleText
               cursor="pointer"
-              textAlign="left"
+              textAlign="center"
               size="sm"
               fontWeight={200}
               alpha={0.5}

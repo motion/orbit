@@ -25,7 +25,7 @@ export function BetaPage() {
         <Space size="xxl" />
 
         <View position="relative">
-          <FadeChild delay={200}>
+          <FadeChild minHeight={800} delay={200}>
             <EarlyAccessContent theme={BetaPage.theme} />
           </FadeChild>
 

@@ -1,6 +1,6 @@
 import { CSSPropertySetStrict } from '@o/css'
 import { HighlightOptions, highlightText, on } from '@o/utils'
-import { alphaColorTheme, CSSPropertySet, getTextSizeTheme, gloss, propStyleTheme } from 'gloss'
+import { colorTheme, CSSPropertySet, getTextSizeTheme, gloss, propStyleTheme } from 'gloss'
 import keycode from 'keycode'
 import * as React from 'react'
 
@@ -337,7 +337,7 @@ const TextBlock = gloss({
   oneLineEllipse: {
     overflow: 'hidden',
   },
-}).theme(propStyleTheme, alphaColorTheme, selectableTheme)
+}).theme(propStyleTheme, colorTheme, selectableTheme)
 
 export function selectableTheme(props) {
   return {

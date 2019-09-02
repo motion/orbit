@@ -16,7 +16,7 @@ export function Link({ children, fontSize, href, width, margin, ...props }: Link
     <LinkText cursor="pointer" {...linkProps} fontSize={fontSize} width={width} margin={margin}>
       <SimpleText
         fontSize={fontSize || 'inherit'}
-        alpha={isActive ? 1 : 0.6}
+        alpha={isActive ? 1 : 0.5}
         hoverStyle={{ alpha: 1 }}
         activeStyle={{ alpha: isActive ? 1 : 0.7 }}
         transition="all ease 300ms"

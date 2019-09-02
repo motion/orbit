@@ -25,13 +25,13 @@ export const transitions = {
   },
   normal: {
     type: 'spring',
-    damping: 20,
-    stiffness: 180,
+    damping: 12,
+    stiffness: 100,
   },
   fast: {
     type: 'spring',
-    damping: 20,
-    stiffness: 250,
+    damping: 15,
+    stiffness: 180,
   },
   fastStatic: {
     duration: 30,
@@ -154,6 +154,7 @@ export const FadeChild = memo(
         </div>
       )
     }
+
     return (
       <View
         data-is="FadeChild"
@@ -190,7 +191,6 @@ export const useFadePage = ({
   return {
     ref: intersection.ref,
     FadeProvide: useCallback(props => {
-      console.log('showns', getProps().shown)
       return <FadeContext.Provider {...props} {...getProps()} />
     }, []),
   }

@@ -25,6 +25,11 @@ async function main() {
       }),
     )
   })
+
+  await new Promise(res => {
+    // never res
+    res
+  })
 }
 
-main()
+await main()

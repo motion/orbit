@@ -1,5 +1,4 @@
-import { Button, CardSimple, Col, Parallax, Row, useScrollProgress, View } from '@o/ui'
-import { useSpring, useTransform } from 'framer-motion'
+import { Button, CardSimple, Col, Geometry, Parallax, Row, View } from '@o/ui'
 import _ from 'lodash'
 import * as React from 'react'
 
@@ -47,54 +46,52 @@ export function TestUIParallax() {
 }
 
 export function TestUIMotion() {
-  const ref = React.useRef(null)
-  const scrollXProgress = useScrollProgress({
-    ref,
-  })
-
+  // const ref = React.useRef(null)
+  // const scrollXProgress = useScrollProgress({
+  //   ref,
+  // })
   return (
     <Row overflow="hidden" height="100%">
-      <View
-        nodeRef={ref}
-        display="flex"
+      <Row
         flex={1}
-        flexFlow="row"
         perspective="1200px"
-        overflowX="auto"
+        scrollable="x"
         scrollSnapType="x mandatory"
         scrollSnapPointsX="repeat(100%)"
-        debug
       >
         {[0, 1, 2, 3, 4, 5].map(i => (
-          <Card key={i} index={i} total={5} scrollXProgress={scrollXProgress} />
-          // <Card rotateY={ref => ref.geometry.intersectionWithFrame().transform([0, 1], [-10, 10])} />
+          <Card key={i} />
         ))}
-      </View>
+      </Row>
     </Row>
   )
 }
 
-// geometry.intersectionWithFrame().transform([0, 1], [-10, 10])
-//   => Springy
-//      UI kit uses it internally to convert it into:
-
-function Card(props: any) {
-  const ry1 = useTransform(props.scrollXProgress, x => {
-    return x - props.index + 0.35
-  })
-  const ry = useTransform(ry1, [0, 1], [-10, 10])
-  const rotateY = useSpring(ry, { stiffness: 400, damping: 90 })
+function Card() {
+  // const ry1 = useTransform(props.scrollXProgress, x => {
+  //   return x - props.index + 0.35
+  // })
+  // const ry = useTransform(ry1, [0, 1], [-10, 10])
+  // const rotateY = useSpring(ry, { stiffness: 400, damping: 90 })
   return (
-    <View scrollSnapAlign="center">
-      <View
-        width={window.innerWidth}
-        height={window.innerHeight}
-        background="lightgreen"
-        rotateY={rotateY}
-        transformOrigin="center center"
-        animate={{ scale: 0.7 }}
-      />
-    </View>
+    <Geometry>
+      {geometry => (
+        <View scrollSnapAlign="center">
+          <View
+            width={window.innerWidth}
+            height={window.innerHeight}
+            background="lightgreen"
+            rotateY={geometry
+              .scrollIntersection()
+              .transform(x => x + 0.35)
+              .transform([0, 1], [-10, 10])
+              .spring({ stiffness: 400, damping: 90 })}
+            transformOrigin="center center"
+            animate={{ scale: 0.7 }}
+          />
+        </View>
+      )}
+    </Geometry>
   )
 }
 

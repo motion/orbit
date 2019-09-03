@@ -13,7 +13,7 @@ import webpack from 'webpack'
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { BundleStatsWebpackPlugin } = require('bundle-stats')
 
-// const LodashWebpackPlugin = require('lodash-webpack-plugin')
+const LodashWebpackPlugin = require('lodash-webpack-plugin')
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
 // const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
@@ -339,7 +339,7 @@ async function makeConfig() {
       ].filter(Boolean),
     },
     plugins: [
-      // new LodashWebpackPlugin(),
+      new LodashWebpackPlugin(),
 
       new IgnoreNotFoundExportPlugin(),
 

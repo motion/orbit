@@ -433,7 +433,7 @@ async function makeConfig() {
 
       isProd && new DuplicatePackageCheckerPlugin(),
 
-      isProd && new ShakePlugin(),
+      !!process.env['SHAKE_COMMONJS'] && new ShakePlugin(),
 
       // new CircularDependencyPlugin({
       //   // failOnError: true,

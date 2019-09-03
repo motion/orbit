@@ -2,9 +2,9 @@ import { AnimatePresence, animation, Button, Col, gloss, Image, Row, Space, useI
 import { Box, Inline } from 'gloss'
 import React, { useEffect, useRef, useState } from 'react'
 
-import listScreen from '../../../public/images/screen-list.jpg'
-import tableScreen from '../../../public/images/screen-table.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
+import listScreen from '../../public/images/screen-list.jpg'
+import tableScreen from '../../public/images/screen-table.jpg'
 import { linkProps } from '../../useLink'
 import { fadeAnimations, FadeChild, transitions, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
@@ -73,31 +73,31 @@ const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 const elements = [
   {
-    iconBefore: require('../../../public/logos/slack.svg'),
+    iconBefore: require('../../public/logos/slack.svg'),
     title: 'Table',
     body: `The table that has it all. Virtualized, resizable, sortable, filterable, multi-selectable, and more. With easy sharing to forms, lists, or other apps in your Orbit.`,
     image: tableScreen,
-    iconAfter: require('../../../public/logos/gmail.svg'),
+    iconAfter: require('../../public/logos/gmail.svg'),
     afterName: 'Gmail',
     beforeName: 'Slack',
     link: '/docs/table',
   },
   {
-    iconBefore: require('../../../public/logos/postgres.svg'),
+    iconBefore: require('../../public/logos/postgres.svg'),
     title: 'List',
     body: `Every list in Orbit accepts the same props as tables. They are incredibly powerful, virtualized by default, and can group, filter, search, and share with a prop.`,
     image: listScreen,
-    iconAfter: require('../../../public/logos/jira.svg'),
+    iconAfter: require('../../public/logos/jira.svg'),
     afterName: 'Jira',
     beforeName: 'Postgres',
     link: '/docs/list',
   },
   {
-    iconBefore: require('../../../public/logos/medium.svg'),
+    iconBefore: require('../../public/logos/medium.svg'),
     title: 'Grid',
     body: `Orbit Grids automatically persist their state. They can be easily arranged and resized, and plugging in app data inside them is as easy as nesting an <AppCard />.`,
     image: listScreen,
-    iconAfter: require('../../../public/logos/sheets.svg'),
+    iconAfter: require('../../public/logos/sheets.svg'),
     afterName: 'GSheets',
     beforeName: 'Crawler',
     link: '/docs/grid',
@@ -223,7 +223,7 @@ export default function NeckSection() {
                 <Image
                   userSelect="none"
                   opacity={0.5}
-                  src={require('../../../public/images/curve-arrow.svg')}
+                  src={require('../../public/images/curve-arrow.svg')}
                   transform={{
                     scale: 0.8,
                   }}
@@ -376,7 +376,7 @@ export default function NeckSection() {
                     rotate: '275deg',
                     scale: 0.8,
                   }}
-                  src={require('../../../public/images/curve-arrow.svg')}
+                  src={require('../../public/images/curve-arrow.svg')}
                 />
               </FadeChild>
             </Flex>

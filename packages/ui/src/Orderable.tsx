@@ -4,11 +4,12 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
+import { isEqual } from '@o/fast-compare'
 import { gloss } from 'gloss'
-import { isEqual } from 'lodash'
 import * as React from 'react'
+
 import { Rect } from './helpers/geometry'
+
 
 export type OrderableOrder = string[]
 

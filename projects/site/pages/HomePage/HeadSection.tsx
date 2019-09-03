@@ -4,7 +4,7 @@ import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
-import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeInView'
+import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 import { useTextFit } from '../../views/useTextFit'
@@ -152,7 +152,7 @@ const HeadContent = memo(() => {
 const HeadJoin = memo(() => {
   return (
     <View flex={1} width="100%" position="absolute" bottom="15%" alignItems="center">
-      <FadeChild {...fadeUpProps} delay={500}>
+      <FadeChild {...fadeAnimations.up} delay={500}>
         <SurfacePassProps elevation={5} {...fontProps.TitleFont}>
           <Theme name="orbitOneDark">
             <Scale size={useScreenVal(0.8, 1, 1.1)}>

@@ -5,7 +5,7 @@ import React, { memo, useLayoutEffect, useState } from 'react'
 import { useIsTiny, useScreenSize } from './hooks/useScreenSize'
 import { LinkState } from './LinkState'
 import { useSiteStore } from './SiteStore'
-import { defaultConfig, FadeChild, fastStatticConfig, useFadePage } from './views/FadeInView'
+import { fadeAnimations, FadeChild, useFadePage } from './views/FadeInView'
 import { HeaderContain, LinkSection } from './views/HeaderContain'
 import { HeaderContext } from './views/HeaderContext'
 import { LinksLeft, LinksRight } from './views/HeaderLink'
@@ -80,7 +80,7 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
             <LinkSection alignRight>{before}</LinkSection>
             <FadeChild
               off={!LinkState.didAnimateOut}
-              config={shown ? defaultConfig : fastStatticConfig}
+              {...(shown ? fadeAnimations.normal : fadeAnimations.fastStatic)}
               delay={shown ? 0 : 0}
             >
               <LogoHorizontal slim />
@@ -111,7 +111,7 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
             <LinkSection alignRight>{before}</LinkSection>
             <FadeChild
               off={!LinkState.didAnimateOut}
-              config={shown ? defaultConfig : fastStatticConfig}
+              config={shown ? fadeAnimations.normal : fadeAnimations.fastStatic}
               delay={shown ? 100 : 0}
             >
               <LogoVertical />

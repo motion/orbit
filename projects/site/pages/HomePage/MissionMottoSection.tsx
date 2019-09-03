@@ -1,8 +1,8 @@
 import { Col, Grid, ListItem, SimpleText, SpaceGroup, TextProps, Theme, View } from '@o/ui'
 import React, { memo } from 'react'
 
-import earth from '../../../public/images/earth.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
+import earth from '../../public/images/earth.jpg'
 import { FadeChild, FadeParent } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'

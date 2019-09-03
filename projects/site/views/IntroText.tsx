@@ -1,8 +1,8 @@
 import { Image, TextProps } from '@o/ui'
 import React from 'react'
 
-import markSolid from '../../public/images/mark-solid.svg'
 import { fontProps } from '../constants'
+import markSolid from '../public/images/mark-solid.svg'
 import { Text } from './Text'
 
 export const IntroText = (props: TextProps) => {

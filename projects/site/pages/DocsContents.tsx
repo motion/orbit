@@ -1,4 +1,4 @@
-import GithubIcon from '!raw-loader!../../public/logos/github.svg'
+import GithubIcon from '!raw-loader!../public/logos/github.svg'
 import { themes } from '@o/kit'
 import { Button, gloss, Icon, Row, Section, Space, SurfacePassProps, Tag, Title } from '@o/ui'
 import { ThemeProvide } from 'gloss'

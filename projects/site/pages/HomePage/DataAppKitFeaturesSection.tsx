@@ -1,8 +1,8 @@
 import { FullScreen, Grid, Image, memoIsEqualDeep, PassProps, Row, Space, View } from '@o/ui'
 import React, { memo } from 'react'
 
-import orbits from '../../../public/images/orbits.svg'
 import { useIsTiny, useScreenHeight, useScreenSize } from '../../hooks/useScreenSize'
+import orbits from '../../public/images/orbits.svg'
 import { useSiteStore } from '../../SiteStore'
 import { linkProps } from '../../useLink'
 import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'

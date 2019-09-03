@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { LinkState } from '../LinkState'
-import { FadeChild, fastConfig, fastStatticConfig } from './FadeInView'
+import { fadeAnimations, FadeChild } from './FadeInView'
 import { HeaderContext } from './HeaderContext'
 import { Link } from './LinkProps'
 
@@ -13,7 +13,7 @@ export const HeaderLink = ({ delay, children, ...props }: any) => {
       <FadeChild
         off={!LinkState.didAnimateOut}
         delay={leaving ? 0 : delay}
-        config={leaving ? fastStatticConfig : fastConfig}
+        {...(leaving ? fadeAnimations.fastStatic : fadeAnimations.fast)}
       >
         {children}
       </FadeChild>

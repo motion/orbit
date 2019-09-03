@@ -55,7 +55,7 @@ export const Footer = () => {
             <GithubIcon />
           </BottomButton>
           <BottomButton
-            src={require('../../../public/logos/twitter.svg')}
+            src={require('../../public/logos/twitter.svg')}
             href="https://twitter.com/tryorbit"
           />
           <BottomButton>

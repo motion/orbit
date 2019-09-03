@@ -13,7 +13,7 @@ import webpack from 'webpack'
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { BundleStatsWebpackPlugin } = require('bundle-stats')
 
-const LodashWebpackPlugin = require('lodash-webpack-plugin')
+// const LodashWebpackPlugin = require('lodash-webpack-plugin')
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
 // const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
@@ -189,8 +189,7 @@ console.log('babelrcOptions', babelrcOptions)
 async function makeConfig() {
   // get the list of paths to all monorepo packages to apply ts-loader too
   const packages = await LernaProject.getPackages(repoRoot)
-  const tsEntries = packages.map(pkg => Path.join(pkg.location, 'src'))
-  // console.log('tsEntries', tsEntries)
+  const tsEntries = packages.map(pkg => Path.join(pkg.location))
 
   const config = {
     target,
@@ -340,7 +339,7 @@ async function makeConfig() {
       ].filter(Boolean),
     },
     plugins: [
-      new LodashWebpackPlugin(),
+      // new LodashWebpackPlugin(),
 
       new IgnoreNotFoundExportPlugin(),
 
@@ -350,17 +349,18 @@ async function makeConfig() {
 
       target !== 'node' && new webpack.IgnorePlugin({ resourceRegExp: /electron-log/ }),
 
-      tsConfigExists &&
-        !isProd &&
-        new ForkTsCheckerWebpackPlugin({
-          useTypescriptIncrementalApi: true,
-        }),
+      // tsConfigExists &&
+      //   !isProd &&
+      //   new ForkTsCheckerWebpackPlugin({
+      //     useTypescriptIncrementalApi: true,
+      //   }),
 
       target !== 'node' &&
         new HtmlWebpackPlugin({
-          chunksSortMode: 'none',
+          chunksSortMode: 'manual',
           favicon: 'public/favicon.png',
           template: 'public/index.html',
+          inject: true,
           ...(isProd &&
             !NO_OPTIMIZE && {
               minify: {
@@ -432,15 +432,15 @@ async function makeConfig() {
           compare: false,
         }),
 
-      !isProd && new webpack.NamedModulesPlugin(),
+      // !isProd && new webpack.NamedModulesPlugin(),
 
       isProd && new DuplicatePackageCheckerPlugin(),
 
       // isProd && new ShakePlugin(),
 
-      new CircularDependencyPlugin({
-        // failOnError: true,
-      }),
+      // new CircularDependencyPlugin({
+      //   // failOnError: true,
+      // }),
 
       flags.executable &&
         new webpack.BannerPlugin({

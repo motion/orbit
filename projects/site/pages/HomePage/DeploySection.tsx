@@ -1,10 +1,10 @@
 import { Col, Image, Row, Space, toColor, View } from '@o/ui'
 import React from 'react'
 
-import appScreenshot from '../../../public/images/app-screenshot.jpg'
-import arrow from '../../../public/images/callout-arrow.svg'
-import codeScreenshot from '../../../public/images/code-screenshot.jpg'
 import { fontProps } from '../../constants'
+import appScreenshot from '../../public/images/app-screenshot.jpg'
+import arrow from '../../public/images/callout-arrow.svg'
+import codeScreenshot from '../../public/images/code-screenshot.jpg'
 import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'

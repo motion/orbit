@@ -1,5 +1,5 @@
-import sepFilled from '!raw-loader!../../../public/images/line-sep-filled.svg'
-import sep from '!raw-loader!../../../public/images/line-sep.svg'
+import sepFilled from '!raw-loader!../../public/images/line-sep-filled.svg'
+import sep from '!raw-loader!../../public/images/line-sep.svg'
 import { useTheme, View, ViewProps } from '@o/ui'
 import React from 'react'
 

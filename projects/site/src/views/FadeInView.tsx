@@ -34,7 +34,7 @@ export const transitions = {
     stiffness: 180,
   },
   fastStatic: {
-    duration: 290,
+    duration: 90 / 1000,
   },
 }
 
@@ -143,8 +143,6 @@ export const FadeChild = memo(
     if (reverse) {
       ;[style, animate] = [animate, style]
     }
-
-    console.log('render view', reverse)
 
     if (isTiny) {
       return (

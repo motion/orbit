@@ -60,9 +60,8 @@ export const createLink = memoize((href: string, header = null, isExternal = fal
       })
   }
   if (header) {
-    console.log('reversing...')
     header.setShown(false)
-    tm = setTimeout(finish, 2090)
+    tm = setTimeout(finish, 90)
   } else {
     finish()
   }

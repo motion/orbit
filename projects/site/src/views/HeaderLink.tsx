@@ -8,7 +8,6 @@ import { Link } from './LinkProps'
 export const HeaderLink = ({ delay, children, ...props }: any) => {
   const header = HeaderContext.useStore()
   const leaving = header && header.shown === false
-  if (leaving) console.log('leaving now')
   return (
     <Link width="33%" fontWeight={400} fontSize={15} {...props}>
       <FadeChild

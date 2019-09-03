@@ -3,18 +3,11 @@
   "compilerOptions": {
     "outDir": "_",
     "baseUrl": "./src",
-    "target": "es5",
-    "module": "esnext",
     "strict": true,
     "noEmit": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "declaration": false,
-    "jsx": "preserve"
+    "declaration": false
   },
-  "exclude": ["_", "node_modules", "tmp", "dist", "server.ts"],
+  "exclude": ["_", "node_modules", "tmp", "dist", "server.ts", ".firebase"],
   "references": [
     {
       "path": "../../app/config"
@@ -32,5 +25,5 @@
       "path": "../../packages/react-textfit"
     }
   ],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx"]
 }

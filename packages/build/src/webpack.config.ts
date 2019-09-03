@@ -350,11 +350,11 @@ async function makeConfig() {
 
       target !== 'node' && new webpack.IgnorePlugin({ resourceRegExp: /electron-log/ }),
 
-      tsConfigExists &&
-        !isProd &&
-        new ForkTsCheckerWebpackPlugin({
-          useTypescriptIncrementalApi: true,
-        }),
+      // tsConfigExists &&
+      //   !isProd &&
+      //   new ForkTsCheckerWebpackPlugin({
+      //     useTypescriptIncrementalApi: true,
+      //   }),
 
       target !== 'node' &&
         new HtmlWebpackPlugin({

@@ -16,7 +16,7 @@ module.exports = function(_, givenOpts) {
 
   const config = {
     plugins: [
-      // plug('babel-plugin-lodash'),
+      plug('babel-plugin-lodash'),
       isDev && plug('react-hot-loader/babel'),
       // plug('babel-plugin-react-native-web', {
       //   commonjs: true,

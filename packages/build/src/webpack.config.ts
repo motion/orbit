@@ -241,11 +241,8 @@ async function makeConfig() {
     devtool,
     resolve: {
       extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx'],
-      mainFields: isProd
-        ? ['ts:main', 'module', 'browser', 'main']
-        : ['ts:main', 'module', 'browser', 'main'],
+      mainFields: ['ts:main', 'module', 'source', 'browser', 'main'],
       alias,
-      // plugins: [new ModuleScopePlugin(appSrc, [appPackageJson])],
     },
     resolveLoader: {
       modules: buildNodeModules,
@@ -268,8 +265,8 @@ async function makeConfig() {
           use: 'ignore-loader',
         },
         {
-          test: /\.tsx?$/,
-          include: tsEntries,
+          test: /\.(j|t)sx?$/,
+          // include: tsEntries,
           use: [
             {
               loader: 'babel-loader',

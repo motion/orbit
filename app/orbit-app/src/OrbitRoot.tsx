@@ -1,7 +1,8 @@
 import { themes } from '@o/kit'
-import { ContextMenuProvider, ErrorBoundary, Loading, ProvideUI } from '@o/ui'
+import { ContextMenuProvider, ErrorBoundary, Loading, ProvideBanner, ProvideUI } from '@o/ui'
 import React from 'react'
 import { hot } from 'react-hot-loader/root'
+
 import { IS_ELECTRON } from './constants'
 import ContextMenu from './helpers/electron/ContextMenu.electron'
 import { useThemeStore } from './om/stores'
@@ -31,11 +32,13 @@ export const OrbitRoot = hot(function OrbitRoot() {
       }}
     >
       <ProvideUI themes={themes} activeTheme={themeStore.themeColor}>
-        <ErrorBoundary name="Root">
-          <React.Suspense fallback={<Loading />}>
-            <CurPage />
-          </React.Suspense>
-        </ErrorBoundary>
+        <ProvideBanner>
+          <ErrorBoundary name="Root">
+            <React.Suspense fallback={<Loading />}>
+              <CurPage />
+            </React.Suspense>
+          </ErrorBoundary>
+        </ProvideBanner>
       </ProvideUI>
     </ContextMenuProvider>
   )

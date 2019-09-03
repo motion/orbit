@@ -357,10 +357,10 @@ async function makeConfig() {
 
       target !== 'node' &&
         new HtmlWebpackPlugin({
-          chunksSortMode: 'manual',
+          // chunksSortMode: 'manual',
           favicon: 'public/favicon.png',
           template: 'public/index.html',
-          inject: true,
+          // inject: true,
           ...(isProd &&
             !NO_OPTIMIZE && {
               minify: {

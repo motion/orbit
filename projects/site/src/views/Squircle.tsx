@@ -13,7 +13,7 @@ const calc = (x, y) => [-(y - window.innerHeight / 2) / 40, (x - window.innerWid
 const trans = (x, y, s) => `perspective(1000px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`
 
 export const TiltSquircle = ({ style, ...rest }: ViewProps) => {
-  return <Squircle whileHover={{}} {...rest} />
+  return <Squircle data-is="TiltSquircle" animate whileHover={{ scale: 1.1 }} {...rest} />
 }
 
 export const Squircle = ({
@@ -35,6 +35,7 @@ export const Squircle = ({
     }}
   >
     <View
+      data-is="Squircle"
       width={width}
       height={height}
       style={{

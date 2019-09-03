@@ -5,9 +5,20 @@
     "baseUrl": "./src",
     "strict": true,
     "noEmit": true,
-    "declaration": false
+    "declaration": false,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "isolatedModules": true,
+    "jsx": "preserve"
   },
-  "exclude": ["_", "node_modules", "tmp", "dist", "server.ts", ".firebase"],
+  "exclude": [
+    "_",
+    "node_modules",
+    "tmp",
+    "dist",
+    "server.ts",
+    ".firebase"
+  ],
   "references": [
     {
       "path": "../../app/config"
@@ -25,5 +36,8 @@
       "path": "../../packages/react-textfit"
     }
   ],
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }

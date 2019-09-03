@@ -2,7 +2,7 @@
   "name": "@o/site",
   "version": "2.6.0",
   "private": true,
-  "main": "./index.tsx",
+  "main": "./src/index.tsx",
   "scripts": {
     "start": "mcro-build --port 5000 --target web",
     "next:start": "cross-env NODE_ENV=production node .next/production-server/server/index.js",

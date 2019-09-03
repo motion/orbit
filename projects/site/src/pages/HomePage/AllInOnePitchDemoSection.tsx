@@ -265,7 +265,12 @@ export default function NeckSection() {
                 />
               </FadeChild>
 
-              <FadeChild transition={transitions.slowNotBouncy} delay={500} marginBottom={-200}>
+              <FadeChild
+                transition={transitions.slowNotBouncy}
+                delay={500}
+                marginBottom={-200}
+                zIndex={10}
+              >
                 <TiltSquircle
                   {...linkProps(elements[index].link)}
                   tagName="div"
@@ -278,7 +283,6 @@ export default function NeckSection() {
                   key={index}
                   custom={direction}
                   variants={variants}
-                  zIndex={10}
                 >
                   <TitleText
                     fontSize={18}

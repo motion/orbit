@@ -1,5 +1,5 @@
 import { createStoreContext } from '@o/kit'
-import { useDebounce, useDebounceValue, useGet, useIntersectionObserver, View, ViewProps } from '@o/ui'
+import { useDebounce, useGet, useIntersectionObserver, View, ViewProps } from '@o/ui'
 import React, { memo, useCallback, useRef, useState } from 'react'
 
 import { useIsTiny } from '../hooks/useScreenSize'
@@ -34,7 +34,7 @@ export const transitions = {
     stiffness: 180,
   },
   fastStatic: {
-    duration: 30,
+    duration: 290,
   },
 }
 
@@ -113,6 +113,7 @@ type FadeChildProps = ViewProps & {
   delay?: number
   disable?: boolean
   fullscreen?: boolean
+  reverse?: boolean
 }
 
 export const FadeChild = memo(
@@ -124,20 +125,27 @@ export const FadeChild = memo(
     delay,
     disable,
     fullscreen,
+    reverse,
     ...rest
   }: FadeChildProps) => {
     const isTiny = useIsTiny()
     const fadeContext = FadeContext.useStore()
-    const shown = !!useDebounceValue(
-      !disable && !window['recentHMR'] && (fadeContext.shown !== null ? fadeContext.shown : false),
-      delay,
-    )
-    const styleFin = {
+    const shown =
+      !disable && !window['recentHMR'] && (fadeContext.shown !== null ? fadeContext.shown : false)
+
+    style = {
       display: 'flex',
       flexFlow: 'column',
       ...style,
       ...(fullscreen && fullscreenStyle),
     }
+
+    if (reverse) {
+      ;[style, animate] = [animate, style]
+    }
+
+    console.log('render view', reverse)
+
     if (isTiny) {
       return (
         <div
@@ -158,9 +166,9 @@ export const FadeChild = memo(
     return (
       <View
         data-is="FadeChild"
-        style={styleFin}
+        style={style}
         animate={shown ? animate : undefined}
-        transition={transition}
+        transition={{ ...transition, delay: (delay || 1) / 1000 }}
         {...rest}
       >
         {children}

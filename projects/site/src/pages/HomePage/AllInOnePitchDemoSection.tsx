@@ -148,6 +148,29 @@ export default function NeckSection() {
 
   return (
     <Fade.FadeProvide>
+      {/* pink left */}
+      <Page.BackgroundParallax
+        speed={-0.25}
+        offset={-0.8}
+        x="-35%"
+        top="-20%"
+        scale={2}
+        className="glow-one"
+        opacity={0.3}
+        background="radial-gradient(circle closest-side, #F64097, transparent)"
+      />
+
+      {/* teal right */}
+      <Page.BackgroundParallax
+        speed={0.4}
+        offset={1}
+        x="40%"
+        scale={1.68}
+        className="glow-two"
+        opacity={0.35}
+        background="radial-gradient(circle closest-side, #00E5FF, transparent)"
+      />
+
       <SpacedPageContent
         nodeRef={Fade.ref}
         header={
@@ -396,26 +419,6 @@ export default function NeckSection() {
           </Row>
         </Col>
       </SpacedPageContent>
-
-      <Page.BackgroundParallax
-        speed={-0.4}
-        offset={0.45}
-        x="-35%"
-        scale={1.5}
-        className="glow-one"
-        opacity={0.22}
-        background="radial-gradient(circle closest-side, #F64097, transparent)"
-      />
-
-      <Page.BackgroundParallax
-        speed={0.4}
-        offset={0.3}
-        x="40%"
-        scale={1.68}
-        className="glow-two"
-        opacity={0.25}
-        background="radial-gradient(circle closest-side, #00E5FF, transparent)"
-      />
     </Fade.FadeProvide>
   )
 }

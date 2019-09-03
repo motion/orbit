@@ -2,7 +2,6 @@ import { AppDefinition, AppIcon, ensure, react, Templates, useAppDefinition, use
 import { AppBit } from '@o/models'
 import { Card, CardProps, FullScreen, Row, SimpleText, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
 import React, { memo, useEffect, useLayoutEffect, useRef } from 'react'
-import { to, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
 import { useOm } from '../../om/om'
@@ -10,7 +9,9 @@ import { OrbitApp, whenIdle } from './OrbitApp'
 import { appsCarouselStore, stackMarginLessPct } from './OrbitAppsCarouselStore'
 import { OrbitSearchResults } from './OrbitSearchResults'
 
+// import { to, useSpring, useSprings } from 'react-spring'
 export const OrbitAppsCarousel = memo(() => {
+  return null
   const { state } = useOm()
   const rowRef = appsCarouselStore.rowRef
   const apps = state.apps.activeClientApps

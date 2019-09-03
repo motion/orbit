@@ -1,7 +1,7 @@
 import { AppBit, createUsableStore, ensure, getAppDefinition, react, useForceUpdate, useReaction } from '@o/kit'
-import { Button, Card, FullScreen, idFn, sleep, useNodeSize, useTheme } from '@o/ui'
+import { Button, Card, FullScreen, useNodeSize, useTheme } from '@o/ui'
+import { AnimationControls, useAnimation } from 'framer-motion'
 import React, { memo, useEffect, useRef } from 'react'
-import { useSpring } from 'react-spring'
 
 import { om, useOm } from '../../om/om'
 import { paneManagerStore } from '../../om/stores'
@@ -11,14 +11,14 @@ import { appsCarouselStore } from './OrbitAppsCarouselStore'
 const yOffset = 15
 
 class AppsDrawerStore {
+  // @ts-ignore
   props: {
     apps: AppBit[]
     height: number
-    springSet: Function
+    animation: AnimationControls
   } = {
-    height: 0,
     apps: [],
-    springSet: idFn,
+    height: 0,
   }
 
   isAnimating = false
@@ -42,10 +42,11 @@ class AppsDrawerStore {
   updateDrawerAnimation = react(
     () => [this.isOpen, this.props.height],
     () => {
+      ensure('this.props.animation', !!this.props.animation)
       if (this.isOpen) {
-        this.props.springSet({ y: yOffset })
+        this.props.animation.start({ y: yOffset })
       } else {
-        this.props.springSet({ y: this.props.height + yOffset })
+        this.props.animation.start({ y: this.props.height + yOffset })
       }
     },
   )
@@ -81,20 +82,15 @@ export const OrbitAppsDrawer = memo(() => {
   const frameSize = useNodeSize({ ref: frameRef, throttle: 300 })
   const height = frameSize.height
   const appsDrawer = appsDrawerStore.useStore()
-  const [spring, springSet] = useSpring(() => ({
-    // start offscreen
-    y: window.innerHeight * 1.5,
-    onRest: appsDrawerStore.onFinishAnimate,
-    onStart: appsDrawerStore.onStartAnimate,
-  }))
+  const animation = useAnimation()
 
   useEffect(() => {
     appsDrawerStore.setProps({
       apps,
       height,
-      springSet,
+      animation,
     })
-  }, [springSet, apps, height])
+  }, [animation, apps, height])
 
   // this is a sort of "trickle render" to load the dock apps
   // in the backgorund, so they show before they animate open
@@ -134,8 +130,7 @@ export const OrbitAppsDrawer = memo(() => {
         borderWidth={0}
         width="100%"
         height="100%"
-        animated
-        transform={spring.y.to(y => `translate3d(0,${y}px,0)`)}
+        animate={animation}
         pointerEvents="auto"
         position="relative"
         overflow="hidden"

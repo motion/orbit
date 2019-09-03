@@ -1,9 +1,9 @@
 import { useForceUpdate } from '@o/use-store'
 import { isDefined, selectDefined } from '@o/utils'
+import { motion, useAnimation } from 'framer-motion'
 import { FullScreen } from 'gloss'
 import memoize from 'memoize-weak'
 import React, { useCallback, useEffect, useRef } from 'react'
-import { animated, useSpring } from 'react-spring'
 import { useGesture } from 'react-with-gesture'
 
 import { ActiveDraggables } from './Draggable'
@@ -59,7 +59,7 @@ const useWindowAttachments = {
   ),
 }
 
-const instantConf = { config: { duration: 0 } }
+const instantConf = { transition: { duration: 0 } }
 
 const boundsContain = (
   bounds: Bounds,
@@ -106,6 +106,13 @@ const defaultBounds = {
   bottom: 0,
 }
 
+type Position = {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
 export function FloatingView(props: FloatingViewProps) {
   let {
     defaultWidth = 200,
@@ -150,27 +157,45 @@ export function FloatingView(props: FloatingViewProps) {
     // bounds adjust
   ;[x, y, width, height] = boundsContain(bounds, windowSize, x, y, width, height)
 
-  const [spring, set] = useSpring(() => ({
-    xy: [x, y],
-    width,
-    height,
-  }))
+  const _animation = useAnimation()
+  const curAnimationRef = useRef<Position>({
+    x: 0,
+    y: 0,
+    width: 100,
+    height: 100,
+  })
+  const getAnimation = useCallback((key?: string) => {
+    if (key) return curAnimationRef.current[key]
+    return curAnimationRef.current
+  }, [])
+  const setAnimation = useCallback(next => {
+    curAnimationRef.current = next
+    _animation.start(next)
+  }, [])
 
-  const curSpring = useGet(spring)
+  useEffect(() => {
+    setAnimation({
+      x,
+      y,
+      width,
+      height,
+    })
+  }, [])
+
   const prevDim = useRef({ height: 0, width: 0 })
 
   // sync props
 
   const syncDimensionProp = (dim: 'width' | 'height' | 'xy', val: any) => {
     const prev = prevDim.current
-    const cur = curSpring()[dim].getValue()
+    const cur = getAnimation(dim)
     if (Array.isArray(val) ? val.every(z => isDefined(z)) : isDefined(val)) {
       if (val !== cur) {
         prev[dim] = cur
         update({ [dim]: val })
       }
     } else if (prev[dim]) {
-      set({ [dim]: prev[dim] })
+      setAnimation({ [dim]: prev[dim] })
     }
   }
 
@@ -180,26 +205,19 @@ export function FloatingView(props: FloatingViewProps) {
 
   // component logic
 
-  const pos = {
-    xy: spring.xy.getValue(),
-    width: spring.width.getValue(),
-    height: spring.height.getValue(),
-  }
-  const curPos = useRef(pos)
-  const lastDrop = useRef(pos)
+  const lastDrop = useRef(getAnimation())
   const interactiveRef = useRef(null)
   const commitTm = useRef(null)
 
-  const update = useCallback((next: Partial<typeof pos> & any, preventCommit = false) => {
-    curPos.current = { ...curPos.current, ...next }
-    set(next)
+  const update = useCallback((next: Partial<Position> & any, preventCommit = false) => {
+    setAnimation(next)
     if (preventCommit) return
     clearTimeout(commitTm.current)
     commitTm.current = setTimeout(commit, 50)
   }, [])
 
   const commit = useCallback((next = null) => {
-    lastDrop.current = { ...curPos.current, ...next }
+    lastDrop.current = { ...getAnimation(), ...next }
     curDim.current = lastDrop.current
     if (next) {
       forceUpdate()
@@ -211,7 +229,7 @@ export function FloatingView(props: FloatingViewProps) {
     if (cb) {
       cb(w, h, desW, desH, sides)
     }
-    const cur = curPos.current
+    const cur = getAnimation()
     let { width, height } = cur
     let left = cur.xy[0]
     let top = cur.xy[1]
@@ -258,15 +276,13 @@ export function FloatingView(props: FloatingViewProps) {
   return (
     <Portal prepend>
       <FullScreen>
-        <animated.div
+        <motion.div
           style={{
             pointerEvents: (isVisible ? pointerEvents : 'none') as any,
             zIndex,
-            width: spring.width,
-            height: spring.height,
-            transform: spring.xy['to']((x1, y1) => `translate3d(${x1}px,${y1}px,0)`),
             position: 'fixed',
           }}
+          animate={_animation}
         >
           <Interactive
             ref={interactiveRef}
@@ -288,7 +304,7 @@ export function FloatingView(props: FloatingViewProps) {
               {children}
             </FullScreen>
           </Interactive>
-        </animated.div>
+        </motion.div>
       </FullScreen>
     </Portal>
   )

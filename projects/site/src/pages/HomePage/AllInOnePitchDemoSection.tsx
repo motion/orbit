@@ -152,12 +152,12 @@ export default function NeckSection() {
       <Page.BackgroundParallax
         speed={-0.25}
         offset={-0.8}
-        x="-35%"
-        top="-20%"
+        x="-45%"
+        top="-10%"
         scale={2}
         className="glow-one"
-        opacity={0.3}
-        background="radial-gradient(circle closest-side, #F64097, transparent)"
+        opacity={0.23}
+        background="radial-gradient(circle closest-side, #D25CCD, transparent)"
       />
 
       {/* teal right */}
@@ -168,7 +168,7 @@ export default function NeckSection() {
         scale={1.68}
         className="glow-two"
         opacity={0.35}
-        background="radial-gradient(circle closest-side, #00E5FF, transparent)"
+        background="radial-gradient(circle closest-side, #5639D0, transparent)"
       />
 
       <SpacedPageContent

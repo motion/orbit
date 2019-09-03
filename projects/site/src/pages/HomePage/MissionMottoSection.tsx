@@ -44,7 +44,7 @@ export default function LegsSection() {
 }
 
 const Item = props => (
-  <ListItem title={<SimpleText flex={1} size="lg" alpha={0.75} {...props} />} icon="tick" />
+  <ListItem title={<SimpleText flex={1} size="sm" alpha={0.75} {...props} />} icon="tick" />
 )
 
 const dly = 120

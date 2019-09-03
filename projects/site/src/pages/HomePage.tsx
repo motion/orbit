@@ -34,7 +34,7 @@ const DataAppKitFeaturesSection = loadOnIntersect(
     ),
   ),
 )
-const FeetSection = loadOnIntersect(
+const FooterSection = loadOnIntersect(
   lazy(() =>
     retry(() => import(/* webpackChunkName: "FooterSection" */ './HomePage/FooterSection')),
   ),
@@ -92,7 +92,7 @@ export const HomePage = memo(() => {
         </Page>
         <Page>
           <Theme name="home">
-            <FeetSection />
+            <FooterSection hideJoin />
           </Theme>
         </Page>
       </main>

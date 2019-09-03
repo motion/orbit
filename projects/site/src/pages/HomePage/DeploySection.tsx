@@ -20,36 +20,36 @@ export default function DeploySection() {
   return (
     <Fade.FadeProvide>
       <Page.BackgroundParallax
-        speed={0.35}
+        speed={0.45}
         zIndex={-2}
         opacity={0.3}
         offset={0.3}
         x="0%"
         scale={1.6}
-        background="radial-gradient(circle closest-side, #4A00A8, transparent)"
+        background="radial-gradient(circle closest-side, #00A77F, transparent)"
         debug
       />
 
       {/* big purple bottom left */}
       <Page.BackgroundParallax
-        speed={-0.35}
+        speed={-0.45}
         zIndex={-1}
         opacity={0.22}
         offset={0.4}
         x="-40%"
-        scale={3.2}
+        scale={2.7}
         background="radial-gradient(circle closest-side, #AD3BFF, transparent)"
       />
 
       {/* dark red bottom right */}
       <Page.BackgroundParallax
-        speed={0.8}
+        speed={0.4}
         zIndex={-1}
-        opacity={0.5}
+        opacity={0.45}
         offset={1.1}
         x="55%"
         scale={2.2}
-        background="radial-gradient(circle closest-side, #441316, transparent)"
+        background="radial-gradient(circle closest-side, #8B2028, transparent)"
       />
 
       <SpacedPageContent

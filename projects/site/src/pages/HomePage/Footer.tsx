@@ -18,6 +18,7 @@ export const Footer = () => {
       width="100%"
       alignItems="flex-end"
       scrollable="y"
+      minHeight="min-content"
     >
       <Col minWidth={sectionMinWidth} flex={1} space="sm">
         <SmallTitle alt="lightRed">Orbit</SmallTitle>

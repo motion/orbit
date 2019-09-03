@@ -94,9 +94,6 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
         }
         outProps.className = finalClassName
         outProps.style = style
-        if (outProps['data-is'] === 'TiltSquircle') {
-          console.log('outProps', outProps)
-        }
         outProps['data-is'] = `${outProps['data-is']} is-animated`
       }
     },

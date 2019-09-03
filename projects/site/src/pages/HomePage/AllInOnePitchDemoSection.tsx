@@ -106,7 +106,7 @@ const elements = [
 
 const variants = {
   enter: (direction: number) => ({
-    x: direction < 0 ? 800 : -800,
+    x: direction < 0 ? 1000 : -1000,
     opacity: 0,
   }),
   center: {
@@ -116,7 +116,7 @@ const variants = {
   },
   exit: (direction: number) => ({
     zIndex: 0,
-    x: direction < 0 ? 800 : -800,
+    x: direction < 0 ? 1000 : -1000,
     opacity: 0,
   }),
 }
@@ -219,7 +219,12 @@ export default function NeckSection() {
                 />
               </FadeChild>
               <Space size="xxl" />
-              <FadeChild key={index} {...fadeAnimations.left} delay={800} alignSelf="flex-end">
+              <FadeChild
+                key={`arrowBefore-${page}`}
+                {...fadeAnimations.left}
+                delay={800}
+                alignSelf="flex-end"
+              >
                 <Image
                   userSelect="none"
                   opacity={0.5}
@@ -240,7 +245,7 @@ export default function NeckSection() {
                 <Button
                   alt="flat"
                   cursor="pointer"
-                  size={1.9}
+                  size={1.8}
                   iconSize={20}
                   circular
                   zIndex={100}
@@ -253,7 +258,7 @@ export default function NeckSection() {
                 <Button
                   alt="flat"
                   cursor="pointer"
-                  size={1.9}
+                  size={1.8}
                   iconSize={20}
                   circular
                   zIndex={100}
@@ -280,7 +285,7 @@ export default function NeckSection() {
                   boxShadow="0 20px 50px rgba(0,0,0,0.6)"
                   padding={30}
                   cursor="pointer"
-                  key={index}
+                  key={`squircle-${page}`}
                   custom={direction}
                   variants={variants}
                 >
@@ -306,20 +311,18 @@ export default function NeckSection() {
                 transition={transitions.slowNotBouncy}
                 {...fadeAnimations.up}
                 delay={800}
-                width={400}
+                width="100%"
                 height={300}
                 position="relative"
               >
                 <AnimatePresence initial={false} custom={direction}>
                   <View
-                    key={index}
+                    key={`image-${page}`}
                     custom={direction}
                     variants={variants}
                     width="100%"
                     height="100%"
-                    minWidth={350}
                     borderRadius={22}
-                    background="#000"
                     boxShadow={[[0, 10, 30, [0, 0, 0]]]}
                     overflow="hidden"
                     initial="enter"
@@ -362,7 +365,7 @@ export default function NeckSection() {
                   alignSelf="center"
                   width={80}
                   height={80}
-                  key={index}
+                  key={`iconAfter-${page}`}
                   custom={direction}
                   variants={variants}
                   src={elements[index].iconAfter}
@@ -371,7 +374,7 @@ export default function NeckSection() {
               <Space size="xxl" />
               <FadeChild delay={600} alignSelf="flex-start">
                 <Image
-                  key={index}
+                  key={`arrowAfter-${page}`}
                   custom={direction}
                   variants={variants}
                   userSelect="none"
@@ -388,7 +391,7 @@ export default function NeckSection() {
 
           <Row margin={[32, 'auto', 0]}>
             {[0, 1, 2].map(x => (
-              <Dot key={x} active={x === index} onClick={() => goTo(x)} />
+              <Dot key={`dot-${x}`} active={x === index} onClick={() => goTo(x)} />
             ))}
           </Row>
         </Col>

@@ -180,26 +180,27 @@ export function FloatingView(props: FloatingViewProps) {
       width,
       height,
     })
-  }, [])
+  }, [x, y, width, height])
 
   const prevDim = useRef({ height: 0, width: 0 })
 
   // sync props
 
-  const syncDimensionProp = (dim: 'width' | 'height' | 'xy', val: any) => {
+  const syncDimensionProp = (dim: 'width' | 'height' | 'x' | 'y', val: any) => {
     const prev = prevDim.current
     const cur = getAnimation(dim)
-    if (Array.isArray(val) ? val.every(z => isDefined(z)) : isDefined(val)) {
+    if (isDefined(val)) {
       if (val !== cur) {
         prev[dim] = cur
-        update({ [dim]: val })
+        update({ ...cur, [dim]: val })
       }
     } else if (prev[dim]) {
-      setAnimation({ [dim]: prev[dim] })
+      setAnimation({ ...cur, [dim]: prev[dim] })
     }
   }
 
-  useEffect(() => syncDimensionProp('xy', [x, y]), [x, y])
+  useEffect(() => syncDimensionProp('x', x), x)
+  useEffect(() => syncDimensionProp('y', y), y)
   useEffect(() => syncDimensionProp('width', width), [width])
   useEffect(() => syncDimensionProp('height', height), [height])
 
@@ -231,8 +232,8 @@ export function FloatingView(props: FloatingViewProps) {
     }
     const cur = getAnimation()
     let { width, height } = cur
-    let left = cur.xy[0]
-    let top = cur.xy[1]
+    let left = cur.x
+    let top = cur.y
 
     if (sides.right) {
       width = w
@@ -242,16 +243,16 @@ export function FloatingView(props: FloatingViewProps) {
     }
     if (sides.top) {
       const diff = h - cur.height
-      top = cur.xy[1] - diff
+      top = cur.y - diff
       height = cur.height + diff
     }
     if (sides.left) {
       const diff = w - cur.width
-      left = cur.xy[0] - diff
+      left = cur.x - diff
       width = cur.width + diff
     }
 
-    update({ width, height, xy: [left, top], ...instantConf })
+    update({ width, height, x: left, y: top, ...instantConf })
   }, [])
 
   const dragCancel = useRef(null)
@@ -263,10 +264,9 @@ export function FloatingView(props: FloatingViewProps) {
       ActiveDraggables.remove(dragCancel.current)
       return
     }
-    const xy = lastDrop.current.xy
-    const nextxy = [delta[0] + xy[0], delta[1] + xy[1]]
+    const { x, y } = lastDrop.current
     if (down) {
-      update({ xy: nextxy, ...instantConf }, true)
+      update({ x: delta[0] + x, y: delta[1] + y, ...instantConf }, true)
     } else {
       commit()
       ActiveDraggables.remove(dragCancel.current)

@@ -191,6 +191,7 @@ export class AppsBuilder {
 
     // manage node compilers
     log.info(`\n\n\nWARNING DISABLING NODE PRE BUILD FOR NOW, RE ENABLE \n\n\n`)
+    nodeConfigs
     // for (const name in nodeConfigs) {
     //   const config = nodeConfigs[name]
     //   const runningName = `${name}-node`

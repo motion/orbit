@@ -3,6 +3,7 @@ import { RefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } 
 import { useVisibility } from '../Visibility'
 import { useDebounce } from './useDebounce'
 import { useGet } from './useGet'
+import { useIntersectionObserver } from './useIntersectionObserver'
 import { useMutationObserver } from './useMutationObserver'
 import { useResizeObserver } from './useResizeObserver'
 
@@ -41,12 +42,15 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
       const node = ref.current
       if (!nodeRect) {
         if (node) {
-          set({
-            top: node.offsetTop,
-            left: node.offsetLeft,
-            width: node.clientWidth,
-            height: node.clientHeight,
-          })
+          if (node.offsetWidth === 0 && node.offsetHeight === 0) {
+            // not visible in dom yet
+            return
+          }
+          const { top, left, width, height } = node.getBoundingClientRect()
+          if (isNaN(top)) {
+            debugger
+          }
+          set({ top, left, width, height })
         } else {
           set(null)
         }
@@ -59,12 +63,18 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
         return
       }
       const rect = getRect(nodeRect || node.getBoundingClientRect())
+      if (isNaN(rect.top)) {
+        debugger
+      }
       set(rect)
     },
     [ref],
   )
 
-  useLayoutEffect(measureImmediate, [])
+  useLayoutEffect(measureImmediate, [
+    ref.current ? ref.current.offsetWidth : 0,
+    ref.current ? ref.current.offsetHeight : 0,
+  ])
 
   const measure = useDebounce(measureImmediate, debounce)
 
@@ -88,23 +98,23 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
     onChange: measure,
   })
 
-  // useIntersectionObserver({
-  //   disable,
-  //   ref,
-  //   onChange: entries => {
-  //     if (!entries) return
-  //     const [entry] = entries
-  //     if (entry.isIntersecting) {
-  //       intersected.current = true
-  //       measure(entry.boundingClientRect)
-  //     }
-  //     // disabled this because it doesnt make sense unless under a flag
-  //     // else {
-  //     //   intersected.current = false
-  //     //   measure(false)
-  //     // }
-  //   },
-  // })
+  useIntersectionObserver({
+    disable,
+    ref,
+    onChange: entries => {
+      if (!entries) return
+      const [entry] = entries
+      if (entry.isIntersecting) {
+        intersected.current = true
+        measure(entry.boundingClientRect)
+      }
+      // disabled this because it doesnt make sense unless under a flag
+      // else {
+      //   intersected.current = false
+      //   measure(false)
+      // }
+    },
+  })
 
   useEffect(measure, [ref, measureKey, ...mountArgs])
 

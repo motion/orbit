@@ -34,3 +34,5 @@ export { ThemeProvide } from './theme/ThemeProvide'
 export * from './themes'
 export { propStyleTheme as propsToStyles } from './themes/propStyleTheme'
 export { SimpleStyleObject } from './types'
+
+process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()

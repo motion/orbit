@@ -169,7 +169,7 @@ export const OrbitHeader = memo(() => {
     >
       <OrbitHeaderEditingBg isActive={isDeveloping} />
 
-      <HeaderTop height={slim ? 42 : 56}>
+      <HeaderTop height={slim ? 42 : 50}>
         <HeaderButtonPassProps>
           <HeaderSide space="sm" slim={slim}>
             <BackButton isTorn={isTorn} />

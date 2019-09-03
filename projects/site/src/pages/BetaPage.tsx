@@ -3,7 +3,7 @@ import { mount, route } from 'navi'
 import React from 'react'
 
 import { Header } from '../Header'
-import { FadeChild, FadeParent } from '../views/FadeIn'
+import { FadeChild, FadeParent } from '../views/FadeInView'
 import { SectionContent } from '../views/SectionContent'
 import { EarlyAccessContent } from './HomePage/EarlyAccessContent'
 import { Footer } from './HomePage/Footer'
@@ -25,7 +25,7 @@ export function BetaPage() {
         <Space size="xxl" />
 
         <View position="relative">
-          <FadeChild delay={200}>
+          <FadeChild minHeight={800} delay={200}>
             <EarlyAccessContent theme={BetaPage.theme} />
           </FadeChild>
 

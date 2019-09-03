@@ -11,7 +11,7 @@ import { useScreenSize } from './hooks/useScreenSize'
 import { useSiteStore } from './SiteStore'
 import { themes } from './themes'
 import { BusyIndicator } from './views/BusyIndicator'
-import { useFadePage } from './views/FadeIn'
+import { useFadePage } from './views/FadeInView'
 import { HeaderLink, LinksLeft, LinksRight } from './views/HeaderLink'
 
 const transition = 'transform ease 300ms'
@@ -38,10 +38,10 @@ export const usePageTheme = () => {
   ]
 }
 
-const PageLoading = () => {
+const PageLoading = memo(() => {
   const loadingRoute = useLoadingRoute()
   return <BusyIndicator color="#FE5C58" isBusy={!!loadingRoute} delayMs={50} />
-}
+})
 
 export const Layout = memo((props: any) => {
   const forceUpdate = useForceUpdate()

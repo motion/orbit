@@ -166,7 +166,7 @@ class GridStore {
 }
 
 // this is the problem function, type is off
-const { useStore: useGridStore, SimpleProvider } = createStoreContext(GridStore)
+const { useStore: useGridStore, ProvideStore } = createStoreContext(GridStore)
 
 export const GridLayout = memo(function GridLayout(directProps: GridLayoutProps) {
   const props = useDefaultProps(defaultProps, directProps)
@@ -231,7 +231,7 @@ export const GridLayoutChildren = memo((props: GridLayoutPropsChildren) => {
   }
   return (
     <Contents nodeRef={ref}>
-      <SimpleProvider value={gridStore}>{children}</SimpleProvider>
+      <ProvideStore value={gridStore}>{children}</ProvideStore>
     </Contents>
   )
 })

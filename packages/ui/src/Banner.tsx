@@ -1,7 +1,6 @@
 import { createStoreContext } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { FullScreen } from 'gloss'
-import { filter } from 'lodash'
 import React, { FunctionComponent, memo, useCallback, useEffect, useRef } from 'react'
 
 import { Button } from './buttons/Button'
@@ -86,7 +85,7 @@ class BannerStore {
       if (toRemove.onClose) {
         toRemove.onClose()
       }
-      this.banners = filter(this.banners, x => x.key !== key)
+      this.banners = this.banners.filter(x => x.key !== key)
     }
   }
 }
@@ -113,7 +112,7 @@ export const ProvideBanner = memo(
     const BannerView = template
 
     return (
-      <BannerManager.SimpleProvider value={bannerStore}>
+      <BannerManager.ProvideStore value={bannerStore}>
         {children}
 
         {/* default to a bottom fixed position, we can make this customizable */}
@@ -143,7 +142,7 @@ export const ProvideBanner = memo(
             </FlipAnimate>
           </FullScreen>
         </Portal>
-      </BannerManager.SimpleProvider>
+      </BannerManager.ProvideStore>
     )
   },
 )

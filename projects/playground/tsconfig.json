@@ -8,5 +8,5 @@
     "tsBuildInfoFile": "tsconfig.tsbuildinfo"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../../packages/kit" }, { "path": "../../packages/ui" }]
+  "references": [{ "path": "../../app/kit" }, { "path": "../../packages/ui" }]
 }

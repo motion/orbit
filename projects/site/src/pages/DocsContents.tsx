@@ -1,4 +1,4 @@
-import GithubIcon from '!raw-loader!../../public/logos/github.svg'
+import GithubIcon from '!raw-loader!../public/logos/github.svg'
 import { themes } from '@o/kit'
 import { Button, gloss, Icon, Row, Section, Space, SurfacePassProps, Tag, Title } from '@o/ui'
 import { ThemeProvide } from 'gloss'
@@ -9,7 +9,7 @@ import { scrollTo } from '../etc/helpers'
 import { Navigation } from '../Navigation'
 import { linkProps } from '../useLink'
 import { CodeBlock } from '../views/CodeBlock'
-import { FadeChild } from '../views/FadeIn'
+import { FadeChild } from '../views/FadeInView'
 import { MDX } from '../views/MDX'
 import { docsItems } from './docsItems'
 import { Example } from './DocsPage/Example'
@@ -26,7 +26,8 @@ export const DocsContents = memo(
       <>
         <SurfacePassProps
           alt="bordered"
-          size={2}
+          size={1.5}
+          sizeFont={0.75}
           flex={1}
           ellipse
           cursor="pointer"

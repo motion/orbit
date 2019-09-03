@@ -6,25 +6,28 @@ import { AboveFooter } from './AboveFooter'
 import { Footer } from './Footer'
 import { blackWavePattern } from './purpleWaveUrl'
 
-export default memo(function FeetSection() {
+export default memo(function FeetSection(props: { hideJoin?: boolean }) {
   return (
     <>
-      <Page.Content padding="xxl" justifyContent="space-between" alignItems="center">
+      <View padding="xxl" justifyContent="space-between" alignItems="center">
         <Space size="xl" />
-        <AboveFooter />
+        <View flex={3} />
+        <AboveFooter hideJoin={props.hideJoin} />
         <View flex={1} />
         <Footer />
-      </Page.Content>
+        <View flex={1} />
+      </View>
 
-      <Page.Background
-        speed={0.1}
+      <Page.BackgroundParallax
+        speed={0.2}
         zIndex={-10}
-        bottom="-110%"
+        offset={-0.2}
         backgroundSize="cover"
         left="-40%"
         right="-40%"
         width="180%"
-        top="-50%"
+        top="0%"
+        bottom="-90%"
         backgroundPosition="top center"
         opacity={1}
         backgroundImage={blackWavePattern}

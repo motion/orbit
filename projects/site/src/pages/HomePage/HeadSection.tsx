@@ -4,8 +4,7 @@ import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
-import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeIn'
-import { Page } from '../../views/Page'
+import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 import { useTextFit } from '../../views/useTextFit'
@@ -24,12 +23,12 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Build and collaborate on apps that power your company.`,
-    `Orbit is an open, data-first Work OS.`,
+    `Create apps for yourself, your team, or to sell to others.`,
+    `The new app platform that gets out of your way.`,
   ],
   medium: [
-    `Build and collaborate on apps that power your company.`,
-    `Orbit is an open, data-first Work OS.`,
+    `Create apps for yourself, your team, or to sell to others.`,
+    `The new app platform that gets out of your way.`,
   ],
   small: [`Build apps that power your company.`, `The data-first Work OS.`],
 }
@@ -97,7 +96,7 @@ const HeadContent = memo(() => {
         maxWidth="80%"
       >
         <Paragraph
-          fontWeight={100}
+          fontWeight={400}
           tagName="div"
           style={{
             ...pFit.style,
@@ -153,7 +152,7 @@ const HeadContent = memo(() => {
 const HeadJoin = memo(() => {
   return (
     <View flex={1} width="100%" position="absolute" bottom="15%" alignItems="center">
-      <FadeChild {...fadeUpProps} delay={500}>
+      <FadeChild {...fadeAnimations.up} delay={500}>
         <SurfacePassProps elevation={5} {...fontProps.TitleFont}>
           <Theme name="orbitOneDark">
             <Scale size={useScreenVal(0.8, 1, 1.1)}>
@@ -204,22 +203,20 @@ export function HeadSection() {
 
   return (
     <Fade.FadeProvide>
-      <Page.Content>
-        <Col
-          right={useScreenHeightVal(40, 0)}
-          left={useScreenHeightVal(40, 0)}
-          opacity={fontsLoaded ? 1 : 0}
-          margin={['auto', 0]}
-        >
-          <Space size="xxxl" />
-          <Col nodeRef={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
-            <HeadContent />
-          </Col>
-          <Space size="xxxl" />
-          <View flex={1} />
-          <HeadJoin />
+      <Col
+        right={useScreenHeightVal(40, 0)}
+        left={useScreenHeightVal(40, 0)}
+        opacity={fontsLoaded ? 1 : 0}
+        margin={['auto', 0]}
+      >
+        <Space size="xxxl" />
+        <Col nodeRef={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
+          <HeadContent />
         </Col>
-      </Page.Content>
+        <Space size="xxxl" />
+        <View flex={1} />
+        <HeadJoin />
+      </Col>
     </Fade.FadeProvide>
   )
 }

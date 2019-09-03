@@ -3,9 +3,7 @@ import React from 'react'
 
 import { employees } from './fakeData'
 
-const avatar = (
-  <Avatar width={28} height={28} src={require('../../../public/images/orbit-logo.svg')} />
-)
+const avatar = <Avatar width={28} height={28} src={require('../../public/images/orbit-logo.svg')} />
 
 const rows = employees.map(x => ({
   key: `${x.email}${x.dob}${x.name.first}`,

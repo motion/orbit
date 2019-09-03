@@ -3,7 +3,7 @@ import React from 'react'
 
 import { colors } from '../../colors'
 import { linkProps } from '../../useLink'
-import { FadeChild } from '../../views/FadeIn'
+import { FadeChild } from '../../views/FadeInView'
 import { TitleText } from '../../views/TitleText'
 import { useScreenVal } from '../HomePage/SpacedPageContent'
 import { BlogLayout } from './BlogLayout'

@@ -2,15 +2,17 @@ import { App } from '@o/reactron'
 import * as React from 'react'
 
 import { devTools } from './helpers/devTools'
-import { ElectronDebugStore } from './stores/ElectronDebugStore'
 
-const debugStore = new ElectronDebugStore()
+if (process.env.NODE_ENV === 'development') {
+  require('./dev')
+}
 
 export default function ElectronRoot(props: { children: any }) {
   return (
     <App
-      onBeforeQuit={debugStore.handleBeforeQuit}
-      onWillQuit={debugStore.handleQuit}
+      onWillQuit={() => {
+        require('global').handleExit()
+      }}
       devTools={devTools}
     >
       {props.children}

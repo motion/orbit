@@ -1,20 +1,21 @@
 import React from 'react'
 
 import { LinkState } from '../LinkState'
-import { FadeChild, fastConfig, fastStatticConfig } from './FadeIn'
+import { fadeAnimations, FadeChild, transitions } from './FadeInView'
 import { HeaderContext } from './HeaderContext'
 import { Link } from './LinkProps'
 
 export const HeaderLink = ({ delay, children, ...props }: any) => {
-  const header = HeaderContext.useProps()
+  const header = HeaderContext.useStore()
   const leaving = header && header.shown === false
   return (
-    <Link width="33%" fontWeight={400} fontFamily="GTEesti" fontSize={14} {...props}>
+    <Link width="33%" fontWeight={400} fontSize={15} {...props}>
       <FadeChild
-        willAnimateOnHover
-        off={!LinkState.didAnimateOut}
+        disable={!LinkState.didAnimateOut}
         delay={leaving ? 0 : delay}
-        config={leaving ? fastStatticConfig : fastConfig}
+        reverse={leaving}
+        {...(leaving ? fadeAnimations.up : fadeAnimations.down)}
+        transition={leaving ? transitions.fastStatic : transitions.fast}
       >
         {children}
       </FadeChild>

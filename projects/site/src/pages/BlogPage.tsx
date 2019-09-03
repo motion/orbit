@@ -5,7 +5,7 @@ import { View } from 'react-navi'
 
 import { Header } from '../Header'
 import { ContentSection } from '../views/ContentSection'
-import { FadeParent } from '../views/FadeIn'
+import { FadeParent } from '../views/FadeInView'
 import { MDX } from '../views/MDX'
 import { SectionContent } from '../views/SectionContent'
 import { TitleText } from '../views/TitleText'

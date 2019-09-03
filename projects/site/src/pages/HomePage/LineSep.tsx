@@ -1,6 +1,6 @@
-import sepFilled from '!raw-loader!../../../public/images/line-sep-filled.svg'
-import sep from '!raw-loader!../../../public/images/line-sep.svg'
-import { SVG, useTheme, View, ViewProps } from '@o/ui'
+import sepFilled from '!raw-loader!../../public/images/line-sep-filled.svg'
+import sep from '!raw-loader!../../public/images/line-sep.svg'
+import { useTheme, View, ViewProps } from '@o/ui'
 import React from 'react'
 
 export function LineSep({
@@ -23,7 +23,7 @@ export function LineSep({
   }
   return (
     <View color={theme.background} position="absolute" top={0} width="100%" height={100} {...props}>
-      <SVG svg={svg} width="100%" />
+      <svg width="100%" dangerouslySetInnerHTML={{ __html: svg }} />
     </View>
   )
 }

@@ -1,9 +1,8 @@
-import { RefObject, useCallback, useEffect, useRef, useState } from 'react'
+import { RefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { useVisibility } from '../Visibility'
 import { useDebounce } from './useDebounce'
 import { useGet } from './useGet'
-import { useIntersectionObserver } from './useIntersectionObserver'
 import { useMutationObserver } from './useMutationObserver'
 import { useResizeObserver } from './useResizeObserver'
 
@@ -14,36 +13,45 @@ export type Rect = {
   left: number
 }
 
-export function getRect(o: any) {
-  return { width: o.width, height: o.height, left: o.left, top: o.top }
+export function getRect(o: any): Rect {
+  return { width: +o.width, height: +o.height, left: +o.left, top: +o.top }
 }
 
 type UsePositionProps = {
   ref: RefObject<HTMLElement>
   measureKey?: any
-  onChange?: ((change: { rect: Rect | undefined; visible: boolean }) => any) | null
+  onChange?: ((change: Rect | null) => any) | null
   preventMeasure?: boolean
   debounce?: number
 }
 
 export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
-  const [pos, setPos] = useState(null)
   const { measureKey, ref, preventMeasure, debounce = 100 } = props
+  const [pos, setPos] = useState<Rect | null>(null)
   const onChange = useGet(props.onChange || setPos)
   const disable = useVisibility() === false
   const intersected = useRef(false)
   const getState = useGet({ disable, preventMeasure })
-  const measureSlow = useCallback(
+  const measureImmediate = useCallback(
     (nodeRect?) => {
       const state = getState()
       if (state.preventMeasure) return
-      const callback = onChange()
-      if (!callback) return
-      if (nodeRect === false) {
-        callback({ visible: false, rect: null })
+      const set = onChange()
+      if (!set) return
+      const node = ref.current
+      if (!nodeRect) {
+        if (node) {
+          set({
+            top: node.offsetTop,
+            left: node.offsetLeft,
+            width: node.clientWidth,
+            height: node.clientHeight,
+          })
+        } else {
+          set(null)
+        }
         return
       }
-      const node = ref.current
       if (!node) return
       if (!intersected.current) return
       const visible = state.disable === false || !isVisible(node)
@@ -51,12 +59,14 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
         return
       }
       const rect = getRect(nodeRect || node.getBoundingClientRect())
-      callback({ visible, rect })
+      set(rect)
     },
     [ref],
   )
 
-  const measure = useDebounce(measureSlow, debounce)
+  useLayoutEffect(measureImmediate, [])
+
+  const measure = useDebounce(measureImmediate, debounce)
 
   useResizeObserver({
     ref,
@@ -78,21 +88,23 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
     onChange: measure,
   })
 
-  useIntersectionObserver({
-    disable,
-    ref,
-    onChange: entries => {
-      if (!entries) return
-      const [entry] = entries
-      if (entry.isIntersecting) {
-        intersected.current = true
-        measure(entry.boundingClientRect)
-      } else {
-        intersected.current = false
-        measure(false)
-      }
-    },
-  })
+  // useIntersectionObserver({
+  //   disable,
+  //   ref,
+  //   onChange: entries => {
+  //     if (!entries) return
+  //     const [entry] = entries
+  //     if (entry.isIntersecting) {
+  //       intersected.current = true
+  //       measure(entry.boundingClientRect)
+  //     }
+  //     // disabled this because it doesnt make sense unless under a flag
+  //     // else {
+  //     //   intersected.current = false
+  //     //   measure(false)
+  //     // }
+  //   },
+  // })
 
   useEffect(measure, [ref, measureKey, ...mountArgs])
 

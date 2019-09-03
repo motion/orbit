@@ -10,15 +10,6 @@ export type SectionContentProps = ViewProps & {
   pages?: number
 }
 
-const style = {
-  position: 'relative',
-  flex: 1,
-  flexDirection: 'inherit',
-  flexWrap: 'inherit',
-  alignItems: 'inherit',
-  justifyContent: 'inherit',
-} as const
-
 export const SectionContent = ({
   outside,
   children,
@@ -43,9 +34,7 @@ export const SectionContent = ({
     >
       {outside}
       <SectionContentChrome flex={flex} {...props}>
-        <div style={{ width: '100%', display: 'flex', flexFlow: 'column', ...style }}>
-          {children}
-        </div>
+        {children}
       </SectionContentChrome>
     </Section>
   )
@@ -59,6 +48,7 @@ const Section = gloss(View, {
 
 export const SectionContentChrome = gloss(View, {
   minHeight: '100%',
+  // alignItems: 'center',
   width: '100%',
   maxWidth: Constants.widths.large,
   paddingLeft: Constants.sidePad,

@@ -1,7 +1,7 @@
 import { GlossPropertySet } from '@o/css'
+import { MotionProps, MotionTransform } from 'framer-motion'
 import { AlphaColorProps, CSSPropertySet, CSSPropertySetStrict, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
 import React from 'react'
-import { SpringValue } from 'react-spring'
 
 import { Size } from '../Space'
 import { CommonViewProps } from './CommonViewProps'
@@ -63,28 +63,30 @@ type CommonHTMLProps = Omit<
   | 'color'
 >
 
-// BUT WERE CHANGING IT TO ACCEPT ANIMATED VALUES FOR ANY CSS PROPERTY
-// WE DONT PASS THIS TO THEMES
-type CSSPropertyStrictWithAnimation = {
-  [P in keyof CSSPropertySetStrict]?: CSSPropertySetStrict[P] | SpringValue
-}
+type MotionCompatCommonProps = Omit<
+  CommonHTMLProps,
+  'onDrag' | 'onDragStart' | 'onDragEnd' | 'style'
+>
 
-export type ViewBaseProps = GlossProps<CommonHTMLProps> &
+export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
   PseudoStyleProps &
   TextSizeProps &
   AlphaColorProps &
   ElevatableProps &
   MarginProps &
-  PaddingProps & {
+  PaddingProps &
+  /** Accept the motion props */
+  Omit<MotionProps, 'animate'> &
+  MotionTransform & {
     // could make this better done in terms of type flow, its for <Input labels...
     label?: React.ReactNode
-    /** Will take animated springs used as properties and apply them as animations */
-    animated?: boolean
+    // allow boolean toggle animate too
+    animate?: boolean & MotionProps['animate']
   }
 
 export type ViewProps = ViewBaseProps &
   // be sure to omit margin/padding
-  Omit<CSSPropertyStrictWithAnimation, 'margin' | 'padding'>
+  Omit<CSSPropertySetStrict, 'margin' | 'padding'>
 
 export type ViewThemeProps = ViewBaseProps & GlossPropertySet
 
@@ -95,6 +97,4 @@ export type ScrollableViewProps = Omit<ViewProps, 'flexFlow'> & {
   scrollable?: boolean | 'x' | 'y'
   parentSpacing?: Size
   animated?: boolean
-  scrollLeft?: SpringValue<number> // TODO | number requires a custom hook
-  scrollTop?: SpringValue<number>
 }

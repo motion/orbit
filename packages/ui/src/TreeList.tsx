@@ -251,7 +251,7 @@ const getStateOptions = (stateType: 'tree' | 'user', props?: TreeListProps) => {
 }
 
 const ContextualTreeListStore = createStoreContext(TreeListStore)
-export const ProvideTreeList = ContextualTreeListStore.SimpleProvider
+export const ProvideTreeList = ContextualTreeListStore.ProvideStore
 export const useTreeList = ContextualTreeListStore.useStore
 
 /**

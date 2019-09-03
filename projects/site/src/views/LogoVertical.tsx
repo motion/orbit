@@ -1,4 +1,4 @@
-import words from '!raw-loader!../../public/images/logomark-solid.svg'
+import words from '!raw-loader!../public/images/logomark-solid.svg'
 import { Space, SVG, View, ViewProps } from '@o/ui'
 import { gloss, useTheme } from 'gloss'
 import React, { memo } from 'react'

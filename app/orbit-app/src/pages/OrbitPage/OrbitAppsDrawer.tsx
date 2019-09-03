@@ -8,7 +8,7 @@ import { paneManagerStore } from '../../om/stores'
 import { OrbitApp, whenIdle } from './OrbitApp'
 import { appsCarouselStore } from './OrbitAppsCarouselStore'
 
-const boxShadowSize = 15
+const yOffset = 15
 
 class AppsDrawerStore {
   props: {
@@ -43,9 +43,9 @@ class AppsDrawerStore {
     () => [this.isOpen, this.props.height],
     () => {
       if (this.isOpen) {
-        this.props.springSet({ y: boxShadowSize })
+        this.props.springSet({ y: yOffset })
       } else {
-        this.props.springSet({ y: this.props.height + boxShadowSize })
+        this.props.springSet({ y: this.props.height + yOffset })
       }
     },
   )
@@ -126,8 +126,8 @@ export const OrbitAppsDrawer = memo(() => {
         background={theme.backgroundStronger}
         boxShadow={[
           {
-            blur: boxShadowSize * 0.7,
-            color: [0, 0, 10, hasDarkBackground ? 0.5 : 0.3],
+            blur: hasDarkBackground ? 10 : 5,
+            color: [0, 0, 0, hasDarkBackground ? 0.5 : 0.1],
           },
         ]}
         sizeRadius={2}
@@ -151,7 +151,7 @@ export const OrbitAppsDrawer = memo(() => {
           return (
             <FullScreen
               key={app.id}
-              bottom={boxShadowSize}
+              bottom={yOffset}
               opacity={0}
               transform={{
                 y: frameSize.height,

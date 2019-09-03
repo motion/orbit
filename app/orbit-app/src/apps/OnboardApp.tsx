@@ -73,7 +73,7 @@ export function OnboardApp() {
   }, [flow.index])
 
   return (
-    <Onboard.SimpleProvider value={onboardStore}>
+    <Onboard.ProvideStore value={onboardStore}>
       <FlowProvide value={flow}>
         <BlurryGuys />
         <Col width="80%" maxWidth={600} margin="auto" height="80%">
@@ -102,7 +102,7 @@ export function OnboardApp() {
         </Col>
         <OnboardToolbar />
       </FlowProvide>
-    </Onboard.SimpleProvider>
+    </Onboard.ProvideStore>
   )
 }
 

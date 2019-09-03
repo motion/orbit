@@ -28,7 +28,11 @@ const mergeDisabled = merge.bind(
   'alphaDisabled',
 )
 
-export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
+export const colorTheme: ThemeFn = (props, theme, previous) => {
+  return alphaColorTheme(props, theme, previous, true)
+}
+
+export const alphaColorTheme = (props, theme, previous, shouldSetDefault = false) => {
   const color = props.color || theme.color
   const alpha = selectDefined(props.alpha, theme.alpha)
   const next: CSSPropertySet | null = {}
@@ -36,7 +40,9 @@ export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
     if (color !== 'inherit' && typeof alpha === 'number') {
       next.color = Config.toColor(color).setAlpha(alpha)
     } else {
-      next.color = color
+      if (shouldSetDefault) {
+        next.color = color
+      }
     }
   }
   const applyPsuedos = props.applyPsuedoColors
@@ -50,7 +56,10 @@ export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
     mergeActive(next, color, props, theme)
     mergeDisabled(next, color, props, theme)
   }
-  return mergeStyles(previous, next)
+  if (Object.keys(next).length) {
+    const res = mergeStyles(previous, next)
+    return res
+  }
 }
 
 function merge(

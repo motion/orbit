@@ -93,9 +93,9 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
   }, [stackNav.stack])
 
   return (
-    <StackNavContext.SimpleProvider value={stackNav}>
+    <StackNavContext.ProvideStore value={stackNav}>
       <Slider curFrame={stackElements.length - 1}>{stackElements}</Slider>
-    </StackNavContext.SimpleProvider>
+    </StackNavContext.ProvideStore>
   )
 })
 

@@ -8,6 +8,8 @@ import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
 
+// reduced a 5mb bundle by 0.01mb...
+// const ShakePlugin = require('webpack-common-shake').Plugin
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { BundleStatsWebpackPlugin } = require('bundle-stats')
 
@@ -187,8 +189,7 @@ console.log('babelrcOptions', babelrcOptions)
 async function makeConfig() {
   // get the list of paths to all monorepo packages to apply ts-loader too
   const packages = await LernaProject.getPackages(repoRoot)
-  const tsEntries = packages.map(pkg => Path.join(pkg.location, 'src'))
-  // console.log('tsEntries', tsEntries)
+  const tsEntries = packages.map(pkg => Path.join(pkg.location))
 
   const config = {
     target,
@@ -348,17 +349,18 @@ async function makeConfig() {
 
       target !== 'node' && new webpack.IgnorePlugin({ resourceRegExp: /electron-log/ }),
 
-      tsConfigExists &&
-        !isProd &&
-        new ForkTsCheckerWebpackPlugin({
-          useTypescriptIncrementalApi: true,
-        }),
+      // tsConfigExists &&
+      //   !isProd &&
+      //   new ForkTsCheckerWebpackPlugin({
+      //     useTypescriptIncrementalApi: true,
+      //   }),
 
       target !== 'node' &&
         new HtmlWebpackPlugin({
-          chunksSortMode: 'none',
+          // chunksSortMode: 'manual',
           favicon: 'public/favicon.png',
           template: 'public/index.html',
+          // inject: true,
           ...(isProd &&
             !NO_OPTIMIZE && {
               minify: {
@@ -430,13 +432,15 @@ async function makeConfig() {
           compare: false,
         }),
 
-      !isProd && new webpack.NamedModulesPlugin(),
+      // !isProd && new webpack.NamedModulesPlugin(),
 
       isProd && new DuplicatePackageCheckerPlugin(),
 
-      new CircularDependencyPlugin({
-        // failOnError: true,
-      }),
+      // isProd && new ShakePlugin(),
+
+      // new CircularDependencyPlugin({
+      //   // failOnError: true,
+      // }),
 
       flags.executable &&
         new webpack.BannerPlugin({

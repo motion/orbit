@@ -1,19 +1,9 @@
-import {
-  Col,
-  FullScreen,
-  Grid,
-  ListItem,
-  SimpleText,
-  SpaceGroup,
-  TextProps,
-  Theme,
-  View,
-} from '@o/ui'
+import { Col, Grid, ListItem, SimpleText, SpaceGroup, TextProps, Theme, View } from '@o/ui'
 import React, { memo } from 'react'
 
-import earth from '../../../public/images/earth.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
-import { FadeChild, FadeParent } from '../../views/FadeIn'
+import earth from '../../public/images/earth.jpg'
+import { FadeChild, FadeParent } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -35,31 +25,26 @@ export const SubParagraph = (props: TextProps) => (
 export default function LegsSection() {
   return (
     <Theme name="home">
-      <Page.Content>
-        <View height={70} />
-        <AboutSection />
-      </Page.Content>
+      <View height={70} />
+      <AboutSection />
 
-      <Page.Parallax speed={0.075} zIndex={-1}>
-        <FullScreen
-          className="earth"
-          backgroundImage={`url(${earth})`}
-          backgroundSize="contain"
-          backgroundPosition="center center"
-          backgroundRepeat="no-repeat"
-          transform={{
-            scale: 1,
-            x: '6%',
-            y: '-5%',
-          }}
-        />
-      </Page.Parallax>
+      <Page.BackgroundParallax
+        speed={0.2}
+        zIndex={-2}
+        className="earth"
+        backgroundImage={`url(${earth})`}
+        backgroundSize="contain"
+        backgroundPosition="center center"
+        backgroundRepeat="no-repeat"
+        x="6%"
+        offset={-0.05}
+      />
     </Theme>
   )
 }
 
 const Item = props => (
-  <ListItem title={<SimpleText flex={1} size="lg" alpha={0.75} {...props} />} icon="tick" />
+  <ListItem title={<SimpleText flex={1} size="sm" alpha={0.75} {...props} />} icon="tick" />
 )
 
 const dly = 120

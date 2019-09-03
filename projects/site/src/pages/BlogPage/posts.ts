@@ -1,4 +1,4 @@
-import nateImg from '../../../public/images/nate.jpg'
+import nateImg from '../../public/images/nate.jpg'
 import { PostEntry } from './PostEntry'
 
 export type PostDirectory = {

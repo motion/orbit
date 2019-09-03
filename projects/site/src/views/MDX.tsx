@@ -12,6 +12,9 @@ import { IntroText } from './IntroText'
 import { Key } from './Key'
 import { TitleText } from './TitleText'
 
+const contentSpaceLg = <Space size="xl" />
+const contentSpace = <Space size="lg" />
+
 export const components = {
   // custom
   Tag,
@@ -21,40 +24,40 @@ export const components = {
   IntroText: props => (
     <>
       <IntroText {...props} />
-      <Space size="lg" />
+      {contentSpaceLg}
     </>
   ),
 
   h1: props => (
     <>
       <TitleText size="lg" {...props} />
-      <Space />
+      {contentSpace}
     </>
   ),
   h2: props => (
     <>
       <TitleText marginTop={16} size="md" {...props} />
-      <Space size="lg" />
+      {contentSpaceLg}
     </>
   ),
   h3: props => (
     <>
-      <Space />
+      {contentSpace}
       <TitleText marginTop={16} size="sm" {...props} />
-      <Space />
+      {contentSpace}
     </>
   ),
   h4: props => (
     <>
       <TitleText size="xs" {...props} />
-      <Space />
+      {contentSpace}
     </>
   ),
   pre: props => <div {...props} />,
   code: props => (
     <>
       <CodeBlock {...props} />
-      <Space />
+      {contentSpace}
     </>
   ),
   li: props => (
@@ -66,18 +69,19 @@ export const components = {
   ul: props => (
     <>
       <ul className="body-text" {...props} />
-      <Space />
+      {contentSpace}
     </>
   ),
 
-  a: ({ tagName: _ignore, ...props }) => {
-    return <a {...linkProps(props.href)} {...props} />
+  a: props => {
+    const { tagName, ...lp } = linkProps(props.href)
+    return <a {...lp} {...props} />
   },
 
   ol: props => (
     <>
       <ol className="body-text" {...props} />
-      <Space />
+      {contentSpace}
     </>
   ),
   p: props => (
@@ -90,7 +94,7 @@ export const components = {
         color="inherit"
         {...props}
       />
-      <Space />
+      {contentSpace}
     </>
   ),
   description: props => (
@@ -102,7 +106,7 @@ export const components = {
         fontSize="inherit"
         lineHeight="inherit"
       />
-      <Space />
+      {contentSpace}
     </>
   ),
   blockquote: props => (

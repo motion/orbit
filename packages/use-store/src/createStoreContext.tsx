@@ -12,7 +12,7 @@ export function createStoreContext<Instance>(constructor: { new (): Instance }) 
   const Context = createContext<Instance | null>(null)
   return {
     Context,
-    SimpleProvider: ({ value, children }: { value: Instance; children: any }) => {
+    ProvideStore: ({ value, children }: { value: Instance; children: any }) => {
       return <Context.Provider value={unwrapProxy(value)}>{children}</Context.Provider>
     },
     Provider: ({ children, ...props }: InferProps<Instance> & { children: any }) => {

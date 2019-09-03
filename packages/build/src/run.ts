@@ -14,11 +14,7 @@ let args = ['--config', configPath, ...extraArgs]
 
 console.log(`Running ${cmd} ${args.join(' ')}`)
 
-const proc = execa(cmd, args, {
-  env: {
-    ENTRY: `${process.cwd()}/src`,
-  },
-})
+const proc = execa(cmd, args)
 
 proc.stdout.pipe(process.stdout)
 proc.stderr.pipe(process.stderr)

@@ -34,7 +34,7 @@ export const AppNavigator = memo((props: AppNavigatorProps) => {
   )
 
   return (
-    <AppChildViews.SimpleProvider value={appChildViews}>
+    <AppChildViews.ProvideStore value={appChildViews}>
       <App
         statusBar={appChildViews.statusBar}
         toolBar={appChildViews.toolBar}
@@ -46,7 +46,7 @@ export const AppNavigator = memo((props: AppNavigatorProps) => {
           ))}
         </CardStack>
       </App>
-    </AppChildViews.SimpleProvider>
+    </AppChildViews.ProvideStore>
   )
 })
 

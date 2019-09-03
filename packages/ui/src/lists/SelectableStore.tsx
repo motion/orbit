@@ -1,16 +1,11 @@
 import { isEqual } from '@o/fast-compare'
 import { always, createStoreContext, ensure, react, useStore } from '@o/use-store'
 import { isDefined, selectDefined } from '@o/utils'
-import { isNumber } from 'lodash'
 import { MutableRefObject } from 'react'
 
-import { defaultSortPressDelay, isBrowser } from '../constants'
+import { defaultSortPressDelay } from '../constants'
 import { Config } from '../helpers/configureUI'
 import { DynamicListControlled } from './DynamicList'
-
-if (isBrowser) {
-  require('./SelectableStore.css')
-}
 
 export enum Direction {
   up = 'up',
@@ -143,6 +138,7 @@ export class SelectableStore {
     if (isEqual(this.active, nextActive)) {
       return
     }
+
     this.active = nextActive
     this.updateActiveAndKeyToIndex(next, false)
   }
@@ -232,7 +228,7 @@ export class SelectableStore {
   // returns only the index of the first row!
   get activeIndex(): number {
     const maybeIndex = this.active.size && this.keyToIndex[[...this.active][0]]
-    return isNumber(maybeIndex) ? maybeIndex : -1
+    return +maybeIndex === maybeIndex ? maybeIndex : -1
   }
 
   setActiveIndex = (index: number) => {
@@ -499,7 +495,7 @@ export class SelectableStore {
 
 const Context = createStoreContext(SelectableStore)
 
-export const SelectableStoreProvider = Context.SimpleProvider
+export const SelectableStoreProvider = Context.ProvideStore
 
 // will grab the parent store if its provided, otherwise create its own
 export function useCreateSelectableStore(props?: SelectableProps, options = { react: false }) {

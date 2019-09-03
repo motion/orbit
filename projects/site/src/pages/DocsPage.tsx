@@ -1,4 +1,4 @@
-import { BorderRight, Button, Col, gloss, List, Portal, Row, Sidebar, Space } from '@o/ui'
+import { BorderRight, Button, Col, gloss, List, Portal, Row, Sidebar, sleep, Space, useOnMount, whenIdle } from '@o/ui'
 import { useForceUpdate, useReaction } from '@o/use-store'
 import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
@@ -12,7 +12,7 @@ import { Navigation } from '../Navigation'
 import { useSiteStore } from '../SiteStore'
 import { linkProps } from '../useLink'
 import { ContentSection } from '../views/ContentSection'
-import { FadeChild, useFadePage } from '../views/FadeIn'
+import { FadeChild, useFadePage } from '../views/FadeInView'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { DocsContents } from './DocsContents'
@@ -37,6 +37,20 @@ const itemProps = {
 
 const DocsList = memo(() => {
   const docsStore = DocsStoreContext.useStore()
+  const [mounted, setMounted] = useState(false)
+
+  useOnMount(async () => {
+    await whenIdle()
+    await sleep(50)
+    await whenIdle()
+    await sleep(50)
+    await whenIdle()
+    await sleep(50)
+    await whenIdle()
+    console.log('MOUNT')
+    setMounted(true)
+  })
+
   return (
     <List
       query={docsStore.search}
@@ -44,7 +58,7 @@ const DocsList = memo(() => {
       selectable
       alwaysSelected
       defaultSelected={docsStore.initialIndex}
-      overscanCount={500}
+      overscanCount={mounted ? 500 : 0}
       items={docsItems[docsStore.section]}
       itemProps={itemProps}
       getItemProps={preloadItem}
@@ -52,7 +66,6 @@ const DocsList = memo(() => {
         if (!rows[0]) {
           console.warn('no row on select!', rows)
         } else {
-          console.log('docsNavigate', rows[0])
           docsNavigate(rows[0].id)
         }
       }, [])}

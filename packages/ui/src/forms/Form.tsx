@@ -1,7 +1,6 @@
 import { isEqual } from '@o/fast-compare'
 import { createStoreContext, ensure, react, shallow, useReaction, useStore } from '@o/use-store'
 import { selectDefined } from '@o/utils'
-import { flatten } from 'lodash'
 import React, { HTMLProps, Ref, useCallback } from 'react'
 
 import { Button } from '../buttons/Button'
@@ -177,19 +176,19 @@ class FormStore {
     this.mountKey
     const keys = Object.keys(this.values).filter(x => names.some(y => y === x))
     const fields = keys.map(key => this.values[key])
-    const selectFields = flatten(
-      fields
-        .filter(x => x.type === 'select')
-        // can have multiple values
-        .map((x, i) => {
-          const key = keys[i]
-          return Array.isArray(x.value)
-            ? x.value.map(y => createIncludeFilter(key, y.value))
-            : x.value
-            ? createIncludeFilter(key, x.value.value)
-            : null
-        }),
-    ).filter(Boolean)
+    const selectFields = fields
+      .filter(x => x.type === 'select')
+      // can have multiple values
+      .map((x, i) => {
+        const key = keys[i]
+        return Array.isArray(x.value)
+          ? x.value.map(y => createIncludeFilter(key, y.value))
+          : x.value
+          ? createIncludeFilter(key, x.value.value)
+          : null
+      })
+      .flat()
+      .filter(Boolean)
     return selectFields
   }
 }
@@ -279,7 +278,7 @@ export function Form({
       onSubmit={onSubmitInner}
       {...{ action, method, target, name }}
     >
-      <FormContext.SimpleProvider value={formStore}>
+      <FormContext.ProvideStore value={formStore}>
         <Section background="transparent" flex={1} {...sectionProps}>
           {formStore.globalError && (
             <>
@@ -308,7 +307,7 @@ export function Form({
             </>
           )}
         </Section>
-      </FormContext.SimpleProvider>
+      </FormContext.ProvideStore>
     </form>
   )
 }

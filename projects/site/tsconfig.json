@@ -3,15 +3,41 @@
   "compilerOptions": {
     "outDir": "_",
     "baseUrl": "./src",
-    "target": "es2018",
-    "module": "esnext"
+    "strict": true,
+    "noEmit": true,
+    "declaration": false,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "isolatedModules": true,
+    "jsx": "preserve"
   },
-  "exclude": ["_", "node_modules", "tmp", "dist"],
+  "exclude": [
+    "_",
+    "node_modules",
+    "tmp",
+    "dist",
+    "server.ts",
+    ".firebase"
+  ],
   "references": [
-    { "path": "../../app/config" },
-    { "path": "../../packages/gloss" },
-    { "path": "../../packages/color" },
-    { "path": "../../packages/use-store" },
-    { "path": "../../packages/react-textfit" }
+    {
+      "path": "../../app/config"
+    },
+    {
+      "path": "../../packages/gloss"
+    },
+    {
+      "path": "../../packages/color"
+    },
+    {
+      "path": "../../packages/use-store"
+    },
+    {
+      "path": "../../packages/react-textfit"
+    }
+  ],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
   ]
 }

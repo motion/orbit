@@ -409,4 +409,4 @@ export function useMenuApps() {
 export const menuStore = createStoreContext(MenuStore)
 export const useMenuStore = menuStore.useStore
 export const useCreateMenuStore = menuStore.useCreateStore
-export const ProvideMenuStore = menuStore.SimpleProvider
+export const ProvideMenuStore = menuStore.ProvideStore

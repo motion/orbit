@@ -124,13 +124,12 @@ export const OrbitHeaderOpenAppMenu = memo(
 
     return (
       <MenuButton
-        alt="action"
         size={1}
         sizeRadius={1.6}
         tooltip="Open to desktop (⌘ + ⏎)"
         onClick={effects.openCurrentApp}
-        elevation={3}
-        elevationShadowOpacity={0.2}
+        elevation={1.5}
+        elevationShadowOpacity={0.1}
         disabled={disabled}
         opacity={disabled ? 0.5 : 1}
         openIconProps={useMemo(

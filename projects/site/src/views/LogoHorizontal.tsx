@@ -1,4 +1,4 @@
-import orbit from '!raw-loader!../../public/images/logomark-solid.svg'
+import orbit from '!raw-loader!../public/images/logomark-solid.svg'
 import { SVG, View, ViewProps } from '@o/ui'
 import { gloss, useTheme } from 'gloss'
 import React, { memo } from 'react'
@@ -20,7 +20,7 @@ export const LogoHorizontal = memo((props: ViewProps & { slim?: boolean }) => {
       padding={[0, 20]}
       margin={[0, 0]}
       transform={{
-        x: 2,
+        x: 6,
         y: -2,
         scale: scaleDown,
       }}

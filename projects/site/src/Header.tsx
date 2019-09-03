@@ -5,7 +5,7 @@ import React, { memo, useLayoutEffect, useState } from 'react'
 import { useIsTiny, useScreenSize } from './hooks/useScreenSize'
 import { LinkState } from './LinkState'
 import { useSiteStore } from './SiteStore'
-import { defaultConfig, FadeChild, fastStatticConfig, useFadePage } from './views/FadeIn'
+import { fadeAnimations, FadeChild, useFadePage } from './views/FadeInView'
 import { HeaderContain, LinkSection } from './views/HeaderContain'
 import { HeaderContext } from './views/HeaderContext'
 import { LinksLeft, LinksRight } from './views/HeaderLink'
@@ -22,14 +22,15 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
   const size = useScreenSize()
   const theme = useTheme()
   const siteStore = useSiteStore()
-  const [shown, setShown] = useState(true)
+  const headerStore = HeaderContext.useCreateStore()
+  const { shown } = headerStore
   const Fade = useFadePage({ shown, threshold: 0 })
 
   useLayoutEffect(() => {
     if (size === 'small') {
-      setShown(siteStore.showSidebar)
+      headerStore.setShown(siteStore.showSidebar)
     } else {
-      setShown(true)
+      headerStore.setShown(true)
     }
   }, [size, siteStore.showSidebar])
 
@@ -47,6 +48,7 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
       </LinkRow>
     )
   }
+
   let children = null
   const menuElement = size === 'small' && (
     <Button
@@ -61,6 +63,7 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
       onClick={siteStore.toggleSidebar}
     />
   )
+
   if (slim) {
     children = (
       <Fade.FadeProvide>
@@ -77,7 +80,7 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
             <LinkSection alignRight>{before}</LinkSection>
             <FadeChild
               off={!LinkState.didAnimateOut}
-              config={shown ? defaultConfig : fastStatticConfig}
+              {...(shown ? fadeAnimations.normal : fadeAnimations.fastStatic)}
               delay={shown ? 0 : 0}
             >
               <LogoHorizontal slim />
@@ -108,7 +111,7 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
             <LinkSection alignRight>{before}</LinkSection>
             <FadeChild
               off={!LinkState.didAnimateOut}
-              config={shown ? defaultConfig : fastStatticConfig}
+              config={shown ? fadeAnimations.normal : fadeAnimations.fastStatic}
               delay={shown ? 100 : 0}
             >
               <LogoVertical />
@@ -119,11 +122,8 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
       </Fade.FadeProvide>
     )
   }
-  return (
-    <HeaderContext.PassProps setShown={setShown} shown={shown}>
-      {children}
-    </HeaderContext.PassProps>
-  )
+
+  return <HeaderContext.ProvideStore value={headerStore}>{children}</HeaderContext.ProvideStore>
 })
 
 const LinkRow = gloss(Box, {

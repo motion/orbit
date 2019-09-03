@@ -8,6 +8,13 @@ import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
 import { ThemeSelect } from './theme/Theme'
 
+// so you can reference in postProcessProps
+export { StyleTracker } from './stylesheet/gc'
+
+export const isGlossView = (view: any): boolean => {
+  return view && !!view[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+}
+
 export const baseIgnoreAttrs = {
   ...validCSSAttr,
   width: false,
@@ -40,7 +47,7 @@ export type GlossConfig<Props> = {
   displayName?: string
   ignoreAttrs?: { [key: string]: boolean }
   defaultProps?: Partial<Props>
-  modifyProps?: (curProps: Props, nextProps: any) => any
+  postProcessProps?: (curProps: Props, nextProps: any, tracker: StyleTracker) => any
   getElement?: (props: Props) => any
   isDOMElement?: boolean
 }
@@ -192,12 +199,12 @@ export function gloss<Props = any, ThemeProps = Props>(
     let element = typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
 
     // helper for element
-    const getEl = config && config.getElement
+    const getEl = config!.getElement
     if (getEl) {
       element = getEl(props)
     }
 
-    const isDOMElement = typeof element === 'string' || (config && config.isDOMElement)
+    const isDOMElement = typeof element === 'string' || config!.isDOMElement
 
     // set up final props with filtering for various attributes
     let finalProps: any = {}
@@ -213,12 +220,12 @@ export function gloss<Props = any, ThemeProps = Props>(
           continue
         }
         if (!validProp(key)) continue
-        finalProps[key] = finalProps[key] || props[key]
+        finalProps[key] = props[key]
       }
     } else {
       for (const key in props) {
         if (conditionalStyles && conditionalStyles[key]) continue
-        finalProps[key] = finalProps[key] || props[key]
+        finalProps[key] = props[key]
       }
     }
 
@@ -227,9 +234,9 @@ export function gloss<Props = any, ThemeProps = Props>(
     finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
 
     // hook: setting your own props
-    const modifyProps = config && config.modifyProps
-    if (modifyProps) {
-      modifyProps(props, finalProps)
+    const postProcessProps = config!.postProcessProps
+    if (postProcessProps) {
+      postProcessProps(props, finalProps, tracker)
     }
 
     return createElement(element, finalProps, props.children)
@@ -324,7 +331,7 @@ function addStyles(
     if (!rules) continue
 
     // add the stylesheets and classNames
-    // TODO this could do a simple "diff" so that fast-changing styles only change the "changing" props
+    // TODO could do a simple "diff" so that fast-changing styles only change the "changing" props
     // it would likely help things like when you animate based on mousemove, may be slower in default case
     const className = addRules(displayName, rules, key, tagName, moreSpecific)
     classNames = classNames || []
@@ -547,7 +554,7 @@ function getAllStyles(
 
 /**
  * We need to compile a few things to get the config right:
- *   1. get all the parents modifyProps until:
+ *   1. get all the parents postProcessProps until:
  *   2. encounter a parent with getElement (and use that isDOMElement)
  *   3. stop there, don't keep going higher
  */
@@ -560,15 +567,17 @@ function getCompiledConfig(
   while (cur) {
     const curConf = cur.internal.getConfig().config
     if (curConf) {
-      if (curConf.modifyProps) {
-        // merge the modifyProps
-        const og = compiledConf.modifyProps
-        compiledConf.modifyProps = og
-          ? (a, b) => {
-              og(a, b)
-              curConf.modifyProps!(a, b)
-            }
-          : curConf.modifyProps
+      if (curConf.postProcessProps) {
+        // merge the postProcessProps
+        const og = compiledConf.postProcessProps
+        if (curConf.postProcessProps !== og) {
+          compiledConf.postProcessProps = og
+            ? (a, b) => {
+                og(a, b, tracker)
+                curConf.postProcessProps!(a, b, tracker)
+              }
+            : curConf.postProcessProps
+        }
       }
       // find the first getElement and break here
       if (curConf.getElement) {

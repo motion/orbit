@@ -1,11 +1,9 @@
-import { createContextualProps, FullScreen, ViewProps } from '@o/ui'
+import { createContextualProps, Parallax, ParallaxViewProps } from '@o/ui'
 import { selectDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
-import { ParallaxLayerProps } from 'react-spring/renderprops-addons'
 
 import { useIsTiny } from '../hooks/useScreenSize'
 import { useSiteStore } from '../SiteStore'
-import { ParallaxLayer } from './Parallax'
 import { SectionContent, SectionContentProps } from './SectionContent'
 
 const { PassProps, useProps } = createContextualProps({
@@ -14,31 +12,37 @@ const { PassProps, useProps } = createContextualProps({
   overflow: 'visible',
 })
 
-type PageProps = {
-  offset: number
-  zIndex?: number
-  children: any
-  fadeable?: boolean
-  pages?: number
+export function Page(props: SectionContentProps) {
+  const siteStore = useSiteStore()
+  const isTiny = useIsTiny()
+  return (
+    <PassProps overflow="visible" zIndex={0} {...props}>
+      <Parallax.Container>
+        <SectionContent
+          className="page"
+          height={siteStore.sectionHeight * (props.pages || 1)}
+          paddingTop={30}
+          paddingBottom={30}
+          {...props}
+          flex="none"
+          {...isTiny && {
+            height: 'auto',
+            minHeight: 'auto',
+          }}
+        />
+      </Parallax.Container>
+    </PassProps>
+  )
 }
 
-export function Page(props: PageProps) {
-  return <PassProps overflow="visible" zIndex={0} {...props} />
-}
-
-Page.Parallax = ({
-  overflow,
-  zIndex,
-  style,
-  ...props
-}: ParallaxLayerProps & { children: any; zIndex?: number; overflow?: any; style?: Object }) => {
+Page.Parallax = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) => {
   const parallax = useProps()
   const isTiny = useIsTiny()
   if (isTiny) {
     return null
   }
   return (
-    <ParallaxLayer
+    <Parallax.View
       speed={0.2}
       offset={parallax.offset}
       style={{
@@ -52,33 +56,18 @@ Page.Parallax = ({
   )
 }
 
-Page.Content = (props: SectionContentProps) => {
-  const parallax = useProps()
-  const zIndex = parallax.zIndex + +(props.zIndex || 0) + 2
-  const siteStore = useSiteStore()
-  const isTiny = useIsTiny()
-  return (
-    <SectionContent
-      className="page-content"
-      height={siteStore.sectionHeight * (props.pages || 1)}
-      paddingTop={30}
-      paddingBottom={30}
-      {...props}
-      zIndex={zIndex}
-      flex="none"
-      {...isTiny && {
-        height: 'auto',
-        minHeight: 'auto',
-      }}
-    />
-  )
-}
-
-Page.Background = ({ speed = 0, ...props }: ViewProps & { speed?: number }) => {
+Page.BackgroundParallax = (props: ParallaxViewProps) => {
   const { zIndex, offset } = useProps()
   return (
-    <Page.Parallax offset={offset} speed={speed} zIndex={(props.zIndex || 0) + zIndex - 2}>
-      <FullScreen transition="all ease 1000ms" className="page-background" {...props} />
-    </Page.Parallax>
+    <Page.Parallax
+      zIndex={(props.zIndex || 0) + zIndex - 2}
+      className="page-background"
+      position="absolute"
+      left="5%"
+      right="5%"
+      top="2%"
+      bottom="2%"
+      {...props}
+    />
   )
 }

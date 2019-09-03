@@ -1,26 +1,29 @@
 import { View, ViewProps } from '@o/ui'
+import { useAnimation } from 'framer-motion'
 import React from 'react'
-import { animated, useSpring } from 'react-spring'
 
 // @ts-ignore
 if (CSS.paintWorklet) {
   // @ts-ignore
-  CSS.paintWorklet.addModule('/smooth-corners.js')
+  CSS.paintWorklet.addModule(
+    process.env.NODE_ENV === 'development' ? '/public/smooth-corners.js' : '/smooth-corners.js',
+  )
 }
 
-const calc = (x, y) => [-(y - window.innerHeight / 2) / 40, (x - window.innerWidth / 2) / 40, 1.05]
-const trans = (x, y, s) => `perspective(1000px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`
-
 export const TiltSquircle = ({ style, ...rest }: ViewProps) => {
-  const [props, set] = useSpring(() => ({
-    xys: [0, 0, 1],
-    config: { mass: 5, tension: 350, friction: 40 },
-  }))
+  const tilt = useAnimation()
   return (
     <Squircle
-      onMouseMove={({ clientX: x, clientY: y }) => set({ xys: calc(x, y) })}
-      onMouseLeave={() => set({ xys: [0, 0, 1] })}
-      style={{ ...style, transform: props.xys.to(trans as any) }}
+      onMouseMove={({ clientX: x, clientY: y }) =>
+        tilt.start({
+          rotateY: (x - window.innerWidth / 2) / 40,
+          rotateX: -(y - window.innerHeight / 2) / 40,
+          scale: 1.1,
+        })
+      }
+      onMouseLeave={() => tilt.start({ rotateY: 0, rotateX: 0, scale: 1 })}
+      data-is="TiltSquircle"
+      animate={tilt}
       {...rest}
     />
   )
@@ -32,29 +35,30 @@ export const Squircle = ({
   height,
   position,
   margin,
-  style,
+  zIndex,
   ...props
 }: ViewProps) => (
   <View
+    perspective="1000px"
     {...{
       width,
       height,
       position,
       margin,
+      zIndex,
     }}
   >
-    <animated.div style={{ ...style, display: 'flex', flexFlow: 'column', zIndex: 2 }}>
-      <View
-        width={width}
-        height={height}
-        style={{
-          maskImage: 'paint(smooth-corners)',
-          WebkitMaskImage: 'paint(smooth-corners)',
-          borderRadius: 60,
-        }}
-        {...props}
-      />
-    </animated.div>
+    <View
+      data-is="Squircle"
+      width={width}
+      height={height}
+      style={{
+        maskImage: 'paint(smooth-corners)',
+        WebkitMaskImage: 'paint(smooth-corners)',
+        borderRadius: 60,
+      }}
+      {...props}
+    />
     {!!boxShadow && (
       <View
         position="absolute"

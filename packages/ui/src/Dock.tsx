@@ -30,11 +30,11 @@ export type DockProps = RowProps
 export const Dock = memo((props: DockProps) => {
   const dockStore = useStore(DockStore)
   return (
-    <DockStoreContext.SimpleProvider value={dockStore}>
+    <DockStoreContext.ProvideStore value={dockStore}>
       <Flipper flipKey={dockStore.key}>
         <Row position="absolute" bottom={20} right={20} zIndex={100000000} {...props} />
       </Flipper>
-    </DockStoreContext.SimpleProvider>
+    </DockStoreContext.ProvideStore>
   )
 })
 

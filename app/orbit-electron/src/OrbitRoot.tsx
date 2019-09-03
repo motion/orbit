@@ -2,19 +2,19 @@ import { Logger } from '@o/logger'
 import { App as ReactronApp } from '@o/reactron'
 import { Electron } from '@o/stores'
 import { useStore } from '@o/use-store'
-import * as React from 'react'
+import React, { useState } from 'react'
 
 import { devTools } from './helpers/devTools'
 import { MenuItems } from './MenuItems'
 import { OrbitMainWindow } from './OrbitMainWindow'
-import { ElectronDebugStore } from './stores/ElectronDebugStore'
 
 const log = new Logger('OrbitRoot')
 
-const debugStore = new ElectronDebugStore()
-
 export function OrbitRoot() {
   const { isMainWindow, appConf, windowId } = useStore(Electron)
+  const [state, setState] = useState({
+    restartKey: 0,
+  })
   log.verbose(
     `windowId: ${windowId} ${process.env.WINDOW_ID}, isMainWindow: ${isMainWindow}, appConf.type: ${
       appConf.appRole
@@ -22,12 +22,15 @@ export function OrbitRoot() {
   )
   return (
     <ReactronApp
-      onBeforeQuit={debugStore.handleBeforeQuit}
-      onWillQuit={debugStore.handleQuit}
+      onWillQuit={() => {
+        require('global').handleExit()
+      }}
       devTools={devTools}
     >
-      <MenuItems restart={debugStore.restart} />
-      <OrbitMainWindow />
+      <MenuItems
+        restart={() => setState(state => ({ ...setState, restartKey: state.restartKey + 1 }))}
+      />
+      <OrbitMainWindow key={state.restartKey} />
     </ReactronApp>
   )
 }

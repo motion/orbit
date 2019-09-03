@@ -129,7 +129,7 @@ export const App = (props: AppProps) => {
   }, [props.menuItems])
 
   return (
-    <ParentApp.SimpleProvider value={parentApp || currentApp}>
+    <ParentApp.ProvideStore value={parentApp || currentApp}>
       {renderApp({
         statusbar: hasStatusbar && <Statusbar {...hasProps}>{props.statusBar}</Statusbar>,
         main: hasMain && <Main {...hasProps}>{props.children}</Main>,
@@ -137,7 +137,7 @@ export const App = (props: AppProps) => {
         toolbar: hasToolbar && <Toolbar {...hasProps}>{props.toolBar}</Toolbar>,
         actions: hasActions && <Actions {...hasProps}>{props.actions}</Actions>,
       })}
-    </ParentApp.SimpleProvider>
+    </ParentApp.ProvideStore>
   )
 }
 

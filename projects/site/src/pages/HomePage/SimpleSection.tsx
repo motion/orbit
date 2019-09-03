@@ -4,7 +4,7 @@ import { Box } from 'gloss'
 import React from 'react'
 
 import { useScreenSize } from '../../hooks/useScreenSize'
-import { FadeChild, fadeLeftProps, fadeRightProps } from '../../views/FadeIn'
+import { fadeAnimations, FadeChild } from '../../views/FadeInView'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 
@@ -19,7 +19,7 @@ export const SimpleSection = ({ delay = 100, index = undefined, title, children,
   const isLeft = isDefined(index) && index % 2 === 0
   return (
     <SectionChrome space {...rest}>
-      <FadeChild {...(isLeft ? fadeRightProps : fadeLeftProps)} delay={delay}>
+      <FadeChild {...(isLeft ? fadeAnimations.right : fadeAnimations.left)} delay={delay}>
         <SectionTitle>
           {isDefined(index) && (
             <Badge opacity={screen === 'large' ? 1 : 0}>

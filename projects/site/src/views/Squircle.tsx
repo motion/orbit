@@ -1,4 +1,5 @@
 import { View, ViewProps } from '@o/ui'
+import { useAnimation } from 'framer-motion'
 import React from 'react'
 
 // @ts-ignore
@@ -9,11 +10,23 @@ if (CSS.paintWorklet) {
   )
 }
 
-const calc = (x, y) => [-(y - window.innerHeight / 2) / 40, (x - window.innerWidth / 2) / 40, 1.05]
-const trans = (x, y, s) => `perspective(1000px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`
-
 export const TiltSquircle = ({ style, ...rest }: ViewProps) => {
-  return <Squircle data-is="TiltSquircle" animate whileHover={{ scale: 1.1 }} {...rest} />
+  const tilt = useAnimation()
+  return (
+    <Squircle
+      onMouseMove={({ clientX: x, clientY: y }) =>
+        tilt.start({
+          rotateY: (x - window.innerWidth / 2) / 40,
+          rotateX: -(y - window.innerHeight / 2) / 40,
+          scale: 1.1,
+        })
+      }
+      onMouseLeave={() => tilt.start({ rotateY: 0, rotateX: 0, scale: 1 })}
+      data-is="TiltSquircle"
+      animate={tilt}
+      {...rest}
+    />
+  )
 }
 
 export const Squircle = ({
@@ -26,6 +39,7 @@ export const Squircle = ({
   ...props
 }: ViewProps) => (
   <View
+    perspective="1000px"
     {...{
       width,
       height,

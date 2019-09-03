@@ -189,7 +189,7 @@ console.log('babelrcOptions', babelrcOptions)
 async function makeConfig() {
   // get the list of paths to all monorepo packages to apply ts-loader too
   const packages = await LernaProject.getPackages(repoRoot)
-  const tsEntries = packages.map(pkg => Path.join(pkg.location, 'src'))
+  const tsEntries = packages.map(pkg => Path.join(pkg.location))
   // console.log('tsEntries', tsEntries)
 
   const config = {
@@ -360,7 +360,7 @@ async function makeConfig() {
         new HtmlWebpackPlugin({
           chunksSortMode: 'manual',
           favicon: 'public/favicon.png',
-          template: '!!prerender-loader?string!public/index.html',
+          template: 'public/index.html',
           ...(isProd &&
             !NO_OPTIMIZE && {
               minify: {

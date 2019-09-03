@@ -2,9 +2,11 @@
   "name": "@o/site",
   "version": "2.6.0",
   "private": true,
-  "main": "./src/index.tsx",
+  "main": "./index.tsx",
   "scripts": {
     "start": "mcro-build --port 5000 --target web",
+    "next:start": "cross-env NODE_ENV=production node .next/production-server/server/index.js",
+    "next:dev": "nodemon server.ts",
     "build": "NODE_ENV=production OPTIMIZE_REACT=1 ANALYZE_BUNDLE=1 mcro-build --prod --build --target web",
     "build:simple": "mcro-build --prod --build --target web",
     "start:prod": "mcro-build --prod --port 5000 --report --target web",
@@ -14,6 +16,7 @@
     "deploy": "rm -r dist || true && yarn build:docs:ui && yarn build:simple && ./firebase-fix.sh && yarn deploy:firebase"
   },
   "dependencies": {
+    "cross-env": "5.2.0",
     "gloss": "^2.6.0",
     "gloss-theme": "^2.6.0",
     "@o/utils": "*",
@@ -31,6 +34,10 @@
     "mobx": "^5.13.0",
     "navi": "0.12.4",
     "prism-react-renderer": "0.1.6",
+    "next": "^9.0.5",
+    "next-transpile-modules": "^2.3.1",
+    "next-optimized-images": "^2.5.3",
+    "next-compose-plugins": "^2.2.0",
     "query-string": "6.2.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -45,6 +52,8 @@
     "zenscroll": "^4.0.2"
   },
   "devDependencies": {
+    "nodemon": "^1.19.1",
+    "ts-node": "^8.3.0",
     "@babel/core": "^7.4.4",
     "@babel/preset-env": "*",
     "@babel/preset-react": "*",

@@ -3,13 +3,9 @@ import { always, createStoreContext, ensure, react, useStore } from '@o/use-stor
 import { isDefined, selectDefined } from '@o/utils'
 import { MutableRefObject } from 'react'
 
-import { defaultSortPressDelay, isBrowser } from '../constants'
+import { defaultSortPressDelay } from '../constants'
 import { Config } from '../helpers/configureUI'
 import { DynamicListControlled } from './DynamicList'
-
-if (isBrowser) {
-  require('./SelectableStore.css')
-}
 
 export enum Direction {
   up = 'up',

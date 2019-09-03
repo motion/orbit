@@ -3,15 +3,33 @@
   "compilerOptions": {
     "outDir": "_",
     "baseUrl": "./src",
-    "target": "es2018",
-    "module": "esnext"
+    "target": "es5",
+    "module": "esnext",
+    "strict": true,
+    "noEmit": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "jsx": "preserve"
   },
-  "exclude": ["_", "node_modules", "tmp", "dist"],
+  "exclude": ["_", "node_modules", "tmp", "dist", "server.ts"],
   "references": [
-    { "path": "../../app/config" },
-    { "path": "../../packages/gloss" },
-    { "path": "../../packages/color" },
-    { "path": "../../packages/use-store" },
-    { "path": "../../packages/react-textfit" }
-  ]
+    {
+      "path": "../../app/config"
+    },
+    {
+      "path": "../../packages/gloss"
+    },
+    {
+      "path": "../../packages/color"
+    },
+    {
+      "path": "../../packages/use-store"
+    },
+    {
+      "path": "../../packages/react-textfit"
+    }
+  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

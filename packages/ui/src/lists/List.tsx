@@ -273,6 +273,16 @@ export const List = memoIsEqualDeep(
         {...collapseProps}
       >
         {children}
+
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+            .selectable-mouse-down * {
+                user-select: none !important;
+              }
+            `,
+          }}
+        />
       </Section>
     )
   }),

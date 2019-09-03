@@ -61,6 +61,7 @@ type CommonHTMLProps = Omit<
   | 'itemScope'
   | 'inputMode'
   | 'color'
+  | 'size'
 >
 
 type MotionCompatCommonProps = Omit<
@@ -81,7 +82,7 @@ export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
     // could make this better done in terms of type flow, its for <Input labels...
     label?: React.ReactNode
     // allow boolean toggle animate too
-    animate?: boolean & MotionProps['animate']
+    animate?: boolean | MotionProps['animate']
   }
 
 export type ViewProps = ViewBaseProps &

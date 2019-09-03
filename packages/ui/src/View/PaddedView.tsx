@@ -59,11 +59,16 @@ export function usePadding(
     : typeof padding === 'number'
     ? padding * scale
     : padding
-  const paddingObj = {
-    paddingTop: selectDefined(props.paddingTop, padding[0], padding),
-    paddingRight: selectDefined(props.paddingRight, padding[1], padding),
-    paddingBottom: selectDefined(props.paddingBottom, padding[2], padding[0], padding),
-    paddingLeft: selectDefined(props.paddingLeft, padding[3], padding[1], padding),
-  }
-  return paddingObj
+
+  const res: any = {}
+  const paddingTop = selectDefined(props.paddingTop, padding[0], padding)
+  const paddingRight = selectDefined(props.paddingRight, padding[1], padding)
+  const paddingBottom = selectDefined(props.paddingBottom, padding[2], padding[0], padding)
+  const paddingLeft = selectDefined(props.paddingLeft, padding[3], padding[1], padding)
+  // dont set unless necessary
+  if (paddingTop) res.paddingTop = paddingTop
+  if (paddingRight) res.paddingRight = paddingRight
+  if (paddingLeft) res.paddingLeft = paddingLeft
+  if (paddingBottom) res.paddingBottom = paddingBottom
+  return res
 }

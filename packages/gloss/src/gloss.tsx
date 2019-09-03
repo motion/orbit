@@ -174,6 +174,12 @@ export function gloss<Props = any, ThemeProps = Props>(
       }
     }, [])
 
+    if (process.env.NODE_ENV === 'development') {
+      if (props['debug'] === 'break') {
+        debugger
+      }
+    }
+
     const dynClassNames = addDynamicStyles(
       id,
       ThemedView.displayName,
@@ -237,6 +243,19 @@ export function gloss<Props = any, ThemeProps = Props>(
     const postProcessProps = config!.postProcessProps
     if (postProcessProps) {
       postProcessProps(props, finalProps, tracker)
+    }
+
+    if (process.env.NODE_ENV === 'development') {
+      if (props['debug']) {
+        console.log(
+          'styles\n',
+          [...classNames].map(x => tracker.get(x.replace(/^s/, ''))).filter(Boolean),
+          '\nprops\n',
+          props,
+          '\nfinalProps\n',
+          finalProps,
+        )
+      }
     }
 
     return createElement(element, finalProps, props.children)

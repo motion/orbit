@@ -1,4 +1,4 @@
-import { GlossPropertySet, validCSSAttr } from '@o/css'
+import { GlossPropertySet } from '@o/css'
 import { motion } from 'framer-motion'
 import { Base, gloss } from 'gloss'
 
@@ -51,10 +51,6 @@ const motionExtraProps = {
 export const motionProps = {
   ...motionStyleProps,
   ...motionExtraProps,
-}
-const validStyleAttr = {
-  ...validCSSAttr,
-  ...motionProps,
 }
 
 // regular view

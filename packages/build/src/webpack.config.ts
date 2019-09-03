@@ -266,7 +266,9 @@ async function makeConfig() {
         },
         {
           test: /\.(j|t)sx?$/,
-          // include: tsEntries,
+          // in prod mode include everything for better bundling,
+          // in dev mode just the entries in monorepo
+          ...(isProd ? null : { include: tsEntries }),
           use: [
             {
               loader: 'babel-loader',

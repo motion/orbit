@@ -190,34 +190,35 @@ export class AppsBuilder {
     let res: WebpackAppsDesc[] = []
 
     // manage node compilers
-    for (const name in nodeConfigs) {
-      const config = nodeConfigs[name]
-      const runningName = `${name}-node`
-      const { running, hash, hasChanged } = this.getRunningApp(runningName, config)
-      if (hasChanged === false) {
-        res.push(running)
-      } else {
-        if (running && running.close) {
-          running.close()
-        }
-        log.info(`Building node app ${name}`)
-        const packer = await webpackPromise([config], { loud: true })
-        if (packer.type !== 'watch') {
-          throw new Error(`Shouldn't ever get here`)
-        }
-        res.push({
-          name: runningName,
-          hash,
-          config,
-          watchingCompiler: packer.compiler,
-          close: () => {
-            packer.compiler.close(() => {
-              log.verbose(`Closed node compiler ${name}`)
-            })
-          },
-        })
-      }
-    }
+    log.info(`\n\n\nWARNING DISABLING NODE PRE BUILD FOR NOW, RE ENABLE \n\n\n`)
+    // for (const name in nodeConfigs) {
+    //   const config = nodeConfigs[name]
+    //   const runningName = `${name}-node`
+    //   const { running, hash, hasChanged } = this.getRunningApp(runningName, config)
+    //   if (hasChanged === false) {
+    //     res.push(running)
+    //   } else {
+    //     if (running && running.close) {
+    //       running.close()
+    //     }
+    //     log.info(`Building node app ${name}`)
+    //     const packer = await webpackPromise([config], { loud: true })
+    //     if (packer.type !== 'watch') {
+    //       throw new Error(`Shouldn't ever get here`)
+    //     }
+    //     res.push({
+    //       name: runningName,
+    //       hash,
+    //       config,
+    //       watchingCompiler: packer.compiler,
+    //       close: () => {
+    //         packer.compiler.close(() => {
+    //           log.verbose(`Closed node compiler ${name}`)
+    //         })
+    //       },
+    //     })
+    //   }
+    // }
 
     log.info(`updateBuild() Finished updating node apps`)
 

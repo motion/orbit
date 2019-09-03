@@ -1,7 +1,6 @@
 import { isEqual } from '@o/fast-compare'
 import { always, createStoreContext, ensure, react, useStore } from '@o/use-store'
 import { isDefined, selectDefined } from '@o/utils'
-import { isNumber } from 'lodash'
 import { MutableRefObject } from 'react'
 
 import { defaultSortPressDelay, isBrowser } from '../constants'
@@ -233,7 +232,7 @@ export class SelectableStore {
   // returns only the index of the first row!
   get activeIndex(): number {
     const maybeIndex = this.active.size && this.keyToIndex[[...this.active][0]]
-    return isNumber(maybeIndex) ? maybeIndex : -1
+    return +maybeIndex === maybeIndex ? maybeIndex : -1
   }
 
   setActiveIndex = (index: number) => {

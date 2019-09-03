@@ -118,7 +118,7 @@ export const PlainIcon = ({
             height: size,
             ...style,
           }}
-          dangerouselySetInnerHTML={{
+          dangerouslySetInnerHTML={{
             __html: svg,
           }}
         />

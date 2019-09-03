@@ -13,7 +13,7 @@ import webpack from 'webpack'
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { BundleStatsWebpackPlugin } = require('bundle-stats')
 
-const LodashWebpackPlugin = require('lodash-webpack-plugin')
+// const LodashWebpackPlugin = require('lodash-webpack-plugin')
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
 // const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
@@ -340,7 +340,7 @@ async function makeConfig() {
       ].filter(Boolean),
     },
     plugins: [
-      new LodashWebpackPlugin(),
+      // new LodashWebpackPlugin(),
 
       new IgnoreNotFoundExportPlugin(),
 
@@ -358,9 +358,9 @@ async function makeConfig() {
 
       target !== 'node' &&
         new HtmlWebpackPlugin({
-          chunksSortMode: 'none',
+          chunksSortMode: 'manual',
           favicon: 'public/favicon.png',
-          template: 'public/index.html',
+          template: '!!prerender-loader?string!public/index.html',
           ...(isProd &&
             !NO_OPTIMIZE && {
               minify: {
@@ -432,15 +432,15 @@ async function makeConfig() {
           compare: false,
         }),
 
-      !isProd && new webpack.NamedModulesPlugin(),
+      // !isProd && new webpack.NamedModulesPlugin(),
 
       isProd && new DuplicatePackageCheckerPlugin(),
 
       // isProd && new ShakePlugin(),
 
-      new CircularDependencyPlugin({
-        // failOnError: true,
-      }),
+      // new CircularDependencyPlugin({
+      //   // failOnError: true,
+      // }),
 
       flags.executable &&
         new webpack.BannerPlugin({

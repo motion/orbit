@@ -30,8 +30,8 @@ export function ScrollableView(props: ScrollableViewProps) {
     scrollable,
     parentSpacing,
     hideScrollbars,
-    scrollLeft,
-    scrollTop,
+    // scrollLeft,
+    // scrollTop,
     ...viewPropsRaw
   } = props
 
@@ -65,8 +65,8 @@ export function ScrollableView(props: ScrollableViewProps) {
   return (
     <ScrollableChrome
       scrollable={scrollable}
-      scrollTop={scrollTop}
-      scrollLeft={scrollLeft}
+      // scrollTop={scrollTop}
+      // scrollLeft={scrollLeft}
       {...viewProps}
       {...props}
       className={`${hideScrollbars ? 'hide-scrollbars' : ''} ${props.className || ''}`}

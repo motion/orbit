@@ -1,24 +1,30 @@
-import execa from 'execa'
-import * as Path from 'path'
+import webpack from 'webpack'
 
-process.env.IS_RUNNING = 'true'
+import makeConfig from './webpack.config'
 
-const configPath = require.resolve('./webpack.config')
-const root = Path.join(__dirname, '..')
+process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 
-const argsIndex = process.argv.findIndex(x => /mcro-build$/.test(x))
-const extraArgs = argsIndex >= 0 ? process.argv.slice(argsIndex + 1) : []
+console.log('RUNNING')
 
-const cmd = `${root}/node_modules/.bin/webpack-dev-server`
-let args = ['--config', configPath, ...extraArgs]
+async function main() {
+  const finalConfig = {
+    mode: 'development',
+    ...(await makeConfig()),
+  }
 
-console.log(`Running ${cmd} ${args.join(' ')}`)
+  // console.log(JSON.stringify(finalConfig, null, 2))
 
-const proc = execa(cmd, args, {
-  env: {
-    ENTRY: `${process.cwd()}/src`,
-  },
-})
+  webpack(finalConfig as any, async (err, stats) => {
+    if (err) {
+      console.log(err)
+      return
+    }
+    console.log(
+      stats.toString({
+        colors: true,
+      }),
+    )
+  })
+}
 
-proc.stdout.pipe(process.stdout)
-proc.stderr.pipe(process.stderr)
+main()

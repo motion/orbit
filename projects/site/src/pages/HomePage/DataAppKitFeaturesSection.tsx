@@ -228,16 +228,15 @@ export default memo(function DataAppKitFeaturesSection() {
 
       <Page.BackgroundParallax
         speed={0.1}
+        offset={0}
         zIndex={-20}
-        bottom="-150%"
         backgroundSize="cover"
         left="-20%"
         right="-20%"
-        width="150%"
-        offset={0.1}
+        bottom="-50%"
         backgroundColor="transparent"
         backgroundPosition="top center"
-        opacity={0.4}
+        opacity={0.65}
         backgroundImage={blackWavePattern}
       />
     </>

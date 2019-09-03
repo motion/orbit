@@ -17,14 +17,15 @@ export default memo(function FeetSection() {
       </View>
 
       <Page.BackgroundParallax
-        speed={0.1}
+        speed={0.2}
         zIndex={-10}
-        bottom="-110%"
+        offset={-0.2}
         backgroundSize="cover"
         left="-40%"
         right="-40%"
         width="180%"
-        top="-50%"
+        top="0%"
+        bottom="-90%"
         backgroundPosition="top center"
         opacity={1}
         backgroundImage={blackWavePattern}

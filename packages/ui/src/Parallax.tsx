@@ -75,8 +75,12 @@ export function ParallaxView({
     lastKey.current = key
   }
 
-  const pctHeight =
+  let pctHeight =
     offset >= 0 ? (store.height - nodeSize.height) / store.height : nodeSize.height / store.height
+
+  if (pctHeight >= 1) {
+    pctHeight = 0.99
+  }
 
   let val = useTransform(shouldSwap ? emptyMotion : scrollY, [dirVal, dirVal + 1], [0, -1], {
     clamp: false,
@@ -89,10 +93,6 @@ export function ParallaxView({
     val,
     x => x + offset * pctHeight * store[direction === 'y' ? 'height' : 'width'],
   )
-
-  if (offset < 0) {
-    console.log('offset', offset, pctHeight, store.height, nodeSize.height)
-  }
 
   useLayoutEffect(() => {
     if (shouldSwap) {

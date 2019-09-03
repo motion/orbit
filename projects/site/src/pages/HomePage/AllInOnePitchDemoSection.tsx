@@ -398,7 +398,7 @@ export default function NeckSection() {
       </SpacedPageContent>
 
       <Page.BackgroundParallax
-        speed={0.4}
+        speed={-0.4}
         offset={0.45}
         x="-35%"
         scale={1.5}

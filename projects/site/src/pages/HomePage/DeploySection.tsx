@@ -15,22 +15,23 @@ import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
 const Para = props => <Paragraph sizeLineHeight={1.1} size={1.2} alpha={0.72} {...props} />
 
-export default function ShoulderSection() {
+export default function DeploySection() {
   const Fade = useFadePage()
   return (
     <Fade.FadeProvide>
       <Page.BackgroundParallax
-        speed={0.8}
+        speed={0.65}
         zIndex={-2}
         opacity={0.26}
         offset={0.3}
         x="30%"
         scale={1.6}
         background="radial-gradient(circle closest-side, #4A00A8, transparent)"
+        debug
       />
 
       <Page.BackgroundParallax
-        speed={-0.25}
+        speed={-0.35}
         zIndex={-1}
         opacity={0.22}
         offset={0.4}

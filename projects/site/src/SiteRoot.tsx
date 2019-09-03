@@ -11,14 +11,14 @@ export const SiteRoot = hot(() => {
   return (
     <ErrorBoundary name="Site Root">
       <SiteStoreContext.Provider>
-        {/* this key helps HMR for lazy imports... */}
+        {/* this key helps HMR for lazy imports... but it breaks scroll position */}
         <Router
-          key={process.env.NODE_ENV === 'development' ? Math.random() : 0}
+          // key={process.env.NODE_ENV === 'development' ? Math.random() : 0}
           navigation={Navigation}
         >
           <Layout>
             <Suspense fallback={null}>
-              <View disableScrolling={false} hashScrollBehavior="smooth" />
+              <View hashScrollBehavior="smooth" />
             </Suspense>
           </Layout>
         </Router>

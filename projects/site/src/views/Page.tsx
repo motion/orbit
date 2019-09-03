@@ -60,15 +60,13 @@ Page.BackgroundParallax = (props: ParallaxViewProps) => {
   const { zIndex, offset } = useProps()
   return (
     <Page.Parallax
-      width="100%"
-      height="100%"
       zIndex={(props.zIndex || 0) + zIndex - 2}
       className="page-background"
       position="absolute"
-      top={0}
-      left={0}
-      right={0}
-      bottom={0}
+      left="5%"
+      right="5%"
+      top="2%"
+      bottom="2%"
       {...props}
     />
   )

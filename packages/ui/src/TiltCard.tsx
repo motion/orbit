@@ -2,6 +2,7 @@ import { useAnimation } from 'framer-motion'
 import React from 'react'
 
 import { Card, CardProps } from './Card'
+import { View } from './View/View'
 
 export const TiltCard = ({ style, ...rest }: CardProps) => {
   const tilt = useAnimation()

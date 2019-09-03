@@ -29,8 +29,8 @@ export default function LegsSection() {
       <AboutSection />
 
       <Page.BackgroundParallax
-        speed={0.075}
-        zIndex={-1}
+        speed={0.2}
+        zIndex={-2}
         className="earth"
         backgroundImage={`url(${earth})`}
         backgroundSize="contain"

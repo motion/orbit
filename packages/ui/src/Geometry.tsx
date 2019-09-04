@@ -3,7 +3,6 @@ import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { SpringProps } from 'popmotion'
 import { memo, useContext, useEffect, useLayoutEffect } from 'react'
 import React from 'react'
-import { TransformOptions } from 'stream'
 
 import { useLazyRef } from './hooks/useLazyRef'
 import { useScrollProgress } from './hooks/useScrollProgress'
@@ -33,8 +32,9 @@ export class AnimationStore {
     return this.values[this.values.length - 1]
   }
 
-  transform(to: any): AnimationStore
-  transform(from: number[], to?: any[], options?: TransformOptions): AnimationStore {
+  transform<T>(transform: (v: any) => T): AnimationStore
+  transform(from: number[], to?: any[], options?: any): AnimationStore
+  transform(from: any, to?: any[], options?: any): AnimationStore {
     if (this.frozen) return this
     this.animationHooks.addHook(hooksValues => {
       const lastHookVal = hooksValues[hooksValues.length - 1]

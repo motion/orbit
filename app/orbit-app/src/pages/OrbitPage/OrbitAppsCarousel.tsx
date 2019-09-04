@@ -301,6 +301,7 @@ const OrbitAppCard = memo(
 
     // wrapping with view lets the scale transform not affect the scroll, for some reason this was happening
     // i thought scale transform doesnt affect layout?
+    const mouseDown = useRef(0)
     return (
       <View
         pointerEvents={store.isFocused ? 'inherit' : 'none'}
@@ -315,6 +316,22 @@ const OrbitAppCard = memo(
           x={x}
           transformOrigin="center center"
           position="relative"
+          onMouseDown={() => {
+            if (appsCarouselStore.zoomedIn) {
+              return
+            }
+            mouseDown.current = Date.now()
+          }}
+          onMouseUp={e => {
+            if (appsCarouselStore.zoomedIn) {
+              return
+            }
+            if (mouseDown.current > appsCarouselStore.lastDragAt) {
+              e.stopPropagation()
+              appsCarouselStore.scrollToIndex(index, true)
+            }
+            mouseDown.current = -1
+          }}
         >
           <Row
             alignItems="center"

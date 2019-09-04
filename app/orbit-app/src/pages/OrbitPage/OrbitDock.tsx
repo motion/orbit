@@ -258,6 +258,7 @@ const OrbitDockButton = memo(function OrbitDockButton({
         label={app.name}
         nodeRef={buttonRef}
         labelProps={{
+          background: [0, 0, 0, 0.65],
           transition: `all ease-out 80ms ${100 - index * 30}ms`,
           elevation: 1,
           opacity: 0,

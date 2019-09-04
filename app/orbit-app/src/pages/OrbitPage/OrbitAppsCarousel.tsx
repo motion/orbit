@@ -17,7 +17,7 @@ export const OrbitAppsCarousel = memo(() => {
   const frameRef = useRef<HTMLElement>(null)
   const frameSize = useNodeSize({ ref: frameRef })
   const rowSize = useParentNodeSize({ ref: rowRef })
-  const scaleVal = useMotionValue(0.7)
+  const scaleVal = useMotionValue(0)
   const scale = useSpring(scaleVal)
 
   // const [scrollSpring, setScrollSpring, stopScrollSpring] = useSpring(() => ({
@@ -58,8 +58,7 @@ export const OrbitAppsCarousel = memo(() => {
       ] as const,
     async (next, { when, sleep }) => {
       const zoomedIn = !next[1]
-      console.log('zoomedIn', zoomedIn)
-      scale.set(zoomedIn ? 1 : 0.7)
+      scale.set(zoomedIn ? 1 : 0.6)
       await when(() => !appsCarouselStore.isAnimating)
       await sleep(50)
       return next
@@ -82,7 +81,6 @@ export const OrbitAppsCarousel = memo(() => {
       <View
         width="100%"
         height="100%"
-        overflow="hidden"
         nodeRef={frameRef}
         transition="all ease 200ms"
         {...hidden && {
@@ -218,19 +216,20 @@ const OrbitAppCard = memo(
         pointerEvents={isFocused ? 'inherit' : 'none'}
         data-is="OrbitAppCard-Container"
         zIndex={1000 - index}
-        marginRight={`-${stackMarginLessPct * 100}%`}
         scrollSnapAlign="center"
       >
         <Geometry key={index}>
           {geometry => (
             <View
               animate
+              background="blue"
               rotateY={geometry
                 .scrollIntersection()
-                .transform(x => x - index + 0.5)
+                .transform(x => x - index + 0.35)
                 .transform([0, 1], [-20, 20])
                 .spring({ stiffness: 300, damping: 50 })}
               scale={scale}
+              x="20%"
               transformOrigin="center center"
               onMouseDown={() => {
                 if (appsCarouselStore.zoomedIn) {

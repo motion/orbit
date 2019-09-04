@@ -1,7 +1,10 @@
 import { App, createApp } from '@o/kit'
 import React from 'react'
+import { cold } from 'react-hot-loader'
 
 import { GraphExplorer, GraphQueryExplorer, useGraphExplorer } from '../views/GraphExplorer'
+
+cold(GraphExplorer)
 
 export default createApp({
   id: 'graph',

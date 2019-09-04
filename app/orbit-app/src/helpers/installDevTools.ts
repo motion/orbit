@@ -68,6 +68,7 @@ setConfig({
   logLevel: 'no-errors-please',
   pureSFC: true,
   pureRender: true,
+  // reloadHooks: false,
   // disableHotRenderer: true,
 })
 

@@ -146,13 +146,13 @@ export function TestUIMotion() {
                   height="92vh"
                   background="red"
                   boxShadow="0 0 10px rgba(0,0,0,0.5)"
-                  // style={{
-                  //   zIndex: geometry
-                  //     .scrollIntersection()
-                  //     .transform(x => x - index + 0.5)
-                  //     .transform([0, 1], [-1, 1])
-                  //     .getValue(),
-                  // }}
+                  style={{
+                    zIndex: geometry
+                      .scrollIntersection()
+                      .transform(x => x - index + 0.5)
+                      .transform([0, 1], [-1, 1])
+                      .getValue(),
+                  }}
                   rotateY={geometry
                     .scrollIntersection()
                     .transform(x => x - index + 0.5 + index * pctSquish)

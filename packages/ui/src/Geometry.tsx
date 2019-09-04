@@ -96,7 +96,7 @@ class GeometryStore {
   scrollIntersection() {
     const curStore = this.stores[this.curCall]
     if (curStore) {
-      console.log('frozen reutrning', curStore)
+      this.curCall++
       curStore.freeze()
       return curStore
     }
@@ -115,6 +115,7 @@ class GeometryStore {
 export function Geometry(props: { children: (geometry: GeometryStore) => React.ReactNode }) {
   const geometry = useLazyRef(() => new GeometryStore()).current
   const update = useForceUpdate()
+
   geometry.onRender()
 
   useOnMount(() => {

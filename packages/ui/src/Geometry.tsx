@@ -1,4 +1,4 @@
-import { decorate } from '@o/use-store'
+import { decorate, useForceUpdate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { SpringProps } from 'popmotion'
 import { memo, useContext, useLayoutEffect } from 'react'
@@ -6,6 +6,7 @@ import React from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
 import { useOnHotReload } from './hooks/useOnHotReload'
+import { useOnMount } from './hooks/useOnMount'
 import { useScrollProgress } from './hooks/useScrollProgress'
 import { ScrollableRefContext } from './View/ScrollableRefContext'
 
@@ -54,39 +55,50 @@ export class AnimationStore {
   }
 }
 
-type StoredRoutine = {
-  key: string
-  store: AnimationStore
-}
-
 class GeometryStore {
-  routines: StoredRoutine[] = []
-  hooksKey = 0
+  stores: AnimationStore[] = []
   curCall = 0
 
-  onRender(values?: any) {
+  onRender() {
     this.curCall = 0
-    if (this.routines[0]) {
-      this.routines[0].store.values = values
-    }
+  }
+
+  setValues(index: number, val?: any[]) {
+    this.stores[index].values = val
+    this.update()
   }
 
   clear() {
-    this.routines = []
+    this.stores = []
     this.curCall = 0
-    this.hooksKey = Math.random()
   }
 
-  scrollIntersection(key: string = '') {
-    const curRoutine = this.routines[this.curCall]
-    let shouldSwap = false
-    if (curRoutine) {
-      if (curRoutine.key !== key) {
-        shouldSwap = true
-      } else {
-        curRoutine.store.freeze()
-        return curRoutine.store
-      }
+  cb = null
+  onUpdated(cb: Function) {
+    this.cb = cb
+  }
+
+  tm = null
+  update() {
+    clearTimeout(this.tm)
+    this.tm = setTimeout(() => {
+      this.cb()
+    })
+  }
+
+  // hooks-like
+  addStore(store: AnimationStore) {
+    this.curCall++
+    this.stores = [...this.stores, store]
+    this.update()
+  }
+
+  scrollIntersection() {
+    const curStore = this.stores[this.curCall]
+    if (curStore) {
+      console.log('frozen reutrning', curStore)
+      curStore.freeze()
+      return curStore
     }
     const store = new AnimationStore()
     store.animationHooks.addHook(() => {
@@ -95,32 +107,33 @@ class GeometryStore {
         ref,
       })
     })
-    if (shouldSwap) {
-      // changing key
-      this.routines.splice(this.routines.indexOf(curRoutine), 1, { key, store })
-    } else {
-      this.routines.push({ key, store })
-    }
-    this.hooksKey = Math.random()
-    this.curCall++
+    this.addStore(store)
     return store
   }
 }
 
 export function Geometry(props: { children: (geometry: GeometryStore) => React.ReactNode }) {
   const geometry = useLazyRef(() => new GeometryStore()).current
-  const [hookVals, setHooksVals] = React.useState([])
-  const hooks = geometry.routines.map(x => x.store.animationHooks.hooks).flat()
-  geometry.onRender(hookVals)
+  const update = useForceUpdate()
+  geometry.onRender()
+
+  useOnMount(() => {
+    geometry.onUpdated(update)
+  })
 
   useOnHotReload(() => {
     geometry.clear()
-    setHooksVals([])
   })
 
   return (
     <>
-      <DynamicHooks key={geometry.hooksKey} hooks={hooks} onHooksComplete={setHooksVals} />
+      {geometry.stores.map((store, index) => (
+        <DynamicHooks
+          key={index}
+          hooks={store.animationHooks.hooks}
+          onHooksComplete={values => geometry.setValues(index, values)}
+        />
+      ))}
       {props.children(geometry)}
     </>
   )

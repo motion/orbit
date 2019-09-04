@@ -299,7 +299,7 @@ export const OrbitSearchResults = memo(() => {
 const OrbitSearchedItem = gloss<BoxProps & { visible: boolean }>(Box, {
   flex: 1,
   opacity: 0,
-  transition: 'all ease 300ms',
+  transition: 'all ease 180ms',
   pointerEvents: 'none',
   transform: {
     rotateY: '-4deg',

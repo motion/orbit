@@ -9,8 +9,8 @@ export function TestUI() {
       {/* <TestUIPopovers /> */}
       {/* <TestUIGlossSpeed /> */}
       {/* <TestUIEditor /> */}
-      {/* <TestUIMotion /> */}
-      <TestUIAnimation />
+      <TestUIMotion />
+      {/* <TestUIAnimation /> */}
       {/* <TestUIParallax /> */}
     </>
   )
@@ -80,6 +80,8 @@ export function TestUIMotion() {
     })
   }, [])
 
+  const pctSquish = 0.4
+
   return (
     <Col>
       <Row group>
@@ -138,14 +140,22 @@ export function TestUIMotion() {
         {[0, 1, 2, 3, 4, 5].map(index => (
           <Geometry key={index}>
             {geometry => (
-              <View scrollSnapAlign="center">
+              <View scrollSnapAlign="center" marginRight={`${-pctSquish * 100}%`}>
                 <View
                   width="100vw"
                   height="92vh"
                   background="red"
+                  boxShadow="0 0 10px rgba(0,0,0,0.5)"
+                  // style={{
+                  //   zIndex: geometry
+                  //     .scrollIntersection()
+                  //     .transform(x => x - index + 0.5)
+                  //     .transform([0, 1], [-1, 1])
+                  //     .getValue(),
+                  // }}
                   rotateY={geometry
                     .scrollIntersection()
-                    .transform(x => x - index + 0.5)
+                    .transform(x => x - index + 0.5 + index * pctSquish)
                     .transform([0, 1], [-20, 20])
                     .spring({ stiffness: 300, damping: 50 })}
                   transformOrigin="center center"

@@ -70,7 +70,11 @@ type MotionCompatCommonProps = Omit<
   'onDrag' | 'onDragStart' | 'onDragEnd' | 'style'
 >
 
-type OrbitMotionTransform = { [P in keyof MotionTransform]: MotionTransform[P] | AnimationStore }
+export * from 'framer-motion'
+
+export type OrbitMotionTransform = {
+  [P in keyof MotionTransform]: MotionTransform[P] | AnimationStore
+}
 
 export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
   PseudoStyleProps &
@@ -80,7 +84,7 @@ export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
   MarginProps &
   PaddingProps &
   /** Accept the motion props */
-  Omit<MotionProps, 'animate'> &
+  Omit<MotionProps, 'animate' | 'transition'> &
   OrbitMotionTransform & {
     // could make this better done in terms of type flow, its for <Input labels...
     label?: React.ReactNode
@@ -90,7 +94,9 @@ export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
 
 export type ViewProps = ViewBaseProps &
   // be sure to omit margin/padding
-  Omit<CSSPropertySetStrict, 'margin' | 'padding'>
+  Omit<CSSPropertySetStrict, 'margin' | 'padding' | 'transition'> & {
+    transition?: CSSPropertySetStrict['transition'] | MotionProps['transition']
+  }
 
 export type ViewThemeProps = ViewBaseProps & GlossPropertySet
 

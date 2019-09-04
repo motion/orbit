@@ -49,7 +49,10 @@ export { configureUI, ConfigureUIProps } from './helpers/configureUI'
 export { Direction, SelectableStore } from './lists/SelectableStore'
 export { SortOrder, TableFilter } from './tables/types'
 export { View } from './View/View'
+
 export { ViewProps } from './View/types'
+export { MotionProps, MotionTransform } from 'framer-motion'
+
 export * from './Arrow'
 export * from './Avatar'
 export * from './Badge'

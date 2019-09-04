@@ -1,22 +1,54 @@
-import { always, createUsableStore, ensure, react, shallow } from '@o/kit'
+import { createUsableStore, ensure, react, shallow } from '@o/kit'
 import { AppBit } from '@o/models'
-import { idFn } from '@o/ui'
-import { numberBounder, numberScaler, sleep } from '@o/utils'
+import { MotionValue } from 'framer-motion'
 import { debounce } from 'lodash'
+import { spring, SpringProps } from 'popmotion'
 import { createRef } from 'react'
 
 import { om } from '../../om/om'
 
+const createUpdateableSpring = (
+  defaultVal: number,
+  config?: SpringProps,
+): {
+  value: MotionValue
+  update: (config: SpringProps | false) => void
+  reset: () => void
+} => {
+  let value = new MotionValue(defaultVal)
+  const defaultConfig = config
+  function update(config?: SpringProps | false) {
+    if (config === false) {
+      value.stop()
+    } else {
+      value.attach((v, set) => {
+        value.stop()
+        spring({
+          from: value.get(),
+          to: v,
+          velocity: value.getVelocity(),
+          ...(config || defaultConfig),
+        }).start(set)
+        return value.get()
+      })
+    }
+  }
+  update()
+  return {
+    value,
+    update,
+    reset() {
+      update(defaultConfig)
+    },
+  }
+}
+
 class OrbitAppsCarouselStore {
   props: {
     apps: AppBit[]
-    setCarouselSprings: Function
-    setScrollSpring: Function
     rowWidth: number
   } = {
     apps: [],
-    setCarouselSprings: idFn,
-    setScrollSpring: idFn,
     rowWidth: 0,
   }
 
@@ -30,6 +62,7 @@ class OrbitAppsCarouselStore {
   get zoomedIn() {
     return !this.state.zoomedOut
   }
+
   get isOnOpenableApp() {
     return (
       this.focusedApp &&
@@ -45,6 +78,26 @@ class OrbitAppsCarouselStore {
   isZooming = false
   rowNode: HTMLElement | null = null
   rowRef = createRef<HTMLElement>()
+  controlled = false
+
+  // motion/springs
+  scrollSpring = createUpdateableSpring(0, { damping: 50, stiffness: 250 })
+  scaleSpring = createUpdateableSpring(0.6, { damping: 50, stiffness: 250 })
+
+  start() {
+    this.scrollSpring.value.onChange(val => {
+      if (this.controlled) {
+        this.rowRef.current!.scrollLeft = val * window.innerWidth
+      }
+    })
+  }
+
+  setUncontrolled() {
+    this.controlled = false
+    this.scrollSpring.value.stop()
+    // @ts-ignore
+    this.rowRef.current!.style.scrollSnapType = 'x mandatory'
+  }
 
   setRowNode = (next: HTMLElement) => {
     if (!next) return
@@ -53,6 +106,7 @@ class OrbitAppsCarouselStore {
     // @ts-ignore
     this.rowRef.current = next
   }
+
   setHidden(val = true) {
     this.hidden = val
   }
@@ -82,17 +136,22 @@ class OrbitAppsCarouselStore {
     }))
   }
 
-  updateAnimation = react(
-    () => always(this.state),
-    () => {
-      if (this.props.setCarouselSprings) {
-        this.props.setCarouselSprings(this.getSpring)
-      }
-    },
-    {
-      log: false,
+  updateZoom = react(
+    () => [this.state.zoomedOut, this.state.isDragging],
+    ([zoomedOut, isDragging]) => {
+      this.scaleSpring.value.set(zoomedOut ? (isDragging ? 0.5 : 0.6) : 1)
     },
   )
+
+  updateScroll = react(() => this.state.index, this.setScrollSpring)
+
+  setScrollSpring(index: number) {
+    if (this.rowRef.current) {
+      this.rowRef.current.style['scrollSnapType'] = 'initial'
+      this.controlled = true
+      this.scrollSpring.value.set(index)
+    }
+  }
 
   zoomIntoCurrentApp() {
     this.scrollToIndex(Math.round(this.state.index), true)
@@ -106,10 +165,16 @@ class OrbitAppsCarouselStore {
     return null
   }
 
+  updateScrollPositionToIndex = (index: number = this.state.index) => {
+    if (this.rowNode) {
+      this.rowNode.scrollLeft === index * this.props.rowWidth
+    }
+  }
+
   onResize = () => {
-    if (this.currentNode) {
-      const x = this.currentNode.offsetLeft
-      this.props.setScrollSpring({ x, config: { duration: 0 } })
+    if (this.currentNode && this.rowNode) {
+      // dont animate
+      this.rowNode.scrollLeft = this.currentNode.offsetLeft
     }
   }
 
@@ -138,7 +203,7 @@ class OrbitAppsCarouselStore {
   updateScrollPane = react(
     () => [this.nextFocusedIndex, this.zoomIntoNextApp],
     async ([index], { when }) => {
-      await when(() => !!this.apps.length && !!this.props.setCarouselSprings)
+      await when(() => !!this.apps.length)
       ensure('valid index', !!this.apps[index])
       this.animateAndScrollTo(index)
       if (this.zoomIntoNextApp) {
@@ -219,10 +284,8 @@ class OrbitAppsCarouselStore {
     const x = this.props.rowWidth * index
     if (this.rowNode.scrollLeft !== this.state.index * this.props.rowWidth) {
       this.updateScrollPositionToIndex()
-      // TODO this sleep is necessary and a bug in react-spring
-      await sleep(20)
     }
-    this.props.setScrollSpring({ x })
+    this.setScrollSpring(x)
     this.animateCardsTo(index)
   }
 
@@ -240,59 +303,6 @@ class OrbitAppsCarouselStore {
   finishWheel = debounce(() => {
     this.finishScroll()
   }, 100)
-  updateScrollPositionToIndex = (index: number = this.state.index) => {
-    this.props.setScrollSpring({
-      x: index * this.props.rowWidth,
-      config: { duration: 0 },
-    })
-  }
-
-  // NOTE if this goes higher than 0.6, it seems to cause extra scrolling
-  outScaler = numberScaler(0, 1, 0.55, 0.6)
-  inScaler = numberScaler(0, 1, 0.9, 1)
-  opacityScaler = numberScaler(1, 0, 1.2, 0)
-  boundRotation = numberBounder(-3.5, 3.5)
-  boundOpacity = numberBounder(0, 1)
-  getSpring = (i: number) => {
-    const { zoomedIn } = this
-    const offset = this.state.index - i
-    const importance = Math.min(1, Math.max(0, 1 - Math.abs(offset)))
-    const scaler = zoomedIn ? this.inScaler : this.outScaler
-    // zoom all further out of non-focused apps when zoomed in (so you cant see them behind transparent focused apps)
-    const scale = zoomedIn && importance !== 1 ? 0.65 : scaler(importance)
-    const rotation = (zoomedIn ? offset : offset - 0.5) * 10
-    const ry = this.boundRotation(rotation)
-    const opacity = this.boundOpacity(this.opacityScaler(1 - offset))
-    // x is by percent!
-    let x = 0
-    if (zoomedIn) {
-      // if zoomed in, move the side apps out of view (by 500px)
-      if (offset !== 0) {
-        // in percent
-        x = offset > 0 ? -80 : 80
-      }
-    } else {
-      // zoomed out, move them a bit faster, shift them to the right side
-      // in percent
-      x = (offset > -0.2 ? offset * 1 : offset * 0.25) + 19
-    }
-    const next = {
-      x,
-      y: 0,
-      scale: scale * (this.state.isDragging ? 0.95 : 1),
-      ry,
-      opacity,
-      ...(zoomedIn
-        ? {
-            // when zoomed in, go pretty fast to avoid long load
-            config: { mass: 1, tension: 500, friction: 36, velocity: 5 },
-          }
-        : {
-            config: { mass: 1, tension: 400, friction: 35 },
-          }),
-    }
-    return next
-  }
 
   lastDragAt = Date.now()
   onDrag = next => {

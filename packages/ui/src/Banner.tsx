@@ -19,7 +19,7 @@ export type BannerProps = {
   /** Give the banner a title */
   title?: string
   /** The main content of the banner, can have multiple lines using a newline */
-  message: string
+  message: string | React.ReactNode
   /** The theme of the banner */
   type?: 'warn' | 'success' | 'error' | 'info'
   /** Show a loading spinner */
@@ -249,7 +249,7 @@ export const Banner = (props: BannerViewProps) => {
       padding
       elevation={2}
       alignSelf="flex-end"
-      maxWidth={Math.max(200, width * 0.33)}
+      maxWidth={Math.max(200, width * 0.4)}
       background={useCallback(theme => theme.background, [])}
       {...rest}
     >

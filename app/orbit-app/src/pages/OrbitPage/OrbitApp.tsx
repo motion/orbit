@@ -45,7 +45,6 @@ class OrbitAppStore {
         await sleep(20)
         await when(() => !appsCarouselStore.isAnimating)
       }
-      console.log('rendering', this.props.identifier)
       return should
     },
   )

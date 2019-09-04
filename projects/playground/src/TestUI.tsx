@@ -21,6 +21,7 @@ export function TestUIMotion() {
   const spring = useSpring(val, { damping: 50, stiffness: 250 })
   const state = React.useRef({
     controlled: false,
+    wheelTm: null,
     dragStart: 0,
   })
 
@@ -59,14 +60,24 @@ export function TestUIMotion() {
         left={0}
         right={0}
         bottom={0}
-        zIndex={-1}
+        zIndex={-2}
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={1}
+        onWheel={e => {
+          clearTimeout(state.current.wheelTm)
+          const xDelta = e.deltaX
+          const index =
+            rowRef.current.scrollLeft / window.innerWidth + (xDelta / window.innerWidth) * 12
+          set(index)
+          state.current.wheelTm = setTimeout(() => {
+            setUncontrolled()
+          }, 50)
+        }}
         onDrag={(_, pan) => {
           const xAmt = pan.offset.x
           const indexDiff = -xAmt / window.innerWidth
-          const extraSpeed = indexDiff * 1.1
+          const extraSpeed = indexDiff * 1.05
           const index = state.current.dragStart + indexDiff + extraSpeed
           set(index)
         }}
@@ -74,8 +85,8 @@ export function TestUIMotion() {
           state.current.dragStart = rowRef.current.scrollLeft / window.innerWidth
         }}
         onAnimationComplete={() => {
-          console.log('done')
-          rowRef.current.style.scrollSnapType = 'x mandatory'
+          console.warn('done')
+          setUncontrolled()
         }}
       />
       <Row
@@ -86,8 +97,8 @@ export function TestUIMotion() {
         scrollable="x"
         scrollSnapType="x mandatory"
         scrollSnapPointsX="repeat(100%)"
-        onWheel={setUncontrolled}
         nodeRef={rowRef}
+        onWheel={setUncontrolled}
       >
         {[0, 1, 2, 3, 4, 5].map(index => (
           <Geometry key={index}>

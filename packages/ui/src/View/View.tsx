@@ -54,6 +54,8 @@ export const motionProps = {
   ...motionExtraProps,
 }
 
+const shouldRenderToMotion = (props: any) => props.animate || props.drag
+
 // regular view
 export const View = gloss<ViewProps, ViewThemeProps>(Base, {
   display: 'flex',
@@ -61,7 +63,7 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
   .theme(getMargin, usePadding, getElevation)
   .withConfig({
     postProcessProps(inProps, outProps, tracker) {
-      if (inProps.animate) {
+      if (shouldRenderToMotion(inProps)) {
         let style = inProps.style || {}
         let finalClassName = inProps.className
         // parse style back from classname to style tag for motion
@@ -101,8 +103,9 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
     },
     isDOMElement: true,
     getElement(props) {
-      // todo make it not require animate
-      return props.animate ? motion[props.tagName] || motion.div : props.tagName || 'div'
+      return shouldRenderToMotion(props)
+        ? motion[props.tagName] || motion.div
+        : props.tagName || 'div'
     },
   })
 

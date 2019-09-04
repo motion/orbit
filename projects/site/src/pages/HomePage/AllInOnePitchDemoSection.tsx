@@ -355,10 +355,10 @@ export default function NeckSection() {
                       x: { type: 'spring', stiffness: 100, damping: 200 },
                       opacity: { duration: 0.2 },
                     }}
+                    position="absolute"
                     drag="x"
                     dragConstraints={{ left: 0, right: 0 }}
                     dragElastic={1}
-                    position="absolute"
                     onDragEnd={(e, { offset, velocity }) => {
                       const swipe = swipePower(offset.x, velocity.x)
                       if (swipe < -swipeConfidenceThreshold) {

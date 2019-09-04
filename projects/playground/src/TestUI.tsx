@@ -2,6 +2,7 @@ import { Button, CardSimple, Col, Geometry, Parallax, Row, View } from '@o/ui'
 import { useMotionValue, useSpring } from 'framer-motion'
 import _ from 'lodash'
 import * as React from 'react'
+import { useGesture } from 'react-use-gesture'
 
 export function TestUI() {
   return (
@@ -19,23 +20,39 @@ export function TestUIMotion() {
   const rowRef = React.useRef(null)
   const val = useMotionValue(0)
   const spring = useSpring(val)
-  const controlled = React.useRef(true)
+  const state = React.useRef({
+    controlled: false,
+    dragStart: 0,
+  })
 
   const set = React.useCallback((next: number) => {
     rowRef.current.style.scrollSnapType = 'initial'
-    controlled.current = true
+    state.current.controlled = true
     val.set(next)
   }, [])
 
   const setUncontrolled = React.useCallback(() => {
-    controlled.current = false
+    state.current.controlled = false
     spring.stop()
     rowRef.current.style.scrollSnapType = 'x mandatory'
   }, [])
 
+  const bind = useGesture({
+    onDragStart() {
+      state.current.dragStart = rowRef.current.scrollLeft
+    },
+    onDrag(next) {
+      console.log(state.current.dragStart, -next.delta[0] / window.innerWidth)
+      // set( + -)
+    },
+    onDragEnd() {
+      setUncontrolled()
+    },
+  })
+
   React.useEffect(() => {
     spring.onChange(val => {
-      if (controlled.current) {
+      if (state.current.controlled) {
         rowRef.current.scrollLeft = val * window.innerWidth
       }
     })
@@ -57,6 +74,7 @@ export function TestUIMotion() {
         scrollSnapPointsX="repeat(100%)"
         onWheel={setUncontrolled}
         nodeRef={rowRef}
+        {...bind()}
       >
         {[0, 1, 2, 3, 4, 5].map(index => (
           <Geometry key={index}>
@@ -65,7 +83,7 @@ export function TestUIMotion() {
                 <View
                   width="100vw"
                   height="92vh"
-                  background="lightblue"
+                  background="red"
                   rotateY={geometry
                     .scrollIntersection()
                     .transform(x => x - index + 0.5)

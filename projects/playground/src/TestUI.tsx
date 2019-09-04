@@ -14,6 +14,39 @@ export function TestUI() {
   )
 }
 
+export function TestUIMotion() {
+  return (
+    <Row
+      flex={1}
+      perspective="1200px"
+      scrollable="x"
+      scrollSnapType="x mandatory"
+      scrollSnapPointsX="repeat(100%)"
+    >
+      {[0, 1, 2, 3, 4, 5].map(index => (
+        <Geometry key={index}>
+          {geometry => (
+            <View scrollSnapAlign="center">
+              <View
+                width="100vw"
+                height="100vh"
+                background="lightblue"
+                rotateY={geometry
+                  .scrollIntersection()
+                  .transform(x => x - index + 0.5)
+                  .transform([0, 1], [-20, 20])
+                  .spring({ stiffness: 300, damping: 50 })}
+                transformOrigin="center center"
+                animate={{ scale: 0.7 }}
+              />
+            </View>
+          )}
+        </Geometry>
+      ))}
+    </Row>
+  )
+}
+
 export function TestUIParallax() {
   return (
     <>
@@ -42,41 +75,6 @@ export function TestUIParallax() {
       </Parallax.Container>
       <Parallax.Container height="100vh" background="lightgreen" />
     </>
-  )
-}
-
-export function TestUIMotion() {
-  return (
-    <Row overflow="hidden" height="100%">
-      <Row
-        flex={1}
-        perspective="1200px"
-        scrollable="x"
-        scrollSnapType="x mandatory"
-        scrollSnapPointsX="repeat(100%)"
-      >
-        {[0, 1, 2, 3, 4, 5].map(index => (
-          <Geometry key={index}>
-            {geometry => (
-              <View scrollSnapAlign="center">
-                <View
-                  width={window.innerWidth}
-                  height={window.innerHeight}
-                  background="lightgreen"
-                  rotateY={geometry
-                    .scrollIntersection('10')
-                    .transform(x => x - index + 0.35)
-                    .transform([0, 1], [-10, 10])
-                    .spring({ stiffness: 500, damping: 10 })}
-                  transformOrigin="center center"
-                  animate={{ scale: 0.7 }}
-                />
-              </View>
-            )}
-          </Geometry>
-        ))}
-      </Row>
-    </Row>
   )
 }
 

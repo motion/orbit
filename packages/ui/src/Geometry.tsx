@@ -70,6 +70,12 @@ class GeometryStore {
     }
   }
 
+  clear() {
+    this.routines = []
+    this.curCall = 0
+    this.hooksKey = Math.random()
+  }
+
   scrollIntersection(key: string = '') {
     const curRoutine = this.routines[this.curCall]
     let shouldSwap = false
@@ -105,6 +111,12 @@ export function Geometry(props: { children: (geometry: GeometryStore) => React.R
   const [hookVals, setHooksVals] = React.useState([])
   const hooks = geometry.routines.map(x => x.store.animationHooks.hooks).flat()
   geometry.onRender(hookVals)
+
+  useEffect(() => {
+    console.log('hot update')
+    geometry.clear()
+  }, ['hot'])
+
   return (
     <>
       <DynamicHooks key={geometry.hooksKey} hooks={hooks} onHooksComplete={setHooksVals} />

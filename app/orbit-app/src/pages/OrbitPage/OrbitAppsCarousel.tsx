@@ -217,7 +217,6 @@ class AppCardStore {
         await sleep(20)
         await whenIdle()
       }
-      console.log('should render this app')
       this.shouldRender = true
     },
   )

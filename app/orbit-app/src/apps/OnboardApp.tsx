@@ -61,7 +61,9 @@ class OnboardStore {
 const Onboard = createStoreContext(OnboardStore)
 
 export function OnboardApp() {
-  const flow = useCreateFlow()
+  const flow = useCreateFlow({
+    id: 'onboard',
+  })
   const onboardStore = Onboard.useCreateStore()
 
   useEffect(() => {

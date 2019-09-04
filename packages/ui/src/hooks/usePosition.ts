@@ -62,7 +62,11 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
       if (!visible) {
         return
       }
-      const rect = getRect(nodeRect || node.getBoundingClientRect())
+      const bounds =
+        nodeRect instanceof HTMLElement
+          ? node.getBoundingClientRect()
+          : nodeRect || node.getBoundingClientRect()
+      const rect = getRect(bounds)
       if (isNaN(rect.top)) {
         debugger
       }

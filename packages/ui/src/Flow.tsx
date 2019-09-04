@@ -183,8 +183,8 @@ export class FlowStore {
 
   private state = useHooks(() => {
     const [data, setData] = Config.useUserState(
-      this.props.id === '' ? false : `flowdata-${this.props.id || ''}`,
-      this.props.data || null,
+      !this.props || this.props.id === '' ? false : `flowdata-${this.props.id || ''}`,
+      (this.props && this.props.data) || null,
     )
     const [index, setIndex] = useState(0)
     return {

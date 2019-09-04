@@ -90,12 +90,10 @@ export const OrbitAppsCarousel = memo(() => {
     let tm
     const update = () => {
       clearTimeout(tm)
-      console.log('RUN')
       appsCarouselStore.isAnimating = true
       tm = setTimeout(() => {
-        console.log('DONE')
         appsCarouselStore.isAnimating = false
-      }, 20)
+      }, 40)
     }
 
     x.onChange(update)
@@ -210,13 +208,9 @@ class AppCardStore {
   shouldRender = false
 
   renderApp = react(
-    () => [
-      this.isIntersected,
-      appsCarouselStore.isAnimating,
-      appsCarouselStore.state.zoomedOut === false,
-    ],
-    async ([isIntersected, isAnimating, zoomedIn], { sleep }) => {
-      ensure('not animating', !isAnimating)
+    () => [this.isIntersected, appsCarouselStore.state.zoomedOut === false],
+    async ([isIntersected, zoomedIn], { sleep }) => {
+      if (this.shouldRender) return
       ensure('is intersected', isIntersected)
       if (!zoomedIn) {
         await whenIdle()

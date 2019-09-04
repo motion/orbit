@@ -207,7 +207,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   return (
     <MainShortcutHandler handlers={handlers}>
       {!isOnIsolateApp && <OrbitHeader />}
-      {!isOnIsolateApp && <OrbitDock />}
+      {!isOnIsolateApp && <IdleLoad>{() => <OrbitDock />}</IdleLoad>}
       <OrbitDraggableOverlay />
       <OrbitInnerChrome nodeRef={innerRef} torn={isEditing}>
         <OrbitContentArea>

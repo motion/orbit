@@ -1,7 +1,6 @@
 import { createUsableStore, ensure, react, shallow } from '@o/kit'
 import { AppBit } from '@o/models'
 import { MotionValue } from 'framer-motion'
-import { debounce } from 'lodash'
 import { spring, SpringProps } from 'popmotion'
 import { createRef } from 'react'
 
@@ -227,15 +226,6 @@ class OrbitAppsCarouselStore {
     this.zoomIntoNextApp = true
   }
 
-  ensureScrollToPane = react(
-    () => this.isAnimating,
-    () => {
-      ensure('not animating', !this.isAnimating)
-      ensure('zoomed out', !this.zoomedIn)
-      this.finishScroll()
-    },
-  )
-
   undoShouldZoomOnZoomChange = react(
     () => this.state.zoomedOut,
     () => {
@@ -298,15 +288,6 @@ class OrbitAppsCarouselStore {
     this.isControlled = true
     this.animateCardsTo(index)
   }
-
-  // after scroll, select focused card
-  finishScroll = () => {
-    const next = Math.round(this.state.index)
-    this.setFocused(next, true)
-  }
-  finishWheel = debounce(() => {
-    this.finishScroll()
-  }, 100)
 
   lastDragAt = Date.now()
   onDrag = next => {

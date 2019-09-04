@@ -1,12 +1,11 @@
-import { AppBit, createUsableStore, ensure, getAppDefinition, react, useForceUpdate, useReaction } from '@o/kit'
+import { AppBit, createUsableStore, ensure, getAppDefinition, react } from '@o/kit'
 import { Button, Card, FullScreen, useNodeSize, useTheme } from '@o/ui'
 import { AnimationControls, useAnimation } from 'framer-motion'
 import React, { memo, useEffect, useRef } from 'react'
 
 import { om, useOm } from '../../om/om'
 import { paneManagerStore } from '../../om/stores'
-import { OrbitApp, whenIdle } from './OrbitApp'
-import { appsCarouselStore } from './OrbitAppsCarouselStore'
+import { OrbitApp } from './OrbitApp'
 
 const yOffset = 15
 
@@ -27,16 +26,14 @@ class AppsDrawerStore {
     om.actions.router.closeDrawer()
   }
 
-  get activeId() {
-    return paneManagerStore.activePane ? paneManagerStore.activePane.id : -1
-  }
-
-  activeIdAfterAnimating = react(
-    () => this.activeId,
-    async (_, { when, sleep }) => {
-      await sleep(10)
-      await when(() => !this.isAnimating)
-      return _
+  activeDrawerId = react(
+    () => (paneManagerStore.activePane ? +paneManagerStore.activePane.id : -1),
+    activeId => {
+      ensure('is a drawer app', this.props.apps.some(x => x.id === activeId))
+      return activeId
+    },
+    {
+      defaultValue: -1,
     },
   )
 
@@ -53,21 +50,11 @@ class AppsDrawerStore {
   )
 
   get isOpen() {
-    if (paneManagerStore.activePane) {
-      return this.isDrawerPage(paneManagerStore.activePane.id)
-    }
-    return false
+    return this.isDrawerPage(this.activeDrawerId)
   }
 
-  isDrawerPage = (appId: string) => {
-    return this.props.apps.some(x => `${x.id}` === appId)
-  }
-
-  onStartAnimate = () => {
-    this.isAnimating = true
-  }
-  onFinishAnimate = () => {
-    this.isAnimating = false
+  isDrawerPage = (appId: number) => {
+    return this.props.apps.some(x => x.id === appId)
   }
 }
 
@@ -75,8 +62,6 @@ export const appsDrawerStore = createUsableStore(AppsDrawerStore)
 window['appsDrawerStore'] = appsDrawerStore
 
 export const OrbitAppsDrawer = memo(() => {
-  return null
-  const forceUpdate = useForceUpdate()
   const theme = useTheme()
   const { state } = useOm()
   const apps = state.apps.activeSettingsApps
@@ -93,27 +78,6 @@ export const OrbitAppsDrawer = memo(() => {
       animation,
     })
   }, [animation, apps, height])
-
-  // this is a sort of "trickle render" to load the dock apps
-  // in the backgorund, so they show before they animate open
-  useReaction(
-    () => [appsCarouselStore.isAnimating, appsCarouselStore.zoomedIn],
-    async ([animating, zoomedIn], { sleep }) => {
-      console.log('WHAT THE FUCK', animating, zoomedIn)
-      ensure('not animating', !animating)
-      await sleep(100)
-      await whenIdle()
-      for (const app of apps) {
-        if (!renderApp.current[app.id!]) {
-          // wait more if not zoomed in
-          await sleep(zoomedIn ? 100 : 300)
-          renderApp.current[app.id!] = true
-          forceUpdate()
-          await whenIdle()
-        }
-      }
-    },
-  )
 
   const renderApp = useRef({})
   const hasDarkBackground = theme.background.isDark()
@@ -140,13 +104,7 @@ export const OrbitAppsDrawer = memo(() => {
       >
         <DrawerCloseButton />
         {apps.map(app => {
-          // we avoid rendering them until after the animatino completes
-          if (`${app.id}` === appsDrawer.activeIdAfterAnimating) {
-            renderApp.current[app.id!] = true
-          }
-          const shouldRenderApp = renderApp.current[app.id!] || false
-          console.log('should render', renderApp.current[app.id!])
-          const shouldShow = `${app.id}` === appsDrawer.activeId
+          const shouldShow = app.id === appsDrawer.activeDrawerId
           return (
             <FullScreen
               key={app.id}
@@ -171,7 +129,7 @@ export const OrbitAppsDrawer = memo(() => {
                 id={app.id!}
                 identifier={app.identifier!}
                 appDef={getAppDefinition(app.identifier!)}
-                shouldRenderApp={shouldRenderApp}
+                shouldRenderApp
               />
             </FullScreen>
           )

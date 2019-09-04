@@ -3,7 +3,7 @@ import { AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext,
 import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopeState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
 import { ensure, react, useStore, useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
-import React, { memo, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import React, { memo, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { useOm } from '../../om/om'
 import { orbitStore, paneManagerStore } from '../../om/stores'
@@ -23,17 +23,29 @@ type OrbitAppProps = {
   renderApp?: RenderAppFn
 }
 
+const loadOrder: number[] = []
+
 class OrbitAppStore {
   // @ts-ignore
-  props: OrbitAppProps
+  props: OrbitAppProps & {
+    uid: number
+  }
 
   shouldRender = react(
-    () => this.props.shouldRenderApp || false,
-    async (should, { when, sleep }) => {
+    () => [this.props.shouldRenderApp || false],
+    async ([should], { when, sleep }) => {
       ensure('should', !!should)
-      await when(() => !appsCarouselStore.isAnimating)
-      await whenIdle()
-      await sleep(10)
+      // stagger load
+      await sleep(loadOrder.indexOf(this.props.uid) * 100)
+      // wait three ticks before loading
+      let ticks = 0
+      while (ticks < 3) {
+        ticks++
+        await whenIdle()
+        await sleep(20)
+        await when(() => !appsCarouselStore.isAnimating)
+      }
+      console.log('rendering', this.props.identifier)
       return should
     },
   )
@@ -48,7 +60,11 @@ class OrbitAppStore {
 
 export const OrbitApp = memo((props: OrbitAppProps) => {
   const { id, identifier, appDef, disableInteraction, renderApp } = props
-  const { isActive, shouldRender } = useStore(OrbitAppStore, props)
+  const uidRef = useRef(Math.random())
+  if (!loadOrder.includes(uidRef.current)) {
+    loadOrder.push(uidRef.current)
+  }
+  const { isActive, shouldRender } = useStore(OrbitAppStore, { ...props, uid: uidRef.current })
   const appStore = useStoreSimple(AppStore, {
     id,
     identifier,

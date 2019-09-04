@@ -34,7 +34,6 @@ function configure() {
 
   if (process.env.NODE_ENV === 'development') {
     // just for now since its spitting out so many
-    debugger
     setConfig({
       logLevel: 'no-errors-please',
       pureSFC: true,

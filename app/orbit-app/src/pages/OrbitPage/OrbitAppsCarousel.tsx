@@ -8,6 +8,16 @@ import { OrbitApp, whenIdle } from './OrbitApp'
 import { appsCarouselStore, stackMarginLessPct } from './OrbitAppsCarouselStore'
 import { OrbitSearchResults } from './OrbitSearchResults'
 
+const updateOnWheel = e => {
+  if (!appsCarouselStore.state.zoomedOut) return
+  if (!e.currentTarget) return
+  const offset = e.currentTarget.scrollLeft / appsCarouselStore.props.rowWidth
+  const index = Math.round(offset)
+  if (index !== appsCarouselStore.focusedIndex) {
+    appsCarouselStore.setFocused(index)
+  }
+}
+
 export const OrbitAppsCarousel = memo(() => {
   const om = useOm()
   const rowRef = appsCarouselStore.rowRef
@@ -88,6 +98,7 @@ export const OrbitAppsCarousel = memo(() => {
           scrollSnapType="x mandatory"
           scrollSnapPointsX="repeat(100%)"
           nodeRef={appsCarouselStore.setRowNode}
+          onWheel={updateOnWheel}
         >
           {apps.map((app, index) => (
             <OrbitAppCard
@@ -152,7 +163,7 @@ const OrbitAppCard = memo(
     const isFocused = useReaction(
       () => index === appsCarouselStore.focusedIndex,
       {
-        // delay: 40,
+        delay: 40,
         name: `AppCard${index}.isFocused`,
       },
       [index],

@@ -1,3 +1,4 @@
+import { selectDefined } from '@o/utils'
 import { Box, gloss } from 'gloss'
 
 import { isBrowser } from './constants'
@@ -67,9 +68,9 @@ export function getSpacesSize(space: Sizes, scale: number = 1) {
   return getSpaceSize(space)
 }
 
-export const Space = gloss<SpaceProps>(Box)
-  .theme(({ size, ...rest }: SpaceProps) => {
-    const dim = getSpaceSize(size, useScale())
+export const Space = gloss<SpaceProps & { scale?: number }>(Box)
+  .theme(({ size, scale = 1, ...rest }) => {
+    const dim = getSpaceSize(size, selectDefined(scale, useScale()))
     return {
       width: dim,
       height: dim,

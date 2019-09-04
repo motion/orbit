@@ -11,6 +11,7 @@ export { allIcons } from './icons'
 
 export * from '@o/color'
 export * from '@o/utils'
+export * from 'framer-motion'
 
 export { AnimatePresence } from 'framer-motion'
 
@@ -51,7 +52,6 @@ export { SortOrder, TableFilter } from './tables/types'
 export { View } from './View/View'
 
 export { ViewProps } from './View/types'
-export { MotionProps, MotionTransform } from 'framer-motion'
 
 export * from './Arrow'
 export * from './Avatar'

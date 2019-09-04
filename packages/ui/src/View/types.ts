@@ -3,6 +3,7 @@ import { MotionProps, MotionTransform } from 'framer-motion'
 import { AlphaColorProps, CSSPropertySet, CSSPropertySetStrict, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
 import React from 'react'
 
+import { AnimationStore } from '../Geometry'
 import { Size } from '../Space'
 import { CommonViewProps } from './CommonViewProps'
 import { ElevatableProps } from './elevation'
@@ -69,6 +70,8 @@ type MotionCompatCommonProps = Omit<
   'onDrag' | 'onDragStart' | 'onDragEnd' | 'style'
 >
 
+type OrbitMotionTransform = { [P in keyof MotionTransform]: MotionTransform[P] | AnimationStore }
+
 export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
   PseudoStyleProps &
   TextSizeProps &
@@ -78,7 +81,7 @@ export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
   PaddingProps &
   /** Accept the motion props */
   Omit<MotionProps, 'animate'> &
-  MotionTransform & {
+  OrbitMotionTransform & {
     // could make this better done in terms of type flow, its for <Input labels...
     label?: React.ReactNode
     // allow boolean toggle animate too

@@ -90,8 +90,6 @@ export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
     animate?: boolean | MotionProps['animate']
   }
 
-export { Transition, MotionProps, MotionTransform }
-
 export type ViewProps = ViewBaseProps &
   // be sure to omit margin/padding
   Omit<CSSPropertySetStrict, 'margin' | 'padding' | 'transition'> & {

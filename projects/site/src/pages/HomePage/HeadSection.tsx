@@ -16,19 +16,19 @@ let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'A smart operating system for work',
-  medium: 'A smart operating system for work',
+  large: 'A new Web OS',
+  medium: 'A new Web OS',
   small: 'The data-driven app platform',
 }
 
 let allTexts = {
   large: [
     `Create apps for yourself, your team, or to sell to others.`,
-    `The new app platform that gets out of your way.`,
+    `With all new abilities, it's a fresh new platform.`,
   ],
   medium: [
     `Create apps for yourself, your team, or to sell to others.`,
-    `The new app platform that gets out of your way.`,
+    `With all new abilities, it's a fresh new platform.`,
   ],
   small: [`Build apps that power your company.`, `The data-first Work OS.`],
 }
@@ -65,7 +65,7 @@ const HeadContent = memo(() => {
         selectable
         textAlign="center"
         whiteSpace="nowrap"
-        maxHeight={80}
+        maxHeight={150}
       >
         <FadeChild disable={!measured}>{allTitles[screen]}</FadeChild>
       </TitleText>

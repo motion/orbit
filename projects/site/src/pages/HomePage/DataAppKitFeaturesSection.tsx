@@ -61,7 +61,7 @@ export default memo(function DataAppKitFeaturesSection() {
           scale={0.5}
           transformOrigin="bottom center"
         >
-          <FadeChild delay={300} height="100%" width="100%">
+          <FadeChild delay={800} height="100%" width="100%">
             <FullScreen
               left={-100}
               right={-100}
@@ -84,17 +84,17 @@ export default memo(function DataAppKitFeaturesSection() {
         header={
           <>
             <FadeChild>
-              <PillButton>Apps</PillButton>
+              <PillButton>App Store</PillButton>
             </FadeChild>
             <FadeChild delay={100}>
-              <TitleText textAlign="center" size="xl">
-                An ecosystem of data plugins.
+              <TitleText textAlign="center" size="xxl">
+                The app store with more.
               </TitleText>
             </FadeChild>
             <TitleTextSub>
               <FadeChild delay={200}>
-                Plug in data source with a click - with GraphQL and TypeScript APIs. Use and fork
-                apps from the app store.
+                The app store with more - every app can sync in data, expose GraphQL and TypeScript
+                APIs, and render content.
               </FadeChild>
             </TitleTextSub>
           </>
@@ -158,8 +158,8 @@ export default memo(function DataAppKitFeaturesSection() {
                 <PillButton>App Kit</PillButton>
               </FadeChild>
               <FadeChild delay={100}>
-                <TitleText textAlign="center" size={useScreenVal('lg', 'xxl', 'xxxl')}>
-                  Batteries Included
+                <TitleText textAlign="center" size={useScreenVal('lg', 'xxxl', 'xxxl')}>
+                  Batteries Included.
                 </TitleText>
               </FadeChild>
               <TitleTextSub>

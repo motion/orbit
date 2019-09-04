@@ -2,6 +2,7 @@ import { isDefined } from '@o/utils'
 import { gloss } from 'gloss'
 import React, { useRef } from 'react'
 
+import { composeRefs } from '../helpers/composeRefs'
 import { PaddedView } from './PaddedView'
 import { ScrollableRefContext } from './ScrollableRefContext'
 import { ScrollableViewProps } from './types'
@@ -69,9 +70,9 @@ export function ScrollableView(props: ScrollableViewProps) {
         scrollable={scrollable}
         // scrollTop={scrollTop}
         // scrollLeft={scrollLeft}
-        nodeRef={ref}
         {...viewProps}
         {...props}
+        nodeRef={composeRefs(props.nodeRef, ref)}
         className={`${hideScrollbars ? 'hide-scrollbars' : ''} ${props.className || ''}`}
         padding={0}
       >

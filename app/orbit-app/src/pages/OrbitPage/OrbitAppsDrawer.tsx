@@ -37,20 +37,24 @@ class AppsDrawerStore {
     },
   )
 
+  transition = { stiffness: 150, damping: 30 }
+
   updateDrawerAnimation = react(
     () => [this.isOpen, this.props.height],
     () => {
+      console.log('is open?', this.isOpen)
       ensure('this.props.animation', !!this.props.animation)
       if (this.isOpen) {
-        this.props.animation.start({ y: yOffset })
+        this.props.animation.start({ y: yOffset, transition: this.transition })
       } else {
-        this.props.animation.start({ y: this.props.height + yOffset })
+        this.props.animation.start({ y: this.props.height + yOffset, transition: this.transition })
       }
     },
   )
 
   get isOpen() {
-    return this.isDrawerPage(this.activeDrawerId)
+    const id = paneManagerStore.activePane ? paneManagerStore.activePane.id : -1
+    return this.isDrawerPage(+id)
   }
 
   isDrawerPage = (appId: number) => {
@@ -79,7 +83,6 @@ export const OrbitAppsDrawer = memo(() => {
     })
   }, [animation, apps, height])
 
-  const renderApp = useRef({})
   const hasDarkBackground = theme.background.isDark()
 
   return (

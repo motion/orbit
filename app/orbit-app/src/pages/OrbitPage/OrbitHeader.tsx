@@ -203,9 +203,9 @@ export const OrbitHeader = memo(() => {
                   sizeIcon={1.6}
                   glint={false}
                   glintBottom={false}
-                  opacity={0.5}
+                  opacity={0.75}
                   hoverStyle={{
-                    opacity: 0.75,
+                    opacity: 1,
                   }}
                   onClick={om.actions.router.toggleSetupAppPage}
                 />
@@ -218,7 +218,7 @@ export const OrbitHeader = memo(() => {
           </Row>
         </HeaderContain>
 
-        <HeaderSide space="sm" spaceAround="md" justifyContent="flex-start" slim={slim}>
+        <HeaderSide space="sm" spaceAround="md" justifyContent="flex-end" slim={slim}>
           <View flex={1} />
           <OrbitDockOpenButton />
         </HeaderSide>
@@ -385,9 +385,15 @@ const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
 const HeaderContain = gloss<RowProps & { isActive?: boolean; isDeveloping: boolean }>(Row, {
   margin: ['auto', 0],
   alignItems: 'center',
-  flex: 20,
-  maxWidth: 900,
+  width: '67%',
+  minWidth: 650,
+  maxWidth: 950,
   borderRadius: 100,
+
+  '@media screen and (max-width: 780px)': {
+    minWidth: 'auto',
+    background: 'red',
+  },
 }).theme(({ isActive }, theme) => ({
   background: isActive ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075] : 'none',
 }))

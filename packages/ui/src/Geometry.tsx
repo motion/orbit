@@ -72,7 +72,6 @@ class GeometryStore {
 
   scrollIntersection(key: string = '') {
     const curRoutine = this.routines[this.curCall]
-    console.log('go go', curRoutine, key, this.curCall)
     let shouldSwap = false
     if (curRoutine) {
       if (curRoutine.key !== key) {
@@ -82,7 +81,6 @@ class GeometryStore {
         return curRoutine.store
       }
     }
-    console.log('create new')
     const store = new AnimationStore()
     store.animationHooks.addHook(() => {
       const ref = useContext(ScrollableRefContext)
@@ -107,7 +105,6 @@ export function Geometry(props: { children: (geometry: GeometryStore) => React.R
   const [hookVals, setHooksVals] = React.useState([])
   const hooks = geometry.routines.map(x => x.store.animationHooks.hooks).flat()
   geometry.onRender(hookVals)
-  console.log('status', geometry.hooksKey, hooks, hookVals)
   return (
     <>
       <DynamicHooks key={geometry.hooksKey} hooks={hooks} onHooksComplete={setHooksVals} />

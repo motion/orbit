@@ -56,7 +56,9 @@ export const IconShape = memo(
       }
 
       // TODO move this off thread - this interrupts carousel animation
+      let cancelled = false
       whenIdle().then(() => {
+        if (cancelled) return
         const draw = SVG(id).size(diameter, diameter)
         const icon = draw.path(iconPath)
         const out = icon
@@ -69,6 +71,10 @@ export const IconShape = memo(
         cache[iconPath] = `${shapes[shape]} ${out}`
         setSVGPath(cache[iconPath])
       })
+
+      return () => {
+        cancelled = true
+      }
     }, [id, iconPath])
 
     const scale = size / 28

@@ -43,7 +43,7 @@ export class PaneManagerStore {
   }
 
   activePaneSlow = react(() => this.activePaneFast, _ => _, {
-    delay: 80,
+    delay: 150,
     defaultValue: this.activePaneFast || {
       type: 'home',
     },

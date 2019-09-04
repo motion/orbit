@@ -50,7 +50,7 @@ export const light: ThemeObject = Object.freeze({
     sidebarBackgroundTransparent: [255, 255, 255, 0.7],
     appCardBackground: '#f5f7f9',
     appCardBackgroundTransparent: [255, 255, 255, 0],
-    orbitLauncherBackground: [255, 255, 255, 0.4],
+    orbitLauncherBackground: [255, 255, 255, 0.2],
     tabBackgroundHover: [0, 0, 0, 0.1],
     tabBackgroundActive: [0, 0, 0, 0.15],
     tabBackgroundSelected: lightBackground,

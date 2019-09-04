@@ -1,5 +1,5 @@
 import { GlossPropertySet } from '@o/css'
-import { MotionProps, MotionTransform } from 'framer-motion'
+import { MotionProps, MotionTransform, Transition } from 'framer-motion'
 import { AlphaColorProps, CSSPropertySet, CSSPropertySetStrict, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
 import React from 'react'
 
@@ -70,8 +70,6 @@ type MotionCompatCommonProps = Omit<
   'onDrag' | 'onDragStart' | 'onDragEnd' | 'style'
 >
 
-export * from 'framer-motion'
-
 export type OrbitMotionTransform = {
   [P in keyof MotionTransform]: MotionTransform[P] | AnimationStore
 }
@@ -92,10 +90,12 @@ export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
     animate?: boolean | MotionProps['animate']
   }
 
+export { Transition, MotionProps, MotionTransform }
+
 export type ViewProps = ViewBaseProps &
   // be sure to omit margin/padding
   Omit<CSSPropertySetStrict, 'margin' | 'padding' | 'transition'> & {
-    transition?: CSSPropertySetStrict['transition'] | MotionProps['transition']
+    transition?: CSSPropertySetStrict['transition'] | Transition
   }
 
 export type ViewThemeProps = ViewBaseProps & GlossPropertySet

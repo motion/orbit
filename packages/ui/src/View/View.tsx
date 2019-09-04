@@ -2,6 +2,7 @@ import { GlossPropertySet } from '@o/css'
 import { motion } from 'framer-motion'
 import { Base, gloss } from 'gloss'
 
+import { AnimationStore } from '../Geometry'
 import { Sizes } from '../Space'
 import { getElevation } from './elevation'
 import { getSizableValue } from './getSizableValue'
@@ -76,15 +77,20 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
           }
 
           for (const key in inProps) {
+            const val = inProps[key]
             if (motionStyleProps[key]) {
-              style[key] = inProps[key]
+              if (val instanceof AnimationStore) {
+                style[key] = val.getValue()
+              } else {
+                style[key] = val
+              }
               delete outProps[key]
             }
             if (motionExtraProps[key]) {
               if (key === 'animate' && inProps.animate === true) {
                 continue
               }
-              outProps[key] = inProps[key]
+              outProps[key] = val
             }
           }
         }

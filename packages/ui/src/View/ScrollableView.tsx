@@ -1,8 +1,9 @@
 import { isDefined } from '@o/utils'
 import { gloss } from 'gloss'
-import React, { createContext, useRef } from 'react'
+import React, { useRef } from 'react'
 
 import { PaddedView } from './PaddedView'
+import { ScrollableRefContext } from './ScrollableRefContext'
 import { ScrollableViewProps } from './types'
 import { View } from './View'
 import { wrappingSpaceTheme } from './wrappingSpaceTheme'
@@ -17,8 +18,6 @@ const isOnlyChildrenDefined = props => {
   }
   return true
 }
-
-export const ScrollableRefContext = createContext(null)
 
 export function ScrollableView(props: ScrollableViewProps) {
   const ref = useRef(null)
@@ -36,16 +35,14 @@ export function ScrollableView(props: ScrollableViewProps) {
     hideScrollbars,
     // scrollLeft,
     // scrollTop,
-    ...viewPropsRaw
   } = props
 
   // we may want to memo this, need to test if add/remove padding will cause remounts
   let content = children
   const hasPadding = Array.isArray(padding) ? padding.some(Boolean) : !!padding
 
-  const isWrapped = viewPropsRaw.flexWrap === 'wrap'
+  const isWrapped = props.flexWrap === 'wrap'
   const viewProps = {
-    ...viewPropsRaw,
     isWrapped,
     parentSpacing,
   }
@@ -85,6 +82,7 @@ export function ScrollableView(props: ScrollableViewProps) {
 }
 
 const ScrollableChrome = gloss<ScrollableViewProps>(View, {
+  debug: true,
   boxSizing: 'content-box',
   flexDirection: 'inherit',
   flexWrap: 'inherit',

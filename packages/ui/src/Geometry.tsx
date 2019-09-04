@@ -1,13 +1,13 @@
 import { decorate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { SpringProps } from 'popmotion'
-import { memo, useContext, useEffect } from 'react'
+import { memo, useContext, useEffect, useLayoutEffect } from 'react'
 import React from 'react'
 import { TransformOptions } from 'stream'
 
 import { useLazyRef } from './hooks/useLazyRef'
 import { useScrollProgress } from './hooks/useScrollProgress'
-import { ScrollableRefContext } from './View/ScrollableView'
+import { ScrollableRefContext } from './View/ScrollableRefContext'
 
 // @ts-ignore
 @decorate
@@ -20,12 +20,17 @@ class HooksStore<T> {
   }
 }
 
-class AnimationStore {
+export class AnimationStore {
   animationHooks = new HooksStore<MotionValue>()
   frozen = false
+  values = []
 
   freeze() {
     this.frozen = true
+  }
+
+  getValue() {
+    return this.values[this.values.length - 1]
   }
 
   transform(to: any): AnimationStore
@@ -58,8 +63,11 @@ class GeometryStore {
   hooksKey = 0
   curCall = 0
 
-  onRender() {
+  onRender(values?: any) {
     this.curCall = 0
+    if (this.routines[0]) {
+      this.routines[0].store.values = values
+    }
   }
 
   scrollIntersection(key: string = '') {
@@ -98,7 +106,7 @@ export function Geometry(props: { children: (geometry: GeometryStore) => React.R
   const geometry = useLazyRef(() => new GeometryStore()).current
   const [hookVals, setHooksVals] = React.useState([])
   const hooks = geometry.routines.map(x => x.store.animationHooks.hooks).flat()
-  geometry.onRender()
+  geometry.onRender(hookVals)
   console.log('status', geometry.hooksKey, hooks, hookVals)
   return (
     <>
@@ -109,11 +117,11 @@ export function Geometry(props: { children: (geometry: GeometryStore) => React.R
 }
 
 const DynamicHooks = memo((props: { hooks: Function[]; onHooksComplete: (val: any[]) => void }) => {
-  let hooks = []
+  const hooks = []
   for (const hook of props.hooks) {
     hooks.push(hook(hooks))
   }
-  useEffect(() => {
+  useLayoutEffect(() => {
     props.onHooksComplete(hooks)
   }, [])
   return null

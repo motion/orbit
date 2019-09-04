@@ -1,8 +1,7 @@
 import { AppDefinition, AppIcon, ensure, react, Templates, useAppDefinition, useReaction, useStore } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, FullScreen, Row, SimpleText, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
+import { Card, CardProps, FullScreen, Geometry, Row, SimpleText, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
 import React, { memo, useEffect, useLayoutEffect, useRef } from 'react'
-import { useGesture } from 'react-use-gesture'
 
 import { useOm } from '../../om/om'
 import { OrbitApp, whenIdle } from './OrbitApp'
@@ -11,7 +10,6 @@ import { OrbitSearchResults } from './OrbitSearchResults'
 
 // import { to, useSpring, useSprings } from 'react-spring'
 export const OrbitAppsCarousel = memo(() => {
-  return null
   const { state } = useOm()
   const rowRef = appsCarouselStore.rowRef
   const apps = state.apps.activeClientApps
@@ -19,35 +17,31 @@ export const OrbitAppsCarousel = memo(() => {
   const frameSize = useNodeSize({ ref: frameRef })
   const rowSize = useParentNodeSize({ ref: rowRef })
 
-  const [scrollSpring, setScrollSpring, stopScrollSpring] = useSpring(() => ({
-    x: 0,
-    onRest: appsCarouselStore.onFinishScroll,
-    onStart: appsCarouselStore.onStartScroll,
-  }))
+  // const [scrollSpring, setScrollSpring, stopScrollSpring] = useSpring(() => ({
+  //   x: 0,
+  //   onRest: appsCarouselStore.onFinishScroll,
+  //   onStart: appsCarouselStore.onStartScroll,
+  // }))
 
-  const [springs, setCarouselSprings] = useSprings(apps.length, i => ({
-    ...appsCarouselStore.getSpring(i),
-    config: { mass: 1, tension: 350, friction: 32 },
-    onRest: appsCarouselStore.onFinishZoom,
-    onStart: appsCarouselStore.onStartZoom,
-  }))
+  // const [springs, setCarouselSprings] = useSprings(apps.length, i => ({
+  //   ...appsCarouselStore.getSpring(i),
+  //   config: { mass: 1, tension: 350, friction: 32 },
+  //   onRest: appsCarouselStore.onFinishZoom,
+  //   onStart: appsCarouselStore.onStartZoom,
+  // }))
 
   const rowWidth = rowSize.width ? rowSize.width * (1 - stackMarginLessPct) : 0
 
-  useEffect(() => {
-    if (rowWidth) {
-      appsCarouselStore.setProps({
-        apps,
-        setCarouselSprings,
-        setScrollSpring,
-        rowWidth,
-      })
-    }
-  }, [apps, setScrollSpring, setCarouselSprings, rowWidth])
-
-  const bind = useGesture({
-    onDrag: appsCarouselStore.onDrag,
-  })
+  // useEffect(() => {
+  //   if (rowWidth) {
+  //     appsCarouselStore.setProps({
+  //       apps,
+  //       setCarouselSprings,
+  //       setScrollSpring,
+  //       rowWidth,
+  //     })
+  //   }
+  // }, [apps, setScrollSpring, setCarouselSprings, rowWidth])
 
   /**
    * Use this to update state after animations finish
@@ -70,28 +64,9 @@ export const OrbitAppsCarousel = memo(() => {
     },
   )
 
-  useLayoutEffect(() => {
-    rowRef.current!.scrollLeft = scrollSpring.x.getValue()
-  }, [scrollable])
-
-  // comented out: was causing really crazy bugs
-  // this is literally just to fix a stupid hmr bug where when on setupApp
-  // you'd find it scrolled weirdly, i tried mutationObserver/addEventListener('scroll'),
-  // neither pick it up because the event is removed
-  // useEffect(() => {
-  //   if (rowRef.current) {
-  //     const curLeft = Math.round(rowRef.current.scrollLeft)
-  //     const index = appsCarouselStore.focusedIndex
-  //     const expectedLeft = Math.floor(index * rowWidth)
-  //     if (curLeft !== expectedLeft) {
-  //       appsCarouselStore.animateAndScrollTo(0)
-  //       sleep(100).then(() => {
-  //         appsCarouselStore.animateAndScrollTo(index)
-  //       })
-  //       console.warn('mismatched scroll spring / scrollLeft', curLeft, expectedLeft)
-  //     }
-  //   }
-  // })
+  // useLayoutEffect(() => {
+  //   rowRef.current!.scrollLeft = scrollSpring.x.getValue()
+  // }, [scrollable])
 
   return (
     <View data-is="OrbitAppsCarousel" width="100%" height="100%">
@@ -121,19 +96,20 @@ export const OrbitAppsCarousel = memo(() => {
           justifyContent="flex-start"
           scrollable={scrollable}
           overflow={scrollable ? undefined : 'hidden'}
-          onWheel={() => {
-            appsCarouselStore.onFinishScroll()
-            stopScrollSpring()
-            if (appsCarouselStore.state.zoomedOut) {
-              appsCarouselStore.animateTo(rowRef.current!.scrollLeft / rowWidth)
-            }
-            appsCarouselStore.finishWheel()
-          }}
-          scrollLeft={scrollSpring.x}
-          animated
+          // onWheel={() => {
+          //   appsCarouselStore.onFinishScroll()
+          //   stopScrollSpring()
+          //   if (appsCarouselStore.state.zoomedOut) {
+          //     appsCarouselStore.animateTo(rowRef.current!.scrollLeft / rowWidth)
+          //   }
+          //   appsCarouselStore.finishWheel()
+          // }}
+          position="relative"
+          zIndex={1}
+          perspective="1200px"
+          scrollSnapType="x mandatory"
+          scrollSnapPointsX="repeat(100%)"
           nodeRef={appsCarouselStore.setRowNode}
-          perspective="1000px"
-          {...bind()}
         >
           {apps.map((app, index) => (
             <OrbitAppCard
@@ -144,7 +120,6 @@ export const OrbitAppsCarousel = memo(() => {
               identifier={app.identifier!}
               width={frameSize.width}
               height={frameSize.height}
-              springs={springs}
             />
           ))}
         </Row>
@@ -160,7 +135,6 @@ export const OrbitAppsCarousel = memo(() => {
 type OrbitAppCardProps = CardProps & {
   identifier: string
   disableInteraction: boolean
-  springs: any
   index: number
   app: AppBit
 }
@@ -193,10 +167,9 @@ class AppCardStore {
 }
 
 const OrbitAppCard = memo(
-  ({ app, identifier, index, disableInteraction, springs, ...cardProps }: OrbitAppCardProps) => {
+  ({ app, identifier, index, disableInteraction, ...cardProps }: OrbitAppCardProps) => {
     const definition = useAppDefinition(identifier)!
     const store = useStore(AppCardStore)
-    const spring = springs[index]
     const theme = useTheme()
     const isFocused = useReaction(
       () => index === appsCarouselStore.focusedIndex,
@@ -239,90 +212,85 @@ const OrbitAppCard = memo(
         data-is="OrbitAppCard-Container"
         zIndex={1000 - index}
         marginRight={`-${stackMarginLessPct * 100}%`}
+        scrollSnapAlign="center"
       >
-        <View
-          animated
-          transform={to(
-            Object.keys(spring).map(k => spring[k]),
-            (x, y, scale, ry) => `translate3d(${x}%,${y}px,0) scale(${scale}) rotateY(${ry}deg)`,
-          )}
-          opacity={spring.opacity}
-          onMouseDown={() => {
-            if (appsCarouselStore.zoomedIn) {
-              return
-            }
-            mouseDown.current = Date.now()
-          }}
-          onMouseUp={e => {
-            if (appsCarouselStore.zoomedIn) {
-              return
-            }
-            if (mouseDown.current > appsCarouselStore.lastDragAt) {
-              e.stopPropagation()
-              appsCarouselStore.scrollToIndex(index, true)
-            }
-            mouseDown.current = -1
-          }}
-          position="relative"
-        >
-          {/* <AppIcon
-            position="absolute"
-            top={-10}
-            left={-15}
-            size={32}
-            opacity={1}
-            identifier={definition.id}
-            colors={app.colors}
-            opacity={appsCarouselStore.zoomedIn ? 0 : 1}
-            pointerEvents="none"
-          /> */}
-          <Row
-            alignItems="center"
-            justifyContent="center"
-            space="sm"
-            padding
-            position="absolute"
-            bottom={-40}
-            left={0}
-            right={0}
-          >
-            <SimpleText>{app.name}</SimpleText>
-          </Row>
-          <Card
-            data-is="OrbitAppCard"
-            nodeRef={cardRef}
-            borderWidth={0}
-            background={
-              isFocusZoomed
-                ? !definition.viewConfig || definition.viewConfig.transparentBackground !== false
-                  ? theme.appCardBackgroundTransparent
-                  : theme.appCardBackground
-                : theme.backgroundStronger
-            }
-            borderRadius={isFocusZoomed ? 0 : 20}
-            {...(isFocused
-              ? {
-                  boxShadow: [
-                    [0, 0, 0, 3, theme.alternates!.selected['background']],
-                    cardBoxShadow,
-                  ],
+        <Geometry key={index}>
+          {geometry => (
+            <View
+              rotateY={geometry
+                .scrollIntersection()
+                .transform(x => x - index + 0.5)
+                .transform([0, 1], [-20, 20])
+                .spring({ stiffness: 300, damping: 50 })}
+              transformOrigin="center center"
+              onMouseDown={() => {
+                if (appsCarouselStore.zoomedIn) {
+                  return
                 }
-              : {
-                  boxShadow: [cardBoxShadow],
-                })}
-            transition="background 300ms ease"
-            {...cardProps}
-          >
-            <AppLoadingScreen definition={definition} app={app} visible={!store.shouldRender} />
-            <OrbitApp
-              id={app.id!}
-              disableInteraction={disableInteraction}
-              identifier={definition.id}
-              appDef={definition}
-              shouldRenderApp={definition.id === 'setupApp' || store.shouldRender}
-            />
-          </Card>
-        </View>
+                mouseDown.current = Date.now()
+              }}
+              onMouseUp={e => {
+                if (appsCarouselStore.zoomedIn) {
+                  return
+                }
+                if (mouseDown.current > appsCarouselStore.lastDragAt) {
+                  e.stopPropagation()
+                  appsCarouselStore.scrollToIndex(index, true)
+                }
+                mouseDown.current = -1
+              }}
+              position="relative"
+            >
+              <Row
+                alignItems="center"
+                justifyContent="center"
+                space="sm"
+                padding
+                position="absolute"
+                bottom={-40}
+                left={0}
+                right={0}
+              >
+                <SimpleText>{app.name}</SimpleText>
+              </Row>
+              <Card
+                data-is="OrbitAppCard"
+                nodeRef={cardRef}
+                borderWidth={0}
+                background={
+                  isFocusZoomed
+                    ? !definition.viewConfig ||
+                      definition.viewConfig.transparentBackground !== false
+                      ? theme.appCardBackgroundTransparent
+                      : theme.appCardBackground
+                    : theme.backgroundStronger
+                }
+                borderRadius={isFocusZoomed ? 0 : 20}
+                {...(isFocused
+                  ? {
+                      boxShadow: [
+                        [0, 0, 0, 3, theme.alternates!.selected['background']],
+                        cardBoxShadow,
+                      ],
+                    }
+                  : {
+                      boxShadow: [cardBoxShadow],
+                    })}
+                transition="background 300ms ease"
+                {...cardProps}
+              >
+                <AppLoadingScreen definition={definition} app={app} visible={!store.shouldRender} />
+                <OrbitApp
+                  id={app.id!}
+                  disableInteraction={disableInteraction}
+                  identifier={definition.id}
+                  appDef={definition}
+                  shouldRenderApp={definition.id === 'setupApp' || store.shouldRender}
+                />
+              </Card>
+            </View>
+          )}
+        </Geometry>
       </View>
     )
   },

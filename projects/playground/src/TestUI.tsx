@@ -2,7 +2,6 @@ import { Button, CardSimple, Col, Geometry, Parallax, Row, View } from '@o/ui'
 import { useMotionValue, useSpring } from 'framer-motion'
 import _ from 'lodash'
 import * as React from 'react'
-import { useGesture } from 'react-use-gesture'
 
 export function TestUI() {
   return (
@@ -19,7 +18,7 @@ export function TestUI() {
 export function TestUIMotion() {
   const rowRef = React.useRef(null)
   const val = useMotionValue(0)
-  const spring = useSpring(val)
+  const spring = useSpring(val, { damping: 50, stiffness: 250 })
   const state = React.useRef({
     controlled: false,
     dragStart: 0,
@@ -37,19 +36,6 @@ export function TestUIMotion() {
     rowRef.current.style.scrollSnapType = 'x mandatory'
   }, [])
 
-  const bind = useGesture({
-    onDragStart() {
-      state.current.dragStart = rowRef.current.scrollLeft
-    },
-    onDrag(next) {
-      console.log(state.current.dragStart, -next.delta[0] / window.innerWidth)
-      // set( + -)
-    },
-    onDragEnd() {
-      setUncontrolled()
-    },
-  })
-
   React.useEffect(() => {
     spring.onChange(val => {
       if (state.current.controlled) {
@@ -66,15 +52,42 @@ export function TestUIMotion() {
         <Button onClick={() => set(3)}>3</Button>
         <Button onClick={() => set(4)}>4</Button>
       </Row>
+      {/* floating drag handler */}
+      <View
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+        zIndex={-1}
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={1}
+        onDrag={(_, pan) => {
+          const xAmt = pan.offset.x
+          const indexDiff = -xAmt / window.innerWidth
+          const extraSpeed = indexDiff * 1.1
+          const index = state.current.dragStart + indexDiff + extraSpeed
+          set(index)
+        }}
+        onDragStart={() => {
+          state.current.dragStart = rowRef.current.scrollLeft / window.innerWidth
+        }}
+        onAnimationComplete={() => {
+          console.log('done')
+          rowRef.current.style.scrollSnapType = 'x mandatory'
+        }}
+      />
       <Row
         flex={1}
+        position="relative"
+        zIndex={1}
         perspective="1200px"
         scrollable="x"
         scrollSnapType="x mandatory"
         scrollSnapPointsX="repeat(100%)"
         onWheel={setUncontrolled}
         nodeRef={rowRef}
-        {...bind()}
       >
         {[0, 1, 2, 3, 4, 5].map(index => (
           <Geometry key={index}>

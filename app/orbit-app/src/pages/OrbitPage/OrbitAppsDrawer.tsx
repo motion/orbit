@@ -30,6 +30,7 @@ class AppsDrawerStore {
   get activeId() {
     return paneManagerStore.activePane ? paneManagerStore.activePane.id : -1
   }
+
   activeIdAfterAnimating = react(
     () => this.activeId,
     async (_, { when, sleep }) => {
@@ -74,6 +75,7 @@ export const appsDrawerStore = createUsableStore(AppsDrawerStore)
 window['appsDrawerStore'] = appsDrawerStore
 
 export const OrbitAppsDrawer = memo(() => {
+  return null
   const forceUpdate = useForceUpdate()
   const theme = useTheme()
   const { state } = useOm()
@@ -95,16 +97,17 @@ export const OrbitAppsDrawer = memo(() => {
   // this is a sort of "trickle render" to load the dock apps
   // in the backgorund, so they show before they animate open
   useReaction(
-    () => [appsCarouselStore.isAnimating],
-    async ([animating], { sleep }) => {
+    () => [appsCarouselStore.isAnimating, appsCarouselStore.zoomedIn],
+    async ([animating, zoomedIn], { sleep }) => {
+      console.log('WHAT THE FUCK', animating, zoomedIn)
       ensure('not animating', !animating)
       await sleep(100)
       await whenIdle()
       for (const app of apps) {
-        if (renderApp.current[app.id!] === false) {
-          await sleep(100)
+        if (!renderApp.current[app.id!]) {
+          // wait more if not zoomed in
+          await sleep(zoomedIn ? 100 : 300)
           renderApp.current[app.id!] = true
-          console.log('start loading a dock item')
           forceUpdate()
           await whenIdle()
         }
@@ -141,7 +144,8 @@ export const OrbitAppsDrawer = memo(() => {
           if (`${app.id}` === appsDrawer.activeIdAfterAnimating) {
             renderApp.current[app.id!] = true
           }
-          const shouldRenderApp = renderApp.current[app.id!]
+          const shouldRenderApp = renderApp.current[app.id!] || false
+          console.log('should render', renderApp.current[app.id!])
           const shouldShow = `${app.id}` === appsDrawer.activeId
           return (
             <FullScreen

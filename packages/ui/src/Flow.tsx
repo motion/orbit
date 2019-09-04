@@ -25,7 +25,7 @@ export type FlowPropsBase = FlowSectionProps & {
 }
 
 export type FlowStoreProps = {
-  id?: string
+  id: string
   data?: any
   onChangeStep?: (step: number) => any
 }
@@ -177,12 +177,13 @@ interface FlowComponent<Props> extends FunctionComponent<Props> {
 }
 
 export class FlowStore {
-  props: FlowStoreProps = {}
+  // @ts-ignore
+  props: FlowStoreProps
   steps: FlowStepProps[] = []
 
   private state = useHooks(() => {
     const [data, setData] = Config.useUserState(
-      `flowdata-${this.props.id || ''}`,
+      this.props.id === '' ? false : `flowdata-${this.props.id || ''}`,
       this.props.data || null,
     )
     const [index, setIndex] = useState(0)
@@ -259,79 +260,78 @@ export const useCreateFlow = FlowStoreContext.useCreateStore
 export const useFlow = FlowStoreContext.useStore
 export const FlowProvide = FlowStoreContext.ProvideStore
 
-export const Flow: FlowComponent<FlowProps> = memo(
-  ({
+export const Flow: FlowComponent<FlowProps> = memo((flowProps: FlowProps) => {
+  const {
     height,
     Toolbar = DefaultFlowToolbar,
     Layout = FlowLayoutSlider,
     afterTitle,
     ...props
-  }: FlowProps) => {
-    const flowStoreInternal = FlowStoreContext.useCreateStore('useFlow' in props ? false : props)
-    const flowStore = useStore('useFlow' in props ? props.useFlow : flowStoreInternal)
-    const stepChildren = Children.toArray(props.children).filter(
-      x => x && x.type && x.type === FlowStep,
-    )
+  } = flowProps
+  const flowStoreInternal = FlowStoreContext.useCreateStore('useFlow' in props ? false : props)
+  const flowStore = useStore('useFlow' in props ? props.useFlow : flowStoreInternal)
+  const stepChildren = Children.toArray(props.children).filter(
+    x => x && x.type && x.type === FlowStep,
+  )
 
-    // Why no memo? Because we conditionally want to update based on if they are a function (always)
-    // or an element (never). if we don't, you run into infinite loops as you are updating every
-    // render for functional children
-    const stepsRef = useRef<FlowStep[]>([])
-    const stepsId = useRef(0)
-    for (const [index, stepChild] of stepChildren.entries()) {
-      const nextStep = {
-        key: `${index}`,
-        ...stepChild.props,
-      }
-      // memoize functions to prevent infinite renders
-      const isFunctionChild = typeof stepChild.props.children === 'function'
-      if ((isFunctionChild && !stepsRef.current[index]) || !isFunctionChild) {
-        stepsRef.current[index] = nextStep
-        stepsId.current += 1
-      }
+  // Why no memo? Because we conditionally want to update based on if they are a function (always)
+  // or an element (never). if we don't, you run into infinite loops as you are updating every
+  // render for functional children
+  const stepsRef = useRef<FlowStep[]>([])
+  const stepsId = useRef(0)
+  for (const [index, stepChild] of stepChildren.entries()) {
+    const nextStep = {
+      key: `${index}`,
+      ...stepChild.props,
     }
-
-    const total = stepChildren.length
-
-    useLayoutEffect(() => {
-      flowStore.setStepsInternal(stepsRef.current)
-    }, [flowStore, stepsId.current])
-
-    const stepProps = {
-      data: flowStore.data,
-      setData: flowStore.setData,
-      next: flowStore.next,
-      prev: flowStore.prev,
-      setStepIndex: flowStore.setIndex,
+    // memoize functions to prevent infinite renders
+    const isFunctionChild = typeof stepChild.props.children === 'function'
+    if ((isFunctionChild && !stepsRef.current[index]) || !isFunctionChild) {
+      stepsRef.current[index] = nextStep
+      stepsId.current += 1
     }
+  }
 
-    if (!stepsRef.current[flowStore.index]) {
-      return (
-        <Center>
-          No step at index: {flowStore.index}, steps: {JSON.stringify(stepsRef.current)}
-        </Center>
-      )
-    }
+  const total = stepChildren.length
 
+  useLayoutEffect(() => {
+    flowStore.setStepsInternal(stepsRef.current)
+  }, [flowStore, stepsId.current])
+
+  const stepProps = {
+    data: flowStore.data,
+    setData: flowStore.setData,
+    next: flowStore.next,
+    prev: flowStore.prev,
+    setStepIndex: flowStore.setIndex,
+  }
+
+  if (!stepsRef.current[flowStore.index]) {
     return (
-      <FlowStoreContext.ProvideStore value={flowStore}>
-        <Layout
-          Toolbar={Toolbar}
-          total={total}
-          height={height}
-          afterTitle={afterTitle}
-          step={stepsRef.current[flowStore.index]}
-          steps={stepsRef.current}
-          index={flowStore.index}
-          flowStore={flowStore}
-          stepProps={stepProps}
-        >
-          <ScopeState id="flow">{stepsRef.current}</ScopeState>
-        </Layout>
-      </FlowStoreContext.ProvideStore>
+      <Center>
+        No step at index: {flowStore.index}, steps: {JSON.stringify(stepsRef.current)}
+      </Center>
     )
-  },
-) as any
+  }
+
+  return (
+    <FlowStoreContext.ProvideStore value={flowStore}>
+      <Layout
+        Toolbar={Toolbar}
+        total={total}
+        height={height}
+        afterTitle={afterTitle}
+        step={stepsRef.current[flowStore.index]}
+        steps={stepsRef.current}
+        index={flowStore.index}
+        flowStore={flowStore}
+        stepProps={stepProps}
+      >
+        <ScopeState id="flow">{stepsRef.current}</ScopeState>
+      </Layout>
+    </FlowStoreContext.ProvideStore>
+  )
+}) as any
 
 export function FlowStep(_: FlowStepProps) {
   return null

@@ -47,9 +47,13 @@ class OrbitAppsCarouselStore {
   props: {
     apps: AppBit[]
     rowWidth: number
+    zoomOut: MotionValue | null
+    scrollIn: MotionValue | null
   } = {
     apps: [],
     rowWidth: 0,
+    zoomOut: null,
+    scrollIn: null,
   }
 
   // this is only the state that matters for animating
@@ -73,19 +77,17 @@ class OrbitAppsCarouselStore {
   hidden = false
   zoomIntoNextApp = false
   nextFocusedIndex = -1
+  isAnimating = true
   focusedIndex = 0
-  isScrolling = false
-  isZooming = false
   rowNode: HTMLElement | null = null
   rowRef = createRef<HTMLElement>()
   controlled = false
 
   // motion/springs
-  scrollSpring = createUpdateableSpring(0, { damping: 50, stiffness: 250 })
-  scaleSpring = createUpdateableSpring(0.6, { damping: 50, stiffness: 250 })
+  scrollOut = createUpdateableSpring(0, { damping: 50, stiffness: 250 })
 
   start() {
-    this.scrollSpring.value.onChange(val => {
+    this.scrollOut.value.onChange(val => {
       if (this.controlled) {
         this.rowRef.current!.scrollLeft = val * window.innerWidth
       }
@@ -94,7 +96,7 @@ class OrbitAppsCarouselStore {
 
   setUncontrolled() {
     this.controlled = false
-    this.scrollSpring.value.stop()
+    this.scrollOut.value.stop()
     // @ts-ignore
     this.rowRef.current!.style.scrollSnapType = 'x mandatory'
   }
@@ -109,10 +111,6 @@ class OrbitAppsCarouselStore {
 
   setHidden(val = true) {
     this.hidden = val
-  }
-
-  get isAnimating() {
-    return this.isScrolling || this.isZooming
   }
 
   get apps() {
@@ -137,19 +135,30 @@ class OrbitAppsCarouselStore {
   }
 
   updateZoom = react(
-    () => [this.state.zoomedOut, this.state.isDragging],
-    ([zoomedOut, isDragging]) => {
-      this.scaleSpring.value.set(zoomedOut ? (isDragging ? 0.5 : 0.6) : 1)
+    () => this.state.zoomedOut,
+    async (zoomedOut, { when }) => {
+      if (!this.props.zoomOut) {
+        await when(() => !!this.props.zoomOut)
+      }
+      this.props.zoomOut!.set(zoomedOut ? 0 : 1)
+    },
+    {
+      log: false,
     },
   )
 
   updateScroll = react(() => this.state.index, this.setScrollSpring)
 
   setScrollSpring(index: number) {
+    if (index === 628.8) {
+      debugger
+    }
+    if (index === this.scrollOut.value.get()) return
+    console.log('set scroll spring', index)
     if (this.rowRef.current) {
       this.rowRef.current.style['scrollSnapType'] = 'initial'
       this.controlled = true
-      this.scrollSpring.value.set(index)
+      this.scrollOut.value.set(index)
     }
   }
 
@@ -281,12 +290,7 @@ class OrbitAppsCarouselStore {
     if (Math.round(index) !== this.focusedIndex) {
       this.setFocused(index)
     }
-    const x = this.props.rowWidth * index
-    if (this.rowNode.scrollLeft !== this.state.index * this.props.rowWidth) {
-      this.updateScrollPositionToIndex()
-    }
-    this.setScrollSpring(x)
-    this.animateCardsTo(index)
+    this.animateTo(index)
   }
 
   isControlled = false
@@ -317,19 +321,6 @@ class OrbitAppsCarouselStore {
       const nextI = Math.min(Math.max(0, this.state.index + dI), this.apps.length - 1)
       this.animateAndScrollTo(nextI)
     }
-  }
-
-  onFinishScroll = () => {
-    this.isScrolling = false
-  }
-  onStartScroll = () => {
-    this.isScrolling = true
-  }
-  onFinishZoom = () => {
-    this.isZooming = false
-  }
-  onStartZoom = () => {
-    this.isZooming = true
   }
 }
 

@@ -35,6 +35,8 @@ function SetupAppMain() {
     },
   })
 
+  console.log('render setup app...')
+
   return (
     <App
       actions={
@@ -65,6 +67,7 @@ function SetupAppCustom() {
   const stackNav = useStackNavigator()!
 
   const flow = useCreateFlow({
+    id: 'setupApp',
     data: {
       selectedTemplate: null,
     },

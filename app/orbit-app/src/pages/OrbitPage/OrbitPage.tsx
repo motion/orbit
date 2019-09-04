@@ -232,6 +232,7 @@ const IdleLoad = (props: { children: () => React.ReactElement }) => {
       await when(() => !isAnimating)
       await sleep(100)
       await whenIdle()
+      console.log('loading', props)
       return true
     },
     {

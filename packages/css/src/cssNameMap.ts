@@ -165,6 +165,8 @@ export const CAMEL_TO_SNAKE = {
   scrollSnapType: 'scroll-snap-type',
   scrollSnapTypeX: 'scroll-snap-type-x',
   scrollSnapTypeY: 'scroll-snap-type-y',
+  scrollSnapAlign: 'scroll-snap-align',
+  scrollSnapStop: 'scroll-snap-stop',
 }
 
 export const SNAKE_TO_CAMEL = Object.keys(CAMEL_TO_SNAKE).reduce(

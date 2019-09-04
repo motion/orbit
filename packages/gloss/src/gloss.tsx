@@ -100,18 +100,25 @@ export function gloss<Props = any, ThemeProps = Props>(
   a?: CSSPropertySet | GlossView<Props, ThemeProps> | ((props: Props) => any) | string,
   b?: CSSPropertySet,
 ): GlossView<GlossProps<Props>, ThemeProps> {
+  if (process.env.NODE_ENV === 'development') {
+    if (a === undefined && !!b) {
+      throw new Error(
+        `Passed in undefined as first argument to gloss(), you may have a circular import`,
+      )
+    }
+  }
   let target: any = a || 'div'
   let rawStyles = b
   let ignoreAttrs: Object
-  const hasGlossyChild = !!target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
-  const targetConfig: GlossInternalConfig | null = hasGlossyChild
+  const hasGlossyParent = !!target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+  const targetConfig: GlossInternalConfig | null = hasGlossyParent
     ? target.internal.getConfig()
     : null
 
   setTimeout(() => {
     if (!ignoreAttrs) {
       ignoreAttrs =
-        ThemedView.ignoreAttrs || (hasGlossyChild && target.ignoreAttrs) || baseIgnoreAttrs
+        ThemedView.ignoreAttrs || (hasGlossyParent && target.ignoreAttrs) || baseIgnoreAttrs
     }
   }, 0)
 
@@ -121,7 +128,7 @@ export function gloss<Props = any, ThemeProps = Props>(
     target.constructor &&
     target.constructor.name === 'Object' &&
     !b &&
-    !hasGlossyChild &&
+    !hasGlossyParent &&
     !isValidElement(target) &&
     // if you pass an element wrapped in forwardRef() it needs to be filtered somehow..
     !target['$$typeof']
@@ -173,6 +180,12 @@ export function gloss<Props = any, ThemeProps = Props>(
         }
       }
     }, [])
+
+    if (process.env.NODE_ENV === 'development') {
+      if (props['debug'] === 'break') {
+        debugger
+      }
+    }
 
     const dynClassNames = addDynamicStyles(
       id,
@@ -239,12 +252,25 @@ export function gloss<Props = any, ThemeProps = Props>(
       postProcessProps(props, finalProps, tracker)
     }
 
+    if (process.env.NODE_ENV === 'development') {
+      if (props['debug']) {
+        console.log(
+          'styles\n',
+          [...classNames].map(x => tracker.get(x.replace(/^s/, ''))).filter(Boolean),
+          '\nprops\n',
+          props,
+          '\nfinalProps\n',
+          finalProps,
+        )
+      }
+    }
+
     return createElement(element, finalProps, props.children)
   }
 
   const internal: GlossInternals<Props> = {
     themeFns: null,
-    parent: hasGlossyChild ? target : null,
+    parent: hasGlossyParent ? target : null,
     getConfig: () => ({
       config: ogConfig,
       id,
@@ -258,7 +284,7 @@ export function gloss<Props = any, ThemeProps = Props>(
   let ThemedView = createGlossView<Props>(GlossView, internal)
 
   // inherit default props
-  if (hasGlossyChild) {
+  if (hasGlossyParent) {
     ThemedView.defaultProps = target.defaultProps
   }
 

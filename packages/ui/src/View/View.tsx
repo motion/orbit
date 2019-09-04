@@ -1,7 +1,8 @@
-import { GlossPropertySet, validCSSAttr } from '@o/css'
+import { GlossPropertySet } from '@o/css'
 import { motion } from 'framer-motion'
 import { Base, gloss } from 'gloss'
 
+import { AnimationStore } from '../Geometry'
 import { Sizes } from '../Space'
 import { getElevation } from './elevation'
 import { getSizableValue } from './getSizableValue'
@@ -52,10 +53,8 @@ export const motionProps = {
   ...motionStyleProps,
   ...motionExtraProps,
 }
-const validStyleAttr = {
-  ...validCSSAttr,
-  ...motionProps,
-}
+
+const shouldRenderToMotion = (props: any) => props.animate || props.drag
 
 // regular view
 export const View = gloss<ViewProps, ViewThemeProps>(Base, {
@@ -64,7 +63,7 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
   .theme(getMargin, usePadding, getElevation)
   .withConfig({
     postProcessProps(inProps, outProps, tracker) {
-      if (inProps.animate) {
+      if (shouldRenderToMotion(inProps)) {
         let style = inProps.style || {}
         let finalClassName = inProps.className
         // parse style back from classname to style tag for motion
@@ -80,15 +79,20 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
           }
 
           for (const key in inProps) {
+            const val = inProps[key]
             if (motionStyleProps[key]) {
-              style[key] = inProps[key]
+              if (val instanceof AnimationStore) {
+                style[key] = val.getValue()
+              } else {
+                style[key] = val
+              }
               delete outProps[key]
             }
             if (motionExtraProps[key]) {
               if (key === 'animate' && inProps.animate === true) {
                 continue
               }
-              outProps[key] = inProps[key]
+              outProps[key] = val
             }
           }
         }
@@ -99,8 +103,9 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
     },
     isDOMElement: true,
     getElement(props) {
-      // todo make it not require animate
-      return props.animate ? motion[props.tagName] || motion.div : props.tagName || 'div'
+      return shouldRenderToMotion(props)
+        ? motion[props.tagName] || motion.div
+        : props.tagName || 'div'
     },
   })
 

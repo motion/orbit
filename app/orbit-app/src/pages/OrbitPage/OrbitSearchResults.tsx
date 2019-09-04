@@ -247,9 +247,8 @@ export const OrbitSearchResults = memo(() => {
           zIndex={200}
           width="36%"
           transition="all ease 300ms"
-          background={`linear-gradient(to right, ${
-            theme.orbitMainBackground
-          } 15%, transparent 90%)`}
+          background={`linear-gradient(to right, ${theme.orbitLauncherSideBackground ||
+            'transparent'} 15%, transparent 90%)`}
           opacity={carousel.zoomedIn ? 0 : 1}
           pointerEvents={isActive ? 'auto' : 'none'}
           perspective="1000px"

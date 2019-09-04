@@ -1,8 +1,9 @@
 import { GlossPropertySet } from '@o/css'
-import { MotionProps, MotionTransform } from 'framer-motion'
+import { MotionProps, MotionTransform, Transition } from 'framer-motion'
 import { AlphaColorProps, CSSPropertySet, CSSPropertySetStrict, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
 import React from 'react'
 
+import { AnimationStore } from '../Geometry'
 import { Size } from '../Space'
 import { CommonViewProps } from './CommonViewProps'
 import { ElevatableProps } from './elevation'
@@ -61,12 +62,17 @@ type CommonHTMLProps = Omit<
   | 'itemScope'
   | 'inputMode'
   | 'color'
+  | 'size'
 >
 
 type MotionCompatCommonProps = Omit<
   CommonHTMLProps,
   'onDrag' | 'onDragStart' | 'onDragEnd' | 'style'
 >
+
+export type OrbitMotionTransform = {
+  [P in keyof MotionTransform]: MotionTransform[P] | AnimationStore
+}
 
 export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
   PseudoStyleProps &
@@ -76,17 +82,19 @@ export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
   MarginProps &
   PaddingProps &
   /** Accept the motion props */
-  Omit<MotionProps, 'animate'> &
-  MotionTransform & {
+  Omit<MotionProps, 'animate' | 'transition'> &
+  OrbitMotionTransform & {
     // could make this better done in terms of type flow, its for <Input labels...
     label?: React.ReactNode
     // allow boolean toggle animate too
-    animate?: boolean & MotionProps['animate']
+    animate?: boolean | MotionProps['animate']
   }
 
 export type ViewProps = ViewBaseProps &
   // be sure to omit margin/padding
-  Omit<CSSPropertySetStrict, 'margin' | 'padding'>
+  Omit<CSSPropertySetStrict, 'margin' | 'padding' | 'transition'> & {
+    transition?: CSSPropertySetStrict['transition'] | Transition
+  }
 
 export type ViewThemeProps = ViewBaseProps & GlossPropertySet
 

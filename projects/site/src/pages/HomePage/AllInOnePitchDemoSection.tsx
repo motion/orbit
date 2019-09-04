@@ -179,14 +179,14 @@ export default function NeckSection() {
               <PillButton>How</PillButton>
             </FadeChild>
             <FadeChild delay={200}>
-              <TitleText size={useScreenVal('lg', 'xl', 'xxl')}>All together</TitleText>
+              <TitleText size={useScreenVal('lg', 'xxxl', 'xxxl')}>Make apps, easy.</TitleText>
             </FadeChild>
             <TitleTextSub nodeRef={ref as any} margin="auto" minWidth={320}>
-              <FadeChild {...(screen === 'small' ? { display: 'inline' } : null)} delay={300}>
-                &nbsp;Orbit gives you everything you need to create custom apps.&nbsp;
+              <FadeChild {...(screen === 'small' ? { display: 'inline' } : null)} delay={350}>
+                &nbsp;Build tools as a team, sharing a rich set of building blocks.&nbsp;
               </FadeChild>
-              <FadeChild {...(screen === 'small' ? { display: 'inline' } : null)} delay={450}>
-                With data sources, views and more, you control the code.
+              <FadeChild {...(screen === 'small' ? { display: 'inline' } : null)} delay={500}>
+                Orbit comes with everything you need.
               </FadeChild>
             </TitleTextSub>
           </>
@@ -196,7 +196,7 @@ export default function NeckSection() {
           {screen !== 'small' && (
             <Row space>
               <SubSection maxWidth="33%">
-                <FadeChild {...fadeAnimations.left} delay={400}>
+                <FadeChild {...fadeAnimations.left} delay={600}>
                   <PillButtonDark>Import</PillButtonDark>
                   <Space />
                   <CenterText>
@@ -206,7 +206,7 @@ export default function NeckSection() {
                 </FadeChild>
               </SubSection>
               <SubSection flex={2} padding={[true, 'xxl']}>
-                <FadeChild delay={500}>
+                <FadeChild delay={600}>
                   <PillButtonDark>Display</PillButtonDark>
                   <Space />
                   <CenterText maxWidth={400} margin={[0, 'auto']}>
@@ -216,7 +216,7 @@ export default function NeckSection() {
                 </FadeChild>
               </SubSection>
               <SubSection maxWidth="33%">
-                <FadeChild {...fadeAnimations.right} delay={600}>
+                <FadeChild {...fadeAnimations.right} delay={700}>
                   <PillButtonDark>Export</PillButtonDark>
                   <Space />
                   <CenterText>
@@ -232,7 +232,7 @@ export default function NeckSection() {
 
           <Row space>
             <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
-              <FadeChild {...fadeAnimations.left} delay={700}>
+              <FadeChild {...fadeAnimations.left} delay={800}>
                 <Image
                   userSelect="none"
                   alignSelf="center"
@@ -264,7 +264,7 @@ export default function NeckSection() {
               position="relative"
               margin={useScreenVal([0, '-5%'], 0, 0)}
             >
-              <FadeChild width="100%" delay={300}>
+              <FadeChild width="100%" delay={400}>
                 <Button
                   alt="flat"
                   cursor="pointer"
@@ -295,7 +295,7 @@ export default function NeckSection() {
 
               <FadeChild
                 transition={transitions.slowNotBouncy}
-                delay={500}
+                delay={600}
                 marginBottom={-200}
                 zIndex={10}
               >
@@ -355,10 +355,10 @@ export default function NeckSection() {
                       x: { type: 'spring', stiffness: 100, damping: 200 },
                       opacity: { duration: 0.2 },
                     }}
+                    position="absolute"
                     drag="x"
                     dragConstraints={{ left: 0, right: 0 }}
                     dragElastic={1}
-                    position="absolute"
                     onDragEnd={(e, { offset, velocity }) => {
                       const swipe = swipePower(offset.x, velocity.x)
                       if (swipe < -swipeConfidenceThreshold) {

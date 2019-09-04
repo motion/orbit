@@ -54,6 +54,11 @@ const getHeight = (size: number, sizeHeight: number | boolean) => {
 }
 
 export const SizedSurface = (direct: SizedSurfaceProps) => {
+  const sizedSurfaceProps = useSizedSurfaceProps(direct)
+  return <Surface {...sizedSurfaceProps} />
+}
+
+export function useSizedSurfaceProps(direct?: SizedSurfaceProps): SizedSurfaceProps {
   const props = useSurfaceProps(direct)
   const scale = useScale()
   const {
@@ -74,7 +79,9 @@ export const SizedSurface = (direct: SizedSurfaceProps) => {
       ? props.height
       : (typeof sizeHeight !== 'undefined' && getHeight(size, sizeHeight)) || undefined
   let iconPadding = clampRound(LINE_HEIGHT * 0.22 * num(sizeHeight || 1))
-  const pass = {} as any
+  const pass = {
+    size,
+  } as any
   if (sizeHeight) {
     pass.height = height
   }
@@ -87,7 +94,7 @@ export const SizedSurface = (direct: SizedSurfaceProps) => {
     const topPad = sizeHeight ? 0 : clampRound(padSize * 1.5)
     const sidePad = clampRound(9 * padSize)
     pass.padding = [topPad, sidePad]
-    iconPadding = iconPadding * padSize
+    pass.iconPadding = iconPadding * padSize
   }
   if (sizeMargin) {
     const margin = num(sizeMargin) * 0.25 * size
@@ -108,6 +115,5 @@ export const SizedSurface = (direct: SizedSurfaceProps) => {
   if (sizeIcon) {
     pass.sizeIcon = num(sizeIcon)
   }
-  const realProps = mergeDefined(pass, rest)
-  return <Surface iconPadding={iconPadding} {...realProps} size={size} />
+  return mergeDefined(pass, rest)
 }

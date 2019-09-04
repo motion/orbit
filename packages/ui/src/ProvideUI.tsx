@@ -2,7 +2,6 @@ import { ThemeSet } from '@o/css'
 import { ThemeProvide } from 'gloss'
 import React from 'react'
 
-import { ProvideBanner } from './Banner'
 import { ProvideDraggable } from './Draggable'
 import { ProvideFocus, ProvideFocusManager } from './Focus'
 import { ProvideHighlight } from './Highlight'
@@ -22,19 +21,17 @@ export const ProvideUI = (props: ProvideUIProps) => {
     <ProvideHighlight>
       <ThemeProvide activeTheme={props.activeTheme} themes={props.themes}>
         <ProvideDraggable>
-          <ProvideBanner>
-            <ProvideSearch query="">
-              <ProvideVisibility visible={true}>
-                <ProvideFocus focused={true}>
-                  <ProvideShortcut>
-                    <ProvideFocusManager>
-                      <ProvideShare>{props.children}</ProvideShare>
-                    </ProvideFocusManager>
-                  </ProvideShortcut>
-                </ProvideFocus>
-              </ProvideVisibility>
-            </ProvideSearch>
-          </ProvideBanner>
+          <ProvideSearch query="">
+            <ProvideVisibility visible={true}>
+              <ProvideFocus focused={true}>
+                <ProvideShortcut>
+                  <ProvideFocusManager>
+                    <ProvideShare>{props.children}</ProvideShare>
+                  </ProvideFocusManager>
+                </ProvideShortcut>
+              </ProvideFocus>
+            </ProvideVisibility>
+          </ProvideSearch>
         </ProvideDraggable>
       </ThemeProvide>
     </ProvideHighlight>

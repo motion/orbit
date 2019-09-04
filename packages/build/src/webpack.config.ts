@@ -9,7 +9,7 @@ import * as Path from 'path'
 import webpack from 'webpack'
 
 // reduced a 5mb bundle by 0.01mb...
-// const ShakePlugin = require('webpack-common-shake').Plugin
+const ShakePlugin = require('webpack-common-shake').Plugin
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { BundleStatsWebpackPlugin } = require('bundle-stats')
 
@@ -241,11 +241,8 @@ async function makeConfig() {
     devtool,
     resolve: {
       extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx'],
-      mainFields: isProd
-        ? ['ts:main', 'module', 'browser', 'main']
-        : ['ts:main', 'module', 'browser', 'main'],
+      mainFields: ['ts:main', 'module', 'source', 'browser', 'main'],
       alias,
-      // plugins: [new ModuleScopePlugin(appSrc, [appPackageJson])],
     },
     resolveLoader: {
       modules: buildNodeModules,
@@ -268,8 +265,10 @@ async function makeConfig() {
           use: 'ignore-loader',
         },
         {
-          test: /\.tsx?$/,
-          include: tsEntries,
+          test: /\.(j|t)sx?$/,
+          // in prod mode include everything for better bundling,
+          // in dev mode just the entries in monorepo
+          ...(isProd ? null : { include: tsEntries }),
           use: [
             {
               loader: 'babel-loader',
@@ -436,7 +435,7 @@ async function makeConfig() {
 
       isProd && new DuplicatePackageCheckerPlugin(),
 
-      // isProd && new ShakePlugin(),
+      !!process.env['SHAKE_COMMONJS'] && new ShakePlugin(),
 
       // new CircularDependencyPlugin({
       //   // failOnError: true,

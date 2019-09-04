@@ -27,7 +27,7 @@ export const OrbitNav = memo(
     const activePane = paneManagerStore.activePaneSlow
     const { isEditing } = useStore(App)
     const { state, actions } = useOm()
-    const { panes, paneId } = paneManagerStore
+    const { panes } = paneManagerStore
     // in case they get in a weird state, filter
     const activeAppsSorted = useMemo(
       () => allActiveApps.filter(x => panes.some(pane => pane.id === `${x.id}`)),
@@ -46,7 +46,7 @@ export const OrbitNav = memo(
         activeAppsSorted
           .map(
             (app): TabProps => {
-              const isActive = `${app.id}` === paneId
+              const isActive = `${app.id}` === activePane.id
               // const next = activeAppsSorted[index + 1]
               // const isLast = index === activeAppsSorted.length
               // const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
@@ -90,7 +90,7 @@ export const OrbitNav = memo(
             },
           )
           .filter(x => !!x),
-      [activeAppsSorted, paneId],
+      [activeAppsSorted, activePane.id],
     )
 
     const onSettings = isOnSettings(activePane)

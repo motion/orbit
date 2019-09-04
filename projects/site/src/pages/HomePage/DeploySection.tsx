@@ -60,11 +60,11 @@ export default function DeploySection() {
         header={
           <>
             <FadeChild delay={0}>
-              <PillButton>Trust</PillButton>
+              <PillButton>Create</PillButton>
             </FadeChild>
             <FadeChild delay={300}>
-              <TitleText textAlign="center" size={useScreenVal('md', 'md', 'lg')}>
-                Designed for privacy & control
+              <TitleText textAlign="center" size={useScreenVal('md', 'xxl', 'xxxl')}>
+                Best DX, ever.
               </TitleText>
             </FadeChild>
           </>
@@ -97,25 +97,18 @@ export default function DeploySection() {
             </FadeChild>
           </Col>
 
-          <Col space flex={2} minWidth={300} maxWidth={340}>
+          <Col space="xxl" flex={2} minWidth={300} maxWidth={340}>
             <FadeChild delay={500}>
-              <ParagraphIntro {...fontProps.TitleFont} sizeLineHeight={1.1} size={1.5}>
-                From idea to deploy - you control the data, the code that runs it, and where it
-                runs.
+              <ParagraphIntro {...fontProps.TitleFont} sizeLineHeight={1.1} size={1.75}>
+                Orbit pushes forward how apps work, and how we build them, with a radical focus on
+                making code as easy as possible.
               </ParagraphIntro>
             </FadeChild>
 
             <FadeChild delay={650}>
-              <Para size={1.35} sizeLineHeight={1.25}>
-                It's time platforms didn't lock us in, create data silos and work against our
-                interest.
-              </Para>
-            </FadeChild>
-
-            <FadeChild delay={700}>
-              <Para size={1.35} sizeLineHeight={1.25}>
-                Orbit is open source and decentralized. It gives you complete control over the data
-                it syncs and the code that runs!
+              <Para size={1.4} sizeLineHeight={1.25}>
+                Create apps that work together, but run in isolation. Plug in data sources with
+                ease. Develop with instant feedback, everything you need is included.
               </Para>
             </FadeChild>
 

@@ -207,7 +207,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   return (
     <MainShortcutHandler handlers={handlers}>
       {!isOnIsolateApp && <OrbitHeader />}
-      {!isOnIsolateApp && <OrbitDock />}
+      {!isOnIsolateApp && <IdleLoad>{() => <OrbitDock />}</IdleLoad>}
       <OrbitDraggableOverlay />
       <OrbitInnerChrome nodeRef={innerRef} torn={isEditing}>
         <OrbitContentArea>
@@ -232,6 +232,7 @@ const IdleLoad = (props: { children: () => React.ReactElement }) => {
       await when(() => !isAnimating)
       await sleep(100)
       await whenIdle()
+      console.log('loading', props)
       return true
     },
     {

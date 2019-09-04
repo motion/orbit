@@ -4,6 +4,7 @@ import { getGlobalConfig, useActiveSpace } from '@o/kit'
 import GraphiQLExplorer from 'graphiql-explorer'
 import { buildClientSchema, getIntrospectionQuery, GraphQLSchema } from 'graphql'
 import React, { useEffect, useRef, useState } from 'react'
+import { cold } from 'react-hot-loader'
 import ShadowDOM from 'react-shadow'
 
 import { useThemeStore } from '../om/stores'
@@ -384,3 +385,6 @@ function spaceFetcher(
       })
   })
 }
+
+cold(GraphQueryExplorer)
+cold(GraphExplorer)

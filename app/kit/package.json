@@ -23,7 +23,7 @@
     "@o/ui": "^2.6.0",
     "@o/use-store": "^2.6.0",
     "@o/utils": "^2.6.0",
-    "compromise": "^11.11.0",
+    "compromise": "^11.14.3",
     "date-fns": "2.0.0-alpha.7",
     "gloss": "^2.6.0",
     "gloss-theme": "^2.6.0",

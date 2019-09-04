@@ -1,5 +1,5 @@
-import { Button, CardSimple, Col, Parallax, Row, View } from '@o/ui'
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { Button, CardSimple, Col, Geometry, Parallax, Row, View } from '@o/ui'
+import { motion, useAnimation, useMotionValue, useSpring } from 'framer-motion'
 import _ from 'lodash'
 import * as React from 'react'
 
@@ -9,9 +9,154 @@ export function TestUI() {
       {/* <TestUIPopovers /> */}
       {/* <TestUIGlossSpeed /> */}
       {/* <TestUIEditor /> */}
-      <TestUIMotion />
+      {/* <TestUIMotion /> */}
+      <TestUIAnimation />
       {/* <TestUIParallax /> */}
     </>
+  )
+}
+
+const variants = {
+  visible: i => ({
+    scale: i * 1,
+    rotateY: i * 10,
+  }),
+}
+
+export function TestUIAnimation() {
+  const animation = useAnimation()
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      animation.set({
+        opacity: 1,
+      })
+    }, 500)
+  }, [])
+
+  return [1, 2, 3].map(x => (
+    <motion.div
+      key={x}
+      custom={x}
+      animate={animation}
+      variants={variants}
+      style={{
+        width: 100,
+        height: 100,
+        margin: 10,
+        background: 'green',
+      }}
+    />
+  ))
+}
+
+export function TestUIMotion() {
+  const rowRef = React.useRef(null)
+  const val = useMotionValue(0)
+  const spring = useSpring(val, { damping: 50, stiffness: 250 })
+  const state = React.useRef({
+    controlled: false,
+    wheelTm: null,
+    dragStart: 0,
+  })
+
+  const set = React.useCallback((next: number) => {
+    rowRef.current.style.scrollSnapType = 'initial'
+    state.current.controlled = true
+    val.set(next)
+  }, [])
+
+  const setUncontrolled = React.useCallback(() => {
+    state.current.controlled = false
+    spring.stop()
+    rowRef.current.style.scrollSnapType = 'x mandatory'
+  }, [])
+
+  React.useEffect(() => {
+    spring.onChange(val => {
+      if (state.current.controlled) {
+        rowRef.current.scrollLeft = val * window.innerWidth
+      }
+    })
+  }, [])
+
+  return (
+    <Col>
+      <Row group>
+        <Button onClick={() => set(1)}>1</Button>
+        <Button onClick={() => set(2)}>2</Button>
+        <Button onClick={() => set(3)}>3</Button>
+        <Button onClick={() => set(4)}>4</Button>
+      </Row>
+      {/* floating drag handler */}
+      <View
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+        zIndex={-2}
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={1}
+        onWheel={e => {
+          clearTimeout(state.current.wheelTm)
+          const xDelta = e.deltaX
+          const index =
+            rowRef.current.scrollLeft / window.innerWidth + (xDelta / window.innerWidth) * 12
+          set(index)
+          state.current.wheelTm = setTimeout(() => {
+            setUncontrolled()
+          }, 50)
+        }}
+        onDrag={(_, pan) => {
+          const xAmt = pan.offset.x
+          const indexDiff = -xAmt / window.innerWidth
+          const extraSpeed = indexDiff * 1.05
+          const index = state.current.dragStart + indexDiff + extraSpeed
+          set(index)
+        }}
+        onDragStart={() => {
+          state.current.dragStart = rowRef.current.scrollLeft / window.innerWidth
+        }}
+        onAnimationComplete={() => {
+          console.warn('done')
+          setUncontrolled()
+        }}
+      />
+      <Row
+        flex={1}
+        position="relative"
+        zIndex={1}
+        perspective="1200px"
+        scrollable="x"
+        scrollSnapType="x mandatory"
+        scrollSnapPointsX="repeat(100%)"
+        nodeRef={rowRef}
+        onWheel={setUncontrolled}
+      >
+        {[0, 1, 2, 3, 4, 5].map(index => (
+          <Geometry key={index}>
+            {geometry => (
+              <View scrollSnapAlign="center">
+                <View
+                  width="100vw"
+                  height="92vh"
+                  background="red"
+                  rotateY={geometry
+                    .scrollIntersection()
+                    .transform(x => x - index + 0.5)
+                    .transform([0, 1], [-20, 20])
+                    .spring({ stiffness: 300, damping: 50 })}
+                  transformOrigin="center center"
+                  animate={{ scale: 0.7 }}
+                />
+              </View>
+            )}
+          </Geometry>
+        ))}
+      </Row>
+    </Col>
   )
 }
 
@@ -46,62 +191,6 @@ export function TestUIParallax() {
   )
 }
 
-export function TestUIMotion() {
-  const ref = React.useRef(null)
-  const scrollXProgress = useScrollProgress({
-    ref,
-  })
-
-  return (
-    <Row overflow="hidden" height="100%">
-      <motion.div
-        ref={ref}
-        style={{
-          display: 'flex',
-          flex: 1,
-          flexFlow: 'row',
-          perspective: '1200px',
-          overflowX: 'auto',
-          scrollSnapType: 'x mandatory',
-          scrollSnapPointsX: 'repeat(100%)',
-        }}
-      >
-        {[0, 1, 2, 3, 4, 5].map(i => (
-          <Card key={i} index={i} total={5} scrollXProgress={scrollXProgress} />
-          // <Card rotateY={ref => ref.geometry.intersectionWithFrame().transform([0, 1], [-10, 10])} />
-        ))}
-      </motion.div>
-    </Row>
-  )
-}
-
-// geometry.intersectionWithFrame().transform([0, 1], [-10, 10])
-//   => Springy
-//      UI kit uses it internally to convert it into:
-
-function Card(props: any) {
-  const ry1 = useTransform(props.scrollXProgress, x => {
-    return x - props.index + 0.35
-  })
-  const ry = useTransform(ry1, [0, 1], [-10, 10])
-  const rotateY = useSpring(ry, { stiffness: 400, damping: 90 })
-  return (
-    <View>
-      <motion.div
-        style={{
-          width: window.innerWidth,
-          height: window.innerHeight,
-          background: 'lightgreen',
-          rotateY,
-          scrollSnapAlign: 'center',
-          transformOrigin: 'center center',
-        }}
-        animate={{ scale: 0.7 }}
-      />
-    </View>
-  )
-}
-
 export function TestUIGlossSpeed() {
   const [key, setKey] = React.useState(0)
   return (
@@ -116,17 +205,4 @@ export function TestUIGlossSpeed() {
       </Col>
     </Col>
   )
-}
-
-function useScrollProgress({ ref }) {
-  const scrollXProgress = useMotionValue(0)
-
-  React.useEffect(() => {
-    function updateCallback(e) {
-      scrollXProgress.set(e.target.scrollLeft / e.target.clientWidth)
-    }
-    ref.current.addEventListener('scroll', updateCallback, { passive: true })
-  }, [])
-
-  return scrollXProgress
 }

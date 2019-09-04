@@ -13,7 +13,7 @@ export const SiteRoot = hot(() => {
       <SiteStoreContext.Provider>
         {/* this key helps HMR for lazy imports... but it breaks scroll position */}
         <Router
-          key={process.env.NODE_ENV === 'development' ? Math.random() : 0}
+          // key={process.env.NODE_ENV === 'development' ? Math.random() : 0}
           navigation={Navigation}
         >
           <Layout>

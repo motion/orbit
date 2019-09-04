@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 
 import { createBanner } from './Banner'
 import { Button } from './buttons/Button'
+import { Code } from './Code'
+import { Space } from './Space'
+import { SubTitle } from './text/SubTitle'
 
 export class ErrorBoundary extends Component<{ name: string; displayInline?: boolean }> {
   state = {
@@ -16,7 +19,13 @@ export class ErrorBoundary extends Component<{ name: string; displayInline?: boo
     this.handle.set({
       type: 'error',
       title: `Error in ${this.props.name}`,
-      message: `${error.message}`,
+      message: (
+        <>
+          <SubTitle>{error.message}</SubTitle>
+          <Space />
+          <Code>{error.stack}</Code>
+        </>
+      ),
     })
     this.setState({ error })
   }

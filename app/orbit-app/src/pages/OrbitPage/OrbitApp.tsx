@@ -1,12 +1,13 @@
 import { isEqual } from '@o/fast-compare'
 import { AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getApps, ProvideStores, RenderAppFn, useAppBit } from '@o/kit'
 import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopeState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
-import { useReaction, useStoreSimple } from '@o/use-store'
+import { ensure, react, useStore, useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
-import React, { memo, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import React, { memo, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { useOm } from '../../om/om'
 import { orbitStore, paneManagerStore } from '../../om/stores'
+import { appsCarouselStore } from './OrbitAppsCarouselStore'
 import { OrbitMain } from './OrbitMain'
 import { OrbitSidebar } from './OrbitSidebar'
 import { OrbitStatusBar } from './OrbitStatusBar'
@@ -22,65 +23,88 @@ type OrbitAppProps = {
   renderApp?: RenderAppFn
 }
 
-export const OrbitApp = memo(
-  ({
+const loadOrder: number[] = []
+
+class OrbitAppStore {
+  // @ts-ignore
+  props: OrbitAppProps & {
+    uid: number
+  }
+
+  shouldRender = react(
+    () => [this.props.shouldRenderApp || false],
+    async ([should], { when, sleep }) => {
+      ensure('should', !!should)
+      // stagger load
+      await sleep(loadOrder.indexOf(this.props.uid) * 100)
+      // wait three ticks before loading
+      let ticks = 0
+      while (ticks < 3) {
+        ticks++
+        await whenIdle()
+        await sleep(20)
+        await when(() => !appsCarouselStore.isAnimating)
+      }
+      return should
+    },
+  )
+
+  isActive = react(() => {
+    return selectDefined(
+      this.props.isVisible,
+      !this.props.disableInteraction && paneManagerStore.activePane.id === `${this.props.id}`,
+    )
+  })
+}
+
+export const OrbitApp = memo((props: OrbitAppProps) => {
+  const { id, identifier, appDef, disableInteraction, renderApp } = props
+  const uidRef = useRef(Math.random())
+  if (!loadOrder.includes(uidRef.current)) {
+    loadOrder.push(uidRef.current)
+  }
+  const { isActive, shouldRender } = useStore(OrbitAppStore, { ...props, uid: uidRef.current })
+  const appStore = useStoreSimple(AppStore, {
     id,
     identifier,
-    appDef,
-    shouldRenderApp,
-    disableInteraction,
-    renderApp,
-    isVisible,
-  }: OrbitAppProps) => {
-    const isActive = useReaction(() => {
-      return selectDefined(
-        isVisible,
-        !disableInteraction && paneManagerStore.activePane.id === `${id}`,
-      )
-    }, [disableInteraction])
+  })
 
-    const appStore = useStoreSimple(AppStore, {
-      id,
-      identifier,
-    })
+  useLayoutEffect(() => {
+    if (isActive) {
+      orbitStore.setActiveAppStore(appStore)
+    }
+  }, [orbitStore, appStore, isActive])
 
-    useLayoutEffect(() => {
-      if (isActive) {
-        orbitStore.setActiveAppStore(appStore)
+  return (
+    <Suspense
+      fallback={
+        <div>
+          error loading app {identifier} {id}
+        </div>
       }
-    }, [orbitStore, appStore, isActive, shouldRenderApp])
-
-    return (
-      <Suspense
-        fallback={
-          <div>
-            error loading app {identifier} {id}
-          </div>
-        }
+    >
+      <View
+        className={`orbit-app ${isActive ? 'is-active' : 'non-active'}`}
+        flex={1}
+        pointerEvents={disableInteraction ? 'none' : 'inherit'}
       >
-        <View
-          className={`orbit-app ${isActive ? 'is-active' : 'non-active'}`}
-          flex={1}
-          pointerEvents={disableInteraction ? 'none' : 'inherit'}
-        >
-          <ScopeState id={`app-${identifier}-${id}`}>
-            <ProvideStores stores={{ appStore }}>
-              <ProvideVisibility visible={isActive}>
-                <OrbitAppRender
-                  id={id}
-                  identifier={identifier}
-                  shouldRenderApp={selectDefined(shouldRenderApp, true)}
-                  appDef={appDef}
-                  renderApp={renderApp}
-                />
-              </ProvideVisibility>
-            </ProvideStores>
-          </ScopeState>
-        </View>
-      </Suspense>
-    )
-  },
-)
+        <ScopeState id={`app-${identifier}-${id}`}>
+          <ProvideStores stores={{ appStore }}>
+            <ProvideVisibility visible={isActive}>
+              <OrbitAppRender
+                id={id}
+                identifier={identifier}
+                shouldRenderApp={shouldRender}
+                appDef={appDef}
+                renderApp={renderApp}
+              />
+            </ProvideVisibility>
+          </ProvideStores>
+        </ScopeState>
+      </View>
+    </Suspense>
+  )
+})
 
 const OrbitAppRender = memo((props: OrbitAppProps) => {
   const appDef = props.appDef || getAppDefinition(props.identifier)

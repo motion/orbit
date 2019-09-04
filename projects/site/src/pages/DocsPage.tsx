@@ -1,4 +1,4 @@
-import { BorderRight, Button, Col, gloss, List, Portal, Row, Sidebar, sleep, Space, useOnMount, whenIdle } from '@o/ui'
+import { BorderRight, Button, Col, gloss, List, Portal, ProvideBanner, Row, Sidebar, sleep, Space, useOnMount, whenIdle } from '@o/ui'
 import { useForceUpdate, useReaction } from '@o/use-store'
 import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
@@ -256,9 +256,11 @@ export default compose(
       )
     }
     return (
-      <DocsPage>
-        <View disableScrolling={window['recentHMR']} />
-      </DocsPage>
+      <ProvideBanner>
+        <DocsPage>
+          <View disableScrolling={window['recentHMR']} />
+        </DocsPage>
+      </ProvideBanner>
     )
   }),
 

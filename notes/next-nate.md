@@ -96,19 +96,33 @@ next
 
 Sep
 
-"Have good demo apps"
+"Have everything ready for beta"
+
+- Improved demo flow x2 (apps, bugs, etc)
+- Build to production
+- Website improved with better docs / home text
 
 Oct
 
-"Fix up site and onboarding for launch"
+"Launch in private beta"
+
+- Improve demo apps
+- Upgrade build/release process (auto updates etc)
+- Get builds in hands of friends for initial debugging
 
 Nov
 
-"Sell it to some early users"
+"Public beta launch"
+
+- Upgrade docs, website, etc
+- Really improve apps/demos
+- Start on dockerizing things for cloud stuff
 
 Dec
 
-"Launch"
+"Sell it / Launch"
+
+---
 
 First, need to talk to a few startup people to get some feedback:
 

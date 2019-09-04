@@ -1,9 +1,10 @@
 import { IconSvgPaths20 } from '@blueprintjs/icons'
 import { toColor } from '@o/color'
 import { useTheme } from 'gloss'
-import React, { memo, useLayoutEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import SVG from 'svg.js'
 
+import { whenIdle } from './helpers/whenIdle'
 import { findName, IconProps } from './Icon'
 import { View } from './View/View'
 
@@ -48,22 +49,32 @@ export const IconShape = memo(
 
     const [svgPath, setSVGPath] = useState(`${shapes[shape]}`)
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       if (!iconPath) return
       if (cache[iconPath]) {
         return setSVGPath(cache[iconPath])
       }
-      const draw = SVG(id).size(diameter, diameter)
-      const icon = draw.path(iconPath)
-      const out = icon
-        // TODO if its not a perfect square we need to adjust here
-        .size(16, 16)
-        .move(6, 6)
-        .array()
-        .toString()
 
-      cache[iconPath] = `${shapes[shape]} ${out}`
-      setSVGPath(cache[iconPath])
+      // TODO move this off thread - this interrupts carousel animation
+      let cancelled = false
+      whenIdle().then(() => {
+        if (cancelled) return
+        const draw = SVG(id).size(diameter, diameter)
+        const icon = draw.path(iconPath)
+        const out = icon
+          // TODO if its not a perfect square we need to adjust here
+          .size(16, 16)
+          .move(6, 6)
+          .array()
+          .toString()
+
+        cache[iconPath] = `${shapes[shape]} ${out}`
+        setSVGPath(cache[iconPath])
+      })
+
+      return () => {
+        cancelled = true
+      }
     }, [id, iconPath])
 
     const scale = size / 28

@@ -2,7 +2,7 @@ import { ColorLike } from '@o/color'
 import { isEqual } from '@o/fast-compare'
 import { on } from '@o/utils'
 import { Box, gloss, isGlossView, Theme, ThemeContext } from 'gloss'
-import { Cancelable, debounce, isNumber, last, pick } from 'lodash'
+import { debounce, isNumber, last, pick } from 'lodash'
 import * as React from 'react'
 
 import { Arrow } from './Arrow'
@@ -140,7 +140,7 @@ const defaultProps = {
 
 type PopoverPropsWithDefaults = PopoverProps & typeof defaultProps
 
-type DebouncedFn = Function & Cancelable
+type DebouncedFn = Function & { cancel: () => void }
 type PopoverDirection = 'top' | 'bottom' | 'left' | 'right' | 'auto'
 type PositionStateX = { arrowLeft: number; left: number }
 type PositionStateY = { arrowTop: number; top: number; maxHeight: number }

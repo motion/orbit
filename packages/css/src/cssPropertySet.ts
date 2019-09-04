@@ -498,6 +498,7 @@ export type scrollSnapPointsY = 'none' | string
 export type scrollSnapType = 'none' | 'mandatory' | 'proximity' | string
 export type scrollSnapTypeX = 'none' | 'mandatory' | 'proximity'
 export type scrollSnapTypeY = 'none' | 'mandatory' | 'proximity'
+export type scrollSnapAlign = 'center' | 'end' | 'start' | string
 export type shapeImageThreshold = number
 export type shapeMargin = lengthPercentage
 export type shapeOutside = 'none' | shapeBox | string
@@ -1061,6 +1062,7 @@ export type GenerateCSSPropertySet<A extends true | false> = {
   scrollSnapType?: CSSPropertyVal<scrollSnapType, A>
   scrollSnapTypeX?: CSSPropertyVal<scrollSnapTypeX, A>
   scrollSnapTypeY?: CSSPropertyVal<scrollSnapTypeY, A>
+  scrollSnapAlign?: CSSPropertyVal<scrollSnapAlign, A>
   shapeImageThreshold?: CSSPropertyVal<shapeImageThreshold, A>
   shapeMargin?: CSSPropertyVal<shapeMargin, A>
   shapeOutside?: CSSPropertyVal<shapeOutside, A>

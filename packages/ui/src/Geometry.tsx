@@ -1,7 +1,7 @@
 import { decorate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { SpringProps } from 'popmotion'
-import { memo, useContext, useEffect, useLayoutEffect } from 'react'
+import { memo, useContext, useEffect, useLayoutEffect, useRef } from 'react'
 import React from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
@@ -106,16 +106,27 @@ class GeometryStore {
   }
 }
 
+function useHotReload(fn: Function) {
+  const mounted = useRef(false)
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true
+      return
+    }
+    fn()
+  }, ['hot'])
+}
+
 export function Geometry(props: { children: (geometry: GeometryStore) => React.ReactNode }) {
   const geometry = useLazyRef(() => new GeometryStore()).current
   const [hookVals, setHooksVals] = React.useState([])
   const hooks = geometry.routines.map(x => x.store.animationHooks.hooks).flat()
   geometry.onRender(hookVals)
 
-  useEffect(() => {
-    console.log('hot update')
+  useHotReload(() => {
     geometry.clear()
-  }, ['hot'])
+    setHooksVals([])
+  })
 
   return (
     <>

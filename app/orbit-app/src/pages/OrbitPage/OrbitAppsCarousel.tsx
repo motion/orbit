@@ -1,6 +1,6 @@
 import { AppDefinition, AppIcon, ensure, react, Templates, useAppDefinition, useReaction, useStore } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, FullScreen, Row, SimpleText, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useScrollOffset, useTheme, View } from '@o/ui'
+import { Card, CardProps, FullScreen, Geometry, Row, SimpleText, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useScrollProgress, useTheme, View } from '@o/ui'
 import { MotionValue, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 
@@ -29,7 +29,7 @@ export const OrbitAppsCarousel = memo(() => {
   const rowWidth = rowSize.width ? rowSize.width * (1 - stackMarginLessPct) : 0
 
   const zoomOut = useMotionValue(1)
-  const scrollIn = useScrollOffset({ ref: rowRef })
+  const scrollIn = useScrollProgress({ ref: rowRef })
   const x = useSpring(useTransform(zoomOut, x => (x === 1 ? '0%' : '20%')), {
     damping: 50,
     stiffness: 250,
@@ -226,21 +226,6 @@ const OrbitAppCard = memo(
 
     const cardBoxShadow = [15, 30, 120, [0, 0, 0, theme.background.isDark() ? 0.5 : 0.25]]
 
-    const scrollRotate = useRelative(
-      (zoom, scroll) => {
-        if (zoom === 1) {
-          return 0
-        } else {
-          return scroll + 0.35
-        }
-      },
-      zoomOut,
-      scrollIn,
-    )
-    const rotateY = useSpring(useTransform(scrollRotate, [-1, 1], [-20, 20]), {
-      damping: 50,
-      stiffness: 250,
-    })
     const scale = useSpring(
       useTransform(zoomOut, zoom => {
         if (zoom === 1) {
@@ -255,84 +240,94 @@ const OrbitAppCard = memo(
     // i thought scale transform doesnt affect layout?
     const mouseDown = useRef(0)
     return (
-      <View
-        pointerEvents={store.isFocused ? 'inherit' : 'none'}
-        data-is="OrbitAppCard-Container"
-        zIndex={1000 - index}
-        scrollSnapAlign="center"
-      >
-        <View
-          animate
-          rotateY={rotateY}
-          scale={scale}
-          x={x}
-          transformOrigin="center center"
-          position="relative"
-          onMouseDown={() => {
-            if (appsCarouselStore.zoomedIn) {
-              return
-            }
-            mouseDown.current = Date.now()
-          }}
-          onMouseUp={e => {
-            if (appsCarouselStore.zoomedIn) {
-              return
-            }
-            if (mouseDown.current > appsCarouselStore.lastDragAt) {
-              e.stopPropagation()
-              appsCarouselStore.scrollToIndex(index, true)
-            }
-            mouseDown.current = -1
-          }}
-        >
-          <Row
-            alignItems="center"
-            justifyContent="center"
-            space="sm"
-            padding
-            position="absolute"
-            bottom={-40}
-            left={0}
-            right={0}
+      <Geometry>
+        {(geometry, ref) => (
+          <View
+            nodeRef={ref}
+            pointerEvents={store.isFocused ? 'inherit' : 'none'}
+            data-is="OrbitAppCard-Container"
+            zIndex={1000 - index}
+            scrollSnapAlign="center"
+            marginRight={`-${stackMarginLessPct * 100}%`}
           >
-            <SimpleText>{app.name}</SimpleText>
-          </Row>
-          <Card
-            data-is="OrbitAppCard"
-            nodeRef={cardRef}
-            borderWidth={0}
-            background={
-              store.isFocusZoomed
-                ? !definition.viewConfig || definition.viewConfig.transparentBackground !== false
-                  ? theme.appCardBackgroundTransparent
-                  : theme.appCardBackground
-                : theme.backgroundStronger
-            }
-            borderRadius={store.isFocusZoomed ? 0 : 20}
-            {...(store.isFocused
-              ? {
-                  boxShadow: [
-                    [0, 0, 0, 3, theme.alternates!.selected['background']],
-                    cardBoxShadow,
-                  ],
+            <View
+              animate
+              rotateY={geometry
+                .scrollIntersection()
+                .transform([-1, 1], [-50, 50])
+                .spring({ stiffness: 250, damping: 50 })}
+              scale={scale}
+              x={x}
+              transformOrigin="center center"
+              position="relative"
+              onMouseDown={() => {
+                if (appsCarouselStore.zoomedIn) {
+                  return
                 }
-              : {
-                  boxShadow: [cardBoxShadow],
-                })}
-            transition="background 300ms ease"
-            {...cardProps}
-          >
-            <AppLoadingScreen definition={definition} app={app} visible={!store.shouldRender} />
-            <OrbitApp
-              id={app.id!}
-              disableInteraction={disableInteraction}
-              identifier={definition.id}
-              appDef={definition}
-              shouldRenderApp={store.shouldRender}
-            />
-          </Card>
-        </View>
-      </View>
+                mouseDown.current = Date.now()
+              }}
+              onMouseUp={e => {
+                if (appsCarouselStore.zoomedIn) {
+                  return
+                }
+                if (mouseDown.current > appsCarouselStore.lastDragAt) {
+                  e.stopPropagation()
+                  appsCarouselStore.scrollToIndex(index, true)
+                }
+                mouseDown.current = -1
+              }}
+            >
+              <Row
+                alignItems="center"
+                justifyContent="center"
+                space="sm"
+                padding
+                position="absolute"
+                bottom={-40}
+                left={0}
+                right={0}
+              >
+                <SimpleText>{app.name}</SimpleText>
+              </Row>
+              <Card
+                data-is="OrbitAppCard"
+                nodeRef={cardRef}
+                borderWidth={0}
+                background={
+                  store.isFocusZoomed
+                    ? !definition.viewConfig ||
+                      definition.viewConfig.transparentBackground !== false
+                      ? theme.appCardBackgroundTransparent
+                      : theme.appCardBackground
+                    : theme.backgroundStronger
+                }
+                borderRadius={store.isFocusZoomed ? 0 : 20}
+                {...(store.isFocused
+                  ? {
+                      boxShadow: [
+                        [0, 0, 0, 3, theme.alternates!.selected['background']],
+                        cardBoxShadow,
+                      ],
+                    }
+                  : {
+                      boxShadow: [cardBoxShadow],
+                    })}
+                transition="background 300ms ease"
+                {...cardProps}
+              >
+                <AppLoadingScreen definition={definition} app={app} visible={!store.shouldRender} />
+                <OrbitApp
+                  id={app.id!}
+                  disableInteraction={disableInteraction}
+                  identifier={definition.id}
+                  appDef={definition}
+                  shouldRenderApp={store.shouldRender}
+                />
+              </Card>
+            </View>
+          </View>
+        )}
+      </Geometry>
     )
   },
 )

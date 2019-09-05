@@ -90,9 +90,16 @@ export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
     animate?: boolean | MotionProps['animate']
   }
 
+export type OrbitCSSPropertySet = Omit<CSSPropertySetStrict, 'margin' | 'padding' | 'transition'>
+
+// add in the AnimationStores for any prop (motion accepts it)
+export type OrbitCSSPropertyAnimation = {
+  [P in keyof OrbitCSSPropertySet]: OrbitCSSPropertySet[P] | AnimationStore
+}
+
 export type ViewProps = ViewBaseProps &
   // be sure to omit margin/padding
-  Omit<CSSPropertySetStrict, 'margin' | 'padding' | 'transition'> & {
+  OrbitCSSPropertyAnimation & {
     transition?: CSSPropertySetStrict['transition'] | Transition
   }
 

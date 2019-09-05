@@ -1,12 +1,12 @@
 import { decorate, useForceUpdate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { SpringProps } from 'popmotion'
-import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
 import React from 'react'
+import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
 import { useOnHotReload } from './hooks/useOnHotReload'
-import { useOnMount } from './hooks/useOnMount'
+import { useRelative } from './hooks/useRelative'
 import { useScrollProgress } from './hooks/useScrollProgress'
 import { ScrollableRefContext } from './View/ScrollableRefContext'
 
@@ -53,6 +53,18 @@ export class AnimationStore {
     })
     return this
   }
+
+  mergeTransform<T extends MotionValue>(
+    values: T[],
+    callback: (previous: MotionValue, ...values: T[]) => T,
+  ) {
+    if (this.frozen) return this
+    this.animationHooks.addHook(hooksValues => {
+      const lastHookVal = hooksValues[hooksValues.length - 1]
+      return useRelative(callback, lastHookVal, ...values)
+    })
+    return this
+  }
 }
 
 class GeometryStore {
@@ -65,34 +77,15 @@ class GeometryStore {
     this.curCall = 0
   }
 
-  setValues(index: number, val?: any[]) {
-    this.stores[index].values = val
-    this.update()
-  }
-
   clear() {
     this.stores = []
     this.curCall = 0
-  }
-
-  cb = null
-  onUpdated(cb: Function) {
-    this.cb = cb
-  }
-
-  tm = null
-  update = () => {
-    clearTimeout(this.tm)
-    this.tm = setTimeout(() => {
-      this.cb()
-    })
   }
 
   // hooks-like
   addStore(store: AnimationStore) {
     this.curCall++
     this.stores = [...this.stores, store]
-    this.update()
   }
 
   setupStore(fn: (store: AnimationStore) => void) {
@@ -164,38 +157,22 @@ export function Geometry(props: {
   const geometry = useLazyRef(() => new GeometryStore(nodeRef)).current
   const update = useForceUpdate()
 
-  geometry.onRender()
-
-  useOnMount(() => {
-    geometry.onUpdated(update)
-  })
-
   useOnHotReload(() => {
     geometry.clear()
     update()
   })
 
-  return (
-    <>
-      {geometry.stores.map((store, index) => (
-        <DynamicHooks
-          key={index}
-          hooks={store.animationHooks.hooks}
-          onHooksComplete={values => geometry.setValues(index, values)}
-        />
-      ))}
-      {props.children(geometry, nodeRef)}
-    </>
-  )
-}
+  geometry.onRender()
+  const childrenElements = props.children(geometry, nodeRef)
 
-const DynamicHooks = memo((props: { hooks: Function[]; onHooksComplete: (val: any[]) => void }) => {
-  const hooks = []
-  for (const hook of props.hooks) {
-    hooks.push(hook(hooks))
+  // now run hooks
+  for (const store of geometry.stores) {
+    const hooks = []
+    for (const hook of store.animationHooks.hooks) {
+      hooks.push(hook(hooks))
+    }
+    store.values = hooks
   }
-  useLayoutEffect(() => {
-    props.onHooksComplete(hooks)
-  }, [])
-  return null
-})
+
+  return <>{childrenElements}</>
+}

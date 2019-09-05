@@ -80,14 +80,13 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
 
           for (const key in inProps) {
             const val = inProps[key]
+            if (val instanceof AnimationStore) {
+              style[key] = val.getValue()
+              delete outProps[key]
+              continue
+            }
             if (motionStyleProps[key]) {
-              if (val instanceof AnimationStore) {
-                if (val.values.length) {
-                  style[key] = val.getValue()
-                }
-              } else {
-                style[key] = val
-              }
+              style[key] = val
               delete outProps[key]
             }
             if (motionExtraProps[key]) {

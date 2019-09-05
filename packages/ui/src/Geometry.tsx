@@ -55,10 +55,7 @@ export class AnimationStore {
     return this
   }
 
-  mergeTransform<T extends MotionValue>(
-    values: T[],
-    callback: (previous: MotionValue, ...values: T[]) => number,
-  ) {
+  mergeTransform<T>(values: MotionValue<T>[], callback: (previous: T, ...values: T[]) => T) {
     if (this.frozen) return this
     this.animationHooks.addHook(hooksValues => {
       const lastHookVal = hooksValues[hooksValues.length - 1]

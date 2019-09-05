@@ -4,8 +4,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react, useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
+import { createRef, useRef } from 'react'
 
 import { sleep } from '../../helpers'
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
@@ -65,21 +65,25 @@ class HeaderStore {
     queryStore.setQuery(this.inputRef.current.innerText)
   }
 
-  isFocusing = false
+  triggerFocus = 0
   focus = async () => {
     if (!this.inputRef || !this.inputRef.current) return
     if (document.activeElement === this.inputRef.current) return
-    if (this.isFocusing) return
-    this.isFocusing = true
-    await whenIdle()
-    await sleep(50)
-    await whenIdle()
-    // this causes re-paints, dont do it too eagerly
-    console.warn('focusing')
-    this.inputRef.current!.focus()
-    moveCursorToEndOfTextarea(this.inputRef.current)
-    this.isFocusing = false
+    this.triggerFocus = Date.now()
   }
+
+  doFocus = react(
+    () => this.triggerFocus,
+    async (_, { when }) => {
+      await whenIdle()
+      await whenIdle()
+      await when(() => !appsCarouselStore.isAnimating)
+      // this causes re-paints, dont do it too eagerly
+      console.warn('focusing')
+      this.inputRef.current!.focus()
+      moveCursorToEndOfTextarea(this.inputRef.current)
+    },
+  )
 
   focusInputOnVisible = react(
     () => Electron.state.showOrbitMain,

@@ -10,7 +10,7 @@ import { memoIsEqualDeep } from './helpers/memoHelpers'
 import { useDeepEqualState } from './hooks/useDeepEqualState'
 import { useGet } from './hooks/useGet'
 import { List, ListProps } from './lists/List'
-import { ListItemProps } from './lists/ListItem'
+import { ListItemProps } from './lists/ListItemViewProps'
 import { Loading } from './progress/Loading'
 import { TreeItem } from './Tree'
 

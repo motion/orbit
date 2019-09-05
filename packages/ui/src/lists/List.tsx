@@ -18,8 +18,8 @@ import { SubTitle } from '../text/SubTitle'
 import { Text } from '../text/Text'
 import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
-import { ListItem, ListItemProps } from './ListItem'
-import { HandleSelection, ListItemSimpleProps } from './ListItemSimple'
+import { ListItem } from './ListItem'
+import { HandleSelection, ListItemProps, ListItemSimpleProps } from './ListItemViewProps'
 import { Direction, selectablePropKeys, SelectableProps, SelectableStore, SelectableStoreProvider, useCreateSelectableStore } from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
@@ -60,7 +60,7 @@ export type ListProps = SectionSpecificProps &
     onEdit?: (item: any, nextTitle: string) => any
   }
 
-export function toListItemProps(props?: any): ListItemSimpleProps & { item?: any } {
+function toListItemProps(props?: any): ListItemSimpleProps & { item?: any } {
   if (!props) {
     return null
   }

@@ -9,157 +9,19 @@ import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { useFocus } from '../Focus'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { HighlightText } from '../Highlight'
-import { Icon, IconProps } from '../Icon'
-import { ListSeparator, ListSeparatorProps } from '../ListSeparator'
-import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
+import { Icon } from '../Icon'
+import { ListSeparator } from '../ListSeparator'
+import { SizedSurface } from '../SizedSurface'
 import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
 import { SimpleText } from '../text/SimpleText'
-import { Text, TextProps } from '../text/Text'
+import { Text } from '../text/Text'
 import { Col } from '../View/Col'
 import { usePadding } from '../View/PaddedView'
 import { Row } from '../View/Row'
 import { View } from '../View/View'
+import { ListItemSimpleProps } from './ListItemViewProps'
 import { useIsSelected } from './useIsSelected'
-
-export type ItemRenderText = (text: string) => JSX.Element
-export type HandleSelection = (index: number, event?: any) => any
-
-export type ListItemHide = {
-  hideTitle?: boolean
-  hideIcon?: boolean
-  hideSubtitle?: boolean
-  hideBody?: boolean
-  hideItemDate?: boolean
-  hideDate?: boolean
-  hideMeta?: boolean
-  hideBorder?: boolean
-}
-
-export type ListItemSpecificProps = ListItemHide & {
-  /** Condensed view for list items */
-  oneLine?: boolean
-
-  /** Disable/enable selection */
-  selectable?: boolean
-
-  /** Adds extra indentation for tree-style view */
-  indent?: number
-
-  /** Attach a subId for index view selection, see AppViewProps */
-  subId?: string | number
-
-  /** Adds a button before the subtitle */
-  location?: React.ReactNode
-
-  /** Adds multi-line text below the Title and Subtitle */
-  preview?: React.ReactNode
-
-  /** Adds a title element */
-  title?: React.ReactNode
-
-  /** Override the opacity of the text elements below title */
-  subTextOpacity?: number
-
-  /** Adds an element vertically above list item */
-  above?: React.ReactNode
-
-  /** Adds an element horizontally before list item */
-  before?: React.ReactNode
-
-  /** Adds a SubTitle to item */
-  subTitle?: React.ReactNode
-
-  /** Adds a date with formatting after list item */
-  date?: Date
-
-  /** String or ReactNode to show icon on list item */
-  icon?: any
-
-  /** Internal: used for selection */
-  index?: number
-
-  /** Adds an element horizontally after title */
-  afterTitle?: React.ReactNode
-
-  /** Adds an element horizontally after list item */
-  after?: React.ReactNode
-
-  titleProps?: Partial<TextProps>
-
-  /** Icons default to showing inline with the title, this forces them to show before the list item */
-  iconBefore?: boolean
-
-  /** Adds extra IconProps to icon elements */
-  iconProps?: Partial<IconProps>
-
-  separatorProps?: Partial<ListSeparatorProps>
-
-  /** Add className */
-  className?: string
-
-  /** Custom function to parse text */
-  renderText?: ItemRenderText
-
-  /** Add custom children below list item */
-  children?: React.ReactNode
-
-  /** Disable selection */
-  disableSelect?: boolean
-
-  /** Disable filtering this item */
-  disableFilter?: boolean
-
-  /** Event used on selection */
-  onSelect?: HandleSelection
-
-  /** Event used on double-click or keyboard enter */
-  onOpen?: HandleSelection
-
-  /** Add border radius */
-  borderRadius?: number
-
-  /** Override selection conditional logic */
-  isSelected?: boolean | ((index: number) => boolean)
-
-  /** Whether to make the title push after elements */
-  titleFlex?: number
-
-  /** Add extra SubTitle props */
-  subTitleProps?: Partial<TextProps>
-
-  /** Event on clicking location element */
-  onClickLocation?: (index: number, e?: Event) => any
-
-  /** Text to show in prefixed separator */
-  separator?: React.ReactNode
-
-  /** For use with automatic separator generation, when using `<List />` */
-  groupName?: string
-
-  /** Will show a delete next to the item automatically and call onDelete */
-  deletable?: boolean
-
-  /** Called when deletable is set and user confirms the delete action */
-  onDelete?: (item: ListItemSimpleProps) => any
-
-  /** Allows double click on title to edit, calls onEdit when user hits "enter" or clicks away */
-  editable?: boolean
-
-  /** Called when `editable` and after editing a title */
-  onEdit?: (nextTitle: string) => any
-
-  /** Called when `editable` and cancelled editing a title */
-  onCancelEdit?: (nextTitle: string) => any
-
-  /** Called when `editable` and start editing a title */
-  onStartEdit?: () => any
-}
-
-export type ListItemSimpleProps = Omit<SizedSurfaceProps, 'onClick'> &
-  ListItemSpecificProps & {
-    onClick?: (e: Event, props: ListItemSimpleProps) => any
-  }
 
 // this wrapper required for virtualization to measure/style */}
 // prevents hard re-renders on resize by taking out the style prop

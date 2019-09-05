@@ -1,6 +1,6 @@
 import { useReaction } from '@o/use-store'
 
-import { ListItemSimpleProps } from './ListItemSimple'
+import { ListItemSimpleProps } from './ListItemViewProps'
 
 export function useIsSelected(props: Pick<ListItemSimpleProps, 'isSelected' | 'index'>) {
   return useReaction(

@@ -233,7 +233,19 @@ const OrbitAppCard = memo(
                 .spring({ damping: 50, stiffness: 500 })}
               zIndex={geometry.scrollIntersection().transform(x => (x > 0 ? 1 - x : x))}
               x={geometry
-                .useTransform(zoomOut, x => (x === 1 ? '0%' : '20%'))
+                .useTransform(zoomOut, x => {
+                  if (x) {
+                    const focused = appsCarouselStore.focusedIndex
+                    if (index === focused) {
+                      return '0%'
+                    }
+                    if (index > focused) {
+                      return '30%'
+                    }
+                    return '-30%'
+                  }
+                  return '20%'
+                })
                 .spring({ damping: 50, stiffness: 250 })}
               {...index === 0 && {
                 onUpdate: () => {
@@ -241,7 +253,7 @@ const OrbitAppCard = memo(
                   appsCarouselStore.isAnimating = true
                   tm.current = setTimeout(() => {
                     appsCarouselStore.isAnimating = false
-                  }, 30)
+                  }, 45)
                 },
               }}
               transformOrigin="center center"

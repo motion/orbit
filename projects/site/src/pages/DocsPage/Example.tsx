@@ -3,6 +3,7 @@ import { Box } from 'gloss'
 import { capitalize } from 'lodash'
 import React, { createElement, isValidElement, memo, Suspense, useRef, useState } from 'react'
 
+import { fontProps } from '../../constants'
 import { linkProps } from '../../useLink'
 import { CodeBlock } from '../../views/CodeBlock'
 
@@ -106,8 +107,8 @@ export const Example = memo(
               <Space />
               <Card
                 elevation={1}
-                pad
-                titlePadding="sm"
+                padding
+                titlePadding="md"
                 background={theme => theme.backgroundStrong}
                 title={name || capitalize(id)}
                 afterTitle={
@@ -135,7 +136,7 @@ export const Example = memo(
                   setShowSource(!showSource)
                 }}
               >
-                {contents}
+                <View {...fontProps.SystemFont}>{contents}</View>
               </Card>
               <Space size="xl" />
             </>

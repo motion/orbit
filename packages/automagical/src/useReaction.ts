@@ -117,11 +117,11 @@ const createComponentReaction = (
       state.current = next
       if (!firstMount.current) {
         if (opts && opts.priority) {
-          // @ts-ignore
-          React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.Scheduler.unstable_runWithPriority(
-            opts.priority,
-            forceUpdate,
-          )
+          const Internals = React['__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED']
+          if (Internals.Scheduler) {
+            Internals.Scheduler.unstable_runWithPriority(opts.priority, forceUpdate)
+            return
+          }
         }
         // use the configured queueUpdate if given
         if (automagicConfig.queueUpdate) {

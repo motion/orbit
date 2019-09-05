@@ -1,6 +1,7 @@
 import { Absolute, ListItem, ListShortcuts, Popover, Portal, RoundButton, Row, SurfacePassProps } from '@o/ui'
 import React, { memo } from 'react'
 
+import { fontProps } from '../constants'
 import { FadeChild } from '../views/FadeInView'
 import { Key } from '../views/Key'
 import { ListSubTitle } from '../views/ListSubTitle'
@@ -9,7 +10,7 @@ import { DocsStoreContext } from './DocsStore'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 
 export const DocsPageHeader = memo(
-  ({ isSmall, inputRef, setTheme, theme, setShowSidebar, siteStore, showSidebar }: any) => {
+  ({ isSmall, inputRef, setTheme, theme, setShowSidebar, showSidebar }: any) => {
     const docsStore = DocsStoreContext.useStore()
     return (
       <Portal prepend style={{ position: 'sticky', top: 10, zIndex: 10000000 }}>
@@ -33,6 +34,7 @@ export const DocsPageHeader = memo(
                 size="xl"
                 placeholder={isSmall ? 'Search...' : 'Search the docs...'}
                 after={!isSmall && <Key tooltip="Shortcut: t">t</Key>}
+                {...fontProps.SystemFont}
               />
 
               <Absolute
@@ -94,12 +96,12 @@ export const DocsPageHeader = memo(
                       tooltip="Toggle dark mode"
                       onClick={() => setTheme(theme === 'home' ? 'light' : 'home')}
                     />
-                    <RoundButton
+                    {/* <RoundButton
                       icon="code"
                       iconSize={16}
                       tooltip="Toggle all code collapsed"
                       onClick={siteStore.toggleCodeCollapsed}
-                    />
+                    /> */}
                     {isSmall && (
                       <RoundButton
                         icon={showSidebar ? 'arrowleft' : 'arrowright'}

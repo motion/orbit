@@ -16,7 +16,7 @@
     "@o/libs": "^2.6.0",
     "@o/logger": "^2.6.0",
     "@o/models": "^2.6.0",
-    "@o/react-sortable-hoc": "1.10.2",
+    "@o/react-sortable-hoc": "1.10.4",
     "@o/search-app": "^2.6.0",
     "@o/stores": "^2.6.0",
     "@o/ui": "^2.6.0",

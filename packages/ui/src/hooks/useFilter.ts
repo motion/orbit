@@ -4,7 +4,7 @@ import { sortBy } from 'lodash'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { groupByFirstLetter } from '../helpers/groupByFirstLetter'
-import { ListItemSimpleProps } from '../lists/ListItemViewProps'
+import { ListItemProps } from '../lists/ListItemViewProps'
 import { useActiveSearchQuery } from '../Search'
 
 export type UseFilterProps<A> = {
@@ -39,7 +39,7 @@ export type UseFilterProps<A> = {
   groupMinimum?: number
 }
 
-export function useFilter(props: UseFilterProps<ListItemSimpleProps>) {
+export function useFilter(props: UseFilterProps<ListItemProps>) {
   const items = props.items || []
   const filterKeys = props.filterKeys || ['title']
   const initialQuery = useRef(true)
@@ -78,7 +78,7 @@ export function useFilter(props: UseFilterProps<ListItemSimpleProps>) {
 
   // TODO this could be a lot more flexible, also see nextapps.de search on github
   const searchIndex = useMemo(() => {
-    if (props.searchable) {
+    if (props.searchable !== false) {
       return sortedItems.map(item => filterKeys.map(key => item[key]).join(' '))
     }
     return []
@@ -109,33 +109,32 @@ export function useFilter(props: UseFilterProps<ListItemSimpleProps>) {
   const shouldGroup = filteredItems.length > (props.groupMinimum || 0)
 
   // handle groupByLetter boolean
-  let getGroupProps = shouldGroup && props.groupByLetter && groupByFirstLetter(filterKeys[0])
-
-  // handle groupBy function
-  if (shouldGroup && props.groupBy) {
-    getGroupProps = useCallback(
-      (item: any, index: number, items: any[]) => {
-        if (items[index - 1]) {
-          const cur = props.groupBy(items[index - 1])
-          const next = props.groupBy(item)
-          if (next !== cur) {
+  let getGroupProps = useCallback(
+    (item: any, index: number, items: any[]) => {
+      if (shouldGroup && props.groupBy) {
+        if (props.groupByLetter && groupByFirstLetter(filterKeys[0])) {
+          if (items[index - 1]) {
+            const cur = props.groupBy(items[index - 1])
+            const next = props.groupBy(item)
+            if (next !== cur) {
+              return {
+                separator: next,
+              }
+            }
+          } else {
             return {
-              separator: next,
+              separator: props.groupBy(item),
             }
           }
-        } else {
-          return {
-            separator: props.groupBy(item),
-          }
         }
-      },
-      [props.groupBy],
-    )
-  }
+      }
+    },
+    [props.groupBy],
+  )
 
   return {
     results: filteredItems,
-    getItemProps: shouldGroup ? getGroupProps : null,
+    getItemProps: getGroupProps,
   }
 }
 

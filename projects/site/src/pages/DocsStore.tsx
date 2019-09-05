@@ -12,6 +12,7 @@ class DocsStore {
   initialIndex = getInitialIndex()
   search = ''
   section = 'all'
+  selected = null
 
   setSearch = next => {
     this.search = next

@@ -536,6 +536,10 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
     justifyContent: 'center',
     padding: 0,
   },
+
+  disabled: {
+    cursor: 'not-allowed',
+  },
 }).theme((props, theme) => {
   const { fontSize, lineHeight } = scaledTextSizeTheme(props) || defaultTextTheme
   const themeStyle = psuedoStyleTheme(props, theme)

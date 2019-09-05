@@ -1,8 +1,9 @@
-import { Button, CardProps, Col, Divider, Grid, Icon, Section, Space, TiltCard } from '@o/ui'
+import { Button, Col, Divider, Grid, Section, Space } from '@o/ui'
 import React from 'react'
 
-import { linkProps } from '../../useLink'
 import { themes } from '../../themes'
+import { linkProps } from '../../useLink'
+import { DocsFeatureCard } from './DocsFeatureCard'
 
 const examples = [
   { title: 'Building an App', subTitle: 'Something', colors: themes.lightOrange, icon: 'home' },
@@ -10,33 +11,17 @@ const examples = [
   { title: 'Flows', colors: themes.lightGreen, icon: 'i' },
 ]
 
-const FeatureCard = (props: CardProps) => (
-  <TiltCard
-    size="xl"
-    titlePadding="md"
-    cursor="pointer"
-    tagName="a"
-    textDecoration="none"
-    elevation={1}
-    {...props}
-  />
-)
-
 export const LatestUpdates = () => (
   <Grid space="xl" itemMinWidth={220}>
     {examples.map(example => (
-      <FeatureCard key={example.title} subTitle={example.subTitle} title={example.title}>
-        <Col
-          minHeight={200}
-          background={example.colors.background}
-          alignItems="center"
-          justifyContent="center"
-          pad
-          flex={1}
-        >
-          <Icon color={example.colors.color} size={52} name={example.icon} />
-        </Col>
-      </FeatureCard>
+      <DocsFeatureCard
+        key={example.title}
+        subTitle={example.subTitle}
+        title={example.title}
+        background={example.colors.background}
+        color={example.colors.color}
+        icon={example.icon}
+      />
     ))}
   </Grid>
 )
@@ -44,17 +29,14 @@ export const LatestUpdates = () => (
 export const Tutorials = () => (
   <Grid space="xl" itemMinWidth={200}>
     {examples.map(example => (
-      <FeatureCard key={example.title} title={example.title}>
-        <Col
-          height={180}
-          background={example.colors.background}
-          alignItems="center"
-          justifyContent="center"
-          pad
-        >
-          <Icon color={example.colors.color} size={40} name={example.icon} />
-        </Col>
-      </FeatureCard>
+      <DocsFeatureCard
+        key={example.title}
+        subTitle={example.subTitle}
+        title={example.title}
+        background={example.colors.background}
+        color={example.colors.color}
+        icon={example.icon}
+      />
     ))}
   </Grid>
 )

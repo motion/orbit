@@ -19,4 +19,19 @@ export const guides: GuideIndex = {
     title: 'First App',
     date: '2018-10-05T22:12:03.284Z',
   },
+  second: {
+    view: () => import('./first-app/index.mdx'),
+    title: 'First App',
+    date: '2018-10-05T22:12:03.284Z',
+  },
+  third: {
+    view: () => import('./first-app/index.mdx'),
+    title: 'First App',
+    date: '2018-10-05T22:12:03.284Z',
+  },
+  fourth: {
+    view: () => import('./first-app/index.mdx'),
+    title: 'First App',
+    date: '2018-10-05T22:12:03.284Z',
+  },
 }

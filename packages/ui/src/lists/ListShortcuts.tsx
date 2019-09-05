@@ -1,33 +1,32 @@
-import React, { memo, useMemo } from 'react'
-import { HotKeys, HotKeysProps } from 'react-hotkeys'
+import React, { HTMLProps, memo, useCallback, useMemo } from 'react'
 
+import { keyCode } from '../helpers/keycode'
 import { useShortcutStore } from '../Shortcut'
 
-export const ListShortcuts = memo(({ keyMap, handlers, ...props }: Partial<HotKeysProps>) => {
+export const ListShortcuts = memo((props: HTMLProps<HTMLDivElement>) => {
   const shortcutStore = useShortcutStore()
-  const innerHandlers = useMemo(() => {
-    const emit = key => {
-      shortcutStore.emit(key)
-    }
-    return {
-      up: () => emit('up'),
-      down: () => emit('down'),
-      ...handlers,
-    }
-  }, [handlers])
   return (
-    <HotKeys
-      keyMap={{
-        down: 'down',
-        up: 'up',
-        ...keyMap,
-      }}
+    <div
       style={hotKeyStyle}
-      handlers={innerHandlers}
       {...props}
+      onKeyDown={useCallback(e => {
+        const emit = key => {
+          shortcutStore.emit(key)
+        }
+        const key = keyCode(e)
+        switch (key) {
+          case 'down':
+            emit('down')
+            break
+          case 'up':
+            emit('up')
+            break
+        }
+      }, [])}
     />
   )
 })
+
 const hotKeyStyle = {
   flex: 'inherit',
 }

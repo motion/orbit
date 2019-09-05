@@ -12,21 +12,24 @@ export function useStickySidebar({ condition = true, id, ...rest }) {
     return () => window.removeEventListener('resize', forceUpdateSlow)
   })
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (condition === false) {
       return
     }
-    const sidebar = new StickySidebar(id, {
-      topSpacing: 0,
-      bottomSpacing: 0,
-      innerWrapperSelector: '.sidebar__inner',
-      stickyClass: 'is-affixed',
-      minWidth: 0,
-      resizeSensor: true,
-      ...rest,
-    })
+    let sidebar
+    setTimeout(() => {
+      sidebar = new StickySidebar(id, {
+        topSpacing: 0,
+        bottomSpacing: 0,
+        innerWrapperSelector: '.sidebar__inner',
+        stickyClass: 'is-affixed',
+        minWidth: 0,
+        resizeSensor: true,
+        ...rest,
+      })
+    }, 20)
     return () => {
-      sidebar.destroy()
+      sidebar && sidebar.destroy()
     }
   }, [])
 }

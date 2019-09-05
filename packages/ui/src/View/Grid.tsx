@@ -16,7 +16,7 @@ export type GridProps = ColProps & {
 }
 
 export const Grid = (props: GridProps) => (
-  <Col display="grid" {...sizeGaps(autoGridLayout(props))} />
+  <Col display="grid" width="100%" {...sizeGaps(autoGridLayout(props))} />
 )
 
 // for gloss parents

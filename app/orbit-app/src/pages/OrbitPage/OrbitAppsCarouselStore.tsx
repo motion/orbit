@@ -47,12 +47,10 @@ class OrbitAppsCarouselStore {
     apps: AppBit[]
     rowWidth: number
     zoomOut: MotionValue | null
-    scrollIn: MotionValue | null
   } = {
     apps: [],
     rowWidth: 0,
     zoomOut: null,
-    scrollIn: null,
   }
 
   // this is only the state that matters for animating

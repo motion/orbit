@@ -1,8 +1,8 @@
 import { AppDefinition, AppIcon, ensure, react, Templates, useAppDefinition, useReaction, useStore } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, FullScreen, Row, SimpleText, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useScrollProgress, useTheme, View } from '@o/ui'
+import { Card, CardProps, FullScreen, Row, SimpleText, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useScrollOffset, useTheme, View } from '@o/ui'
 import { MotionValue, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import React, { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { useOm } from '../../om/om'
 import { OrbitApp, whenIdle } from './OrbitApp'
@@ -19,51 +19,6 @@ const updateOnWheel = e => {
   }
 }
 
-/**
- * TODO pending this we can replace:
- */
-const toValue: <T>(v: MotionValue<T> | T) => T = v => (v instanceof MotionValue ? v.get() : v)
-const isMotionValue = (c: any) => c instanceof MotionValue
-function useRelative<T>(callback: (...values: T[]) => T, ...values: (MotionValue<T> | T)[]) {
-  // Compute the motion values's value by running
-  // current values of its related values through
-  // the callback function
-  const getComputedValue = useCallback(() => callback(...values.map(toValue)), [callback, values])
-
-  // Create new motion value
-  const value = useMotionValue(getComputedValue())
-
-  // Update the motion value with the computed value
-  const compute = useCallback(() => value.set(getComputedValue()), [])
-
-  // Partition the values into motion values / non-motion values
-  const [mvs, nmvs]: [MotionValue<T>[], T[]] = useMemo(
-    () =>
-      values.reduce(
-        (acc, val) => {
-          acc[isMotionValue(val) ? 0 : 1].push(val)
-          return acc
-        },
-        [[] as any[], [] as any[]],
-      ),
-    [values],
-  )
-
-  // When motion values values
-  // change, update listeners
-  useEffect(() => {
-    compute()
-    const rs = mvs.map(v => v.onChange(compute))
-    return () => rs.forEach(remove => remove())
-  }, [mvs])
-
-  // When non-motion values
-  // change, compute a new value
-  useEffect(compute, [nmvs])
-
-  return value
-}
-
 export const OrbitAppsCarousel = memo(() => {
   const om = useOm()
   const rowRef = appsCarouselStore.rowRef
@@ -74,13 +29,11 @@ export const OrbitAppsCarousel = memo(() => {
   const rowWidth = rowSize.width ? rowSize.width * (1 - stackMarginLessPct) : 0
 
   const zoomOut = useMotionValue(1)
-  const scrollIn = useScrollProgress({ ref: rowRef })
+  const scrollIn = useScrollOffset({ ref: rowRef })
   const x = useSpring(useTransform(zoomOut, x => (x === 1 ? '0%' : '20%')), {
     damping: 50,
     stiffness: 250,
   })
-
-  Object.assign(window, { zoomOut, scrollIn })
 
   useOnMount(() => {
     appsCarouselStore.start()
@@ -106,7 +59,6 @@ export const OrbitAppsCarousel = memo(() => {
         apps,
         rowWidth,
         zoomOut,
-        scrollIn,
       })
     }
   }, [apps, rowWidth])
@@ -277,15 +229,15 @@ const OrbitAppCard = memo(
     const scrollRotate = useRelative(
       (zoom, scroll) => {
         if (zoom === 1) {
-          return 0.5
+          return 0
         } else {
-          return scroll - index + 0.35
+          return scroll + 0.35
         }
       },
       zoomOut,
       scrollIn,
     )
-    const rotateY = useSpring(useTransform(scrollRotate, [0, 1], [-20, 20]), {
+    const rotateY = useSpring(useTransform(scrollRotate, [-1, 1], [-20, 20]), {
       damping: 50,
       stiffness: 250,
     })
@@ -409,3 +361,48 @@ const AppLoadingScreen = memo((props: AppLoadingScreenProps) => {
     />
   )
 })
+
+/**
+ * TODO pending this we can replace:
+ */
+const toValue: <T>(v: MotionValue<T> | T) => T = v => (v instanceof MotionValue ? v.get() : v)
+const isMotionValue = (c: any) => c instanceof MotionValue
+function useRelative<T>(callback: (...values: T[]) => T, ...values: (MotionValue<T> | T)[]) {
+  // Compute the motion values's value by running
+  // current values of its related values through
+  // the callback function
+  const getComputedValue = useCallback(() => callback(...values.map(toValue)), [callback, values])
+
+  // Create new motion value
+  const value = useMotionValue(getComputedValue())
+
+  // Update the motion value with the computed value
+  const compute = useCallback(() => value.set(getComputedValue()), [])
+
+  // Partition the values into motion values / non-motion values
+  const [mvs, nmvs]: [MotionValue<T>[], T[]] = useMemo(
+    () =>
+      values.reduce(
+        (acc, val) => {
+          acc[isMotionValue(val) ? 0 : 1].push(val)
+          return acc
+        },
+        [[] as any[], [] as any[]],
+      ),
+    [values],
+  )
+
+  // When motion values values
+  // change, update listeners
+  useEffect(() => {
+    compute()
+    const rs = mvs.map(v => v.onChange(compute))
+    return () => rs.forEach(remove => remove())
+  }, [mvs])
+
+  // When non-motion values
+  // change, compute a new value
+  useEffect(compute, [nmvs])
+
+  return value
+}

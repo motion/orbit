@@ -139,27 +139,35 @@ export function TestUIMotion() {
       >
         {[0, 1, 2, 3, 4, 5].map(index => (
           <Geometry key={index}>
-            {geometry => (
-              <View scrollSnapAlign="center" marginRight={`${-pctSquish * 100}%`}>
+            {(geometry, ref) => (
+              <View nodeRef={ref} scrollSnapAlign="center" marginRight={`${-pctSquish * 100}%`}>
                 <View
                   width="100vw"
                   height="92vh"
                   background="red"
                   boxShadow="0 0 10px rgba(0,0,0,0.5)"
-                  style={{
-                    zIndex: geometry
-                      .scrollIntersection()
-                      .transform(x => x - index + 0.5)
-                      .transform([0, 1], [-1, 1])
-                      .getValue(),
-                  }}
+                  // style={{
+                  //   zIndex: geometry
+                  //     .scrollIntersection()
+                  //     .transform(x => {
+                  //       // console.log('x2', x)
+                  //       return x - index + 1
+                  //     })
+                  //     // .transform([0, 1], [0, 1])
+                  //     .getValue(),
+                  // }}
                   rotateY={geometry
                     .scrollIntersection()
-                    .transform(x => x - index + 0.5 + index * pctSquish)
-                    .transform([0, 1], [-20, 20])
+                    .transform([-1, 1], [-20, 20])
+                    .transform(x => {
+                      console.log('x', x)
+                      return x
+                    })
                     .spring({ stiffness: 300, damping: 50 })}
                   transformOrigin="center center"
-                  animate={{ scale: 0.7 }}
+                  animate={{
+                    scale: 0.7,
+                  }}
                 />
               </View>
             )}

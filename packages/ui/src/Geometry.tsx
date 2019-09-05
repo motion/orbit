@@ -1,7 +1,7 @@
 import { decorate, useForceUpdate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { SpringProps } from 'popmotion'
-import { memo, useContext, useLayoutEffect } from 'react'
+import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
 import React from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
@@ -59,6 +59,8 @@ class GeometryStore {
   stores: AnimationStore[] = []
   curCall = 0
 
+  constructor(private nodeRef: RefObject<HTMLElement>) {}
+
   onRender() {
     this.curCall = 0
   }
@@ -79,7 +81,7 @@ class GeometryStore {
   }
 
   tm = null
-  update() {
+  update = () => {
     clearTimeout(this.tm)
     this.tm = setTimeout(() => {
       this.cb()
@@ -93,7 +95,7 @@ class GeometryStore {
     this.update()
   }
 
-  scrollIntersection() {
+  setupStore(fn: (store: AnimationStore) => void) {
     const curStore = this.stores[this.curCall]
     if (curStore) {
       this.curCall++
@@ -101,30 +103,82 @@ class GeometryStore {
       return curStore
     }
     const store = new AnimationStore()
-    store.animationHooks.addHook(() => {
-      const ref = useContext(ScrollableRefContext)
-      return useScrollProgress({
-        ref,
-      })
-    })
+    fn(store)
     this.addStore(store)
     return store
   }
+
+  /**
+   * Returns a 0 to 1 value (for any child) representing the current scroll position of the parent scrollable
+   */
+  scrollProgress() {
+    return this.setupStore(store => {
+      store.animationHooks.addHook(() => {
+        const ref = useContext(ScrollableRefContext)
+        return useScrollProgress({
+          ref,
+        })
+      })
+    })
+  }
+
+  /**
+   * Returns -1 to 1 value of the current nodes intersection within the parent scrollable
+   * (where -1 is off on the left/top, and 1 is off on the right/bottom, 0 is centered)
+   */
+  scrollIntersection() {
+    return this.setupStore(store => {
+      store.animationHooks.addHook(() => {
+        const ref = useContext(ScrollableRefContext)
+        const scrollProgress = useScrollProgress({
+          ref,
+        })
+        const state = useRef({
+          offset: 0,
+          width: 0.1,
+        })
+        if (this.nodeRef.current) {
+          const total = ref.current.childElementCount
+          const nodeWidth = this.nodeRef.current.clientWidth
+          const nodeLeft = this.nodeRef.current.offsetLeft
+          const parentWidth = ref.current.scrollWidth
+          const offset = nodeLeft / (parentWidth - nodeWidth)
+          state.current.offset = offset
+          // assume all have same widths for now
+          state.current.width = 1 / (total - 1)
+        }
+        // this should make it go to 0 once node is centered
+        let pipe = useTransform(scrollProgress, x => {
+          const intersection = (x - state.current.offset) / state.current.width
+          // console.log('intersection', intersection, x, state.current)
+          return intersection
+        })
+        return pipe //useTransform(pipe, [0, 1], [-1, 1])
+      })
+    })
+  }
 }
 
-export function Geometry(props: { children: (geometry: GeometryStore) => React.ReactNode }) {
-  const geometry = useLazyRef(() => new GeometryStore()).current
+export function Geometry(props: {
+  children: (geometry: GeometryStore, ref: any) => React.ReactNode
+}) {
+  const nodeRef = useRef()
+  const geometry = useLazyRef(() => new GeometryStore(nodeRef)).current
   const update = useForceUpdate()
 
   geometry.onRender()
 
   useOnMount(() => {
+    geometry.clear()
     geometry.onUpdated(update)
   })
 
   useOnHotReload(() => {
     geometry.clear()
+    update()
   })
+
+  const children = props.children(geometry, nodeRef)
 
   return (
     <>
@@ -135,7 +189,7 @@ export function Geometry(props: { children: (geometry: GeometryStore) => React.R
           onHooksComplete={values => geometry.setValues(index, values)}
         />
       ))}
-      {props.children(geometry)}
+      {children}
     </>
   )
 }

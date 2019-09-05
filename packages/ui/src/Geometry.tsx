@@ -1,11 +1,13 @@
-import { decorate } from '@o/use-store'
+import { decorate, useForceUpdate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { SpringProps } from 'popmotion'
-import { memo, useContext, useLayoutEffect } from 'react'
 import React from 'react'
+import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
+import { useNodeSize } from './hooks/useNodeSize'
 import { useOnHotReload } from './hooks/useOnHotReload'
+import { useRelative } from './hooks/useRelative'
 import { useScrollProgress } from './hooks/useScrollProgress'
 import { ScrollableRefContext } from './View/ScrollableRefContext'
 
@@ -52,87 +54,168 @@ export class AnimationStore {
     })
     return this
   }
-}
 
-type StoredRoutine = {
-  key: string
-  store: AnimationStore
+  mergeTransform<T>(values: MotionValue<T>[], callback: (previous: T, ...values: T[]) => T) {
+    if (this.frozen) return this
+    this.animationHooks.addHook(hooksValues => {
+      const lastHookVal = hooksValues[hooksValues.length - 1]
+      return useRelative(callback, lastHookVal, ...values)
+    })
+    return this
+  }
 }
 
 class GeometryStore {
-  routines: StoredRoutine[] = []
-  hooksKey = 0
+  stores: AnimationStore[] = []
   curCall = 0
+  frozen = false
 
-  onRender(values?: any) {
+  constructor(private nodeRef: RefObject<HTMLElement>) {}
+
+  onRender() {
     this.curCall = 0
-    if (this.routines[0]) {
-      this.routines[0].store.values = values
-    }
   }
 
   clear() {
-    this.routines = []
+    this.stores = []
     this.curCall = 0
-    this.hooksKey = Math.random()
+    this.frozen = false
   }
 
-  scrollIntersection(key: string = '') {
-    const curRoutine = this.routines[this.curCall]
-    let shouldSwap = false
-    if (curRoutine) {
-      if (curRoutine.key !== key) {
-        shouldSwap = true
-      } else {
-        curRoutine.store.freeze()
-        return curRoutine.store
-      }
+  freeze() {
+    this.frozen = true
+  }
+
+  setupStore(fn: (store: AnimationStore) => void) {
+    const curStore = this.stores[this.curCall]
+    this.curCall++
+    if (curStore) {
+      return curStore
+    }
+    if (this.frozen) {
+      throw new Error(`Error, using Geometry strangely`)
     }
     const store = new AnimationStore()
-    store.animationHooks.addHook(() => {
-      const ref = useContext(ScrollableRefContext)
-      return useScrollProgress({
-        ref,
+    fn(store)
+    this.stores = [...this.stores, store]
+    return store
+  }
+
+  /**
+   * Use an existing MotionValue and transform it
+   */
+  useTransform<T>(value: MotionValue<T>, transform?: (val: T) => T) {
+    return this.setupStore(store => {
+      store.animationHooks.addHook(() => {
+        return useTransform(value, transform)
       })
     })
-    if (shouldSwap) {
-      // changing key
-      this.routines.splice(this.routines.indexOf(curRoutine), 1, { key, store })
-    } else {
-      this.routines.push({ key, store })
-    }
-    this.hooksKey = Math.random()
-    this.curCall++
-    return store
+  }
+
+  /**
+   * Returns a 0 to 1 value (for any child) representing the current scroll position of the parent scrollable
+   */
+  scrollProgress() {
+    return this.setupStore(store => {
+      store.animationHooks.addHook(() => {
+        const ref = useContext(ScrollableRefContext)
+        return useScrollProgress({
+          ref,
+        })
+      })
+    })
+  }
+
+  sharedScrollProgress = null
+
+  /**
+   * Returns -1 to 1 value of the current nodes intersection within the parent scrollable
+   * (where -1 is off on the left/top, and 1 is off on the right/bottom, 0 is centered)
+   */
+  scrollIntersection() {
+    return this.setupStore(store => {
+      const { sharedScrollProgress } = this
+      store.animationHooks.addHook(() => {
+        const ref = useContext(ScrollableRefContext)
+        const scrollProgress = (() => {
+          if (sharedScrollProgress) return sharedScrollProgress
+          return useScrollProgress({
+            ref,
+          })
+        })()
+
+        // needs to be mounted to be effective
+        const state = useRef({
+          offset: 0,
+          width: 0.1,
+        })
+
+        const measure = () => {
+          if (!this.nodeRef.current || !ref.current) {
+            throw new Error(`No node or parent node (did you give a parent scrollable=""?)`)
+          }
+          if (!ref.current.scrollWidth) {
+            return
+          }
+          const total = ref.current.childElementCount
+          const nodeWidth = this.nodeRef.current.clientWidth
+          const nodeLeft = this.nodeRef.current.offsetLeft
+          const parentWidth = ref.current.scrollWidth
+          const offset = nodeLeft / (parentWidth - nodeWidth)
+          state.current.offset = offset
+          // assume all have same widths for now
+          state.current.width = 1 / (total - 1)
+          // trigger update
+          scrollProgress.set(scrollProgress.get())
+        }
+
+        useNodeSize({
+          throttle: 100,
+          ref: this.nodeRef,
+          onChange: measure,
+        })
+
+        // doing this onMount failed with ref.current.scrollWidth being empty if suspense threw
+        // TODO we could share this parent size watcher like we do scrollPosition
+        useNodeSize({
+          throttle: 100,
+          ref,
+          onChange: measure,
+        })
+
+        // this should make it go to 0 once node is centered
+        return useTransform(scrollProgress, x => {
+          return (x - state.current.offset) / state.current.width
+        })
+      })
+    })
   }
 }
 
-export function Geometry(props: { children: (geometry: GeometryStore) => React.ReactNode }) {
-  const geometry = useLazyRef(() => new GeometryStore()).current
-  const [hookVals, setHooksVals] = React.useState([])
-  const hooks = geometry.routines.map(x => x.store.animationHooks.hooks).flat()
-  geometry.onRender(hookVals)
+export function Geometry(props: {
+  children: (geometry: GeometryStore, ref: any) => React.ReactNode
+}) {
+  const nodeRef = useRef()
+  const geometry = useLazyRef(() => new GeometryStore(nodeRef)).current
+  const update = useForceUpdate()
 
   useOnHotReload(() => {
     geometry.clear()
-    setHooksVals([])
+    update()
   })
 
-  return (
-    <>
-      <DynamicHooks key={geometry.hooksKey} hooks={hooks} onHooksComplete={setHooksVals} />
-      {props.children(geometry)}
-    </>
-  )
-}
+  geometry.onRender()
+  const childrenElements = props.children(geometry, nodeRef)
 
-const DynamicHooks = memo((props: { hooks: Function[]; onHooksComplete: (val: any[]) => void }) => {
-  const hooks = []
-  for (const hook of props.hooks) {
-    hooks.push(hook(hooks))
+  for (const store of geometry.stores) {
+    const hooks = []
+    for (const hook of store.animationHooks.hooks) {
+      hooks.push(hook(hooks))
+    }
+    store.values = hooks
+    store.freeze()
   }
-  useLayoutEffect(() => {
-    props.onHooksComplete(hooks)
-  }, [])
-  return null
-})
+  geometry.freeze()
+
+  return <>{childrenElements}</>
+}

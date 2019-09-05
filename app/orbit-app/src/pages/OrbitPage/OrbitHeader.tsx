@@ -10,10 +10,9 @@ import { createRef, useRef } from 'react'
 import { sleep } from '../../helpers'
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
-import { queryStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
+import { appsDrawerStore, queryStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
 import { whenIdle } from './OrbitApp'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarouselStore'
-import { appsDrawerStore } from './OrbitAppsDrawer'
 import { orbitDockStore } from './OrbitDock'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitHeaderOpenAppMenu } from './OrbitHeaderOpenAppMenu'
@@ -66,21 +65,25 @@ class HeaderStore {
     queryStore.setQuery(this.inputRef.current.innerText)
   }
 
-  isFocusing = false
+  triggerFocus = 0
   focus = async () => {
     if (!this.inputRef || !this.inputRef.current) return
     if (document.activeElement === this.inputRef.current) return
-    if (this.isFocusing) return
-    this.isFocusing = true
-    await whenIdle()
-    await sleep(50)
-    await whenIdle()
-    // this causes re-paints, dont do it too eagerly
-    console.warn('focusing')
-    this.inputRef.current!.focus()
-    moveCursorToEndOfTextarea(this.inputRef.current)
-    this.isFocusing = false
+    this.triggerFocus = Date.now()
   }
+
+  doFocus = react(
+    () => this.triggerFocus,
+    async (_, { when }) => {
+      await whenIdle()
+      await whenIdle()
+      await when(() => !appsCarouselStore.isAnimating)
+      ensure('not already active', document.activeElement !== this.inputRef.current)
+      // this causes re-paints, dont do it too eagerly
+      this.inputRef.current!.focus()
+      moveCursorToEndOfTextarea(this.inputRef.current)
+    },
+  )
 
   focusInputOnVisible = react(
     () => Electron.state.showOrbitMain,
@@ -335,7 +338,7 @@ const HomeButton = memo(
           onMouseUp={e => {
             e.stopPropagation()
             if (appsDrawerStore.isOpen) {
-              appsDrawerStore.closeDrawer()
+              actions.router.closeDrawer()
               return
             }
             if (appsCarouselStore.zoomedIn) {
@@ -421,7 +424,7 @@ const BackButton = memo(({ isTorn }: { isTorn: boolean }) => {
       iconSize={18}
       onClick={() => {
         if (appsDrawerStore.isOpen) {
-          appsDrawerStore.closeDrawer()
+          actions.router.closeDrawer()
           return
         }
         if (appsCarousel.zoomedIn) {

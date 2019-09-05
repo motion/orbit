@@ -47,12 +47,10 @@ class OrbitAppsCarouselStore {
     apps: AppBit[]
     rowWidth: number
     zoomOut: MotionValue | null
-    scrollIn: MotionValue | null
   } = {
     apps: [],
     rowWidth: 0,
     zoomOut: null,
-    scrollIn: null,
   }
 
   // this is only the state that matters for animating
@@ -88,7 +86,7 @@ class OrbitAppsCarouselStore {
   start() {
     this.scrollOut.value.onChange(val => {
       if (this.controlled) {
-        this.rowRef.current!.scrollLeft = val * window.innerWidth
+        this.rowRef.current!.scrollLeft = val * this.props.rowWidth
       }
     })
   }
@@ -133,6 +131,9 @@ class OrbitAppsCarouselStore {
     }))
   }
 
+  /**
+   * ANIMATION OUTPUT, updateZoom and updateScroll triger animations ONLY:
+   */
   updateZoom = react(
     () => this.state.zoomedOut,
     async (zoomedOut, { when }) => {
@@ -145,13 +146,9 @@ class OrbitAppsCarouselStore {
       log: false,
     },
   )
-
   updateScroll = react(() => this.state.index, this.setScrollSpring)
 
   setScrollSpring(index: number) {
-    if (index === 628.8) {
-      debugger
-    }
     if (index === this.scrollOut.value.get()) return
     console.log('set scroll spring', index)
     if (this.rowRef.current) {
@@ -171,12 +168,6 @@ class OrbitAppsCarouselStore {
       return elements[this.focusedIndex] || null
     }
     return null
-  }
-
-  updateScrollPositionToIndex = (index: number = this.state.index) => {
-    if (this.rowNode) {
-      this.rowNode.scrollLeft === index * this.props.rowWidth
-    }
   }
 
   onResize = () => {
@@ -264,16 +255,6 @@ class OrbitAppsCarouselStore {
     }
   }
 
-  animateCardsTo = (index: number) => {
-    if (this.state.index !== index) {
-      const paneIndex = Math.round(index)
-      if (paneIndex !== this.focusedIndex) {
-        this.setFocused(paneIndex)
-      }
-      this.state.index = index
-    }
-  }
-
   animateAndScrollTo = async (index: number) => {
     if (!this.rowNode) return
     if (this.state.index === index) return
@@ -286,7 +267,13 @@ class OrbitAppsCarouselStore {
   isControlled = false
   animateTo = (index: number) => {
     this.isControlled = true
-    this.animateCardsTo(index)
+    if (this.state.index !== index) {
+      const paneIndex = Math.round(index)
+      if (paneIndex !== this.focusedIndex) {
+        this.setFocused(paneIndex)
+      }
+      this.state.index = index
+    }
   }
 
   lastDragAt = Date.now()

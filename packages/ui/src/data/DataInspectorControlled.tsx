@@ -8,6 +8,7 @@ import { SimpleText, SimpleTextProps } from '../text/SimpleText'
 import { Tooltip } from '../Tooltip'
 import { DataDescription } from './DataDescription'
 import { DataPreview } from './DataPreview'
+import { fontFamilyMonospace } from './fontFamilyMonospace'
 import { getSortedKeys } from './utils'
 
 export type DataInspectorSetValue = (path: string[], val: any) => void
@@ -96,8 +97,6 @@ const { clipboard } = Electron
 
 // TODO
 type ElectronMenuItemOptions = any
-
-export const fontFamilyMonospace = `'Operator Mono', 'Meslo LG S DZ', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace`
 
 const BaseContainer = gloss<SimpleTextProps & { disabled?: boolean }>(SimpleText, {
   paddingLeft: 10,

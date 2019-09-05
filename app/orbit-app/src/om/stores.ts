@@ -2,6 +2,7 @@ import { PaneManagerStore, QueryStore, ThemeStore } from '@o/kit'
 import { createUsableStore } from '@o/use-store'
 
 import { OrbitStore } from '../pages/OrbitPage/OrbitStore'
+import { AppsDrawerStore } from './AppsDrawerStore'
 import { NewAppStore } from './NewAppStore'
 import { OrbitWindowStore } from './OrbitWindowStore'
 
@@ -23,6 +24,9 @@ export const useNewAppStore = newAppStore.useStore
 export const paneManagerStore = createUsableStore(PaneManagerStore)
 export const usePaneManagerStore = paneManagerStore.useStore
 
+export const appsDrawerStore = createUsableStore(AppsDrawerStore, { paneManagerStore })
+export const useAppsDrawerStore = appsDrawerStore.useStore
+
 export const Stores = {
   themeStore,
   orbitStore,
@@ -30,6 +34,7 @@ export const Stores = {
   orbitWindowStore,
   newAppStore,
   paneManagerStore,
+  appsDrawerStore,
 }
 
 process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()

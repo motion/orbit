@@ -1,6 +1,6 @@
 import { createContext } from 'react'
 
-import { ItemRenderText } from '../lists/ListItemSimple'
+import { ItemRenderText } from '../lists/ListItemViewProps'
 import { TextProps } from '../text/Text'
 import { ViewProps } from '../View/types'
 

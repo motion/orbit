@@ -9,8 +9,8 @@ export function TestUI() {
       {/* <TestUIPopovers /> */}
       {/* <TestUIGlossSpeed /> */}
       {/* <TestUIEditor /> */}
-      {/* <TestUIMotion /> */}
-      <TestUIAnimation />
+      <TestUIMotion />
+      {/* <TestUIAnimation /> */}
       {/* <TestUIParallax /> */}
     </>
   )
@@ -72,10 +72,12 @@ export function TestUIMotion() {
     rowRef.current.style.scrollSnapType = 'x mandatory'
   }, [])
 
+  const pctSquish = 0.4
+
   React.useEffect(() => {
     spring.onChange(val => {
       if (state.current.controlled) {
-        rowRef.current.scrollLeft = val * window.innerWidth
+        rowRef.current.scrollLeft = val * (1 - pctSquish) * window.innerWidth
       }
     })
   }, [])
@@ -137,19 +139,23 @@ export function TestUIMotion() {
       >
         {[0, 1, 2, 3, 4, 5].map(index => (
           <Geometry key={index}>
-            {geometry => (
-              <View scrollSnapAlign="center">
+            {(geometry, ref) => (
+              <View nodeRef={ref} scrollSnapAlign="center" marginRight={`${-pctSquish * 100}%`}>
                 <View
                   width="100vw"
                   height="92vh"
                   background="red"
+                  boxShadow="0 0 10px rgba(0,0,0,0.5)"
+                  zIndex={geometry.scrollIntersection().transform(x => (x > 0 ? 1 - x : x))}
                   rotateY={geometry
                     .scrollIntersection()
-                    .transform(x => x - index + 0.5)
-                    .transform([0, 1], [-20, 20])
-                    .spring({ stiffness: 300, damping: 50 })}
+                    .transform([-1, 1], [-50, 50])
+                    .spring({ stiffness: 500, damping: 10 })}
+                  opacity={geometry.scrollIntersection().transform([-1, 1], [2, 0])}
                   transformOrigin="center center"
-                  animate={{ scale: 0.7 }}
+                  animate={{
+                    scale: 0.7,
+                  }}
                 />
               </View>
             )}

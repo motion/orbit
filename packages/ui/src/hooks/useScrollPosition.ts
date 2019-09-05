@@ -8,14 +8,12 @@ export function useScrollPosition<A extends HTMLDivElement, T extends React.RefO
   useEffect(() => {
     const node = ref.current
     const scrollParent = getScrollParent(node)
-    console.log('scrollParent', scrollParent)
     if (!scrollParent) return
     const onScroll = debounce(() => {
-      console.log('got em')
       cb(ref.current)
     }, 32)
     // TODO can make this deduped by container :)
-    scrollParent.addEventListener('scroll', onScroll)
+    scrollParent.addEventListener('scroll', onScroll, { passive: true })
     return () => {
       scrollParent.removeEventListener('scroll', onScroll)
     }

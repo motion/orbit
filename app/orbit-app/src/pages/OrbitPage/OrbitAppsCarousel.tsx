@@ -1,8 +1,8 @@
 import { AppDefinition, AppIcon, ensure, react, Templates, useAppDefinition, useReaction, useStore } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, FullScreen, Row, SimpleText, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useScrollProgress, useTheme, View } from '@o/ui'
+import { Card, CardProps, FullScreen, Geometry, Row, SimpleText, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useScrollProgress, useTheme, View } from '@o/ui'
 import { MotionValue, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import React, { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { useOm } from '../../om/om'
 import { OrbitApp, whenIdle } from './OrbitApp'
@@ -17,51 +17,6 @@ const updateOnWheel = e => {
   if (index !== appsCarouselStore.focusedIndex) {
     appsCarouselStore.setFocused(index)
   }
-}
-
-/**
- * TODO pending this we can replace:
- */
-const toValue: <T>(v: MotionValue<T> | T) => T = v => (v instanceof MotionValue ? v.get() : v)
-const isMotionValue = (c: any) => c instanceof MotionValue
-function useRelative<T>(callback: (...values: T[]) => T, ...values: (MotionValue<T> | T)[]) {
-  // Compute the motion values's value by running
-  // current values of its related values through
-  // the callback function
-  const getComputedValue = useCallback(() => callback(...values.map(toValue)), [callback, values])
-
-  // Create new motion value
-  const value = useMotionValue(getComputedValue())
-
-  // Update the motion value with the computed value
-  const compute = useCallback(() => value.set(getComputedValue()), [])
-
-  // Partition the values into motion values / non-motion values
-  const [mvs, nmvs]: [MotionValue<T>[], T[]] = useMemo(
-    () =>
-      values.reduce(
-        (acc, val) => {
-          acc[isMotionValue(val) ? 0 : 1].push(val)
-          return acc
-        },
-        [[] as any[], [] as any[]],
-      ),
-    [values],
-  )
-
-  // When motion values values
-  // change, update listeners
-  useEffect(() => {
-    compute()
-    const rs = mvs.map(v => v.onChange(compute))
-    return () => rs.forEach(remove => remove())
-  }, [mvs])
-
-  // When non-motion values
-  // change, compute a new value
-  useEffect(compute, [nmvs])
-
-  return value
 }
 
 export const OrbitAppsCarousel = memo(() => {
@@ -79,8 +34,6 @@ export const OrbitAppsCarousel = memo(() => {
     damping: 50,
     stiffness: 250,
   })
-
-  Object.assign(window, { zoomOut, scrollIn })
 
   useOnMount(() => {
     appsCarouselStore.start()
@@ -106,7 +59,6 @@ export const OrbitAppsCarousel = memo(() => {
         apps,
         rowWidth,
         zoomOut,
-        scrollIn,
       })
     }
   }, [apps, rowWidth])
@@ -265,105 +217,114 @@ const OrbitAppCard = memo(
       },
       onChange(x) {
         const isIntersecting = !!(x.length && x[0].isIntersecting)
-        if (isIntersecting && app.identifier === 'setupApp') {
-          console.warn('INTERSECT SETUPAPP')
-        }
         store.setIsIntersected(isIntersecting)
       },
     })
 
     const cardBoxShadow = [15, 30, 120, [0, 0, 0, theme.background.isDark() ? 0.5 : 0.25]]
 
-    const scrollRotate = useRelative(
-      (zoom, scroll) => {
-        if (zoom === 1) {
-          return 0.5
-        } else {
-          return scroll - index + 0.35
-        }
-      },
-      zoomOut,
-      scrollIn,
-    )
-    const rotateY = useSpring(useTransform(scrollRotate, [0, 1], [-20, 20]), {
-      damping: 50,
-      stiffness: 250,
-    })
-    const scale = useSpring(
-      useTransform(zoomOut, zoom => {
-        if (zoom === 1) {
-          return index === appsCarouselStore.focusedIndex ? 1 : 0.5
-        }
-        return 0.6
-      }),
-      { damping: 50, stiffness: 500 },
-    )
-
     // wrapping with view lets the scale transform not affect the scroll, for some reason this was happening
     // i thought scale transform doesnt affect layout?
+    const mouseDown = useRef(0)
     return (
-      <View
-        pointerEvents={store.isFocused ? 'inherit' : 'none'}
-        data-is="OrbitAppCard-Container"
-        zIndex={1000 - index}
-        scrollSnapAlign="center"
-      >
-        <View
-          animate
-          rotateY={rotateY}
-          scale={scale}
-          x={x}
-          transformOrigin="center center"
-          position="relative"
-        >
-          <Row
-            alignItems="center"
-            justifyContent="center"
-            space="sm"
-            padding
-            position="absolute"
-            bottom={-40}
-            left={0}
-            right={0}
+      <Geometry>
+        {(geometry, ref) => (
+          <View
+            nodeRef={ref}
+            pointerEvents={store.isFocused ? 'inherit' : 'none'}
+            data-is="OrbitAppCard-Container"
+            zIndex={1000 - index}
+            scrollSnapAlign="center"
+            marginRight={`-${stackMarginLessPct * 100}%`}
           >
-            <SimpleText>{app.name}</SimpleText>
-          </Row>
-          <Card
-            data-is="OrbitAppCard"
-            nodeRef={cardRef}
-            borderWidth={0}
-            background={
-              store.isFocusZoomed
-                ? !definition.viewConfig || definition.viewConfig.transparentBackground !== false
-                  ? theme.appCardBackgroundTransparent
-                  : theme.appCardBackground
-                : theme.backgroundStronger
-            }
-            borderRadius={store.isFocusZoomed ? 0 : 20}
-            {...(store.isFocused
-              ? {
-                  boxShadow: [
-                    [0, 0, 0, 3, theme.alternates!.selected['background']],
-                    cardBoxShadow,
-                  ],
+            <View
+              animate
+              rotateY={geometry
+                .scrollIntersection()
+                .transform([-1, 1], [-40, 30])
+                .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? 0 : prev))
+                .spring({ stiffness: 250, damping: 50 })}
+              opacity={
+                geometry.scrollIntersection().transform([-1, 1], [3, 0])
+                // .transform(x => log(x, index))
+              }
+              scale={geometry
+                .useTransform(zoomOut, zoom =>
+                  zoom === 1 ? (index === appsCarouselStore.focusedIndex ? 1 : 0.5) : 0.6,
+                )
+                .spring({ damping: 50, stiffness: 500 })}
+              zIndex={geometry.scrollIntersection().transform(x => (x > 0 ? 1 - x : x))}
+              x={x}
+              transformOrigin="center center"
+              position="relative"
+              onMouseDown={() => {
+                if (appsCarouselStore.zoomedIn) {
+                  return
                 }
-              : {
-                  boxShadow: [cardBoxShadow],
-                })}
-            transition="background 300ms ease"
-            {...cardProps}
-          >
-            <AppLoadingScreen definition={definition} app={app} visible={!store.shouldRender} />
-            <OrbitApp
-              id={app.id!}
-              disableInteraction={disableInteraction}
-              identifier={definition.id}
-              appDef={definition}
-              shouldRenderApp={store.shouldRender}
-            />
-          </Card>
-        </View>
-      </View>
+                mouseDown.current = Date.now()
+              }}
+              onMouseUp={e => {
+                if (appsCarouselStore.zoomedIn) {
+                  return
+                }
+                if (mouseDown.current > appsCarouselStore.lastDragAt) {
+                  e.stopPropagation()
+                  appsCarouselStore.scrollToIndex(index, true)
+                }
+                mouseDown.current = -1
+              }}
+            >
+              <Row
+                alignItems="center"
+                justifyContent="center"
+                space="sm"
+                padding
+                position="absolute"
+                bottom={-40}
+                left={0}
+                right={0}
+              >
+                <SimpleText>{app.name}</SimpleText>
+              </Row>
+              <Card
+                data-is="OrbitAppCard"
+                nodeRef={cardRef}
+                borderWidth={0}
+                background={
+                  store.isFocusZoomed
+                    ? !definition.viewConfig ||
+                      definition.viewConfig.transparentBackground !== false
+                      ? theme.appCardBackgroundTransparent
+                      : theme.appCardBackground
+                    : theme.backgroundStronger
+                }
+                borderRadius={store.isFocusZoomed ? 0 : 20}
+                {...(store.isFocused
+                  ? {
+                      boxShadow: [
+                        [0, 0, 0, 3, theme.alternates!.selected['background']],
+                        cardBoxShadow,
+                      ],
+                    }
+                  : {
+                      boxShadow: [cardBoxShadow],
+                    })}
+                transition="background 300ms ease"
+                {...cardProps}
+              >
+                <AppLoadingScreen definition={definition} app={app} visible={!store.shouldRender} />
+                <OrbitApp
+                  id={app.id!}
+                  disableInteraction={disableInteraction}
+                  identifier={definition.id}
+                  appDef={definition}
+                  shouldRenderApp={store.shouldRender}
+                />
+              </Card>
+            </View>
+          </View>
+        )}
+      </Geometry>
     )
   },
 )
@@ -392,3 +353,48 @@ const AppLoadingScreen = memo((props: AppLoadingScreenProps) => {
     />
   )
 })
+
+/**
+ * TODO pending this we can replace:
+ */
+const toValue: <T>(v: MotionValue<T> | T) => T = v => (v instanceof MotionValue ? v.get() : v)
+const isMotionValue = (c: any) => c instanceof MotionValue
+function useRelative<T>(callback: (...values: T[]) => T, ...values: (MotionValue<T> | T)[]) {
+  // Compute the motion values's value by running
+  // current values of its related values through
+  // the callback function
+  const getComputedValue = useCallback(() => callback(...values.map(toValue)), [callback, values])
+
+  // Create new motion value
+  const value = useMotionValue(getComputedValue())
+
+  // Update the motion value with the computed value
+  const compute = useCallback(() => value.set(getComputedValue()), [])
+
+  // Partition the values into motion values / non-motion values
+  const [mvs, nmvs]: [MotionValue<T>[], T[]] = useMemo(
+    () =>
+      values.reduce(
+        (acc, val) => {
+          acc[isMotionValue(val) ? 0 : 1].push(val)
+          return acc
+        },
+        [[] as any[], [] as any[]],
+      ),
+    [values],
+  )
+
+  // When motion values values
+  // change, update listeners
+  useEffect(() => {
+    compute()
+    const rs = mvs.map(v => v.onChange(compute))
+    return () => rs.forEach(remove => remove())
+  }, [mvs])
+
+  // When non-motion values
+  // change, compute a new value
+  useEffect(compute, [nmvs])
+
+  return value
+}

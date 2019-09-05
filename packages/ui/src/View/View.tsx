@@ -64,7 +64,7 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
   .withConfig({
     postProcessProps(inProps, outProps, tracker) {
       if (shouldRenderToMotion(inProps)) {
-        let style = inProps.style || {}
+        let style = { ...inProps.style }
         let finalClassName = inProps.className
         // parse style back from classname to style tag for motion
         if (outProps.className) {
@@ -80,13 +80,15 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
 
           for (const key in inProps) {
             const val = inProps[key]
-            if (motionStyleProps[key]) {
-              if (val instanceof AnimationStore) {
-                style[key] = val.getValue()
-              } else {
-                style[key] = val
-              }
+            if (val instanceof AnimationStore) {
+              style[key] = val.getValue()
               delete outProps[key]
+              continue
+            }
+            if (motionStyleProps[key]) {
+              style[key] = val
+              delete outProps[key]
+              continue
             }
             if (motionExtraProps[key]) {
               if (key === 'animate' && inProps.animate === true) {

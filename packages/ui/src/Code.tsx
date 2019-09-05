@@ -1,6 +1,6 @@
 import { gloss } from 'gloss'
 
-import { fontFamilyMonospace } from './data/DataInspectorControlled'
+import { fontFamilyMonospace } from './data/fontFamilyMonospace'
 
 export const Code = gloss('code', {
   whiteSpace: 'pre',

@@ -4,55 +4,14 @@ import React, { useCallback, useRef, useState } from 'react'
 
 import { useDraggable } from '../Draggable'
 import { ProvideFocus } from '../Focus'
-import { Bit } from '../helpers/BitLike'
 import { composeRefs } from '../helpers/composeRefs'
 import { Config, CustomItemView } from '../helpers/configureUI'
 import { NormalItem, normalizeItem } from '../helpers/normalizeItem'
 import { PersonRow } from '../PersonRow'
 import { useVisibilityStore } from '../Visibility'
-import { ListItemSimple, ListItemSimpleProps } from './ListItemSimple'
-import { ListItemViewProps } from './ListItemViewProps'
-import { SelectableStore, useSelectableStore } from './SelectableStore'
-import { VirtualListItemProps } from './VirtualListItem'
-
-export type ListItemProps = ListItemSimpleProps &
-  Omit<VirtualListItemProps<Bit>, 'index'> & {
-    /** Internally used for selection, can be overridden */
-    index?: number
-
-    /** Attach an ID for index view selection, see AppViewProps */
-    id?: string
-
-    /** Attach an identifier for index view selection, see AppViewProps */
-    identifier?: string
-
-    /** Attach a subType for index view selection, see AppViewProps */
-    subType?: string
-
-    /** Show a row of people below the list item */
-    people?: Bit[]
-
-    /** Disable automatically showing people when passing in a Bit */
-    hidePeople?: boolean
-
-    /** Props for the inner ItemView, when displaying a media item type */
-    itemViewProps?: ListItemViewProps
-
-    /** Pass in your own SelectableStore */
-    selectableStore?: SelectableStore
-
-    /** Arbitrarily add extra data, makes search and doing things on onSelect callbacks easier */
-    extraData?: any
-
-    /** Allow dragging to other targets */
-    draggable?: boolean
-
-    /** Specify the item you are dragging */
-    draggableItem?: any
-
-    /** Show the full content of the bit, if given, inline */
-    showFullContent?: boolean
-  }
+import { ListItemSimple } from './ListItemSimple'
+import { ListItemProps, ListItemSimpleProps } from './ListItemViewProps'
+import { useSelectableStore } from './SelectableStore'
 
 export const ListItem = (props: ListItemProps) => {
   const {

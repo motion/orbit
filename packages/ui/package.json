@@ -35,7 +35,7 @@
     "memoize-weak": "1.0.2",
     "pluralize": "^7.0.0",
     "raf-throttle": "^2.0.3",
-    "react-color": "^2.17.0",
+    "react-color": "2.17.3",
     "react-date-range": "1.0.0-beta2",
     "react-debounce-render": "^5.0.0",
     "react-flip-toolkit": "^6.6.4",

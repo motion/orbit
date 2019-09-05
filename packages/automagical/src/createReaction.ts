@@ -55,7 +55,7 @@ export function createReaction(
   }
 
   let id = lazy ? 1 : 0
-  const shouldLog = () => optionsLog !== false || localSettingLog() > 0
+  const shouldLog = () => optionsLog !== false || localSettingLog() > 2
   let currentValueUnreactive: any // for comparing previous value without triggering reaction
   let previousValue: any
   let stopReaction: Function | null = null

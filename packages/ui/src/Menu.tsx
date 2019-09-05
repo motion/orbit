@@ -1,6 +1,7 @@
 import React, { isValidElement } from 'react'
 
-import { ListItem, ListItemProps } from './lists/ListItem'
+import { ListItem } from './lists/ListItem'
+import { ListItemProps } from './lists/ListItemViewProps'
 import { Popover, PopoverProps } from './Popover'
 import { Col, ColProps } from './View/Col'
 

@@ -166,30 +166,30 @@ function AppSettings(props: { appId: number }) {
       }
     >
       {!!definition.app && (
-        <Card title="Customize" padding>
+        <Card title="Customize" padding titlePadding="md">
           <AppsMainNew customizeColor app={app} />
+        </Card>
+      )}
+
+      {!!definition.setup && (
+        <Card title="App Settings" padding titlePadding="md">
+          <AppSetupForm id={app ? app.id : false} def={definition} />
+        </Card>
+      )}
+
+      {!!definition.settings && (
+        <Card minHeight={400} title="Data Settings" titlePadding="md">
+          <AppMainView identifier={definition.id} viewType="settings" />
         </Card>
       )}
 
       {!!buildStatus && (
         <Card
-          title="Build"
+          title="Build Status"
           padding
           afterTitle={<Button onClick={() => rebuildApp(app)}>Rebuild</Button>}
         >
           <DefinitionList row={buildStatus} />
-        </Card>
-      )}
-
-      {!!definition.settings && (
-        <Card minHeight={400} title="Data Settings">
-          <AppMainView identifier={definition.id} viewType="settings" />
-        </Card>
-      )}
-
-      {!!definition.setup && (
-        <Card title="App Settings" padding>
-          <AppSetupForm id={app ? app.id : false} def={definition} />
         </Card>
       )}
     </Section>

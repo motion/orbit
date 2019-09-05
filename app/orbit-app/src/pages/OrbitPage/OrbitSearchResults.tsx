@@ -6,8 +6,8 @@ import React, { memo, Suspense, useCallback, useMemo, useRef } from 'react'
 import { SearchResultsApp } from '../../apps/SearchResultsApp'
 import { om } from '../../om/om'
 import { SearchStore } from '../../om/SearchStore'
+import { appsDrawerStore } from '../../om/stores'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarouselStore'
-import { appsDrawerStore } from './OrbitAppsDrawer'
 
 class OrbitSearchResultsStore {
   searchState: SearchState | null = null
@@ -299,7 +299,7 @@ export const OrbitSearchResults = memo(() => {
 const OrbitSearchedItem = gloss<BoxProps & { visible: boolean }>(Box, {
   flex: 1,
   opacity: 0,
-  transition: 'all ease 300ms',
+  transition: 'all ease 180ms',
   pointerEvents: 'none',
   transform: {
     rotateY: '-4deg',

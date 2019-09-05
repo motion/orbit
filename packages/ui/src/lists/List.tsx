@@ -1,7 +1,6 @@
 import { isDefined, selectDefined } from '@o/utils'
 import { pick } from 'lodash'
-import React, { forwardRef, memo, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
-import { HotKeys, HotKeysProps } from 'react-hotkeys'
+import React, { forwardRef, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
 
 import { Center } from '../Center'
 import { splitCollapseProps } from '../Collapsable'
@@ -18,8 +17,8 @@ import { SubTitle } from '../text/SubTitle'
 import { Text } from '../text/Text'
 import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
-import { ListItem, ListItemProps } from './ListItem'
-import { HandleSelection, ListItemSimpleProps } from './ListItemSimple'
+import { ListItem } from './ListItem'
+import { HandleSelection, ListItemProps, ListItemSimpleProps } from './ListItemViewProps'
 import { Direction, selectablePropKeys, SelectableProps, SelectableStore, SelectableStoreProvider, useCreateSelectableStore } from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
@@ -60,7 +59,7 @@ export type ListProps = SectionSpecificProps &
     onEdit?: (item: any, nextTitle: string) => any
   }
 
-export function toListItemProps(props?: any): ListItemSimpleProps & { item?: any } {
+function toListItemProps(props?: any): ListItemSimpleProps & { item?: any } {
   if (!props) {
     return null
   }
@@ -73,8 +72,6 @@ export function toListItemProps(props?: any): ListItemSimpleProps & { item?: any
 const PropsContext = createContextualProps<ListProps>()
 export const ListPassProps = PropsContext.PassProps
 export const useListProps = PropsContext.useProps
-
-export type HandleOrbitSelect = (index: number, extraData: any) => any
 
 const nullFn = () => null
 
@@ -313,36 +310,4 @@ function ListPlaceholder(props: ListProps) {
 // @ts-ignore
 List.accepts = {
   surfaceProps: true,
-}
-
-export const ListShortcuts = memo(({ keyMap, handlers, ...props }: Partial<HotKeysProps>) => {
-  const shortcutStore = useShortcutStore()
-
-  const innerHandlers = useMemo(() => {
-    const emit = key => {
-      shortcutStore.emit(key)
-    }
-    return {
-      up: () => emit('up'),
-      down: () => emit('down'),
-      ...handlers,
-    }
-  }, [handlers])
-
-  return (
-    <HotKeys
-      keyMap={{
-        down: 'down',
-        up: 'up',
-        ...keyMap,
-      }}
-      style={hotKeyStyle}
-      handlers={innerHandlers}
-      {...props}
-    />
-  )
-})
-
-const hotKeyStyle = {
-  flex: 'inherit',
 }

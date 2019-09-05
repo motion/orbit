@@ -217,9 +217,6 @@ const OrbitAppCard = memo(
       },
       onChange(x) {
         const isIntersecting = !!(x.length && x[0].isIntersecting)
-        if (isIntersecting && app.identifier === 'setupApp') {
-          console.warn('INTERSECT SETUPAPP')
-        }
         store.setIsIntersected(isIntersecting)
       },
     })
@@ -257,7 +254,10 @@ const OrbitAppCard = memo(
                 .transform([-1, 1], [-40, 30])
                 .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? 0 : prev))
                 .spring({ stiffness: 250, damping: 50 })}
-              opacity={geometry.scrollIntersection().transform([-1, 1], [3, 0])}
+              opacity={geometry
+                .scrollIntersection()
+                .transform([-1, 1], [3, 0])
+                .transform(x => log(x, index))}
               scale={scale}
               x={x}
               transformOrigin="center center"

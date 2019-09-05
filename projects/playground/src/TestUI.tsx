@@ -154,8 +154,8 @@ export function TestUIMotion() {
                   }}
                   rotateY={geometry
                     .scrollIntersection()
-                    .transform([-1, 1], [-20, 20])
-                    .spring({ stiffness: 300, damping: 50 })}
+                    .transform([-1, 1], [-50, 50])
+                    .spring({ stiffness: 500, damping: 10 })}
                   transformOrigin="center center"
                   animate={{
                     scale: 0.7,

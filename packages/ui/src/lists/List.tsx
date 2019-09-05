@@ -117,8 +117,8 @@ export const List = memoIsEqualDeep(
     const getItemPropsGet = useGet(getItemProps || nullFn)
     const visibility = useVisibility()
     const getVisibility = useGet(visibility)
-    const filtered = useFilter(props as any)
-    const filteredGetItemProps = useGetFn(filtered.getItemProps || nullFn)
+    const filtered = useFilter(props)
+    const filteredGetItemProps = useGetFn(filtered.getItemProps || (nullFn as any))
     const getItems = useGet(filtered.results)
     const getShareable = useGet(shareable)
     const selection = useRef<[any[], number[]]>([[], []])
@@ -156,6 +156,7 @@ export const List = memoIsEqualDeep(
     useEffect(() => {
       if (!shortcutStore) return
       return shortcutStore.onShortcut(shortcut => {
+        console.log('got shortuct', shortcut)
         if (getVisibility() !== true) {
           return
         }
@@ -289,6 +290,10 @@ export const List = memoIsEqualDeep(
     },
   },
 )
+
+List.defaultProps = {
+  searchable: false,
+}
 
 function ListPlaceholder(props: ListProps) {
   return (

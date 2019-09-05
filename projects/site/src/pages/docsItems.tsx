@@ -1,3 +1,4 @@
+import { ListItemProps } from '@o/ui'
 import React from 'react'
 
 import { fontProps } from '../constants'
@@ -138,7 +139,7 @@ const uikit = [
   { id: 'passprops', icon: 'filter-list', title: 'PassProps' },
 ]
 
-export const docsItems = {
+export const docsItems: { [key: string]: ListItemProps[] } = {
   all: [...guides, ...uikit],
   ui: uikit,
   docs: guides,

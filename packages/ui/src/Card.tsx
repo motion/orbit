@@ -92,7 +92,7 @@ export function Card(props: CardProps) {
               },
               [collapseOnClick, onClickTitle],
             )}
-            cursor={hasTitleClick ? 'pointer' : 'auto'}
+            cursor={hasTitleClick ? 'pointer' : 'inherit'}
             alignItems="center"
             titleFlex={titleFlex}
             subTitleProps={subTitleProps}

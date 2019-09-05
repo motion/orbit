@@ -1,4 +1,4 @@
-import { Col, ColProps, Grid, Space } from '@o/ui'
+import { Col, ColProps, Grid, Space, TitleRow } from '@o/ui'
 import { compose, mount, route, withView } from 'navi'
 import React from 'react'
 import { View } from 'react-navi'
@@ -11,10 +11,10 @@ import { FadeChild, FadeParent } from '../views/FadeInView'
 import { MDX } from '../views/MDX'
 import { SectionContent } from '../views/SectionContent'
 import { TitleText } from '../views/TitleText'
+import { DocsFeatureCard } from './DocsPage/DocsFeatureCard'
 import { GuideEntry, guides } from './GuidesPage/guides'
 import { AboveFooter } from './HomePage/AboveFooter'
 import { Footer } from './HomePage/Footer'
-import { useScreenVal } from './HomePage/SpacedPageContent'
 
 export default compose(
   withView(() => {
@@ -86,37 +86,30 @@ export function GuidesPageIndex() {
     .filter(x => !x.private)
     .sort((a, b) => (new Date(a.date).getTime() > new Date(b.date).getTime() ? -1 : 1))
   return (
-    <GuidesLayout space>
-      {all.map((post, index) => (
-        <FadeChild key={post.date} delay={index * 150}>
-          <Col
-            padding={useScreenVal('md', 'xl', 'xl')}
-            {...linkProps(`/guides/${all[index].id}`)}
-            hoverStyle={{
-              background: '#f9f9f9',
-            }}
-          >
-            <TitleText
-              fontWeight={200}
-              color={colors.purple}
-              selectable={false}
-              textAlign="left"
-              size="md"
-            >
-              {post.title}
-            </TitleText>
-            <Space size="sm" />
-          </Col>
-        </FadeChild>
-      ))}
-    </GuidesLayout>
+    <>
+      <GuidesLayout space title="Guides">
+        {all.map((post, index) => (
+          <FadeChild key={post.date} delay={index * 150}>
+            <DocsFeatureCard
+              icon="ok"
+              background={colors.purple}
+              color="white"
+              title={post.title}
+              {...linkProps(`/guides/${all[index].id}`)}
+            />
+          </FadeChild>
+        ))}
+      </GuidesLayout>
+    </>
   )
 }
 
-export function GuidesLayout({ children, ...props }: ColProps) {
+export function GuidesLayout({ children, title, ...props }: ColProps & { title: string }) {
   return (
     <>
       <SectionContent minHeight={500} padding="xxl">
+        <TitleRow size="xl" title={title} bordered padding />
+        <Space size="xl" />
         <Grid itemMaxWidth={200} itemMinWidth={150} {...props}>
           {children}
         </Grid>

@@ -1,8 +1,7 @@
-import { BorderRight, Button, Col, gloss, List, Portal, ProvideBanner, Row, Sidebar, sleep, Space, useOnMount, whenIdle } from '@o/ui'
-import { useForceUpdate, useReaction } from '@o/use-store'
-import { debounce } from 'lodash'
+import { BorderRight, Button, Col, configureHotKeys, gloss, List, ListItemProps, Portal, ProvideBanner, Row, Sidebar, sleep, Space, useFilter, useOnMount, whenIdle } from '@o/ui'
+import { useReaction } from '@o/use-store'
 import { compose, mount, route, withView } from 'navi'
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { NotFoundBoundary, View } from 'react-navi'
 
 import { Header } from '../Header'
@@ -35,6 +34,10 @@ const itemProps = {
   },
 }
 
+configureHotKeys({
+  ignoreTags: [],
+})
+
 const DocsList = memo(() => {
   const docsStore = DocsStoreContext.useStore()
   const [mounted, setMounted] = useState(false)
@@ -51,21 +54,44 @@ const DocsList = memo(() => {
     setMounted(true)
   })
 
+  const curRow = useRef(docsItems[docsStore.section][0])
+  const { results } = useFilter({
+    query: docsStore.search,
+    items: docsItems[docsStore.section],
+  })
+
+  const items = useMemo(() => {
+    let items: ListItemProps[] = []
+    if (docsStore.search) {
+      items = [
+        ...items,
+        {
+          key: docsStore.search,
+          groupName: `Current Page`,
+          ...curRow.current,
+        },
+        { separator: `Results for "${docsStore.search}"`, selectable: false },
+      ]
+    }
+    items = [...items, ...results]
+    return items
+  }, [docsStore.search, results])
+
   return (
     <List
-      query={docsStore.search}
-      searchable
       selectable
       alwaysSelected
-      defaultSelected={docsStore.initialIndex}
+      defaultSelected={docsStore.search ? 0 : docsStore.initialIndex}
       overscanCount={mounted ? 500 : 0}
-      items={docsItems[docsStore.section]}
+      items={items}
       itemProps={itemProps}
       getItemProps={preloadItem}
       onSelect={useCallback(rows => {
         if (!rows[0]) {
           console.warn('no row on select!', rows)
         } else {
+          console.log('nav to', rows[0].id)
+          curRow.current = rows[0]
           docsNavigate(rows[0].id)
         }
       }, [])}
@@ -82,12 +108,6 @@ const DocsPage = memo((props: { children?: any }) => {
   const [showSidebar, setShowSidebar] = useState(true)
   const inputRef = useRef(null)
   const [themeName, setThemeName] = usePageTheme()
-
-  useStickySidebar({
-    condition: screen !== 'small',
-    id: '#sidebar',
-    containerSelector: '#main',
-  })
 
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))
@@ -207,18 +227,16 @@ const DocsPage = memo((props: { children?: any }) => {
 })
 
 const DocsPageSidebar = memo(({ children }: any) => {
-  const forceUpdate = useForceUpdate()
+  const screen = useScreenSize()
 
-  useEffect(() => {
-    const updateSlow = debounce(forceUpdate, 100)
-    window.addEventListener('resize', updateSlow, { passive: true })
-    return () => {
-      window.removeEventListener('resize', updateSlow)
-    }
+  useStickySidebar({
+    condition: screen !== 'small',
+    id: '#sidebar',
+    containerSelector: '#main',
   })
 
   return (
-    <Col id="sidebar" width={250} pointerEvents="auto" height={window.innerHeight}>
+    <Col id="sidebar" width={250} pointerEvents="auto" height="100vh">
       <Col position="relative" className="sidebar__inner" flex={1}>
         <Col margin={[25, 0, 0]} flex={1} position="relative">
           {children}

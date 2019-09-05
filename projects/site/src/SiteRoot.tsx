@@ -1,5 +1,5 @@
 import { ErrorBoundary } from '@o/ui'
-import React, { Suspense } from 'react'
+import React, { StrictMode, Suspense } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Router, View } from 'react-navi'
 
@@ -9,20 +9,22 @@ import { SiteStoreContext } from './SiteStore'
 
 export const SiteRoot = hot(() => {
   return (
-    <ErrorBoundary name="Site Root">
-      <SiteStoreContext.Provider>
-        {/* this key helps HMR for lazy imports... but it breaks scroll position */}
-        <Router
-          // key={process.env.NODE_ENV === 'development' ? Math.random() : 0}
-          navigation={Navigation}
-        >
-          <Layout>
-            <Suspense fallback={null}>
-              <View hashScrollBehavior="smooth" />
-            </Suspense>
-          </Layout>
-        </Router>
-      </SiteStoreContext.Provider>
-    </ErrorBoundary>
+    <StrictMode>
+      <ErrorBoundary name="Site Root">
+        <SiteStoreContext.Provider>
+          {/* this key helps HMR for lazy imports... but it breaks scroll position */}
+          <Router
+            // key={process.env.NODE_ENV === 'development' ? Math.random() : 0}
+            navigation={Navigation}
+          >
+            <Layout>
+              <Suspense fallback={null}>
+                <View hashScrollBehavior="smooth" />
+              </Suspense>
+            </Layout>
+          </Router>
+        </SiteStoreContext.Provider>
+      </ErrorBoundary>
+    </StrictMode>
   )
 })

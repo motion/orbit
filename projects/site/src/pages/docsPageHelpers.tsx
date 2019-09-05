@@ -24,8 +24,7 @@ export const docsNavigate = id => {
       if (window.location.pathname === next) {
         return
       }
-      console.warn('NAV', window.location.pathname, next)
-      Navigation.navigate(next, { replace: true })
+      Navigation.navigate(next)
     },
     isRecent ? 150 : 50,
   )

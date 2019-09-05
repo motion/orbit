@@ -28,8 +28,6 @@ export function getEditor() {
   return require('@o/editor').Editor
 }
 
-module.hot && module.hot.accept()
-
 export * from './OrbitHot'
 export { Actions } from './Actions'
 

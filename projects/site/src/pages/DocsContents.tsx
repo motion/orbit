@@ -85,7 +85,7 @@ export const DocsContents = memo(
             space
             title={
               <FadeChild>
-                <Title size={(title || '').length > 22 ? 2 : 3}>{title || 'No title'}</Title>
+                <Title size={(title || '').length > 22 ? 2 : 2.5}>{title || 'No title'}</Title>
               </FadeChild>
             }
             belowTitle={

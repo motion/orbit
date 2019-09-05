@@ -160,7 +160,7 @@ export class AuthServer {
         (req, res) => {
           const values: OauthValues = req['user'] || req['currentUser']
           finishAuth(name, values).then(response => {
-            log.info('auth response', response)
+            log.info(`auth response ${JSON.stringify(response)}`)
           })
           res.send(`
 <html>

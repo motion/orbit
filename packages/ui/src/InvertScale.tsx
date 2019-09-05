@@ -5,7 +5,6 @@ export function InvertScale({ style, ...rest }: any) {
   const invertStyle = useInvertedScale()
   return (
     <motion.div
-      layoutTransition
       style={{
         flexDirection: 'inherit',
         flexBasis: 'inherit',

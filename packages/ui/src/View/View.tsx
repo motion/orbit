@@ -98,8 +98,12 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
             if (tracker.has(key)) {
               const styles = tracker.get(key)
               if (+styles.namespace == +styles.namespace) {
-                // if (inProps['debug']) debugger
-                Object.assign(style, css(styles.rules))
+                if (!styles.styleObject) {
+                  styles.styleObject = css(styles.rules, { snakeCase: false })
+                }
+                Object.assign(style, styles.styleObject)
+              } else {
+                finalClassName += ` ${name}`
               }
             } else {
               finalClassName += ` ${name}`

@@ -15,16 +15,15 @@ export let Basic = () => {
 
       <Row>
         <Button
-          debug
           layoutTransition={{
             type: 'spring',
-            damping: 10,
             stiffness: 100,
+            damping: 40,
           }}
           icon="ok"
           onClick={() => setFull(!full)}
         >
-          {full ? 'Hello' : 'No way'}
+          {full ? 'Long title' : ''}
         </Button>
       </Row>
     </Col>

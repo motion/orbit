@@ -16,7 +16,7 @@ export function debug(level?: number) {
   }
   window['enableLog'] = next
   localStorage.setItem('enableLog', `${next}`)
-  if (next) {
+  if (next > 5) {
     spyOff = spy(logMobxEvent)
   } else {
     spyOff && spyOff()

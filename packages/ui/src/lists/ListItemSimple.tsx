@@ -1,4 +1,3 @@
-import { useReaction } from '@o/use-store'
 import { idFn, isDefined, selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
 import { Box, gloss, Theme, ThemeContext, useTheme } from 'gloss'
@@ -21,6 +20,7 @@ import { Col } from '../View/Col'
 import { usePadding } from '../View/PaddedView'
 import { Row } from '../View/Row'
 import { View } from '../View/View'
+import { useIsSelected } from './useIsSelected'
 
 export type ItemRenderText = (text: string) => JSX.Element
 export type HandleSelection = (index: number, event?: any) => any
@@ -504,20 +504,4 @@ function getIcon(props: ListItemSimpleProps) {
     element = <Icon name={props.icon} {...iconPropsFinal} />
   }
   return element
-}
-
-export function useIsSelected(props: Pick<ListItemSimpleProps, 'isSelected' | 'index'>) {
-  return useReaction(
-    () => {
-      if (typeof props.isSelected === 'function') {
-        return props.isSelected(props.index)
-      }
-      return !!props.isSelected
-    },
-    {
-      name: 'useIsSelected',
-      priority: 2,
-    },
-    [props.isSelected],
-  )
 }

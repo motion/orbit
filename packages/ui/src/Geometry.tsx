@@ -1,8 +1,8 @@
 import { decorate, useForceUpdate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { SpringProps } from 'popmotion'
-import React from 'react'
 import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
+import React from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
 import { useNodeSize } from './hooks/useNodeSize'
@@ -57,7 +57,7 @@ export class AnimationStore {
 
   mergeTransform<T extends MotionValue>(
     values: T[],
-    callback: (previous: MotionValue, ...values: T[]) => T,
+    callback: (previous: MotionValue, ...values: T[]) => number,
   ) {
     if (this.frozen) return this
     this.animationHooks.addHook(hooksValues => {

@@ -22,12 +22,12 @@ export function updateProps(store: any, nextProps: Object) {
     }
 
     // removes
-    for (const key of curPropKeys) {
-      if (typeof nextProps[key] === 'undefined') {
-        delete store.props[key]
-        updated = true
-      }
-    }
+    // for (const key of curPropKeys) {
+    //   if (typeof nextProps[key] === 'undefined') {
+    //     delete store.props[key]
+    //     updated = true
+    //   }
+    // }
 
     if (updated) {
       store.__lastProps = nextProps

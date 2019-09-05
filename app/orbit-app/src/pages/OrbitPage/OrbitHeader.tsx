@@ -4,8 +4,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react, useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 import { createRef, useRef } from 'react'
+import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 
 import { sleep } from '../../helpers'
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
@@ -79,7 +79,7 @@ class HeaderStore {
       await whenIdle()
       await when(() => !appsCarouselStore.isAnimating)
       // this causes re-paints, dont do it too eagerly
-      console.warn('focusing')
+      if (document.activeElement === this.inputRef.current) return
       this.inputRef.current!.focus()
       moveCursorToEndOfTextarea(this.inputRef.current)
     },

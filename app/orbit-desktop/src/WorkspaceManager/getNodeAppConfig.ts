@@ -69,15 +69,16 @@ export async function getNodeAppConfig(entry: string, name: any, options: Comman
       outputFile: 'index.node.js',
       watch: options.watch,
       // for non-treeshaking
-      mode: 'development',
+      // WARNING bug it exports to "module not found {}"
+      // mode: 'development',
       dllReferences: [defaultBaseDll],
       // for tree-shaking...
-      // mode: 'production',
-      // plugins: [
-      //   new IgnoreIfNotNodeEntryImport({
-      //     file: entry,
-      //   }),
-      // ],
+      mode: 'production',
+      plugins: [
+        new IgnoreIfNotNodeEntryImport({
+          file: entry,
+        }),
+      ],
     }),
     {
       node: {

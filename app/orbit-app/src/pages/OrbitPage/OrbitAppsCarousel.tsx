@@ -1,7 +1,7 @@
 import { AppDefinition, AppIcon, ensure, react, Templates, useAppDefinition, useReaction, useStore } from '@o/kit'
 import { AppBit } from '@o/models'
 import { Card, CardProps, FullScreen, Geometry, Row, SimpleText, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useScrollProgress, useTheme, View } from '@o/ui'
-import { MotionValue, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { MotionValue, useMotionValue } from 'framer-motion'
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { useOm } from '../../om/om'
@@ -30,27 +30,9 @@ export const OrbitAppsCarousel = memo(() => {
 
   const zoomOut = useMotionValue(1)
   const scrollIn = useScrollProgress({ ref: rowRef })
-  const x = useSpring(useTransform(zoomOut, x => (x === 1 ? '0%' : '20%')), {
-    damping: 50,
-    stiffness: 250,
-  })
 
   useOnMount(() => {
     appsCarouselStore.start()
-
-    // link to isAnimating, not as nice as react-spring atm onAnimationStart() didnt fire
-
-    let tm
-    const update = () => {
-      clearTimeout(tm)
-      appsCarouselStore.isAnimating = true
-      tm = setTimeout(() => {
-        appsCarouselStore.isAnimating = false
-      }, 40)
-    }
-
-    x.onChange(update)
-    scrollIn.onChange(update)
   })
 
   useEffect(() => {
@@ -130,7 +112,6 @@ export const OrbitAppsCarousel = memo(() => {
               height={frameSize.height}
               zoomOut={zoomOut}
               scrollIn={scrollIn}
-              x={x}
             />
           ))}
         </Row>
@@ -202,7 +183,6 @@ const OrbitAppCard = memo(
     disableInteraction,
     zoomOut,
     scrollIn,
-    x,
     ...cardProps
   }: OrbitAppCardProps) => {
     const definition = useAppDefinition(identifier)!
@@ -226,6 +206,7 @@ const OrbitAppCard = memo(
     // wrapping with view lets the scale transform not affect the scroll, for some reason this was happening
     // i thought scale transform doesnt affect layout?
     const mouseDown = useRef(0)
+    const tm = useRef<any>(0)
     return (
       <Geometry>
         {(geometry, ref) => (
@@ -241,20 +222,28 @@ const OrbitAppCard = memo(
               animate
               rotateY={geometry
                 .scrollIntersection()
-                .transform([-1, 1], [-40, 30])
+                .transform([-1, 1], [-20, 10])
                 .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? 0 : prev))
                 .spring({ stiffness: 250, damping: 50 })}
-              opacity={
-                geometry.scrollIntersection().transform([-1, 1], [3, 0])
-                // .transform(x => log(x, index))
-              }
+              opacity={geometry.scrollIntersection().transform([-1, 1], [3, 0])}
               scale={geometry
                 .useTransform(zoomOut, zoom =>
                   zoom === 1 ? (index === appsCarouselStore.focusedIndex ? 1 : 0.5) : 0.6,
                 )
                 .spring({ damping: 50, stiffness: 500 })}
               zIndex={geometry.scrollIntersection().transform(x => (x > 0 ? 1 - x : x))}
-              x={x}
+              x={geometry
+                .useTransform(zoomOut, x => (x === 1 ? '0%' : '20%'))
+                .spring({ damping: 50, stiffness: 250 })}
+              {...index === 0 && {
+                onUpdate: () => {
+                  clearTimeout(tm.current)
+                  appsCarouselStore.isAnimating = true
+                  tm.current = setTimeout(() => {
+                    appsCarouselStore.isAnimating = false
+                  }, 30)
+                },
+              }}
               transformOrigin="center center"
               position="relative"
               onMouseDown={() => {

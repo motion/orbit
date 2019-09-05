@@ -74,7 +74,7 @@ class OrbitAppsCarouselStore {
   hidden = false
   zoomIntoNextApp = false
   nextFocusedIndex = -1
-  isAnimating = true
+  isAnimating = false
   focusedIndex = 0
   rowNode: HTMLElement | null = null
   rowRef = createRef<HTMLElement>()

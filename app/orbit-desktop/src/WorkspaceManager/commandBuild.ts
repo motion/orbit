@@ -101,6 +101,13 @@ export async function bundleApp(options: CommandBuildOptions): Promise<StatusRep
   }
   const appInfo = appInfoRes.value
 
+  if (!appInfo) {
+    return {
+      type: 'error',
+      message: `No appInfo generated?`,
+    }
+  }
+
   let webConf: webpack.Configuration | null = null
   let nodeConf: webpack.Configuration | null = null
 

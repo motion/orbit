@@ -31,7 +31,7 @@ export async function commandGenTypes(
     return {
       type: 'success',
       message: 'No API found',
-    } as const
+    }
   }
 
   const program = ts.createProgram([apiEntry], compilerOptions)
@@ -47,7 +47,7 @@ export async function commandGenTypes(
     return {
       type: 'success',
       message: 'gen-types no default export symbol found, not exporting node api types.',
-    } as const
+    }
   }
 
   const defaultExportType = checker.getTypeOfSymbolAtLocation(
@@ -105,7 +105,7 @@ export async function commandGenTypes(
     return {
       type: 'success',
       message: `Written to ${props.out}`,
-    } as const
+    }
   }
 
   console.log(`Found API types:

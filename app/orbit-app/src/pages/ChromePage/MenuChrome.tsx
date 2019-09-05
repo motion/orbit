@@ -4,8 +4,6 @@ import * as React from 'react'
 import { MENU_WIDTH } from '../../constants'
 import { useMenuStore } from './MenuStore'
 
-// import { animated, interpolate, useSpring } from 'react-spring'
-
 const springyConfig = {
   mass: 0.8,
   tension: 280,

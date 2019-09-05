@@ -223,8 +223,6 @@ const OrbitAppCard = memo(
 
     const cardBoxShadow = [15, 30, 120, [0, 0, 0, theme.background.isDark() ? 0.5 : 0.25]]
 
-    console.log('render app card')
-
     // wrapping with view lets the scale transform not affect the scroll, for some reason this was happening
     // i thought scale transform doesnt affect layout?
     const mouseDown = useRef(0)

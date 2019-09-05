@@ -272,7 +272,7 @@ export const OrbitSearchResults = memo(() => {
                       iconSize: 42,
                       activeStyle: false,
                       titleProps: {
-                        size: 1.1,
+                        size: 1.2,
                       },
                     }),
                     [],

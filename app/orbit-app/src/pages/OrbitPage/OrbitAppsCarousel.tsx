@@ -240,9 +240,9 @@ const OrbitAppCard = memo(
                       return '0%'
                     }
                     if (index > focused) {
-                      return '30%'
+                      return '50%'
                     }
-                    return '-30%'
+                    return '-50%'
                   }
                   return '20%'
                 })

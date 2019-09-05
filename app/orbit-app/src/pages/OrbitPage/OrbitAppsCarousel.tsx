@@ -223,15 +223,7 @@ const OrbitAppCard = memo(
 
     const cardBoxShadow = [15, 30, 120, [0, 0, 0, theme.background.isDark() ? 0.5 : 0.25]]
 
-    const scale = useSpring(
-      useTransform(zoomOut, zoom => {
-        if (zoom === 1) {
-          return index === appsCarouselStore.focusedIndex ? 1 : 0.5
-        }
-        return 0.6
-      }),
-      { damping: 50, stiffness: 500 },
-    )
+    console.log('render app card')
 
     // wrapping with view lets the scale transform not affect the scroll, for some reason this was happening
     // i thought scale transform doesnt affect layout?
@@ -258,7 +250,12 @@ const OrbitAppCard = memo(
                 .scrollIntersection()
                 .transform([-1, 1], [3, 0])
                 .transform(x => log(x, index))}
-              scale={scale}
+              scale={geometry
+                .useTransform(zoomOut, zoom =>
+                  zoom === 1 ? (index === appsCarouselStore.focusedIndex ? 1 : 0.5) : 0.6,
+                )
+                .spring({ damping: 50, stiffness: 500 })}
+              zIndex={geometry.scrollIntersection().transform(x => (x > 0 ? 1 - x : x))}
               x={x}
               transformOrigin="center center"
               position="relative"

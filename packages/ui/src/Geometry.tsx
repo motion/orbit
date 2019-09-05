@@ -1,8 +1,8 @@
 import { decorate, useForceUpdate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { SpringProps } from 'popmotion'
-import React from 'react'
 import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
+import React from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
 import { useNodeSize } from './hooks/useNodeSize'
@@ -99,6 +99,17 @@ class GeometryStore {
     fn(store)
     this.stores = [...this.stores, store]
     return store
+  }
+
+  /**
+   * Use an existing MotionValue and transform it
+   */
+  useTransform<T>(value: MotionValue<T>, transform?: (val: T) => T) {
+    return this.setupStore(store => {
+      store.animationHooks.addHook(() => {
+        return useTransform(value, transform)
+      })
+    })
   }
 
   /**

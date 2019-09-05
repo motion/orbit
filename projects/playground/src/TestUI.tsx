@@ -72,15 +72,15 @@ export function TestUIMotion() {
     rowRef.current.style.scrollSnapType = 'x mandatory'
   }, [])
 
+  const pctSquish = 0.4
+
   React.useEffect(() => {
     spring.onChange(val => {
       if (state.current.controlled) {
-        rowRef.current.scrollLeft = val * window.innerWidth
+        rowRef.current.scrollLeft = val * (1 - pctSquish) * window.innerWidth
       }
     })
   }, [])
-
-  const pctSquish = 0.4
 
   return (
     <Col>
@@ -146,23 +146,15 @@ export function TestUIMotion() {
                   height="92vh"
                   background="red"
                   boxShadow="0 0 10px rgba(0,0,0,0.5)"
-                  // style={{
-                  //   zIndex: geometry
-                  //     .scrollIntersection()
-                  //     .transform(x => {
-                  //       // console.log('x2', x)
-                  //       return x - index + 1
-                  //     })
-                  //     // .transform([0, 1], [0, 1])
-                  //     .getValue(),
-                  // }}
+                  style={{
+                    zIndex: geometry
+                      .scrollIntersection()
+                      .transform(x => (x > 0 ? 1 - x : x))
+                      .getValue(),
+                  }}
                   rotateY={geometry
                     .scrollIntersection()
                     .transform([-1, 1], [-20, 20])
-                    .transform(x => {
-                      console.log('x', x)
-                      return x
-                    })
                     .spring({ stiffness: 300, damping: 50 })}
                   transformOrigin="center center"
                   animate={{

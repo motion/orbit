@@ -148,12 +148,10 @@ class GeometryStore {
           state.current.width = 1 / (total - 1)
         }
         // this should make it go to 0 once node is centered
-        let pipe = useTransform(scrollProgress, x => {
+        return useTransform(scrollProgress, x => {
           const intersection = (x - state.current.offset) / state.current.width
-          // console.log('intersection', intersection, x, state.current)
           return intersection
         })
-        return pipe //useTransform(pipe, [0, 1], [-1, 1])
       })
     })
   }
@@ -169,7 +167,6 @@ export function Geometry(props: {
   geometry.onRender()
 
   useOnMount(() => {
-    geometry.clear()
     geometry.onUpdated(update)
   })
 
@@ -177,8 +174,6 @@ export function Geometry(props: {
     geometry.clear()
     update()
   })
-
-  const children = props.children(geometry, nodeRef)
 
   return (
     <>
@@ -189,7 +184,7 @@ export function Geometry(props: {
           onHooksComplete={values => geometry.setValues(index, values)}
         />
       ))}
-      {children}
+      {props.children(geometry, nodeRef)}
     </>
   )
 }

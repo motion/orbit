@@ -1,16 +1,13 @@
-import { createUsableStore, getAppDefinition } from '@o/kit'
-import { Button, Card, FullScreen, useNodeSize, useTheme } from '@o/ui'
+import { getAppDefinition } from '@o/kit'
+import { Card, FullScreen, useNodeSize, useTheme } from '@o/ui'
 import { useAnimation } from 'framer-motion'
 import React, { memo, useEffect, useLayoutEffect, useRef } from 'react'
 
 import { useOm } from '../../om/om'
-import { AppsDrawerStore } from './AppsDrawerStore'
+import { appsDrawerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
 
 export const yOffset = 15
-
-export const appsDrawerStore = createUsableStore(AppsDrawerStore)
-window['appsDrawerStore'] = appsDrawerStore
 
 const variants = {
   open: {
@@ -65,7 +62,6 @@ export const OrbitAppsDrawer = memo(() => {
         position="relative"
         overflow="hidden"
       >
-        <DrawerCloseButton />
         {apps.map(app => {
           const shouldShow = app.id === appsDrawer.activeDrawerId
           return (
@@ -99,22 +95,5 @@ export const OrbitAppsDrawer = memo(() => {
         })}
       </Card>
     </FullScreen>
-  )
-})
-
-const DrawerCloseButton = memo(() => {
-  return null
-  return (
-    <Button
-      zIndex={1000}
-      position="absolute"
-      onClick={appsDrawerStore.closeDrawer}
-      top={5}
-      right={5}
-      size="sm"
-      alt="flat"
-      circular
-      icon="cross"
-    />
   )
 })

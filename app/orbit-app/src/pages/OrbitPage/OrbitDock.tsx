@@ -6,9 +6,8 @@ import { partition } from 'lodash'
 import React, { memo, useContext, useMemo, useRef } from 'react'
 
 import { useOm } from '../../om/om'
-import { paneManagerStore } from '../../om/stores'
+import { appsDrawerStore, paneManagerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
-import { appsDrawerStore } from './OrbitAppsDrawer'
 
 type DockOpenState = 'open' | 'closed' | 'pinned'
 

@@ -4,8 +4,8 @@ import React, { memo, useMemo } from 'react'
 
 import { useStores } from '../hooks/useStores'
 import { useOm } from '../om/om'
+import { appsDrawerStore } from '../om/stores'
 import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarouselStore'
-import { appsDrawerStore } from '../pages/OrbitPage/OrbitAppsDrawer'
 import { orbitDockStore } from '../pages/OrbitPage/OrbitDock'
 
 // TODO these would be easier to search if they all prefixed with something
@@ -84,7 +84,7 @@ export default memo(function MainShortcutHandler(props: {
         }
         // close app drawer if open
         if (appsDrawerStore.isOpen) {
-          appsDrawerStore.closeDrawer()
+          actions.router.closeDrawer()
           return
         }
         if (App.appRole === 'main') {

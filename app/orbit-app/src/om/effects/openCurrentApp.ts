@@ -3,8 +3,7 @@ import { TearAppCommand } from '@o/models'
 import { Electron } from '@o/stores'
 
 import { appsCarouselStore } from '../../pages/OrbitPage/OrbitAppsCarouselStore'
-import { appsDrawerStore } from '../../pages/OrbitPage/OrbitAppsDrawer'
-import { paneManagerStore } from '../stores'
+import { appsDrawerStore, paneManagerStore } from '../stores'
 
 export async function openCurrentApp() {
   if (appsDrawerStore.isOpen) {

@@ -151,6 +151,7 @@ export function TestUIMotion() {
                     .scrollIntersection()
                     .transform([-1, 1], [-50, 50])
                     .spring({ stiffness: 500, damping: 10 })}
+                  opacity={geometry.scrollIntersection().transform([-1, 1], [2, 0])}
                   transformOrigin="center center"
                   animate={{
                     scale: 0.7,

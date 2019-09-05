@@ -1,8 +1,8 @@
 import { decorate, useForceUpdate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { SpringProps } from 'popmotion'
-import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
 import React from 'react'
+import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
 import { useNodeSize } from './hooks/useNodeSize'
@@ -118,23 +118,29 @@ class GeometryStore {
     })
   }
 
+  sharedScrollProgress = null
+
   /**
    * Returns -1 to 1 value of the current nodes intersection within the parent scrollable
    * (where -1 is off on the left/top, and 1 is off on the right/bottom, 0 is centered)
    */
   scrollIntersection() {
     return this.setupStore(store => {
+      const { sharedScrollProgress } = this
       store.animationHooks.addHook(() => {
         const ref = useContext(ScrollableRefContext)
+        const scrollProgress = (() => {
+          if (sharedScrollProgress) return sharedScrollProgress
+          return useScrollProgress({
+            ref,
+          })
+        })()
+
         // needs to be mounted to be effective
         const state = useRef({
           offset: 0,
           width: 0.1,
         })
-        const scrollProgress = useScrollProgress({
-          ref,
-        })
-
         // doing this onMount failed with ref.current.scrollWidth being empty if suspense threw
         useNodeSize({
           throttle: 100,

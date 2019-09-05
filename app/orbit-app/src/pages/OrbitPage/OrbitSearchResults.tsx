@@ -6,8 +6,8 @@ import React, { memo, Suspense, useCallback, useMemo, useRef } from 'react'
 import { SearchResultsApp } from '../../apps/SearchResultsApp'
 import { om } from '../../om/om'
 import { SearchStore } from '../../om/SearchStore'
+import { appsDrawerStore } from '../../om/stores'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarouselStore'
-import { appsDrawerStore } from './OrbitAppsDrawer'
 
 class OrbitSearchResultsStore {
   searchState: SearchState | null = null

@@ -4,16 +4,15 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react, useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 import { createRef, useRef } from 'react'
+import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 
 import { sleep } from '../../helpers'
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
-import { queryStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
+import { appsDrawerStore, queryStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
 import { whenIdle } from './OrbitApp'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarouselStore'
-import { appsDrawerStore } from './OrbitAppsDrawer'
 import { orbitDockStore } from './OrbitDock'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitHeaderOpenAppMenu } from './OrbitHeaderOpenAppMenu'
@@ -335,7 +334,7 @@ const HomeButton = memo(
           onMouseUp={e => {
             e.stopPropagation()
             if (appsDrawerStore.isOpen) {
-              appsDrawerStore.closeDrawer()
+              actions.router.closeDrawer()
               return
             }
             if (appsCarouselStore.zoomedIn) {
@@ -421,7 +420,7 @@ const BackButton = memo(({ isTorn }: { isTorn: boolean }) => {
       iconSize={18}
       onClick={() => {
         if (appsDrawerStore.isOpen) {
-          appsDrawerStore.closeDrawer()
+          actions.router.closeDrawer()
           return
         }
         if (appsCarousel.zoomedIn) {

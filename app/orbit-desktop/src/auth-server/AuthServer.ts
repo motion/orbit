@@ -159,7 +159,9 @@ export class AuthServer {
         Passport.authenticate(name, options, null),
         (req, res) => {
           const values: OauthValues = req['user'] || req['currentUser']
-          finishAuth(name, values)
+          finishAuth(name, values).then(response => {
+            log.info('auth response', response)
+          })
           res.send(`
 <html>
   <head>

@@ -34,7 +34,7 @@ export default function CosalSaliency(props: Props) {
   return (
     <div style={{ padding: 10 }}>
       {typeof props.query === 'undefined' && (
-        <div style={{ flexFlow: 'row' }}>
+        <div style={{ flexDirection: 'row' }}>
           {Object.keys(store.texts).map(name => (
             <div
               key={name}
@@ -48,7 +48,7 @@ export default function CosalSaliency(props: Props) {
       )}
       <div
         style={{
-          flexFlow: 'row',
+          flexDirection: 'row',
           padding: 10,
           flexWrap: 'wrap',
           lineHeight: '3rem',
@@ -69,7 +69,7 @@ export default function CosalSaliency(props: Props) {
 }
 
 const Word = gloss({
-  flexFlow: 'row',
+  flexDirection: 'row',
   alignItems: 'center',
   marginRight: 14,
 })

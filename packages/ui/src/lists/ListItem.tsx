@@ -140,7 +140,7 @@ export const ListItem = (props: ListItemProps) => {
 }
 
 const Bottom = gloss(Box, {
-  flexFlow: 'row',
+  flexDirection: 'row',
   alignItems: 'center',
 })
 

@@ -171,7 +171,7 @@ const backgroundColor = (props, theme) => {
 const TreeItemsRowContainer = gloss<
   BoxProps & { selected?: boolean; level?: number; even?: boolean }
 >(Box, {
-  flexFlow: 'row',
+  flexDirection: 'row',
   alignItems: 'center',
   flexShrink: 0,
   flexWrap: 'nowrap',
@@ -250,7 +250,7 @@ class TreeItemsRowAttribute extends React.PureComponent<{
 }
 
 const TreeItemsRowDecoration = gloss(Box, {
-  flexFlow: 'row',
+  flexDirection: 'row',
   flexShrink: 0,
   justifyContent: 'flex-end',
   alignItems: 'center',

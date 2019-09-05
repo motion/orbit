@@ -249,7 +249,7 @@ const IdleLoad = (props: { children: () => React.ReactElement }) => {
 // }
 
 const OrbitContentArea = gloss(Box, {
-  flexFlow: 'row',
+  flexDirection: 'row',
   flex: 1,
   transform: {
     z: 0,

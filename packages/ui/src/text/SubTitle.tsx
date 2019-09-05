@@ -12,7 +12,7 @@ export function SubTitle(props: SubTitleProps) {
       fontWeight={300}
       size={1.1}
       alignItems="center"
-      flexFlow="row"
+      flexDirection="row"
       {...Config.defaultProps.title}
       {...props}
     />

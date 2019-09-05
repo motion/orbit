@@ -60,7 +60,7 @@ Paragraph.defaultProps = {
 }
 
 const MessageHeader = gloss({
-  flexFlow: 'row',
+  flexDirection: 'row',
 })
 
 const Block = gloss({

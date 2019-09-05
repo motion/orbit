@@ -93,7 +93,7 @@ const ChatMessageFrame = gloss(View, {
   overflow: 'hidden',
   alignItems: 'flex-start',
   oneLine: {
-    flexFlow: 'row',
+    flexDirection: 'row',
     alignItems: 'center',
   },
 })

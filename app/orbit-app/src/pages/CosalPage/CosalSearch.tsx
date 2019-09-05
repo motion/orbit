@@ -41,7 +41,7 @@ export default function CosalSearch() {
   const store = useStore(SearchStore)
   return (
     <div style={{ padding: 50 }}>
-      <div style={{ flexFlow: 'row', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
         <input
           style={{ width: 500, fontSize: 20 }}
           onChange={e => (store.query = e.target.value)}
@@ -50,7 +50,7 @@ export default function CosalSearch() {
         <CosalSaliency query={store.query} />
       </div>
 
-      <div style={{ flexFlow: 'row', flex: 1 }}>
+      <div style={{ flexDirection: 'row', flex: 1 }}>
         <div style={{ flex: 2 }}>
           <div
             style={{

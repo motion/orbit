@@ -5,5 +5,5 @@ export type RowProps = BaseProps
 
 export const Row = gloss(Base, {
   display: 'flex',
-  flexFlow: 'row',
+  flexDirection: 'row',
 })

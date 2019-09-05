@@ -4,7 +4,7 @@ import { Col, gloss } from 'gloss'
 export const HorizontalScroll = gloss(Row, {
   overflowX: 'scroll',
   flex: 1,
-  flexFlow: 'row',
+  flexDirection: 'row',
   alignItems: 'center',
   '&::-webkit-scrollbar': {
     display: 'none',

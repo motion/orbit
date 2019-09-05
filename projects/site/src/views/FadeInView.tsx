@@ -135,7 +135,7 @@ export const FadeChild = memo(
 
     style = {
       display: 'flex',
-      flexFlow: 'column',
+      flexDirection: 'column',
       ...style,
       ...(fullscreen && fullscreenStyle),
     }
@@ -149,7 +149,7 @@ export const FadeChild = memo(
         <div
           style={{
             display: 'flex',
-            flexFlow: 'column',
+            flexDirection: 'column',
             justifyContent: 'inherit',
             alignItems: 'inherit',
             ...style,

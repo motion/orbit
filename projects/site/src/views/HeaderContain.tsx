@@ -8,7 +8,7 @@ export function HeaderContain(props) {
   return (
     <SectionContent
       padding={[0, useScreenVal('0%', '1%', '10%')]}
-      flexFlow="row"
+      flexDirection="row"
       alignItems="center"
       justifyContent="space-around"
       {...props}
@@ -17,7 +17,7 @@ export function HeaderContain(props) {
 }
 export const LinkSection = gloss<BoxProps & { alignRight?: boolean }>(Box, {
   flex: 4,
-  flexFlow: 'row',
+  flexDirection: 'row',
   justifyContent: 'space-between',
   maxWidth: 380,
   alignItems: 'center',

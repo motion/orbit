@@ -46,7 +46,7 @@ export type BoxProps = GlossProps<CommonHTMLProps & CSSPropertySetStrict>
 
 export const Box = gloss<BoxProps>({
   display: 'flex',
-  flexFlow: 'column',
+  flexDirection: 'column',
   boxSizing: 'border-box',
   flexShrink: 0,
   minWidth: 0,

@@ -143,7 +143,7 @@ const NavButtonChromeInner = gloss<any>(Row, {
 
 const NavButtonChrome = gloss<TabProps>(View, {
   position: 'relative',
-  flexFlow: 'row',
+  flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
   borderRadius: borderSize,

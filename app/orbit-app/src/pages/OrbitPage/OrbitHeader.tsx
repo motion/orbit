@@ -369,7 +369,7 @@ const OrbitHeaderContainer = gloss<any>(View, {
 }))
 
 const HeaderSide = gloss<RowProps & { slim?: boolean }>(Row, {
-  flexFlow: 'row',
+  flexDirection: 'row',
   flex: 1,
   width: '10%',
   minWidth: 110,
@@ -402,7 +402,7 @@ const HeaderContain = gloss<RowProps & { isActive?: boolean; isDeveloping: boole
 }))
 
 const HeaderTop = gloss(View, {
-  flexFlow: 'row',
+  flexDirection: 'row',
   position: 'relative',
 })
 

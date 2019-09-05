@@ -162,7 +162,7 @@ export const OrbitNav = memo(
 const OrbitNavChrome = gloss(Box, {
   maxWidth: '100%',
   pointerEvents: 'inherit',
-  flexFlow: 'row',
+  flexDirection: 'row',
   position: 'relative',
   alignItems: 'flex-end',
   justifyContent: 'space-between',

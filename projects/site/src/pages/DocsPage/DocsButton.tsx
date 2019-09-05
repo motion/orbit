@@ -1,15 +1,35 @@
 import { Button, Col, MenuButton, RoundButton, Row, SubSection, SurfacePassProps } from '@o/ui'
-import React from 'react'
+import React, { useState } from 'react'
 
-export let Basic = (
-  <Row space flexWrap="wrap">
-    <Button>Hello World</Button>
-    <Button icon="cog">Hello World</Button>
-    <Button icon="cog" iconAfter>
-      Hello World
-    </Button>
-  </Row>
-)
+export let Basic = () => {
+  const [full, setFull] = useState(false)
+  return (
+    <Col space>
+      <Row space flexWrap="wrap">
+        <Button>Hello World</Button>
+        <Button icon="cog">Hello World</Button>
+        <Button icon="cog" iconAfter>
+          Hello World
+        </Button>
+      </Row>
+
+      <Row>
+        <Button
+          debug
+          layoutTransition={{
+            type: 'spring',
+            damping: 10,
+            stiffness: 100,
+          }}
+          icon="ok"
+          onClick={() => setFull(!full)}
+        >
+          {full ? 'Hello' : 'No way'}
+        </Button>
+      </Row>
+    </Col>
+  )
+}
 
 export let Alternates = (
   <Col space>

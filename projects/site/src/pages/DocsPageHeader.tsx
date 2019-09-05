@@ -87,7 +87,7 @@ export const DocsPageHeader = memo(
                 bottom={0}
                 alignItems="center"
                 justifyContent="flex-start"
-                flexFlow="row"
+                flexDirection="row"
               >
                 <SurfacePassProps size={1} iconSize={12}>
                   <Row group>

@@ -53,7 +53,7 @@ const OrbitToolbarChrome = gloss<RowProps & { transparent?: boolean }>(Row, {
 
 const ToolbarInner = gloss<{ isActive: boolean } & ViewProps>(View, {
   flex: 2,
-  flexFlow: 'row',
+  flexDirection: 'row',
   opacity: 0,
   height: 0,
   pointerEvents: 'none',

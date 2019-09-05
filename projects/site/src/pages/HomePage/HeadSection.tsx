@@ -163,7 +163,7 @@ const HeadJoin = memo(() => {
                 }}
                 borderRadius={1000}
                 boxShadow={[[0, 5, 40, [0, 0, 0, 0.15]]]}
-                flexFlow="row"
+                flexDirection="row"
                 group
                 space={false}
                 margin={[0, '-2%']}
@@ -293,7 +293,7 @@ export function HeadSection() {
 // const RoundButton = ({ primary = colors.red, ...props }: ViewProps & { primary?: any }) => (
 //   <View
 //     tagName="a"
-//     flexFlow="row"
+//     flexDirection="row"
 //     position="relative"
 //     alignItems="center"
 //     justifyContent="center"

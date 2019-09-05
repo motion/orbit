@@ -16,11 +16,9 @@ export let Basic = () => {
       <Row>
         <Button
           layoutTransition={{
-            type: 'spring',
-            stiffness: 100,
-            damping: 40,
+            duration: 0.5,
           }}
-          icon="ok"
+          icon={full ? 'chevron-left' : 'chevron-right'}
           onClick={() => setFull(!full)}
         >
           {full ? 'Long title' : ''}

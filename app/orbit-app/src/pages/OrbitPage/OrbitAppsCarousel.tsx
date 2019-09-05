@@ -244,10 +244,10 @@ const OrbitAppCard = memo(
                 .transform([-1, 1], [-40, 30])
                 .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? 0 : prev))
                 .spring({ stiffness: 250, damping: 50 })}
-              opacity={geometry
-                .scrollIntersection()
-                .transform([-1, 1], [3, 0])
-                .transform(x => log(x, index))}
+              opacity={
+                geometry.scrollIntersection().transform([-1, 1], [3, 0])
+                // .transform(x => log(x, index))
+              }
               scale={geometry
                 .useTransform(zoomOut, zoom =>
                   zoom === 1 ? (index === appsCarouselStore.focusedIndex ? 1 : 0.5) : 0.6,

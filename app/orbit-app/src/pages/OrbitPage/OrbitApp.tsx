@@ -47,6 +47,9 @@ class OrbitAppStore {
       }
       return should
     },
+    {
+      log: false,
+    },
   )
 
   isActive = react(() => {

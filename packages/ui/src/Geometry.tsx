@@ -1,8 +1,8 @@
 import { decorate, useForceUpdate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { SpringProps } from 'popmotion'
-import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
 import React from 'react'
+import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
 import { useNodeSize } from './hooks/useNodeSize'
@@ -149,28 +149,38 @@ class GeometryStore {
           offset: 0,
           width: 0.1,
         })
+
+        const measure = () => {
+          if (!this.nodeRef.current || !ref.current) {
+            throw new Error(`No node or parent node (did you give a parent scrollable=""?)`)
+          }
+          if (!ref.current.scrollWidth) {
+            return
+          }
+          const total = ref.current.childElementCount
+          const nodeWidth = this.nodeRef.current.clientWidth
+          const nodeLeft = this.nodeRef.current.offsetLeft
+          const parentWidth = ref.current.scrollWidth
+          const offset = nodeLeft / (parentWidth - nodeWidth)
+          state.current.offset = offset
+          // assume all have same widths for now
+          state.current.width = 1 / (total - 1)
+          // trigger update
+          scrollProgress.set(scrollProgress.get())
+        }
+
+        useNodeSize({
+          throttle: 100,
+          ref: this.nodeRef,
+          onChange: measure,
+        })
+
         // doing this onMount failed with ref.current.scrollWidth being empty if suspense threw
+        // TODO we could share this parent size watcher like we do scrollPosition
         useNodeSize({
           throttle: 100,
           ref,
-          onChange: () => {
-            if (!this.nodeRef.current || !ref.current) {
-              throw new Error(`No node or parent node (did you give a parent scrollable=""?)`)
-            }
-            if (!ref.current.scrollWidth) {
-              return
-            }
-            const total = ref.current.childElementCount
-            const nodeWidth = this.nodeRef.current.clientWidth
-            const nodeLeft = this.nodeRef.current.offsetLeft
-            const parentWidth = ref.current.scrollWidth
-            const offset = nodeLeft / (parentWidth - nodeWidth)
-            state.current.offset = offset
-            // assume all have same widths for now
-            state.current.width = 1 / (total - 1)
-            // trigger update
-            scrollProgress.set(scrollProgress.get())
-          },
+          onChange: measure,
         })
 
         // this should make it go to 0 once node is centered

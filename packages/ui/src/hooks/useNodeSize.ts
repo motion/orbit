@@ -57,19 +57,34 @@ export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = [])
     [mountArgs],
   )
 
-  useEffect(() => {
+  const updateSize = () => {
     if (disable) return
     if (ref.current) {
       const next = {
         width: ref.current.clientWidth,
         height: ref.current.clientHeight,
       }
-      if (props['debug']) console.log(next)
       if (!isEqual(next, state)) {
         setState(next)
       }
     }
-  }, [disable, ref, ...mountArgs])
+  }
+
+  // useMutationObserve(
+  //   {
+  //     ref,
+  //     disable,
+  //     options: {
+  //       attributes: true,
+  //       childList: true,
+  //       subtree: true,
+  //     },
+  //     onChange: updateSize,
+  //   },
+  //   [mountArgs],
+  // )
+
+  useEffect(updateSize, [disable, ref, ...mountArgs])
 
   return useMemo(
     () => ({

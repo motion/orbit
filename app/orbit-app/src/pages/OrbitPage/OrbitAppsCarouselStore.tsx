@@ -171,12 +171,6 @@ class OrbitAppsCarouselStore {
     return null
   }
 
-  updateScrollPositionToIndex = (index: number = this.state.index) => {
-    if (this.rowNode) {
-      this.rowNode.scrollLeft === index * this.props.rowWidth
-    }
-  }
-
   onResize = () => {
     if (this.currentNode && this.rowNode) {
       // dont animate
@@ -262,16 +256,6 @@ class OrbitAppsCarouselStore {
     }
   }
 
-  animateCardsTo = (index: number) => {
-    if (this.state.index !== index) {
-      const paneIndex = Math.round(index)
-      if (paneIndex !== this.focusedIndex) {
-        this.setFocused(paneIndex)
-      }
-      this.state.index = index
-    }
-  }
-
   animateAndScrollTo = async (index: number) => {
     if (!this.rowNode) return
     if (this.state.index === index) return
@@ -284,7 +268,13 @@ class OrbitAppsCarouselStore {
   isControlled = false
   animateTo = (index: number) => {
     this.isControlled = true
-    this.animateCardsTo(index)
+    if (this.state.index !== index) {
+      const paneIndex = Math.round(index)
+      if (paneIndex !== this.focusedIndex) {
+        this.setFocused(paneIndex)
+      }
+      this.state.index = index
+    }
   }
 
   lastDragAt = Date.now()

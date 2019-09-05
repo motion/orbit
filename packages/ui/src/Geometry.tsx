@@ -1,10 +1,11 @@
 import { decorate, useForceUpdate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { SpringProps } from 'popmotion'
-import React from 'react'
 import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
+import React from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
+import { useNodeSize } from './hooks/useNodeSize'
 import { useOnHotReload } from './hooks/useOnHotReload'
 import { useRelative } from './hooks/useRelative'
 import { useScrollProgress } from './hooks/useScrollProgress'
@@ -70,6 +71,7 @@ export class AnimationStore {
 class GeometryStore {
   stores: AnimationStore[] = []
   curCall = 0
+  frozen = false
 
   constructor(private nodeRef: RefObject<HTMLElement>) {}
 
@@ -80,24 +82,25 @@ class GeometryStore {
   clear() {
     this.stores = []
     this.curCall = 0
+    this.frozen = false
   }
 
-  // hooks-like
-  addStore(store: AnimationStore) {
-    this.curCall++
-    this.stores = [...this.stores, store]
+  freeze() {
+    this.frozen = true
   }
 
   setupStore(fn: (store: AnimationStore) => void) {
     const curStore = this.stores[this.curCall]
+    this.curCall++
     if (curStore) {
-      this.curCall++
-      curStore.freeze()
       return curStore
+    }
+    if (this.frozen) {
+      throw new Error(`Error, using Geometry strangely`)
     }
     const store = new AnimationStore()
     fn(store)
-    this.addStore(store)
+    this.stores = [...this.stores, store]
     return store
   }
 
@@ -123,27 +126,42 @@ class GeometryStore {
     return this.setupStore(store => {
       store.animationHooks.addHook(() => {
         const ref = useContext(ScrollableRefContext)
-        const scrollProgress = useScrollProgress({
-          ref,
-        })
+        // needs to be mounted to be effective
         const state = useRef({
           offset: 0,
           width: 0.1,
         })
-        if (this.nodeRef.current) {
-          const total = ref.current.childElementCount
-          const nodeWidth = this.nodeRef.current.clientWidth
-          const nodeLeft = this.nodeRef.current.offsetLeft
-          const parentWidth = ref.current.scrollWidth
-          const offset = nodeLeft / (parentWidth - nodeWidth)
-          state.current.offset = offset
-          // assume all have same widths for now
-          state.current.width = 1 / (total - 1)
-        }
+        const scrollProgress = useScrollProgress({
+          ref,
+        })
+
+        // doing this onMount failed with ref.current.scrollWidth being empty if suspense threw
+        useNodeSize({
+          throttle: 100,
+          ref,
+          onChange: () => {
+            if (!this.nodeRef.current || !ref.current) {
+              throw new Error(`No node or parent node (did you give a parent scrollable=""?)`)
+            }
+            if (!ref.current.scrollWidth) {
+              return
+            }
+            const total = ref.current.childElementCount
+            const nodeWidth = this.nodeRef.current.clientWidth
+            const nodeLeft = this.nodeRef.current.offsetLeft
+            const parentWidth = ref.current.scrollWidth
+            const offset = nodeLeft / (parentWidth - nodeWidth)
+            state.current.offset = offset
+            // assume all have same widths for now
+            state.current.width = 1 / (total - 1)
+            // trigger update
+            scrollProgress.set(scrollProgress.get())
+          },
+        })
+
         // this should make it go to 0 once node is centered
         return useTransform(scrollProgress, x => {
-          const intersection = (x - state.current.offset) / state.current.width
-          return intersection
+          return (x - state.current.offset) / state.current.width
         })
       })
     })
@@ -165,14 +183,15 @@ export function Geometry(props: {
   geometry.onRender()
   const childrenElements = props.children(geometry, nodeRef)
 
-  // now run hooks
   for (const store of geometry.stores) {
     const hooks = []
     for (const hook of store.animationHooks.hooks) {
       hooks.push(hook(hooks))
     }
     store.values = hooks
+    store.freeze()
   }
+  geometry.freeze()
 
   return <>{childrenElements}</>
 }

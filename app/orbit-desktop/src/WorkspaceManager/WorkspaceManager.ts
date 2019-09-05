@@ -73,13 +73,13 @@ export class WorkspaceManager {
     log.info(`updateWorkspace ${JSON.stringify(opts)}`)
     // ensure Space model inserted and up to date
     await ensureWorkspaceModel(opts.workspaceRoot)
-    // ensure app info built out once
-    await buildWorkspaceAppsInfo(opts.workspaceRoot, { watch: false })
-    // start watching apps for updates on their AppMeta
-    await this.appsManager.start({
-      singleUseMode: this.startOpts.singleUseMode,
-    })
     if (!this.startOpts.singleUseMode) {
+      // ensure app info built out once
+      await buildWorkspaceAppsInfo(opts.workspaceRoot, { watch: false })
+      // start watching apps for updates on their AppMeta
+      await this.appsManager.start({
+        singleUseMode: this.startOpts.singleUseMode,
+      })
       await this.graphServer.start()
     }
     this.options = opts
@@ -314,7 +314,9 @@ export class WorkspaceManager {
           }
         }
         await this.updateWorkspace(options)
-        await this.updateAppsBuilder()
+        if (!this.startOpts.singleUseMode) {
+          await this.updateAppsBuilder()
+        }
         return true
       }),
 

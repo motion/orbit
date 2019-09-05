@@ -1,7 +1,7 @@
 import { downloadAppDefinition, getPackageId, requireAppDefinition } from '@o/apps-manager'
 import { newEmptyAppBit } from '@o/libs'
 import { Logger } from '@o/logger'
-import { AppBit, AppEntity } from '@o/models'
+import { AppBit, AppEntity, StatusReply } from '@o/models'
 import { getRepository } from 'typeorm'
 
 import { getActiveSpace } from '../helpers/getActiveSpace'
@@ -20,9 +20,9 @@ export const FinishAuthQueue = new Map<
   }
 >()
 
-export const finishAuth = async (type: string, values: OauthValues) => {
+export const finishAuth = async (type: string, values: OauthValues): Promise<StatusReply> => {
   try {
-    log.info('createSource', values)
+    log.info(`createSource ${type}`, values)
 
     if (!FinishAuthQueue.has(type)) {
       throw new Error(`No finish callback found in queue for ${type}`)
@@ -36,7 +36,7 @@ export const finishAuth = async (type: string, values: OauthValues) => {
 
     if (!info) {
       return {
-        type: 'error' as const,
+        type: 'error',
         message: `No information found for this app, an error in Orbit occured for authKey: ${type}`,
       }
     }
@@ -46,8 +46,8 @@ export const finishAuth = async (type: string, values: OauthValues) => {
 
     if (!packageId || !directory) {
       return {
-        type: 'error' as const,
-        message: `No packageId or directory, error in Orbit: (${packageId}, ${directory})`,
+        type: 'error',
+        message: `No packageId/directory: ${info.identifier} (${packageId}, ${directory})`,
       }
     }
 
@@ -92,7 +92,7 @@ export const finishAuth = async (type: string, values: OauthValues) => {
       app = await required.value.finishAuth(app, values, OAuthStrategies[type].config)
       if (!app || typeof app !== 'object') {
         return {
-          type: 'error' as const,
+          type: 'error',
           message: `App.finishAuth does not return an AppBit`,
         }
       }
@@ -104,6 +104,11 @@ export const finishAuth = async (type: string, values: OauthValues) => {
     log.info(`Call back to command`)
     FinishAuthQueue.delete(type)
     info.finish(true)
+
+    return {
+      type: 'success',
+      message: `Added auth`,
+    }
   } catch (err) {
     log.error(`Error in finishAuth: ${err.message} ${err.stack}`)
 
@@ -113,6 +118,11 @@ export const finishAuth = async (type: string, values: OauthValues) => {
       info.finish(false)
     } else {
       log.info(`And no callback either..`)
+    }
+
+    return {
+      type: 'error',
+      message: `Error in finishAuth: ${err.message} ${err.stack}`,
     }
   }
 }

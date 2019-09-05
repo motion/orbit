@@ -24,7 +24,7 @@ export async function loadAppEntry(
       return null
     }
   } catch (err) {
-    log.error(`Error loading entry`, err.message, err.stack)
+    log.error(`Error loading entry ${entryType}`, err.message, err.stack)
     return null
   }
 }

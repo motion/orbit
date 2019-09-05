@@ -72,8 +72,11 @@ async function writeAppInfo(appRoot: string): Promise<StatusReply> {
     ExportDefaultDeclaration(path) {
       path.traverse({
         CallExpression(path) {
+          let didOnce = false // hack, prevent recursion
           path.traverse({
             ObjectExpression(path) {
+              if (didOnce) return
+              didOnce = true
               for (const prop of path.node.properties) {
                 if (isObjectProperty(prop)) {
                   const key = prop.key.name

@@ -32,7 +32,7 @@ export async function getOrbitDesktop(
   if (port) {
     reporter.info(`Found existing orbit process`)
   } else {
-    reporter.info('Starting Orbit.app')
+    reporter.info('🌒 Starting Orbit.app')
     // run desktop and try again
     orbitProcess = runOrbitDesktop(props, isInMonoRepo)
     if (orbitProcess) {

@@ -257,7 +257,7 @@ const OrbitAppCard = memo(
                 .transform([-1, 1], [-40, 30])
                 .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? 0 : prev))
                 .spring({ stiffness: 250, damping: 50 })}
-              opacity={geometry.scrollIntersection().transform([-1, 1], [2, 0])}
+              opacity={geometry.scrollIntersection().transform([-1, 1], [3, 0])}
               scale={scale}
               x={x}
               transformOrigin="center center"

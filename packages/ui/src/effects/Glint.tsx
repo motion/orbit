@@ -26,15 +26,7 @@ export const Glint = gloss<Props>(Box, {
   height: 10,
   zIndex: 10000,
 }).theme((props, theme) => {
-  const {
-    bottom,
-    borderLeftRadius,
-    borderRadius = 0,
-    borderRightRadius,
-    opacity,
-    size = 1,
-    y,
-  } = props
+  const { bottom, opacity, size = 1, y, ...radiusProps } = props
   const isTop = isUndef(bottom)
   const themeProp = isTop ? 'glintColor' : 'glintColorBottom'
   let glintColor = props.color || theme[themeProp]
@@ -45,17 +37,6 @@ export const Glint = gloss<Props>(Box, {
       glintColor = theme.backgroundStrong || theme.background.darken(0.1)
     }
   }
-  const radiusStyle = {
-    ...(borderRadius && {
-      borderRadius,
-    }),
-    ...(borderRightRadius && {
-      [isTop ? 'borderTopRightRadius' : 'borderBottomRightRadius']: borderRightRadius,
-    }),
-    ...(borderLeftRadius && {
-      [isTop ? 'borderTopLeftRadius' : 'borderBottomLeftRadius']: borderLeftRadius,
-    }),
-  }
   const autoHalf = (isTop ? -0.5 : 0.5) * size
   return {
     opacity: typeof theme.glintColor !== 'undefined' ? 1 : opacity,
@@ -64,7 +45,7 @@ export const Glint = gloss<Props>(Box, {
     transform: { y: typeof y === 'number' ? y : autoHalf },
     borderTop: isTop && [size, glintColor],
     borderBottom: !isTop && [size, glintColor],
-    ...radiusStyle,
+    ...radiusProps,
   }
 })
 

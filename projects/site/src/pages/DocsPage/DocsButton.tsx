@@ -22,9 +22,28 @@ export let Alternates = (
     </Row>
     <Row space flexWrap="wrap">
       {['error', 'warn', 'confirm'].map(alt => (
-        <RoundButton key={alt} alt={alt} icon="cog" size={2}>
+        <RoundButton key={alt} alt={alt} icon="cog" size="lg">
           Alt {alt}
         </RoundButton>
+      ))}
+    </Row>
+    <Row space flexWrap="wrap">
+      {['error', 'warn', 'confirm'].map(alt => (
+        <Button key={alt} alt={alt} icon="cog" size="lg" sizePadding={1.2} sizeRadius={1.2}>
+          Alt {alt}
+        </Button>
+      ))}
+    </Row>
+    <Row space flexWrap="wrap">
+      {['error', 'warn', 'confirm'].map(alt => (
+        <Button key={alt} alt={alt} icon="cog" size="xxxl">
+          Alt {alt}
+        </Button>
+      ))}
+    </Row>
+    <Row space flexWrap="wrap">
+      {['error', 'warn', 'confirm'].map(alt => (
+        <Button key={alt} alt={alt} icon="cog" size="xxxl" circular />
       ))}
     </Row>
   </Col>

@@ -376,9 +376,9 @@ export function Surface(direct: SurfaceProps) {
             {...borderProps}
             {...borderPosition === 'inside' &&
               borderWidth > 0 && {
-                height: roundHalf(+height - size / 2),
+                height: roundHalf(+height - size / 2) - 1,
                 transform: {
-                  y: roundHalf(size) % 1,
+                  y: roundHalf(size),
                 },
               }}
           >

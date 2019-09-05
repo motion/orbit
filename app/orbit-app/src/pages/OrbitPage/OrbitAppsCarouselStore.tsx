@@ -86,7 +86,7 @@ class OrbitAppsCarouselStore {
   start() {
     this.scrollOut.value.onChange(val => {
       if (this.controlled) {
-        this.rowRef.current!.scrollLeft = val * window.innerWidth
+        this.rowRef.current!.scrollLeft = val * this.props.rowWidth
       }
     })
   }
@@ -131,6 +131,9 @@ class OrbitAppsCarouselStore {
     }))
   }
 
+  /**
+   * ANIMATION OUTPUT, updateZoom and updateScroll triger animations ONLY:
+   */
   updateZoom = react(
     () => this.state.zoomedOut,
     async (zoomedOut, { when }) => {
@@ -143,13 +146,9 @@ class OrbitAppsCarouselStore {
       log: false,
     },
   )
-
   updateScroll = react(() => this.state.index, this.setScrollSpring)
 
   setScrollSpring(index: number) {
-    if (index === 628.8) {
-      debugger
-    }
     if (index === this.scrollOut.value.get()) return
     console.log('set scroll spring', index)
     if (this.rowRef.current) {

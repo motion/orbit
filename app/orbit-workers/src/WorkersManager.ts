@@ -43,8 +43,9 @@ export class WorkersManager {
 
       try {
         const workers = definition.workers || []
+        log.verbose(`running node`, definition)
         for (const worker of workers) {
-          log.verbose('running worker', worker)
+          log.verbose(`running worker`, worker)
           try {
             worker()
           } catch (err) {

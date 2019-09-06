@@ -99,6 +99,7 @@ export async function getNodeAppConfig(entry: string, name: any, options: Comman
         {
           '@o/ui': '@o/ui/node',
           '@o/kit': '@o/kit/node',
+          '@o/worker-kit': '@o/worker-kit',
         },
         // externalize everything but local files
         function(_context, request, callback) {

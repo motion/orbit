@@ -253,7 +253,7 @@ const dockButtonProps = (index: number, dockStore: OrbitDockStore): Partial<Dock
 })
 
 const themes = [
-  { name: 'Auto', value: 'automatic', icon: 'contast' },
+  { name: 'Auto', value: 'automatic', icon: 'right-join' },
   { name: 'Dark', value: 'dark', icon: 'moon' },
   { name: 'Light', value: 'light', icon: 'flash' },
 ] as const

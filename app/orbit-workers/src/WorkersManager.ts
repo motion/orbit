@@ -27,17 +27,17 @@ export class WorkersManager {
   updateAppDefinitions = react(
     () => this.appsManager.nodeAppDefinitions,
     async nodeDefinitions => {
-      log.info('i see nodeDefinitions, update workers', Object.keys(nodeDefinitions))
+      log.info('i see nodeDefinitions, update workers', nodeDefinitions)
 
-      for (const identifier in nodeDefinitions) {
+      for (const definition of nodeDefinitions) {
         // In development mode we could restart all workers whenever we see one update
         // that wouldn't be too disruptive.
         // for now, just do the same thing as prod (if already running, ignore)
-        if (this.workers.has(identifier)) {
+        if (this.workers.has(definition.id)) {
           continue
         }
 
-        const workers = nodeDefinitions[identifier].workers || []
+        const workers = nodeDefinitions[definition.id].workers || []
         for (const worker of workers) {
           log.verbose('running worker', worker)
           try {

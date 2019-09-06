@@ -3005,10 +3005,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@10.5.1", "@types/node@^10.1.0", "@types/node@^10.5.1", "@types/node@^12.0.12", "@types/node@^8.0.24", "@types/node@^8.0.53":
-  version "10.5.1"
-  resolved "https://registry.npmjs.org/@types/node/-/node-10.5.1.tgz#d578446f4abff5c0b49ade9b4e5274f6badaadfc"
-  integrity sha512-AFLl1IALIuyt6oK4AYZsgWVJ/5rnyzQWud7IebaZWWV3YmgtPZkQmYio9R5Ze/2pdd7XfqF5bP+hWS11mAKoOQ==
+"@types/node@*", "@types/node@12.7.4", "@types/node@^10.1.0", "@types/node@^10.5.1", "@types/node@^12.0.12", "@types/node@^8.0.24", "@types/node@^8.0.53":
+  version "12.7.4"
+  resolved "https://registry.npmjs.org/@types/node/-/node-12.7.4.tgz#64db61e0359eb5a8d99b55e05c729f130a678b04"
+  integrity sha512-W0+n1Y+gK/8G2P/piTkBBN38Qc5Q1ZSO6B5H3QmPCUewaiXOo2GCAWZ4ElZCcNhjJuBSUSLGFUJnmlCn5+nxOQ==
 
 "@types/pg-types@*":
   version "1.11.4"
@@ -13931,7 +13931,7 @@ launch-editor@2.2.1:
     chalk "^2.3.0"
     shell-quote "^1.6.1"
 
-laxy@1.0.0:
+laxy@1.0.0, laxy@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/laxy/-/laxy-1.0.0.tgz#164796533948cd165eddf54aa93386a0af739922"
   integrity sha512-qXNggPvuiav30gShAXnRn4stXLmK8qBPBE4lCRHf35PFq9zeMim/jIf30Okx5JyD/tDX/1aapcAVnbpAjiaCHg==

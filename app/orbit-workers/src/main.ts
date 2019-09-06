@@ -1,9 +1,13 @@
 import { Logger } from '@o/logger'
+import root from 'global'
 import { once } from 'lodash'
 
-if (!global['require'].__islaxied) {
-  console.error('ERROR ERRORERRORERRORERRORERRORERRORERRORERRORERRORERRORERRORERRORERROR')
-  process.exit(1)
+// lazy imports for safety/speed (@o/kit is huge, etc)
+if (!root.require.__proxiedRequire) {
+  const lazy = require('laxy')
+  root.require = lazy(require)
+  root.require.__proxiedRequire = true
+  global['require'] = root.require
 }
 
 const { workersRoot } = require('./OrbitWorkersRoot')

@@ -1,18 +1,16 @@
 import { getGlobalConfig, setGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { ChildProcessProps, startChildProcess } from '@o/orbit-fork-process'
+import root from 'global'
 import { join } from 'path'
 import WebSocket from 'ws'
 
 import { getInitialConfig } from './getInitialConfig'
 
 // lazy imports for safety/speed (@o/kit is huge, etc)
-if (!global['require'].__islaxied) {
-  const laxy = require('laxy')
-  global['require'] = laxy(require)
-  console.log(global['require'], require, 'ok')
-  global['require'].__islaxied = true
-}
+const lazy = require('laxy')
+root.require = lazy(require)
+root.require.__proxiedRequire = true
 
 // sort order important
 require('isomorphic-fetch')

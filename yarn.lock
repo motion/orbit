@@ -8295,7 +8295,7 @@ electron-is-dev@^0.3.0:
   resolved "https://registry.npmjs.org/electron-is-dev/-/electron-is-dev-0.3.0.tgz#14e6fda5c68e9e4ecbeff9ccf037cbd7c05c5afe"
   integrity sha1-FOb9pcaOnk7L7/nM8DfL18BcWv4=
 
-electron-is-dev@^1.0.1:
+electron-is-dev@^1.0.1, electron-is-dev@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/electron-is-dev/-/electron-is-dev-1.1.0.tgz#b15a2a600bdc48a51a857d460e05f15b19a2522c"
   integrity sha512-Z1qA/1oHNowGtSBIcWk0pcLEqYT/j+13xUw/MYOrBUOL4X7VN0i0KCTf5SqyvMPmW5pSPKbo28wkxMxzZ20YnQ==
@@ -8394,12 +8394,13 @@ electron-updater@3.1.1:
     semver "^5.5.0"
     source-map-support "^0.5.6"
 
-electron-util@0.9.0:
-  version "0.9.0"
-  resolved "https://registry.npmjs.org/electron-util/-/electron-util-0.9.0.tgz#2a07b8e2b5035886884db53e0b7db625a9862845"
-  integrity sha512-C5IiDQ99na6u//yrvaNZnkc9EpGHVDvX+fiKaCZWuXmLfQ6rSWN19wUg9azRVBvPx9Spg2ouGFh41Bi6fPuUtg==
+electron-util@^0.12.1:
+  version "0.12.1"
+  resolved "https://registry.npmjs.org/electron-util/-/electron-util-0.12.1.tgz#4a10492d416509a1f588c92d2e50e17798fb4c56"
+  integrity sha512-tRumSqHzNs37X9r2dS42cCxTw8Kw1kARyIcOrKNlYf73n+cooDpBM7+WvA1UNpx1KFPuaBxDpxCmt0SFsJq3BQ==
   dependencies:
-    electron-is-dev "^0.3.0"
+    electron-is-dev "^1.1.0"
+    new-github-issue-url "^0.2.1"
 
 electron@7.0.0-beta.3:
   version "7.0.0-beta.3"
@@ -13930,6 +13931,20 @@ launch-editor@2.2.1:
     chalk "^2.3.0"
     shell-quote "^1.6.1"
 
+laxy@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/laxy/-/laxy-1.0.0.tgz#164796533948cd165eddf54aa93386a0af739922"
+  integrity sha512-qXNggPvuiav30gShAXnRn4stXLmK8qBPBE4lCRHf35PFq9zeMim/jIf30Okx5JyD/tDX/1aapcAVnbpAjiaCHg==
+  dependencies:
+    lazy-singleton "^1.0.0"
+
+lazy-singleton@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/lazy-singleton/-/lazy-singleton-1.0.0.tgz#09d76a99baffd19af80850d3c3690f938ec52dab"
+  integrity sha512-ATHcvPO6FA5zVYoD04mY1mf6wm9ELG9qKHhJo75s7yfEHa22+IASVWRwQZKWIzsOnN+R9PNg++tNTtBCXuYchQ==
+  dependencies:
+    p2n "^1.0.1"
+
 lazy-val@^1.0.3:
   version "1.0.4"
   resolved "https://registry.npmjs.org/lazy-val/-/lazy-val-1.0.4.tgz#882636a7245c2cfe6e0a4e3ba6c5d68a137e5c65"
@@ -15738,6 +15753,11 @@ neo-async@^2.5.0, neo-async@^2.6.0, neo-async@^2.6.1:
   resolved "https://registry.npmjs.org/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
+new-github-issue-url@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.npmjs.org/new-github-issue-url/-/new-github-issue-url-0.2.1.tgz#e17be1f665a92de465926603e44b9f8685630c1d"
+  integrity sha512-md4cGoxuT4T4d/HDOXbrUHkTKrp/vp+m3aOA7XXVYwNsUNMK49g3SQicTSeV5GIz/5QVGAeYRAOlyp9OvlgsYA==
+
 next-compose-plugins@^2.2.0:
   version "2.2.0"
   resolved "https://registry.npmjs.org/next-compose-plugins/-/next-compose-plugins-2.2.0.tgz#95cd8eb40ab0652070d76572fb648354191628b0"
@@ -16893,6 +16913,13 @@ p-waterfall@^1.0.0:
   integrity sha1-ftlLPOszMngjU69qrhGqn8I1uwA=
   dependencies:
     p-reduce "^1.0.0"
+
+p2n@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/p2n/-/p2n-1.0.1.tgz#eb96e66af4e3f2c7964f608fa181d7ab826cfa2b"
+  integrity sha512-7AMVLVTz5YBQ9OXOAJn98RQLXXg4JvR/Azaf0wUeYuSb8iOBINpmNndaQ3+5Kr1oIdn1sb3evgnCLYVNtCFFXQ==
+  dependencies:
+    global "^4.3.2"
 
 package-json@^2.0.0:
   version "2.4.0"

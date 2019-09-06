@@ -29,7 +29,6 @@ export function getEditor() {
 }
 
 export * from './OrbitHot'
-export { Actions } from './Actions'
 
 export * from './AppLoadContext'
 export * from './bit/Readability'

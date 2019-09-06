@@ -172,7 +172,9 @@ export function makeWebpackConfig(
     resolve: {
       extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
       mainFields:
-        mode === 'production'
+        target === 'node'
+          ? ['main']
+          : mode === 'production'
           ? ['ts:main', 'module', 'browser', 'main']
           : ['ts:main', 'module', 'browser', 'main'],
       alias: {
@@ -180,7 +182,8 @@ export function makeWebpackConfig(
         'react-dom': '@o/react-dom', //mode === 'production' ? '@hot-loader/react-dom' : '@hot-loader/react-dom',
         'react-native': 'react-native-web',
         ...(target === 'node' && {
-          window: '@o/kit/EmptyThing',
+          '@o/ui': '@o/kit/node',
+          '@o/kit': '@o/kit/node',
         }),
       },
       modules,

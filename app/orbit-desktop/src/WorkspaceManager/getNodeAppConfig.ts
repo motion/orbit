@@ -95,7 +95,12 @@ export async function getNodeAppConfig(entry: string, name: any, options: Comman
           // and our nice tree-shakeable libraries
           // WE cant do this until we can ignore non-node files from just entrypoint, loaders cant test like that
           // would have to be a webpack plugin
-          if (request === '@o/kit' || request === '@o/worker-kit' || request === '@o/ui') {
+          if (
+            request === '@o/kit/node' ||
+            request === '@o/kit/EmptyThing' ||
+            request === '@o/worker-kit' ||
+            request === '@o/ui/node'
+          ) {
             // @ts-ignore
             return callback()
           }

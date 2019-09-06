@@ -89,7 +89,17 @@ export async function getNodeAppConfig(entry: string, name: any, options: Comman
         __dirname: false,
         __filename: false,
       },
+      resolve: {
+        alias: {
+          '@o/ui': '@o/ui/node',
+          '@o/kit': '@o/kit/node',
+        },
+      },
       externals: [
+        {
+          '@o/ui': '@o/ui/node',
+          '@o/kit': '@o/kit/node',
+        },
         // externalize everything but local files
         function(_context, request, callback) {
           // and our nice tree-shakeable libraries

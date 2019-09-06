@@ -181,10 +181,6 @@ export function makeWebpackConfig(
         react: '@o/react',
         'react-dom': '@o/react-dom', //mode === 'production' ? '@hot-loader/react-dom' : '@hot-loader/react-dom',
         'react-native': 'react-native-web',
-        ...(target === 'node' && {
-          '@o/ui': '@o/kit/node',
-          '@o/kit': '@o/kit/node',
-        }),
       },
       modules,
     },

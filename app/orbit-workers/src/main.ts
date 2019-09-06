@@ -1,8 +1,10 @@
 import { Logger } from '@o/logger'
 import { once } from 'lodash'
 
-const root = global as any
-root.window = global
+if (!global['require'].__islaxied) {
+  console.error('ERROR ERRORERRORERRORERRORERRORERRORERRORERRORERRORERRORERRORERRORERROR')
+  process.exit(1)
+}
 
 const { workersRoot } = require('./OrbitWorkersRoot')
 

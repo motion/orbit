@@ -3,6 +3,7 @@ import { AppWorker, Syncer } from '@o/worker-kit'
 import { SlackSyncer } from './SlackSyncer.node'
 
 export const SlackSyncerWorker: AppWorker = async () => {
+  console.log(`Start slack worker`)
   const syncer = new Syncer({
     id: 'slack',
     appIdentifier: 'slack',

@@ -1,11 +1,18 @@
 import { getGlobalConfig, setGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { ChildProcessProps, startChildProcess } from '@o/orbit-fork-process'
-import root from 'global'
 import { join } from 'path'
 import WebSocket from 'ws'
 
 import { getInitialConfig } from './getInitialConfig'
+
+// lazy imports for safety/speed (@o/kit is huge, etc)
+if (!global['require'].__islaxied) {
+  const laxy = require('laxy')
+  global['require'] = laxy(require)
+  console.log(global['require'], require, 'ok')
+  global['require'].__islaxied = true
+}
 
 // sort order important
 require('isomorphic-fetch')
@@ -13,7 +20,8 @@ require('abortcontroller-polyfill/dist/polyfill-patch-fetch')
 
 // this is the entry for every process
 
-root.WebSocket = WebSocket
+// @ts-ignore
+global.WebSocket = WebSocket
 require('array.prototype.flatmap').shim()
 
 Error.stackTraceLimit = Infinity
@@ -143,9 +151,8 @@ export async function main() {
       //  2. sends OpenWorkspaceCommand to the resolver
       //  3. that then needs to validate/update the space.directory if it moved
       //  4. if workers runs too quickly it will run its OrbitAppsManager with the wrong space.directory
-      //
       //  the ideal fix would be a big refactor of this whole area taking into account many moving pieces
-      await new Promise(res => setTimeout(res, 8000))
+      await new Promise(res => setTimeout(res, 4000))
       setupProcess({
         name: 'workers',
         inspectPort: 9008,

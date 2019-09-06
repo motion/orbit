@@ -37,7 +37,7 @@ export class WorkersManager {
           continue
         }
 
-        const workers = nodeDefinitions[definition.id].workers || []
+        const workers = definition.workers || []
         for (const worker of workers) {
           log.verbose('running worker', worker)
           try {

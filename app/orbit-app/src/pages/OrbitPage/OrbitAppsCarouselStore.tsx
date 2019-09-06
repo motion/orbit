@@ -140,7 +140,7 @@ class OrbitAppsCarouselStore {
       if (!this.props.zoomOut) {
         await when(() => !!this.props.zoomOut)
       }
-      this.props.zoomOut!.set(zoomedOut ? 0 : 1)
+      this.props.zoomOut!.set(zoomedOut ? 1 : 0)
     },
     {
       log: false,

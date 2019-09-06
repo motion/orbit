@@ -1,29 +1,6 @@
-import {
-  AppDefinition,
-  AppIcon,
-  ensure,
-  react,
-  Templates,
-  useAppDefinition,
-  useReaction,
-  useStore,
-} from '@o/kit'
+import { AppDefinition, AppIcon, ensure, react, Templates, useAppDefinition, useReaction, useStore } from '@o/kit'
 import { AppBit } from '@o/models'
-import {
-  Card,
-  CardProps,
-  FullScreen,
-  Geometry,
-  Row,
-  SimpleText,
-  useIntersectionObserver,
-  useNodeSize,
-  useOnMount,
-  useParentNodeSize,
-  useScrollProgress,
-  useTheme,
-  View,
-} from '@o/ui'
+import { Card, CardProps, FullScreen, Geometry, Row, SimpleText, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useScrollProgress, useTheme, View } from '@o/ui'
 import { MotionValue, useMotionValue } from 'framer-motion'
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 

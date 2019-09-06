@@ -289,19 +289,11 @@ require('@o/kit').OrbitHot.fileLeave();
                 {
                   test: /\.tsx?$/,
                   use: [
-                    'thread-loader',
+                    // 'thread-loader',
                     {
                       loader: 'babel-loader',
                       options: {
-                        presets: [
-                          [
-                            require.resolve('@o/babel-preset-motion'),
-                            {
-                              mode,
-                              disable: target === 'node' ? ['react-hot-loader/babel'] : [],
-                            },
-                          ],
-                        ],
+                        presets: [require.resolve('@o/babel-preset-motion')],
                       },
                     },
                   ].filter(Boolean),

@@ -1,7 +1,23 @@
 import '../public/styles/base.css'
 
 /**
- * ⚠️
+ *  ⚠️    ⚠️    ⚠️    ⚠️    ⚠️    ⚠️
+ *
+ *     Don't import here directly
+ *       (order here important)
+ *
+ *  ⚠️    ⚠️    ⚠️    ⚠️    ⚠️    ⚠️
+ */
+
+// https://github.com/facebook/react/issues/16604
+if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
+  const runtime = require('react-refresh/runtime')
+  runtime.injectIntoGlobalHook(window)
+  window['$RefreshReg$'] = () => {}
+  window['$RefreshSig$'] = () => type => type
+}
+
+/**
  *
  * Note: we're using custom react/react-dom that lets you move between prod/dev.
  *

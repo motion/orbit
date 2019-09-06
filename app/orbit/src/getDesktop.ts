@@ -81,7 +81,7 @@ export async function getOrbitDesktop(
 async function findBonjourService(type: string, timeout: number): Promise<number | false> {
   let bonjourInstance = bonjour()
   let waitForService = new Promise(resolve => {
-    reporter.verbose('Finding bounjour service', type)
+    reporter.verbose(`Finding bounjour service ${type}`)
     bonjourInstance.findOne({ type }, service => {
       reporter.verbose(`bonjour got ${service.type} ${service.port}`)
       resolve(service.port)

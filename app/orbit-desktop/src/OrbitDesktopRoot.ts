@@ -277,6 +277,17 @@ export class OrbitDesktopRoot {
                 })
               }
             },
+            // wait for mediator/client, then bonjour
+            async () => {
+              log.verbose(`Starting Bonjour service on ${this.mediatorPort}`)
+              this.bonjour = bonjour()
+              this.bonjourService = this.bonjour.publish({
+                name: 'orbitDesktop',
+                type: 'orbitDesktop',
+                port: this.mediatorPort,
+              })
+              this.bonjourService.start()
+            },
           ],
         },
         // ocr relies on mediator
@@ -292,15 +303,6 @@ export class OrbitDesktopRoot {
         timeout: 3000,
       },
     )
-
-    log.verbose(`Starting Bonjour service on ${this.mediatorPort}`)
-    this.bonjour = bonjour()
-    this.bonjourService = this.bonjour.publish({
-      name: 'orbitDesktop',
-      type: 'orbitDesktop',
-      port: this.mediatorPort,
-    })
-    this.bonjourService.start()
 
     log.info('DESKTOP FINISHED START()')
   }

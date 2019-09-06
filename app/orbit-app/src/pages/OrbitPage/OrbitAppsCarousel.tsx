@@ -225,7 +225,13 @@ const OrbitAppCard = memo(
                 // .transform(x => (x > -7 ? -7 : x))
                 .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? 0 : prev))
                 .spring({ stiffness: 250, damping: 50 })}
-              opacity={geometry.scrollIntersection().transform([-1, 1], [0, 3])}
+              opacity={
+                1 ||
+                geometry
+                  .scrollIntersection()
+                  .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? prev : 1))
+                  .transform([-1, 1], [0, 2.5])
+              }
               scale={geometry
                 .scrollIntersection()
                 .mergeTransform([zoomOut], (intersect, zoom) => {
@@ -234,7 +240,7 @@ const OrbitAppCard = memo(
                   return 0.6 //todo
                 })
                 .spring({ damping: 50, stiffness: 500 })}
-              zIndex={geometry.scrollIntersection().transform(x => (x > 0 ? 1 - x : x))}
+              zIndex={geometry.scrollIntersection().transform(x => 1 - Math.abs(x))}
               x={geometry
                 .useTransform(zoomOut, x => {
                   if (x) {

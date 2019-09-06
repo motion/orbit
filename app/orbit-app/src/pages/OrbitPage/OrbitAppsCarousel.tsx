@@ -98,7 +98,6 @@ export const OrbitAppsCarousel = memo(() => {
         width="100%"
         height="100%"
         nodeRef={frameRef}
-        transition="all ease 200ms"
         {...hidden && {
           pointerEvents: 'none',
           opacity: 0,

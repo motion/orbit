@@ -18,6 +18,8 @@ import { useOnHotReload } from './hooks/useOnHotReload'
 import { useRelative } from './hooks/useRelative'
 import { useScrollProgress } from './hooks/useScrollProgress'
 import { ScrollableRefContext } from './View/ScrollableRefContext'
+import { useMutationObserver } from './hooks/useMutationObserver'
+import { useResizeObserver } from './hooks/useResizeObserver'
 
 // @ts-ignore
 @decorate
@@ -168,20 +170,34 @@ class GeometryStore {
           }
           const nodeWidth = this.nodeRef.current.clientWidth
           const nodeLeft = this.nodeRef.current.offsetLeft
-          if (nodeLeft <= 0) {
+          if (nodeLeft < 0) {
             // this happens on mount sometimes but will be fixed once measured
             return
           }
           const parentWidth = ref.current.scrollWidth
-          const offset = nodeLeft / (parentWidth - nodeWidth)
           // assume all have same widths for now
           const total = ref.current.childElementCount
           const width = 1 / total
+          const offset = nodeLeft / (parentWidth - nodeWidth)
+
           state.current = { width, offset, total }
           // trigger update
           scrollProgress.set(scrollProgress.get())
-          console.log(state.current, nodeLeft)
+          console.log(state.current, { parentWidth, nodeLeft, nodeWidth })
         }
+
+        // we literally cant watch scrollWidth, and we need it :/
+        // TEMP we need to not re-do this in every geometry anyway and share it
+        useEffect(() => {
+          let lastScrollWidth
+          let clear = setInterval(() => {
+            if (lastScrollWidth !== ref.current.scrollWidth) {
+              lastScrollWidth = ref.current.scrollWidth
+              measure()
+            }
+          }, 300)
+          return () => clearInterval(clear)
+        }, [])
 
         useNodeSize({
           throttle: 100,

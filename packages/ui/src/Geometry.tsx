@@ -1,8 +1,8 @@
 import { decorate, useForceUpdate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { SpringProps } from 'popmotion'
-import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
 import React from 'react'
+import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
 import { useNodeSize } from './hooks/useNodeSize'
@@ -160,15 +160,34 @@ class GeometryStore {
           }
           const nodeWidth = this.nodeRef.current.clientWidth
           const nodeLeft = this.nodeRef.current.offsetLeft
+          if (nodeLeft < 0) {
+            // this happens on mount sometimes but will be fixed once measured
+            return
+          }
           const parentWidth = ref.current.scrollWidth
-          const offset = nodeLeft / (parentWidth - nodeWidth)
           // assume all have same widths for now
           const total = ref.current.childElementCount
           const width = 1 / total
+          const offset = nodeLeft / (parentWidth - nodeWidth)
+
           state.current = { width, offset, total }
           // trigger update
           scrollProgress.set(scrollProgress.get())
+          console.log(state.current, { parentWidth, nodeLeft, nodeWidth })
         }
+
+        // we literally cant watch scrollWidth, and we need it :/
+        // TEMP we need to not re-do this in every geometry anyway and share it
+        useEffect(() => {
+          let lastScrollWidth
+          let clear = setInterval(() => {
+            if (lastScrollWidth !== ref.current.scrollWidth) {
+              lastScrollWidth = ref.current.scrollWidth
+              measure()
+            }
+          }, 300)
+          return () => clearInterval(clear)
+        }, [])
 
         useNodeSize({
           throttle: 100,

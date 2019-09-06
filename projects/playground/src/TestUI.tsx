@@ -72,7 +72,7 @@ export function TestUIMotion() {
     rowRef.current.style.scrollSnapType = 'x mandatory'
   }, [])
 
-  const pctSquish = 0.4
+  const pctSquish = 0.6
 
   React.useEffect(() => {
     spring.onChange(val => {
@@ -137,7 +137,7 @@ export function TestUIMotion() {
         nodeRef={rowRef}
         onWheel={setUncontrolled}
       >
-        {[0, 1, 2, 3, 4, 5].map(index => (
+        {[0, 1, 2, 3, 4, 5, 6].map(index => (
           <Geometry key={index}>
             {(geometry, ref) => (
               <View nodeRef={ref} scrollSnapAlign="center" marginRight={`${-pctSquish * 100}%`}>

@@ -1,17 +1,17 @@
-import { createApp } from '@o/kit'
+import { createApp, App } from '@o/kit'
 import React from 'react'
+import { useGraphExplorer, GraphExplorer, GraphQueryExplorer } from '../views/GraphExplorer'
 
 export default createApp({
   id: 'graph',
   name: 'Graph',
   icon: 'graph',
   app: () => {
-    return null
-    // const props = useGraphExplorer()
-    // return (
-    //   <App index={<GraphExplorer {...props} />}>
-    //     <GraphQueryExplorer {...props} />
-    //   </App>
-    // )
+    const props = useGraphExplorer()
+    return (
+      <App index={<GraphExplorer {...props} />}>
+        <GraphQueryExplorer {...props} />
+      </App>
+    )
   },
 })

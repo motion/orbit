@@ -1,3 +1,31 @@
+NEW SITE SECTIONS:
+
+1. "heads up display" + "apps for teams" + "simple"
+2. screenshot/illustration
+3. Make apps, easy (show more)
+4. Augment your OS (show interaction with home)
+5. Best DX, ever (hover to define DX) (SHOW MORE)
+6. IN as easy as OUT (show OCR/pinning + syncing/graph)
+7. REPLACE Batteries included with a quick feature rundown w/screenshots:
+   1. GraphQL browser
+   2. QueryBuilder
+   3. Bit Explorer
+   4. Large UI Kit
+   5. etc
+
+(if anything, just show footer here and have a FEATURES page)
+
+8. Easy deploy (move the deploy stuff down to here)
+...
+
+Features page could show each individual app in more depth basically,
+very simple layout with some brighter colors and screenshots.
+
+
+
+
+
+
 Really nice app flow:
 
 Notes app

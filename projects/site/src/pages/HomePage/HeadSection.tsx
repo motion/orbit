@@ -25,12 +25,12 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Orbit is a moldable, beautiful heads up display for your team.`,
-    `Code apps that are always on, with amazing abilities.`,
+    `Orbit is a beautiful, moldable heads up display for your team.`,
+    `Unify and explore data, code apps on it, and more.`,
   ],
   medium: [
-    `Orbit is a moldable, beautiful heads up display for your team.`,
-    `Code apps that are always on, with amazing abilities.`,
+    `Orbit is a beautiful, moldable heads up display for your team.`,
+    `Unify and explore data, code apps on it, and more.`,
   ],
   small: [`Create internal apps with all new abilities.`, `It's perfect tool for teams.`],
 }

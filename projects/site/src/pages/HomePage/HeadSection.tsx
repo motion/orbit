@@ -18,19 +18,19 @@ let lgSpace = <Space size="xxxl" />
 // Itrou
 
 let allTitles = {
-  large: 'Unify apps, create, enjoy.',
-  medium: 'Unify apps, create, enjoy.',
-  small: 'Unify apps, create, enjoy.',
+  large: 'A new type of OS.',
+  medium: 'A new type of OS.',
+  small: 'A new type of OS.',
 }
 
 let allTexts = {
   large: [
-    `Orbit is a beautiful, moldable heads up display for your team.`,
-    `Unify and explore data, code apps on it, and more.`,
+    `A beautiful, moldable heads up display for you & your team.`,
+    `Unify and explore data, create apps, display, search, and more.`,
   ],
   medium: [
-    `Orbit is a beautiful, moldable heads up display for your team.`,
-    `Unify and explore data, code apps on it, and more.`,
+    `A beautiful, moldable heads up display for you & your team.`,
+    `Unify and explore data, create apps, display, search, and more.`,
   ],
   small: [`Create internal apps with all new abilities.`, `It's perfect tool for teams.`],
 }

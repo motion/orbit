@@ -24,7 +24,7 @@ export async function getOrbitDesktop(
   didStartOrbit: boolean
   orbitProcess: ChildProcess | null
 }> {
-  let port = await findBonjourService('orbitDesktop', 180)
+  let port = await findBonjourService('orbitDesktop', 250)
   let didStartOrbit = false
   let orbitProcess: ChildProcess | null = null
   const isInMonoRepo = await getIsInMonorepo()
@@ -81,7 +81,7 @@ export async function getOrbitDesktop(
 async function findBonjourService(type: string, timeout: number): Promise<number | false> {
   let bonjourInstance = bonjour()
   let waitForService = new Promise(resolve => {
-    reporter.verbose('Finding bounjour service', type)
+    reporter.verbose(`Finding bounjour service ${type}`)
     bonjourInstance.findOne({ type }, service => {
       reporter.verbose(`bonjour got ${service.type} ${service.port}`)
       resolve(service.port)

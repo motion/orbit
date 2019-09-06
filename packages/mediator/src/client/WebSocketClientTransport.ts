@@ -147,7 +147,8 @@ export class WebSocketClientTransport implements ClientTransport {
    * Executes a single-time command and returns results emitted by the server.
    */
   execute(type: TransportRequestType, values: TransportRequestValues): Promise<TransportResponse> {
-    const id = ++this.operationsCounter // don't change - will lead to wrong id
+    this.operationsCounter = this.operationsCounter + (1 % Number.MAX_SAFE_INTEGER)
+    const id = this.operationsCounter // don't change - will lead to wrong id
     const query = {
       ...values,
       id: this.name + '_' + id,

@@ -7,13 +7,19 @@ import WebSocket from 'ws'
 
 import { getInitialConfig } from './getInitialConfig'
 
+// lazy imports for safety/speed (@o/kit is huge, etc)
+const lazy = require('laxy')
+root.require = lazy(require)
+root.require.__proxiedRequire = true
+
 // sort order important
 require('isomorphic-fetch')
 require('abortcontroller-polyfill/dist/polyfill-patch-fetch')
 
 // this is the entry for every process
 
-root.WebSocket = WebSocket
+// @ts-ignore
+global.WebSocket = WebSocket
 require('array.prototype.flatmap').shim()
 
 Error.stackTraceLimit = Infinity
@@ -53,7 +59,7 @@ export async function main() {
 
   const config = getGlobalConfig()
 
-  if (!SUB_PROCESS && !SINGLE_USE_MODE) {
+  if (!SUB_PROCESS) {
     // 🐛 for some reason you'll get "directv-tick" consistently on a port
     // EVEN IF port was found to be empty.... killing again helps
     if (!process.env.NO_KILL_PORTS) {
@@ -143,9 +149,8 @@ export async function main() {
       //  2. sends OpenWorkspaceCommand to the resolver
       //  3. that then needs to validate/update the space.directory if it moved
       //  4. if workers runs too quickly it will run its OrbitAppsManager with the wrong space.directory
-      //
       //  the ideal fix would be a big refactor of this whole area taking into account many moving pieces
-      await new Promise(res => setTimeout(res, 8000))
+      await new Promise(res => setTimeout(res, 4000))
       setupProcess({
         name: 'workers',
         inspectPort: 9008,

@@ -32,7 +32,8 @@
     "memoize-weak": "^1.0.2",
     "react-hot-loader": "4.12.12",
     "sherlockjs": "1.4.0",
-    "typeorm": "^0.3.0-alpha.23"
+    "typeorm": "^0.3.0-alpha.23",
+    "laxy": "1.0.0"
   },
   "peerDependencies": {
     "electron": "*",

@@ -18,7 +18,7 @@ export type WebpackParams = {
   target?: 'node' | 'electron-renderer' | 'web'
   outputDir?: string
   outputFile?: string
-  output?: any
+  output?: webpack.Configuration['output']
   externals?: any
   ignore?: string[]
   watch?: boolean
@@ -163,7 +163,8 @@ export function makeWebpackConfig(
       devtool ||
       (mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-source-map'),
     externals: [
-      {
+      // having this on in development mode for node made exports fail
+      target === 'web' && {
         electron: '{}',
       },
       externals,
@@ -171,7 +172,9 @@ export function makeWebpackConfig(
     resolve: {
       extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
       mainFields:
-        mode === 'production'
+        target === 'node'
+          ? ['main']
+          : mode === 'production'
           ? ['ts:main', 'module', 'browser', 'main']
           : ['ts:main', 'module', 'browser', 'main'],
       alias: {
@@ -293,15 +296,7 @@ require('@o/kit').OrbitHot.fileLeave();
                     {
                       loader: 'babel-loader',
                       options: {
-                        presets: [
-                          [
-                            require.resolve('@o/babel-preset-motion'),
-                            {
-                              mode,
-                              disable: target === 'node' ? ['react-hot-loader/babel'] : [],
-                            },
-                          ],
-                        ],
+                        presets: [require.resolve('@o/babel-preset-motion')],
                       },
                     },
                   ].filter(Boolean),

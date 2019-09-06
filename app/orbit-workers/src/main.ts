@@ -1,8 +1,14 @@
 import { Logger } from '@o/logger'
+import root from 'global'
 import { once } from 'lodash'
 
-const root = global as any
-root.window = global
+// lazy imports for safety/speed (@o/kit is huge, etc)
+if (!root.require.__proxiedRequire) {
+  const lazy = require('laxy')
+  root.require = lazy(require)
+  root.require.__proxiedRequire = true
+  global['require'] = root.require
+}
 
 const { workersRoot } = require('./OrbitWorkersRoot')
 

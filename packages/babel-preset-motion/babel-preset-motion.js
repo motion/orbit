@@ -18,6 +18,7 @@ module.exports = function(_, givenOpts) {
     plugins: [
       plug('babel-plugin-lodash'),
       isDev && plug('react-hot-loader/babel'),
+      // isDev && plug('react-refresh/babel'),
       // plug('babel-plugin-react-native-web', {
       //   commonjs: true,
       // }),

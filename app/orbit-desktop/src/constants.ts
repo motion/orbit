@@ -1,5 +1,9 @@
 import { getGlobalConfig } from '@o/config'
 import * as Path from 'path'
+import electronUtil from 'electron-util/node'
+import { join } from 'path'
+
+export const ROOT_DESKTOP_PATH = electronUtil.fixPathForAsarUnpack(join(__dirname, '..'))
 
 const Config = getGlobalConfig()
 const isDevelopment = process.env.NODE_ENV === 'development'

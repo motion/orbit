@@ -3,7 +3,7 @@ import { Subscription } from '@o/mediator'
 import { AppBit, AppEntity, AppModel, Job, JobEntity } from '@o/models'
 import { EntityManager, getManager, getRepository } from 'typeorm'
 
-import { mediatorClient } from './mediatorClient'
+import { getMediatorClient } from './mediatorClient'
 import { SyncerUtils } from './SyncerUtils'
 
 const cancelCommands = new Set<number>()
@@ -134,7 +134,7 @@ export class Syncer {
           await this.runInterval(app as AppBit, true)
         }
       } else {
-        this.subscription = mediatorClient
+        this.subscription = getMediatorClient()
           .observeMany(AppModel, {
             args: { where: { identifier: this.options.appIdentifier } },
           })
@@ -333,7 +333,7 @@ export class Syncer {
           app,
           log,
           getManager(),
-          mediatorClient,
+          getMediatorClient(),
           async () => !!checkCancelled(app.id),
         ),
       })

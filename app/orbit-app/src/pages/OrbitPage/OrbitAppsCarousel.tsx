@@ -222,14 +222,18 @@ const OrbitAppCard = memo(
               animate
               rotateY={geometry
                 .scrollIntersection()
-                .transform([-1, 1], [-20, 10])
+                .transform([-1, 1], [15, -25])
+                // .transform(x => (x > -7 ? -7 : x))
                 .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? 0 : prev))
                 .spring({ stiffness: 250, damping: 50 })}
-              opacity={geometry.scrollIntersection().transform([-1, 1], [3, 0])}
+              opacity={geometry.scrollIntersection().transform([-1, 1], [0, 3])}
               scale={geometry
-                .useTransform(zoomOut, zoom =>
-                  zoom === 1 ? (index === appsCarouselStore.focusedIndex ? 1 : 0.5) : 0.6,
-                )
+                .scrollIntersection()
+                .mergeTransform([zoomOut], (intersect, zoom) => {
+                  if (zoom === 1) return index === appsCarouselStore.focusedIndex ? 1 : 0.5
+                  if (intersect >= 0) return 0.6
+                  return 0.6 //todo
+                })
                 .spring({ damping: 50, stiffness: 500 })}
               zIndex={geometry.scrollIntersection().transform(x => (x > 0 ? 1 - x : x))}
               x={geometry

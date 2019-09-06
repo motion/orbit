@@ -28,6 +28,7 @@ export class OrbitWorkersRoot {
     this.registerREPLGlobals()
     await this.createDbConnection()
     this.setupMediatorServer()
+    log.verbose(`setting mediator client ${this.mediatorClient}`)
     __YOURE_FIRED_IF_YOU_EVEN_REPL_PEEK_AT_THIS.setMediatorClient(this.mediatorClient)
     await this.workersManager.start()
   }

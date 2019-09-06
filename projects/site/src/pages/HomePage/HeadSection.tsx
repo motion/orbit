@@ -15,6 +15,8 @@ let smallSpc = <Space size="xl" />
 let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
+// Itrou
+
 let allTitles = {
   large: 'A new App OS',
   medium: 'A new App OS',
@@ -23,14 +25,14 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Create apps for yourself, your team, or to sell to others.`,
-    `With all new abilities, it's a fresh new platform.`,
+    `A beautiful, moldable heads up display for you & your team.`,
+    `Unify and explore data, create apps, display, search, and more.`,
   ],
   medium: [
-    `Create apps for yourself, your team, or to sell to others.`,
-    `With all new abilities, it's a fresh new platform.`,
+    `A beautiful, moldable heads up display for you & your team.`,
+    `Unify and explore data, create apps, display, search, and more.`,
   ],
-  small: [`Create apps with all new abilities.`, `The perfect tool for teams.`],
+  small: [`Create internal apps with all new abilities.`, `It's perfect tool for teams.`],
 }
 
 const HeadContent = memo(() => {

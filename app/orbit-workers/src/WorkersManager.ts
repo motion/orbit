@@ -24,29 +24,40 @@ export class WorkersManager {
     // todo stop
   }
 
-  updateAppDefinitions = react(
+  runUpdateAppDefinitions = react(
     () => this.appsManager.nodeAppDefinitions,
-    async nodeDefinitions => {
-      log.info('i see nodeDefinitions, update workers', Object.keys(nodeDefinitions))
+    this.updateAppDefinitions,
+  )
 
-      for (const identifier in nodeDefinitions) {
-        // In development mode we could restart all workers whenever we see one update
-        // that wouldn't be too disruptive.
-        // for now, just do the same thing as prod (if already running, ignore)
-        if (this.workers.has(identifier)) {
-          continue
-        }
+  async updateAppDefinitions() {
+    const { nodeAppDefinitions } = this.appsManager
+    log.info('i see nodeDefinitions, update workers', nodeAppDefinitions)
 
-        const workers = nodeDefinitions[identifier].workers || []
+    for (const definition of nodeAppDefinitions) {
+      // In development mode we could restart all workers whenever we see one update
+      // that wouldn't be too disruptive.
+      // for now, just do the same thing as prod (if already running, ignore)
+      if (this.workers.has(definition.id)) {
+        continue
+      }
+
+      try {
+        const workers = definition.workers || []
+        log.verbose(`running node`, definition)
         for (const worker of workers) {
-          log.verbose('running worker', worker)
+          log.verbose(`running worker`, worker)
           try {
             worker()
           } catch (err) {
             log.error(`Error running worker ${err.message}`, err)
           }
         }
+      } catch (err) {
+        /**
+         * TODO bridge this info back to app
+         */
+        log.error(`Error running worker app ${definition.id} ${err.message}`, err)
       }
-    },
-  )
+    }
+  }
 }

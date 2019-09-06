@@ -33,7 +33,7 @@ class OrbitSearchResultsStore {
     () => this.isActiveRaw,
     async (next, { sleep, when }) => {
       await sleep(20)
-      await when(() => !appsCarouselStore.isAnimating)
+      await when(() => !appsCarouselStore.isAnimating && !appsCarouselStore.zoomedIn)
       return next
     },
     {

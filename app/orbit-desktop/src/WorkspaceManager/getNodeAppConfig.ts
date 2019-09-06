@@ -70,28 +70,48 @@ export async function getNodeAppConfig(entry: string, name: any, options: Comman
       watch: options.watch,
       // for non-treeshaking
       // WARNING bug it exports to "module not found {}"
-      // mode: 'development',
+      mode: 'development',
       dllReferences: [defaultBaseDll],
+      output: {
+        library: 'test',
+        libraryTarget: 'umd',
+      },
       // for tree-shaking...
-      mode: 'production',
-      plugins: [
-        new IgnoreIfNotNodeEntryImport({
-          file: entry,
-        }),
-      ],
+      // mode: 'production',
+      // plugins: [
+      //   new IgnoreIfNotNodeEntryImport({
+      //     file: entry,
+      //   }),
+      // ],
     }),
     {
       node: {
         __dirname: false,
         __filename: false,
       },
+      resolve: {
+        alias: {
+          '@o/ui': '@o/ui/node',
+          '@o/kit': '@o/kit/node',
+        },
+      },
       externals: [
+        {
+          '@o/ui': '@o/ui/node',
+          '@o/kit': '@o/kit/node',
+          '@o/worker-kit': '@o/worker-kit',
+        },
         // externalize everything but local files
         function(_context, request, callback) {
           // and our nice tree-shakeable libraries
           // WE cant do this until we can ignore non-node files from just entrypoint, loaders cant test like that
           // would have to be a webpack plugin
-          if (request === '@o/kit' || request === '@o/worker-kit' || request === '@o/ui') {
+          if (
+            request === '@o/kit/node' ||
+            request === '@o/kit/EmptyThing' ||
+            request === '@o/worker-kit' ||
+            request === '@o/ui/node'
+          ) {
             // @ts-ignore
             return callback()
           }

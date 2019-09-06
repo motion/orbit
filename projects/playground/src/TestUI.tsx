@@ -146,12 +146,12 @@ export function TestUIMotion() {
                   height="92vh"
                   background="red"
                   boxShadow="0 0 10px rgba(0,0,0,0.5)"
-                  zIndex={geometry.scrollIntersection().transform(x => (x > 0 ? 1 - x : x))}
+                  zIndex={geometry.scrollIntersection().transform(x => 1 - Math.abs(x))}
                   rotateY={geometry
                     .scrollIntersection()
-                    .transform([-1, 1], [-50, 50])
+                    .transform([-1, 1], [50, -50])
                     .spring({ stiffness: 500, damping: 10 })}
-                  opacity={geometry.scrollIntersection().transform([-1, 1], [2, 0])}
+                  opacity={geometry.scrollIntersection().transform([-1, 1], [0, 2])}
                   transformOrigin="center center"
                   animate={{
                     scale: 0.7,

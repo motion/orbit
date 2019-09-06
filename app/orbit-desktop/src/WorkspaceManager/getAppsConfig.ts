@@ -264,6 +264,7 @@ export function getAppParams(props: WebpackParams): WebpackParams {
     }),
     ignore: ['electron-log', '@o/worker-kit', 'configstore'],
     ...props,
+    // @ts-ignore
     output: {
       ...(props.target === 'node' && {
         library: '[name]',

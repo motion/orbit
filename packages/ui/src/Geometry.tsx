@@ -1,8 +1,8 @@
 import { decorate, useForceUpdate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { SpringProps } from 'popmotion'
-import React from 'react'
 import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
+import React from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
 import { useNodeSize } from './hooks/useNodeSize'
@@ -148,6 +148,7 @@ class GeometryStore {
         const state = useRef({
           offset: 0,
           width: 0.1,
+          total: 0,
         })
 
         const measure = () => {
@@ -157,14 +158,14 @@ class GeometryStore {
           if (!ref.current.scrollWidth) {
             return
           }
-          const total = ref.current.childElementCount
           const nodeWidth = this.nodeRef.current.clientWidth
           const nodeLeft = this.nodeRef.current.offsetLeft
           const parentWidth = ref.current.scrollWidth
           const offset = nodeLeft / (parentWidth - nodeWidth)
-          state.current.offset = offset
           // assume all have same widths for now
-          state.current.width = 1 / (total - 1)
+          const total = ref.current.childElementCount
+          const width = 1 / total
+          state.current = { width, offset, total }
           // trigger update
           scrollProgress.set(scrollProgress.get())
         }
@@ -184,8 +185,10 @@ class GeometryStore {
         })
 
         // this should make it go to 0 once node is centered
-        return useTransform(scrollProgress, x => {
-          return (x - state.current.offset) / state.current.width
+        return useTransform(scrollProgress, scroll => {
+          const cur = state.current
+          const progress = Math.min(1, (cur.offset - scroll) * cur.total)
+          return Math.round(progress * 1000) / 1000
         })
       })
     })

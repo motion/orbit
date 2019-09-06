@@ -1,10 +1,11 @@
 import { getAppInfo } from '@o/apps-manager'
+import { getGlobalConfig } from '@o/config'
 import { isEqual } from '@o/fast-compare'
 import { isOrbitApp, readPackageJson } from '@o/libs-node'
 import { Logger } from '@o/logger'
 import { CommandOpts, resolveCommand } from '@o/mediator'
 import { AppBuildCommand, AppDefinition, CommandBuildOptions, StatusReply } from '@o/models'
-import { ensureDir, pathExists, readJSON, writeJSON } from 'fs-extra'
+import { ensureDir, pathExists, readFile, readJSON, writeJSON } from 'fs-extra'
 import { join } from 'path'
 import webpack from 'webpack'
 
@@ -94,7 +95,6 @@ export async function bundleApp(options: CommandBuildOptions): Promise<StatusRep
   const entry = await getAppEntry(options.projectRoot)
   const pkg = await readPackageJson(options.projectRoot)
 
-  const appHash = await getAppHash(options.projectRoot)
   const appInfoRes = await buildAppInfo(options)
   if (appInfoRes.type !== 'success') {
     return appInfoRes
@@ -130,7 +130,7 @@ export async function bundleApp(options: CommandBuildOptions): Promise<StatusRep
     })
   }
 
-  await writeBuildInfo(options.projectRoot, appHash)
+  await writeBuildInfo(options.projectRoot)
 
   return {
     type: 'success',
@@ -147,9 +147,28 @@ async function getAppHash(appDir: string) {
   })
 }
 
-async function writeBuildInfo(appDir: string, appHash) {
+async function getBuildInfo(appDir: string) {
+  const appHash = await getAppHash(appDir)
+  const appPackage = await readJSON(join(appDir, 'package.json'))
+  const globalConfig = await getGlobalConfig()
+  /// ..... brittle
+  const configFiles = (await Promise.all(
+    [require.resolve('./makeWebpackConfig'), require.resolve('./getNodeAppConfig')].map(async x => {
+      return await readFile(x)
+    }),
+  )).join('')
+  return {
+    configFiles,
+    appHash,
+    appPackage,
+    orbitConfig: globalConfig.paths,
+    version: globalConfig.version,
+  }
+}
+
+async function writeBuildInfo(appDir: string) {
   const file = join(appDir, 'dist', 'buildInfo.json')
-  return await writeJSON(file, appHash)
+  return await writeJSON(file, await getBuildInfo(appDir))
 }
 
 async function readBuildInfo(appDir: string) {
@@ -194,7 +213,7 @@ async function shouldRebuildApp(appRoot: string) {
     }
   }
   // ensure buildInfo hash is equal
-  const current = await getAppHash(appRoot)
+  const current = await getBuildInfo(appRoot)
   const existing = await readBuildInfo(appRoot)
   return isEqual(current, existing) === false
 }

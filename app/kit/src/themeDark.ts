@@ -6,7 +6,7 @@ import { alternates } from './themeAlternates'
 import { transparent } from './themeColors'
 
 const color = [255, 255, 255]
-const background = toColor([20, 20, 20])
+const background = toColor([25, 25, 25])
 const borderColor = [180, 180, 180, 0.25]
 
 const backgroundStrong = background.lighten(0.15)

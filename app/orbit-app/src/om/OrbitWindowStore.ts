@@ -14,7 +14,7 @@ export class OrbitWindowStore {
     () => themeStore.vibrancy === 'none',
     disabled => {
       if (disabled) {
-        const bg = themeStore.themeColor === 'dark' ? '#111' : '#fff'
+        const bg = themeStore.themeColor === 'dark' ? '#333' : '#fff'
         document.body.style.background = bg
       } else {
         document.body.style.background = 'transparent'

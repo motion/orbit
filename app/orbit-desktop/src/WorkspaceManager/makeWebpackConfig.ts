@@ -163,6 +163,7 @@ export function makeWebpackConfig(
       devtool ||
       (mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-source-map'),
     externals: [
+      // having this on in development mode for node made exports fail
       target === 'web' && {
         electron: '{}',
       },

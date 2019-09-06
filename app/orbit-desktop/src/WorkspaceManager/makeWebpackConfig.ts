@@ -18,7 +18,7 @@ export type WebpackParams = {
   target?: 'node' | 'electron-renderer' | 'web'
   outputDir?: string
   outputFile?: string
-  output?: any
+  output?: webpack.Configuration['output']
   externals?: any
   ignore?: string[]
   watch?: boolean
@@ -163,7 +163,7 @@ export function makeWebpackConfig(
       devtool ||
       (mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-source-map'),
     externals: [
-      {
+      target === 'web' && {
         electron: '{}',
       },
       externals,
@@ -289,7 +289,7 @@ require('@o/kit').OrbitHot.fileLeave();
                 {
                   test: /\.tsx?$/,
                   use: [
-                    // 'thread-loader',
+                    'thread-loader',
                     {
                       loader: 'babel-loader',
                       options: {

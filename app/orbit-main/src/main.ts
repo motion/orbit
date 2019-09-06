@@ -53,7 +53,7 @@ export async function main() {
 
   const config = getGlobalConfig()
 
-  if (!SUB_PROCESS && !SINGLE_USE_MODE) {
+  if (!SUB_PROCESS) {
     // 🐛 for some reason you'll get "directv-tick" consistently on a port
     // EVEN IF port was found to be empty.... killing again helps
     if (!process.env.NO_KILL_PORTS) {

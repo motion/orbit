@@ -18,6 +18,7 @@
     "@o/babel-preset-motion": "^2.6.0",
     "@o/config": "^2.6.0",
     "@o/constants": "^2.6.0",
+    "electron-util": "^0.12.1",
     "@o/cosal": "^2.6.0",
     "@o/devcert": "^2.6.0",
     "@o/electron-sudo": "^2.6.0",

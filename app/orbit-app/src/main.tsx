@@ -9,14 +9,6 @@ import '../public/styles/base.css'
  *  ⚠️    ⚠️    ⚠️    ⚠️    ⚠️    ⚠️
  */
 
-// https://github.com/facebook/react/issues/16604
-if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
-  const runtime = require('react-refresh/runtime')
-  runtime.injectIntoGlobalHook(window)
-  window['$RefreshReg$'] = () => {}
-  window['$RefreshSig$'] = () => type => type
-}
-
 /**
  *
  * Note: we're using custom react/react-dom that lets you move between prod/dev.
@@ -29,12 +21,17 @@ if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
  *   2. Be sure react-hot-loader is before them
  *
  */
-const OG_DEV = window['__DEV__']
 window['__DEV__'] = true
+// https://github.com/facebook/react/issues/16604
+if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
+  const runtime = require('react-refresh/runtime')
+  runtime.injectIntoGlobalHook(window)
+  window['$RefreshReg$'] = () => {}
+  window['$RefreshSig$'] = () => type => type
+}
 require('react-hot-loader')
 const React = require('react')
 const ReactDOM = require('react-dom')
-window['__DEV__'] = OG_DEV
 
 const { getGlobalConfig, setGlobalConfig } = require('@o/config')
 const { IS_ELECTRON } = require('./constants')

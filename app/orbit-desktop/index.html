@@ -17,6 +17,9 @@
           return {}
         }
       }
+
+      // ensure dev is set true at first to load react dev stuff
+      window['__DEV__'] = true
     </script>
   </head>
 
@@ -27,8 +30,6 @@
         // easier to see what would be transparent in dev mode in browser
         document.body.style.background = '#eee'
       }
-
-      window.__DEV__ = false
 
       System = {
         registry: {},

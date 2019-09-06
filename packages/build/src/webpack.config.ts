@@ -189,7 +189,8 @@ console.log('babelrcOptions', babelrcOptions)
 async function makeConfig() {
   // get the list of paths to all monorepo packages to apply ts-loader too
   const packages = await LernaProject.getPackages(repoRoot)
-  const tsEntries = packages.map(pkg => Path.join(pkg.location))
+  const tsEntries = packages.map(pkg => Path.join(pkg.location, 'src'))
+  // console.log('tsEntries', tsEntries)
 
   const config = {
     target,

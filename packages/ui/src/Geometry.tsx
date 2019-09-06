@@ -1,7 +1,15 @@
 import { decorate, useForceUpdate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { SpringProps } from 'popmotion'
-import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
+import {
+  isValidElement,
+  memo,
+  RefObject,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+} from 'react'
 import React from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
@@ -160,6 +168,10 @@ class GeometryStore {
           }
           const nodeWidth = this.nodeRef.current.clientWidth
           const nodeLeft = this.nodeRef.current.offsetLeft
+          if (nodeLeft <= 0) {
+            // this happens on mount sometimes but will be fixed once measured
+            return
+          }
           const parentWidth = ref.current.scrollWidth
           const offset = nodeLeft / (parentWidth - nodeWidth)
           // assume all have same widths for now
@@ -168,6 +180,7 @@ class GeometryStore {
           state.current = { width, offset, total }
           // trigger update
           scrollProgress.set(scrollProgress.get())
+          console.log(state.current, nodeLeft)
         }
 
         useNodeSize({

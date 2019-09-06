@@ -56,7 +56,7 @@ export function GraphExplorer({
         <div
           style={{
             display: 'flex',
-            flexFlow: 'row',
+            flexDirection: 'row',
             height: '100%',
             flex: 1,
             overflow: 'hidden',
@@ -167,7 +167,7 @@ export function GraphQueryExplorer({
         <div
           style={{
             display: 'flex',
-            flexFlow: 'row',
+            flexDirection: 'row',
             height: '100%',
             flex: 1,
             overflow: 'hidden',

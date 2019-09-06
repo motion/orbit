@@ -16,7 +16,7 @@ export function BrowserDebugTray({ children }: any) {
           onMouseLeave={() => {
             // App.sendMessage(App, App.messages.TRAY_EVENT, { type: 'trayHovered', value: 'Out' })
           }}
-          flexFlow="row"
+          flexDirection="row"
           height={28}
           alignItems="center"
           pointerEvents="auto"

@@ -167,7 +167,7 @@ const getColor = (props: TableRowProps, theme: ThemeObject) => {
 }
 
 const TableBodyRowContainer = gloss<TableRowProps>(Box, {
-  flexFlow: 'row',
+  flexDirection: 'row',
   fontWeight: 'inherit',
   overflow: 'hidden',
   width: '100%',

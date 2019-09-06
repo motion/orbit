@@ -1,4 +1,4 @@
-import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction, useStore } from '@o/kit'
+import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useActiveUser, useReaction, useStore } from '@o/kit'
 import { App } from '@o/stores'
 import { ActiveDraggables, Col, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
@@ -131,42 +131,23 @@ export const OrbitDock = memo(() => {
     activeDockApps,
     _ => _.identifier === 'settings' || _.identifier === 'apps',
   )
+  const nodeRef = useRef(null)
+  const size = useNodeSize({
+    ref: nodeRef,
+    throttle: 200,
+  })
 
   return (
     <Col
       position="absolute"
       top={56}
+      nodeRef={nodeRef}
       right={0}
       padding={[25, 10, 10, 0]}
       space="lg"
       onMouseEnter={store.hoverEnter}
       onMouseLeave={store.hoverLeave}
       zIndex={100000000}
-      pointerEvents={store.isOpen ? 'auto' : 'none'}
-    >
-      <OrbitDockPanel offset={0} apps={topDockApps} />
-      <OrbitDockPanel offset={topDockApps.length} apps={bottomDockApps} />
-    </Col>
-  )
-})
-
-export const orbitDockStore = createUsableStore(OrbitDockStore)
-window['orbitDockStore'] = orbitDockStore
-
-export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
-  const theme = useTheme()
-  const store = orbitDockStore.useStore()
-  const dockRef = useRef<HTMLElement>(null)
-  const size = useNodeSize({
-    ref: dockRef,
-    throttle: 200,
-  })
-
-  return (
-    <Dock
-      position="relative"
-      flexDirection="column"
-      nodeRef={dockRef}
       pointerEvents={store.state === 'closed' ? 'none' : 'inherit'}
       transform={
         store.isOpen
@@ -178,9 +159,25 @@ export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
             }
       }
       transition={store.isOpen ? `all ease 300ms` : `all ease-out 300ms 150ms`}
-      className="orbit-dock"
-      bottom="auto"
     >
+      <OrbitDockPanel offset={0} apps={topDockApps} />
+      <OrbitDockPanel offset={topDockApps.length} apps={bottomDockApps} />
+      <Dock space="sm" position="relative" flexDirection="column" bottom="auto">
+        <DockThemeButton index={topDockApps.length + bottomDockApps.length} />
+        <DockVibrancyButton index={topDockApps.length + bottomDockApps.length + 1} />
+      </Dock>
+    </Col>
+  )
+})
+
+export const orbitDockStore = createUsableStore(OrbitDockStore)
+window['orbitDockStore'] = orbitDockStore
+
+export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
+  const theme = useTheme()
+
+  return (
+    <Dock position="relative" flexDirection="column" className="orbit-dock" bottom="auto">
       {props.apps.map((app, index) => (
         <OrbitDockButton
           key={app.id}
@@ -199,6 +196,7 @@ export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
           }}
         />
       ))}
+
       <FullScreen
         data-is="DockShadow"
         top={30}
@@ -221,6 +219,94 @@ export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
     </Dock>
   )
 }
+
+const dockButtonProps = (index: number, dockStore: OrbitDockStore): Partial<DockButtonProps> => ({
+  onMouseMove: () => {
+    if (appsDrawerStore.isOpen) return
+    // wait for settle
+    if (dockStore.hoveredIndex === -1) {
+      dockStore.hoverEnterButton(index)
+    }
+  },
+  onMouseEnter: () => {
+    if (appsDrawerStore.isOpen) return
+    dockStore.hoverEnterButton(index)
+  },
+  onMouseLeave: () => {
+    dockStore.hoverLeaveButton()
+  },
+  labelProps: {
+    transition: `all ease-out 80ms ${100 - index * 30}ms`,
+    background: [0, 0, 0, 0.65],
+    elevation: 1,
+    opacity: 0,
+    transform: {
+      y: -10,
+    },
+    ...(dockStore.isOpen && {
+      transition: `all ease-out 400ms ${230 + index * 30}ms`,
+      opacity: 1,
+      transform: {
+        y: 0,
+      },
+    }),
+  },
+})
+
+const themes = [
+  { name: 'Auto', value: 'automatic', icon: 'right-join' },
+  { name: 'Dark', value: 'dark', icon: 'moon' },
+  { name: 'Light', value: 'light', icon: 'flash' },
+] as const
+
+const DockThemeButton = memo(({ index }: { index: number }) => {
+  const dockStore = orbitDockStore.useStore()
+  const [user, updateUser] = useActiveUser()
+  const curTheme = user.settings!.theme
+  const themeIndex = themes.findIndex(x => x.value === curTheme)
+  const theme = themes[themeIndex]
+  return (
+    <DockButton
+      id="theme-mode"
+      onClick={() =>
+        updateUser(x => {
+          x.settings!.theme = themes[(themeIndex + 1) % themes.length].value
+        })
+      }
+      icon={theme.icon}
+      label={`Theme: ${theme.name}`}
+      {...dockButtonProps(index, dockStore)}
+    />
+  )
+})
+
+const vibrancies = [
+  { name: 'More', value: 'more', icon: 'circle' },
+  { name: 'Some', value: 'some', icon: 'selection' },
+  { name: 'None', value: 'none', icon: 'full-circle' },
+] as const
+
+const DockVibrancyButton = memo(({ index }: { index: number }) => {
+  const dockStore = orbitDockStore.useStore()
+  const [user, updateUser] = useActiveUser()
+  const curVibrancy = user.settings!.vibrancy || 'some'
+  const vibrancyIndex = vibrancies.findIndex(x => x.value === curVibrancy)
+  const vibrancy = vibrancies[vibrancyIndex]
+
+  return (
+    <DockButton
+      id="vibrancy-mode"
+      onClick={() =>
+        updateUser(x => {
+          x.settings!.vibrancy = vibrancies[(vibrancyIndex + 1) % vibrancies.length].value
+        })
+      }
+      icon={vibrancy.icon}
+      label={`Vibrancy: ${vibrancy.name}`}
+      {...dockButtonProps(index, dockStore)}
+    />
+  )
+})
 
 const OrbitDockButton = memo(function OrbitDockButton({
   index,
@@ -256,36 +342,7 @@ const OrbitDockButton = memo(function OrbitDockButton({
         icon={definition.icon || 'layers'}
         label={app.name}
         nodeRef={buttonRef}
-        labelProps={{
-          background: [0, 0, 0, 0.65],
-          transition: `all ease-out 80ms ${100 - index * 30}ms`,
-          elevation: 1,
-          opacity: 0,
-          transform: {
-            y: -10,
-          },
-          ...(dockStore.isOpen && {
-            transition: `all ease-out 400ms ${230 + index * 30}ms`,
-            opacity: 1,
-            transform: {
-              y: 0,
-            },
-          }),
-        }}
-        onMouseMove={() => {
-          if (appsDrawerStore.isOpen) return
-          // wait for settle
-          if (dockStore.hoveredIndex === -1) {
-            dockStore.hoverEnterButton(index)
-          }
-        }}
-        onMouseEnter={() => {
-          if (appsDrawerStore.isOpen) return
-          dockStore.hoverEnterButton(index)
-        }}
-        onMouseLeave={() => {
-          dockStore.hoverLeaveButton()
-        }}
+        {...dockButtonProps(index, dockStore)}
         {...rest}
       />
       {nodePosition && (

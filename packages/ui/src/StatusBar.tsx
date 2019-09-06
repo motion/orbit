@@ -13,7 +13,7 @@ const statusBarProps = {
 export const StatusBar = gloss(View, {
   padding: [0, 7],
   height: 34,
-  flexFlow: 'row',
+  flexDirection: 'row',
   overflow: 'hidden',
   alignItems: 'center',
   // backdropFilter: 'blur(10px)',

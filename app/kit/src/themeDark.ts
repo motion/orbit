@@ -6,7 +6,7 @@ import { alternates } from './themeAlternates'
 import { transparent } from './themeColors'
 
 const color = [255, 255, 255]
-const background = toColor([20, 20, 20])
+const background = toColor([25, 25, 25])
 const borderColor = [180, 180, 180, 0.25]
 
 const backgroundStrong = background.lighten(0.15)
@@ -104,7 +104,11 @@ Object.assign(
     sidebarBackgroundTransparent: [15, 15, 15, 0.4],
     appCardBackground: [15, 15, 15],
     appCardBackgroundTransparent: [15, 15, 15, 0],
-    orbitLauncherBackground: [0, 0, 0, 0.2],
+    orbitLauncherBackground: {
+      none: [30, 30, 30],
+      some: [10, 10, 13, 0.2], // we use thicker vibrancy here
+      more: [25, 25, 30, 0.4],
+    },
     sidebarBorderColor: '#444',
     headerBorderBottom: '#151515',
     headerBackground: linearGradient([0, 0, 0, 0.4], [0, 0, 0, 0.3]),

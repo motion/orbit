@@ -54,7 +54,7 @@ export function Toolbar({
 }
 
 const ToolbarRow = gloss<ToolbarProps>(Row, {
-  flexFlow: 'row',
+  flexDirection: 'row',
   alignItems: 'center',
   width: '100%',
   position: 'relative',

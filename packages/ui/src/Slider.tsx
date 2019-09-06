@@ -111,7 +111,7 @@ Slider.Pane = SliderPane
 
 const SliderContainer = gloss(View, {
   flex: 1,
-  flexFlow: 'row',
+  flexDirection: 'row',
   alignItems: 'flex-start',
   overflow: 'hidden',
   position: 'relative',

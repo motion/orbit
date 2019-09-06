@@ -1,6 +1,7 @@
-import { GlossPropertySet } from '@o/css'
-import { motion } from 'framer-motion'
+import { css, GlossPropertySet } from '@o/css'
+import { motion, useInvertedScale } from 'framer-motion'
 import { Base, gloss } from 'gloss'
+import React from 'react'
 
 import { AnimationStore } from '../Geometry'
 import { Sizes } from '../Space'
@@ -68,6 +69,7 @@ const motionExtraProps = {
   variants: true,
   whileHover: true,
   whileTap: true,
+  useInvertedScale: true,
 }
 
 // includes motion styles too
@@ -76,7 +78,7 @@ export const motionProps = {
   ...motionExtraProps,
 }
 
-const shouldRenderToMotion = (props: any) => props.animate || props.drag
+const shouldRenderToMotion = (props: any) => props.animate || props.drag || props.layoutTransition
 
 // regular view
 export const View = gloss<ViewProps, ViewThemeProps>(Base, {
@@ -92,34 +94,43 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
         if (outProps.className) {
           finalClassName = ''
           for (const name of outProps.className.split(' ')) {
-            if (tracker.has(name)) {
-              const rules = tracker.get(name).rules
-              Object.assign(style, rules)
+            const key = name[0] === 's' ? name.slice(1) : name
+            if (tracker.has(key)) {
+              const styles = tracker.get(key)
+              if (+styles.namespace == +styles.namespace) {
+                if (!styles.styleObject) {
+                  styles.styleObject = css(styles.rules, { snakeCase: false })
+                }
+                Object.assign(style, styles.styleObject)
+              } else {
+                finalClassName += ` ${name}`
+              }
             } else {
               finalClassName += ` ${name}`
             }
           }
+        }
 
-          for (const key in inProps) {
-            const val = inProps[key]
-            if (val instanceof AnimationStore) {
-              style[key] = val.getValue()
-              delete outProps[key]
+        for (const key in inProps) {
+          const val = inProps[key]
+          if (val instanceof AnimationStore) {
+            style[key] = val.getValue()
+            delete outProps[key]
+            continue
+          }
+          if (motionStyleProps[key]) {
+            style[key] = val
+            delete outProps[key]
+            continue
+          }
+          if (motionExtraProps[key]) {
+            if (key === 'animate' && inProps.animate === true) {
               continue
             }
-            if (motionStyleProps[key]) {
-              style[key] = val
-              delete outProps[key]
-              continue
-            }
-            if (motionExtraProps[key]) {
-              if (key === 'animate' && inProps.animate === true) {
-                continue
-              }
-              outProps[key] = val
-            }
+            outProps[key] = val
           }
         }
+
         outProps.className = finalClassName
         outProps.style = style
         outProps['data-is'] = `${outProps['data-is']} is-animated`

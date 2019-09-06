@@ -11,7 +11,7 @@ export const Tag = ({ size = 0.9, ...props }: TagProps) => {
     <SizedSurface
       ellipse
       sizeRadius={0.9 * sz}
-      sizeFont={1.2 * sz}
+      sizeFont={1.15 * sz}
       sizePadding={0.7 * sz}
       sizeHeight={0.8 * sz}
       sizeLineHeight={0.9 * sz}

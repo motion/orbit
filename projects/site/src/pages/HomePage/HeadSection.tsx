@@ -16,9 +16,9 @@ let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'A new Web OS',
-  medium: 'A new Web OS',
-  small: 'The data-driven app platform',
+  large: 'A new App OS',
+  medium: 'A new App OS',
+  small: 'A new App OS',
 }
 
 let allTexts = {
@@ -30,7 +30,7 @@ let allTexts = {
     `Create apps for yourself, your team, or to sell to others.`,
     `With all new abilities, it's a fresh new platform.`,
   ],
-  small: [`Build apps that power your company.`, `The data-first Work OS.`],
+  small: [`Create apps with all new abilities.`, `The perfect tool for teams.`],
 }
 
 const HeadContent = memo(() => {
@@ -163,7 +163,7 @@ const HeadJoin = memo(() => {
                 }}
                 borderRadius={1000}
                 boxShadow={[[0, 5, 40, [0, 0, 0, 0.15]]]}
-                flexFlow="row"
+                flexDirection="row"
                 group
                 space={false}
                 margin={[0, '-2%']}
@@ -293,7 +293,7 @@ export function HeadSection() {
 // const RoundButton = ({ primary = colors.red, ...props }: ViewProps & { primary?: any }) => (
 //   <View
 //     tagName="a"
-//     flexFlow="row"
+//     flexDirection="row"
 //     position="relative"
 //     alignItems="center"
 //     justifyContent="center"

@@ -172,7 +172,7 @@ export function CustomApp1() {
                 filters={form.getFilters(['active', 'type'])}
               />
             </Pane>
-            <Pane scrollable="x" flexFlow="row" padding={20}>
+            <Pane scrollable="x" flexDirection="row" padding={20}>
               {highlighted.map(row => (
                 <Card
                   key={row.id}

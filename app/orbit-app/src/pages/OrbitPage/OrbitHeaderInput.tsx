@@ -144,7 +144,7 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { f
 
   return (
     <FakeInput>
-      <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
+      <View height="100%" flex={1} position="relative" flexDirection="row" alignItems="center">
         <HighlightedTextArea
           forwardRef={headerStore.inputRef}
           width="100%"
@@ -178,7 +178,7 @@ const After = gloss(Box, {
   bottom: 0,
   alignItems: 'center',
   justifyContent: 'center',
-  flexFlow: 'row',
+  flexDirection: 'row',
 })
 
 const FakeInput = gloss(View, {
@@ -187,7 +187,7 @@ const FakeInput = gloss(View, {
   padding: [2, 12],
   alignItems: 'center',
   justifyContent: 'center',
-  flexFlow: 'row',
+  flexDirection: 'row',
   flex: 1,
   cursor: 'text',
   transition: 'none',

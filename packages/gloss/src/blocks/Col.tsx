@@ -5,5 +5,5 @@ export type ColProps = BaseProps
 
 export const Col = gloss(Base, {
   display: 'flex',
-  flexFlow: 'column',
+  flexDirection: 'column',
 })

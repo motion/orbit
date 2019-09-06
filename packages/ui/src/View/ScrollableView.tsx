@@ -9,7 +9,7 @@ import { ScrollableViewProps } from './types'
 import { View } from './View'
 import { wrappingSpaceTheme } from './wrappingSpaceTheme'
 
-// dont allow flexFlow so we force props down through flexDirection
+// dont allow flexDirection so we force props down through flexDirection
 
 const isOnlyChildrenDefined = props => {
   for (const key in props) {

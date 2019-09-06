@@ -42,7 +42,7 @@ export const MenuButton = memo((props: MenuButtonProps) => {
           <View
             height={height}
             onClick={preventPropagation}
-            flexFlow="row"
+            flexDirection="row"
             alignItems="center"
             position="relative"
             justifyContent="center"

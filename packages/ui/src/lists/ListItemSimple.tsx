@@ -313,7 +313,7 @@ const ListItemInner = memoIsEqualDeep(function ListItemInner(props: ListItemSimp
 const ListItemTitleBar = gloss(Row, {
   width: '100%',
   flex: 1,
-  flexFlow: 'row',
+  flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   textAlign: 'left',
@@ -325,7 +325,7 @@ const Preview = gloss({
 })
 
 const ListItemSubtitle = gloss(View, {
-  flexFlow: 'row',
+  flexDirection: 'row',
   alignItems: 'center',
   flex: 1,
   overflow: 'hidden',
@@ -341,7 +341,7 @@ const AfterHeader = gloss(Box, {
 const ListItemMainContent = gloss<{ oneLine?: boolean }>(Box, {
   flex: 1,
   margin: ['auto', 0],
-  flexFlow: 'row',
+  flexDirection: 'row',
 })
 
 const getIconSize = props =>

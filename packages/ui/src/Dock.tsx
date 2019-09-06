@@ -92,7 +92,7 @@ export const DockButton = (props: DockButtonProps) => {
         />
         {!!props.label && (
           <Theme name="tooltip">
-            <TagLabel towards="right" size="xxs" {...labelProps}>
+            <TagLabel size="xxs" {...labelProps}>
               {props.label}
             </TagLabel>
           </Theme>
@@ -102,7 +102,7 @@ export const DockButton = (props: DockButtonProps) => {
   )
 }
 
-type TagLabelProps = TagProps & {
+export type TagLabelProps = TagProps & {
   arrowSize?: number
   towards?: 'left' | 'right' | 'top' | 'bottom'
 }

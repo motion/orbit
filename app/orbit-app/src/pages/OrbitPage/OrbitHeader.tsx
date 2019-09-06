@@ -4,8 +4,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react, useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
+import { createRef, useRef } from 'react'
 
 import { sleep } from '../../helpers'
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
@@ -80,6 +80,7 @@ class HeaderStore {
       await when(() => !appsCarouselStore.isAnimating)
       ensure('not already active', document.activeElement !== this.inputRef.current)
       // this causes re-paints, dont do it too eagerly
+      ensure('this.inputRef.current', !!this.inputRef.current)
       this.inputRef.current!.focus()
       moveCursorToEndOfTextarea(this.inputRef.current)
     },
@@ -369,7 +370,7 @@ const OrbitHeaderContainer = gloss<any>(View, {
 }))
 
 const HeaderSide = gloss<RowProps & { slim?: boolean }>(Row, {
-  flexFlow: 'row',
+  flexDirection: 'row',
   flex: 1,
   width: '10%',
   minWidth: 110,
@@ -402,7 +403,7 @@ const HeaderContain = gloss<RowProps & { isActive?: boolean; isDeveloping: boole
 }))
 
 const HeaderTop = gloss(View, {
-  flexFlow: 'row',
+  flexDirection: 'row',
   position: 'relative',
 })
 

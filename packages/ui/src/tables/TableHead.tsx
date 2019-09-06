@@ -49,7 +49,7 @@ const TableHeaderColumnInteractive = gloss(Interactive, {
 })
 
 const TableHeaderColumnContainer = gloss(Box, {
-  flexFlow: 'row',
+  flexDirection: 'row',
   padding: '0 8px',
   margin: ['auto', 0],
   alignItems: 'center',
@@ -70,7 +70,7 @@ const TableHeadContainer = gloss(Row, {
 }))
 
 const TableHeadColumnContainer = gloss(Box, {
-  flexFlow: 'row',
+  flexDirection: 'row',
   justifyContent: 'space-between',
   position: 'relative',
   userSelect: 'none',

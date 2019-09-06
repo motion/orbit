@@ -10,6 +10,7 @@ import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
 import { createContextualProps } from './helpers/createContextualProps'
 import { Icon, IconProps, IconPropsContext } from './Icon'
+import { InvertScale } from './InvertScale'
 import { PassProps } from './PassProps'
 import { PopoverProps } from './Popover'
 import { getSegmentedStyle } from './SegmentedRow'
@@ -447,6 +448,12 @@ export function Surface(direct: SurfaceProps) {
         )}
       </>
     )
+  }
+
+  // automatically invert transition
+  if (props.layoutTransition) {
+    const ogChildren = childrenProps.children
+    childrenProps.children = <InvertScale>{ogChildren}</InvertScale>
   }
 
   const iconOpacity = typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any)

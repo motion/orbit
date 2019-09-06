@@ -71,7 +71,7 @@ const OrbitStatusMessages = memo(() => {
 })
 
 const OrbitPageInner = memo(function OrbitPageInner() {
-  const { isEditing } = useStore(App)
+  const appStore = useStore(App)
   const { actions, state } = useOm()
   const isOnIsolateApp = state.router.isOnIsolateApp
 
@@ -134,38 +134,14 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     }
   }, [])
 
-  let contentArea: React.ReactNode = null
-
   /**
-   * Done by andreyy, work to get hmr working on one-off dev apps
+   * Warning: memo here, perf sensitive, beware closed variables
    */
-  // useEffect(() => {
-  //   if (App.appConf.appId === 0) {
-  //     return
-  //   }
-  //   hmrSocket(`/appServer/${App.appConf.appId}/__webpack_hmr`, {
-  //     built: () => {
-  //       console.log('force updating after app server hmr')
-  //       forceUpdate()
-  //     },
-  //   })
-  // }, [App.appConf.appId])
-
-  if (isEditing) {
-    // const bundleUrl = `${App.bundleUrl}?cacheKey=${Math.random()}`
-    // console.log(
-    //   `%cEditing app id: ${App.appConf.windowId} at url ${bundleUrl}`,
-    //   'color: green; background: lightgreen; font-weight: bold;',
-    // )
-    // contentArea = (
-    //   <Suspense fallback={<Loading message={`Loading app ${App.appConf.windowId}`} />}>
-    //     <LoadApp RenderApp={RenderDevApp} bundleURL={bundleUrl} />
-    //   </Suspense>
-    // )
-  } else {
+  const params = state.router.curPage.params!
+  const contentArea = useMemo(() => {
+    let element: React.ReactNode = null
     if (isOnIsolateApp) {
-      const params = state.router.curPage.params!
-      contentArea = (
+      element = (
         <Suspense fallback={null}>
           <OrbitApp
             id={+params.id!}
@@ -173,18 +149,18 @@ const OrbitPageInner = memo(function OrbitPageInner() {
             shouldRenderApp
             isVisible
           />
-          {/* <IdleLoad>{() => <OrbitAppsDrawer />}</IdleLoad> */}
         </Suspense>
       )
     } else {
-      contentArea = (
+      element = (
         <Suspense fallback={null}>
           <OrbitAppsCarousel />
           <IdleLoad>{() => <OrbitAppsDrawer />}</IdleLoad>
         </Suspense>
       )
     }
-  }
+    return element
+  }, [isOnIsolateApp, params])
 
   const onOpen = useCallback(rows => {
     if (rows.length) {
@@ -209,11 +185,15 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       {!isOnIsolateApp && <OrbitHeader />}
       {!isOnIsolateApp && <IdleLoad>{() => <OrbitDock />}</IdleLoad>}
       <OrbitDraggableOverlay />
-      <OrbitInnerChrome nodeRef={innerRef} torn={isEditing}>
-        <OrbitContentArea>
-          <ListPassProps onOpen={onOpen}>{contentArea}</ListPassProps>
-        </OrbitContentArea>
-      </OrbitInnerChrome>
+      <ListPassProps onOpen={onOpen}>
+        <OrbitInnerChrome
+          nodeRef={innerRef}
+          torn={appStore.isEditing}
+          vibrancy={appStore.state.userSettings.vibrancy}
+        >
+          <OrbitContentArea>{contentArea}</OrbitContentArea>
+        </OrbitInnerChrome>
+      </ListPassProps>
     </MainShortcutHandler>
   )
 })
@@ -242,26 +222,55 @@ const IdleLoad = (props: { children: () => React.ReactElement }) => {
   return show ? props.children() : null
 }
 
-// let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
-//   return (
-//     <OrbitApp appDef={appDef} id={App.appConf.windowId} identifier={appDef.id} shouldRenderApp />
-//   )
-// }
-
 const OrbitContentArea = gloss(Box, {
-  flexFlow: 'row',
+  flexDirection: 'row',
   flex: 1,
   transform: {
     z: 0,
   },
 })
 
-const OrbitInnerChrome = gloss<{ torn?: boolean } & ViewProps>(View, {
+const OrbitInnerChrome = gloss<
+  { torn?: boolean; vibrancy: typeof App.state.userSettings.vibrancy } & ViewProps
+>(View, {
   flex: 1,
   overflow: 'hidden',
   position: 'relative',
   zIndex: 3,
-}).theme(({ torn }, theme) => ({
+}).theme(({ torn, vibrancy }, theme) => ({
   boxShadow: [torn ? null : [0, 0, 80, [0, 0, 0, 0.05]]],
-  background: theme.orbitLauncherBackground,
+  background: theme.orbitLauncherBackground[vibrancy || 'some'],
 }))
+
+// /**
+//      * Done by andreyy, work to get hmr working on one-off dev apps
+//      */
+//     // useEffect(() => {
+//     //   if (App.appConf.appId === 0) {
+//     //     return
+//     //   }
+//     //   hmrSocket(`/appServer/${App.appConf.appId}/__webpack_hmr`, {
+//     //     built: () => {
+//     //       console.log('force updating after app server hmr')
+//     //       forceUpdate()
+//     //     },
+//     //   })
+//     // }, [App.appConf.appId])
+
+//     if (isEditing) {
+//       // const bundleUrl = `${App.bundleUrl}?cacheKey=${Math.random()}`
+//       // console.log(
+//       //   `%cEditing app id: ${App.appConf.windowId} at url ${bundleUrl}`,
+//       //   'color: green; background: lightgreen; font-weight: bold;',
+//       // )
+//       // element = (
+//       //   <Suspense fallback={<Loading message={`Loading app ${App.appConf.windowId}`} />}>
+//       //     <LoadApp RenderApp={RenderDevApp} bundleURL={bundleUrl} />
+//       //   </Suspense>
+//       // )
+//     }
+// // let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
+// //   return (
+// //     <OrbitApp appDef={appDef} id={App.appConf.windowId} identifier={appDef.id} shouldRenderApp />
+// //   )
+// // }

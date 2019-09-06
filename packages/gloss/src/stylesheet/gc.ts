@@ -16,6 +16,9 @@ export type StyleTracker = Map<
     displayName?: string
     namespace: string
     rules: BaseRules
+    // we can compile it later and use it for speed
+    // only using in the motion View.tsx stuff for now
+    styleObject?: Object
     selector: string
     style: string
     className: string

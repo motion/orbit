@@ -127,7 +127,7 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
 })
 
 const LinkRow = gloss(Box, {
-  flexFlow: 'row',
+  flexDirection: 'row',
   flex: 1,
   alignItems: 'center',
   justifyContent: 'center',

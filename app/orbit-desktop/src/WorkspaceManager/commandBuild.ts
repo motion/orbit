@@ -5,6 +5,7 @@ import { isOrbitApp, readPackageJson } from '@o/libs-node'
 import { Logger } from '@o/logger'
 import { CommandOpts, resolveCommand } from '@o/mediator'
 import { AppBuildCommand, AppDefinition, CommandBuildOptions, StatusReply } from '@o/models'
+import { stringHash } from '@o/utils'
 import { ensureDir, pathExists, readFile, readJSON, writeJSON } from 'fs-extra'
 import { join } from 'path'
 import webpack from 'webpack'
@@ -152,11 +153,15 @@ async function getBuildInfo(appDir: string) {
   const appPackage = await readJSON(join(appDir, 'package.json'))
   const globalConfig = await getGlobalConfig()
   /// ..... brittle
-  const configFiles = (await Promise.all(
-    [require.resolve('./makeWebpackConfig'), require.resolve('./getNodeAppConfig')].map(async x => {
-      return await readFile(x)
-    }),
-  )).join('')
+  const configFiles = stringHash(
+    (await Promise.all(
+      [require.resolve('./makeWebpackConfig'), require.resolve('./getNodeAppConfig')].map(
+        async x => {
+          return await readFile(x)
+        },
+      ),
+    )).join(''),
+  )
   return {
     configFiles,
     appHash,

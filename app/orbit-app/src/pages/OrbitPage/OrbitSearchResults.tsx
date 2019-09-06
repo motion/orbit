@@ -25,21 +25,9 @@ class OrbitSearchResultsStore {
     },
   )
 
-  get isActiveRaw() {
+  get isActive() {
     return !appsCarouselStore.zoomedIn && !appsDrawerStore.isOpen
   }
-
-  isActive = react(
-    () => this.isActiveRaw,
-    async (next, { sleep, when }) => {
-      await sleep(20)
-      await when(() => !appsCarouselStore.isAnimating && !appsCarouselStore.zoomedIn)
-      return next
-    },
-    {
-      defaultValue: this.isActiveRaw,
-    },
-  )
 
   selectedItem: { type: 'app' | 'content'; index: number } = { type: 'app', index: -1 }
   setSelectedItem(item: ListItemProps, index: number) {
@@ -70,7 +58,7 @@ class OrbitSearchResultsStore {
 
   // handlers for actions
   get shouldHandleEnter() {
-    if (!this.isActiveRaw) return false
+    if (!this.isActive) return false
     if (!this.selectedRow) return false
     return true
   }

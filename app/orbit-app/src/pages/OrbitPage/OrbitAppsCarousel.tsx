@@ -213,41 +213,45 @@ const OrbitAppCard = memo(
             nodeRef={ref}
             pointerEvents={store.isFocused ? 'inherit' : 'none'}
             data-is="OrbitAppCard-Container"
-            zIndex={1000 - index}
             scrollSnapAlign="center"
             marginRight={`-${stackMarginLessPct * 100}%`}
           >
             <View
               animate
+              zIndex={geometry.scrollIntersection().transform(x => 1 - Math.abs(x))}
               rotateY={geometry
                 .scrollIntersection()
                 .transform([-1, 1], [15, -25])
                 // .transform(x => (x > -7 ? -7 : x))
-                .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? 0 : prev))
+                .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? prev : 0))
                 .spring({ stiffness: 250, damping: 50 })}
-              opacity={geometry.scrollIntersection().transform([-1, 1], [0, 3])}
+              opacity={geometry
+                .scrollIntersection()
+                .mergeTransform([zoomOut], (prev, zoomOut) => {
+                  return zoomOut === 1 ? prev : 1
+                })
+                .transform([-1, 1], [0, 2.5])}
               scale={geometry
                 .scrollIntersection()
-                .mergeTransform([zoomOut], (intersect, zoom) => {
-                  if (zoom === 1) return index === appsCarouselStore.focusedIndex ? 1 : 0.5
+                .mergeTransform([zoomOut], (intersect, zoomOut) => {
+                  if (zoomOut === 0) return index === appsCarouselStore.focusedIndex ? 1 : 0.5
                   if (intersect >= 0) return 0.6
                   return 0.6 //todo
                 })
                 .spring({ damping: 50, stiffness: 500 })}
-              zIndex={geometry.scrollIntersection().transform(x => (x > 0 ? 1 - x : x))}
               x={geometry
                 .useTransform(zoomOut, x => {
                   if (x) {
-                    const focused = appsCarouselStore.focusedIndex
-                    if (index === focused) {
-                      return '0%'
-                    }
-                    if (index > focused) {
-                      return '50%'
-                    }
-                    return '-50%'
+                    return '20%'
                   }
-                  return '20%'
+                  const focused = appsCarouselStore.focusedIndex
+                  if (index === focused) {
+                    return '0%'
+                  }
+                  if (index > focused) {
+                    return '50%'
+                  }
+                  return '-50%'
                 })
                 .spring({ damping: 50, stiffness: 250 })}
               {...index === 0 && {

@@ -41,14 +41,21 @@ export class WorkersManager {
         continue
       }
 
-      const workers = definition.workers || []
-      for (const worker of workers) {
-        log.verbose('running worker', worker)
-        try {
-          worker()
-        } catch (err) {
-          log.error(`Error running worker ${err.message}`, err)
+      try {
+        const workers = definition.workers || []
+        for (const worker of workers) {
+          log.verbose('running worker', worker)
+          try {
+            worker()
+          } catch (err) {
+            log.error(`Error running worker ${err.message}`, err)
+          }
         }
+      } catch (err) {
+        /**
+         * TODO bridge this info back to app
+         */
+        log.error(`Error running worker app ${definition.id} ${err.message}`, err)
       }
     }
   }

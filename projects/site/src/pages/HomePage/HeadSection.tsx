@@ -18,9 +18,9 @@ let lgSpace = <Space size="xxxl" />
 // Itrou
 
 let allTitles = {
-  large: 'A new type of OS.',
-  medium: 'A new type of OS.',
-  small: 'A new type of OS.',
+  large: 'A new App OS',
+  medium: 'A new App OS',
+  small: 'A new App OS',
 }
 
 let allTexts = {

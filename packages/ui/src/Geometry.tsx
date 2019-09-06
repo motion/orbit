@@ -178,7 +178,7 @@ class GeometryStore {
             // trigger update
             scrollProgress.set(scrollProgress.get())
           },
-          100,
+          80,
           {
             trailing: true,
           },

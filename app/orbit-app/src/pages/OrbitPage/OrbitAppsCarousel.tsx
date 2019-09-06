@@ -213,25 +213,22 @@ const OrbitAppCard = memo(
             nodeRef={ref}
             pointerEvents={store.isFocused ? 'inherit' : 'none'}
             data-is="OrbitAppCard-Container"
-            zIndex={1000 - index}
             scrollSnapAlign="center"
             marginRight={`-${stackMarginLessPct * 100}%`}
           >
             <View
               animate
+              zIndex={geometry.scrollIntersection().transform(x => 1 - Math.abs(x))}
               rotateY={geometry
                 .scrollIntersection()
                 .transform([-1, 1], [15, -25])
                 // .transform(x => (x > -7 ? -7 : x))
                 .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? 0 : prev))
                 .spring({ stiffness: 250, damping: 50 })}
-              opacity={
-                1 ||
-                geometry
-                  .scrollIntersection()
-                  .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? prev : 1))
-                  .transform([-1, 1], [0, 2.5])
-              }
+              opacity={geometry
+                .scrollIntersection()
+                .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? prev : 1))
+                .transform([-1, 1], [0, 2.5])}
               scale={geometry
                 .scrollIntersection()
                 .mergeTransform([zoomOut], (intersect, zoom) => {
@@ -240,7 +237,6 @@ const OrbitAppCard = memo(
                   return 0.6 //todo
                 })
                 .spring({ damping: 50, stiffness: 500 })}
-              zIndex={geometry.scrollIntersection().transform(x => 1 - Math.abs(x))}
               x={geometry
                 .useTransform(zoomOut, x => {
                   if (x) {

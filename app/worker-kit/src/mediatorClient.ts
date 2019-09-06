@@ -1,6 +1,10 @@
 import { MediatorClient } from '@o/mediator'
 
-export let mediatorClient: MediatorClient
+let mediatorClient: MediatorClient
+
+export function getMediatorClient() {
+  return mediatorClient
+}
 
 export function setMediatorClient(next: MediatorClient) {
   mediatorClient = next

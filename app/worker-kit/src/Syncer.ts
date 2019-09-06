@@ -6,8 +6,6 @@ import { EntityManager, getManager, getRepository } from 'typeorm'
 import { getMediatorClient } from './mediatorClient'
 import { SyncerUtils } from './SyncerUtils'
 
-console.log('mediatorClient', getMediatorClient())
-
 const cancelCommands = new Set<number>()
 
 export class AppCancelError extends Error {}

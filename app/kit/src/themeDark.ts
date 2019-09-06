@@ -106,8 +106,8 @@ Object.assign(
     appCardBackgroundTransparent: [15, 15, 15, 0],
     orbitLauncherBackground: {
       none: [30, 30, 30],
-      some: [10, 10, 20, 0.2], // we use thicker vibrancy here
-      more: [30, 30, 40, 0.5],
+      some: [10, 10, 13, 0.2], // we use thicker vibrancy here
+      more: [25, 25, 30, 0.4],
     },
     sidebarBorderColor: '#444',
     headerBorderBottom: '#151515',

@@ -11,6 +11,8 @@
     "example-workspace/apps/*"
   ],
   "scripts": {
+    "preinstall": "yarn electron:unpatch",
+    "postinstall": "patch-package && yarn electron:patch:if-exists",
     "bootstrap": "./bin/bootstrap",
     "clean": "bin/clean",
     "clean:all": "bin/clean --modules --data --build --apps",
@@ -31,6 +33,9 @@
     "start:dev:noworkers:clean": "(cd example-workspace && DISABLE_WORKERS=true orbit ws --dev --logLevel 6 --clean)",
     "start:devtools": "overmind-devtools & (cd app/orbit-repl && yarn start)",
     "start:site": "cd projects/site && yarn start",
+    "electron:patch:if-exists": "if [ -d  ~/github/electron/electron-gn/src/out/Release ]; then yarn electron:patch; fi",
+    "electron:patch": "cd node_modules/electron && mv dist dist2 && ln -s ~/github/electron/electron-gn/src/out/Release dist",
+    "electron:unpatch": "if [ -f  node_modules/electron/dist2 ]; then rm node_modules/electron/dist && mv node_modules/electron/dist2 node_modules/electron/dist; fi",
     "start:playground": "cd projects/playground && yarn start",
     "fix-permissions": "chmod ug+x app/orbit/_/index.js",
     "build": "tsc -b",
@@ -47,7 +52,6 @@
     "publish:apps:patch": "lerna exec --concurrency 1 --scope '@o/*-app' --no-bail -- orbit publish --bump-version patch",
     "publish:apps:patch:ignore-build": "lerna exec --scope '@o/*-app' --no-bail -- orbit publish --bump-version patch --ignore-version --ignore-build",
     "test:built:app": "cd app/build-orbit && yarn run test:built:app",
-    "postinstall": "patch-package",
     "dev:open:datafolder": "open ~/Library/Application\\ Support/Electron",
     "dev:open:db": "open ~/Library/Application\\ Support/Electron/development_database.sqlite",
     "test": "jest",
@@ -58,8 +62,8 @@
     "react-hot-loader": "4.12.12"
   },
   "resolutions": {
-    "react": "16.8.6",
-    "react-dom": "16.8.6",
+    "react": "16.9.0",
+    "react-dom": "16.9.0",
     "node-gyp": "5.0.3",
     "node-abi": "2.11.0",
     "@types/lodash": "4.14.135",

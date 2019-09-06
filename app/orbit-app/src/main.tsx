@@ -1,11 +1,28 @@
 import '../public/styles/base.css'
-import 'react-hot-loader'
 
-import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
-import { Provider } from 'overmind-react'
+/**
+ * ⚠️
+ *
+ * Note: we're using custom react/react-dom that lets you move between prod/dev.
+ *
+ * Please don't import anything else above this, be careful.
+ *
+ * Before we load it, we load in dev mode, then switch back into whatever mode were in.
+ *
+ *   1. Be sure this is the first time react/react-dom are loaded
+ *   2. Be sure react-hot-loader is before them
+ *
+ */
+const OG_DEV = window['__DEV__']
+window['__DEV__'] = true
+require('react-hot-loader')
+const React = require('react')
+const ReactDOM = require('react-dom')
+window['__DEV__'] = OG_DEV
 
-import { IS_ELECTRON } from './constants'
-import { sleep } from './helpers'
+const { getGlobalConfig, setGlobalConfig } = require('@o/config')
+const { IS_ELECTRON } = require('./constants')
+const { sleep } = require('./helpers')
 
 const SearchOptions = {
   profile: window.location.search.includes('react.profile'),
@@ -33,7 +50,7 @@ if (process.env) {
 
 async function fetchInitialConfig() {
   // set config before app starts...
-  let config: GlobalConfig | null = null
+  let config = null
   while (!config) {
     try {
       config = await fetch('/config').then(res => res.json())
@@ -120,9 +137,6 @@ async function main() {
 
 // render app
 async function startApp(forceRefresh: boolean | 'mode' = false) {
-  const React = require('react')
-  const ReactDOM = require('react-dom')
-
   let RootNode = document.querySelector('#app')
 
   if (forceRefresh === 'mode') {
@@ -140,6 +154,7 @@ async function startApp(forceRefresh: boolean | 'mode' = false) {
   // re-require for hmr to capture new value
   const { OrbitRoot } = require('./OrbitRoot')
 
+  const { Provider } = require('overmind-react')
   let elements = (
     <Provider value={window['om']}>
       <OrbitRoot />

@@ -15,8 +15,8 @@
     "core-js": "2.6.5",
     "gloss": "^2.6.0",
     "lodash": "4.17.11",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
     "react-hot-loader": "4.12.12",
     "framer-motion": "1.6.7"
   }

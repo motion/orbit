@@ -1,4 +1,9 @@
+Really nice app flow:
 
+Notes app
+RSS app
+
+Have them both work together.
 
 ---
 

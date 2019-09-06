@@ -1,0 +1,13 @@
+diff --git a/node_modules/electron-devtools-installer/dist/utils.js b/node_modules/electron-devtools-installer/dist/utils.js
+index babbbd1..1526270 100644
+--- a/node_modules/electron-devtools-installer/dist/utils.js
++++ b/node_modules/electron-devtools-installer/dist/utils.js
+@@ -9,6 +9,8 @@ var _electron = require('electron');
+ 
+ var _electron2 = _interopRequireDefault(_electron);
+ 
++_electron2.default = _electron2.default || _electron2
++
+ var _fs = require('fs');
+ 
+ var _fs2 = _interopRequireDefault(_fs);

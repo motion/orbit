@@ -16,8 +16,8 @@
     "@o/fast-compare": "^2.6.0",
     "@o/utils": "^2.6.0",
     "lodash": "^4.17.15",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
   },
   "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

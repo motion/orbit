@@ -48,8 +48,8 @@
   "peerDependencies": {
     "electron": "*",
     "mobx": "*",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
   },
   "devDependencies": {
     "touch": "^3.1.0"

@@ -292,7 +292,7 @@ export const List = memoIsEqualDeep(
 )
 
 List.defaultProps = {
-  searchable: false,
+  searchable: true,
 }
 
 function ListPlaceholder(props: ListProps) {

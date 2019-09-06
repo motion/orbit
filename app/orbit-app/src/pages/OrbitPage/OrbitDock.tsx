@@ -162,8 +162,9 @@ export const OrbitDock = memo(() => {
     >
       <OrbitDockPanel offset={0} apps={topDockApps} />
       <OrbitDockPanel offset={topDockApps.length} apps={bottomDockApps} />
-      <Dock position="relative" flexDirection="column" className="orbit-dock" bottom="auto">
+      <Dock space="sm" position="relative" flexDirection="column" bottom="auto">
         <DockThemeButton index={topDockApps.length + bottomDockApps.length} />
+        <DockVibrancyButton index={topDockApps.length + bottomDockApps.length + 1} />
       </Dock>
     </Col>
   )
@@ -274,6 +275,34 @@ const DockThemeButton = memo(({ index }: { index: number }) => {
       }
       icon={theme.icon}
       label={`Theme: ${theme.name}`}
+      {...dockButtonProps(index, dockStore)}
+    />
+  )
+})
+
+const vibrancies = [
+  { name: 'More', value: 'more', icon: 'circle' },
+  { name: 'Some', value: 'some', icon: 'selection' },
+  { name: 'None', value: 'none', icon: 'full-circle' },
+] as const
+
+const DockVibrancyButton = memo(({ index }: { index: number }) => {
+  const dockStore = orbitDockStore.useStore()
+  const [user, updateUser] = useActiveUser()
+  const curVibrancy = user.settings!.vibrancy || 'some'
+  const vibrancyIndex = vibrancies.findIndex(x => x.value === curVibrancy)
+  const vibrancy = vibrancies[vibrancyIndex]
+
+  return (
+    <DockButton
+      id="vibrancy-mode"
+      onClick={() =>
+        updateUser(x => {
+          x.settings!.vibrancy = vibrancies[(vibrancyIndex + 1) % vibrancies.length].value
+        })
+      }
+      icon={vibrancy.icon}
+      label={`Vibrancy: ${vibrancy.name}`}
       {...dockButtonProps(index, dockStore)}
     />
   )

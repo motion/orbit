@@ -104,7 +104,11 @@ Object.assign(
     sidebarBackgroundTransparent: [15, 15, 15, 0.4],
     appCardBackground: [15, 15, 15],
     appCardBackgroundTransparent: [15, 15, 15, 0],
-    orbitLauncherBackground: [0, 0, 0, 0.2],
+    orbitLauncherBackground: {
+      none: [30, 30, 30],
+      some: [10, 10, 20, 0.2], // we use thicker vibrancy here
+      more: [30, 30, 40, 0.5],
+    },
     sidebarBorderColor: '#444',
     headerBorderBottom: '#151515',
     headerBackground: linearGradient([0, 0, 0, 0.4], [0, 0, 0, 0.3]),

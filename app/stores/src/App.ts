@@ -116,9 +116,9 @@ class AppStore {
       return 'none'
     }
     if (vibrancy === 'more') {
-      return App.isDark ? 'dark' : 'light'
+      return App.isDark ? 'hud' : 'light'
     }
-    return App.isDark ? 'selection' : 'medium-light'
+    return App.isDark ? 'ultra-dark' : 'medium-light'
   }
 
   get isShowingMenu() {

@@ -41,7 +41,7 @@ const SearchOptions = {
   profile: window.location.search.includes('react.profile'),
   concurrent: window.location.search.includes('react.concurrent'),
 }
-debugger
+console.warn('TODO enable prod mode with new electron (see yarn start NODE_ENV)')
 /**
  * Warning: I ran into a bug importing @/kit or @/ui here (or anything from the base DLL)
  * It causes many imports that shouldn't be undefined to be undefined.

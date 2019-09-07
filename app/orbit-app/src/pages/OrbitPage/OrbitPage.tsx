@@ -56,7 +56,6 @@ const OrbitStatusMessages = memo(() => {
         windowId: WINDOW_ID,
       },
     }).subscribe(message => {
-      console.log('message', message)
       banner.set({
         type: message.type,
         title: message.title,
@@ -205,12 +204,12 @@ const IdleLoad = (props: { children: () => React.ReactElement }) => {
       if (getValue() === true) {
         return true
       }
-      await sleep(100)
+      await sleep(80)
       await whenIdle()
-      await sleep(100)
+      await sleep(80)
       await whenIdle()
       await when(() => !isAnimating)
-      await sleep(100)
+      await sleep(80)
       await whenIdle()
       return true
     },

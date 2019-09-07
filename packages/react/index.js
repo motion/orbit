@@ -327,11 +327,11 @@ Component.prototype.isReactComponent = {};
 Component.prototype.setState = function (partialState, callback) {
   (function () {
     if (!(typeof partialState === 'object' || typeof partialState === 'function' || partialState == null)) {
-      if (__DEV__) {
+      // if (__DEV__) {
         throw ReactError(Error('setState(...): takes an object of state variables to update or a function which returns an object of state variables.'));
-      } else {
-        throw ReactErrorProd(Error(85));
-      }
+      // } else {
+      //   throw ReactErrorProd(Error(85));
+      // }
     }
   })();
   this.updater.enqueueSetState(this, partialState, callback, 'setState');
@@ -977,11 +977,11 @@ function cloneAndReplaceKey(oldElement, newKey) {
 function cloneElement(element, config, children) {
   (function () {
     if (!!(element === null || element === undefined)) {
-      if (__DEV__) {
+      // if (__DEV__) {
         throw ReactError(Error('React.cloneElement(...): The argument must be a React element, but you passed ' + element + '.'));
-      } else {
-        throw ReactErrorProd(Error(267), element);
-      }
+      // } else {
+      //   throw ReactErrorProd(Error(267), element);
+      // }
     }
   })();
 
@@ -1205,11 +1205,11 @@ function traverseAllChildrenImpl(children, nameSoFar, callback, traverseContext)
       var childrenString = '' + children;
       (function () {
         {
-          if (__DEV__) {
+          // if (__DEV__) {
             throw ReactError(Error('Objects are not valid as a React child (found: ' + (childrenString === '[object Object]' ? 'object with keys {' + Object.keys(children).join(', ') + '}' : childrenString) + ').' + addendum));
-          } else {
-            throw ReactErrorProd(Error(31), childrenString === '[object Object]' ? 'object with keys {' + Object.keys(children).join(', ') + '}' : childrenString, addendum);
-          }
+          // } else {
+          //   throw ReactErrorProd(Error(31), childrenString === '[object Object]' ? 'object with keys {' + Object.keys(children).join(', ') + '}' : childrenString, addendum);
+          // }
         }
       })();
     }
@@ -1389,11 +1389,11 @@ function toArray(children) {
 function onlyChild(children) {
   (function () {
     if (!isValidElement(children)) {
-      if (__DEV__) {
+      // if (__DEV__) {
         throw ReactError(Error('React.Children.only expected to receive a single React element child.'));
-      } else {
-        throw ReactErrorProd(Error(143));
-      }
+      // } else {
+      //   throw ReactErrorProd(Error(143));
+      // }
     }
   })();
   return children;
@@ -1599,11 +1599,11 @@ function resolveDispatcher() {
   var dispatcher = ReactCurrentDispatcher.current;
   (function () {
     if (!(dispatcher !== null)) {
-      if (__DEV__) {
+      // if (__DEV__) {
         throw ReactError(Error('Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:\n1. You might have mismatching versions of React and the renderer (such as React DOM)\n2. You might be breaking the Rules of Hooks\n3. You might have more than one copy of React in the same app\nSee https://fb.me/react-invalid-hook-call for tips about how to debug and fix this problem.'));
-      } else {
-        throw ReactErrorProd(Error(321));
-      }
+      // } else {
+      //   throw ReactErrorProd(Error(321));
+      // }
     }
   })();
   return dispatcher;

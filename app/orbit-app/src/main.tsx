@@ -169,7 +169,6 @@ async function startApp(forceRefresh: boolean | 'mode' = false) {
 
   // re-require for hmr to capture new value
   const { OrbitRoot } = require('./OrbitRoot')
-
   const { Provider } = require('overmind-react')
   let elements = (
     <Provider value={window['om']}>
@@ -187,11 +186,7 @@ async function startApp(forceRefresh: boolean | 'mode' = false) {
 
   if (SearchOptions.concurrent) {
     console.warn('Concurrent mode enabled')
-    ReactDOM.unstable_createRoot(RootNode).render(
-      // <React.StrictMode>
-      <React.unstable_ConcurrentMode>{elements}</React.unstable_ConcurrentMode>,
-      // </React.StrictMode>,
-    )
+    ReactDOM.unstable_createRoot(RootNode).render(elements)
   } else {
     ReactDOM.render(elements, RootNode)
   }

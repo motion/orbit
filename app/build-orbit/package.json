@@ -14,8 +14,8 @@
   },
   "devDependencies": {
     "debug": "^3.1.0",
-    "electron-builder": "20.38.5",
-    "electron-rebuild": "1.8.5",
+    "electron-builder": "21.2.0",
+    "electron-rebuild": "1.8.6",
     "execa": "2.0.3",
     "fs-extra": "^7.0.0",
     "node-abi": "2.11.0",

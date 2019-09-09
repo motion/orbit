@@ -1,3 +1,75 @@
+The plan from jun for Sep:
+
+"Have everything ready for beta"
+
+- Improved demo flow x2 (apps, bugs, etc)
+- Build to production
+- Website improved with better docs / home text
+
+---
+
+1) Am I on track?
+
+Yes, but will need to work really hard on demo apps, and be sure to do site work every day:
+
+2) My daily plan should be?
+
+- Half day on stability, performance, and "Orbit" high level flow stuff until that feels good enough for release/demo
+- Quarter day on apps, focused entirely on getting the apps to feel good, including ~30m night to think through the demo high level.
+- One hour a day on the website/docs:
+
+---
+
+Detailed September Plan:
+
+- [ ] Finish motion/carousel
+  - [ ] Carousel is definitely slower, need to test with more items too
+  - [ ] Performance opening drawer
+  - [ ] Fix a lot of correctness bugs (resize window, etc)
+  - [ ] Check into regressions on keyboard movement in main area/apps (is it moving inside apps when it shouldnt?)
+
+- [ ] Get Concurrent working with priority on new react
+- [ ] Fix a ton of bugs:
+  - [ ] Search has some glitching when showing items
+  - [ ] QueryBuilder has so many, including performance
+  - [ ] Get the whole flow of install/delete/edit working again
+
+- [ ] Lists app should have a lot of improvements
+- [ ] General performance run would help a ton
+  - [ ] Especially things like:
+    - [ ] During sync I think its saving bits often and causing lots of updates
+
+- [ ] Build to production
+  - [ ] !!! we can't do this right now for electron 8 though without some trouble, so no rounded windows..?
+  - [ ] Get build to prod working
+  - [ ] + get build to prod with full flow of app editing working
+
+- [ ] Last Features to tie it all together?
+  - [ ] Should I do anything more????
+  - [ ] If so, only to actually make the demo apps great
+    - [ ] Having a floating "selection" may be it:
+      - [ ] Simple CardStack that shows what's selected
+      - [ ] Esc/close button to clear it
+      - [ ] Finish drag/drop + with wysiwig
+
+- [ ] Demo apps that would be compelling:
+  - [ ] StackOverflow Clone
+  - [ ] Some sort of easy drag/drop in/out type thing
+  - [ ] Some sort of data browsing/plugin app:
+    - [ ] Database browser could be useful
+    - [ ] GraphQL usage would be helpful
+
+
+GO TO PROD / DEV TASKS
+
+- [ ] FastRefresh once Webpack plugin is ready for both our own stack + the individual apps.
+- [ ] Webpack 5 will be instrumental in more easily going to production, check if its ready for integration as its picked up some steam.
+- [ ] React Window is being re-written again by bvaughn, there are bugs in it currently, an afternoon to revisit and see if we can upgrade to that version
+
+
+----------
+
+
 NEW SITE SECTIONS:
 
 1. "heads up display" + "apps for teams" + "simple"
@@ -6,24 +78,35 @@ NEW SITE SECTIONS:
 4. Augment your OS (show interaction with home)
 5. Best DX, ever (hover to define DX) (SHOW MORE)
 6. IN as easy as OUT (show OCR/pinning + syncing/graph)
-7. REPLACE Batteries included with a quick feature rundown w/screenshots:
-   1. GraphQL browser
-   2. QueryBuilder
-   3. Bit Explorer
-   4. Large UI Kit
-   5. etc
+7. BATTERIES => FEATURES
+   1. Have 3 buttons on the top with sections:
+      1. (Development)
+         1. Webpack 5
+         2. Fast Refresh
+         3. 100ms HMR
+         4. Visual App Manager
+         5. 0-config Build system
+      2. (Interface)
+         1. Virtualized Tables/Lists
+         2. Powerful Selections
+         3. Forms, Flows
+         4. 80 Components, 50 hooks
+         5. Suspense integrated / hooks
+      3. (Apps)
+         1. QueryBuilder
+         2. GraphQL
+         3. Drag/Drop
+         4. Shared Bits
+         5. Clipboard
+         6. NLP/Searchable
 
 (if anything, just show footer here and have a FEATURES page)
 
-8. Easy deploy (move the deploy stuff down to here)
+1. Easy deploy (move the deploy stuff down to here)
 ...
 
 Features page could show each individual app in more depth basically,
 very simple layout with some brighter colors and screenshots.
-
-
-
-
 
 
 Really nice app flow:
@@ -35,19 +118,7 @@ Have them both work together.
 
 ---
 
-Weekend goals!!!!!!
-
-- [ ] Get ocr fully linked in with tray => Bit
-- [ ] get tray showing a dropdown menu
-- [ ] fix apps make the loop from "CMD+N" to actually editing and app <10s
-- [ ] do all querybuilder improvements
-- [ ] more wysiwig
-
----
-
-- [ ] fix perf issue with switching between items
 - [ ] fix pane resizing bugs
-- [ ] fix suspense flickering issues
 - [ ] fix issues using different app apis, test
 - [ ] persisting queries
 - [ ] persisting to bits the query information
@@ -127,14 +198,6 @@ next
 
 ---
 
-Sep
-
-"Have everything ready for beta"
-
-- Improved demo flow x2 (apps, bugs, etc)
-- Build to production
-- Website improved with better docs / home text
-
 Oct
 
 "Launch in private beta"
@@ -164,22 +227,6 @@ First, need to talk to a few startup people to get some feedback:
 - Zeit/Expo cofounders
 - Retool?
 - ... add a few more
-
----
-
-there should be a concept of "extensions" that could be loaded via app store.
-
-extensions would be basically a DLL that provides functionality to all apps.
-
-examples:
-
-- MonacoEditorExtension provides a code editor, you can import and use it.
-- DraftEditor Extension (wysiwig)
-- NLP/Screen/Etc
-- Then apps would have to declare the extensions they rely on and have orbit install
-- Is very tricky in terms of reloading, would require a hard reload likely
-
----
 
 Questions:
 

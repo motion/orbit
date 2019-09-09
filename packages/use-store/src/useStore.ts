@@ -23,6 +23,7 @@ export {
   ReactionRejectionError,
   useCurrentComponent,
   useReaction,
+  UpdatePriority,
 } from '@o/automagical'
 export { configureUseStore } from './configure'
 export { createStoreContext } from './createStoreContext'

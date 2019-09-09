@@ -608,7 +608,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       movable,
       top,
       width,
-      disableFloatingGrabbers,
+      disableFloatingGrabbers = true,
       disabled,
       minWidth,
       maxHeight,

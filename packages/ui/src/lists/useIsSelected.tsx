@@ -12,7 +12,7 @@ export function useIsSelected(props: Pick<ListItemSimpleProps, 'isSelected' | 'i
     },
     {
       name: 'ListItem|Card.isSelected',
-      priority: UpdatePriority.UserBlocking,
+      priority: UpdatePriority.Immediate,
     },
     [props.isSelected],
   )

@@ -1,5 +1,4 @@
 import { AppDefinition, AppIcon, ensure, react, Templates, UpdatePriority, useAppDefinition, useReaction, useStore } from '@o/kit'
-import { isEqualDebug } from '@o/libs'
 import { AppBit } from '@o/models'
 import { Card, CardProps, FullScreen, Geometry, Row, SimpleText, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useScrollProgress, useTheme, View } from '@o/ui'
 import { MotionValue, useMotionValue } from 'framer-motion'
@@ -324,7 +323,6 @@ const OrbitAppCard = memo(
       </Geometry>
     )
   },
-  isEqualDebug,
 )
 
 type AppLoadingScreenProps = {

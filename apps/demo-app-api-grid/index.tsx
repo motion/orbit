@@ -1,6 +1,6 @@
 import { AppCard, createApp, useUserState } from '@o/kit'
 import Slack, { SlackConversation } from '@o/slack-app'
-import { GridLayout, Tab, Table, Tabs } from '@o/ui'
+import { Calendar, Card, GridLayout, Tab, Table, Tabs } from '@o/ui'
 import React, { useState } from 'react'
 
 export default createApp({
@@ -15,6 +15,12 @@ export function DemoGridApp() {
   const [app, setApp] = useState(null)
   const [rooms, setRooms] = useState([])
   const [layout, setLayout] = useUserState('grid-layout', null)
+  const [dateRange, setDateRange] = useState({
+    startDate: new Date(),
+    endDate: null,
+    key: 'selection',
+  })
+  console.log('dateRange', dateRange)
   return (
     <GridLayout layout={layout} onChangeLayout={setLayout}>
       <AppCard key="slack" title="Slack room" appType={Slack} onChange={setApp}>
@@ -30,7 +36,20 @@ export function DemoGridApp() {
           )
         }}
       </AppCard>
-      <AppCard key="slack2" title="Room Messages" appType={Slack} app={app} padding="sm">
+      <Card flex={1} elevation={3} key="slack2" title="Time Period" padding="sm">
+        <Calendar
+          ranges={[dateRange]}
+          scroll={{ enabled: true }}
+          showSelectionPreview={false}
+          showDateDisplay={false}
+          moveRangeOnFirstSelection={false}
+          onChange={(a, b) => {
+            setDateRange([a])
+            console.log('a', a, b)
+          }}
+        />
+      </Card>
+      <AppCard key="slack3" title="Room Messages" appType={Slack} app={app} padding="sm">
         {({ api }) => (
           <Tabs scrollable defaultActive="0">
             {rooms.map((room, index) => (

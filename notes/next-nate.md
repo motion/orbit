@@ -10,13 +10,17 @@ The plan from jun for Sep:
 
 1) Am I on track?
 
-Yes, but will need to work really hard on demo apps, and be sure to do site work every day:
+Yes, but will need to work really hard on demo apps, and be sure to do docs every day.
 
 2) My daily plan should be?
 
-- Half day on stability, performance, and "Orbit" high level flow stuff until that feels good enough for release/demo
-- Quarter day on apps, focused entirely on getting the apps to feel good, including ~30m night to think through the demo high level.
-- One hour a day on the website/docs:
+- A lot of DX initially, to see if we can make myself faster
+- Half day:
+  - stability, performance, "Orbit" high level stuff
+- Quarter day:
+  - apps, focused entirely on demo apps dfeeling good
+- One hour:
+  - website/docs
 
 ---
 

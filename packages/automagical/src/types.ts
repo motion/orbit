@@ -36,6 +36,7 @@ export type ReactionOptions = {
   lazy?: boolean
   name?: string
   priority?: UpdatePriority
+  debug?: boolean
 }
 
 export interface MagicalObject {

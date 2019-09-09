@@ -2,7 +2,7 @@ import { AppIcon, useModels, useStore } from '@o/kit'
 import { BuildStatusModel } from '@o/models'
 import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
-import { createUsableStore, ensure, react, useReaction } from '@o/use-store'
+import { createUsableStore, ensure, react, UpdatePriority, useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 import { createRef, useRef } from 'react'
@@ -66,7 +66,7 @@ class HeaderStore {
   }
 
   triggerFocus = 0
-  focus = async () => {
+  async focus() {
     if (!this.inputRef || !this.inputRef.current) return
     if (document.activeElement === this.inputRef.current) return
     this.triggerFocus = Date.now()
@@ -107,9 +107,9 @@ class HeaderStore {
   )
 
   handleMouseUp = async () => {
-    window['requestIdleCallback'](() => {
-      this.focus()
-    })
+    await sleep(0)
+    await whenIdle()
+    this.focus()
   }
 }
 
@@ -120,17 +120,15 @@ export const useHeaderStore = headerStore.useStore
 export const OrbitHeader = memo(() => {
   const om = useOm()
   const containerRef = useRef()
-  // perf sensitive
   const [focusedApp, zoomedIn] = useReaction(
     () => [appsCarouselStore.focusedApp, appsCarouselStore.zoomedIn],
-    async (_, { sleep }) => {
-      await sleep(200)
-      return _
-    },
+    _ => _,
     {
       defaultValue: [appsCarouselStore.focusedApp, appsCarouselStore.zoomedIn],
+      priority: UpdatePriority.Idle,
     },
   )
+  console.warn('render OrbitHeader', focusedApp, zoomedIn)
   const orbitStore = useOrbitStore()
   const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()

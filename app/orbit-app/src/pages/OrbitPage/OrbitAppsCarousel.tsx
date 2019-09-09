@@ -1,4 +1,5 @@
-import { AppDefinition, AppIcon, ensure, react, Templates, useAppDefinition, useReaction, useStore } from '@o/kit'
+import { AppDefinition, AppIcon, ensure, react, Templates, UpdatePriority, useAppDefinition, useReaction, useStore } from '@o/kit'
+import { isEqualDebug } from '@o/libs'
 import { AppBit } from '@o/models'
 import { Card, CardProps, FullScreen, Geometry, Row, SimpleText, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useScrollProgress, useTheme, View } from '@o/ui'
 import { MotionValue, useMotionValue } from 'framer-motion'
@@ -49,15 +50,15 @@ export const OrbitAppsCarousel = memo(() => {
    * Use this to update state after animations finish
    */
   const hidden = useReaction(() => appsCarouselStore.hidden)
-  const [scrollable, disableInteraction] = useReaction(
-    () => [appsCarouselStore.zoomedIn ? false : 'x', appsCarouselStore.zoomedIn === false] as const,
-    async (next, { when, sleep }) => {
+  const scrollable = useReaction(
+    () => (appsCarouselStore.zoomedIn ? false : 'x'),
+    async (next, { when }) => {
       await when(() => !appsCarouselStore.isAnimating)
-      await sleep(50)
       return next
     },
     {
-      defaultValue: [false, true],
+      defaultValue: false,
+      priority: UpdatePriority.Low,
       name: 'OrbitAppsCarousel.render',
     },
   )
@@ -65,6 +66,8 @@ export const OrbitAppsCarousel = memo(() => {
   // useLayoutEffect(() => {
   //   rowRef.current!.scrollLeft = scrollSpring.x.getValue()
   // }, [scrollable])
+
+  console.warn('OrbitAppsCarousel.render()')
 
   return (
     <View data-is="OrbitAppsCarousel" width="100%" height="100%">
@@ -105,7 +108,6 @@ export const OrbitAppsCarousel = memo(() => {
               key={app.id}
               index={index}
               app={app}
-              disableInteraction={disableInteraction}
               identifier={app.identifier!}
               width={frameSize.width}
               height={frameSize.height}
@@ -125,7 +127,6 @@ export const OrbitAppsCarousel = memo(() => {
 
 type OrbitAppCardProps = CardProps & {
   identifier: string
-  disableInteraction: boolean
   index: number
   app: AppBit
   zoomOut: MotionValue
@@ -153,37 +154,13 @@ class AppCardStore {
     },
   )
 
-  isFocusZoomed = react(
-    () => this.props.index === appsCarouselStore.focusedIndex && !appsCarouselStore.state.zoomedOut,
-    // TODO play with this
-    {
-      delay: 40,
-    },
-  )
-
-  isFocused = react(
-    () => this.props.index === appsCarouselStore.focusedIndex,
-    // TODO play with this
-    {
-      delay: 40,
-    },
-  )
-
   setIsIntersected(val: boolean) {
     this.isIntersected = val
   }
 }
 
 const OrbitAppCard = memo(
-  ({
-    app,
-    identifier,
-    index,
-    disableInteraction,
-    zoomOut,
-    scrollIn,
-    ...cardProps
-  }: OrbitAppCardProps) => {
+  ({ app, identifier, index, zoomOut, scrollIn, ...cardProps }: OrbitAppCardProps) => {
     const definition = useAppDefinition(identifier)!
     const store = useStore(AppCardStore, { index })
     const theme = useTheme()
@@ -202,6 +179,18 @@ const OrbitAppCard = memo(
 
     const cardBoxShadow = [15, 30, 120, [0, 0, 0, theme.background.isDark() ? 0.5 : 0.25]]
 
+    // group these updates together, and ensure they are low priority
+    const [isFocused, isFocusZoomed] = useReaction(
+      () => [
+        index === appsCarouselStore.focusedIndex,
+        index === appsCarouselStore.focusedIndex && !appsCarouselStore.state.zoomedOut,
+      ],
+      {
+        priority: UpdatePriority.Low,
+      },
+      [index],
+    )
+
     // wrapping with view lets the scale transform not affect the scroll, for some reason this was happening
     // i thought scale transform doesnt affect layout?
     const mouseDown = useRef(0)
@@ -211,7 +200,7 @@ const OrbitAppCard = memo(
         {(geometry, ref) => (
           <View
             nodeRef={ref}
-            pointerEvents={store.isFocused ? 'inherit' : 'none'}
+            pointerEvents={isFocused ? 'inherit' : 'none'}
             data-is="OrbitAppCard-Container"
             scrollSnapAlign="center"
             marginRight={`-${stackMarginLessPct * 100}%`}
@@ -222,7 +211,7 @@ const OrbitAppCard = memo(
               rotateY={geometry
                 .scrollIntersection()
                 .transform([-1, 1], [15, -25])
-                // .transform(x => (x > -7 ? -7 : x))
+                .transform(x => (x > -7 ? -7 : x))
                 .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? prev : 0))
                 .spring({ stiffness: 250, damping: 50 })}
               opacity={geometry
@@ -299,15 +288,15 @@ const OrbitAppCard = memo(
                 nodeRef={cardRef}
                 borderWidth={0}
                 background={
-                  store.isFocusZoomed
+                  isFocusZoomed
                     ? !definition.viewConfig ||
                       definition.viewConfig.transparentBackground !== false
                       ? theme.appCardBackgroundTransparent
                       : theme.appCardBackground
                     : theme.backgroundStronger
                 }
-                borderRadius={store.isFocusZoomed ? 0 : 20}
-                {...(store.isFocused
+                borderRadius={isFocusZoomed ? 0 : 20}
+                {...(isFocused
                   ? {
                       boxShadow: [
                         [0, 0, 0, 3, theme.alternates!.selected['background']],
@@ -323,10 +312,10 @@ const OrbitAppCard = memo(
                 <AppLoadingScreen definition={definition} app={app} visible={!store.shouldRender} />
                 <OrbitApp
                   id={app.id!}
-                  disableInteraction={disableInteraction}
                   identifier={definition.id}
                   appDef={definition}
                   shouldRenderApp={store.shouldRender}
+                  disableInteraction={!isFocusZoomed}
                 />
               </Card>
             </View>
@@ -335,6 +324,7 @@ const OrbitAppCard = memo(
       </Geometry>
     )
   },
+  isEqualDebug,
 )
 
 type AppLoadingScreenProps = {

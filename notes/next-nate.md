@@ -93,12 +93,13 @@ NEW SITE SECTIONS:
          4. 80 Components, 50 hooks
          5. Suspense integrated / hooks
       3. (Apps)
-         1. QueryBuilder
-         2. GraphQL
-         3. Drag/Drop
-         4. Shared Bits
-         5. Clipboard
-         6. NLP/Searchable
+         1. Syncers/Multi-Process
+         2. QueryBuilder
+         3. GraphQL
+         4. Drag/Drop
+         5. Shared Bits
+         6. Clipboard
+         7. NLP/Searchable
 
 (if anything, just show footer here and have a FEATURES page)
 

@@ -5,6 +5,7 @@
  * @format
  */
 import { isDefined } from '@o/utils'
+import composeRefs from '@seznam/compose-react-refs'
 import { gloss } from 'gloss'
 import { debounce, isEqual, throttle } from 'lodash'
 import memoize from 'memoize-weak'
@@ -205,12 +206,18 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     )
   }
 
+  containerRef = React.createRef<HTMLElement>()
+
   componentDidMount() {
-    document.addEventListener('keydown', this.onKeyDown)
+    if (this.containerRef.current) {
+      this.containerRef.current.addEventListener('keydown', this.onKeyDown)
+    }
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.onKeyDown)
+    if (this.containerRef.current) {
+      this.containerRef.current.removeEventListener('keydown', this.onKeyDown)
+    }
   }
 
   updateList = throttle(() => {
@@ -439,7 +446,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         overflow={viewProps.overflow}
         width={width}
         height={height}
-        nodeRef={containerRef}
+        nodeRef={composeRefs(this.containerRef, containerRef)}
       >
         <TableHead
           columnOrder={columnOrder}

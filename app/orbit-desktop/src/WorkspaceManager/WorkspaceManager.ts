@@ -69,6 +69,18 @@ export class WorkspaceManager {
     this.updateBuildMode()
   }
 
+  private updateBuildMode() {
+    // update buildMode first
+    this.buildMode.main = this.options.dev ? 'development' : 'production'
+    for (const app of this.activeAppsMeta) {
+      // apps always default to production mode
+      this.buildMode[app.packageId] = process.env.DEV_ALL_APPS
+        ? 'development'
+        : this.buildMode[app.packageId] || 'production'
+    }
+    this.buildModePush(this.buildMode)
+  }
+
   async updateWorkspace(opts: CommandWsOptions) {
     log.info(`updateWorkspace ${JSON.stringify(opts)}`)
     // ensure Space model inserted and up to date
@@ -181,18 +193,6 @@ export class WorkspaceManager {
     })
     // sleep because we have no good wait mechanism on setState there
     await sleep(100)
-  }
-
-  private updateBuildMode() {
-    // update buildMode first
-    this.buildMode.main = this.options.dev ? 'development' : 'production'
-    for (const app of this.activeAppsMeta) {
-      // apps always default to production mode
-      this.buildMode[app.packageId] = this.options.dev
-        ? 'development'
-        : this.buildMode[app.packageId] || 'production'
-    }
-    this.buildModePush(this.buildMode)
   }
 
   /**

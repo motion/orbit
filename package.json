@@ -25,6 +25,7 @@
     "clean:devtools-extensions": "rm -r ~/Library/Application Support/Electron/extensions/*",
     "start": "yarn fix-permissions && cd example-workspace && NODE_ENV=development orbit ws --logLevel 1",
     "start:dev": "yarn fix-permissions && cd example-workspace && NODE_ENV=development orbit ws --dev --logLevel 4",
+    "start:dev:all": "DEV_ALL_APPS=1 yarn start:dev",
     "start:dev:clean": "cd example-workspace && NODE_ENV=development orbit ws --dev --logLevel 2 --clean",
     "start:dev:verbose": "cd example-workspace && NODE_ENV=development orbit ws --dev --logLevel 6",
     "start:dev:noworkers": "(cd example-workspace && NODE_ENV=development DISABLE_WORKERS=true orbit ws --dev --logLevel 4)",

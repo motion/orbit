@@ -203,7 +203,7 @@ export const OrbitSearchResults = memo(() => {
   // sync from carousel to list
   useReaction(
     () => appsCarouselStore.focusedIndex,
-    async (index, { sleep }) => {
+    async index => {
       const app = appsCarouselStore.apps[index]
       ensure('app', !!app)
       ensure('not hidden', !appsCarouselStore.hidden)
@@ -213,7 +213,7 @@ export const OrbitSearchResults = memo(() => {
       if (listRef.current && listIndex > -1) {
         if (listRef.current.activeIndex !== listIndex) {
           ignoreNextSelect.current = true
-          await sleep(70)
+          // await sleep(70)
           listRef.current.setActiveIndex(listIndex)
         }
       }
@@ -225,8 +225,8 @@ export const OrbitSearchResults = memo(() => {
       <Row
         data-is="OrbitSearchResults"
         width="100%"
-        height="100%"
-        perspective="1000px"
+        height="102%"
+        perspective="1200px"
         pointerEvents="none"
         WebkitFontSmoothing="antialiased"
       >

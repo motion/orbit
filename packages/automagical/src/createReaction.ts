@@ -43,9 +43,8 @@ export function createReaction(
     return +((typeof localStorage !== 'undefined' && localStorage.getItem('enableLog')) || 0)
   }
 
-  const { delayValue, lazy, delay, equals, log: optionsLog, name } = getReactionOptions(userOptions)
+  const { delayValue, lazy, delay, log: optionsLog, name, equals } = getReactionOptions(userOptions)
   let mobxOptions: Mobx.IReactionOptions = {
-    equals,
     // we run immediately by default
     fireImmediately: !lazy,
     name: config.name || name,
@@ -95,7 +94,7 @@ export function createReaction(
       }
     }
 
-    if (nextValue === currentValueUnreactive) {
+    if (equals ? equals(nextValue, currentValueUnreactive) : nextValue === currentValueUnreactive) {
       return
     }
 
@@ -103,6 +102,9 @@ export function createReaction(
 
     // dev mode logging helpers
     if (process.env.NODE_ENV === 'development') {
+      if (userOptions && userOptions.debug) {
+        console.warn(`Update (previous)`, previousValue, `(next)`, nextValue)
+      }
       changed = [previousValue, nextValue]
     }
 

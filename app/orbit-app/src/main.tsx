@@ -41,7 +41,10 @@ const SearchOptions = {
   profile: window.location.search.includes('react.profile'),
   concurrent: window.location.search.includes('react.concurrent'),
 }
-
+console.warn(
+  'TODO enable prod mode with new electron (see yarn start NODE_ENV)',
+  process.env.NODE_ENV,
+)
 /**
  * Warning: I ran into a bug importing @/kit or @/ui here (or anything from the base DLL)
  * It causes many imports that shouldn't be undefined to be undefined.
@@ -112,7 +115,7 @@ async function main() {
       ],
       // seems like classes dont work (transpiled probably similar to error: https://github.com/maicki/why-did-you-update/issues/47)
       exclude: [
-        /ErrorBoundary|Sidebar|Interactive|Portal|Text|Popover|SuspenseWithBanner|ItemMeasurer|VirtualListItemInner|SortableGridItem|TimeAgo/,
+        /Geometry|ErrorBoundary|Sidebar|Interactive|Portal|Text|Popover|SuspenseWithBanner|ItemMeasurer|VirtualListItemInner|SortableGridItem|TimeAgo/,
       ],
     })
   }
@@ -166,7 +169,6 @@ async function startApp(forceRefresh: boolean | 'mode' = false) {
 
   // re-require for hmr to capture new value
   const { OrbitRoot } = require('./OrbitRoot')
-
   const { Provider } = require('overmind-react')
   let elements = (
     <Provider value={window['om']}>
@@ -184,11 +186,7 @@ async function startApp(forceRefresh: boolean | 'mode' = false) {
 
   if (SearchOptions.concurrent) {
     console.warn('Concurrent mode enabled')
-    ReactDOM.unstable_createRoot(RootNode).render(
-      // <React.StrictMode>
-      <React.unstable_ConcurrentMode>{elements}</React.unstable_ConcurrentMode>,
-      // </React.StrictMode>,
-    )
+    ReactDOM.unstable_createRoot(RootNode).render(elements)
   } else {
     ReactDOM.render(elements, RootNode)
   }

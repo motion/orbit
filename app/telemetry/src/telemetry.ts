@@ -8,7 +8,6 @@ import uuid from 'uuid/v1'
 
 import { sanitizeErrors } from './error-helpers'
 import { EventStorage } from './event-storage'
-import { showAnalyticsNotification } from './showAnalyticsNotification'
 
 export class Telemetry {
   installedOrbitVersion: string
@@ -148,7 +147,7 @@ export class Telemetry {
     let enabled = this.store.getConfig(`telemetry.enabled`)
     if (enabled === undefined || enabled === null) {
       if (!ci.isCI) {
-        showAnalyticsNotification()
+        // showAnalyticsNotification()
       }
       enabled = true
       this.store.updateConfig(`telemetry.enabled`, enabled)

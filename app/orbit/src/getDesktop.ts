@@ -145,7 +145,6 @@ export function runOrbitDesktop(
           ...(singleUseMode && { SINGLE_USE_MODE: 'true' }),
           ...(isInMonoRepo && {
             FIRST_RUN: 'true', // runs it when in monorepo mode
-            NODE_ENV: 'development',
           }),
           HIDE_ON_START: 'true',
           CLI_PATH: cliPath,

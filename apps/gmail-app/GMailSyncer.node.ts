@@ -189,7 +189,7 @@ export const GMailSyncer: SyncerRunner = async ({ app, log, utils }) => {
       // sync threads
       for (let thread of addedThreads) {
         await utils.isAborted()
-        await sleep(10)
+        await sleep(30)
         await syncThread(thread)
       }
 

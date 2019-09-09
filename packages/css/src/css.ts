@@ -71,12 +71,11 @@ export function css(styles: Object, opts?: CSSConfig): Object {
 }
 
 function cssValue(key: string, value: any, options?: CSSConfig) {
-  let valueType = typeof value
   // get real values
   if (value === false) {
     value === FALSE_VALUES[key]
-    valueType = typeof value
   }
+  let valueType = typeof value
   // remove nullish
   if (value === undefined || value === null || value === false) {
     return

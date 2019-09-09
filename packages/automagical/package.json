@@ -15,7 +15,8 @@
     "json-stringify-pretty-compact": "1.2.0",
     "mobx": "*",
     "react": "^16.9.0",
-    "zen-observable": "0.8.13"
+    "zen-observable": "0.8.13",
+    "scheduler": "^0.15.0"
   },
   "devDependencies": {
     "@types/webpack-env": "*"

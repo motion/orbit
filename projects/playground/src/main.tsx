@@ -15,9 +15,8 @@ export function render() {
     </ProvideUI>
   )
   if (window.location.search.indexOf('react.concurrent') > 0) {
-    ReactDOM.unstable_createRoot(RootNode).render(
-      <React.unstable_ConcurrentMode>{element}</React.unstable_ConcurrentMode>,
-    )
+    // @ts-ignore
+    ReactDOM.unstable_createRoot(RootNode).render(element)
   } else {
     ReactDOM.render(element, RootNode)
   }

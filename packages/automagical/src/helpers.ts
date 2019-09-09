@@ -12,11 +12,29 @@ export const getReactionName = (obj: MagicalObject) => {
   return obj.constructor.name
 }
 
-const defaultOpts: ReactionOptions = {
-  equals: isEqual,
+const isEqualWarn = (a, b) => {
+  const x = Date.now()
+  try {
+    return isEqual(a, b)
+  } finally {
+    const time = Date.now() - x
+    if (time > 1) {
+      console.warn(
+        `Dev mode warning: were doing deep equality comparison, this took ${time}ms to compare. Want to change? Use "equals" option to change`,
+        a,
+        b,
+      )
+    }
+  }
 }
 
-export function getReactionOptions(userOptions?: ReactionOptions | null) {
+const defaultOpts = {
+  equals: process.env.NODE_ENV === 'development' ? isEqualWarn : isEqual,
+}
+
+export function getReactionOptions(
+  userOptions?: ReactionOptions | null,
+): ReactionOptions & { equals: ReactionOptions['equals'] } {
   if (userOptions instanceof Object) {
     return { ...defaultOpts, ...userOptions }
   }

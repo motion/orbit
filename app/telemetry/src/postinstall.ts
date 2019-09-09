@@ -1,5 +1,3 @@
-import { showAnalyticsNotification } from './showAnalyticsNotification'
-
 let enabled = false
 
 try {
@@ -8,7 +6,7 @@ try {
   const config = new Configstore(`orbit`, {}, { globalConfigPath: true })
   enabled = config.get(`telemetry.enabled`)
   if (enabled === undefined && !ci.isCI) {
-    showAnalyticsNotification()
+    // showAnalyticsNotification()
   }
 } catch (e) {
   // ignore

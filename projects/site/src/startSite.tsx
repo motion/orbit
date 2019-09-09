@@ -27,12 +27,7 @@ export function render() {
 
   if (window.location.search.indexOf('react.concurrent') > 0) {
     // @ts-ignore
-    ReactDOM.unstable_createRoot(RootNode).render(
-      // @ts-ignore
-      <React.unstable_ConcurrentMode>
-        <SiteRoot />,
-      </React.unstable_ConcurrentMode>,
-    )
+    ReactDOM.unstable_createRoot(RootNode).render(<SiteRoot />)
   } else {
     ReactDOM.render(<SiteRoot />, RootNode)
   }

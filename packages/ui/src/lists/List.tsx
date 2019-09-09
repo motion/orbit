@@ -156,10 +156,10 @@ export const List = memoIsEqualDeep(
     useEffect(() => {
       if (!shortcutStore) return
       return shortcutStore.onShortcut(shortcut => {
-        console.log('got shortuct', shortcut)
         if (getVisibility() !== true) {
           return
         }
+        console.log('got shortuct', shortcut)
         switch (shortcut) {
           case 'open':
             if (onOpen) {

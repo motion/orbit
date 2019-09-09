@@ -300,7 +300,7 @@ export class OrbitDesktopRoot {
         },
       ],
       {
-        timeout: 3000,
+        timeout: 10000,
       },
     )
 

@@ -1,4 +1,4 @@
-import { useReaction } from '@o/use-store'
+import { UpdatePriority, useReaction } from '@o/use-store'
 
 import { ListItemSimpleProps } from './ListItemViewProps'
 
@@ -12,7 +12,7 @@ export function useIsSelected(props: Pick<ListItemSimpleProps, 'isSelected' | 'i
     },
     {
       name: 'ListItem|Card.isSelected',
-      priority: 2,
+      priority: UpdatePriority.Immediate,
     },
     [props.isSelected],
   )

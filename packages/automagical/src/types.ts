@@ -1,5 +1,6 @@
 import { CompositeDisposable } from 'event-kit'
 import { IEqualsComparer } from 'mobx'
+import * as Scheduler from 'scheduler'
 
 // how to have a more flexible Function?
 // this often complains when used as callbacks from eventListener or mutationobserver
@@ -18,6 +19,14 @@ export type ReactionHelpers = {
   }
 }
 
+export enum UpdatePriority {
+  Immediate = Scheduler.unstable_ImmediatePriority,
+  UserBlocking = Scheduler.unstable_UserBlockingPriority,
+  Normal = Scheduler.unstable_NormalPriority,
+  Low = Scheduler.unstable_LowPriority,
+  Idle = Scheduler.unstable_IdlePriority,
+}
+
 export type ReactionOptions = {
   equals?: IEqualsComparer<any>
   log?: boolean | 'state' | 'all'
@@ -26,7 +35,8 @@ export type ReactionOptions = {
   defaultValue?: any
   lazy?: boolean
   name?: string
-  priority?: 1 | 2 | 3 | 4
+  priority?: UpdatePriority
+  debug?: boolean
 }
 
 export interface MagicalObject {

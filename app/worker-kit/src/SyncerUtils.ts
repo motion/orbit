@@ -69,9 +69,8 @@ export class SyncerUtils {
           : undefined,
       },
     }
-    this.log.vtimer('load bits from the database', options, findOptions)
     const bits = await this.manager.getRepository(BitEntity).find(findOptions)
-    this.log.vtimer('load bits from the database', bits.length)
+    this.log.vtimer('loaded bits from the database', bits.length)
     return bits
   }
 
@@ -187,7 +186,7 @@ export class SyncerUtils {
           }
           await manager.insert(BitEntity, bits)
           // Add some small throttle
-          await sleep(20)
+          await sleep(200)
         }
         for (let bit of insertedBits) {
           if (bit.people && bit.people.length) {

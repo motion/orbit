@@ -177,7 +177,6 @@ class GeometryStore {
             if (!isEqual(state.current, next)) {
               state.current = next
               // TODO called too much... scrollWidth isn't great
-              console.log('measure me', offset)
               // trigger update
               scrollProgress.set(scrollProgress.get())
             }

@@ -84,18 +84,7 @@ class OrbitAppsCarouselStore {
   scrollOut = createUpdateableSpring(0, { damping: 50, stiffness: 250 })
 
   start() {
-    this.scrollOut.value.onChange(val => {
-      if (this.controlled) {
-        this.rowRef.current!.scrollLeft = val * this.props.rowWidth
-      }
-    })
-  }
-
-  setUncontrolled() {
-    this.controlled = false
-    this.scrollOut.value.stop()
-    // @ts-ignore
-    this.rowRef.current!.style.scrollSnapType = 'x mandatory'
+    this.watchScrollOut()
   }
 
   setRowNode = (next: HTMLElement) => {
@@ -146,8 +135,19 @@ class OrbitAppsCarouselStore {
       log: false,
     },
   )
-  updateScroll = react(() => this.state.index, this.setScrollSpring)
 
+  // scrollOut lets us animate the scroll position
+  // we use our own spring internally `this.scrollOut`
+  uncontrolledTm: any = null
+  watchScrollOut() {
+    this.scrollOut.value.onChange(val => {
+      if (!this.controlled) return
+      this.rowRef.current!.scrollLeft = val * this.props.rowWidth
+      clearTimeout(this.uncontrolledTm)
+      this.uncontrolledTm = setTimeout(this.setUncontrolled, 30)
+    })
+  }
+  updateScroll = react(() => this.state.index, this.setScrollSpring)
   setScrollSpring(index: number) {
     if (index === this.scrollOut.value.get()) return
     console.log('set scroll spring', index)
@@ -156,6 +156,13 @@ class OrbitAppsCarouselStore {
       this.controlled = true
       this.scrollOut.value.set(index)
     }
+  }
+  // after we finish animation we need to go back to scroll snap
+  setUncontrolled = () => {
+    this.controlled = false
+    this.scrollOut.value.stop()
+    // @ts-ignore
+    this.rowRef.current!.style.scrollSnapType = 'x mandatory'
   }
 
   zoomIntoCurrentApp() {

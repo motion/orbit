@@ -4,6 +4,7 @@
   "description": "",
   "main": "_/css.js",
   "module": "_/css.mjs",
+  "ts:main": "src/css.ts",
   "source": "src/css.ts",
   "sideEffects": false,
   "author": "Motion",

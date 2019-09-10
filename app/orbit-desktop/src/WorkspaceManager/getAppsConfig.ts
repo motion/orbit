@@ -87,6 +87,7 @@ export async function getAppsConfig(
   const clientConfigs: { [key: string]: webpack.Configuration } = {}
 
   // contains react-hot-loader, always in development
+  const baseOutputDir = join(directory, 'dist', 'development')
   const baseDllParams: WebpackParams = {
     name: `base`,
     entry: ['react', 'react-dom', 'react-hot-loader'],
@@ -95,13 +96,13 @@ export async function getAppsConfig(
     context: directory,
     // always development
     mode: 'development',
-    outputDir: join(directory, 'dist', 'development'),
+    outputDir: baseOutputDir,
     publicPath: '/',
     outputFile: 'base.dll.js',
     output: {
       library: 'base',
     },
-    dll: join(outputDir, 'orbit-manifest-base.json'),
+    dll: join(baseOutputDir, 'orbit-manifest-base.json'),
   }
   const baseConfig = await addDLL(baseDllParams)
   clientConfigs.base = baseConfig

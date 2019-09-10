@@ -94,7 +94,7 @@ const buildNodeModules = [
   Path.join(__dirname, '..', '..', '..', 'node_modules'),
 ]
 
-const hot = true || (!flags.disableHMR && !isProd)
+const hot = !flags.disableHMR && !isProd
 const defines = {
   'process.platform': JSON.stringify('darwin'),
   'process.env.NODE_ENV': JSON.stringify(mode),

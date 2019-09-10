@@ -16,7 +16,6 @@ import { isRightClick } from './helpers/isRightClick'
 import LowPassFilter from './helpers/LowPassFilter'
 import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap'
 import { InteractiveChrome } from './InteractiveChrome'
-import { ResizeObserverCallback } from './ResizeObserver'
 import { ViewProps } from './View/types'
 import { View } from './View/View'
 

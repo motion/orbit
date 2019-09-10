@@ -26,7 +26,6 @@ export function useMemoList<T, R>(
       const key = getItemMemoKey(item, index)
       const curKey = state.current.keys[index]
       if (!curKey || !curKey.every((k, i) => k === key[i])) {
-        console.log('not equal', key, curKey, index, state.current)
         state.current.keys[index] = key
         state.current.items[index] = getItem ? getItem(item, index) : item
       }

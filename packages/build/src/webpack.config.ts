@@ -190,7 +190,7 @@ async function makeConfig() {
   // get the list of paths to all monorepo packages to apply ts-loader too
   const packages = await LernaProject.getPackages(repoRoot)
   const tsEntries = packages.map(pkg => Path.join(pkg.location, 'src'))
-  console.log('tsEntries', tsEntries)
+  // console.log('tsEntries', tsEntries)
 
   const config = {
     target,

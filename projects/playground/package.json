@@ -6,7 +6,7 @@
     "start": "mcro-build --entry ./src/index --port 5001 --target web"
   },
   "dependencies": {
-    "@babel/core": "^7.4.4",
+    "@babel/core": "^7.6.0",
     "@babel/runtime": "^7.4.5",
     "@o/babel-preset-motion": "^2.6.0",
     "@o/kit": "^2.6.0",
@@ -17,7 +17,6 @@
     "lodash": "4.17.11",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
-    "react-hot-loader": "4.12.12",
     "framer-motion": "1.6.7"
   }
 }

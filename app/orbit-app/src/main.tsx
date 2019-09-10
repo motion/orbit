@@ -15,10 +15,7 @@ import '../public/styles/base.css'
  *
  * Please don't import anything else above this, be careful.
  *
- * Before we load it, we load in dev mode, then switch back into whatever mode were in.
- *
- *   1. Be sure this is the first time react/react-dom are loaded
- *   2. Be sure react-hot-loader is before them
+ * Before we load it, we load in dev mode, then switch back into whatever mode were in. Be sure this is the first time react/react-dom are loaded
  *
  */
 window['__DEV__'] = true
@@ -29,7 +26,6 @@ if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
   window['$RefreshReg$'] = () => {}
   window['$RefreshSig$'] = () => type => type
 }
-require('react-hot-loader')
 const React = require('react')
 const ReactDOM = require('react-dom')
 

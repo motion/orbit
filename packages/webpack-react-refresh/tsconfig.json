@@ -1,11 +1,10 @@
 {
   "extends": "../../tsconfig.base",
+  "include": ["src/**/*"],
   "compilerOptions": {
     "composite": true,
     "module": "CommonJS",
     "outDir": "_",
     "rootDir": "src"
-  },
-  "include": ["src/**/*"],
-  "references": [{ "path": "../webpack-react-refresh" }]
+  }
 }

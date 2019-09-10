@@ -89,6 +89,7 @@ export function TestUIMotion() {
         <Button onClick={() => set(2)}>2</Button>
         <Button onClick={() => set(3)}>3</Button>
         <Button onClick={() => set(4)}>4</Button>
+        <Button onClick={() => set(5)}>5</Button>
       </Row>
       {/* floating drag handler */}
       <View
@@ -144,7 +145,7 @@ export function TestUIMotion() {
                 <View
                   width="100vw"
                   height="92vh"
-                  background="red"
+                  background="green"
                   boxShadow="0 0 10px rgba(0,0,0,0.5)"
                   zIndex={geometry.scrollIntersection().transform(x => 1 - Math.abs(x))}
                   rotateY={geometry

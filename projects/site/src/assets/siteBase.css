@@ -72,10 +72,6 @@ small {
   display: inline;
 }
 
-.react-hot-loader-error-overlay {
-  pointer-events: auto;
-}
-
 img {
   border: none;
 }

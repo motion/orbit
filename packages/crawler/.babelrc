@@ -1,14 +1,7 @@
 {
   "env": {
     "development": {
-      "presets": [
-        [
-          "@o/babel-preset-motion",
-          {
-            "disable": ["gloss/transform", "react-hot-loader/babel"]
-          }
-        ]
-      ]
+      "presets": [["@o/babel-preset-motion"]]
     }
   }
 }

@@ -7,10 +7,6 @@
   all: initial;
 }
 
-.react-hot-loader-error-overlay * {
-  pointer-events: auto;
-}
-
 .hide-scrollbars {
   -webkit-overflow-scrolling: initial;
   -ms-overflow-style: none;

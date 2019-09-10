@@ -1,5 +1,4 @@
 import { Logger } from '@o/logger'
-import { hot } from 'react-hot-loader'
 
 import { EventSourceManager } from './EventSourceManager'
 
@@ -29,7 +28,7 @@ export const OrbitHot = {
   },
   fileEnter(props: OrbitHotProps) {
     this.appHandler = entry => {
-      const hotEntry = hot(props.module)(entry)
+      const hotEntry = entry
       return hotEntry
     }
     // accept this (this should be created only at root)

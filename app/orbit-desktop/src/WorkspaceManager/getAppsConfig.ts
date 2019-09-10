@@ -86,11 +86,10 @@ export async function getAppsConfig(
   const nodeConfigs: { [key: string]: webpack.Configuration } = {}
   const clientConfigs: { [key: string]: webpack.Configuration } = {}
 
-  // contains react-hot-loader, always in development
   const baseOutputDir = join(directory, 'dist', 'development')
   const baseDllParams: WebpackParams = {
     name: `base`,
-    entry: ['react', 'react-dom', 'react-hot-loader'],
+    entry: ['react', 'react-dom'],
     watch,
     target: 'web',
     context: directory,

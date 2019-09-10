@@ -1,0 +1,16 @@
+diff --git a/node_modules/webpack/lib/HotModuleReplacement.runtime.js b/node_modules/webpack/lib/HotModuleReplacement.runtime.js
+index 5756623..7e0c681 100644
+--- a/node_modules/webpack/lib/HotModuleReplacement.runtime.js
++++ b/node_modules/webpack/lib/HotModuleReplacement.runtime.js
+@@ -301,7 +301,10 @@ module.exports = function() {
+ 				var moduleId = queueItem.id;
+ 				var chain = queueItem.chain;
+ 				module = installedModules[moduleId];
+-				if (!module || module.hot._selfAccepted) continue;
++				if (!module || module.hot._selfAccepted) {
++					module.hot._selfAccepted()
++					continue;
++				}
+ 				if (module.hot._selfDeclined) {
+ 					return {
+ 						type: "self-declined",

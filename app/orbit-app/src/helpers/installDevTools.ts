@@ -2,7 +2,6 @@ import './installGlobals'
 
 import { debug } from '@o/ui'
 import { debugUseStore, IS_STORE } from '@o/use-store'
-import { setConfig } from 'react-hot-loader'
 
 import { Stores } from '../om/stores'
 import * as Fixtures from './developmentFixtures'
@@ -62,15 +61,6 @@ function globalizeStores(stores: Record<string, any>) {
     defineStoreOnWindow(key, stores[key])
   }
 }
-
-// just for now since its spitting out so many
-setConfig({
-  logLevel: 'no-errors-please',
-  pureSFC: true,
-  pureRender: true,
-  // reloadHooks: false,
-  // disableHotRenderer: true,
-})
 
 Error.stackTraceLimit = Infinity
 

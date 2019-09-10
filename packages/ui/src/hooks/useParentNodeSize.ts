@@ -16,7 +16,8 @@ export function useParentNodeSize(props?: UseNodeSizeProps) {
     let parent = ref.current.parentElement
     // avoid display contents nodes
     if (parent) {
-      while (getComputedStyle(parent, null).display === 'contents') {
+      // @ts-ignore
+      while (parent.computedStyleMap().get('display') === 'contents') {
         parent = parent.parentElement
         if (!parent) break
       }

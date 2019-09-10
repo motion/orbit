@@ -206,8 +206,12 @@ export function makeWebpackConfig(
                     presets: [
                       [
                         require.resolve('@o/babel-preset-motion'),
-                        // even in prod ensure react-refresh is there
-                        { enable: ['react-refresh/babel'] },
+                        target === 'web'
+                          ? {
+                              // even in prod ensure react-refresh is there
+                              enable: ['react-refresh/babel'],
+                            }
+                          : {},
                       ],
                     ],
                   },
@@ -405,7 +409,7 @@ require('@o/kit').OrbitHot.fileLeave();
         )) ||
         []),
 
-      new ReactRefreshPlugin(),
+      target === 'web' && new ReactRefreshPlugin(),
 
       hot &&
         new webpack.HotModuleReplacementPlugin({

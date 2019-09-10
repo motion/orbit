@@ -177,10 +177,11 @@ export const HTMLPropNames = [
 const ReactPropNames = ['dangerouslySetInnerHTML']
 
 const mergedProps = [...SVGPropNames, ...EventPropNames, ...HTMLPropNames, ...ReactPropNames]
+
 export const ValidProps = mergedProps.reduce((acc, cur) => {
   acc[cur] = true
   return acc
 }, {})
 
-export const validProp = (name: string) =>
-  ValidProps[name] || name.includes('data-') || name.includes('x-') || name.includes('aria-')
+export const validPropLoose = (name: string) =>
+  name.includes('data-') || name.includes('x-') || name.includes('aria-')

@@ -1,9 +1,10 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, styleToClassName, ThemeObject, validCSSAttr } from '@o/css'
-import { createElement, isValidElement, useEffect, useRef } from 'react'
+import { isEqual } from '@o/fast-compare'
+import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './config'
 import { useTheme } from './helpers/useTheme'
-import { validProp } from './helpers/validProp'
+import { validPropLoose, ValidProps } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
 import { ThemeSelect } from './theme/Theme'
@@ -151,6 +152,7 @@ export function gloss<Props = any, ThemeProps = Props>(
   let config: GlossConfig<Props> | null = null
 
   let hasCompiled = false
+  let getEl: GlossConfig<Props>['getElement'] | null = null
 
   /**
    *
@@ -166,6 +168,7 @@ export function gloss<Props = any, ThemeProps = Props>(
       themeFn = compileTheme(ThemedView)
       staticClasses = addStyles(Styles.styles, ThemedView.displayName, targetElementName)
       config = getCompiledConfig(ThemedView, ogConfig)
+      getEl = config.getElement
     }
 
     const theme = useTheme()
@@ -181,12 +184,6 @@ export function gloss<Props = any, ThemeProps = Props>(
       }
     }, [])
 
-    if (process.env.NODE_ENV === 'development') {
-      if (props['debug'] === 'break') {
-        debugger
-      }
-    }
-
     const dynClassNames = addDynamicStyles(
       id,
       ThemedView.displayName,
@@ -198,21 +195,12 @@ export function gloss<Props = any, ThemeProps = Props>(
       targetElementName,
     )
 
-    const classNames = new Set<string>(
-      staticClasses
-        ? dynClassNames
-          ? [...staticClasses, ...dynClassNames]
-          : staticClasses
-        : dynClassNames,
-    )
-
     dynClasses.current = dynClassNames
 
     // if this is a plain view we can use tagName, otherwise just pass it down
     let element = typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
 
     // helper for element
-    const getEl = config!.getElement
     if (getEl) {
       element = getEl(props)
     }
@@ -232,8 +220,9 @@ export function gloss<Props = any, ThemeProps = Props>(
           finalProps.ref = props.nodeRef
           continue
         }
-        if (!validProp(key)) continue
-        finalProps[key] = props[key]
+        if (ValidProps[key] || validPropLoose(key)) {
+          finalProps[key] = props[key]
+        }
       }
     } else {
       for (const key in props) {
@@ -243,7 +232,11 @@ export function gloss<Props = any, ThemeProps = Props>(
     }
 
     // we control these props
-    finalProps.className = [...classNames].join(' ')
+    if (staticClasses || dynClassNames.size) {
+      finalProps.className = staticClasses
+        ? [...staticClasses, ...dynClassNames].join(' ')
+        : [...dynClassNames].join(' ')
+    }
     finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
 
     // hook: setting your own props
@@ -256,7 +249,10 @@ export function gloss<Props = any, ThemeProps = Props>(
       if (props['debug']) {
         console.log(
           'styles\n',
-          [...classNames].map(x => tracker.get(x.replace(/^s/, ''))).filter(Boolean),
+          finalProps.className
+            .split(' ')
+            .map(x => tracker.get(x.replace(/^s/, '')))
+            .filter(Boolean),
           '\nprops\n',
           props,
           '\nfinalProps\n',
@@ -321,7 +317,7 @@ export function gloss<Props = any, ThemeProps = Props>(
 }
 
 function createGlossView<Props>(GlossView: any, config) {
-  const res: GlossView<Props> = GlossView
+  const res: GlossView<Props> = memo(GlossView, glossSmartMemo) as any
   res.internal = config
   res[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
   res.theme = (...themeFns) => {
@@ -331,11 +327,16 @@ function createGlossView<Props>(GlossView: any, config) {
   return res
 }
 
+function glossSmartMemo(a: any, b: any) {
+  if (b.children) return false
+  return isEqual(a, b)
+}
+
 // keeps priority of hover/active/focus as expected
 const psuedoScore = (x: string) => {
-  const hasFocus = x.indexOf('&:focus') > -1 ? 1 : 0
-  const hasHover = x.indexOf('&:hover') > -1 ? 2 : 0
-  const hasActive = x.indexOf('&:active') > -1 ? 3 : 0
+  const hasFocus = x.includes('&:focus') ? 1 : 0
+  const hasHover = x.includes('&:hover') ? 2 : 0
+  const hasActive = x.includes('&:active') ? 3 : 0
   return hasActive + hasHover + hasFocus
 }
 
@@ -349,7 +350,10 @@ function addStyles(
   prevClassNames?: Set<string> | null,
   moreSpecific?: boolean,
 ) {
-  const keys = Object.keys(styles).sort(pseudoSort)
+  const keys = Object.keys(styles)
+  if (keys.length > 1) {
+    keys.sort(pseudoSort)
+  }
   let classNames: string[] | null = null
   for (const key of keys) {
     const rules = styles[key]
@@ -410,14 +414,15 @@ function addDynamicStyles(
 
   // if passed any classes from a parent gloss view, merge them, ignore classname and track
   if (props.className) {
-    const propClassNames = props.className.trim().split(whiteSpaceRegex)
+    const propClassNames = props.className.split(whiteSpaceRegex)
     // note this reverse: this is a bit odd
     // right now we have conditionalStyles applied as their own className (so base: .1, conditional: .2)
     // then we pass className="1 2" if we have a parent that the conditional style === true
     // what we probably want is to merge them all into their own single className
     // until then, we need to preserve the important order, so we reverse to make sure conditional applies first
-    propClassNames.reverse()
-    for (const className of propClassNames) {
+    const len = propClassNames.length
+    for (let i = len - 1; i >= 0; i--) {
+      const className = propClassNames[i]
       const cn = className[0] === SPECIFIC_PREFIX ? className.slice(1) : className
       const info = tracker.get(cn)
       if (info) {

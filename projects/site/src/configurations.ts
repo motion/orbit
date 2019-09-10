@@ -1,6 +1,5 @@
 import { configureUI, debug, toColor } from '@o/ui'
 import { configureUseStore, debugUseStore, IS_STORE } from '@o/use-store'
-import { setConfig } from 'react-hot-loader'
 import ResizeObserver from 'resize-observer-polyfill'
 
 import { fontProps } from './constants'
@@ -33,14 +32,6 @@ function configure() {
   })
 
   if (process.env.NODE_ENV === 'development') {
-    // just for now since its spitting out so many
-    setConfig({
-      logLevel: 'no-errors-please',
-      pureSFC: true,
-      pureRender: true,
-      // disableHotRenderer: true,
-    })
-
     // dev tools for stores
     configureUseStore({
       debugStoreState: true,

@@ -1,13 +1,12 @@
 import { ErrorBoundary } from '@o/ui'
 import React, { StrictMode, Suspense } from 'react'
-import { hot } from 'react-hot-loader/root'
 import { Router, View } from 'react-navi'
 
 import { Layout } from './Layout'
 import { Navigation } from './Navigation'
 import { SiteStoreContext } from './SiteStore'
 
-export const SiteRoot = hot(() => {
+export const SiteRoot = () => {
   return (
     <StrictMode>
       <ErrorBoundary name="Site Root">
@@ -27,4 +26,4 @@ export const SiteRoot = hot(() => {
       </ErrorBoundary>
     </StrictMode>
   )
-})
+}

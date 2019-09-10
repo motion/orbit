@@ -1,10 +1,9 @@
 import './assets/font-colfax/stylesheet.css'
 import './assets/font-gteesti/stylesheet.css'
 import './assets/siteBase.css'
-import 'react-hot-loader'
 import 'requestidlecallback-polyfill'
 
-// import after react-hot-loader, order important
+require('react-dom') // ensure hmr patch applied
 require('./configurations')
 require('./startSite')
 

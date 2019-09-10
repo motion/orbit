@@ -3,8 +3,8 @@ import { decorate, useForceUpdate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { debounce, throttle } from 'lodash'
 import { SpringProps } from 'popmotion'
-import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
 import React from 'react'
+import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
 import { useNodeSize } from './hooks/useNodeSize'
@@ -219,17 +219,27 @@ class GeometryStore {
                   type: 'child',
                   dispose: () => resizer.disconnect(),
                 })
+
+                const childMutationObserver = new MutationObserver(measure)
+                childMutationObserver.observe(child, {
+                  subtree: true,
+                  attributes: true,
+                })
+                disposables.add({
+                  type: 'child',
+                  dispose: () => childMutationObserver.disconnect(),
+                })
               }
             }
           }
 
-          const parentMutationObserver = new MutationObserver(watchChildren)
-          parentMutationObserver.observe(ref.current, {
+          const measureChildrenObserver = new MutationObserver(watchChildren)
+          measureChildrenObserver.observe(ref.current, {
             childList: true,
           })
           disposables.add({
             type: 'parent',
-            dispose: () => parentMutationObserver.disconnect(),
+            dispose: () => measureChildrenObserver.disconnect(),
           })
 
           watchChildren()
@@ -238,6 +248,10 @@ class GeometryStore {
             disposables.forEach(x => x.dispose())
             updateScrollWidth.cancel()
           }
+        }, [])
+
+        useEffect(() => {
+          measure()
         }, [])
 
         useNodeSize({

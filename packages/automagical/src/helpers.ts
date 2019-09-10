@@ -28,8 +28,36 @@ const isEqualWarn = (a, b) => {
   }
 }
 
+const comparator = process.env.NODE_ENV === 'development' ? isEqualWarn : isEqual
+
+/**
+ * Tries to do a deep equality, but will fail when bail to === when it sees "big" things
+ */
+const isEqualStupidOptimize = (a: any, b: any) => {
+  if (!a || !b) return a === b
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a === b) return true
+    if (a.length !== b.length) return false
+    if (a[0] === b[0]) return a.every((ai, i) => ai === b[i])
+    if (a.length < 20) return comparator(a, b)
+    return false
+  }
+  if (typeof b === 'object') {
+    if (Object.keys(b).length < 10) {
+      return comparator(a, b)
+    } else {
+      return false
+    }
+  }
+  if (b instanceof Set) {
+    if (b.size < 10) return comparator(a, b)
+    return false
+  }
+  return comparator(a, b)
+}
+
 const defaultOpts = {
-  equals: process.env.NODE_ENV === 'development' ? isEqualWarn : isEqual,
+  equals: isEqualStupidOptimize, //process.env.NODE_ENV === 'development' ? isEqualWarn : isEqual,
 }
 
 export function getReactionOptions(

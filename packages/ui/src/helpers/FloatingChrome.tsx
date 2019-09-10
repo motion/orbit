@@ -1,7 +1,8 @@
+import { isEqual } from '@o/fast-compare'
 import { Box } from 'gloss'
 import React, { HTMLAttributes, RefObject, useEffect, useMemo, useState } from 'react'
 
-import { getRect, Rect, usePosition } from '../hooks/usePosition'
+import { Rect, usePosition } from '../hooks/usePosition'
 import { ViewProps } from '../View/types'
 import { View } from '../View/View'
 import { Portal } from './portal'
@@ -19,13 +20,19 @@ export const FloatingChrome = (props: FloatingChromeProps) => {
 
   usePosition({
     ref: target,
-    onChange: x => x && setPos(x),
+    measureKey,
+    onChange: next => {
+      if (next) {
+        setPos(cur => {
+          if (!isEqual(cur, next)) {
+            console.warn('UPDATING', target, next)
+            return next
+          }
+        })
+      }
+    },
+    debounce: 100,
   })
-
-  useEffect(() => {
-    const rect = target.current && getRect(target.current.getBoundingClientRect())
-    setPos(rect)
-  }, [target, measureKey])
 
   return (
     <Portal style={useMemo(() => ({ zIndex }), [zIndex])}>
@@ -34,7 +41,7 @@ export const FloatingChrome = (props: FloatingChromeProps) => {
           style={{
             position: 'absolute',
             zIndex,
-            // background: 'red',
+            background: 'red',
             ...pos,
             ...style,
           }}

@@ -7,7 +7,7 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../../packages/ReactRefresh"],
   "references": [
     { "path": "../models" },
     { "path": "../stores" },
@@ -27,5 +27,6 @@
     { "path": "../../packages/electron-sudo" },
     { "path": "../../packages/devcert" },
     { "path": "../../packages/orbit-fork-process" }
+    { "path": "../../packages/webpack-react-refresh" }
   ]
 }

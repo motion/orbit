@@ -199,8 +199,8 @@ export function FloatingView(props: FloatingViewProps) {
     }
   }
 
-  useEffect(() => syncDimensionProp('x', x), x)
-  useEffect(() => syncDimensionProp('y', y), y)
+  useEffect(() => syncDimensionProp('x', x), [x])
+  useEffect(() => syncDimensionProp('y', y), [y])
   useEffect(() => syncDimensionProp('width', width), [width])
   useEffect(() => syncDimensionProp('height', height), [height])
 

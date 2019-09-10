@@ -1,7 +1,6 @@
 import * as LernaProject from '@lerna/project'
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 import * as Fs from 'fs'
-import { pathExistsSync } from 'fs-extra'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import IgnoreNotFoundExportPlugin from 'ignore-not-found-export-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
@@ -9,13 +8,14 @@ import * as Path from 'path'
 import webpack from 'webpack'
 
 // reduced a 5mb bundle by 0.01mb...
+const { ReactRefreshPlugin } = require('@o/webpack-react-refresh')
 const ShakePlugin = require('webpack-common-shake').Plugin
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { BundleStatsWebpackPlugin } = require('bundle-stats')
 
 const LodashWebpackPlugin = require('lodash-webpack-plugin')
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
-const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
+// const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
 // const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 // const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -23,8 +23,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const WebpackNotifierPlugin = require('webpack-notifier')
 const TerserPlugin = require('terser-webpack-plugin')
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-const CircularDependencyPlugin = require('circular-dependency-plugin')
+// const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+// const CircularDependencyPlugin = require('circular-dependency-plugin')
 
 const cwd = process.cwd()
 // TODO: this doesn't seem to be the correct way to get the monorepo root.
@@ -80,11 +80,12 @@ const shouldExtractCSS = target !== 'node' && isProd && !IS_RUNNING
 //   cheap-source-map (no line numbers...)
 //   cheap-module-eval-source-map (seems alright in both...)
 //   cheap-module-source-map (works well in electron, no line numbers in browser...)
-const devtool = flags.devtool || isProd ? 'source-map' : 'cheap-module-eval-source-map'
+const devtool = flags.devtool || isProd ? 'source-map' : false
+console.log('devtool', devtool)
 
 // const appSrc = Path.join(entry, '..')
 const tsConfig = Path.join(cwd, 'tsconfig.json')
-const tsConfigExists = pathExistsSync(tsConfig)
+// const tsConfigExists = pathExistsSync(tsConfig)
 const outputPath = Path.join(cwd, 'dist')
 
 const buildNodeModules = [
@@ -173,7 +174,6 @@ const alias = {
   // Uncomment lines below if you want to profile in production...
   // 'react-dom': 'react-dom/profiling',
   // 'schedule/tracking': 'schedule/tracking-profiling',
-  'react-dom': mode === 'production' ? 'react-dom' : '@hot-loader/react-dom',
   'lodash.isequal': 'lodash/isEqual',
 }
 
@@ -190,7 +190,7 @@ async function makeConfig() {
   // get the list of paths to all monorepo packages to apply ts-loader too
   const packages = await LernaProject.getPackages(repoRoot)
   const tsEntries = packages.map(pkg => Path.join(pkg.location, 'src'))
-  // console.log('tsEntries', tsEntries)
+  console.log('tsEntries', tsEntries)
 
   const config = {
     target,
@@ -234,7 +234,7 @@ async function makeConfig() {
             colors: true,
           },
       historyApiFallback: true,
-      hot: !flags.disableHMR && !isProd,
+      hot: true || (!flags.disableHMR && !isProd),
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
@@ -348,6 +348,8 @@ async function makeConfig() {
       new webpack.DefinePlugin(defines),
 
       target !== 'node' && new webpack.IgnorePlugin({ resourceRegExp: /electron-log/ }),
+
+      mode === 'development' && new ReactRefreshPlugin(),
 
       // tsConfigExists &&
       //   !isProd &&

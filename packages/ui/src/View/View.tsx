@@ -1,7 +1,6 @@
 import { css, GlossPropertySet } from '@o/css'
-import { motion, useInvertedScale } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Base, gloss } from 'gloss'
-import React from 'react'
 
 import { AnimationStore } from '../Geometry'
 import { Sizes } from '../Space'

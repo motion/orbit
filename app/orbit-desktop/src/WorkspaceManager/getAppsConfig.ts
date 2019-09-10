@@ -60,7 +60,7 @@ export async function getAppsConfig(
    * This inline function just ensures we build + reference them.
    */
   async function addDLL(params: WebpackParams): Promise<webpack.Configuration> {
-    log.info(`Adding dll: ${params.entry[0]}`)
+    log.info(`Adding dll: ${params.name}, first entry: ${params.entry[0]}`)
     // add to dlls
     dllReferences.unshift({
       manifest: params.dll,
@@ -86,21 +86,22 @@ export async function getAppsConfig(
   const nodeConfigs: { [key: string]: webpack.Configuration } = {}
   const clientConfigs: { [key: string]: webpack.Configuration } = {}
 
-  // contains react-hot-loader, always in development
+  const baseOutputDir = join(directory, 'dist', 'development')
   const baseDllParams: WebpackParams = {
     name: `base`,
-    entry: ['react', 'react-dom', 'react-hot-loader'],
+    entry: ['react', 'react-dom', 'react-refresh/runtime'],
     watch,
     target: 'web',
-    mode: 'development',
     context: directory,
-    outputDir,
+    // always development
+    mode: 'development',
+    outputDir: baseOutputDir,
     publicPath: '/',
     outputFile: 'base.dll.js',
     output: {
       library: 'base',
     },
-    dll: join(outputDir, 'orbit-manifest-base.json'),
+    dll: join(baseOutputDir, 'orbit-manifest-base.json'),
   }
   const baseConfig = await addDLL(baseDllParams)
   clientConfigs.base = baseConfig

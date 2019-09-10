@@ -488,7 +488,8 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
     }
 
     if (!isManuallyPositioned && !this.target) {
-      throw new Error('Not manually positioned and no target found.')
+      console.error('Not manually positioned and no target found.')
+      return
     }
 
     if (this.target) {

@@ -1,12 +1,18 @@
 module.exports = function(_, givenOpts) {
   const opts = givenOpts || {}
   const disable = opts.disable || []
-  const isDev = opts.mode === 'production' ? false : process.env.NODE_ENV !== 'production'
+  const enable = opts.enable || []
+  const mode = opts.mode || process.env.NODE_ENV || 'development'
+  const isDev = mode === 'development'
 
   let names = []
 
-  const plug = (name, plOpts) => {
+  const plug = (name, plOpts, opts) => {
     if (disable.find(x => x === name)) {
+      return null
+    }
+    // disable if not in preferred mode (unless enabled)
+    if (opts && opts.usually !== mode && !enable.some(x => x === name)) {
       return null
     }
     names.push(name)
@@ -16,13 +22,9 @@ module.exports = function(_, givenOpts) {
 
   const config = {
     plugins: [
-      plug('babel-plugin-lodash'),
-      isDev && plug('react-hot-loader/babel'),
-      // isDev && plug('react-refresh/babel'),
-      // plug('babel-plugin-react-native-web', {
-      //   commonjs: true,
-      // }),
-      isDev && plug('./babel-plugin-react-displayname.js'),
+      plug('babel-plugin-lodash', undefined, { usually: 'production' }),
+      plug('react-refresh/babel', undefined, { usually: 'development' }),
+      plug('./babel-plugin-react-displayname.js', undefined, { usually: 'development' }),
       plug('@babel/plugin-syntax-dynamic-import'),
       plug('@babel/plugin-transform-runtime', {
         regenerator: false,
@@ -36,7 +38,7 @@ module.exports = function(_, givenOpts) {
         loose: true,
       }),
       // last so it optimizes
-      ...(((!isDev || process.env['OPTIMIZE_REACT']) && [
+      ...((process.env['OPTIMIZE_REACT'] && [
         plug('babel-plugin-transform-react-remove-prop-types'),
         plug('@babel/plugin-transform-react-inline-elements'),
         plug('@o/plugin-transform-react-constant-elements'),
@@ -46,20 +48,27 @@ module.exports = function(_, givenOpts) {
     presets:
       opts.presets ||
       [
-        isDev && plug('gloss/babel', opts.glossConfig || {}),
+        plug('gloss/babel', opts.glossConfig || {}, { usually: 'development' }),
         plug('@babel/preset-react', {
           pragmaFrag: 'React.Fragment',
         }),
-        plug('@babel/preset-env', {
-          loose: true,
-          modules: false,
-          targets: {
-            chrome: '74',
-            esmodules: true,
+        plug(
+          '@babel/preset-env',
+          {
+            loose: true,
+            modules: false,
+            targets: {
+              chrome: '74',
+              esmodules: true,
+            },
+            exclude: ['transform-regenerator', 'transform-async-to-generator'],
+            ...opts.env,
           },
-          exclude: ['transform-regenerator', 'transform-async-to-generator'],
-          ...opts.env,
-        }),
+          undefined,
+          {
+            usually: 'production',
+          },
+        ),
         plug('@babel/preset-typescript'),
       ].filter(Boolean),
   }

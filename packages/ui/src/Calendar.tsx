@@ -1,13 +1,13 @@
 import { Contents } from 'gloss'
 import React from 'react'
-import { DateRangePicker } from 'react-date-range'
+import { DateRange as ReactCalendar } from 'react-date-range'
 
 import { memoIsEqualDeep } from './helpers/memoHelpers'
 
 export const Calendar = memoIsEqualDeep(props => {
   return (
     <Contents className="calendar-dom">
-      <DateRangePicker ranges={[]} {...props} />
+      <ReactCalendar ranges={[]} {...props} />
 
       <style
         dangerouslySetInnerHTML={{

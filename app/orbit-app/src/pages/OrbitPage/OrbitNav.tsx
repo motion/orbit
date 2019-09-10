@@ -3,9 +3,9 @@ import { AppIcon, PaneManagerPane, useActiveAppsSorted, useStore } from '@o/kit'
 import { AppModel } from '@o/models'
 import { SortableContainer, SortableContainerProps, SortableElement } from '@o/react-sortable-hoc'
 import { App } from '@o/stores'
-import { isRightClick, Space } from '@o/ui'
+import { isRightClick, Space, useMemoList } from '@o/ui'
 import { Box, gloss, Row, RowProps } from 'gloss'
-import React, { forwardRef, memo, useMemo } from 'react'
+import React, { forwardRef, memo, useEffect, useMemo, useRef } from 'react'
 
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
@@ -41,56 +41,52 @@ export const OrbitNav = memo(
     const tabWidth = 54
     const tabWidthPinned = 66
 
-    const items = useMemo(
-      () =>
-        activeAppsSorted
-          .map(
-            (app): TabProps => {
-              const isActive = `${app.id}` === activePane.id
-              // const next = activeAppsSorted[index + 1]
-              // const isLast = index === activeAppsSorted.length
-              // const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
-              const isPinned = app.tabDisplay === 'pinned' || app.tabDisplay === 'permanent'
-              return {
-                app,
-                width: isPinned ? tabWidthPinned : tabWidth,
-                tabDisplay: app.tabDisplay,
-                isActive,
-                icon: <AppIcon identifier={app.identifier} colors={app.colors} />,
-                iconSize: tabHeight - 6,
-                getContext() {
-                  return [
-                    {
-                      label: 'Open...',
-                    },
-                    {
-                      label: 'App settings',
-                      checked: true,
-                    },
-                    {
-                      type: 'separator',
-                    },
-                    {
-                      label: isPinned ? 'Unpin' : 'Pin',
-                      click() {
-                        save(AppModel, {
-                          ...app,
-                          tabDisplay: app.tabDisplay === 'pinned' ? 'plain' : 'pinned',
-                        })
-                      },
-                    },
-                    ...getAppContextItems(app),
-                  ]
+    const items = useMemoList(
+      activeAppsSorted,
+      app => [app, `${app.id}` === activePane.id],
+      app => {
+        const isActive = `${app.id}` === activePane.id
+        // const next = activeAppsSorted[index + 1]
+        // const isLast = index === activeAppsSorted.length
+        // const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
+        const isPinned = app.tabDisplay === 'pinned' || app.tabDisplay === 'permanent'
+        return {
+          app,
+          width: isPinned ? tabWidthPinned : tabWidth,
+          tabDisplay: app.tabDisplay,
+          isActive,
+          icon: <AppIcon identifier={app.identifier} colors={app.colors} />,
+          iconSize: tabHeight - 6,
+          getContext() {
+            return [
+              {
+                label: 'Open...',
+              },
+              {
+                label: 'App settings',
+                checked: true,
+              },
+              {
+                type: 'separator',
+              },
+              {
+                label: isPinned ? 'Unpin' : 'Pin',
+                click() {
+                  save(AppModel, {
+                    ...app,
+                    tabDisplay: app.tabDisplay === 'pinned' ? 'plain' : 'pinned',
+                  })
                 },
-                onClick: () => {
-                  appsCarouselStore.shouldZoomIn()
-                  actions.router.showAppPage({ id: `${app.id}` })
-                },
-              }
-            },
-          )
-          .filter(x => !!x),
-      [activeAppsSorted, activePane.id],
+              },
+              ...getAppContextItems(app),
+            ]
+          },
+          onClick: () => {
+            appsCarouselStore.shouldZoomIn()
+            actions.router.showAppPage({ id: `${app.id}` })
+          },
+        }
+      },
     )
 
     const onSettings = isOnSettings(activePane)

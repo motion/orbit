@@ -22,7 +22,7 @@
     "react-native": "^0.60.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
+    "@babel/core": "^7.6.0",
     "@babel/runtime": "^7.4.5",
     "@o/kit": "^2.6.0",
     "@o/ui": "^2.6.0",

@@ -190,6 +190,8 @@ const OrbitAppCard = memo(
       [index],
     )
 
+    console.log('rendering card')
+
     // wrapping with view lets the scale transform not affect the scroll, for some reason this was happening
     // i thought scale transform doesnt affect layout?
     const mouseDown = useRef(0)
@@ -203,6 +205,7 @@ const OrbitAppCard = memo(
             data-is="OrbitAppCard-Container"
             scrollSnapAlign="center"
             marginRight={`-${stackMarginLessPct * 100}%`}
+            width="100vw"
           >
             <View
               animate
@@ -210,7 +213,7 @@ const OrbitAppCard = memo(
               rotateY={geometry
                 .scrollIntersection()
                 .transform([-1, 1], [15, -25])
-                .transform(x => (x > -7 ? -7 : x))
+                // .transform(x => (x > -12 ? -12 : x))
                 .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? prev : 0))
                 .spring({ stiffness: 250, damping: 50 })}
               opacity={geometry
@@ -294,7 +297,8 @@ const OrbitAppCard = memo(
                       : theme.appCardBackground
                     : theme.backgroundStronger
                 }
-                borderRadius={isFocusZoomed ? 0 : 20}
+                // borderRadius={isFocusZoomed ? 0 : 20}
+                borderRadius={0}
                 {...(isFocused
                   ? {
                       boxShadow: [

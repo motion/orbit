@@ -9,11 +9,11 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@babel/core": "^7.4.4",
-    "@babel/generator": "^7.4.4",
-    "@babel/parser": "^7.4.4",
-    "@babel/traverse": "^7.4.4",
-    "@babel/types": "^7.4.4",
+    "@babel/core": "^7.6.0",
+    "@babel/generator": "^7.6.0",
+    "@babel/parser": "^7.5.5",
+    "@babel/traverse": "^7.6.0",
+    "@babel/types": "^7.6.1",
     "ajv": "^6.5.3",
     "invariant": "^2.2.1",
     "loader-utils": "^1.1.0"

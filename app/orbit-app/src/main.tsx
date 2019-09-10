@@ -15,10 +15,7 @@ import '../public/styles/base.css'
  *
  * Please don't import anything else above this, be careful.
  *
- * Before we load it, we load in dev mode, then switch back into whatever mode were in.
- *
- *   1. Be sure this is the first time react/react-dom are loaded
- *   2. Be sure react-hot-loader is before them
+ * Before we load it, we load in dev mode, then switch back into whatever mode were in. Be sure this is the first time react/react-dom are loaded
  *
  */
 window['__DEV__'] = true
@@ -29,7 +26,6 @@ if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
   window['$RefreshReg$'] = () => {}
   window['$RefreshSig$'] = () => type => type
 }
-require('react-hot-loader')
 const React = require('react')
 const ReactDOM = require('react-dom')
 
@@ -101,18 +97,17 @@ async function main() {
 
   console.timeEnd('splash')
 
+  // ?why
   if (window.location.search.indexOf('why') > -1) {
     const whyDidYouRender = require('@welldone-software/why-did-you-render').default
     const React = require('react')
+    const match = window.location.search.match(/why=([a-z0-9_]+)/i)
+    const include = match && match.length === 2 ? match[1] : 'App|Orbit|Demo|Header'
+    const includeMatch = include === 'all' ? /[A-Z][a-zA-Z]+/ : new RegExp(include, 'i')
     whyDidYouRender(React, {
       // turn on to log ONLY when things rendered without needing to
       // logOnDifferentValues: true,
-      include: [
-        // turn on to log just about everything
-        // /[A-Z][a-zA-Z]+/,
-        // turn on to log main orbit areas + expensive views only
-        /App|Orbit|Demo|Header/,
-      ],
+      include: [includeMatch],
       // seems like classes dont work (transpiled probably similar to error: https://github.com/maicki/why-did-you-update/issues/47)
       exclude: [
         /Geometry|ErrorBoundary|Sidebar|Interactive|Portal|Text|Popover|SuspenseWithBanner|ItemMeasurer|VirtualListItemInner|SortableGridItem|TimeAgo/,

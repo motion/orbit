@@ -38,8 +38,11 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
       const state = getState()
       if (state.preventMeasure) return
       const set = onChange()
-      if (!set) return
       const node = ref.current
+      if (!set) return
+      if (!node) return
+      if (!intersected.current) return
+      if (state.disable) return
       if (!nodeRect) {
         if (node) {
           if (node.offsetWidth === 0 && node.offsetHeight === 0) {
@@ -54,12 +57,6 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
         } else {
           set(null)
         }
-        return
-      }
-      if (!node) return
-      if (!intersected.current) return
-      const visible = state.disable === false || !isVisible(node)
-      if (!visible) {
         return
       }
       const bounds =
@@ -112,11 +109,6 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
         intersected.current = true
         measure(entry.boundingClientRect)
       }
-      // disabled this because it doesnt make sense unless under a flag
-      // else {
-      //   intersected.current = false
-      //   measure(false)
-      // }
     },
   })
 
@@ -129,15 +121,4 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
   }, [disable])
 
   return pos
-}
-
-function isVisible(ele) {
-  const style = window.getComputedStyle(ele)
-  return (
-    style.width !== '0' &&
-    style.height !== '0' &&
-    style.opacity !== '0' &&
-    style.display !== 'none' &&
-    style.visibility !== 'hidden'
-  )
 }

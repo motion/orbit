@@ -1,14 +1,13 @@
 import { themes } from '@o/kit'
 import { ContextMenuProvider, ErrorBoundary, Loading, ProvideBanner, ProvideUI } from '@o/ui'
 import React from 'react'
-import { hot } from 'react-hot-loader/root'
 
 import { IS_ELECTRON } from './constants'
 import ContextMenu from './helpers/electron/ContextMenu.electron'
 import { useThemeStore } from './om/stores'
 import { useCaptureLinks } from './useCaptureLinks'
 
-export const OrbitRoot = hot(function OrbitRoot() {
+export function OrbitRoot() {
   const themeStore = useThemeStore()
 
   useCaptureLinks(document)
@@ -42,7 +41,7 @@ export const OrbitRoot = hot(function OrbitRoot() {
       </ProvideUI>
     </ContextMenuProvider>
   )
-})
+}
 
 if (process.env.NODE_ENV === 'development' && module['hot']) {
   module['hot'].addStatusHandler(status => {

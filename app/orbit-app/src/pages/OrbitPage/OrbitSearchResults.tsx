@@ -225,7 +225,7 @@ export const OrbitSearchResults = memo(() => {
       <Row
         data-is="OrbitSearchResults"
         width="100%"
-        height="102%"
+        height="100%"
         perspective="1200px"
         pointerEvents="none"
         WebkitFontSmoothing="antialiased"

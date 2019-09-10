@@ -164,12 +164,14 @@ export const OrbitAppRenderOfDefinition = ({
     () =>
       shouldRenderApp && (
         <FadeIn>
+          {/* <ReactShadow.div> */}
           {/* this is the default wrapper for App, but they can use their own inside it */}
           <AppDefinitionAppView
             {...activeItem}
             identifier={(activeItem && activeItem!.identifier) || identifier}
             id={`${(activeItem && activeItem!.id) || id}`}
           />
+          {/* </ReactShadow.div> */}
         </FadeIn>
       ),
     [shouldRenderApp, activeItem, id, identifier],

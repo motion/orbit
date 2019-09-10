@@ -1,9 +1,8 @@
 import * as React from 'react'
-import { hot } from 'react-hot-loader/root'
 
 import { TestUI } from './TestUI'
 
-export default hot(function RootView() {
+export default function RootView() {
   return (
     <>
       <TestUI />
@@ -15,4 +14,4 @@ export default hot(function RootView() {
       {/* <TestCarousel /> */}
     </>
   )
-})
+}

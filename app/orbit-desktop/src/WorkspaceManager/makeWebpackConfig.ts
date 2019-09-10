@@ -1,4 +1,5 @@
 import { isDefined } from '@o/utils'
+import { ReactRefreshPlugin } from '@o/webpack-react-refresh'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
 import IgnoreNotFoundExportPlugin from 'ignore-not-found-export-webpack-plugin'
 import * as Path from 'path'
@@ -205,9 +206,8 @@ export function makeWebpackConfig(
                     presets: [
                       [
                         require.resolve('@o/babel-preset-motion'),
-                        {
-                          disable: ['react-hot-loader/babel'],
-                        },
+                        // even in prod ensure react-refresh is there
+                        { enable: ['react-refresh/babel'] },
                       ],
                     ],
                   },
@@ -404,6 +404,8 @@ require('@o/kit').OrbitHot.fileLeave();
             }),
         )) ||
         []),
+
+      new ReactRefreshPlugin(),
 
       hot &&
         new webpack.HotModuleReplacementPlugin({

@@ -21,30 +21,31 @@ export type TabProps = Omit<ViewProps, 'width'> & {
   icon?: string | React.ReactNode
   iconSize?: number
   iconAdjustOpacity?: number
-  getContext?: () => MenuTemplate
+  getContext?: (props: TabProps) => MenuTemplate
   disabled?: boolean
-  iconProps?: Partial<IconProps>
+  iconProps?: Partial<OrbitTabIconProps>
   after?: React.ReactNode
   location?: string
 }
 
-export const OrbitTab = memo(function OrbitTab({
-  icon,
-  iconSize: iconSizeProp,
-  iconProps,
-  iconAdjustOpacity = 0,
-  tooltip,
-  label,
-  isActive = false,
-  className = '',
-  getContext,
-  after,
-  location,
-  app,
-  width,
-  ...props
-}: TabProps) {
-  const contextMenuProps = useContextMenu({ items: getContext ? getContext() : undefined })
+export const OrbitTab = memo((props: TabProps) => {
+  const {
+    icon,
+    iconSize: iconSizeProp,
+    iconProps,
+    iconAdjustOpacity = 0,
+    tooltip,
+    label,
+    isActive = false,
+    className = '',
+    getContext,
+    after,
+    location,
+    app,
+    width,
+    ...rest
+  } = props
+  const contextMenuProps = useContextMenu({ items: getContext ? getContext(props) : undefined })
   const iconSize = iconSizeProp || 16
   const link = useLocationLink(location || '')
 
@@ -56,7 +57,7 @@ export const OrbitTab = memo(function OrbitTab({
       isActive={isActive}
       onClick={link}
       {...contextMenuProps}
-      {...props}
+      {...rest}
     >
       <NavButtonChromeInner isActive={isActive}>
         <Tooltip label={app ? app.name : undefined}>
@@ -103,7 +104,9 @@ export const OrbitTab = memo(function OrbitTab({
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
-function OrbitTabIcon(props: Omit<IconProps, 'label'> & Partial<TabProps>) {
+export type OrbitTabIconProps = Omit<IconProps, 'label'> & Partial<TabProps>
+
+function OrbitTabIcon(props: OrbitTabIconProps) {
   const theme = useTheme()
   let opacity = props.isActive ? 1 : 0.5
   opacity += props.iconAdjustOpacity || 0

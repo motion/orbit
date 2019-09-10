@@ -18,19 +18,19 @@ let lgSpace = <Space size="xxxl" />
 // Itrou
 
 let allTitles = {
-  large: 'A new App OS',
-  medium: 'A new App OS',
-  small: 'A new App OS',
+  large: 'Create your own app-suite.',
+  medium: 'Create your own app-suite.',
+  small: 'Create your own app-suite.',
 }
 
 let allTexts = {
   large: [
-    `A beautiful, moldable heads up display for you & your team.`,
-    `Unify and explore data, create apps, display, search, and more.`,
+    `Best in class developer experience, toolkit, and a rich data + app-store.`,
+    `It's the beautiful, moldable app-platform for you & your team.`,
   ],
   medium: [
-    `A beautiful, moldable heads up display for you & your team.`,
-    `Unify and explore data, create apps, display, search, and more.`,
+    `Best in class developer experience, toolkit, and a rich data + app-store.`,
+    `It's the beautiful, moldable app-platform for you & your team.`,
   ],
   small: [`Create internal apps with all new abilities.`, `It's perfect tool for teams.`],
 }

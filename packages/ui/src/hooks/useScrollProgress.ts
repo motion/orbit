@@ -1,5 +1,5 @@
-import { useMotionValue } from 'framer-motion'
-import { useEffect } from 'react'
+import { MotionValue, useMotionValue } from 'framer-motion'
+import { RefObject, useEffect } from 'react'
 
 // TODO handle x/y option
 
@@ -7,8 +7,14 @@ import { useEffect } from 'react'
  * Returns the scroll progress as a 0-1 value based on how far it's scrolled
  * Where 0 is the beginning and 1 is the end.
  */
-export function useScrollProgress({ ref }) {
-  const scrollXProgress = useMotionValue(0)
+export function useScrollProgress({
+  ref,
+  motionValue,
+}: {
+  ref: RefObject<HTMLElement>
+  motionValue?: MotionValue<number>
+}) {
+  const scrollXProgress = motionValue || useMotionValue(0)
 
   useEffect(() => {
     function updateCallback(e) {

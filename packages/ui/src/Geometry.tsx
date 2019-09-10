@@ -1,18 +1,14 @@
-import { isEqual } from '@o/fast-compare'
 import { decorate, useForceUpdate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
-import { debounce } from 'lodash'
 import { SpringProps } from 'popmotion'
 import React from 'react'
-import { RefObject, useContext, useEffect, useRef } from 'react'
+import { RefObject, useCallback, useContext, useEffect, useRef } from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
-import { useNodeSize } from './hooks/useNodeSize'
 import { useOnHotReload } from './hooks/useOnHotReload'
 import { useRelative } from './hooks/useRelative'
 import { useScrollProgress } from './hooks/useScrollProgress'
-import { ResizeObserver } from './ResizeObserver'
-import { ScrollableRefContext } from './View/ScrollableRefContext'
+import { useScrollableParent } from './View/ScrollableParentStore'
 
 // @ts-ignore
 @decorate
@@ -121,15 +117,13 @@ class GeometryStore {
   scrollProgress() {
     return this.setupStore(store => {
       store.animationHooks.addHook(() => {
-        const ref = useContext(ScrollableRefContext)
+        const scrollableParent = useScrollableParent()
         return useScrollProgress({
-          ref,
+          ref: scrollableParent.props.ref,
         })
       })
     })
   }
-
-  sharedScrollProgress = null
 
   /**
    * Returns -1 to 1 value of the current nodes intersection within the parent scrollable
@@ -137,142 +131,21 @@ class GeometryStore {
    */
   scrollIntersection() {
     return this.setupStore(store => {
-      const { sharedScrollProgress } = this
       store.animationHooks.addHook(() => {
-        const ref = useContext(ScrollableRefContext)
-        const scrollProgress = (() => {
-          if (sharedScrollProgress) return sharedScrollProgress
-          return useScrollProgress({
-            ref,
-          })
-        })()
-
-        // needs to be mounted to be effective
-        const state = useRef({
-          offset: 0,
-          width: 0.1,
-          total: 0,
-        })
-
-        const measure = debounce(
-          () => {
-            console.log('measure call')
-            if (!this.nodeRef.current || !ref.current) {
-              throw new Error(`No node or parent node (did you give a parent scrollable=""?)`)
-            }
-            if (!ref.current.scrollWidth) {
-              return
-            }
-            const nodeWidth = this.nodeRef.current.clientWidth
-            const nodeLeft = this.nodeRef.current.offsetLeft
-            if (nodeLeft < 0) {
-              // this happens on mount sometimes but will be fixed once measured
-              return
-            }
-            const parentWidth = ref.current.scrollWidth
-            // assume all have same widths for now
-            const total = ref.current.childElementCount
-            const width = 1 / total
-            const offset = nodeLeft / (parentWidth - nodeWidth)
-
-            const next = { width, offset, total }
-            if (!isEqual(state.current, next)) {
-              state.current = next
-              // TODO called too much... scrollWidth isn't great
-              // trigger update
-              scrollProgress.set(scrollProgress.get())
-            }
-          },
-          60,
-          {
-            trailing: true,
-          },
-        )
-
-        // this fixed a bug where scrollWidth changed in OrbitAppsCarousel
-        // we literally cant watch scrollWidth, and we need it :/
-        // so attempting to watch a few other things...
-        useEffect(() => {
-          const disposables = new Set<{ type: string; dispose: Function }>()
-
-          let lastScrollWidth = ref.current.scrollWidth
-          const updateScrollWidth = debounce(() => {
-            const next = ref.current.scrollWidth
-            if (lastScrollWidth !== lastScrollWidth) {
-              lastScrollWidth = next
-              measure()
-            }
-          })
-
-          function watchChildren() {
-            disposables.forEach(x => {
-              if (x.type === 'child') {
-                x.dispose()
-              }
-            })
-
-            // add resizeObservers to all children
-            for (const child of Array.from(ref.current.childNodes)) {
-              if (child instanceof HTMLElement) {
-                const resizer = new ResizeObserver(updateScrollWidth)
-                resizer.observe(child)
-                disposables.add({
-                  type: 'child',
-                  dispose: () => resizer.disconnect(),
-                })
-
-                const childMutationObserver = new MutationObserver(measure)
-                childMutationObserver.observe(child, {
-                  subtree: true,
-                  attributes: true,
-                })
-                disposables.add({
-                  type: 'child',
-                  dispose: () => childMutationObserver.disconnect(),
-                })
-              }
-            }
-          }
-
-          const measureChildrenObserver = new MutationObserver(watchChildren)
-          measureChildrenObserver.observe(ref.current, {
-            childList: true,
-          })
-          disposables.add({
-            type: 'parent',
-            dispose: () => measureChildrenObserver.disconnect(),
-          })
-
-          watchChildren()
-
-          return () => {
-            disposables.forEach(x => x.dispose())
-            updateScrollWidth.cancel()
-          }
-        }, [])
+        const scrollableParentStore = useScrollableParent()
+        const { scrollIntersectionState } = scrollableParentStore
 
         useEffect(() => {
-          measure()
+          scrollableParentStore.startIntersection()
         }, [])
-
-        useNodeSize({
-          throttle: 100,
-          ref: this.nodeRef,
-          onChange: measure,
-        })
-
-        // doing this onMount failed with ref.current.scrollWidth being empty if suspense threw
-        // TODO we could share this parent size watcher like we do scrollPosition
-        useNodeSize({
-          throttle: 100,
-          ref,
-          onChange: measure,
-        })
 
         // this should make it go to 0 once node is centered
-        return useTransform(scrollProgress, scroll => {
-          const cur = state.current
-          return (cur.offset - scroll) * cur.total
+        return useTransform(scrollIntersectionState.scrollProgress, scroll => {
+          if (!scrollIntersectionState.ready) {
+            return 0
+          }
+          const state = scrollIntersectionState.children.get(this.nodeRef.current)
+          return (state.offset - scroll) * state.total
         })
       })
     })

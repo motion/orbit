@@ -4,7 +4,7 @@ import React, { useRef } from 'react'
 
 import { composeRefs } from '../helpers/composeRefs'
 import { PaddedView } from './PaddedView'
-import { ScrollableRefContext } from './ScrollableRefContext'
+import { ScrollableIntersection, ScrollableParentContext } from './ScrollableParentStore'
 import { ScrollableViewProps } from './types'
 import { View } from './View'
 import { wrappingSpaceTheme } from './wrappingSpaceTheme'
@@ -22,21 +22,14 @@ const isOnlyChildrenDefined = props => {
 
 export function ScrollableView(props: ScrollableViewProps) {
   const ref = useRef(null)
+  const scrollableParent = ScrollableParentContext.useCreateStore({ ref })
 
   // likely not great pattern, was testing spacing elements using descendent selectors
   if (isOnlyChildrenDefined(props)) {
     return <>{props.children}</>
   }
 
-  const {
-    children,
-    padding,
-    scrollable,
-    parentSpacing,
-    hideScrollbars,
-    // scrollLeft,
-    // scrollTop,
-  } = props
+  const { children, padding, scrollable, parentSpacing, hideScrollbars } = props
 
   // we may want to memo this, need to test if add/remove padding will cause remounts
   let content = children
@@ -65,11 +58,12 @@ export function ScrollableView(props: ScrollableViewProps) {
   }
 
   return (
-    <ScrollableRefContext.Provider value={ref}>
+    <ScrollableParentContext.ProvideStore value={scrollableParent}>
+      {scrollableParent.shouldScrollIntersect && (
+        <ScrollableIntersection scrollableParent={scrollableParent} />
+      )}
       <ScrollableChrome
         scrollable={scrollable}
-        // scrollTop={scrollTop}
-        // scrollLeft={scrollLeft}
         {...viewProps}
         {...props}
         nodeRef={composeRefs(props.nodeRef, ref)}
@@ -78,12 +72,11 @@ export function ScrollableView(props: ScrollableViewProps) {
       >
         {content}
       </ScrollableChrome>
-    </ScrollableRefContext.Provider>
+    </ScrollableParentContext.ProvideStore>
   )
 }
 
 const ScrollableChrome = gloss<ScrollableViewProps>(View, {
-  debug: true,
   boxSizing: 'content-box',
   flexDirection: 'inherit',
   flexWrap: 'inherit',

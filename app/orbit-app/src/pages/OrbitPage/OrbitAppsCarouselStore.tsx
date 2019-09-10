@@ -144,14 +144,14 @@ class OrbitAppsCarouselStore {
       if (!this.controlled) return
       this.rowRef.current!.scrollLeft = val * this.props.rowWidth
       clearTimeout(this.uncontrolledTm)
-      this.uncontrolledTm = setTimeout(this.setUncontrolled, 30)
+      this.uncontrolledTm = setTimeout(this.setUncontrolled, 50)
     })
   }
   updateScroll = react(() => this.state.index, this.setScrollSpring)
   setScrollSpring(index: number) {
     if (index === this.scrollOut.value.get()) return
-    console.log('set scroll spring', index)
     if (this.rowRef.current) {
+      clearTimeout(this.uncontrolledTm)
       this.rowRef.current.style['scrollSnapType'] = 'initial'
       this.controlled = true
       this.scrollOut.value.set(index)

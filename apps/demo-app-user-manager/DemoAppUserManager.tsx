@@ -1,4 +1,4 @@
-import { Card, DefinitionList, Fetch, Fieldsets, Form, Layout, Pane, Row, Section, Select, Tab, Table, Tabs, useActiveSearchQuery, useCreateForm, useFetch, useVisibility } from '@o/ui'
+import { Card, DefinitionList, Fetch, Fieldsets, Form, Layout, Pane, Row, Section, Select, Tab, Table, Tabs, useActiveSearchQuery, useCreateForm, useFetch } from '@o/ui'
 import React, { useMemo, useState } from 'react'
 
 const endpoint = 'https://jsonplaceholder.typicode.com'
@@ -18,8 +18,6 @@ export function DemoAppUserManager() {
       })),
     [allUsers],
   )
-  const visibility = useVisibility()
-  console.warn('visibility', visibility)
   return (
     <Form useForm={form}>
       <Layout type="row">

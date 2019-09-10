@@ -123,6 +123,7 @@ export function ScrollableIntersection({
         }
 
         // done, trigger update
+        scrollableParent.scrollIntersectionState.ready = true
         scrollProgress.set(scrollProgress.get())
       }, 0)
     }

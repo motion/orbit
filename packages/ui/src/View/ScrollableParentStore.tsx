@@ -1,9 +1,8 @@
 import { createStoreContext } from '@o/use-store'
 import { MotionValue } from 'framer-motion'
-import { RefObject, useCallback, useEffect, useRef } from 'react'
+import { RefObject, useEffect } from 'react'
 
 import { useScrollProgress } from '../hooks/useScrollProgress'
-import { ResizeObserver } from '../ResizeObserver'
 
 class ScrollableParentStore {
   props: {
@@ -36,9 +35,10 @@ export function ScrollableIntersection({
 }: {
   scrollableParent: ScrollableParentStore
 }) {
+  const scrollProgress = scrollableParent.scrollIntersectionState.scrollProgress
   useScrollProgress({
     ref: scrollableParent.props.ref,
-    motionValue: scrollableParent.scrollIntersectionState.scrollProgress,
+    motionValue: scrollProgress,
   })
 
   useEffect(() => {
@@ -76,9 +76,10 @@ export function ScrollableIntersection({
     function finishUpdate() {
       clearTimeout(updateTm)
       updateTm = setTimeout(() => {
-        console.log('now update children measurements')
-        const parentWidth = ref.current.clientWidth
-        children.forEach(({ contentRect, node }) => {
+        const parentOuterWidth = ref.current.clientWidth
+        const childrenWidths: { width: number; height: number }[] = []
+
+        for (const [_, { contentRect, node }] of children.entries()) {
           const final = {
             width: contentRect.width,
             height: contentRect.height,
@@ -92,15 +93,37 @@ export function ScrollableIntersection({
             for (const side of sides) {
               const val = styleMap.get(side)
               if (val.unit === 'percent') {
-                final[dimension] += (val.value * parentWidth) / 100
+                final[dimension] += (val.value * parentOuterWidth) / 100
               } else {
                 final[dimension] += val.to('px').value
               }
             }
           }
 
-          console.log('value', final)
-        })
+          childrenWidths.push(final)
+        }
+
+        // calculate real parent width
+        const parentWidth = childrenWidths.reduce((a, b) => a + b.width, 0)
+
+        // and now update children states
+        for (const [index, { node }] of children.entries()) {
+          // now we have the real width, do scroll intersection measurements
+          // assume all have same widths for now
+          const nodeLeft = node.offsetLeft
+          const nodeWidth = childrenWidths[index].width
+          const total = childrenWidths.length
+          const width = 1 / total
+          const offset = nodeLeft / (parentWidth - nodeWidth)
+          scrollableParent.scrollIntersectionState.children.set(node, {
+            offset,
+            width,
+            total,
+          })
+        }
+
+        // done, trigger update
+        scrollProgress.set(scrollProgress.get())
       }, 0)
     }
 
@@ -114,6 +137,7 @@ export function ScrollableIntersection({
       // add resizeObservers to all children
       for (const [index, child] of Array.from(ref.current.childNodes).entries()) {
         if (child instanceof HTMLElement) {
+          // @ts-ignore
           const resizer = new ResizeObserver(entries => {
             if (entries.length) {
               updateChild(index, entries[0].contentRect, child)
@@ -145,31 +169,3 @@ export function ScrollableIntersection({
 
   return null
 }
-
-// const measure = () => {
-//   // if (!this.nodeRef.current || !ref.current) {
-//   //   throw new Error(`No node or parent node (did you give a parent scrollable=""?)`)
-//   // }
-//   // if (!ref.current.scrollWidth) {
-//   //   return
-//   // }
-//   // const nodeWidth = this.nodeRef.current.clientWidth
-//   // const nodeLeft = this.nodeRef.current.offsetLeft
-//   // if (nodeLeft < 0) {
-//   //   // this happens on mount sometimes but will be fixed once measured
-//   //   return
-//   // }
-//   // const parentWidth = ref.current.scrollWidth
-//   // // assume all have same widths for now
-//   // const total = ref.current.childElementCount
-//   // const width = 1 / total
-//   // const offset = nodeLeft / (parentWidth - nodeWidth)
-
-//   // const next = { width, offset, total }
-//   // if (!isEqual(state.current, next)) {
-//   //   state.current = next
-//   //   // TODO called too much... scrollWidth isn't great
-//   //   // trigger update
-//   //   scrollProgress.set(scrollProgress.get())
-//   // }
-// }

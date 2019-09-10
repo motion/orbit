@@ -94,8 +94,11 @@ export function createReaction(
       }
     }
 
-    if (equals ? equals(nextValue, currentValueUnreactive) : nextValue === currentValueUnreactive) {
-      return
+    if (nextValue === currentValueUnreactive) return
+    if (equals) {
+      if (equals(nextValue, currentValueUnreactive)) {
+        return
+      }
     }
 
     let changed: any

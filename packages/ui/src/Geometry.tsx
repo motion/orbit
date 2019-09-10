@@ -3,14 +3,15 @@ import { decorate, useForceUpdate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
 import { debounce, throttle } from 'lodash'
 import { SpringProps } from 'popmotion'
-import React from 'react'
 import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
+import React from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
 import { useNodeSize } from './hooks/useNodeSize'
 import { useOnHotReload } from './hooks/useOnHotReload'
 import { useRelative } from './hooks/useRelative'
 import { useScrollProgress } from './hooks/useScrollProgress'
+import { ResizeObserver } from './ResizeObserver'
 import { ScrollableRefContext } from './View/ScrollableRefContext'
 
 // @ts-ignore
@@ -187,18 +188,56 @@ class GeometryStore {
           },
         )
 
+        // this fixed a bug where scrollWidth changed in OrbitAppsCarousel
         // we literally cant watch scrollWidth, and we need it :/
-        // TEMP we need to not re-do this in every geometry anyway and share it
+        // so attempting to watch a few other things...
         useEffect(() => {
-          let lastScrollWidth
-          let clear = setInterval(() => {
-            if (!ref.current.scrollWidth) return
-            if (lastScrollWidth !== ref.current.scrollWidth) {
-              lastScrollWidth = ref.current.scrollWidth
+          const disposables = new Set<{ type: string; dispose: Function }>()
+
+          let lastScrollWidth = ref.current.scrollWidth
+          const updateScrollWidth = debounce(() => {
+            const next = ref.current.scrollWidth
+            if (lastScrollWidth !== lastScrollWidth) {
+              lastScrollWidth = next
               measure()
             }
-          }, 300)
-          return () => clearInterval(clear)
+          })
+
+          function watchChildren() {
+            disposables.forEach(x => {
+              if (x.type === 'child') {
+                x.dispose()
+              }
+            })
+
+            // add resizeObservers to all children
+            for (const child of Array.from(ref.current.childNodes)) {
+              if (child instanceof HTMLElement) {
+                const resizer = new ResizeObserver(updateScrollWidth)
+                resizer.observe(child)
+                disposables.add({
+                  type: 'child',
+                  dispose: () => resizer.disconnect(),
+                })
+              }
+            }
+          }
+
+          const parentMutationObserver = new MutationObserver(watchChildren)
+          parentMutationObserver.observe(ref.current, {
+            childList: true,
+          })
+          disposables.add({
+            type: 'parent',
+            dispose: () => parentMutationObserver.disconnect(),
+          })
+
+          watchChildren()
+
+          return () => {
+            disposables.forEach(x => x.dispose())
+            updateScrollWidth.cancel()
+          }
         }, [])
 
         useNodeSize({

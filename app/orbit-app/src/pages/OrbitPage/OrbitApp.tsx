@@ -4,6 +4,7 @@ import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisi
 import { ensure, react, useStore, useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
 import React, { memo, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import ReactShadow from 'react-shadow'
 
 import { useOm } from '../../om/om'
 import { orbitStore, paneManagerStore } from '../../om/stores'
@@ -164,12 +165,14 @@ export const OrbitAppRenderOfDefinition = ({
     () =>
       shouldRenderApp && (
         <FadeIn>
-          {/* this is the default wrapper for App, but they can use their own inside it */}
-          <AppDefinitionAppView
-            {...activeItem}
-            identifier={(activeItem && activeItem!.identifier) || identifier}
-            id={`${(activeItem && activeItem!.id) || id}`}
-          />
+          <ReactShadow.div>
+            {/* this is the default wrapper for App, but they can use their own inside it */}
+            <AppDefinitionAppView
+              {...activeItem}
+              identifier={(activeItem && activeItem!.identifier) || identifier}
+              id={`${(activeItem && activeItem!.id) || id}`}
+            />
+          </ReactShadow.div>
         </FadeIn>
       ),
     [shouldRenderApp, activeItem, id, identifier],

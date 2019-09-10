@@ -94,7 +94,11 @@ const rulesToClass = new WeakMap()
 const gc = new GarbageCollector(sheet, tracker, rulesToClass)
 const whiteSpaceRegex = /[\s]+/g
 
-// gloss shouldUpdate optimization
+/**
+ * Gloss componentShouldUpdate optimization - Gloss styles should never
+ * rely on react elements (TODO document that), which means we can do nice
+ * optimization by tracking if only non-elements changed.
+ */
 const shouldUpdateMap = new WeakMap<object, boolean>()
 function glossIsEqual(a: any, b: any) {
   let shouldUpdate = false
@@ -111,7 +115,7 @@ function glossIsEqual(a: any, b: any) {
     }
   }
   shouldUpdateMap.set(b, shouldUpdateInner)
-  return shouldUpdate
+  return !shouldUpdate
 }
 
 let idCounter = 1
@@ -213,8 +217,10 @@ export function gloss<Props = any, ThemeProps = Props>(
       element = getEl(props)
     }
 
+    /**
+     * Optimization: only update if non-elements changed
+     */
     if (shouldUpdateMap.get(props) === false && lastProps.current) {
-      console.warn('yay')
       // because hooks can run in theme, be sure to run them
       if (theme && themeFn) themeFn(props, theme)
       return createElement(element, lastProps.current, props.children)

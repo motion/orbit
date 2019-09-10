@@ -205,6 +205,7 @@ const OrbitAppCard = memo(
             data-is="OrbitAppCard-Container"
             scrollSnapAlign="center"
             marginRight={`-${stackMarginLessPct * 100}%`}
+            width="100vw"
           >
             <View
               animate
@@ -296,7 +297,8 @@ const OrbitAppCard = memo(
                       : theme.appCardBackground
                     : theme.backgroundStronger
                 }
-                borderRadius={isFocusZoomed ? 0 : 20}
+                // borderRadius={isFocusZoomed ? 0 : 20}
+                borderRadius={0}
                 {...(isFocused
                   ? {
                       boxShadow: [

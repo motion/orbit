@@ -1,10 +1,10 @@
 import { isEqual } from '@o/fast-compare'
 import { decorate, useForceUpdate } from '@o/use-store'
 import { MotionValue, useSpring, useTransform } from 'framer-motion'
-import { debounce, throttle } from 'lodash'
+import { debounce } from 'lodash'
 import { SpringProps } from 'popmotion'
 import React from 'react'
-import { isValidElement, memo, RefObject, useContext, useEffect, useLayoutEffect, useRef } from 'react'
+import { RefObject, useContext, useEffect, useRef } from 'react'
 
 import { useLazyRef } from './hooks/useLazyRef'
 import { useNodeSize } from './hooks/useNodeSize'
@@ -156,6 +156,7 @@ class GeometryStore {
 
         const measure = debounce(
           () => {
+            console.log('measure call')
             if (!this.nodeRef.current || !ref.current) {
               throw new Error(`No node or parent node (did you give a parent scrollable=""?)`)
             }

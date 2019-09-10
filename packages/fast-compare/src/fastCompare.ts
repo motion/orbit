@@ -52,7 +52,6 @@ function isEqualInner(a: any, b: any, options?: IsEqualOptions) {
 
   if (a && b && typeof a == 'object' && typeof b == 'object') {
     if (a[EQUALITY_KEY] && a[EQUALITY_KEY] === b[EQUALITY_KEY]) return true
-    // if (isEqualWeak(a, b)) return true
 
     let arrA = isArray(a),
       arrB = isArray(b),

@@ -94,6 +94,26 @@ const rulesToClass = new WeakMap()
 const gc = new GarbageCollector(sheet, tracker, rulesToClass)
 const whiteSpaceRegex = /[\s]+/g
 
+// gloss shouldUpdate optimization
+const shouldUpdateMap = new WeakMap<object, boolean>()
+function glossIsEqual(a: any, b: any) {
+  let shouldUpdate = false
+  let shouldUpdateInner = false
+  for (const key in b) {
+    const bVal = b[key]
+    if (isValidElement(bVal)) {
+      shouldUpdate = true
+      continue
+    }
+    if (!isEqual(a[key], bVal)) {
+      shouldUpdate = true
+      shouldUpdateInner = true
+    }
+  }
+  shouldUpdateMap.set(b, shouldUpdateInner)
+  return shouldUpdate
+}
+
 let idCounter = 1
 const viewId = () => idCounter++ % Number.MAX_SAFE_INTEGER
 
@@ -108,6 +128,7 @@ export function gloss<Props = any, ThemeProps = Props>(
       )
     }
   }
+
   let target: any = a || 'div'
   let rawStyles = b
   let ignoreAttrs: Object
@@ -173,6 +194,7 @@ export function gloss<Props = any, ThemeProps = Props>(
 
     const theme = useTheme()
     const dynClasses = useRef<Set<string> | null>(null)
+    const lastProps = useRef<any>()
 
     // unmount
     useEffect(() => {
@@ -183,6 +205,20 @@ export function gloss<Props = any, ThemeProps = Props>(
         }
       }
     }, [])
+
+    // if this is a plain view we can use tagName, otherwise just pass it down
+    let element = typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
+    // helper for element
+    if (getEl) {
+      element = getEl(props)
+    }
+
+    if (shouldUpdateMap.get(props) === false && lastProps.current) {
+      console.warn('yay')
+      // because hooks can run in theme, be sure to run them
+      if (theme && themeFn) themeFn(props, theme)
+      return createElement(element, lastProps.current, props.children)
+    }
 
     const dynClassNames = addDynamicStyles(
       id,
@@ -196,14 +232,6 @@ export function gloss<Props = any, ThemeProps = Props>(
     )
 
     dynClasses.current = dynClassNames
-
-    // if this is a plain view we can use tagName, otherwise just pass it down
-    let element = typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
-
-    // helper for element
-    if (getEl) {
-      element = getEl(props)
-    }
 
     const isDOMElement = typeof element === 'string' || config!.isDOMElement
 
@@ -261,6 +289,7 @@ export function gloss<Props = any, ThemeProps = Props>(
       }
     }
 
+    lastProps.current = finalProps
     return createElement(element, finalProps, props.children)
   }
 
@@ -317,7 +346,7 @@ export function gloss<Props = any, ThemeProps = Props>(
 }
 
 function createGlossView<Props>(GlossView: any, config) {
-  const res: GlossView<Props> = memo(GlossView, glossSmartMemo) as any
+  const res: GlossView<Props> = memo(GlossView, glossIsEqual) as any
   res.internal = config
   res[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
   res.theme = (...themeFns) => {
@@ -325,11 +354,6 @@ function createGlossView<Props>(GlossView: any, config) {
     return res
   }
   return res
-}
-
-function glossSmartMemo(a: any, b: any) {
-  if (b.children) return false
-  return isEqual(a, b)
 }
 
 // keeps priority of hover/active/focus as expected

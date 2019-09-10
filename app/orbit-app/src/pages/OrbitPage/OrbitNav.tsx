@@ -5,7 +5,7 @@ import { SortableContainer, SortableContainerProps, SortableElement } from '@o/r
 import { App } from '@o/stores'
 import { isRightClick, Space } from '@o/ui'
 import { Box, gloss, Row, RowProps } from 'gloss'
-import React, { forwardRef, memo, useMemo } from 'react'
+import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
@@ -41,6 +41,32 @@ export const OrbitNav = memo(
     const tabWidth = 54
     const tabWidthPinned = 66
 
+    const getContext = useCallback(({ app }) => {
+      const isPinned = app.tabDisplay === 'pinned' || app.tabDisplay === 'permanent'
+      return [
+        {
+          label: 'Open...',
+        },
+        {
+          label: 'App settings',
+          checked: true,
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: isPinned ? 'Unpin' : 'Pin',
+          click() {
+            save(AppModel, {
+              ...app,
+              tabDisplay: app.tabDisplay === 'pinned' ? 'plain' : 'pinned',
+            })
+          },
+        },
+        ...getAppContextItems(app),
+      ]
+    }, [])
+
     const items = useMemo(
       () =>
         activeAppsSorted
@@ -58,30 +84,7 @@ export const OrbitNav = memo(
                 isActive,
                 icon: <AppIcon identifier={app.identifier} colors={app.colors} />,
                 iconSize: tabHeight - 6,
-                getContext() {
-                  return [
-                    {
-                      label: 'Open...',
-                    },
-                    {
-                      label: 'App settings',
-                      checked: true,
-                    },
-                    {
-                      type: 'separator',
-                    },
-                    {
-                      label: isPinned ? 'Unpin' : 'Pin',
-                      click() {
-                        save(AppModel, {
-                          ...app,
-                          tabDisplay: app.tabDisplay === 'pinned' ? 'plain' : 'pinned',
-                        })
-                      },
-                    },
-                    ...getAppContextItems(app),
-                  ]
-                },
+                getContext,
                 onClick: () => {
                   appsCarouselStore.shouldZoomIn()
                   actions.router.showAppPage({ id: `${app.id}` })

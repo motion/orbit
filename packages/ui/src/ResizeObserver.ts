@@ -24,4 +24,6 @@ interface ResizeObserverPolyfill {
   prototype: ResizeObserver
   new (callback: ResizeObserverCallback): ResizeObserver
 }
-export const ResizeObserver = window['ResizeObserver'] as ResizeObserverPolyfill
+
+export const ResizeObserver =
+  typeof window !== 'undefined' ? (window['ResizeObserver'] as ResizeObserverPolyfill) : null

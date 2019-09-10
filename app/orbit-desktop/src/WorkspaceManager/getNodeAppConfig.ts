@@ -5,58 +5,30 @@ import { join } from 'path'
 import { getAppParams } from './getAppsConfig'
 import { makeWebpackConfig } from './makeWebpackConfig'
 
-// default base dll
-export let defaultBaseDll
-if (process.env.NODE_ENV === 'production') {
-  const Config = getGlobalConfig()
-  defaultBaseDll = {
-    manifest: join(Config.paths.desktopRoot, 'dist', 'orbit-manifest-base.json'),
-    filepath: join(Config.paths.desktopRoot, 'dist', 'base.dll.js'),
-  }
-} else {
-  const monoRoot = join(__dirname, '..', '..', '..', '..')
-  defaultBaseDll = {
-    manifest: join(
-      monoRoot,
-      'example-workspace',
-      'dist',
-      'development',
-      'orbit-manifest-base.json',
-    ),
-    filepath: join(monoRoot, 'example-workspace', 'dist', 'development', 'base.dll.js'),
-  }
-}
-
-class IgnoreIfNotNodeEntryImport {
-  constructor(private options: { file: string }) {}
-
-  directDependencies = new Set<string>()
-
-  checkIgnore = result => {
-    if (!result) return result
-    // if entry === file, ok
-    if (result.request === this.options.file) {
-      this.directDependencies = new Set()
-      return result
+function getBaseDLL() {
+  // default base dll
+  let defaultBaseDll
+  if (process.env.NODE_ENV === 'production') {
+    const Config = getGlobalConfig()
+    defaultBaseDll = {
+      manifest: join(Config.paths.desktopRoot, 'dist', 'orbit-manifest-base.json'),
+      filepath: join(Config.paths.desktopRoot, 'dist', 'base.dll.js'),
     }
-    // if issuer === file, ok if .node
-    if (result.contextInfo && result.contextInfo.issuer === this.options.file) {
-      if (result.request[0] === '.' && !result.request.includes('.node')) {
-        result.request = '@o/kit/EmptyThing'
-        return result
-      }
+  } else {
+    const monoRoot = join(__dirname, '..', '..', '..', '..')
+    // mode always development
+    defaultBaseDll = {
+      manifest: join(
+        monoRoot,
+        'example-workspace',
+        'dist',
+        'development',
+        'orbit-manifest-base.json',
+      ),
+      filepath: join(monoRoot, 'example-workspace', 'dist', 'development', 'base.dll.js'),
     }
-    return result
   }
-
-  apply(compiler) {
-    compiler.hooks.normalModuleFactory.tap('IgnorePlugin', nmf => {
-      nmf.hooks.beforeResolve.tap('IgnorePlugin', this.checkIgnore)
-    })
-    compiler.hooks.contextModuleFactory.tap('IgnorePlugin', cmf => {
-      cmf.hooks.beforeResolve.tap('IgnorePlugin', this.checkIgnore)
-    })
-  }
+  return defaultBaseDll
 }
 
 export async function getNodeAppConfig(entry: string, name: any, options: CommandBuildOptions) {
@@ -71,7 +43,7 @@ export async function getNodeAppConfig(entry: string, name: any, options: Comman
       // for non-treeshaking
       // WARNING bug it exports to "module not found {}"
       mode: 'development',
-      dllReferences: [defaultBaseDll],
+      dllReferences: [getBaseDLL()],
       output: {
         library: 'test',
         libraryTarget: 'umd',
@@ -126,3 +98,35 @@ export async function getNodeAppConfig(entry: string, name: any, options: Comman
     },
   )
 }
+
+// class IgnoreIfNotNodeEntryImport {
+//   constructor(private options: { file: string }) {}
+
+//   directDependencies = new Set<string>()
+
+//   checkIgnore = result => {
+//     if (!result) return result
+//     // if entry === file, ok
+//     if (result.request === this.options.file) {
+//       this.directDependencies = new Set()
+//       return result
+//     }
+//     // if issuer === file, ok if .node
+//     if (result.contextInfo && result.contextInfo.issuer === this.options.file) {
+//       if (result.request[0] === '.' && !result.request.includes('.node')) {
+//         result.request = '@o/kit/EmptyThing'
+//         return result
+//       }
+//     }
+//     return result
+//   }
+
+//   apply(compiler) {
+//     compiler.hooks.normalModuleFactory.tap('IgnorePlugin', nmf => {
+//       nmf.hooks.beforeResolve.tap('IgnorePlugin', this.checkIgnore)
+//     })
+//     compiler.hooks.contextModuleFactory.tap('IgnorePlugin', cmf => {
+//       cmf.hooks.beforeResolve.tap('IgnorePlugin', this.checkIgnore)
+//     })
+//   }
+// }

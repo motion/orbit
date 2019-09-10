@@ -60,7 +60,7 @@ export async function getAppsConfig(
    * This inline function just ensures we build + reference them.
    */
   async function addDLL(params: WebpackParams): Promise<webpack.Configuration> {
-    log.info(`Adding dll: ${params.entry[0]}`)
+    log.info(`Adding dll: ${params.name}, first entry: ${params.entry[0]}`)
     // add to dlls
     dllReferences.unshift({
       manifest: params.dll,
@@ -92,9 +92,10 @@ export async function getAppsConfig(
     entry: ['react', 'react-dom', 'react-hot-loader'],
     watch,
     target: 'web',
-    mode: 'development',
     context: directory,
-    outputDir,
+    // always development
+    mode: 'development',
+    outputDir: join(directory, 'dist', 'development'),
     publicPath: '/',
     outputFile: 'base.dll.js',
     output: {

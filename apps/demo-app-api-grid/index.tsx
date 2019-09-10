@@ -20,7 +20,6 @@ export function DemoGridApp() {
     endDate: null,
     key: 'selection',
   })
-  console.log('dateRange', dateRange)
   return (
     <GridLayout layout={layout} onChangeLayout={setLayout}>
       <AppCard key="slack" title="Slack room" appType={Slack} onChange={setApp}>
@@ -36,7 +35,7 @@ export function DemoGridApp() {
           )
         }}
       </AppCard>
-      <Card flex={1} elevation={3} key="slack2" title="Time Period2 ok" padding="sm">
+      <Card flex={1} elevation={3} key="slack2" title="Time Period" padding="sm">
         <Calendar
           ranges={[dateRange]}
           scroll={{ enabled: true }}

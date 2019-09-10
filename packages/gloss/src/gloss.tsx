@@ -96,8 +96,8 @@ const whiteSpaceRegex = /[\s]+/g
 
 /**
  * Gloss componentShouldUpdate optimization - Gloss styles should never
- * rely on react elements (TODO document that), which means we can do nice
- * optimization by tracking if only non-elements changed.
+ * rely on react elements (TODO document that, but weve never used it internally even on accident),
+ * which means we can do nice optimization by tracking if only non-elements changed.
  */
 const shouldUpdateMap = new WeakMap<object, boolean>()
 function glossIsEqual(a: any, b: any) {

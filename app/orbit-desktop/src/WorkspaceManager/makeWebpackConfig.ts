@@ -178,9 +178,9 @@ export function makeWebpackConfig(
           ? ['ts:main', 'module', 'browser', 'main']
           : ['ts:main', 'module', 'browser', 'main'],
       alias: {
-        // react: '@o/react',
-        // 'react-dom': '@o/react-dom', //mode === 'production' ? '@hot-loader/react-dom' : '@hot-loader/react-dom',
-        // 'react-native': 'react-native-web',
+        react: '@o/react',
+        'react-dom': '@o/react-dom', //mode === 'production' ? '@hot-loader/react-dom' : '@hot-loader/react-dom',
+        'react-native': 'react-native-web',
       },
       modules,
     },

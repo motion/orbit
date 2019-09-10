@@ -1,5 +1,4 @@
 import { useLocationLink } from '@o/kit'
-import { isEqualDebug } from '@o/libs'
 import { AppBit } from '@o/models'
 import { Button, ButtonProps, Icon, IconProps, MenuTemplate, Row, SimpleText, Tooltip, useContextMenu, View, ViewProps } from '@o/ui'
 import { gloss, useTheme } from 'gloss'
@@ -101,7 +100,7 @@ export const OrbitTab = memo((props: TabProps) => {
     return <Tooltip label={tooltip}>{button}</Tooltip>
   }
   return button
-}, isEqualDebug)
+})
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 

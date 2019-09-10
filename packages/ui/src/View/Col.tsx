@@ -1,11 +1,13 @@
+import { isDefined } from '@o/utils'
 import { Base } from 'gloss'
-import React, { Suspense } from 'react'
+import React, { isValidElement, Suspense } from 'react'
 
 import { Breadcrumbs } from '../Breadcrumbs'
 import { CollapsableProps, createCollapsableChildren, splitCollapseProps } from '../Collapsable'
 import { createSpacedChildren, SpaceGroupProps } from '../SpaceGroup'
-import { ScrollableView } from './ScrollableView'
+import { ScrollableView, wrapWithPaddedView } from './ScrollableView'
 import { ScrollableViewProps } from './types'
+import { View } from './View'
 
 type GroupProps = {
   group?: boolean
@@ -21,11 +23,17 @@ export type ColProps = CollapsableProps &
 
 export const Col = createBaseView({ flexDirection: 'column', 'data-is': 'Col' })
 
-export function createBaseView(defaultProps: any) {
-  const View = (colProps: ColProps) => {
+export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Element {
+  function BaseView(colProps: ColProps) {
     if (!colProps.children) {
       return null
     }
+
+    // likely not great pattern, was testing spacing elements using descendent selectors
+    if ('children' in colProps && Object.keys(colProps).length === 1) {
+      return colProps.children as JSX.Element
+    }
+
     const [
       collapseProps,
       {
@@ -37,6 +45,7 @@ export function createBaseView(defaultProps: any) {
         group,
         separator,
         suspense,
+        scrollable,
         ...props
       },
     ] = splitCollapseProps(colProps)
@@ -63,20 +72,31 @@ export function createBaseView(defaultProps: any) {
       element = <Breadcrumbs separator={separator}>{element}</Breadcrumbs>
     }
 
+    element = suspense ? <Suspense fallback={suspense}>{element}</Suspense> : element
+
     // scrollable
+    // use even if === false because we may want the scroll context
+    if (isDefined(scrollable)) {
+      // scrollable wraps in padded already so no need to continue
+      return (
+        <ScrollableView {...defaultProps} scrollable={scrollable} parentSpacing={space} {...props}>
+          {element}
+        </ScrollableView>
+      )
+    }
+
+    // padded
+    element = wrapWithPaddedView(element, props)
     return (
-      <ScrollableView {...defaultProps} parentSpacing={space} {...props}>
-        {suspense ? <Suspense fallback={suspense}>{element}</Suspense> : element}
-      </ScrollableView>
+      <View {...defaultProps} {...props}>
+        {element}
+      </View>
     )
   }
 
   // for gloss parents
-  // @ts-ignore
-  View.ignoreAttrs = Base.ignoreAttrs
+  BaseView.ignoreAttrs = Base.ignoreAttrs
+  BaseView.acceptsSpacing = true
 
-  // @ts-ignore
-  View.acceptsSpacing = true
-
-  return View
+  return BaseView
 }

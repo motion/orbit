@@ -21,6 +21,8 @@ class HooksStore<T> {
   }
 }
 
+const emptyValue = new MotionValue(0)
+
 export class AnimationStore {
   animationHooks = new HooksStore<MotionValue>()
   frozen = false
@@ -133,6 +135,11 @@ class GeometryStore {
     return this.setupStore(store => {
       store.animationHooks.addHook(() => {
         const scrollableParentStore = useScrollableParent()
+        if (!scrollableParentStore) {
+          throw new Error(
+            'No scrollable parent, must have a view like <Col scrollable={} /> as parent',
+          )
+        }
         const { scrollIntersectionState } = scrollableParentStore
 
         useEffect(() => {

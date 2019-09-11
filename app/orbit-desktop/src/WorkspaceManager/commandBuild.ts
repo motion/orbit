@@ -7,6 +7,7 @@ import { CommandOpts, resolveCommand } from '@o/mediator'
 import { AppBuildCommand, AppDefinition, CommandBuildOptions, StatusReply } from '@o/models'
 import { stringHash } from '@o/utils'
 import { ensureDir, pathExists, readFile, readJSON, writeJSON } from 'fs-extra'
+import { omit } from 'lodash'
 import { join } from 'path'
 import webpack from 'webpack'
 
@@ -166,7 +167,7 @@ async function getBuildInfo(appDir: string) {
     configFiles,
     appHash,
     appPackage,
-    orbitConfig: stringHash(JSON.stringify(globalConfig.paths)),
+    orbitConfig: stringHash(JSON.stringify(omit(globalConfig.paths, 'nodeBinary'))),
     version: globalConfig.version,
   }
 }

@@ -37,7 +37,7 @@ export function ScrollableView(props: ScrollableViewProps) {
   )
 }
 
-const ScrollableChrome = gloss<ScrollableViewProps>(View, {
+export const ScrollableChrome = gloss<ScrollableViewProps>(View, {
   boxSizing: 'content-box',
   flexDirection: 'inherit',
   flexWrap: 'inherit',

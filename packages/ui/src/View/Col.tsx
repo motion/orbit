@@ -25,15 +25,6 @@ export const Col = createBaseView({ flexDirection: 'column', 'data-is': 'Col' })
 
 export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Element {
   function BaseView(colProps: ColProps) {
-    if (!colProps.children) {
-      return null
-    }
-
-    // likely not great pattern, was testing spacing elements using descendent selectors
-    if ('children' in colProps && Object.keys(colProps).length === 1) {
-      return colProps.children as JSX.Element
-    }
-
     const [
       collapseProps,
       {
@@ -72,24 +63,20 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
       element = <Breadcrumbs separator={separator}>{element}</Breadcrumbs>
     }
 
-    element = suspense ? <Suspense fallback={suspense}>{element}</Suspense> : element
-
     // scrollable
     // use even if === false because we may want the scroll context
     if (isDefined(scrollable)) {
       // scrollable wraps in padded already so no need to continue
       return (
         <ScrollableView {...defaultProps} scrollable={scrollable} parentSpacing={space} {...props}>
-          {element}
+          {wrapWithSuspense(element, suspense)}
         </ScrollableView>
       )
     }
 
-    // padded
-    element = wrapWithPaddedView(element, props)
     return (
       <View {...defaultProps} {...props}>
-        {element}
+        {wrapWithPaddedView(wrapWithSuspense(element, suspense), props)}
       </View>
     )
   }
@@ -99,4 +86,8 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
   BaseView.acceptsSpacing = true
 
   return BaseView
+}
+
+function wrapWithSuspense(element: React.ReactNode, suspense: React.ReactNode) {
+  return (suspense ? <Suspense fallback={suspense}>{element}</Suspense> : element) as JSX.Element
 }

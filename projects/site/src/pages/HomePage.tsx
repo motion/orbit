@@ -72,11 +72,8 @@ export const HomePage = memo(() => {
         <Page>
           <DeploySection />
         </Page>
-        <Page pages={2}>
+        <Page pages={1.5}>
           <DataAppKitFeaturesSection />
-        </Page>
-        <Page>
-          <EarlyAccessBetaSection />
         </Page>
         <Page>
           <SecuritySection />

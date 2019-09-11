@@ -179,7 +179,7 @@ export default memo(() => {
                 Make apps, easy.
               </TitleText>
             </FadeChild>
-            <TitleTextSub nodeRef={ref as any} margin="auto" minWidth={320}>
+            <TitleTextSub margin="auto" minWidth={320}>
               <FadeChild sm-display="inline" delay={350}>
                 &nbsp;Build tools as a team, sharing a rich set of building blocks.&nbsp;
               </FadeChild>

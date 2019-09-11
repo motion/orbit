@@ -6,8 +6,7 @@ import { mediaStyles } from '../constants'
 import { useSiteStore } from '../SiteStore'
 import { SectionContent, SectionContentProps } from './SectionContent'
 
-const { PassProps, useProps } = createContextualProps({
-  offset: 0,
+const { PassProps, useProps } = createContextualProps<SectionContentProps>({
   zIndex: 0,
   overflow: 'visible',
 })
@@ -38,7 +37,6 @@ Page.Parallax = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) => {
     <Parallax.View
       {...mediaStyles.hidden.xs}
       speed={0.2}
-      offset={parallax.offset}
       style={{
         pointerEvents: 'none',
         zIndex: parallax.zIndex + (zIndex || 0) + 1,
@@ -51,7 +49,7 @@ Page.Parallax = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) => {
 }
 
 Page.BackgroundParallax = (props: ParallaxViewProps) => {
-  const { zIndex, offset } = useProps()
+  const { zIndex } = useProps()
   return (
     <Page.Parallax
       zIndex={(props.zIndex || 0) + zIndex - 2}

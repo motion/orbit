@@ -138,6 +138,16 @@ export function makeWebpackConfig(
   const hotEntry = `webpack-hot-middleware/client?name=${name}&path=/__webpack_hmr_${name}`
   const main = hot && !isDefined(injectHot) ? [hotEntry, ...entry] : entry
 
+  const babelPresetMotion = [
+    require.resolve('@o/babel-preset-motion'),
+    {
+      // even in prod ensure react-refresh is there
+      enable: target === 'web' ? ['react-refresh/babel'] : [],
+      disable: target !== 'web' ? ['react-refresh/babel'] : [],
+      mode,
+    },
+  ]
+
   let config: webpack.Configuration = {
     name,
     watch,
@@ -203,17 +213,7 @@ export function makeWebpackConfig(
                 {
                   loader: 'babel-loader',
                   options: {
-                    presets: [
-                      [
-                        require.resolve('@o/babel-preset-motion'),
-                        target === 'web'
-                          ? {
-                              // even in prod ensure react-refresh is there
-                              enable: ['react-refresh/babel'],
-                            }
-                          : {},
-                      ],
-                    ],
+                    presets: [babelPresetMotion],
                   },
                 },
               ],
@@ -300,7 +300,7 @@ require('@o/kit').OrbitHot.fileLeave();
                     {
                       loader: 'babel-loader',
                       options: {
-                        presets: [require.resolve('@o/babel-preset-motion')],
+                        presets: [babelPresetMotion],
                       },
                     },
                   ].filter(Boolean),

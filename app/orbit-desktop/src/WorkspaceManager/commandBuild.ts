@@ -231,7 +231,7 @@ async function shouldRebuildApp(appRoot: string) {
       if (current && existing) {
         for (const key in current) {
           if (!isEqual(current[key], existing[key])) {
-            log.verbose('changed on key', key, 'old', existing[key], 'new', current[key])
+            log.verbose(`changed on key ${key} old ${existing[key]} new ${current[key]}`)
           }
         }
       }

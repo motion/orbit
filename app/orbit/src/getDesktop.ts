@@ -132,6 +132,7 @@ export function runOrbitDesktop(
 
   if (cmd) {
     try {
+      console.log(`⚠️   remove NODE_ENV env here once we get proper electron 8 build`)
       // detached should keep it running as a daemon basically, which we want in production mode
       // TODO could make singleUseMode actually start it properly, but that would be tricky because we'd
       // want to avoid doing extra work initially, and then later "start" the rest of orbit (non singleUseMode stufg)
@@ -148,6 +149,8 @@ export function runOrbitDesktop(
           }),
           HIDE_ON_START: 'true',
           CLI_PATH: cliPath,
+          // TODO we can remove this
+          NODE_ENV: 'development',
         },
       })
 

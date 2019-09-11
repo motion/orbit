@@ -73,13 +73,11 @@ module.exports = function(_, givenOpts) {
       ].filter(Boolean),
   }
 
-  // if (!isDev) {
-  //   console.log(`
+  // console.log(`
   // Babel config
   //   disabled: ${disable.join(' ')}
   //   used:     ${names.join(' ')}
   // `)
-  // }
 
   return config
 }

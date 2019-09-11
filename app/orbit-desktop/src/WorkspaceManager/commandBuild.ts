@@ -7,6 +7,7 @@ import { CommandOpts, resolveCommand } from '@o/mediator'
 import { AppBuildCommand, AppDefinition, CommandBuildOptions, StatusReply } from '@o/models'
 import { stringHash } from '@o/utils'
 import { ensureDir, pathExists, readFile, readJSON, writeJSON } from 'fs-extra'
+import { omit } from 'lodash'
 import { join } from 'path'
 import webpack from 'webpack'
 
@@ -162,11 +163,13 @@ async function getBuildInfo(appDir: string) {
       ),
     )).join(''),
   )
+  const orbitConfig = JSON.stringify(omit(globalConfig.paths, 'nodeBinary'))
+  log.verbose(`getBuildInfo orbitConfig ${orbitConfig}`)
   return {
     configFiles,
     appHash,
     appPackage,
-    orbitConfig: globalConfig.paths,
+    orbitConfig: stringHash(orbitConfig),
     version: globalConfig.version,
   }
 }
@@ -190,37 +193,58 @@ async function isValidJSONFile(path: string) {
     await readJSON(path)
     return true
   } catch (err) {
+    log.info(`Error reading json ${err.message}`)
     return false
   }
 }
 
-async function shouldRebuildApp(appRoot: string) {
-  // do some basic sanity checks
-  // no buildInfo yet
-  if (!(await isValidJSONFile(join(appRoot, 'dist', 'buildInfo.json')))) {
-    return true
-  }
-  // no appInfo yet
-  if (!(await isValidJSONFile(join(appRoot, 'dist', 'appInfo.json')))) {
-    return true
-  }
+class ShouldRebuildMissingBuildInfo {}
+class ShouldRebuildMissingAppInfo {}
+class ShouldRebuildMissingApi {}
+class ShouldRebuildMissingNodeApp {}
+class ShouldRebuildNewBuildInfo {}
 
-  // do some appInfo => output comparison checks
-  const appInfo = await getAppInfo(appRoot)
-  // ensure api file built
-  if (appInfo.api && !(await isValidJSONFile(join(appRoot, 'dist', 'api.json')))) {
-    return false
-  }
-  // ensure node bundle built
-  if (appInfo.workers || appInfo.graph) {
-    if (!(await pathExists(join(appRoot, 'dist', 'index.node.js')))) {
-      return true
+async function shouldRebuildApp(appRoot: string) {
+  try {
+    // do some basic sanity checks
+    // no buildInfo yet
+    if (!(await isValidJSONFile(join(appRoot, 'dist', 'buildInfo.json')))) {
+      throw new ShouldRebuildMissingBuildInfo()
     }
+    // no appInfo yet
+    if (!(await isValidJSONFile(join(appRoot, 'dist', 'appInfo.json')))) {
+      throw new ShouldRebuildMissingAppInfo()
+    }
+    // do some appInfo => output comparison checks
+    const appInfo = await getAppInfo(appRoot)
+    // ensure api file built
+    if (appInfo.api && !(await isValidJSONFile(join(appRoot, 'dist', 'api.json')))) {
+      throw new ShouldRebuildMissingApi()
+    }
+    // ensure node bundle built
+    if (appInfo.workers || appInfo.graph) {
+      if (!(await pathExists(join(appRoot, 'dist', 'index.node.js')))) {
+        throw new ShouldRebuildMissingNodeApp()
+      }
+    }
+    // ensure buildInfo hash is equal
+    const current = await getBuildInfo(appRoot)
+    const existing = await readBuildInfo(appRoot)
+    if (isEqual(current, existing) === false) {
+      if (current && existing) {
+        for (const key in current) {
+          if (!isEqual(current[key], existing[key])) {
+            log.verbose(`changed on key ${key} old ${existing[key]} new ${current[key]}`)
+          }
+        }
+      }
+      throw new ShouldRebuildNewBuildInfo()
+    }
+    return false
+  } catch (err) {
+    log.verbose(`shouldRebuild! ${err.constructor.name}`)
+    return true
   }
-  // ensure buildInfo hash is equal
-  const current = await getBuildInfo(appRoot)
-  const existing = await readBuildInfo(appRoot)
-  return isEqual(current, existing) === false
 }
 
 const hasKey = (appInfo: AppDefinition, ...keys: string[]) =>

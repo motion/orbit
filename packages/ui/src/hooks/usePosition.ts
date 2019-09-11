@@ -24,6 +24,7 @@ type UsePositionProps = {
   onChange?: ((change: Rect | null) => any) | null
   preventMeasure?: boolean
   debounce?: number
+  onlyWhenIntersecting?: boolean
 }
 
 export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
@@ -41,7 +42,9 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
       const node = ref.current
       if (!set) return
       if (!node) return
-      if (!intersected.current) return
+      if (props.onlyWhenIntersecting) {
+        if (!intersected.current) return
+      }
       if (state.disable) return
       if (!nodeRect) {
         if (node) {
@@ -102,13 +105,14 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
   useIntersectionObserver({
     disable,
     ref,
+    options: {
+      threshold: 0,
+    },
     onChange: entries => {
       if (!entries) return
       const [entry] = entries
-      if (entry.isIntersecting) {
-        intersected.current = true
-        measure(entry.boundingClientRect)
-      }
+      intersected.current = entry.isIntersecting
+      measure(entry.boundingClientRect)
     },
   })
 

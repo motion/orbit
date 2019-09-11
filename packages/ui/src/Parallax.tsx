@@ -84,11 +84,6 @@ export function ParallaxView({
     // we went negative, child bigger than container
     pctHeight = 0.99
   }
-  if (isNaN(pctHeight)) {
-    debugger
-  }
-
-  console.log('pctHeight', pctHeight, nodeSize)
 
   let val = useTransform(shouldSwap ? emptyMotion : scrollY, [dirVal, dirVal + 1], [0, -1], {
     clamp: false,

@@ -158,7 +158,6 @@ const NavButtonChrome = gloss<TabProps>(View, {
   const backgroundHover = isActive ? tabBackgroundSelected : tabBackgroundHover
   const backgroundActive = isActive ? tabBackgroundSelected : tabBackgroundActive
   return {
-    debug: background === 'transparent',
     background,
     '&:hover': {
       background: backgroundHover,

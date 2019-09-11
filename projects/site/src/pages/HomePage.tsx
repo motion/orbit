@@ -5,59 +5,29 @@ import React, { lazy, memo, Suspense, useEffect, useRef, useState } from 'react'
 import { requestIdleCallback } from '../etc/requestIdle'
 import { Header } from '../Header'
 import { Page } from '../views/Page'
+import AllInOnePitchDemoSection from './HomePage/AllInOnePitchDemoSection'
 import { HeadSection } from './HomePage/HeadSection'
 import { LoadingPage } from './LoadingPage'
 
-const DeploySection = loadOnIntersect(
-  lazy(() =>
-    retry(() => import(/* webpackChunkName: "DeploySection" */ './HomePage/DeploySection')),
-  ),
-)
-const AllInOnePitchDemoSection = loadOnIntersect(
-  lazy(() =>
-    retry(() =>
-      import(
-        /* webpackChunkName: "AllInOnePitchDemoSection" */ './HomePage/AllInOnePitchDemoSection'
-      ),
-    ),
-  ),
-)
+const DeploySection = loadOnIntersect(lazy(() => retry(() => import('./HomePage/DeploySection'))))
+// const AllInOnePitchDemoSection = loadOnIntersect(
+//   lazy(() => retry(() => import('./HomePage/AllInOnePitchDemoSection'))),
+// )
 const DataAppKitFeaturesSection = loadOnIntersect(
-  lazy(() =>
-    retry(() =>
-      import(
-        /* webpackChunkName: "DataAppKitFeaturesSection" */ './HomePage/DataAppKitFeaturesSection'
-      ),
-    ),
-  ),
+  lazy(() => retry(() => import('./HomePage/DataAppKitFeaturesSection'))),
 )
-const FooterSection = loadOnIntersect(
-  lazy(() =>
-    retry(() => import(/* webpackChunkName: "FooterSection" */ './HomePage/FooterSection')),
-  ),
-)
+const FooterSection = loadOnIntersect(lazy(() => retry(() => import('./HomePage/FooterSection'))))
 const MissionMottoSection = loadOnIntersect(
-  lazy(() =>
-    retry(() =>
-      import(/* webpackChunkName: "MissionMottoSection" */ './HomePage/MissionMottoSection'),
-    ),
-  ),
+  lazy(() => retry(() => import('./HomePage/MissionMottoSection'))),
 )
 const SecuritySection = loadOnIntersect(
-  lazy(() =>
-    retry(() => import(/* webpackChunkName: "SecuritySection" */ './HomePage/SecuritySection')),
-  ),
+  lazy(() => retry(() => import('./HomePage/SecuritySection'))),
 )
-const EarlyAccessBetaSection = loadOnIntersect(
-  lazy(() =>
-    retry(() =>
-      import(/* webpackChunkName: "EarlyAccessBetaSection" */ './HomePage/EarlyAccessBetaSection'),
-    ),
-  ),
-)
+// const EarlyAccessBetaSection = loadOnIntersect(
+//   lazy(() => retry(() => import('./HomePage/EarlyAccessBetaSection'))),
+// )
 
 export const HomePage = memo(() => {
-  console.log('reder homepage')
   return (
     <>
       <LoadingPage />

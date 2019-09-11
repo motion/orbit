@@ -1,6 +1,6 @@
 import { createContextualProps, Parallax, ParallaxViewProps } from '@o/ui'
 import { selectDefined } from '@o/utils'
-import React from 'react'
+import React, { memo, useEffect, useState } from 'react'
 
 import { mediaStyles } from '../constants'
 import { useSiteStore } from '../SiteStore'
@@ -39,7 +39,7 @@ Page.Parallax = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) => {
       speed={0.2}
       style={{
         pointerEvents: 'none',
-        zIndex: parallax.zIndex + (zIndex || 0) + 1,
+        zIndex: +parallax.zIndex + (+zIndex || 0) + 1,
         overflow: selectDefined(overflow, parallax.overflow),
         ...style,
       }}
@@ -48,18 +48,24 @@ Page.Parallax = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) => {
   )
 }
 
-Page.BackgroundParallax = (props: ParallaxViewProps) => {
+Page.BackgroundParallax = memo((props: ParallaxViewProps) => {
   const { zIndex } = useProps()
+  const [shown, setShown] = useState()
+  useEffect(() => {
+    setShown(true)
+  }, [])
   return (
     <Page.Parallax
       zIndex={(props.zIndex || 0) + zIndex - 2}
       className="page-background"
+      transition="opacity ease 1500ms"
       position="absolute"
       left="5%"
       right="5%"
       top="2%"
       bottom="2%"
       {...props}
+      opacity={shown ? props.opacity || 1 : 0}
     />
   )
-}
+})

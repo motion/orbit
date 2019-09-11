@@ -13,8 +13,8 @@ const ParallaxContainerStore = createStoreContext(
     key = 0
     top = 0
     left = 0
-    height = 0
-    width = 0
+    height = 10
+    width = 10
     update(pos: Rect) {
       this.top = pos.top
       this.left = pos.left
@@ -80,7 +80,15 @@ export function ParallaxView({
 
   if (pctHeight >= 1) {
     pctHeight = 0.99
+  } else if (pctHeight < 0) {
+    // we went negative, child bigger than container
+    pctHeight = 0.99
   }
+  if (isNaN(pctHeight)) {
+    debugger
+  }
+
+  console.log('pctHeight', pctHeight, nodeSize)
 
   let val = useTransform(shouldSwap ? emptyMotion : scrollY, [dirVal, dirVal + 1], [0, -1], {
     clamp: false,

@@ -304,7 +304,8 @@ export function gloss<Props = any, ThemeProps = Props>(
     }
 
     if (process.env.NODE_ENV === 'development') {
-      if (props['debug']) {
+      // @ts-ignore
+      if (props.debug) {
         console.log(
           'styles\n',
           finalProps.className

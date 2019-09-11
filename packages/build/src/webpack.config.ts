@@ -130,37 +130,8 @@ const optimization = {
           // runtimeChunk: true,
           splitChunks: {
             chunks: 'all',
-            // name: true,
-            // minSize: 10000,
-            // minChunks: 1,
-            // maxAsyncRequests: 50,
-            // maxInitialRequests: 10,
-            // automaticNameDelimiter: '~',
-            // automaticNameMaxLength: 30,
-            // cacheGroups: {
-            //   default: false,
-            //   vendors: false,
-            //   vendor: false,
-            // },
-            // cacheGroups: {
-            //   default: false,
-            //   vendors: false,
-            //   zero: {
-            //     maxSize: 180000,
-            //   },
-            // },
           },
         }),
-    // minimizer: [
-    //   // target !== 'node' &&
-    //   //   new OptimizeCSSAssetsPlugin({
-    //   //     cssProcessor: require('cssnano'),
-    //   //     cssProcessorPluginOptions: {
-    //   //       preset: ['default', { discardComments: { removeAll: true } }],
-    //   //     },
-    //   //     canPrint: true,
-    //   //   }),
-    // ].filter(Boolean),
   },
   dev: {
     noEmitOnErrors: true,
@@ -175,6 +146,11 @@ const alias = {
   // 'react-dom': 'react-dom/profiling',
   // 'schedule/tracking': 'schedule/tracking-profiling',
   'lodash.isequal': 'lodash/isEqual',
+  // prevent some obvious duplicates
+  mobx: 'mobx',
+  react: 'react',
+  'react-dom': 'react-dom',
+  'react-refresh': 'react-refresh',
 }
 
 const babelrcOptions = {
@@ -349,7 +325,8 @@ async function makeConfig() {
 
       target !== 'node' && new webpack.IgnorePlugin({ resourceRegExp: /electron-log/ }),
 
-      mode === 'development' && new ReactRefreshPlugin(),
+      mode === 'development' && hot && new webpack.HotModuleReplacementPlugin(),
+      mode === 'development' && hot && new ReactRefreshPlugin(),
 
       // tsConfigExists &&
       //   !isProd &&
@@ -436,7 +413,7 @@ async function makeConfig() {
 
       // !isProd && new webpack.NamedModulesPlugin(),
 
-      isProd && new DuplicatePackageCheckerPlugin(),
+      new DuplicatePackageCheckerPlugin(),
 
       !!process.env['SHAKE_COMMONJS'] && new ShakePlugin(),
 

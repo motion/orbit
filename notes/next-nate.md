@@ -60,11 +60,8 @@ Detailed September Plan:
 
 - [ ] Last Features to tie it all together?
   - [ ] Should I do anything more????
-  - [ ] If so, only to actually make the demo apps great
-    - [ ] Having a floating "selection" may be it:
-      - [ ] Simple CardStack that shows what's selected
-      - [ ] Esc/close button to clear it
-      - [ ] Finish drag/drop + with wysiwig
+  1. Floating "selection" may be it.
+  2. "Move Data" modal, see block below
 
 - [ ] Demo apps that would be compelling:
   - [ ] StackOverflow Clone

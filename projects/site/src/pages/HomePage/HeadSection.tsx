@@ -15,24 +15,22 @@ let smallSpc = <Space size="xl" />
 let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
-// Itrou
-
 let allTitles = {
-  large: 'Create your own app-suite.',
-  medium: 'Create your own app-suite.',
-  small: 'Create your own app-suite.',
+  large: 'A smart app platform for your data',
+  medium: 'A smart app platform for your data',
+  small: 'A smart app platform for your data',
 }
 
 let allTexts = {
-  large: [
-    `Best in class developer experience, toolkit, and a rich data + app-store.`,
-    `It's the beautiful, moldable app-platform for you & your team.`,
-  ],
-  medium: [
-    `Best in class developer experience, toolkit, and a rich data + app-store.`,
-    `It's the beautiful, moldable app-platform for you & your team.`,
-  ],
-  small: [`Create internal apps with all new abilities.`, `It's perfect tool for teams.`],
+  large: `
+Best in class developer experience, toolkit, and a rich data + app-store.
+It's the beautiful, moldable app-platform for you & your team.`,
+  medium: `
+Best in class developer experience, toolkit, and a rich data + app-store.
+It's the beautiful, moldable app-platform for you & your team.`,
+  small: `
+Best in class developer experience, toolkit, data plugins, an app store.
+It's the beautiful, moldable app-platform for you & your team.`,
 }
 
 const HeadContent = memo(() => {
@@ -42,7 +40,7 @@ const HeadContent = memo(() => {
   const titleFit = useTextFit({ min: 16, updateKey: fontsLoaded })
   const pFit = useTextFit({ min: 16, updateKey: fontsLoaded })
 
-  const texts = allTexts[screen]
+  const texts = allTexts[screen].trim().split(/\n/g)
   const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
   const br = useScreenVal(smallSpc, medSpc, lgSpace)
 

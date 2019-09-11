@@ -3,6 +3,7 @@ const ReactRefreshHotModule = require.resolve('./ReactRefreshHotModule')
 const ReactRefreshHotModuleInjection = `
 const ReactRefreshHotModule = require('${ReactRefreshHotModule}');
 const modules = module.exports || { ...__webpack_exports__ }
+console.log(module.exports, module, __webpack_exports__)
 for (const key in modules) {
   if (modules[key] && modules[key]._ignoreHMRCheck) {
     delete modules[key]

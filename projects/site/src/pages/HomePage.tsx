@@ -39,7 +39,7 @@ export const HomePage = memo(() => {
         <Page>
           <AllInOnePitchDemoSection />
         </Page>
-        {false && (
+        {true && (
           <>
             <Page>
               <DeploySection />

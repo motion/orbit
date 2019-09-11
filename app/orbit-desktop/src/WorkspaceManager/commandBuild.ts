@@ -166,7 +166,7 @@ async function getBuildInfo(appDir: string) {
     configFiles,
     appHash,
     appPackage,
-    orbitConfig: globalConfig.paths,
+    orbitConfig: stringHash(JSON.stringify(globalConfig.paths)),
     version: globalConfig.version,
   }
 }
@@ -190,15 +190,16 @@ async function isValidJSONFile(path: string) {
     await readJSON(path)
     return true
   } catch (err) {
+    log.info(`Error reading json ${err.message}`)
     return false
   }
 }
 
-class ShouldRebuildMissingBuildInfo extends Error {}
-class ShouldRebuildMissingAppInfo extends Error {}
-class ShouldRebuildMissingApi extends Error {}
-class ShouldRebuildMissingNodeApp extends Error {}
-class ShouldRebuildNewBuildInfo extends Error {}
+class ShouldRebuildMissingBuildInfo {}
+class ShouldRebuildMissingAppInfo {}
+class ShouldRebuildMissingApi {}
+class ShouldRebuildMissingNodeApp {}
+class ShouldRebuildNewBuildInfo {}
 
 async function shouldRebuildApp(appRoot: string) {
   try {
@@ -227,11 +228,18 @@ async function shouldRebuildApp(appRoot: string) {
     const current = await getBuildInfo(appRoot)
     const existing = await readBuildInfo(appRoot)
     if (isEqual(current, existing) === false) {
+      if (current && existing) {
+        for (const key in current) {
+          if (!isEqual(current[key], existing[key])) {
+            log.verbose('changed on key', key, 'old', existing[key], 'new', current[key])
+          }
+        }
+      }
       throw new ShouldRebuildNewBuildInfo()
     }
     return false
   } catch (err) {
-    log.info(`shouldRebuild! ${err.constructor.name}`)
+    log.verbose(`shouldRebuild! ${err.constructor.name}`)
     return true
   }
 }

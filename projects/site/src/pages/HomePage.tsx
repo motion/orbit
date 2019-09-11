@@ -7,7 +7,6 @@ import { Header } from '../Header'
 import { Page } from '../views/Page'
 import { HeadSection } from './HomePage/HeadSection'
 import { LoadingPage } from './LoadingPage'
-import { ParallaxContext } from './ParallaxContext'
 
 const DeploySection = loadOnIntersect(
   lazy(() =>
@@ -58,10 +57,9 @@ const EarlyAccessBetaSection = loadOnIntersect(
 )
 
 export const HomePage = memo(() => {
-  const [parallax, setParallax] = useState(null)
-
+  console.log('reder homepage')
   return (
-    <ParallaxContext.PassProps value={parallax}>
+    <>
       <LoadingPage />
       <Header />
       <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
@@ -92,7 +90,7 @@ export const HomePage = memo(() => {
           </Theme>
         </Page> */}
       </main>
-    </ParallaxContext.PassProps>
+    </>
   )
 })
 

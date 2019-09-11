@@ -101,19 +101,24 @@ const whiteSpaceRegex = /[\s]+/g
  */
 const shouldUpdateMap = new WeakMap<object, boolean>()
 function glossIsEqual(a: any, b: any) {
+  return false
   let shouldUpdate = false
   let shouldUpdateInner = false
-  if (Object.keys(a).length !== Object.keys(b).length) {
-    shouldUpdate = true
-    shouldUpdateInner = true
-  } else {
-    for (const key in b) {
-      const bVal = b[key]
-      if (isValidElement(bVal)) {
-        shouldUpdate = true
-        continue
-      }
-      if (!isEqual(a[key], bVal)) {
+  for (const key in b) {
+    const bVal = b[key]
+    if (isValidElement(bVal)) {
+      shouldUpdate = true
+      continue
+    }
+    if (!isEqual(a[key], bVal)) {
+      shouldUpdate = true
+      shouldUpdateInner = true
+    }
+  }
+  // ensure we didnt remove/add keys
+  if (!shouldUpdate) {
+    for (const key in a) {
+      if (!(key in b)) {
         shouldUpdate = true
         shouldUpdateInner = true
       }
@@ -239,7 +244,7 @@ export function gloss<Props = any, ThemeProps = Props>(
     }
 
     // Optimization: only update if non-elements changed
-    if (shouldAvoidStyleUpdate) {
+    if (false && shouldAvoidStyleUpdate) {
       // because hooks can run in theme, be sure to run them
       theme && themeFn && themeFn(props, theme)
       return createElement(element, last.current.props, props.children)

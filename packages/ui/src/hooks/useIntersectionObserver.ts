@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef, useState } from 'react'
+import { RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { isBrowser } from '../constants'
 import { useGet } from './useGet'
@@ -21,7 +21,7 @@ export function useIntersectionObserver(
   const dispose = useRef<any>(null)
   const [state, setState] = useState<IntersectionObserverEntry[] | null>(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (disable) return
     const node = ref.current
     if (!node) return

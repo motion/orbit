@@ -5,7 +5,6 @@ import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
-import { useParallax } from '../pages/ParallaxContext'
 
 let logoScales = {
   small: 0.7,
@@ -17,7 +16,6 @@ export const LogoVertical = memo(
   ({ size, ...rest }: ViewProps & { size?: 'small' | 'medium' | 'large' }) => {
     const theme = useTheme()
     const screenSize = useScreenSize()
-    const parallax = useParallax()
     const nav = useNavigation()
     const scale = logoScales[size || screenSize]
 
@@ -34,7 +32,7 @@ export const LogoVertical = memo(
         onClick={async e => {
           e.preventDefault()
           if ((await nav.getRoute()).url.pathname === '/') {
-            parallax && parallax.scrollTo(0)
+            alert('scroll to top')
           } else {
             nav.navigate('/')
           }

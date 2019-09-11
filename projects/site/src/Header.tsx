@@ -24,7 +24,7 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
   const { shown } = headerStore
   const Fade = useFadePage({ shown, threshold: 0 })
 
-  const size = useScreenSize({
+  useScreenSize({
     onChange(size) {
       if (size === 'small') {
         headerStore.setShown(siteStore.showSidebar)
@@ -33,8 +33,6 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
       }
     },
   })
-
-  console.log('render header with size', size)
 
   return (
     <HeaderContext.ProvideStore value={headerStore}>
@@ -52,6 +50,7 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
           justifyContent="space-around"
           padding={[30, 0]}
           opacity={slim ? 0 : 1}
+          pointerEvents={slim ? 'none' : 'auto'}
           {...rest}
         >
           <HeaderContain>
@@ -61,7 +60,7 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
               </LinkRow>
             </LinkSection>
             <FadeChild
-              disable={!LinkState.didAnimateOut}
+              // disable={!LinkState.didAnimateOut}
               transition={shown ? transitions.normal : transitions.fastStatic}
               delay={shown ? 100 : 0}
             >
@@ -74,10 +73,10 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
             </LinkSection>
           </HeaderContain>
         </Row>
-      </Fade.FadeProvide>
-      {/* small */}
-      <Fade.FadeProvide>
+        {/* small */}
         <Button
+          sm-opacity={0}
+          sm-pointerEvents="none"
           className="fixed-menu"
           position="fixed"
           top={3}
@@ -90,7 +89,6 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
           onClick={siteStore.toggleSidebar}
         />
         <Row
-          nodeRef={Fade.ref}
           pointerEvents="auto"
           background={theme.background.lighten(0.05)}
           position="relative"

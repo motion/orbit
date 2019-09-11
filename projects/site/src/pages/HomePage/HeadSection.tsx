@@ -3,47 +3,27 @@ import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
-import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
+import { useScreenHeightVal } from '../../hooks/useScreenSize'
 import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
+import { useTextFit } from '../../views/useTextFit'
 import { Join } from './Join'
 import { useScreenVal } from './SpacedPageContent'
 
-let smallSpc = <Space size="xl" />
-let medSpc = <Space size={60} />
-let lgSpace = <Space size={80} />
-
-let allTitles = {
-  large: 'The Smart HUD',
-  medium: 'The Smart HUD',
-  small: 'The Smart HUD',
-}
-
-const largeText = `
+const texts = `
 The beautiful, moldable app platform for teams.
-Orbit is an all-new platform for internal apps.`
-
-// just use same for now
-const allTexts = {
-  large: largeText,
-  medium: largeText,
-  small: largeText,
-}
+Orbit is an all-new platform for internal apps.
+`
+  .trim()
+  .split(/\n/g)
 
 const HeadContent = memo(() => {
-  const screen = useScreenSize()
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const measured = fontsLoaded
-  // const titleFit = useTextFit({ min: 16, updateKey: fontsLoaded })
-
-  const texts = allTexts[screen].trim().split(/\n/g)
+  const titleFit = useTextFit({ min: 16, updateKey: fontsLoaded })
   const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
-  const br = useScreenVal(smallSpc, medSpc, lgSpace)
-
-  const textsWidth = useScreenVal('95%', '100%', '90%')
-
-  const isSmall = screen === 'small'
+  const br = <View sm-height={20} height={30} lg-height={40} />
 
   return (
     <View
@@ -54,8 +34,8 @@ const HeadContent = memo(() => {
       alignItems="center"
     >
       <TitleText
-        // nodeRef={titleFit.ref}
-        // style={titleFit.style}
+        nodeRef={titleFit.ref}
+        style={titleFit.style}
         fontWeight={100}
         alignSelf="center"
         transformOrigin="top center"
@@ -64,12 +44,12 @@ const HeadContent = memo(() => {
         whiteSpace="nowrap"
         maxHeight={160}
       >
-        <FadeChild disable={!measured}>{allTitles[screen]}</FadeChild>
+        <FadeChild disable={!measured}>The Smart HUD</FadeChild>
       </TitleText>
 
-      <Space size={useScreenVal('md', 'xl', 'xxxl')} />
+      {br}
 
-      <View position="relative" flex={1} width={textsWidth} margin={[0, 'auto']} maxWidth="80%">
+      <View position="relative" flex={1} width="90%" margin={[0, 'auto']} maxWidth="80%">
         <Paragraph
           fontWeight={400}
           tagName="div"

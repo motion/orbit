@@ -16,12 +16,14 @@ export function useIsTiny(): boolean {
   return useMediaLayout(sizes.tiny)
 }
 
-export function useScreenSize(options?: UseMediaOptions<'small' | 'medium' | 'large'>): ScreenSize {
-  const [isSmall, isMedium, isLarge] = useMediaLayout(
-    [sizes.small, sizes.medium, sizes.large],
-    options,
-  )
-  return isLarge ? 'large' : isMedium ? 'medium' : isSmall ? 'small' : 'small'
+export function useScreenSize(
+  options?: UseMediaOptions<'small' | 'medium' | 'large'>,
+): ScreenSize | undefined {
+  const res = useMediaLayout([sizes.small, sizes.medium, sizes.large], options)
+  if (!options || !options.onChange) {
+    const [isSmall, isMedium, isLarge] = res
+    return isLarge ? 'large' : isMedium ? 'medium' : isSmall ? 'small' : 'small'
+  }
 }
 
 export function useScreenHeight(): 'short' | 'medium' {

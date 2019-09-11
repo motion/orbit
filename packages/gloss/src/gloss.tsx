@@ -244,7 +244,7 @@ export function gloss<Props = any, ThemeProps = Props>(
     }
 
     // Optimization: only update if non-elements changed
-    if (false && shouldAvoidStyleUpdate) {
+    if (shouldAvoidStyleUpdate) {
       // because hooks can run in theme, be sure to run them
       theme && themeFn && themeFn(props, theme)
       return createElement(element, last.current.props, props.children)

@@ -298,6 +298,7 @@ async function getSharedDllParams(params: WebpackParams): Promise<WebpackParams>
     '@babel/runtime',
     'node-libs-browser',
     'querystring',
+    'webpack-hot-middleware',
   ]
 
   // gather all packages we want included in base dll

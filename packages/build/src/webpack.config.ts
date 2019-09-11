@@ -81,7 +81,6 @@ const shouldExtractCSS = target !== 'node' && isProd && !IS_RUNNING
 //   cheap-module-eval-source-map (seems alright in both...)
 //   cheap-module-source-map (works well in electron, no line numbers in browser...)
 const devtool = flags.devtool || isProd ? 'source-map' : false
-console.log('devtool', devtool)
 
 // const appSrc = Path.join(entry, '..')
 const tsConfig = Path.join(cwd, 'tsconfig.json')
@@ -95,6 +94,7 @@ const buildNodeModules = [
   Path.join(__dirname, '..', '..', '..', 'node_modules'),
 ]
 
+const hot = !flags.disableHMR && !isProd
 const defines = {
   'process.platform': JSON.stringify('darwin'),
   'process.env.NODE_ENV': JSON.stringify(mode),
@@ -108,7 +108,7 @@ console.log(
   'webpack info',
   (NO_OPTIMIZE && 'NO_OPTIMIZE!!') || '',
   JSON.stringify(
-    { buildNodeModules, entry, outputPath, target, isProd, tsConfig, defines },
+    { hot, devtool, buildNodeModules, entry, outputPath, target, isProd, tsConfig, defines },
     null,
     2,
   ),
@@ -190,7 +190,7 @@ async function makeConfig() {
   // get the list of paths to all monorepo packages to apply ts-loader too
   const packages = await LernaProject.getPackages(repoRoot)
   const tsEntries = packages.map(pkg => Path.join(pkg.location, 'src'))
-  console.log('tsEntries', tsEntries)
+  // console.log('tsEntries', tsEntries)
 
   const config = {
     target,
@@ -234,7 +234,7 @@ async function makeConfig() {
             colors: true,
           },
       historyApiFallback: true,
-      hot: true || (!flags.disableHMR && !isProd),
+      hot,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },

@@ -243,10 +243,12 @@ export const SetupAppHome = memo((props: SetupAppHomeProps) => {
   )
 
   const flow = useCreateFlow({
+    id: 'select-app',
     data: {
       selectedAppIdentifier: null,
     },
   })
+
   if (!flow.data) {
     debugger
   }

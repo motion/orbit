@@ -1,6 +1,7 @@
 {
   "name": "@o/automagical",
   "main": "_/automagical.js",
+  "ts:main": "src/automagical.ts",
   "sideEffects": false,
   "version": "2.6.0",
   "scripts": {

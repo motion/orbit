@@ -3,6 +3,7 @@
   "version": "2.6.0",
   "description": "none",
   "main": "_/fastCompare.js",
+  "ts:main": "src/fastCompare.ts",
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput"

@@ -1,4 +1,3 @@
-import { isDefined } from '@o/utils'
 import { gloss } from 'gloss'
 import React, { useRef } from 'react'
 
@@ -11,51 +10,13 @@ import { wrappingSpaceTheme } from './wrappingSpaceTheme'
 
 // dont allow flexDirection so we force props down through flexDirection
 
-const isOnlyChildrenDefined = props => {
-  for (const key in props) {
-    if (isDefined(props[key]) && key !== 'children') {
-      return false
-    }
-  }
-  return true
-}
-
 export function ScrollableView(props: ScrollableViewProps) {
   const ref = useRef(null)
   const scrollableParent = ScrollableParentContext.useCreateStore({ ref })
+  const { children, scrollable, parentSpacing, hideScrollbars } = props
 
-  // likely not great pattern, was testing spacing elements using descendent selectors
-  if (isOnlyChildrenDefined(props)) {
-    return <>{props.children}</>
-  }
-
-  const { children, padding, scrollable, parentSpacing, hideScrollbars } = props
-
-  // we may want to memo this, need to test if add/remove padding will cause remounts
-  let content = children
-  const hasPadding = Array.isArray(padding) ? padding.some(Boolean) : !!padding
-
-  const isWrapped = props.flexWrap === 'wrap'
-  const viewProps = {
-    isWrapped,
-    parentSpacing,
-  }
-
-  // wrap inner with padding view only if necessary (this is super low level view)
-  // this is necessary so CSS scrollable has proper "end margin"
-  if (hasPadding) {
-    content = (
-      <PaddedView
-        scrollable={scrollable}
-        parentSpacing={parentSpacing}
-        isWrapped={isWrapped}
-        padding={padding}
-        flex={props.flex}
-      >
-        {content}
-      </PaddedView>
-    )
-  }
+  // add padding inside scrollable so we get proper padding after end elements
+  const content = wrapWithPaddedView(children, props)
 
   return (
     <ScrollableParentContext.ProvideStore value={scrollableParent}>
@@ -64,7 +25,7 @@ export function ScrollableView(props: ScrollableViewProps) {
       )}
       <ScrollableChrome
         scrollable={scrollable}
-        {...viewProps}
+        parentSpacing={parentSpacing}
         {...props}
         nodeRef={composeRefs(props.nodeRef, ref)}
         className={`${hideScrollbars ? 'hide-scrollbars' : ''} ${props.className || ''}`}
@@ -76,7 +37,7 @@ export function ScrollableView(props: ScrollableViewProps) {
   )
 }
 
-const ScrollableChrome = gloss<ScrollableViewProps>(View, {
+export const ScrollableChrome = gloss<ScrollableViewProps>(View, {
   boxSizing: 'content-box',
   flexDirection: 'inherit',
   flexWrap: 'inherit',
@@ -86,3 +47,27 @@ const ScrollableChrome = gloss<ScrollableViewProps>(View, {
   ...(props.scrollable === true && { overflow: 'auto' }),
   ...(!props.scrollable && wrappingSpaceTheme(props)),
 }))
+
+export function wrapWithPaddedView(
+  element: React.ReactNode,
+  props: ScrollableViewProps,
+): JSX.Element {
+  const hasPadding = Array.isArray(props.padding) ? props.padding.some(Boolean) : !!props.padding
+  // wrap inner with padding view only if necessary (this is super low level view)
+  // this is necessary so CSS scrollable has proper "end margin"
+  if (hasPadding) {
+    const isWrapped = props.flexWrap === 'wrap'
+    element = (
+      <PaddedView
+        scrollable={props.scrollable}
+        parentSpacing={props.parentSpacing}
+        isWrapped={isWrapped}
+        padding={props.padding}
+        flex={props.flex}
+      >
+        {element}
+      </PaddedView>
+    )
+  }
+  return element as JSX.Element
+}

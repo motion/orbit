@@ -27,6 +27,7 @@ export const OrbitHot = {
     this.appHandler = null
   },
   fileEnter(props: OrbitHotProps) {
+    // TODO dont think we need this anymore post-removing react-hot-loader
     this.appHandler = entry => {
       const hotEntry = entry
       return hotEntry

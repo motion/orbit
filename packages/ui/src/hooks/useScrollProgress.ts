@@ -24,8 +24,11 @@ export function useScrollProgress({
       const progress = leftProgress / (1 - right)
       scrollXProgress.set(progress)
     }
-    ref.current.addEventListener('scroll', updateCallback, { passive: true })
-  }, [])
+    ref.current && ref.current.addEventListener('scroll', updateCallback, { passive: true })
+    return () => {
+      ref.current && ref.current.removeEventListener('scroll', updateCallback)
+    }
+  }, [ref.current])
 
   return scrollXProgress
 }
@@ -41,8 +44,11 @@ export function useScrollOffset({ ref }) {
     function updateCallback(e) {
       scrollXProgress.set(e.target.scrollLeft / e.target.clientWidth)
     }
-    ref.current.addEventListener('scroll', updateCallback, { passive: true })
-  }, [])
+    ref.current && ref.current.addEventListener('scroll', updateCallback, { passive: true })
+    return () => {
+      ref.current && ref.current.removeEventListener('scroll', updateCallback)
+    }
+  }, [ref.current])
 
   return scrollXProgress
 }

@@ -27,7 +27,7 @@ const objectToString = (query: string | MediaQueryObject) => {
 
 type MediaQueryShort = string | MediaQueryObject
 
-type UseMediaOptions<A> = {
+export type UseMediaOptions<A> = {
   onChange?: (val?: A extends any[] ? boolean[] : boolean) => any
 }
 

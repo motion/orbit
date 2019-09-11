@@ -7,6 +7,10 @@ import { GlossOptions } from './types'
 export let Config: GlossOptions = {
   isColor: color => color && !!color.rgb,
   toColor: colorToString,
+  mediaQueries: {
+    sm: '@media screen and (max-width: 500px)',
+    lg: '@media screen and (min-width: 900px)',
+  },
   pseudoAbbreviations: {
     hoverStyle: '&:hover',
     activeStyle: '&:active',

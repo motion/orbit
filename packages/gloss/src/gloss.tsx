@@ -203,7 +203,23 @@ export function gloss<Props = any, ThemeProps = Props>(
 
     const theme = useTheme()
     const dynClasses = useRef<Set<string> | null>(null)
-    const lastProps = useRef<any>()
+    const last = useRef<{ props: Object; theme: ThemeObject }>()
+
+    // for smarter update tracking
+    let shouldAvoidStyleUpdate = false
+    if (!last.current) {
+      last.current = {
+        props,
+        theme,
+      }
+    } else {
+      // ensure update on theme change
+      if (last.current.theme !== theme) {
+        last.current.theme = theme
+      } else {
+        shouldAvoidStyleUpdate = shouldUpdateMap.get(props) === false
+      }
+    }
 
     // unmount
     useEffect(() => {
@@ -222,13 +238,11 @@ export function gloss<Props = any, ThemeProps = Props>(
       element = getEl(props)
     }
 
-    /**
-     * Optimization: only update if non-elements changed
-     */
-    if (shouldUpdateMap.get(props) === false && lastProps.current) {
+    // Optimization: only update if non-elements changed
+    if (shouldAvoidStyleUpdate) {
       // because hooks can run in theme, be sure to run them
-      if (theme && themeFn) themeFn(props, theme)
-      return createElement(element, lastProps.current, props.children)
+      theme && themeFn && themeFn(props, theme)
+      return createElement(element, last.current.props, props.children)
     }
 
     const dynClassNames = addDynamicStyles(
@@ -300,7 +314,7 @@ export function gloss<Props = any, ThemeProps = Props>(
       }
     }
 
-    lastProps.current = finalProps
+    last.current.props = finalProps
     return createElement(element, finalProps, props.children)
   }
 
@@ -508,6 +522,7 @@ function addDynamicStyles(
 }
 
 const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
+const mediaQueries = Config.mediaQueries
 
 //
 // this... THIS...
@@ -523,6 +538,7 @@ function mergeStyles(
   nextStyles?: CSSPropertySet | null,
   overwrite?: boolean,
 ): Object | undefined {
+  // this is just for the conditional prop styles
   let propStyles
   for (const key in nextStyles) {
     // dont overwrite as we go down
@@ -532,6 +548,15 @@ function mergeStyles(
     if (validCSSAttr[key]) {
       // valid regular attr
       baseStyles[id][key] = nextStyles[key]
+    } else if (mediaQueries && (key[2] === '-' || key[3] === '-')) {
+      const len2 = key[2] === '-'
+      const styleKey = len2 ? key.slice(3) : key.slice(4)
+      const mediaName = len2 ? key.slice(0, 2) : key.slice(0, 3)
+      const mediaSelector = mediaQueries[mediaName]
+      if (mediaSelector) {
+        baseStyles[mediaSelector] = baseStyles[mediaSelector] || {}
+        baseStyles[mediaSelector][styleKey] = nextStyles[key]
+      }
     } else if (isSubStyle(key)) {
       for (const sKey in nextStyles[key]) {
         if (overwrite === true || !baseStyles[key] || baseStyles[key][sKey] === undefined) {

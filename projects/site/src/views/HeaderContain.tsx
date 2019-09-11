@@ -1,13 +1,14 @@
 import { Box, BoxProps, gloss } from 'gloss'
 import React from 'react'
 
-import { useScreenVal } from '../pages/HomePage/SpacedPageContent'
 import { SectionContent } from './SectionContent'
 
 export function HeaderContain(props) {
   return (
     <SectionContent
-      padding={[0, useScreenVal('0%', '1%', '10%')]}
+      padding={[0, '1%']}
+      sm-padding={[0, '0%']}
+      lg-padding={[0, '2%']}
       flexDirection="row"
       alignItems="center"
       justifyContent="space-around"
@@ -15,6 +16,7 @@ export function HeaderContain(props) {
     />
   )
 }
+
 export const LinkSection = gloss<BoxProps & { alignRight?: boolean }>(Box, {
   flex: 4,
   flexDirection: 'row',

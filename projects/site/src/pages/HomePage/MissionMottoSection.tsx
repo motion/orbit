@@ -22,7 +22,7 @@ export const SubParagraph = (props: TextProps) => (
   />
 )
 
-export default function LegsSection() {
+export default function MissionMottoSection() {
   return (
     <Theme name="home">
       <View height={70} />

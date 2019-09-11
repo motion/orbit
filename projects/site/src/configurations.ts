@@ -2,7 +2,7 @@ import { configureUI, debug, toColor } from '@o/ui'
 import { configureUseStore, debugUseStore, IS_STORE } from '@o/use-store'
 import ResizeObserver from 'resize-observer-polyfill'
 
-import { fontProps } from './constants'
+import * as Constants from './constants'
 import { themes } from './themes'
 
 if (process.env.NODE_ENV === 'development') {
@@ -23,10 +23,11 @@ function configure() {
   window['ResizeObserver'] = ResizeObserver
 
   configureUI({
+    mediaQueries: Constants.mediaQueries,
     defaultProps: {
       title: {
         selectable: true,
-        ...fontProps.TitleFont,
+        ...Constants.fontProps.TitleFont,
       },
     },
   })

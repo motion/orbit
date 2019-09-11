@@ -192,7 +192,7 @@ export default function NeckSection() {
           </>
         }
       >
-        <Col maxWidth="100%" margin={[0, 'auto', 0, 0]}>
+        <Col maxWidth="100%" margin={[0, 'auto']}>
           {screen !== 'small' && (
             <Row space>
               <SubSection maxWidth="33%">

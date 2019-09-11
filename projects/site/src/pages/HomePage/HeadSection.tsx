@@ -7,38 +7,35 @@ import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
 import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
-import { useTextFit } from '../../views/useTextFit'
 import { Join } from './Join'
 import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xl" />
-let medSpc = <Space size="xxl" />
-let lgSpace = <Space size="xxxl" />
+let medSpc = <Space size={60} />
+let lgSpace = <Space size={80} />
 
 let allTitles = {
-  large: 'A smart app platform for your data',
-  medium: 'A smart app platform for your data',
-  small: 'A smart app platform for your data',
+  large: 'The Smart HUD',
+  medium: 'The Smart HUD',
+  small: 'The Smart HUD',
 }
 
-let allTexts = {
-  large: `
-Best in class developer experience, toolkit, and a rich data + app-store.
-It's the beautiful, moldable app-platform for you & your team.`,
-  medium: `
-Best in class developer experience, toolkit, and a rich data + app-store.
-It's the beautiful, moldable app-platform for you & your team.`,
-  small: `
-Best in class developer experience, toolkit, data plugins, an app store.
-It's the beautiful, moldable app-platform for you & your team.`,
+const largeText = `
+The beautiful, moldable app platform for teams.
+Orbit is an all-new platform for internal apps.`
+
+// just use same for now
+const allTexts = {
+  large: largeText,
+  medium: largeText,
+  small: largeText,
 }
 
 const HeadContent = memo(() => {
   const screen = useScreenSize()
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const measured = fontsLoaded
-  const titleFit = useTextFit({ min: 16, updateKey: fontsLoaded })
-  const pFit = useTextFit({ min: 16, updateKey: fontsLoaded })
+  // const titleFit = useTextFit({ min: 16, updateKey: fontsLoaded })
 
   const texts = allTexts[screen].trim().split(/\n/g)
   const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
@@ -51,65 +48,36 @@ const HeadContent = memo(() => {
   return (
     <View
       className="head-text-section"
-      width={useScreenVal('95%', '88%', '85%')}
+      width="max(95vw, 80%)"
       maxWidth={960}
       textAlign="center"
       alignItems="center"
     >
       <TitleText
-        nodeRef={titleFit.ref}
-        style={titleFit.style}
+        // nodeRef={titleFit.ref}
+        // style={titleFit.style}
         fontWeight={100}
         alignSelf="center"
         transformOrigin="top center"
         selectable
         textAlign="center"
         whiteSpace="nowrap"
-        maxHeight={150}
+        maxHeight={160}
       >
         <FadeChild disable={!measured}>{allTitles[screen]}</FadeChild>
       </TitleText>
 
       <Space size={useScreenVal('md', 'xl', 'xxxl')} />
 
-      {isSmall && (
-        <Paragraph
-          size={1.8}
-          sizeLineHeight={1.6}
-          margin={[0, 'auto']}
-          textAlign="center"
-          alpha={0.6}
-          selectable
-          zIndex={100}
-        >
-          {texts[0]} {texts[1]}
-        </Paragraph>
-      )}
-
-      <View
-        maxHeight={isSmall ? 0 : 'auto'}
-        overflow={isSmall ? 'hidden' : 'visible'}
-        position="relative"
-        flex={1}
-        width={textsWidth}
-        margin={[0, 'auto']}
-        maxWidth="80%"
-      >
+      <View position="relative" flex={1} width={textsWidth} margin={[0, 'auto']} maxWidth="80%">
         <Paragraph
           fontWeight={400}
           tagName="div"
-          style={{
-            ...pFit.style,
-            height: 'auto',
-          }}
-          lineHeight={pFit.isMeasured ? `${pFit.height}px` : `40px`}
           height="auto"
-          transformOrigin="top left"
+          transformOrigin="top center"
           margin={[0, 'auto']}
           textAlign="center"
           alpha={0.7}
-          fontSize={40}
-          whiteSpace="nowrap"
         >
           <FadeChild disable={!measured} delay={400}>
             {texts[0]}
@@ -135,7 +103,6 @@ const HeadContent = memo(() => {
         {/* this is just to measure */}
         <Paragraph
           className="measure-p"
-          nodeRef={pFit.ref}
           opacity={0}
           fontSize={40}
           position="absolute"
@@ -155,7 +122,7 @@ const HeadJoin = memo(() => {
       <FadeChild {...fadeAnimations.up} delay={500}>
         <SurfacePassProps elevation={5} {...fontProps.TitleFont}>
           <Theme name="orbitOneDark">
-            <Scale size={useScreenVal(0.8, 1, 1.1)}>
+            <Scale size={useScreenVal(0.9, 1, 1.1)}>
               <Join
                 inputProps={{
                   minWidth: useScreenVal('auto', 300, 300),

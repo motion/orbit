@@ -1,11 +1,9 @@
-import { ErrorBoundary, Loading, Theme, useIntersectionObserver } from '@o/ui'
+import { ErrorBoundary, Loading, useIntersectionObserver } from '@o/ui'
 import { once } from 'lodash'
 import React, { lazy, memo, Suspense, useEffect, useRef, useState } from 'react'
 
 import { requestIdleCallback } from '../etc/requestIdle'
 import { Header } from '../Header'
-import { useIsTiny } from '../hooks/useScreenSize'
-import { useSiteStore } from '../SiteStore'
 import { Page } from '../views/Page'
 import { HeadSection } from './HomePage/HeadSection'
 import { LoadingPage } from './LoadingPage'
@@ -60,9 +58,7 @@ const EarlyAccessBetaSection = loadOnIntersect(
 )
 
 export const HomePage = memo(() => {
-  const siteStore = useSiteStore()
   const [parallax, setParallax] = useState(null)
-  const isTiny = useIsTiny()
 
   return (
     <ParallaxContext.PassProps value={parallax}>
@@ -72,7 +68,7 @@ export const HomePage = memo(() => {
         <Page>
           <HeadSection />
         </Page>
-        <Page>
+        {/* <Page>
           <AllInOnePitchDemoSection />
         </Page>
         <Page>
@@ -94,7 +90,7 @@ export const HomePage = memo(() => {
           <Theme name="home">
             <FooterSection hideJoin />
           </Theme>
-        </Page>
+        </Page> */}
       </main>
     </ParallaxContext.PassProps>
   )

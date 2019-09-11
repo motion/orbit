@@ -2,10 +2,10 @@ import { BorderBottom, Button, Row, RowProps } from '@o/ui'
 import { Box, gloss, useTheme } from 'gloss'
 import React, { memo, useLayoutEffect, useState } from 'react'
 
-import { useIsTiny, useScreenSize } from './hooks/useScreenSize'
+import { useScreenSize } from './hooks/useScreenSize'
 import { LinkState } from './LinkState'
 import { useSiteStore } from './SiteStore'
-import { fadeAnimations, FadeChild, useFadePage } from './views/FadeInView'
+import { FadeChild, transitions, useFadePage } from './views/FadeInView'
 import { HeaderContain, LinkSection } from './views/HeaderContain'
 import { HeaderContext } from './views/HeaderContext'
 import { LinksLeft, LinksRight } from './views/HeaderLink'
@@ -18,86 +18,32 @@ export type HeaderProps = {
 } & RowProps
 
 export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
-  const isTiny = useIsTiny()
-  const size = useScreenSize()
   const theme = useTheme()
   const siteStore = useSiteStore()
   const headerStore = HeaderContext.useCreateStore()
   const { shown } = headerStore
   const Fade = useFadePage({ shown, threshold: 0 })
 
-  useLayoutEffect(() => {
-    if (size === 'small') {
-      headerStore.setShown(siteStore.showSidebar)
-    } else {
-      headerStore.setShown(true)
-    }
-  }, [size, siteStore.showSidebar])
+  const size = useScreenSize({
+    onChange(size) {
+      if (size === 'small') {
+        headerStore.setShown(siteStore.showSidebar)
+      } else {
+        headerStore.setShown(true)
+      }
+    },
+  })
 
-  let before = null
-  let after = null
-  if (size !== 'small') {
-    before = (
-      <LinkRow>
-        <LinksLeft />
-      </LinkRow>
-    )
-    after = (
-      <LinkRow>
-        <LinksRight />
-      </LinkRow>
-    )
-  }
+  console.log('render header with size', size)
 
-  let children = null
-  const menuElement = size === 'small' && (
-    <Button
-      position="fixed"
-      top={3}
-      right={10}
-      zIndex={1000000000}
-      icon="menu"
-      iconSize={16}
-      size={2}
-      chromeless
-      onClick={siteStore.toggleSidebar}
-    />
-  )
-
-  if (slim) {
-    children = (
+  return (
+    <HeaderContext.ProvideStore value={headerStore}>
+      {/* large */}
       <Fade.FadeProvide>
-        {menuElement}
         <Row
           nodeRef={Fade.ref}
-          pointerEvents="auto"
-          background={theme.background.lighten(0.05)}
-          position="relative"
-          zIndex={1000000}
-          {...rest}
-        >
-          <HeaderContain height={50}>
-            <LinkSection alignRight>{before}</LinkSection>
-            <FadeChild
-              off={!LinkState.didAnimateOut}
-              {...(shown ? fadeAnimations.normal : fadeAnimations.fastStatic)}
-              delay={shown ? 0 : 0}
-            >
-              <LogoHorizontal slim />
-            </FadeChild>
-            <LinkSection>{after}</LinkSection>
-          </HeaderContain>
-          {!noBorder && <BorderBottom opacity={0.5} />}
-        </Row>
-      </Fade.FadeProvide>
-    )
-  } else {
-    children = (
-      <Fade.FadeProvide>
-        {menuElement}
-        <Row
-          nodeRef={Fade.ref}
-          position={isTiny ? 'relative' : 'absolute'}
+          position="absolute"
+          xs-position="relative"
           top={0}
           left={0}
           right={0}
@@ -105,25 +51,67 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
           alignItems="center"
           justifyContent="space-around"
           padding={[30, 0]}
+          opacity={slim ? 0 : 1}
           {...rest}
         >
           <HeaderContain>
-            <LinkSection alignRight>{before}</LinkSection>
+            <LinkSection alignRight>
+              <LinkRow>
+                <LinksLeft />
+              </LinkRow>
+            </LinkSection>
             <FadeChild
-              off={!LinkState.didAnimateOut}
-              config={shown ? fadeAnimations.normal : fadeAnimations.fastStatic}
+              disable={!LinkState.didAnimateOut}
+              transition={shown ? transitions.normal : transitions.fastStatic}
               delay={shown ? 100 : 0}
             >
               <LogoVertical />
             </FadeChild>
-            <LinkSection>{after}</LinkSection>
+            <LinkSection>
+              <LinkRow>
+                <LinksRight />
+              </LinkRow>
+            </LinkSection>
           </HeaderContain>
         </Row>
       </Fade.FadeProvide>
-    )
-  }
-
-  return <HeaderContext.ProvideStore value={headerStore}>{children}</HeaderContext.ProvideStore>
+      {/* small */}
+      <Fade.FadeProvide>
+        <Button
+          className="fixed-menu"
+          position="fixed"
+          top={3}
+          right={10}
+          zIndex={1000000000}
+          icon="menu"
+          iconSize={16}
+          size={2}
+          chromeless
+          onClick={siteStore.toggleSidebar}
+        />
+        <Row
+          nodeRef={Fade.ref}
+          pointerEvents="auto"
+          background={theme.background.lighten(0.05)}
+          position="relative"
+          zIndex={1000000}
+          opacity={slim ? 1 : 0}
+          {...rest}
+        >
+          <HeaderContain height={50}>
+            <FadeChild
+              disable={!LinkState.didAnimateOut}
+              transition={shown ? transitions.normal : transitions.fastStatic}
+              delay={shown ? 0 : 0}
+            >
+              <LogoHorizontal slim />
+            </FadeChild>
+          </HeaderContain>
+          {!noBorder && <BorderBottom opacity={0.5} />}
+        </Row>
+      </Fade.FadeProvide>
+    </HeaderContext.ProvideStore>
+  )
 })
 
 const LinkRow = gloss(Box, {

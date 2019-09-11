@@ -1,28 +1,31 @@
-import { useMedia } from '@o/ui'
+import { useMediaLayout, UseMediaOptions } from '@o/ui'
 
 import { widths } from '../constants'
 
 type ScreenSize = 'small' | 'medium' | 'large'
 
 export const sizes = {
-  tiny: { maxWidth: widths.tiny },
-  small: { maxWidth: widths.small },
-  medium: { minWidth: widths.medium },
-  large: { minWidth: widths.large },
+  tiny: { maxWidth: widths.xs },
+  small: { maxWidth: widths.sm },
+  medium: { minWidth: widths.md },
+  large: { minWidth: widths.lg },
   short: { maxHeight: 900 },
 }
 
 export function useIsTiny(): boolean {
-  return useMedia(sizes.tiny)
+  return useMediaLayout(sizes.tiny)
 }
 
-export function useScreenSize(): ScreenSize {
-  const [isSmall, isMedium, isLarge] = useMedia([sizes.small, sizes.medium, sizes.large])
+export function useScreenSize(options?: UseMediaOptions<'small' | 'medium' | 'large'>): ScreenSize {
+  const [isSmall, isMedium, isLarge] = useMediaLayout(
+    [sizes.small, sizes.medium, sizes.large],
+    options,
+  )
   return isLarge ? 'large' : isMedium ? 'medium' : isSmall ? 'small' : 'small'
 }
 
 export function useScreenHeight(): 'short' | 'medium' {
-  const [isShort, isSmall] = useMedia([sizes.short, sizes.small])
+  const [isShort, isSmall] = useMediaLayout([sizes.short, sizes.small])
   // only return "short" if its "fat" ie wider than it is tall
   return isShort && !isSmall ? 'short' : 'medium'
 }

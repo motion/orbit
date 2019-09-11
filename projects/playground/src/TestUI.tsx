@@ -6,14 +6,19 @@ import * as React from 'react'
 export function TestUI() {
   return (
     <>
+      <TestMediaQueries />
       {/* <TestUIPopovers /> */}
       {/* <TestUIGlossSpeed /> */}
       {/* <TestUIEditor /> */}
-      <TestUIMotion />
+      {/* <TestUIMotion /> */}
       {/* <TestUIAnimation /> */}
       {/* <TestUIParallax /> */}
     </>
   )
+}
+
+function TestMediaQueries() {
+  return <View responsive sm-background="red" background="green" width={100} height={100} />
 }
 
 const variants = {

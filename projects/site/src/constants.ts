@@ -15,17 +15,20 @@ export const fontProps = {
 }
 
 export const widths = {
-  tiny: 420,
-  small: 700,
-  medium: 860,
-  large: 1150,
+  xs: 420,
+  sm: 700,
+  md: 860,
+  lg: 1150,
 }
 
 export const sectionMaxHeight = 1250
 export const sidePad = 24
 
-export const screen = {
-  smallQuery: `@media (max-width: ${widths.small}px)`,
+export const mediaQueries = {
+  xs: `@media screen and (max-width: ${widths.xs - 1}px)`,
+  sm: `@media screen and (min-width: ${widths.xs}px) and (max-width: ${widths.md - 1})`,
+  md: `@media screen and (min-width: ${widths.md}px) and (max-width: ${widths.lg - 1})`,
+  lg: `@media screen and (min-width: ${widths.lg}px)`,
 }
 
 export const IS_CHROME = navigator.userAgent.toLowerCase().indexOf('chrome') > -1

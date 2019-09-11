@@ -1,8 +1,8 @@
 import { createContextualProps, Parallax, ParallaxViewProps } from '@o/ui'
 import { selectDefined } from '@o/utils'
-import React, { forwardRef } from 'react'
+import React from 'react'
 
-import { useIsTiny } from '../hooks/useScreenSize'
+import { mediaStyles } from '../constants'
 import { useSiteStore } from '../SiteStore'
 import { SectionContent, SectionContentProps } from './SectionContent'
 
@@ -14,7 +14,6 @@ const { PassProps, useProps } = createContextualProps({
 
 export function Page(props: SectionContentProps) {
   const siteStore = useSiteStore()
-  const isTiny = useIsTiny()
   return (
     <PassProps overflow="visible" zIndex={0} {...props}>
       <Parallax.Container>
@@ -25,10 +24,8 @@ export function Page(props: SectionContentProps) {
           paddingBottom={30}
           {...props}
           flex="none"
-          {...isTiny && {
-            height: 'auto',
-            minHeight: 'auto',
-          }}
+          xs-height="auto"
+          xs-minHeight="auto"
         />
       </Parallax.Container>
     </PassProps>
@@ -37,12 +34,9 @@ export function Page(props: SectionContentProps) {
 
 Page.Parallax = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) => {
   const parallax = useProps()
-  const isTiny = useIsTiny()
-  if (isTiny) {
-    return null
-  }
   return (
     <Parallax.View
+      {...mediaStyles.hidden.xs}
       speed={0.2}
       offset={parallax.offset}
       style={{

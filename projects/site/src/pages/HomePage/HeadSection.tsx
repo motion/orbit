@@ -1,4 +1,4 @@
-import { Col, Scale, Space, SurfacePassProps, Theme, View } from '@o/ui'
+import { Col, Scale, Space, SurfacePassProps, Theme, TitleProps, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
@@ -6,6 +6,7 @@ import { fontProps } from '../../constants'
 import { useScreenHeightVal } from '../../hooks/useScreenSize'
 import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'
 import { Paragraph } from '../../views/Paragraph'
+import { SectionContentChrome } from '../../views/SectionContent'
 import { TitleText } from '../../views/TitleText'
 import { useTextFit } from '../../views/useTextFit'
 import { Join } from './Join'
@@ -18,81 +19,105 @@ Orbit is an all-new platform for internal apps.
   .trim()
   .split(/\n/g)
 
+const TextFitTitle = (props: TitleProps) => {
+  const fontsLoaded = useWaitForFonts(['Eesti Pro'])
+  const titleFit = useTextFit({ min: 16, updateKey: fontsLoaded })
+  return <TitleText {...props} nodeRef={titleFit.ref} style={titleFit.style} />
+}
+
+// anything that influences width/size of text
+const paragraphProps = {
+  fontSize: 60,
+  fontWeight: 400,
+} as const
+
 const HeadContent = memo(() => {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const measured = fontsLoaded
-  const titleFit = useTextFit({ min: 16, updateKey: fontsLoaded })
-  const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
-  const br = <View sm-height={20} height={30} lg-height={40} />
+  const br = <View sm-height={100} height={50} lg-height={40} />
+  const pFit = useTextFit({ min: 16, updateKey: fontsLoaded })
 
   return (
-    <View
-      className="head-text-section"
-      width="max(95vw, 80%)"
-      maxWidth={960}
-      textAlign="center"
-      alignItems="center"
-    >
-      <TitleText
-        nodeRef={titleFit.ref}
-        style={titleFit.style}
-        fontWeight={100}
-        alignSelf="center"
-        transformOrigin="top center"
-        selectable
+    <SectionContentChrome>
+      <View
+        className="head-text-section"
+        position="absolute"
+        left="5%"
+        right="5%"
+        top={0}
+        bottom={0}
         textAlign="center"
-        whiteSpace="nowrap"
-        maxHeight={160}
+        alignItems="center"
       >
-        <FadeChild disable={!measured}>The Smart HUD</FadeChild>
-      </TitleText>
+        <View width="100%">
+          <TextFitTitle
+            fontWeight={100}
+            alignSelf="center"
+            transformOrigin="top center"
+            selectable
+            textAlign="center"
+            whiteSpace="nowrap"
+            maxHeight={160}
+          >
+            <FadeChild disable={!measured}>The Smart HUD</FadeChild>
+          </TextFitTitle>
 
-      {br}
+          {br}
 
-      <View position="relative" flex={1} width="90%" margin={[0, 'auto']} maxWidth="80%">
-        <Paragraph
-          fontWeight={400}
-          tagName="div"
-          height="auto"
-          transformOrigin="top center"
-          margin={[0, 'auto']}
-          textAlign="center"
-          alpha={0.7}
-        >
-          <FadeChild disable={!measured} delay={400}>
-            {texts[0]}
-          </FadeChild>
-          {br}
-          <FadeChild disable={!measured} delay={500}>
-            {texts[1]}
-          </FadeChild>
-          {br}
-          {texts[2] && (
-            <>
-              <FadeChild disable={!measured} delay={600}>
-                {texts[2]}
+          <View position="relative" flex={1} width="90%" maxWidth={800} margin={[0, 'auto']}>
+            <Paragraph
+              {...paragraphProps}
+              tagName="div"
+              height="auto"
+              transformOrigin="top left"
+              margin={[0, 'auto']}
+              textAlign="center"
+              alpha={0.7}
+              lineHeight={pFit.isMeasured ? `${pFit.height}px` : `40px`}
+              style={{
+                ...pFit.style,
+                height: 'auto',
+              }}
+            >
+              <FadeChild disable={!measured} delay={400}>
+                {texts[0]}
               </FadeChild>
               {br}
-            </>
-          )}
-          {/* <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
+              <FadeChild disable={!measured} delay={500}>
+                {texts[1]}
+              </FadeChild>
+              {br}
+              {texts[2] && (
+                <>
+                  <FadeChild disable={!measured} delay={600}>
+                    {texts[2]}
+                  </FadeChild>
+                  {br}
+                </>
+              )}
+              {/* <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
             <Smaller {...linkProps('/apps#faq')}>{subTexts[screen]}</Smaller>
           </FadeChild> */}
-        </Paragraph>
+            </Paragraph>
 
-        {/* this is just to measure */}
-        <Paragraph
-          className="measure-p"
-          opacity={0}
-          fontSize={40}
-          position="absolute"
-          whiteSpace="pre"
-          pointerEvents="none"
-        >
-          {longest}
-        </Paragraph>
+            {/* this is just to measure */}
+            <Paragraph
+              className="measure-p"
+              nodeRef={pFit.ref}
+              {...paragraphProps}
+              opacity={0}
+              position="absolute"
+              whiteSpace="pre"
+              pointerEvents="none"
+            >
+              {texts[0]}
+              <br />
+              {texts[1]}
+            </Paragraph>
+          </View>
+        </View>
       </View>
-    </View>
+    </SectionContentChrome>
   )
 })
 
@@ -146,7 +171,6 @@ export function HeadSection() {
   const Fade = useFadePage({
     threshold: 0,
   })
-  // const size = useScreenSize()
 
   return (
     <Fade.FadeProvide>
@@ -155,13 +179,15 @@ export function HeadSection() {
         left={useScreenHeightVal(40, 0)}
         opacity={fontsLoaded ? 1 : 0}
         margin={['auto', 0]}
+        height="calc(100% - 120px)"
       >
-        <Space size="xxxl" />
-        <Col nodeRef={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
+        <Space size="xxl" />
+        <View flex={1.5} />
+        <Col flex={6} nodeRef={Fade.ref} alignItems="center" justifyContent="center">
           <HeadContent />
         </Col>
-        <Space size="xxxl" />
         <View flex={1} />
+        <Space size="xxl" />
         <HeadJoin />
       </Col>
     </Fade.FadeProvide>

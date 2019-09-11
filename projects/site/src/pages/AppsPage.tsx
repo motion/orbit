@@ -12,7 +12,6 @@ import { SearchInput } from '../views/SearchInput'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { apps } from './HomePage/apps'
-import { useScreenVal } from './HomePage/SpacedPageContent'
 import { makeWavePattern } from './makeWavePattern'
 
 export default mount({
@@ -88,7 +87,9 @@ export function AppsPage() {
             <Space size="xxxl" />
 
             <Col
-              padding={useScreenVal(0, [50, '15%'], [100, '20%', 100])}
+              sm-padding="0"
+              padding={[50, '15%']}
+              lg-padding={[100, '20%', 100]}
               space="xxl"
               spaceAround
               flex={1}
@@ -258,7 +259,11 @@ const AppSearch = memo(() => {
   )
 
   return (
-    <HotKeys keyMap={keyMap} handlers={handlers} style={{ display: 'flex', flexDirection: 'column' }}>
+    <HotKeys
+      keyMap={keyMap}
+      handlers={handlers}
+      style={{ display: 'flex', flexDirection: 'column' }}
+    >
       <View margin={[0, 'auto']}>
         <SearchInput
           width={450}

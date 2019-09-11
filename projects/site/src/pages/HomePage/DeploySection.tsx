@@ -11,7 +11,7 @@ import { Paragraph } from '../../views/Paragraph'
 import { ParagraphIntro } from '../../views/ParagraphIntro'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
-import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
+import { SpacedPageContent } from './SpacedPageContent'
 
 const Para = props => <Paragraph sizeLineHeight={1.1} size={1.2} alpha={0.72} {...props} />
 
@@ -27,7 +27,6 @@ export default function DeploySection() {
         x="0%"
         scale={1.6}
         background="radial-gradient(circle closest-side, #00A77F, transparent)"
-        debug
       />
 
       {/* big purple bottom left */}
@@ -54,8 +53,11 @@ export default function DeploySection() {
 
       <SpacedPageContent
         nodeRef={Fade.ref}
+        sm-transform={{
+          y: 0,
+        }}
         transform={{
-          y: useScreenVal(0, '-10%', '-10%'),
+          y: '-10%',
         }}
         header={
           <>
@@ -63,7 +65,7 @@ export default function DeploySection() {
               <PillButton>Create</PillButton>
             </FadeChild>
             <FadeChild delay={300}>
-              <TitleText textAlign="center" size={useScreenVal('md', 'xxl', 'xxxl')}>
+              <TitleText textAlign="center" size="xl">
                 Best DX, ever.
               </TitleText>
             </FadeChild>

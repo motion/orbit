@@ -1,4 +1,4 @@
-import { ErrorBoundary, Loading, useIntersectionObserver } from '@o/ui'
+import { ErrorBoundary, Loading, Theme, useIntersectionObserver } from '@o/ui'
 import { once } from 'lodash'
 import React, { lazy, memo, Suspense, useEffect, useRef, useState } from 'react'
 
@@ -66,7 +66,7 @@ export const HomePage = memo(() => {
         <Page>
           <HeadSection />
         </Page>
-        {/* <Page>
+        <Page>
           <AllInOnePitchDemoSection />
         </Page>
         <Page>
@@ -88,7 +88,7 @@ export const HomePage = memo(() => {
           <Theme name="home">
             <FooterSection hideJoin />
           </Theme>
-        </Page> */}
+        </Page>
       </main>
     </>
   )

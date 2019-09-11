@@ -26,11 +26,27 @@ export const sidePad = 24
 
 export const mediaQueries = {
   xs: `@media screen and (max-width: ${widths.xs - 1}px)`,
-  sm: `@media screen and (min-width: ${widths.xs}px) and (max-width: ${widths.md - 1})`,
-  md: `@media screen and (min-width: ${widths.md}px) and (max-width: ${widths.lg - 1})`,
+  sm: `@media screen and (max-width: ${widths.sm}px)`,
+  'not-sm': `@media screen and (min-width: ${widths.sm + 1}px)`,
+  md: `@media screen and (min-width: ${widths.md}px)`,
   lg: `@media screen and (min-width: ${widths.lg}px)`,
 }
 
 export const IS_CHROME = navigator.userAgent.toLowerCase().indexOf('chrome') > -1
 
 export const bodyElement = IS_CHROME ? document.documentElement : document.body
+
+const hidden: { [key in keyof typeof mediaQueries]: Object } = Object.keys(mediaQueries).reduce(
+  (acc, key) => {
+    acc[key] = {
+      [`${key}-display`]: 'none',
+      [`${key}-pointerEvents`]: 'none',
+    }
+    return acc
+  },
+  {},
+) as any
+
+export const mediaStyles = {
+  hidden,
+}

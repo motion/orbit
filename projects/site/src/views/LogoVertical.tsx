@@ -4,21 +4,10 @@ import { gloss, useTheme } from 'gloss'
 import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'
 
-import { useScreenSize } from '../hooks/useScreenSize'
-
-let logoScales = {
-  small: 0.7,
-  medium: 0.9,
-  large: 0.9,
-}
-
 export const LogoVertical = memo(
   ({ size, ...rest }: ViewProps & { size?: 'small' | 'medium' | 'large' }) => {
     const theme = useTheme()
-    const screenSize = useScreenSize()
     const nav = useNavigation()
-    const scale = logoScales[size || screenSize]
-
     return (
       <View
         position="relative"
@@ -27,7 +16,10 @@ export const LogoVertical = memo(
         alignItems="center"
         justifyContent="center"
         userSelect="none"
-        transform={{ scale }}
+        sm-transform={{
+          scale: 0.7,
+        }}
+        transform={{ scale: 0.9 }}
         padding={[0, 35]}
         onClick={async e => {
           e.preventDefault()

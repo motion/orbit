@@ -3,7 +3,6 @@ import { isDefined } from '@o/utils'
 import { Box } from 'gloss'
 import React from 'react'
 
-import { useScreenSize } from '../../hooks/useScreenSize'
 import { fadeAnimations, FadeChild } from '../../views/FadeInView'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
@@ -15,14 +14,13 @@ const titleFont = {
 }
 
 export const SimpleSection = ({ delay = 100, index = undefined, title, children, ...rest }) => {
-  const screen = useScreenSize()
   const isLeft = isDefined(index) && index % 2 === 0
   return (
     <SectionChrome space {...rest}>
       <FadeChild {...(isLeft ? fadeAnimations.right : fadeAnimations.left)} delay={delay}>
         <SectionTitle>
           {isDefined(index) && (
-            <Badge opacity={screen === 'large' ? 1 : 0}>
+            <Badge opacity={0} lg-opacity={1}>
               <BadgeText>{index}.</BadgeText>
             </Badge>
           )}

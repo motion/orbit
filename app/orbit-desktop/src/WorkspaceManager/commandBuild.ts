@@ -194,33 +194,46 @@ async function isValidJSONFile(path: string) {
   }
 }
 
-async function shouldRebuildApp(appRoot: string) {
-  // do some basic sanity checks
-  // no buildInfo yet
-  if (!(await isValidJSONFile(join(appRoot, 'dist', 'buildInfo.json')))) {
-    return true
-  }
-  // no appInfo yet
-  if (!(await isValidJSONFile(join(appRoot, 'dist', 'appInfo.json')))) {
-    return true
-  }
+class ShouldRebuildMissingBuildInfo extends Error {}
+class ShouldRebuildMissingAppInfo extends Error {}
+class ShouldRebuildMissingApi extends Error {}
+class ShouldRebuildMissingNodeApp extends Error {}
+class ShouldRebuildNewBuildInfo extends Error {}
 
-  // do some appInfo => output comparison checks
-  const appInfo = await getAppInfo(appRoot)
-  // ensure api file built
-  if (appInfo.api && !(await isValidJSONFile(join(appRoot, 'dist', 'api.json')))) {
-    return false
-  }
-  // ensure node bundle built
-  if (appInfo.workers || appInfo.graph) {
-    if (!(await pathExists(join(appRoot, 'dist', 'index.node.js')))) {
-      return true
+async function shouldRebuildApp(appRoot: string) {
+  try {
+    // do some basic sanity checks
+    // no buildInfo yet
+    if (!(await isValidJSONFile(join(appRoot, 'dist', 'buildInfo.json')))) {
+      throw new ShouldRebuildMissingBuildInfo()
     }
+    // no appInfo yet
+    if (!(await isValidJSONFile(join(appRoot, 'dist', 'appInfo.json')))) {
+      throw new ShouldRebuildMissingAppInfo()
+    }
+    // do some appInfo => output comparison checks
+    const appInfo = await getAppInfo(appRoot)
+    // ensure api file built
+    if (appInfo.api && !(await isValidJSONFile(join(appRoot, 'dist', 'api.json')))) {
+      throw new ShouldRebuildMissingApi()
+    }
+    // ensure node bundle built
+    if (appInfo.workers || appInfo.graph) {
+      if (!(await pathExists(join(appRoot, 'dist', 'index.node.js')))) {
+        throw new ShouldRebuildMissingNodeApp()
+      }
+    }
+    // ensure buildInfo hash is equal
+    const current = await getBuildInfo(appRoot)
+    const existing = await readBuildInfo(appRoot)
+    if (isEqual(current, existing) === false) {
+      throw new ShouldRebuildNewBuildInfo()
+    }
+    return false
+  } catch (err) {
+    log.info(`shouldRebuild! ${err.constructor.name}`)
+    return true
   }
-  // ensure buildInfo hash is equal
-  const current = await getBuildInfo(appRoot)
-  const existing = await readBuildInfo(appRoot)
-  return isEqual(current, existing) === false
 }
 
 const hasKey = (appInfo: AppDefinition, ...keys: string[]) =>

@@ -140,13 +140,18 @@ class AppCardStore {
   shouldRender = false
 
   renderApp = react(
-    () => [this.isIntersected, appsCarouselStore.state.zoomedOut === false],
-    async ([isIntersected, zoomedIn], { sleep }) => {
+    () => [
+      this.isIntersected,
+      appsCarouselStore.state.zoomedOut === false,
+      appsCarouselStore.isAnimating,
+    ],
+    async ([isIntersected, zoomedIn, isAnimating], { sleep }) => {
       if (this.shouldRender) return
       ensure('is intersected', isIntersected)
+      ensure('not animating', !isAnimating)
       if (!zoomedIn) {
         await whenIdle()
-        await sleep(20)
+        await sleep(250)
         await whenIdle()
       }
       this.shouldRender = true
@@ -189,8 +194,6 @@ const OrbitAppCard = memo(
       },
       [index],
     )
-
-    console.log('rendering card')
 
     // wrapping with view lets the scale transform not affect the scroll, for some reason this was happening
     // i thought scale transform doesnt affect layout?

@@ -36,7 +36,7 @@ class OrbitAppStore {
     async ([should], { when, sleep }) => {
       ensure('should', !!should)
       // stagger load
-      await sleep(loadOrder.indexOf(this.props.uid) * 100)
+      await sleep(loadOrder.indexOf(this.props.uid) * 40)
       // wait three ticks before loading
       let ticks = 0
       while (ticks < 3) {

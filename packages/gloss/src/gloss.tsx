@@ -103,15 +103,20 @@ const shouldUpdateMap = new WeakMap<object, boolean>()
 function glossIsEqual(a: any, b: any) {
   let shouldUpdate = false
   let shouldUpdateInner = false
-  for (const key in b) {
-    const bVal = b[key]
-    if (isValidElement(bVal)) {
-      shouldUpdate = true
-      continue
-    }
-    if (!isEqual(a[key], bVal)) {
-      shouldUpdate = true
-      shouldUpdateInner = true
+  if (Object.keys(a).length !== Object.keys(b).length) {
+    shouldUpdate = true
+    shouldUpdateInner = true
+  } else {
+    for (const key in b) {
+      const bVal = b[key]
+      if (isValidElement(bVal)) {
+        shouldUpdate = true
+        continue
+      }
+      if (!isEqual(a[key], bVal)) {
+        shouldUpdate = true
+        shouldUpdateInner = true
+      }
     }
   }
   shouldUpdateMap.set(b, shouldUpdateInner)

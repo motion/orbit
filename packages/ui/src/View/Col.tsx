@@ -75,7 +75,7 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
     }
 
     return (
-      <View {...defaultProps} {...props}>
+      <View {...defaultProps} {...props} padding={0}>
         {wrapWithPaddedView(wrapWithSuspense(element, suspense), props)}
       </View>
     )

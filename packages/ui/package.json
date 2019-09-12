@@ -15,7 +15,7 @@
     "@o/css": "^2.6.0",
     "@o/fast-compare": "^2.6.0",
     "@o/logger": "*",
-    "@o/react-sortable-hoc": "1.10.5",
+    "@o/react-sortable-hoc": "1.10.4",
     "@o/react-window": "1.9.0-alpha.3",
     "@o/use-store": "^2.6.0",
     "@o/utils": "^2.6.0",

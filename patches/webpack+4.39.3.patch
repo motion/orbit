@@ -8,7 +8,7 @@ index 5756623..7e0c681 100644
  				module = installedModules[moduleId];
 -				if (!module || module.hot._selfAccepted) continue;
 +				if (!module || module.hot._selfAccepted) {
-+					module && module.hot._selfAccepted();
++					module && typeof module.hot._selfAccepted === 'function' && module.hot._selfAccepted();
 +					continue;
 +				}
  				if (module.hot._selfDeclined) {

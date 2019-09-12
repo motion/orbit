@@ -21,8 +21,6 @@ class HooksStore<T> {
   }
 }
 
-const emptyValue = new MotionValue(0)
-
 export class AnimationStore {
   animationHooks = new HooksStore<MotionValue>()
   frozen = false
@@ -151,7 +149,8 @@ class GeometryStore {
           if (!scrollIntersectionState.ready) {
             return 0
           }
-          const state = scrollIntersectionState.children.get(this.nodeRef.current)
+          const index = scrollIntersectionState.elements.indexOf(this.nodeRef.current)
+          const state = scrollIntersectionState.measurements.get(index)
           return state ? (state.offset - scroll) * state.total : 0
         })
       })

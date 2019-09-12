@@ -68,7 +68,7 @@ export const OrbitAppsCarousel = memo(() => {
     throttle: 100,
     onChange({ width, height }) {
       setFrameSizeDebounce([width, height])
-      const rowWidth = width ? width * (1 - stackMarginLessPct) : 0
+      const rowWidth = Math.round(width ? width * (1 - stackMarginLessPct) : 0)
       appsCarouselStore.setProps({
         rowWidth,
       })
@@ -135,12 +135,20 @@ export const OrbitAppsCarousel = memo(() => {
 
 function GeometryScrollUpdater() {
   const scrollableParentStore = useScrollableParent()
-  useReaction(() => {
-    appsCarouselStore.zoomedIn
-    const motion = scrollableParentStore.scrollIntersectionState.scrollProgress
-    console.log('force an update')
-    motion.set(motion.get())
-  })
+  window['scrollableParentStore'] = scrollableParentStore
+
+  // bugfix: when we went uncontrolled we didnt finish the scroll progress...
+  // TODO when integrating the scrollLeft into motion, geometry can maybe handle
+  // this internally
+  useReaction(
+    () => appsCarouselStore.controlled,
+    async controlled => {
+      if (!controlled) {
+        scrollableParentStore.setScrollOffset(appsCarouselStore.state.index)
+      }
+    },
+  )
+
   return null
 }
 

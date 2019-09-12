@@ -13,7 +13,14 @@ class ScrollableParentStore {
   scrollIntersectionState = {
     ready: false,
     scrollProgress: new MotionValue(0),
-    children: new Map<HTMLElement, { offset: number; width: number; total: number }>(),
+    measurements: new Map<number, { offset: number; width: number; total: number }>(),
+    elements: [] as HTMLElement[],
+  }
+  setScrollOffset(index: number) {
+    const item = this.scrollIntersectionState.measurements.get(index)
+    if (item) {
+      this.scrollIntersectionState.scrollProgress.set(item.offset)
+    }
   }
   startIntersection() {
     this.shouldScrollIntersect = true
@@ -115,7 +122,7 @@ export function ScrollableIntersection({
           const total = childrenWidths.length
           const width = 1 / total
           const offset = nodeLeft / (parentWidth - nodeWidth)
-          scrollableParent.scrollIntersectionState.children.set(node, {
+          scrollableParent.scrollIntersectionState.measurements.set(index, {
             offset,
             width,
             total,
@@ -137,7 +144,11 @@ export function ScrollableIntersection({
       })
       children.clear()
       // add resizeObservers to all children
-      for (const [index, child] of Array.from(ref.current.childNodes).entries()) {
+      const elements = Array.from(ref.current.childNodes).filter(
+        x => x instanceof HTMLElement,
+      ) as HTMLElement[]
+      scrollableParent.scrollIntersectionState.elements = elements
+      for (const [index, child] of elements.entries()) {
         if (child instanceof HTMLElement) {
           // @ts-ignore
           const resizer = new ResizeObserver(entries => {

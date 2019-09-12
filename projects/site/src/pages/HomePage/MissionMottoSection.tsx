@@ -1,9 +1,9 @@
 import { Col, Grid, ListItem, SimpleText, SpaceGroup, TextProps, Theme, View } from '@o/ui'
 import React, { memo } from 'react'
 
-import { useScreenSize } from '../../hooks/useScreenSize'
 import earth from '../../public/images/earth.jpg'
 import { FadeChild, FadeParent } from '../../views/FadeInView'
+import { MediaSmallHidden } from '../../views/MediaView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -22,7 +22,7 @@ export const SubParagraph = (props: TextProps) => (
   />
 )
 
-export default function LegsSection() {
+export default function MissionMottoSection() {
   return (
     <Theme name="home">
       <View height={70} />
@@ -50,11 +50,11 @@ const Item = props => (
 const dly = 120
 
 export const AboutSection = memo(() => {
-  const screen = useScreenSize()
   return (
     <FadeParent>
       <SpacedPageContent
-        padding={screen === 'small' ? 0 : [0, '10%']}
+        padding={[0, '10%']}
+        sm-padding={0}
         header={
           <>
             <FadeChild>
@@ -94,7 +94,7 @@ export const AboutSection = memo(() => {
             </FadeChild>
           </Col>
 
-          {screen !== 'small' && (
+          <MediaSmallHidden>
             <Col space="md" justifyContent="flex-end">
               <FadeChild delay={dly * 5}>
                 <TitleTextSub textAlign="left" alpha={1} size={1}>
@@ -114,7 +114,7 @@ export const AboutSection = memo(() => {
                 </SpaceGroup>
               </FadeChild>
             </Col>
-          )}
+          </MediaSmallHidden>
         </Grid>
 
         <View flex={1} minHeight={80} />

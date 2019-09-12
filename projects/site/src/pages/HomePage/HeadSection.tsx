@@ -1,153 +1,86 @@
-import { Col, Scale, Space, SurfacePassProps, Theme, View } from '@o/ui'
+import { Col, Scale, SimpleTextProps, Space, SurfacePassProps, Theme, TitleProps, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
-import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
+import { useScreenHeightVal } from '../../hooks/useScreenSize'
 import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'
 import { Paragraph } from '../../views/Paragraph'
+import { SectionContentChrome } from '../../views/SectionContent'
 import { TitleText } from '../../views/TitleText'
-import { useTextFit } from '../../views/useTextFit'
 import { Join } from './Join'
 import { useScreenVal } from './SpacedPageContent'
 
-let smallSpc = <Space size="xl" />
-let medSpc = <Space size="xxl" />
-let lgSpace = <Space size="xxxl" />
-
-// Itrou
-
-let allTitles = {
-  large: 'Create your own app-suite.',
-  medium: 'Create your own app-suite.',
-  small: 'Create your own app-suite.',
+const TextFitTitle = (props: TitleProps) => {
+  return (
+    <TitleText userSelect="text" fontSize="12vw" lineHeight="8.5rem" lg-fontSize={135} {...props} />
+  )
 }
 
-let allTexts = {
-  large: [
-    `Best in class developer experience, toolkit, and a rich data + app-store.`,
-    `It's the beautiful, moldable app-platform for you & your team.`,
-  ],
-  medium: [
-    `Best in class developer experience, toolkit, and a rich data + app-store.`,
-    `It's the beautiful, moldable app-platform for you & your team.`,
-  ],
-  small: [`Create internal apps with all new abilities.`, `It's perfect tool for teams.`],
+const TitleParagraph = (props: SimpleTextProps) => {
+  return <Paragraph alpha={0.7} {...props} />
 }
+
+const scale = 0.9
+const para = {
+  display: 'flex',
+  fontSize: `${3.4 * scale}vw`,
+  lineHeight: `${5 * scale}vw`,
+  'lg-fontSize': 38 * scale,
+  'lg-lineHeight': `${3 * scale}rem`,
+  'sm-fontSize': 22 * scale,
+  'sm-lineHeight': `${2.8 * scale}rem`,
+  'sm-display': 'inline',
+} as const
 
 const HeadContent = memo(() => {
-  const screen = useScreenSize()
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const measured = fontsLoaded
-  const titleFit = useTextFit({ min: 16, updateKey: fontsLoaded })
-  const pFit = useTextFit({ min: 16, updateKey: fontsLoaded })
-
-  const texts = allTexts[screen]
-  const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
-  const br = useScreenVal(smallSpc, medSpc, lgSpace)
-
-  const textsWidth = useScreenVal('95%', '100%', '90%')
-
-  const isSmall = screen === 'small'
+  // const pFit = useTextFit({ min: 16, updateKey: fontsLoaded })
+  const br = <View className="head-space" height="3.5vh" maxHeight={70} />
 
   return (
-    <View
-      className="head-text-section"
-      width={useScreenVal('95%', '88%', '85%')}
-      maxWidth={960}
-      textAlign="center"
-      alignItems="center"
-    >
-      <TitleText
-        nodeRef={titleFit.ref}
-        style={titleFit.style}
-        fontWeight={100}
-        alignSelf="center"
-        transformOrigin="top center"
-        selectable
-        textAlign="center"
-        whiteSpace="nowrap"
-        maxHeight={150}
-      >
-        <FadeChild disable={!measured}>{allTitles[screen]}</FadeChild>
-      </TitleText>
-
-      <Space size={useScreenVal('md', 'xl', 'xxxl')} />
-
-      {isSmall && (
-        <Paragraph
-          size={1.8}
-          sizeLineHeight={1.6}
-          margin={[0, 'auto']}
-          textAlign="center"
-          alpha={0.6}
-          selectable
-          zIndex={100}
-        >
-          {texts[0]} {texts[1]}
-        </Paragraph>
-      )}
-
+    <SectionContentChrome>
       <View
-        maxHeight={isSmall ? 0 : 'auto'}
-        overflow={isSmall ? 'hidden' : 'visible'}
-        position="relative"
-        flex={1}
-        width={textsWidth}
-        margin={[0, 'auto']}
-        maxWidth="80%"
+        className="head-text-section"
+        position="absolute"
+        left="5%"
+        right="5%"
+        top={0}
+        bottom={0}
+        textAlign="center"
+        alignItems="center"
+        justifyContent="center"
       >
-        <Paragraph
-          fontWeight={400}
-          tagName="div"
-          style={{
-            ...pFit.style,
-            height: 'auto',
-          }}
-          lineHeight={pFit.isMeasured ? `${pFit.height}px` : `40px`}
-          height="auto"
-          transformOrigin="top left"
-          margin={[0, 'auto']}
-          textAlign="center"
-          alpha={0.7}
-          fontSize={40}
-          whiteSpace="nowrap"
-        >
-          <FadeChild disable={!measured} delay={400}>
-            {texts[0]}
-          </FadeChild>
-          {br}
-          <FadeChild disable={!measured} delay={500}>
-            {texts[1]}
-          </FadeChild>
-          {br}
-          {texts[2] && (
-            <>
-              <FadeChild disable={!measured} delay={600}>
-                {texts[2]}
-              </FadeChild>
-              {br}
-            </>
-          )}
-          {/* <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
-            <Smaller {...linkProps('/apps#faq')}>{subTexts[screen]}</Smaller>
-          </FadeChild> */}
-        </Paragraph>
+        <View width="100%">
+          <TextFitTitle
+            fontWeight={100}
+            alignSelf="center"
+            transformOrigin="top center"
+            selectable
+            textAlign="center"
+            whiteSpace="nowrap"
+            maxHeight={160}
+          >
+            <FadeChild disable={!measured}>Apps for teams</FadeChild>
+          </TextFitTitle>
 
-        {/* this is just to measure */}
-        <Paragraph
-          className="measure-p"
-          nodeRef={pFit.ref}
-          opacity={0}
-          fontSize={40}
-          position="absolute"
-          whiteSpace="pre"
-          pointerEvents="none"
-        >
-          {longest}
-        </Paragraph>
+          {br}
+
+          <View display="block" minHeight="min-content">
+            <TitleParagraph {...para}>
+              {/* first line */}
+              Build a suite of internal tools in no time.
+            </TitleParagraph>
+            &nbsp;
+            <TitleParagraph {...para}>
+              {/* second line */}
+              Orbit is an easy, all-in-one platform for teams'&nbsp;apps.
+            </TitleParagraph>
+          </View>
+        </View>
       </View>
-    </View>
+    </SectionContentChrome>
   )
 })
 
@@ -157,7 +90,7 @@ const HeadJoin = memo(() => {
       <FadeChild {...fadeAnimations.up} delay={500}>
         <SurfacePassProps elevation={5} {...fontProps.TitleFont}>
           <Theme name="orbitOneDark">
-            <Scale size={useScreenVal(0.8, 1, 1.1)}>
+            <Scale size={useScreenVal(0.9, 1, 1.1)}>
               <Join
                 inputProps={{
                   minWidth: useScreenVal('auto', 300, 300),
@@ -201,7 +134,6 @@ export function HeadSection() {
   const Fade = useFadePage({
     threshold: 0,
   })
-  // const size = useScreenSize()
 
   return (
     <Fade.FadeProvide>
@@ -210,87 +142,20 @@ export function HeadSection() {
         left={useScreenHeightVal(40, 0)}
         opacity={fontsLoaded ? 1 : 0}
         margin={['auto', 0]}
+        height="calc(100% - 120px)"
       >
-        <Space size="xxxl" />
-        <Col nodeRef={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
+        <Space size="xxl" />
+        <View flex={0.5} />
+        <Col flex={6} nodeRef={Fade.ref} alignItems="center" justifyContent="center">
           <HeadContent />
         </Col>
-        <Space size="xxxl" />
-        <View flex={1} />
+        <View flex={1.5} />
         <HeadJoin />
+        <View flex={1.5} />
       </Col>
     </Fade.FadeProvide>
   )
 }
-
-// const SubSection = memo(({ title, children, index, titleColor }: any) => {
-//   return (
-//     <Col flex={1} minWidth={160} maxWidth={220}>
-//       <FadeChild {...fadeUpProps} delay={200 + index * 200}>
-//         <Paragraph
-//           textAlign="center"
-//           textTransform="uppercase"
-//           alpha={0.65}
-//           color={titleColor}
-//           size={1}
-//           fontWeight={600}
-//         >
-//           {title}
-//         </Paragraph>
-//         <Space size="sm" />
-//         <SimpleText textAlign="center" selectable alpha={0.75} size={1} sizeLineHeight={1.1}>
-//           {children}
-//         </SimpleText>
-//       </FadeChild>
-//     </Col>
-//   )
-// })
-
-// {false && (
-//   <Page.Parallax zIndex={1} speed={0}>
-//     <FullScreen userSelect="none" top="auto" transform={{ y: 50 }} zIndex={1000}>
-//       <View
-//         position="absolute"
-//         bottom="12%"
-//         left={0}
-//         right={0}
-//         alignItems="center"
-//         justifyContent="center"
-//         height={160}
-//       >
-//         <View
-//           height={160}
-//           margin={[0, 'auto']}
-//           width={200}
-//           position="relative"
-//           alignItems="center"
-//           justifyContent="center"
-//         >
-//           <Image
-//             position="absolute"
-//             top={0}
-//             transform={{ scale: 0.5 }}
-//             transformOrigin="top center"
-//             src={macbook}
-//           />
-//           <View
-//             className="macbook-shadow"
-//             boxShadow={[[0, 20, 80, 10, '#000']]}
-//             zIndex={-1}
-//             position="absolute"
-//             top={10}
-//             left={0}
-//             right={0}
-//             bottom={10}
-//           />
-//           <RoundButton aria-label="See how Orbit Works" primary="#290C3C" padding={[10, 20]}>
-//             See how Orbit works
-//           </RoundButton>
-//         </View>
-//       </View>
-//     </FullScreen>
-//   </Page.Parallax>
-// )}
 
 // const RoundButton = ({ primary = colors.red, ...props }: ViewProps & { primary?: any }) => (
 //   <View

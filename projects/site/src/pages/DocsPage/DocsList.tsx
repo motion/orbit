@@ -1,19 +1,23 @@
-import { Avatar, Button, List, Scale } from '@o/ui'
+import { Avatar, Button, Col, DateFormat, List, Scale } from '@o/ui'
 import React from 'react'
 
 import { employees } from './fakeData'
 
-const avatar = <Avatar width={28} height={28} src={require('../../public/images/orbit-logo.svg')} />
+const avatar = <Avatar width={32} height={32} src={require('../../public/images/nate.jpg')} />
 
 const rows = employees.map(x => ({
   key: `${x.email}${x.dob}${x.name.first}`,
   title: x.name.first + ' ' + x.name.last,
   subTitle: x.email,
-  icon: x.gender ? 'man' : 'woman',
+  icon: x.gender ? 'man' : 'ok',
   createdAt: x.dob,
   location: x.address.city,
-  iconBefore: true,
-  after: avatar,
+  after: (
+    <Col userSelect="none">
+      <DateFormat date={new Date(x.dob)} />
+    </Col>
+  ),
+  before: avatar,
 }))
 
 const simpleRows = employees.slice(0, 30).map(x => ({
@@ -103,7 +107,7 @@ export let MultipleSelection = (
 )
 
 export let Scaling = (
-  <Scale size={2}>
+  <Scale size={1.5}>
     <List items={rows.slice(0, 20)} height={300} />
   </Scale>
 )

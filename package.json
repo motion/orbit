@@ -36,7 +36,7 @@
     "electron:patch:if-exists": "if [ -d  ~/github/electron/electron-gn/src/out/Release ]; then yarn electron:patch; fi",
     "electron:patch": "cd node_modules/electron && mv dist dist2 || true && ln -s ~/github/electron/electron-gn/src/out/Release dist || true",
     "electron:unpatch": "if [ -f  node_modules/electron/dist2 ]; then rm node_modules/electron/dist && mv node_modules/electron/dist2 node_modules/electron/dist; fi",
-    "start:playground": "cd projects/playground && yarn start",
+    "playground:start": "cd projects/playground && yarn start",
     "fix-permissions": "chmod ug+x app/orbit/_/index.js",
     "site:build": "cd projects/site && yarn build",
     "site:start": "cd projects/site && yarn start",

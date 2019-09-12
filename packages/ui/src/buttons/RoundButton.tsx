@@ -9,7 +9,6 @@ export const RoundButton = (props: ButtonProps) => {
       sizeRadius={3}
       sizePadding={1.2}
       sizeHeight={0.95}
-      fontWeight={300}
       display="inline-flex"
       {...props}
     />

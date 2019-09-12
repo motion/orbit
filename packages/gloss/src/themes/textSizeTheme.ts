@@ -26,8 +26,9 @@ export function getTextSizeTheme(props: TextSizeProps, extraProps?: TextSizeExtr
   const scale = (extraProps && extraProps.scale) || 1
   const size = ((extraProps && extraProps.size) || props.size || 1) * scale
   const sizeLineHeight = (props.sizeLineHeight === true ? 1 : props.sizeLineHeight || 1) * scale
+  const specifiedFontSize = typeof props.fontSize !== 'undefined'
   let fontSize = props.fontSize
-  if (typeof fontSize === 'undefined') {
+  if (!specifiedFontSize) {
     fontSize = size * 14
   }
   let styles: TextStyles | null = null
@@ -40,26 +41,28 @@ export function getTextSizeTheme(props: TextSizeProps, extraProps?: TextSizeExtr
   let lineHeightNum
   // find defaults and round them
   if (typeof fontSize === 'number') {
-    fontSizeNum = Math.round(fontSize)
+    fontSizeNum = fontSize
     styles = styles || {}
     styles.fontSizeNum = fontSizeNum
   }
   if (typeof lineHeight === 'number') {
-    lineHeightNum = Math.round(lineHeight * 10) / 10
+    lineHeightNum = lineHeight
     styles = styles || {}
     styles.lineHeightNum = lineHeightNum
   }
-  if (typeof lineHeightNum === 'number') {
-    const units = props.sizeMethod
-    if (typeof units === 'undefined') {
-      lineHeight = `${lineHeightNum}px`
-      fontSize = `${fontSizeNum}px`
-    } else if (units === 'vw') {
-      lineHeight = `${lineHeightNum / 12}vw`
-      fontSize = `${fontSizeNum / 12}vw`
-    } else {
-      lineHeight = `${lineHeightNum}${units}`
-      fontSize = `${fontSizeNum}${units}`
+  if (!specifiedFontSize) {
+    if (typeof lineHeightNum === 'number') {
+      const units = props.sizeMethod
+      if (typeof units === 'undefined') {
+        lineHeight = `${lineHeightNum}px`
+        fontSize = `${fontSizeNum}px`
+      } else if (units === 'vw') {
+        lineHeight = `${lineHeightNum / 12}vw`
+        fontSize = `${fontSizeNum / 12}vw`
+      } else {
+        lineHeight = `${lineHeightNum}${units}`
+        fontSize = `${fontSizeNum}${units}`
+      }
     }
   }
   if (fontSize) {

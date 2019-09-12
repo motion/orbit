@@ -1,6 +1,6 @@
 import { isColorLike, toColor, toColorString } from '@o/color'
 import { fromEntries, idFn, ImmutableUpdateFn, isDefined, selectDefined } from '@o/utils'
-import { configureCSS, configureGloss } from 'gloss'
+import { configureCSS, configureGloss, GlossDefaultConfig } from 'gloss/config'
 import sum from 'hash-sum'
 import { Context, createContext, FunctionComponent, isValidElement, useState } from 'react'
 
@@ -9,12 +9,18 @@ import { SimpleTextProps } from '../text/SimpleText'
 import { TitleProps } from '../text/Title'
 import { Bit } from './BitLike'
 
+/**
+ * WARNING: dont import gloss directly here, only gloss/config!
+ */
+
 // TODO duplicate of kit definition
 type PersistedStateOptions = {
   persist?: 'off'
 }
 
 export type ConfigureUIProps = {
+  mediaQueries: { [key: string]: string }
+
   // configure a custom icon for all surfaces
   // this could be made generic for any part of the ui kit to override
   useIcon: any
@@ -73,13 +79,12 @@ const hash = x =>
     ),
   )
 
-let hasSet = false
-
 export let Config: ConfigureUIProps = {
   useIcon: null,
   getIconForBit: bit => bit.appIdentifier,
   defaultProps: {},
   customItems: {},
+  mediaQueries: GlossDefaultConfig.mediaQueries,
 
   // used to configure how the UI persists non-temporal state
   useUserState: useState,
@@ -104,10 +109,9 @@ export let Config: ConfigureUIProps = {
   },
 }
 
+// allow multiple configurations because mediaQueries is sensitive to start order
+// so its too hard to thread things around without being able to run multiple
 export function configureUI(opts: Partial<ConfigureUIProps>) {
-  if (hasSet) throw new Error('Only configure once.')
-  hasSet = true
-
   Object.assign(Config, opts)
 
   configureCSS({
@@ -117,6 +121,7 @@ export function configureUI(opts: Partial<ConfigureUIProps>) {
 
   configureGloss({
     toColor,
+    mediaQueries: opts.mediaQueries || Config.mediaQueries,
   })
 }
 

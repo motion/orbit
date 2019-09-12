@@ -29,6 +29,13 @@ if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
 const React = require('react')
 const ReactDOM = require('react-dom')
 
+// run ui mediaQueries config before
+// const { configureUI } = require('@o/ui/config')
+// configureUI({
+//   mediaQueries: {
+//   }
+// })
+
 const { getGlobalConfig, setGlobalConfig } = require('@o/config')
 const { IS_ELECTRON } = require('./constants')
 const { sleep } = require('./helpers')

@@ -77,7 +77,8 @@ export const motionProps = {
   ...motionExtraProps,
 }
 
-const shouldRenderToMotion = (props: any) => props.animate || props.drag || props.layoutTransition
+const shouldRenderToMotion = (props: any) =>
+  'animate' in props || 'drag' in props || 'layoutTransition' in props
 
 // regular view
 export const View = gloss<ViewProps, ViewThemeProps>(Base, {

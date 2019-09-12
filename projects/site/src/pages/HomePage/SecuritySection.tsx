@@ -2,14 +2,13 @@ import { Col, Image, Row, View } from '@o/ui'
 import React from 'react'
 
 import people from '../../assets/illustrations/undraw_server_down_s4lk.svg'
-import { useScreenSize } from '../../hooks/useScreenSize'
+import { MediaSmallHidden } from '../../views/MediaView'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
-import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
+import { SpacedPageContent } from './SpacedPageContent'
 import { TitleTextSub } from './TitleTextSub'
 
 export default function WaistSection() {
-  const screen = useScreenSize()
   return (
     <SpacedPageContent
       padding={[0, '5%']}
@@ -25,7 +24,7 @@ export default function WaistSection() {
       }
     >
       <View flex={1} />
-      <Row flex={1} space={useScreenVal(20, 'xl', 'xxxl')}>
+      <Row flex={1} space="xl">
         <Col flex={3} space="lg">
           <Pitch alpha={1} size="xxs">
             Unlike just about every other platform, Orbit never sends single bit of data outside
@@ -39,11 +38,11 @@ export default function WaistSection() {
           </Pitch>
         </Col>
 
-        {screen !== 'small' && (
+        <MediaSmallHidden>
           <Col flex={2} padding={0}>
             <Image userSelect="none" width="100%" maxWidth={300} margin="auto" src={people} />
           </Col>
-        )}
+        </MediaSmallHidden>
       </Row>
       <View flex={1} />
     </SpacedPageContent>

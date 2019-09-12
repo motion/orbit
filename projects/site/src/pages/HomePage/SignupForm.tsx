@@ -3,12 +3,12 @@ import React, { memo } from 'react'
 
 import { Join } from './Join'
 import { TitleTextSmallCaps } from './TitleTextSmallCaps'
-import { useScreenVal } from './SpacedPageContent'
 
 export const SignupForm = memo((props: ViewProps) => {
   return (
     <View
-      width={useScreenVal('100%', '50%', '50%')}
+      sm-width="100%"
+      width="50%"
       maxWidth={600}
       minWidth={340}
       margin="auto"

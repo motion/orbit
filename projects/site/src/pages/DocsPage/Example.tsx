@@ -63,7 +63,7 @@ export const Example = memo(
       <Col space {...props}>
         {!onlySource && (
           <SubCard
-            minHeight={20}
+            minHeight={100}
             onMouseEnter={() => {
               tm.current = setTimeout(() => setHovered(true), 200)
             }}

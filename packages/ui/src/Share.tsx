@@ -1,5 +1,6 @@
 import { createStoreContext, shallow } from '@o/use-store'
 import { useCallback } from 'react'
+
 import { filterCleanObject } from './helpers/filterCleanObject'
 
 class ShareStore {
@@ -40,7 +41,7 @@ export const useShare = <A extends any[]>(location?: string): [A, (next: A) => v
 }
 
 export const useSetShare = (location?: string): ((next: any[]) => void) => {
-  const store = useShareStore(null, { react: false })
+  const store = useShareStore({ react: false })
   const update = useCallback(next => store.setSelected(location || 'main', next), [store, location])
   return update
 }

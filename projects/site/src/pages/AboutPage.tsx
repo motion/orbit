@@ -6,7 +6,6 @@ import React from 'react'
 import { fontProps } from '../constants'
 import { scrollTo } from '../etc/helpers'
 import { Header } from '../Header'
-import { useScreenSize } from '../hooks/useScreenSize'
 import confettiImage from '../public/images/confetti.jpg'
 import { linkProps } from '../useLink'
 import { FadeChild, useFadePage } from '../views/FadeInView'
@@ -23,8 +22,6 @@ export default mount({
 })
 
 export function AboutPage() {
-  const screen = useScreenSize()
-
   const Fade = useFadePage({
     threshold: 0,
   })
@@ -45,12 +42,7 @@ export function AboutPage() {
 
           <SectionContent flex={1} paddingTop="5%" paddingBottom="5%">
             <Row id="main" alignItems="flex-start">
-              <Col
-                id="sidebar"
-                width={200}
-                pointerEvents="auto"
-                {...screen === 'small' && { width: 0, opacity: 0 }}
-              >
+              <Col id="sidebar" width={200} pointerEvents="auto" sm-width={0} sm-opacity={0}>
                 <Col position="relative" className="sidebar__inner" flex={1}>
                   <FadeChild delay={200}>
                     <Space size={35} />

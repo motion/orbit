@@ -1,8 +1,6 @@
 import { createStoreContext } from '@o/kit'
-import { useDebounce, useGet, useIntersectionObserver, View, ViewProps } from '@o/ui'
+import { useIntersectionObserver, View, ViewProps } from '@o/ui'
 import React, { memo, useCallback, useRef, useState } from 'react'
-
-import { useIsTiny } from '../hooks/useScreenSize'
 
 export type FadeInProps = ViewProps & {
   delay?: number
@@ -94,17 +92,17 @@ export const fadeAnimations = {
   },
 }
 
-const FadeContext = createStoreContext(
+const FadeStoreContext = createStoreContext(
   class FadeContextStore {
     props: {
-      shown: boolean
-      off: boolean
+      disable: boolean
     }
+    shownInternal = false
     get shown() {
-      return this.props.shown
+      return !this.props.disable && this.shownInternal
     }
-    get off() {
-      return this.props.off
+    setShown() {
+      this.shownInternal = true
     }
   },
 )
@@ -128,10 +126,9 @@ export const FadeChild = memo(
     reverse,
     ...rest
   }: FadeChildProps) => {
-    const isTiny = useIsTiny()
-    const fadeContext = FadeContext.useStore()
-    const shown =
-      !disable && !window['recentHMR'] && (fadeContext.shown !== null ? fadeContext.shown : false)
+    // const isTiny = useIsTiny()
+    const fadeStore = FadeStoreContext.useStore()
+    const shown = !disable && (fadeStore.shown !== null ? fadeStore.shown : false)
 
     style = {
       display: 'flex',
@@ -144,29 +141,29 @@ export const FadeChild = memo(
       ;[style, animate] = [animate, style]
     }
 
-    if (isTiny) {
-      return (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'inherit',
-            alignItems: 'inherit',
-            ...style,
-          }}
-          {...rest}
-        >
-          {children}
-        </div>
-      )
-    }
+    // if (isTiny) {
+    //   return (
+    //     <div
+    //       style={{
+    //         display: 'flex',
+    //         flexDirection: 'column',
+    //         justifyContent: 'inherit',
+    //         alignItems: 'inherit',
+    //         ...style,
+    //       }}
+    //       {...rest}
+    //     >
+    //       {children}
+    //     </div>
+    //   )
+    // }
 
     return (
       <View
         data-is="FadeChild"
         style={style}
         animate={shown ? animate : undefined}
-        transition={{ ...transition, delay: (delay || 1) / 1000 }}
+        transition={{ ...(transition as any), delay: (delay || 1) / 1000 }}
         {...rest}
       >
         {children}
@@ -191,13 +188,24 @@ export const useFadePage = ({
   off,
   ...props
 }: UseFadePageProps = {}) => {
-  const intersection = useDebouncedIntersection({ delay, threshold, ...props })
-  const shown = props.shown || intersection.shown || false
-  const getProps = useGet({ shown, off })
+  const ref = useRef(null)
+  const store = FadeStoreContext.useCreateStore({ disable: props.disable }, { react: false })
+  useIntersectionObserver({
+    ref,
+    options: { threshold: threshold, rootMargin: props.intersection },
+    onChange(entries) {
+      // only run once
+      if (store.shownInternal) return
+      const next = entries && entries.some(x => x.isIntersecting)
+      if (next) {
+        store.setShown()
+      }
+    },
+  })
   return {
-    ref: intersection.ref,
-    FadeProvide: useCallback(props => {
-      return <FadeContext.Provider {...props} {...getProps()} />
+    ref,
+    FadeProvide: useCallback(({ children }) => {
+      return <FadeStoreContext.ProvideStore value={store}>{children}</FadeStoreContext.ProvideStore>
     }, []),
   }
 }
@@ -210,32 +218,3 @@ export const FadeParent = memo(({ children, ...props }: UseFadePageProps & { chi
     </Fade.FadeProvide>
   )
 })
-
-export const useDebouncedIntersection = (props: FadeInProps = { delay: 0 }) => {
-  const ref = useRef(null)
-  const [shown, setShown] = useState(false)
-  const setShownSlow = useDebounce(setShown, props.delay)
-  const hasShown = useRef(false)
-
-  useIntersectionObserver({
-    ref,
-    options: { threshold: props.threshold, rootMargin: props.intersection },
-    onChange(entries) {
-      // only run once
-      if (hasShown.current && shown) return
-
-      const isOffscreen = !entries || entries[0].isIntersecting === false
-      if (props.disable || isOffscreen) {
-        setShownSlow(false)
-      } else {
-        hasShown.current = true
-        setShownSlow(true)
-      }
-    },
-  })
-
-  return {
-    ref,
-    shown,
-  }
-}

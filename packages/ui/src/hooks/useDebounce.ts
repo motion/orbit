@@ -1,22 +1,22 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { debounce } from 'lodash'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
-export function useDebounce(fn: Function, amount: number, mountArgs: any[] = []) {
-  const tm = useRef(null)
+// copied from lodash because otherwise webpack-lodash gets mad
+type DebounceSettings = {
+  leading?: boolean
+  maxWait?: number
+  trailing?: boolean
+}
 
-  useEffect(() => {
-    clearTimeout(tm.current)
-    return () => clearTimeout(tm.current)
-  }, [...mountArgs, amount])
-
-  return useCallback(
-    (...args) => {
-      clearTimeout(tm.current)
-      tm.current = setTimeout(() => {
-        return fn(...args)
-      }, amount)
-    },
-    [...mountArgs, amount],
-  )
+export function useDebounce<A extends (...args: any) => any>(
+  fn: A,
+  wait: number,
+  options: DebounceSettings = { leading: true },
+  mountArgs: any[] = [],
+): A {
+  return useMemo(() => {
+    return debounce(fn, wait, options)
+  }, [options, ...mountArgs])
 }
 
 /**

@@ -416,16 +416,15 @@ export class Color {
    */
   inverseLighten(percent: number) {
     const lightness = this.getLuminance()
-    if (lightness === 50) {
+    if (lightness === 0.5) {
       return this
     }
     if (percent < 0) {
       throw new Error('Percent should be a positive value')
     }
-    const isLight = lightness > 50
-    const direction = isLight ? -1 : 1
-    const diff = Math.abs(lightness - 50) * percent
-    return this.lighten(lightness + direction * diff)
+    const isLight = lightness > 0.5
+    const diff = Math.abs(lightness - 0.5) * percent
+    return this[isLight ? 'darken' : 'lighten'](lightness * diff)
   }
 
   /**

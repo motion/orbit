@@ -111,6 +111,9 @@ const createComponentReaction = (
       }
     },
     setValue(next: any) {
+      if (opts && opts.avoidRender) {
+        return
+      }
       if (next === undefined || next === state.current) {
         return
       }

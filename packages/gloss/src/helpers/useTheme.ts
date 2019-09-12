@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 
-import { Config } from '../config'
+import { Config } from '../configureGloss'
 import { ThemeSelect } from '../theme/Theme'
 import { ThemeContext } from '../theme/ThemeContext'
 

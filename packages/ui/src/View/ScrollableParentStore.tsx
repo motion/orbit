@@ -23,7 +23,7 @@ class ScrollableParentStore {
 export const ScrollableParentContext = createStoreContext(ScrollableParentStore)
 
 export const useScrollableParent = () => {
-  return ScrollableParentContext.useStore(undefined, { react: false })
+  return ScrollableParentContext.useStore({ react: false })
 }
 
 /**

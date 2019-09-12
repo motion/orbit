@@ -21,7 +21,7 @@ export * from './blocks/InlineBlock'
 export * from './blocks/InlineFlex'
 export * from './blocks/Row'
 // configureGloss
-export { configureGloss } from './config'
+export { GlossDefaultConfig, configureGloss } from './configureGloss'
 export * from './gloss'
 export { colorToString } from './helpers/helpers'
 export { preProcessTheme } from './helpers/preProcessTheme'
@@ -32,7 +32,7 @@ export { Theme, ThemeSelect } from './theme/Theme'
 export { ThemeContext, ThemeContextType } from './theme/ThemeContext'
 export { ThemeProvide } from './theme/ThemeProvide'
 export * from './themes'
-export { propStyleTheme as propsToStyles } from './themes/propStyleTheme'
-export { SimpleStyleObject } from './types'
+export { propsToStyles } from './themes/propStyleTheme'
+export { GlossConfig, SimpleStyleObject } from './types'
 
 process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()

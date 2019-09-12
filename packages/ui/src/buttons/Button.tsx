@@ -2,6 +2,7 @@ import { isDefined, selectDefined } from '@o/utils'
 import { Theme, useTheme } from 'gloss'
 import React, { memo, useCallback } from 'react'
 
+import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { useUncontrolled } from '../helpers/useUncontrolled'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { useSurfaceProps } from '../Surface'
@@ -61,7 +62,7 @@ const ButtonInner = (props: ButtonProps) => {
   )
 }
 
-export const Button = (buttonProps: ButtonProps) => {
+export const Button = memoIsEqualDeep((buttonProps: ButtonProps) => {
   const props = useSurfaceProps(buttonProps)
   const { alt, theme, subTheme, ...rest } = props
   const controlledProps = useUncontrolled(rest, {
@@ -72,7 +73,7 @@ export const Button = (buttonProps: ButtonProps) => {
       <ButtonInner {...rest} {...controlledProps} />
     </Theme>
   )
-}
+})
 
 Button['defaultProps'] = {
   subTheme: 'button',

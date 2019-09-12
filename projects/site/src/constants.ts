@@ -15,19 +15,49 @@ export const fontProps = {
 }
 
 export const widths = {
-  tiny: 420,
-  small: 700,
-  medium: 860,
-  large: 1150,
+  xs: 420,
+  sm: 700,
+  md: 860,
+  lg: 1150,
 }
 
 export const sectionMaxHeight = 1250
 export const sidePad = 24
 
-export const screen = {
-  smallQuery: `@media (max-width: ${widths.small}px)`,
+export const mediaQueries = {
+  xs: `@media screen and (max-width: ${widths.xs - 1}px)`,
+  sm: `@media screen and (max-width: ${widths.sm}px)`,
+  notsm: `@media screen and (min-width: ${widths.sm + 1}px)`,
+  md: `@media screen and (min-width: ${widths.md}px)`,
+  lg: `@media screen and (min-width: ${widths.lg}px)`,
 }
 
 export const IS_CHROME = navigator.userAgent.toLowerCase().indexOf('chrome') > -1
 
 export const bodyElement = IS_CHROME ? document.documentElement : document.body
+
+const hiddenWhen: { [key in keyof typeof mediaQueries]: Object } = Object.keys(mediaQueries).reduce(
+  (acc, key) => {
+    acc[key] = {
+      [`${key}-display`]: 'none',
+      [`${key}-pointerEvents`]: 'none',
+    }
+    return acc
+  },
+  {},
+) as any
+
+const visibleWhen: { [key in keyof typeof mediaQueries]: Object } = Object.keys(
+  mediaQueries,
+).reduce((acc, key) => {
+  acc[key] = {
+    display: 'none',
+    [`${key}-display`]: 'flex',
+  }
+  return acc
+}, {}) as any
+
+export const mediaStyles = {
+  hiddenWhen,
+  visibleWhen,
+}

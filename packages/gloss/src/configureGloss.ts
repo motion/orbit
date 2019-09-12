@@ -1,12 +1,15 @@
 import { colorToString } from './helpers/helpers'
 import { preProcessTheme } from './helpers/preProcessTheme'
-import { GlossOptions } from './types'
+import { GlossConfig } from './types'
 
-// type Required<T> = T extends object ? { [P in keyof T]-?: NonNullable<T[P]> } : T
-
-export let Config: GlossOptions = {
+export const GlossDefaultConfig: GlossConfig = {
   isColor: color => color && !!color.rgb,
   toColor: colorToString,
+  mediaQueries: {
+    sm: '@media screen and (max-width: 500px)',
+    notsm: '@media screen and (min-width: 501px)',
+    lg: '@media screen and (min-width: 900px)',
+  },
   pseudoAbbreviations: {
     hoverStyle: '&:hover',
     activeStyle: '&:active',
@@ -16,7 +19,9 @@ export let Config: GlossOptions = {
   preProcessTheme: preProcessTheme,
 }
 
-export function configureGloss(options: Partial<GlossOptions>) {
+export let Config = { ...GlossDefaultConfig }
+
+export function configureGloss(options: Partial<GlossConfig>) {
   Object.assign(Config, options)
   Object.freeze(Config) // only allow once
 }

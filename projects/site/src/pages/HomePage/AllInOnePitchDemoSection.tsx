@@ -1,8 +1,8 @@
 import { AnimatePresence, animation, Button, Col, gloss, Image, Row, Space, useIntersectionObserver, View } from '@o/ui'
 import { Box, Inline } from 'gloss'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 
-import { useScreenSize } from '../../hooks/useScreenSize'
+import { mediaStyles } from '../../constants'
 import listScreen from '../../public/images/screen-list.jpg'
 import tableScreen from '../../public/images/screen-table.jpg'
 import { linkProps } from '../../useLink'
@@ -13,7 +13,7 @@ import { PillButton } from '../../views/PillButton'
 import { PillButtonDark } from '../../views/PillButtonDark'
 import { TiltSquircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
-import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
+import { SpacedPageContent } from './SpacedPageContent'
 import { TitleTextSub } from './TitleTextSub'
 
 const SubSection = props => <Flex minWidth={200} alignItems="center" padding {...props} />
@@ -68,8 +68,6 @@ const Flex = gloss(View, {
   position: 'relative',
   flex: 1,
 })
-
-const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 const elements = [
   {
@@ -132,9 +130,7 @@ const swipePower = (offset: number, velocity: number) => {
   return Math.abs(offset) * velocity
 }
 
-export default function NeckSection() {
-  const screen = useScreenSize()
-  const [ref, show] = useIntersectedOnce()
+export default memo(() => {
   const Fade = useFadePage()
 
   const [[page, direction], setPage] = useState([0, 0])
@@ -179,59 +175,59 @@ export default function NeckSection() {
               <PillButton>How</PillButton>
             </FadeChild>
             <FadeChild delay={200}>
-              <TitleText size={useScreenVal('lg', 'xxxl', 'xxxl')}>Make apps, easy.</TitleText>
+              <TitleText size="xxxl" sm-size="20px">
+                Make apps, easy.
+              </TitleText>
             </FadeChild>
-            <TitleTextSub nodeRef={ref as any} margin="auto" minWidth={320}>
-              <FadeChild {...(screen === 'small' ? { display: 'inline' } : null)} delay={350}>
+            <TitleTextSub margin="auto" minWidth={320}>
+              <FadeChild sm-display="inline" delay={350}>
                 &nbsp;Build tools as a team, sharing a rich set of building blocks.&nbsp;
               </FadeChild>
-              <FadeChild {...(screen === 'small' ? { display: 'inline' } : null)} delay={500}>
+              <FadeChild sm-display="inline" delay={500}>
                 Orbit comes with everything you need.
               </FadeChild>
             </TitleTextSub>
           </>
         }
       >
-        <Col maxWidth="100%" margin={[0, 'auto', 0, 0]}>
-          {screen !== 'small' && (
-            <Row space>
-              <SubSection maxWidth="33%">
-                <FadeChild {...fadeAnimations.left} delay={600}>
-                  <PillButtonDark>Import</PillButtonDark>
-                  <Space />
-                  <CenterText>
-                    Plug in the <Inline color="#E01C5A">{elements[index].beforeName}</Inline> data
-                    app with a click.
-                  </CenterText>
-                </FadeChild>
-              </SubSection>
-              <SubSection flex={2} padding={[true, 'xxl']}>
-                <FadeChild delay={600}>
-                  <PillButtonDark>Display</PillButtonDark>
-                  <Space />
-                  <CenterText maxWidth={400} margin={[0, 'auto']}>
-                    Develop using powerful, simple views built on React and Typescript, all without
-                    setting up a build environment.
-                  </CenterText>
-                </FadeChild>
-              </SubSection>
-              <SubSection maxWidth="33%">
-                <FadeChild {...fadeAnimations.right} delay={700}>
-                  <PillButtonDark>Export</PillButtonDark>
-                  <Space />
-                  <CenterText>
-                    Install <Inline color="#F14336">{elements[index].afterName}</Inline>, use it's
-                    simple API to send your results out.
-                  </CenterText>
-                </FadeChild>
-              </SubSection>
-            </Row>
-          )}
+        <Col maxWidth="100%" margin={[0, 'auto']}>
+          <Row space {...mediaStyles.hiddenWhen.notsm}>
+            <SubSection maxWidth="33%">
+              <FadeChild {...fadeAnimations.left} delay={600}>
+                <PillButtonDark>Import</PillButtonDark>
+                <Space />
+                <CenterText>
+                  Plug in the <Inline color="#E01C5A">{elements[index].beforeName}</Inline> data app
+                  with a click.
+                </CenterText>
+              </FadeChild>
+            </SubSection>
+            <SubSection flex={2} padding={[true, 'xxl']}>
+              <FadeChild delay={600}>
+                <PillButtonDark>Display</PillButtonDark>
+                <Space />
+                <CenterText maxWidth={400} margin={[0, 'auto']}>
+                  Develop using powerful, simple views built on React and Typescript, all without
+                  setting up a build environment.
+                </CenterText>
+              </FadeChild>
+            </SubSection>
+            <SubSection maxWidth="33%">
+              <FadeChild {...fadeAnimations.right} delay={700}>
+                <PillButtonDark>Export</PillButtonDark>
+                <Space />
+                <CenterText>
+                  Install <Inline color="#F14336">{elements[index].afterName}</Inline>, use it's
+                  simple API to send your results out.
+                </CenterText>
+              </FadeChild>
+            </SubSection>
+          </Row>
 
           <Space />
 
           <Row space>
-            <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
+            <Flex alignItems="center" sm-display="none">
               <FadeChild {...fadeAnimations.left} delay={800}>
                 <Image
                   userSelect="none"
@@ -262,7 +258,8 @@ export default function NeckSection() {
               flex={2}
               alignItems="center"
               position="relative"
-              margin={useScreenVal([0, '-5%'], 0, 0)}
+              margin={0}
+              sm-margin={[0, '-5%']}
             >
               <FadeChild width="100%" delay={400}>
                 <Button
@@ -381,7 +378,7 @@ export default function NeckSection() {
               </FadeChild>
             </Flex>
 
-            <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
+            <Flex alignItems="center" sm-display="none">
               <FadeChild {...fadeAnimations.right} delay={400}>
                 <Image
                   userSelect="none"
@@ -421,4 +418,4 @@ export default function NeckSection() {
       </SpacedPageContent>
     </Fade.FadeProvide>
   )
-}
+})

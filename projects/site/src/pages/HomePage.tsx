@@ -4,68 +4,34 @@ import React, { lazy, memo, Suspense, useEffect, useRef, useState } from 'react'
 
 import { requestIdleCallback } from '../etc/requestIdle'
 import { Header } from '../Header'
-import { useIsTiny } from '../hooks/useScreenSize'
-import { useSiteStore } from '../SiteStore'
 import { Page } from '../views/Page'
 import { HeadSection } from './HomePage/HeadSection'
 import { LoadingPage } from './LoadingPage'
-import { ParallaxContext } from './ParallaxContext'
 
-const DeploySection = loadOnIntersect(
-  lazy(() =>
-    retry(() => import(/* webpackChunkName: "DeploySection" */ './HomePage/DeploySection')),
-  ),
-)
+const DeploySection = loadOnIntersect(lazy(() => retry(() => import('./HomePage/DeploySection'))))
 const AllInOnePitchDemoSection = loadOnIntersect(
-  lazy(() =>
-    retry(() =>
-      import(
-        /* webpackChunkName: "AllInOnePitchDemoSection" */ './HomePage/AllInOnePitchDemoSection'
-      ),
-    ),
-  ),
+  lazy(() => retry(() => import('./HomePage/AllInOnePitchDemoSection'))),
 )
 const DataAppKitFeaturesSection = loadOnIntersect(
-  lazy(() =>
-    retry(() =>
-      import(
-        /* webpackChunkName: "DataAppKitFeaturesSection" */ './HomePage/DataAppKitFeaturesSection'
-      ),
-    ),
-  ),
+  lazy(() => retry(() => import('./HomePage/DataAppKitFeaturesSection'))),
 )
-const FooterSection = loadOnIntersect(
-  lazy(() =>
-    retry(() => import(/* webpackChunkName: "FooterSection" */ './HomePage/FooterSection')),
-  ),
+const FeaturesSection = loadOnIntersect(
+  lazy(() => retry(() => import('./HomePage/FeaturesSection'))),
 )
+const FooterSection = loadOnIntersect(lazy(() => retry(() => import('./HomePage/FooterSection'))))
 const MissionMottoSection = loadOnIntersect(
-  lazy(() =>
-    retry(() =>
-      import(/* webpackChunkName: "MissionMottoSection" */ './HomePage/MissionMottoSection'),
-    ),
-  ),
+  lazy(() => retry(() => import('./HomePage/MissionMottoSection'))),
 )
 const SecuritySection = loadOnIntersect(
-  lazy(() =>
-    retry(() => import(/* webpackChunkName: "SecuritySection" */ './HomePage/SecuritySection')),
-  ),
+  lazy(() => retry(() => import('./HomePage/SecuritySection'))),
 )
-const EarlyAccessBetaSection = loadOnIntersect(
-  lazy(() =>
-    retry(() =>
-      import(/* webpackChunkName: "EarlyAccessBetaSection" */ './HomePage/EarlyAccessBetaSection'),
-    ),
-  ),
-)
+// const EarlyAccessBetaSection = loadOnIntersect(
+//   lazy(() => retry(() => import('./HomePage/EarlyAccessBetaSection'))),
+// )
 
 export const HomePage = memo(() => {
-  const siteStore = useSiteStore()
-  const [parallax, setParallax] = useState(null)
-  const isTiny = useIsTiny()
-
   return (
-    <ParallaxContext.PassProps value={parallax}>
+    <>
       <LoadingPage />
       <Header />
       <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
@@ -78,25 +44,25 @@ export const HomePage = memo(() => {
         <Page>
           <DeploySection />
         </Page>
-        <Page pages={2}>
+        <Page pages={0.75}>
           <DataAppKitFeaturesSection />
         </Page>
         <Page>
-          <EarlyAccessBetaSection />
+          <FeaturesSection />
         </Page>
-        <Page>
+        <Page pages={0.75}>
           <SecuritySection />
         </Page>
-        <Page>
+        <Page pages={0.75}>
           <MissionMottoSection />
         </Page>
-        <Page>
+        <Page pages={0.75}>
           <Theme name="home">
             <FooterSection hideJoin />
           </Theme>
         </Page>
       </main>
-    </ParallaxContext.PassProps>
+    </>
   )
 })
 

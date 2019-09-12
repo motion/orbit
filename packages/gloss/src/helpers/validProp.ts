@@ -184,4 +184,4 @@ export const ValidProps = mergedProps.reduce((acc, cur) => {
 }, {})
 
 export const validPropLoose = (name: string) =>
-  name.includes('data-') || name.includes('x-') || name.includes('aria-')
+  name.indexOf('data-') > -1 || name.indexOf('x-') > -1 || name.indexOf('aria-') > -1

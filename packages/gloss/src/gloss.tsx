@@ -2,7 +2,7 @@ import { CSSPropertySet, CSSPropertySetLoose, cssString, styleToClassName, Theme
 import { isEqual } from '@o/fast-compare'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
-import { Config } from './config'
+import { Config } from './configureGloss'
 import { useTheme } from './helpers/useTheme'
 import { validPropLoose, ValidProps } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
@@ -44,7 +44,7 @@ export type ThemeFn<Props = any> = (
   previous?: CSSPropertySetLoose | null,
 ) => CSSPropertySetLoose | undefined | null
 
-export type GlossConfig<Props> = {
+export type GlossViewOpts<Props> = {
   displayName?: string
   ignoreAttrs?: { [key: string]: boolean }
   defaultProps?: Partial<Props>
@@ -59,7 +59,7 @@ type GlossInternalConfig = {
   targetElement: any
   styles: any
   conditionalStyles: Object
-  config: GlossConfig<any> | null
+  config: GlossViewOpts<any> | null
 }
 
 type GlossInternals<Props> = {
@@ -83,7 +83,7 @@ export interface GlossView<RawProps, ThemeProps = RawProps, Props = GlossProps<R
   // extra:
   ignoreAttrs?: { [key: string]: boolean }
   theme: (...themeFns: ThemeFn<ThemeProps>[]) => GlossView<RawProps>
-  withConfig: (config: GlossConfig<Props>) => GlossView<RawProps>
+  withConfig: (config: GlossViewOpts<Props>) => GlossView<RawProps>
   internal: GlossInternals<Props>
 }
 
@@ -101,19 +101,24 @@ const whiteSpaceRegex = /[\s]+/g
  */
 const shouldUpdateMap = new WeakMap<object, boolean>()
 function glossIsEqual(a: any, b: any) {
+  return false
   let shouldUpdate = false
   let shouldUpdateInner = false
-  if (Object.keys(a).length !== Object.keys(b).length) {
-    shouldUpdate = true
-    shouldUpdateInner = true
-  } else {
-    for (const key in b) {
-      const bVal = b[key]
-      if (isValidElement(bVal)) {
-        shouldUpdate = true
-        continue
-      }
-      if (!isEqual(a[key], bVal)) {
+  for (const key in b) {
+    const bVal = b[key]
+    if (isValidElement(bVal)) {
+      shouldUpdate = true
+      continue
+    }
+    if (!isEqual(a[key], bVal)) {
+      shouldUpdate = true
+      shouldUpdateInner = true
+    }
+  }
+  // ensure we didnt remove/add keys
+  if (!shouldUpdate) {
+    for (const key in a) {
+      if (!(key in b)) {
         shouldUpdate = true
         shouldUpdateInner = true
       }
@@ -140,18 +145,11 @@ export function gloss<Props = any, ThemeProps = Props>(
 
   let target: any = a || 'div'
   let rawStyles = b
-  let ignoreAttrs: Object
   const hasGlossyParent = !!target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+  let ignoreAttrs: Object = (hasGlossyParent && target.ignoreAttrs) || baseIgnoreAttrs
   const targetConfig: GlossInternalConfig | null = hasGlossyParent
     ? target.internal.getConfig()
     : null
-
-  setTimeout(() => {
-    if (!ignoreAttrs) {
-      ignoreAttrs =
-        ThemedView.ignoreAttrs || (hasGlossyParent && target.ignoreAttrs) || baseIgnoreAttrs
-    }
-  }, 0)
 
   // shorthand: gloss({ ... })
   if (
@@ -178,11 +176,11 @@ export function gloss<Props = any, ThemeProps = Props>(
   let staticClasses: string[] | null = null
 
   // this elements helpers
-  let ogConfig: GlossConfig<Props> | null = null
-  let config: GlossConfig<Props> | null = null
+  let ogConfig: GlossViewOpts<Props> | null = null
+  let config: GlossViewOpts<Props> | null = null
 
   let hasCompiled = false
-  let getEl: GlossConfig<Props>['getElement'] | null = null
+  let getEl: GlossViewOpts<Props>['getElement'] | null = null
 
   /**
    *
@@ -196,14 +194,30 @@ export function gloss<Props = any, ThemeProps = Props>(
     if (!hasCompiled) {
       hasCompiled = true
       themeFn = compileTheme(ThemedView)
-      staticClasses = addStyles(Styles.styles, ThemedView.displayName, targetElementName)
+      staticClasses = addStyles(Styles.styles, ThemedView.displayName)
       config = getCompiledConfig(ThemedView, ogConfig)
       getEl = config.getElement
     }
 
     const theme = useTheme()
     const dynClasses = useRef<Set<string> | null>(null)
-    const lastProps = useRef<any>()
+    const last = useRef<{ props: Object; theme: ThemeObject }>()
+
+    // for smarter update tracking
+    let shouldAvoidStyleUpdate = false
+    if (!last.current) {
+      last.current = {
+        props,
+        theme,
+      }
+    } else {
+      // ensure update on theme change
+      if (last.current.theme !== theme) {
+        last.current.theme = theme
+      } else {
+        shouldAvoidStyleUpdate = shouldUpdateMap.get(props) === false
+      }
+    }
 
     // unmount
     useEffect(() => {
@@ -222,13 +236,11 @@ export function gloss<Props = any, ThemeProps = Props>(
       element = getEl(props)
     }
 
-    /**
-     * Optimization: only update if non-elements changed
-     */
-    if (shouldUpdateMap.get(props) === false && lastProps.current) {
+    // Optimization: only update if non-elements changed
+    if (shouldAvoidStyleUpdate) {
       // because hooks can run in theme, be sure to run them
-      if (theme && themeFn) themeFn(props, theme)
-      return createElement(element, lastProps.current, props.children)
+      theme && themeFn && themeFn(props, theme)
+      return createElement(element, last.current.props, props.children)
     }
 
     const dynClassNames = addDynamicStyles(
@@ -239,7 +251,6 @@ export function gloss<Props = any, ThemeProps = Props>(
       props,
       themeFn,
       theme,
-      targetElementName,
     )
 
     dynClasses.current = dynClassNames
@@ -285,7 +296,8 @@ export function gloss<Props = any, ThemeProps = Props>(
     }
 
     if (process.env.NODE_ENV === 'development') {
-      if (props['debug']) {
+      // @ts-ignore
+      if (props.debug) {
         console.log(
           'styles\n',
           finalProps.className
@@ -300,7 +312,7 @@ export function gloss<Props = any, ThemeProps = Props>(
       }
     }
 
-    lastProps.current = finalProps
+    last.current.props = finalProps
     return createElement(element, finalProps, props.children)
   }
 
@@ -369,9 +381,9 @@ function createGlossView<Props>(GlossView: any, config) {
 
 // keeps priority of hover/active/focus as expected
 const psuedoScore = (x: string) => {
-  const hasFocus = x.includes('&:focus') ? 1 : 0
-  const hasHover = x.includes('&:hover') ? 2 : 0
-  const hasActive = x.includes('&:active') ? 3 : 0
+  const hasFocus = x.indexOf('&:focus') > -1 ? 1 : 0
+  const hasHover = x.indexOf('&:hover') > -1 ? 2 : 0
+  const hasActive = x.indexOf('&:active') > -1 ? 3 : 0
   return hasActive + hasHover + hasFocus
 }
 
@@ -381,7 +393,6 @@ const pseudoSort = (a: string, b: string) => (psuedoScore(a) > psuedoScore(b) ? 
 function addStyles(
   styles: any,
   displayName?: string,
-  tagName?: string,
   prevClassNames?: Set<string> | null,
   moreSpecific?: boolean,
 ) {
@@ -398,7 +409,7 @@ function addStyles(
     // add the stylesheets and classNames
     // TODO could do a simple "diff" so that fast-changing styles only change the "changing" props
     // it would likely help things like when you animate based on mousemove, may be slower in default case
-    const className = addRules(displayName, rules, key, tagName, moreSpecific)
+    const className = addRules(displayName, rules, key, moreSpecific)
     classNames = classNames || []
     classNames.push(className)
 
@@ -438,7 +449,6 @@ function addDynamicStyles(
   props: CSSPropertySet,
   themeFn?: ThemeFn | null,
   theme?: ThemeObject,
-  tagName?: string,
 ) {
   const dynStyles = {}
   let classNames = new Set<string>()
@@ -487,7 +497,7 @@ function addDynamicStyles(
   }
 
   // add dyn styles
-  const dynClassNames = addStyles(dynStyles, displayName, tagName, prevClassNames, true)
+  const dynClassNames = addStyles(dynStyles, displayName, prevClassNames, true)
   if (dynClassNames) {
     for (const cn of dynClassNames) {
       classNames.add(cn)
@@ -517,12 +527,15 @@ const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
 //  BUT its also used nested! See themeFn => mergePropStyles
 //  likely can be refactored, but just need to study it a bit before you do
 //
+let mediaQueries
 function mergeStyles(
   id: string,
   baseStyles: Object,
   nextStyles?: CSSPropertySet | null,
   overwrite?: boolean,
 ): Object | undefined {
+  // this is just for the conditional prop styles
+  mediaQueries = mediaQueries || Config.mediaQueries
   let propStyles
   for (const key in nextStyles) {
     // dont overwrite as we go down
@@ -540,39 +553,58 @@ function mergeStyles(
         }
       }
     } else {
-      let subStyles = nextStyles[key]
-      // catch invalid/falsy
-      if (!subStyles || typeof subStyles !== 'object') {
-        continue
+      let isMediaQuery = false
+      if (mediaQueries) {
+        // media queries after subStyle, subStyle could have a - in it
+        const index = key.indexOf('-')
+        if (index > -1) {
+          const mediaName = key.slice(0, index)
+          const mediaSelector = mediaQueries[mediaName]
+          if (mediaSelector) {
+            const styleKey = key.slice(index + 1)
+            baseStyles[mediaSelector] = baseStyles[mediaSelector] || {}
+            baseStyles[mediaSelector][styleKey] = nextStyles[key]
+            isMediaQuery = true
+          }
+        }
       }
-      // propStyles
-      //   definition: gloss({ isTall: { height: '100%' } })
-      //   usage: <Component isTall />
 
-      propStyles = propStyles || {}
-      propStyles[key] = {}
+      if (!isMediaQuery) {
+        let subStyles = nextStyles[key]
+        // catch invalid/falsy
+        if (!subStyles || typeof subStyles !== 'object') {
+          continue
+        }
+        // propStyles
+        //   definition: gloss({ isTall: { height: '100%' } })
+        //   usage: <Component isTall />
 
-      // they can nest (media queries/psuedoes), split it out, eg:
-      //  gloss({
-      //    isTall: {
-      //      '&:before': {}
-      //    }
-      //  })
-      for (const sKey in subStyles) {
-        // key = isTall
-        // sKey = &:before
-        if (isSubStyle(sKey)) {
-          // keep all sub-styles on their key
-          propStyles[key] = propStyles[key] || {}
-          propStyles[key][sKey] = subStyles[sKey]
-        } else {
-          // we put base styles here, see 'base' check above
-          propStyles[key].base = propStyles[key].base || {}
-          propStyles[key].base[sKey] = subStyles[sKey]
+        propStyles = propStyles || {}
+        propStyles[key] = {}
+
+        // they can nest (media queries/psuedoes), split it out, eg:
+        //  gloss({
+        //    isTall: {
+        //      '&:before': {}
+        //    }
+        //  })
+        for (const sKey in subStyles) {
+          // key = isTall
+          // sKey = &:before
+          if (isSubStyle(sKey)) {
+            // keep all sub-styles on their key
+            propStyles[key] = propStyles[key] || {}
+            propStyles[key][sKey] = subStyles[sKey]
+          } else {
+            // we put base styles here, see 'base' check above
+            propStyles[key].base = propStyles[key].base || {}
+            propStyles[key].base[sKey] = subStyles[sKey]
+          }
         }
       }
     }
   }
+
   return propStyles
 }
 
@@ -626,9 +658,9 @@ function getAllStyles(
  */
 function getCompiledConfig(
   viewOG: GlossView<any>,
-  config: GlossConfig<any> | null,
-): GlossConfig<any> {
-  const compiledConf: GlossConfig<any> = { ...config }
+  config: GlossViewOpts<any> | null,
+): GlossViewOpts<any> {
+  const compiledConf: GlossViewOpts<any> = { ...config }
   let cur = viewOG
   while (cur) {
     const curConf = cur.internal.getConfig().config
@@ -694,13 +726,7 @@ function compileTheme(viewOG: GlossView<any>) {
 }
 
 // adds rules to stylesheet and returns classname
-function addRules(
-  displayName = '_',
-  rules: BaseRules,
-  namespace: string,
-  tagName?: string,
-  moreSpecific?: boolean,
-) {
+function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSpecific?: boolean) {
   // if these rules have been cached to a className then retrieve it
   const cachedClass = rulesToClass.get(rules)
   if (cachedClass) {
@@ -715,7 +741,7 @@ function addRules(
   // this is the first time we've found this className
   if (!tracker.has(className)) {
     // build up the correct selector, explode on commas to allow multiple selectors
-    const selector = getSelector(className, namespace, tagName)
+    const selector = getSelector(className, namespace)
     // insert the new style text
     tracker.set(className, {
       displayName,
@@ -738,9 +764,10 @@ function addRules(
   return moreSpecific ? `${SPECIFIC_PREFIX}${className}` : className
 }
 // has to return a .s-id and .id selector for use in parents passing down styles
-function getSelector(className: string, namespace: string, tagName: string = '') {
+function getSelector(className: string, namespace: string) {
   if (namespace[0] === '@') {
-    return `${tagName}.${className}, body ${tagName}.${SPECIFIC_PREFIX}${className}`
+    // double specificity hack
+    return `.${className}.${className}, body .${SPECIFIC_PREFIX}${className}.${SPECIFIC_PREFIX}${className}`
   }
   if (namespace.indexOf('&') !== -1) {
     // namespace === '&:hover, &:focus, & > div'

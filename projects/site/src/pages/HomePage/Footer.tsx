@@ -4,13 +4,16 @@ import React from 'react'
 import { Link, LinkProps } from '../../views/LinkProps'
 import { Text } from '../../views/Text'
 import { BottomButton } from './BottomButton'
-import { useScreenVal } from './SpacedPageContent'
 
 export const Footer = () => {
-  const sectionMinWidth = useScreenVal(250, 150, 150)
+  const sectionMinWidth = {
+    'sm-minWidht': 250,
+    minWidth: 150,
+  }
   return (
     <Row
-      flexDirection={useScreenVal('column', 'row', 'row')}
+      sm-flexDirection="column"
+      flexDirection="row"
       flexWrap="wrap"
       flex={8}
       space="lg"
@@ -20,7 +23,7 @@ export const Footer = () => {
       scrollable="y"
       minHeight="min-content"
     >
-      <Col minWidth={sectionMinWidth} flex={1} space="sm">
+      <Col {...sectionMinWidth} flex={1} space="sm">
         <SmallTitle alt="lightRed">Orbit</SmallTitle>
         <SmallLink href="/">Home</SmallLink>
         <SmallLink href="/beta">Download</SmallLink>
@@ -31,7 +34,7 @@ export const Footer = () => {
         <SmallLink href="/beta">Beta</SmallLink>
       </Col>
 
-      <Col minWidth={sectionMinWidth} flex={1} space="sm">
+      <Col {...sectionMinWidth} flex={1} space="sm">
         <SmallTitle>Support & Terms</SmallTitle>
         <SmallLink href="mailto:hi@tryorbit.com">Contact us</SmallLink>
         <SmallLink href="/privacy">Privacy Policy</SmallLink>
@@ -39,7 +42,7 @@ export const Footer = () => {
         <SmallLink href="/faq">FAQ</SmallLink>
       </Col>
 
-      <Col minWidth={sectionMinWidth} flex={1} space="sm">
+      <Col {...sectionMinWidth} flex={1} space="sm">
         <SmallTitle>Community</SmallTitle>
         <SmallLink href="/about">About</SmallLink>
         <SmallLink href="/blog">Blog</SmallLink>
@@ -48,7 +51,7 @@ export const Footer = () => {
         <SmallLink href="https://github.com/tryorbit">Github</SmallLink>
       </Col>
 
-      <Col order={useScreenVal(-1, 5, 5)} minWidth={200} flex={2} space="sm">
+      <Col sm-order={-1} minWidth={200} flex={2} space="sm">
         <SmallTitle>Follow Orbit for more updates</SmallTitle>
         <Space size="xs" />
         <Row space>

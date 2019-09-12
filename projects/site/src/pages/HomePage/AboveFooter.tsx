@@ -3,7 +3,6 @@ import React from 'react'
 
 import { LogoVertical } from '../../views/LogoVertical'
 import { SignupForm } from './SignupForm'
-import { useScreenVal } from './SpacedPageContent'
 
 export const AboveFooter = (props: { hideJoin?: boolean }) => {
   const theme = useTheme()
@@ -12,7 +11,7 @@ export const AboveFooter = (props: { hideJoin?: boolean }) => {
       {!props.hideJoin && (
         <>
           <SignupForm width="80%" background={theme.backgroundStrong} borderRadius={20} />
-          <View flex={useScreenVal(1, 3, 4)} />
+          <View sm-flex="1" flex="3" lg-flex="4" />
         </>
       )}
       <Space size={75} />

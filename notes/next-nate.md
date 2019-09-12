@@ -1,3 +1,13 @@
+Technical todos:
+
+- fix toggle into dev mode regression
+- get startup time down
+- get clean workspace build better
+- handle deleting apps, adding apps better
+- handle errors in dev mode
+- show build status messages better
+
+
 The plan from jun for Sep:
 
 "Have everything ready for beta"
@@ -50,11 +60,8 @@ Detailed September Plan:
 
 - [ ] Last Features to tie it all together?
   - [ ] Should I do anything more????
-  - [ ] If so, only to actually make the demo apps great
-    - [ ] Having a floating "selection" may be it:
-      - [ ] Simple CardStack that shows what's selected
-      - [ ] Esc/close button to clear it
-      - [ ] Finish drag/drop + with wysiwig
+  1. Floating "selection" may be it.
+  2. "Move Data" modal, see block below
 
 - [ ] Demo apps that would be compelling:
   - [ ] StackOverflow Clone
@@ -62,6 +69,28 @@ Detailed September Plan:
   - [ ] Some sort of data browsing/plugin app:
     - [ ] Database browser could be useful
     - [ ] GraphQL usage would be helpful
+
+
+----------
+
+MOVING DATA
+
+This is an umbrella for "how to move things around easily".
+
+I think a modal would work well, where in any context you could bring it up.
+
+Imagine an almost automator/shortcuts(ios) style multi-pane thing
+
+Either select items or define query
+  > preview those itmes
+  > add a transform
+    > tranform can select fields, apply code to them
+  > add an output
+    > output can send it to a data-app
+    > can select fields, apply code
+
+
+------------
 
 
 GO TO PROD / DEV TASKS
@@ -243,3 +272,5 @@ small:
     - do a few smart props that we know are usually POJOs
 
 - https://github.com/humandx/slate-automerge
+
+- monobase for the individual docs sites...

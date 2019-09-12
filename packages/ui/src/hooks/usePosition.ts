@@ -15,6 +15,9 @@ export type Rect = {
 }
 
 export function getRect(o: any): Rect {
+  if (!('width' in o)) {
+    debugger
+  }
   return { width: +o.width, height: +o.height, left: +o.left, top: +o.top }
 }
 
@@ -24,6 +27,7 @@ type UsePositionProps = {
   onChange?: ((change: Rect | null) => any) | null
   preventMeasure?: boolean
   debounce?: number
+  onlyWhenIntersecting?: boolean
 }
 
 export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
@@ -31,18 +35,27 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
   const [pos, setPos] = useState<Rect | null>(null)
   const onChange = useGet(props.onChange || setPos)
   const disable = useVisibility() === false
-  const intersected = useRef(false)
-  const getState = useGet({ disable, preventMeasure })
+  const state = useRef({
+    intersected: false,
+    lastPos: null,
+  })
+  const getStatus = useGet({ disable, preventMeasure })
   const measureImmediate = useCallback(
     (nodeRect?) => {
-      const state = getState()
-      if (state.preventMeasure) return
-      const set = onChange()
+      const status = getStatus()
+      if (status.preventMeasure) return
+      const changeFn = onChange()
+      const set = next => {
+        state.current.lastPos = next
+        changeFn(next)
+      }
       const node = ref.current
       if (!set) return
       if (!node) return
-      if (!intersected.current) return
-      if (state.disable) return
+      if (props.onlyWhenIntersecting) {
+        if (!state.current.intersected) return
+      }
+      if (status.disable) return
       if (!nodeRect) {
         if (node) {
           if (node.offsetWidth === 0 && node.offsetHeight === 0) {
@@ -50,9 +63,6 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
             return
           }
           const { top, left, width, height } = node.getBoundingClientRect()
-          if (isNaN(top)) {
-            debugger
-          }
           set({ top, left, width, height })
         } else {
           set(null)
@@ -64,9 +74,6 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
           ? node.getBoundingClientRect()
           : nodeRect || node.getBoundingClientRect()
       const rect = getRect(bounds)
-      if (isNaN(rect.top)) {
-        debugger
-      }
       set(rect)
     },
     [ref],
@@ -77,20 +84,22 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
     ref.current ? ref.current.offsetHeight : 0,
   ])
 
-  const measure = useDebounce(measureImmediate, debounce)
+  const measure = useDebounce(measureImmediate, debounce, { trailing: true })
 
   useResizeObserver({
     ref,
-    onChange: entries => measure(entries[0].contentRect),
+    onChange: entries => {
+      const rect = getRect(entries[0].contentRect)
+      // bugfix stupid thing
+      const lastPos = state.current.lastPos
+      if (lastPos) {
+        if (rect.top === 0) rect.top = lastPos.top || 0
+        if (rect.left === 0) rect.left = lastPos.top || 0
+      }
+      measure(rect)
+    },
     disable,
   })
-
-  useEffect(() => {
-    window.addEventListener('resize', () => measure())
-    return () => {
-      window.removeEventListener('resize', () => measure())
-    }
-  }, [])
 
   useMutationObserver({
     disable,
@@ -102,13 +111,14 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
   useIntersectionObserver({
     disable,
     ref,
+    options: {
+      threshold: 0,
+    },
     onChange: entries => {
       if (!entries) return
       const [entry] = entries
-      if (entry.isIntersecting) {
-        intersected.current = true
-        measure(entry.boundingClientRect)
-      }
+      state.current.intersected = entry.isIntersecting
+      measure(entry.boundingClientRect)
     },
   })
 

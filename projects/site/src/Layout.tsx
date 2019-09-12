@@ -19,7 +19,7 @@ const transition = 'transform ease 300ms'
 let updateLayout = null
 
 export const usePageTheme = () => {
-  const forceUpdate = useForceUpdate()
+  const [_, setNext] = useState()
   const route = useCurrentRoute()
   const curView = route.views.find(x => x && x.type && x.type.theme)
   const key = `theme-${route.url.pathname.split('/')[1] || ''}`
@@ -29,9 +29,13 @@ export const usePageTheme = () => {
     theme,
     useCallback(
       next => {
-        localStorage.setItem(key, next)
-        forceUpdate()
-        updateLayout()
+        setNext(prev => {
+          if (prev !== next) {
+            localStorage.setItem(key, next)
+            updateLayout()
+            return next
+          }
+        })
       },
       [key],
     ),
@@ -45,16 +49,22 @@ const PageLoading = memo(() => {
 
 export const Layout = memo((props: any) => {
   const forceUpdate = useForceUpdate()
+  // ^^^
+  // for some reason literally just having *any* useState/useEffect causes this to render twice on mount.... but not other components
+  // even if its empty and just has a single useForceUpdate
+  // try it, uncomment this and then try with/without forceUpdate:
+  // console.log('rendering layout'); return <div />;
   updateLayout = forceUpdate
-  const siteStore = useSiteStore()
-  const screen = useScreenSize()
+  const siteStore = useSiteStore(undefined, { react: false })
   const sidebarWidth = 300
   const route = useCurrentRoute()
   const [theme] = usePageTheme()
 
-  useEffect(() => {
-    siteStore.screenSize = screen
-  }, [screen])
+  useScreenSize({
+    onChange(size) {
+      siteStore.screenSize = size
+    },
+  })
 
   useEffect(() => {
     if (window.location.hash) {

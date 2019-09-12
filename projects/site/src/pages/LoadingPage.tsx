@@ -49,7 +49,6 @@ function onLoadAllImages() {
 
     function incrementCounter() {
       counter++
-      console.log('count', counter)
       if (counter === len) {
         res()
       }

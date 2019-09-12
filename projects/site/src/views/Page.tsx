@@ -1,20 +1,18 @@
 import { createContextualProps, Parallax, ParallaxViewProps } from '@o/ui'
 import { selectDefined } from '@o/utils'
-import React, { forwardRef } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 
-import { useIsTiny } from '../hooks/useScreenSize'
+import { mediaStyles } from '../constants'
 import { useSiteStore } from '../SiteStore'
 import { SectionContent, SectionContentProps } from './SectionContent'
 
-const { PassProps, useProps } = createContextualProps({
-  offset: 0,
+const { PassProps, useProps } = createContextualProps<SectionContentProps>({
   zIndex: 0,
   overflow: 'visible',
 })
 
 export function Page(props: SectionContentProps) {
   const siteStore = useSiteStore()
-  const isTiny = useIsTiny()
   return (
     <PassProps overflow="visible" zIndex={0} {...props}>
       <Parallax.Container>
@@ -25,10 +23,8 @@ export function Page(props: SectionContentProps) {
           paddingBottom={30}
           {...props}
           flex="none"
-          {...isTiny && {
-            height: 'auto',
-            minHeight: 'auto',
-          }}
+          xs-height="auto"
+          xs-minHeight="auto"
         />
       </Parallax.Container>
     </PassProps>
@@ -37,17 +33,13 @@ export function Page(props: SectionContentProps) {
 
 Page.Parallax = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) => {
   const parallax = useProps()
-  const isTiny = useIsTiny()
-  if (isTiny) {
-    return null
-  }
   return (
     <Parallax.View
+      {...mediaStyles.hiddenWhen.xs}
       speed={0.2}
-      offset={parallax.offset}
       style={{
         pointerEvents: 'none',
-        zIndex: parallax.zIndex + (zIndex || 0) + 1,
+        zIndex: +parallax.zIndex + (+zIndex || 0) + 1,
         overflow: selectDefined(overflow, parallax.overflow),
         ...style,
       }}
@@ -56,18 +48,24 @@ Page.Parallax = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) => {
   )
 }
 
-Page.BackgroundParallax = (props: ParallaxViewProps) => {
-  const { zIndex, offset } = useProps()
+Page.BackgroundParallax = memo((props: ParallaxViewProps) => {
+  const { zIndex } = useProps()
+  const [shown, setShown] = useState()
+  useEffect(() => {
+    setShown(true)
+  }, [])
   return (
     <Page.Parallax
       zIndex={(props.zIndex || 0) + zIndex - 2}
       className="page-background"
+      transition="opacity ease 1500ms"
       position="absolute"
       left="5%"
       right="5%"
       top="2%"
       bottom="2%"
       {...props}
+      opacity={shown ? props.opacity || 1 : 0}
     />
   )
-}
+})

@@ -1,6 +1,7 @@
-import { createStoreContext, useForceUpdate } from '@o/use-store'
-import { useMotionValue, useTransform, useViewportScroll } from 'framer-motion'
-import { useLayoutEffect, useRef } from 'react'
+import { createStoreContext, useReaction } from '@o/use-store'
+import { idFn } from '@o/utils'
+import { useTransform, useViewportScroll } from 'framer-motion'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import React from 'react'
 
 import { useNodeSize } from './hooks/useNodeSize'
@@ -13,14 +14,19 @@ const ParallaxContainerStore = createStoreContext(
     key = 0
     top = 0
     left = 0
-    height = 0
-    width = 0
+    height = 10
+    width = 10
     update(pos: Rect) {
       this.top = pos.top
       this.left = pos.left
       this.height = pos.height
       this.width = pos.width
       this.key = Math.random()
+      this.refresh()
+    }
+    refresh = idFn as any
+    setRefresh(cb: Function) {
+      this.refresh = cb
     }
   },
 )
@@ -30,6 +36,7 @@ export type ParallaxContainerProps = ViewProps
 export function ParallaxContainer(props: ParallaxContainerProps) {
   const ref = React.useRef(null)
   const store = ParallaxContainerStore.useCreateStore()
+
   usePosition({
     ref,
     onChange(pos) {
@@ -37,6 +44,7 @@ export function ParallaxContainer(props: ParallaxContainerProps) {
       store.update(pos)
     },
   })
+
   return (
     <ParallaxContainerStore.ProvideStore value={store}>
       <View {...props} nodeRef={ref} />
@@ -57,32 +65,51 @@ export function ParallaxView({
   ...viewProps
 }: ParallaxViewProps) {
   const ref = useRef(null)
-  const store = ParallaxContainerStore.useStore()
-  const forceUpdate = useForceUpdate()
-  const nodeSize = useNodeSize({
-    ref,
-  })
-  const getKey = () => `${store.key}${nodeSize.height}${nodeSize.width}`
-  const lastKey = useRef(getKey())
-  const emptyMotion = useMotionValue(0)
+  const store = ParallaxContainerStore.useStore({ react: false })
   const { scrollY } = useViewportScroll()
-  const dirVal = store[direction === 'y' ? 'top' : 'left']
+  const dirVal = useReaction(() => store[direction === 'y' ? 'top' : 'left'])
+  const state = useRef({
+    pctHeight: 0,
+    parentSize: 0,
+    nodeSize: { width: 0, height: 0 },
+  })
 
-  let shouldSwap = false
-  const key = getKey()
-  if (lastKey.current !== key) {
-    shouldSwap = true
-    lastKey.current = key
+  const update = () => {
+    const nodeSize = state.current.nodeSize[direction === 'y' ? 'height' : 'width']
+    let pctHeight = offset >= 0 ? (store.height - nodeSize) / store.height : nodeSize / store.height
+    if (pctHeight >= 1) {
+      pctHeight = 0.99
+    } else if (pctHeight < 0) {
+      // we went negative, child bigger than container
+      pctHeight = 0.99
+    }
+    state.current.pctHeight = pctHeight
+    scrollY.set(scrollY.get())
   }
 
-  let pctHeight =
-    offset >= 0 ? (store.height - nodeSize.height) / store.height : nodeSize.height / store.height
+  useNodeSize({
+    ref,
+    throttle: 250,
+    onChange({ width, height }) {
+      console.log('node size', height, store.height)
+      state.current.nodeSize = { width, height }
+      update()
+    },
+  })
 
-  if (pctHeight >= 1) {
-    pctHeight = 0.99
-  }
+  // update based on store changes
+  useReaction(
+    () => {
+      state.current.parentSize = store[direction === 'y' ? 'height' : 'width']
+      update()
+    },
+    {
+      avoidRender: true,
+      name: 'ParallaxView.parentSize',
+    },
+  )
 
-  let val = useTransform(shouldSwap ? emptyMotion : scrollY, [dirVal, dirVal + 1], [0, -1], {
+  let val = useTransform(scrollY, [dirVal, dirVal + 1], [0, -1], {
     clamp: false,
   })
   val = useTransform(val, [0, -1], [0, speed], {
@@ -91,14 +118,8 @@ export function ParallaxView({
 
   val = useTransform(
     val,
-    x => x + offset * pctHeight * store[direction === 'y' ? 'height' : 'width'],
+    x => x + offset * state.current.pctHeight * store[direction === 'y' ? 'height' : 'width'],
   )
-
-  useLayoutEffect(() => {
-    if (shouldSwap) {
-      forceUpdate()
-    }
-  }, [shouldSwap])
 
   return (
     <View

@@ -1,4 +1,4 @@
-import { Col, Image, Row, Space, toColor, View } from '@o/ui'
+import { Col, Image, ParallaxView, Row, Space, toColor } from '@o/ui'
 import React from 'react'
 
 import { fontProps } from '../../constants'
@@ -11,7 +11,7 @@ import { Paragraph } from '../../views/Paragraph'
 import { ParagraphIntro } from '../../views/ParagraphIntro'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
-import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
+import { SpacedPageContent } from './SpacedPageContent'
 
 const Para = props => <Paragraph sizeLineHeight={1.1} size={1.2} alpha={0.72} {...props} />
 
@@ -27,7 +27,6 @@ export default function DeploySection() {
         x="0%"
         scale={1.6}
         background="radial-gradient(circle closest-side, #00A77F, transparent)"
-        debug
       />
 
       {/* big purple bottom left */}
@@ -54,8 +53,11 @@ export default function DeploySection() {
 
       <SpacedPageContent
         nodeRef={Fade.ref}
+        sm-transform={{
+          y: 0,
+        }}
         transform={{
-          y: useScreenVal(0, '-10%', '-10%'),
+          y: '-10%',
         }}
         header={
           <>
@@ -63,7 +65,7 @@ export default function DeploySection() {
               <PillButton>Create</PillButton>
             </FadeChild>
             <FadeChild delay={300}>
-              <TitleText textAlign="center" size={useScreenVal('md', 'xxl', 'xxxl')}>
+              <TitleText textAlign="center" size="xl">
                 Best DX, ever.
               </TitleText>
             </FadeChild>
@@ -74,7 +76,9 @@ export default function DeploySection() {
         <Row space={60} margin={[0, '-180%']}>
           <Col flex={2} alignItems="flex-end" justifyContent="center">
             <FadeChild {...fadeAnimations.left} delay={450}>
-              <View
+              <ParallaxView
+                speed={0.1}
+                offset={-0.5}
                 borderRadius={10}
                 elevation={3}
                 width={400}
@@ -93,7 +97,7 @@ export default function DeploySection() {
                   src={arrow}
                   transform={{ scale: 0.6 }}
                 />
-              </View>
+              </ParallaxView>
             </FadeChild>
           </Col>
 
@@ -133,7 +137,9 @@ export default function DeploySection() {
 
           <Col flex={2} alignItems="flex-start" justifyContent="center">
             <FadeChild {...fadeAnimations.right} delay={800}>
-              <View
+              <ParallaxView
+                speed={-0.1}
+                // offset={0.25}
                 borderRadius={10}
                 elevation={3}
                 width={400}

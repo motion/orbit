@@ -153,7 +153,7 @@ export async function main() {
       //  3. that then needs to validate/update the space.directory if it moved
       //  4. if workers runs too quickly it will run its OrbitAppsManager with the wrong space.directory
       //  the ideal fix would be a big refactor of this whole area taking into account many moving pieces
-      await new Promise(res => setTimeout(res, 4000))
+      await new Promise(res => setTimeout(res, 10_000))
       setupProcess({
         name: 'workers',
         inspectPort: 9008,

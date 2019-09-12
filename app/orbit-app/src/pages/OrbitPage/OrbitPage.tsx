@@ -11,7 +11,7 @@ import { useOm } from '../../om/om'
 import { Stores, useThemeStore } from '../../om/stores'
 import { AppWrapper } from '../../views'
 import MainShortcutHandler from '../../views/MainShortcutHandler'
-import { OrbitApp, whenIdle } from './OrbitApp'
+import { whenIdle } from './OrbitApp'
 import { OrbitAppsCarousel } from './OrbitAppsCarousel'
 import { appsCarouselStore } from './OrbitAppsCarouselStore'
 import { OrbitAppsDrawer } from './OrbitAppsDrawer'
@@ -72,7 +72,6 @@ const OrbitStatusMessages = memo(() => {
 const OrbitPageInner = memo(function OrbitPageInner() {
   const appStore = useStore(App)
   const { actions, state } = useOm()
-  const isOnIsolateApp = state.router.isOnIsolateApp
 
   const shortcutState = useRef({
     closeTab: 0,
@@ -136,30 +135,30 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   /**
    * Warning: memo here, perf sensitive, beware closed variables
    */
-  const params = state.router.curPage.params!
+  // const params = state.router.curPage.params!
   const contentArea = useMemo(() => {
     let element: React.ReactNode = null
-    if (isOnIsolateApp) {
-      element = (
-        <Suspense fallback={null}>
-          <OrbitApp
-            id={+params.id!}
-            identifier={`${params.identifier!}`}
-            shouldRenderApp
-            isVisible
-          />
-        </Suspense>
-      )
-    } else {
-      element = (
-        <Suspense fallback={null}>
-          <OrbitAppsCarousel />
-          <IdleLoad>{() => <OrbitAppsDrawer />}</IdleLoad>
-        </Suspense>
-      )
-    }
+    // if (isOnIsolateApp) {
+    //   element = (
+    //     <Suspense fallback={null}>
+    //       <OrbitApp
+    //         id={+params.id!}
+    //         identifier={`${params.identifier!}`}
+    //         shouldRenderApp
+    //         isVisible
+    //       />
+    //     </Suspense>
+    //   )
+    // } else {
+    element = (
+      <Suspense fallback={null}>
+        <OrbitAppsCarousel />
+        <IdleLoad>{() => <OrbitAppsDrawer />}</IdleLoad>
+      </Suspense>
+    )
+    // }
     return element
-  }, [isOnIsolateApp, params])
+  }, [])
 
   const onOpen = useCallback(rows => {
     if (rows.length) {
@@ -179,10 +178,12 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     })
   }, [innerRef])
 
+  console.warn('render OrbitPage')
+
   return (
     <MainShortcutHandler handlers={handlers}>
-      {!isOnIsolateApp && <OrbitHeader />}
-      {!isOnIsolateApp && <IdleLoad>{() => <OrbitDock />}</IdleLoad>}
+      {!false && <OrbitHeader />}
+      {!false && <IdleLoad>{() => <OrbitDock />}</IdleLoad>}
       <OrbitDraggableOverlay />
       <ListPassProps onOpen={onOpen}>
         <OrbitInnerChrome

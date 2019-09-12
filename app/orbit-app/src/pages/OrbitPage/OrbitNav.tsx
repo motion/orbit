@@ -1,6 +1,6 @@
 import { save } from '@o/bridge'
-import { AppIcon, PaneManagerPane, useActiveAppsSorted, useStore } from '@o/kit'
-import { AppModel } from '@o/models'
+import { AppIcon, useActiveAppsSorted, useStore } from '@o/kit'
+import { AppBit, AppModel } from '@o/models'
 import { SortableContainer, SortableContainerProps, SortableElement } from '@o/react-sortable-hoc'
 import { App } from '@o/stores'
 import { isRightClick, Space, useMemoList } from '@o/ui'
@@ -13,9 +13,11 @@ import { useOm } from '../../om/om'
 import { usePaneManagerStore } from '../../om/stores'
 import { OrbitTab, tabHeight, TabProps } from '../../views/OrbitTab'
 import { appsCarouselStore } from './OrbitAppsCarouselStore'
+import { useHeaderStore } from './OrbitHeader'
 
-const isOnSettings = (pane?: PaneManagerPane) =>
-  pane && (pane.type === 'sources' || pane.type === 'spaces' || pane.type === 'settings')
+const isOnSettings = (app?: AppBit) =>
+  app &&
+  (app.identifier === 'sources' || app.identifier === 'spaces' || app.identifier === 'settings')
 
 const pinWidth = 52
 
@@ -23,8 +25,9 @@ export const OrbitNav = memo(
   forwardRef(function OrbitNav(_: any, ref) {
     const allActiveApps = useActiveAppsSorted()
     const paneManagerStore = usePaneManagerStore()
+    const headerStore = useHeaderStore()
+    const focusedApp = headerStore.paneState.focusedApp
     // use Slow this view doesnt need update quickly
-    const activePane = paneManagerStore.activePaneSlow
     const { isEditing } = useStore(App)
     const { state, actions } = useOm()
     const { panes } = paneManagerStore
@@ -43,9 +46,9 @@ export const OrbitNav = memo(
 
     const items = useMemoList(
       activeAppsSorted,
-      app => [app, `${app.id}` === activePane.id],
+      app => [app, app.id === focusedApp.id],
       app => {
-        const isActive = `${app.id}` === activePane.id
+        const isActive = app.id === focusedApp.id
         // const next = activeAppsSorted[index + 1]
         // const isLast = index === activeAppsSorted.length
         // const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
@@ -89,7 +92,7 @@ export const OrbitNav = memo(
       },
     )
 
-    const onSettings = isOnSettings(activePane)
+    const onSettings = isOnSettings(focusedApp)
     const isOnSetupAppWidth = tabWidthPinned
     const extraButtonsWidth = isOnSetupAppWidth
 

@@ -10,7 +10,7 @@ import { createRef, useRef } from 'react'
 import { sleep } from '../../helpers'
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
-import { appsDrawerStore, queryStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
+import { appsDrawerStore, queryStore, useOrbitStore } from '../../om/stores'
 import { whenIdle } from './OrbitApp'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarouselStore'
 import { orbitDockStore } from './OrbitDock'
@@ -111,6 +111,22 @@ class HeaderStore {
     await whenIdle()
     this.focus()
   }
+
+  paneState = react(
+    () => [appsCarouselStore.focusedApp, appsCarouselStore.zoomedIn],
+    async ([focusedApp, zoomedIn], { sleep }) => {
+      await sleep(20)
+      if (appsCarouselStore.isAnimating) {
+        await sleep(100)
+        await whenIdle()
+      }
+      return { focusedApp, zoomedIn }
+    },
+    {
+      defaultValue: [appsCarouselStore.focusedApp, appsCarouselStore.zoomedIn],
+      priority: UpdatePriority.Idle,
+    },
+  )
 }
 
 export const headerStore = createUsableStore(HeaderStore)
@@ -120,15 +136,8 @@ export const useHeaderStore = headerStore.useStore
 export const OrbitHeader = memo(() => {
   const om = useOm()
   const containerRef = useRef()
-  const [focusedApp, zoomedIn] = useReaction(
-    () => [appsCarouselStore.focusedApp, appsCarouselStore.zoomedIn],
-    _ => _,
-    {
-      defaultValue: [appsCarouselStore.focusedApp, appsCarouselStore.zoomedIn],
-      priority: UpdatePriority.Idle,
-    },
-  )
-  console.warn('render OrbitHeader', focusedApp, zoomedIn)
+  const { focusedApp, zoomedIn } = headerStore.useStore().paneState
+  console.warn('render OrbitHeader', focusedApp)
   const orbitStore = useOrbitStore()
   const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()
@@ -317,10 +326,7 @@ const HomeButton = memo(
   forwardRef(function HomeButton(props: any, ref) {
     const { actions } = useOm()
     const theme = useTheme()
-    const paneManager = usePaneManagerStore()
-    const activePane = paneManager.activePaneSlow
-    const activePaneType = activePane.type
-    const icon = activePaneType
+    const { paneState } = useHeaderStore()
     return (
       <View nodeRef={ref} WebkitAppRegion="no-drag" {...props}>
         <AppIcon
@@ -332,7 +338,7 @@ const HomeButton = memo(
           hoverStyle={{
             opacity: 1,
           }}
-          identifier={icon}
+          identifier={paneState.focusedApp.icon}
           size={28}
           onMouseUp={e => {
             e.stopPropagation()

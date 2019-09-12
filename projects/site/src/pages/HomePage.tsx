@@ -16,6 +16,9 @@ const DeploySection = loadOnIntersect(lazy(() => retry(() => import('./HomePage/
 const DataAppKitFeaturesSection = loadOnIntersect(
   lazy(() => retry(() => import('./HomePage/DataAppKitFeaturesSection'))),
 )
+const FeaturesSection = loadOnIntersect(
+  lazy(() => retry(() => import('./HomePage/FeaturesSection'))),
+)
 const FooterSection = loadOnIntersect(lazy(() => retry(() => import('./HomePage/FooterSection'))))
 const MissionMottoSection = loadOnIntersect(
   lazy(() => retry(() => import('./HomePage/MissionMottoSection'))),
@@ -39,27 +42,26 @@ export const HomePage = memo(() => {
         <Page>
           <AllInOnePitchDemoSection />
         </Page>
-        {true && (
-          <>
-            <Page>
-              <DeploySection />
-            </Page>
-            <Page pages={1.5}>
-              <DataAppKitFeaturesSection />
-            </Page>
-            <Page>
-              <SecuritySection />
-            </Page>
-            <Page>
-              <MissionMottoSection />
-            </Page>
-            <Page>
-              <Theme name="home">
-                <FooterSection hideJoin />
-              </Theme>
-            </Page>
-          </>
-        )}
+        <Page>
+          <DeploySection />
+        </Page>
+        <Page pages={0.75}>
+          <DataAppKitFeaturesSection />
+        </Page>
+        <Page>
+          <FeaturesSection />
+        </Page>
+        <Page pages={0.75}>
+          <SecuritySection />
+        </Page>
+        <Page pages={0.75}>
+          <MissionMottoSection />
+        </Page>
+        <Page pages={0.75}>
+          <Theme name="home">
+            <FooterSection hideJoin />
+          </Theme>
+        </Page>
       </main>
     </>
   )

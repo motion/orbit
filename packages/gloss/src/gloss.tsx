@@ -552,52 +552,59 @@ function mergeStyles(
           baseStyles[key][sKey] = nextStyles[key][sKey]
         }
       }
-    } else if (mediaQueries) {
-      // media queries after subStyle, subStyle could have a - in it
-      const index = key.lastIndexOf('-')
-      if (index > -1) {
-        const mediaName = key.slice(0, index)
-        const mediaSelector = mediaQueries[mediaName]
-        if (mediaSelector) {
-          const styleKey = key.slice(index + 1)
-          baseStyles[mediaSelector] = baseStyles[mediaSelector] || {}
-          baseStyles[mediaSelector][styleKey] = nextStyles[key]
+    } else {
+      let isMediaQuery = false
+      if (mediaQueries) {
+        // media queries after subStyle, subStyle could have a - in it
+        const index = key.lastIndexOf('-')
+        if (index > -1) {
+          const mediaName = key.slice(0, index)
+          const mediaSelector = mediaQueries[mediaName]
+          if (mediaSelector) {
+            const styleKey = key.slice(index + 1)
+            baseStyles[mediaSelector] = baseStyles[mediaSelector] || {}
+            baseStyles[mediaSelector][styleKey] = nextStyles[key]
+            isMediaQuery = true
+          }
         }
       }
-    } else {
-      let subStyles = nextStyles[key]
-      // catch invalid/falsy
-      if (!subStyles || typeof subStyles !== 'object') {
-        continue
-      }
-      // propStyles
-      //   definition: gloss({ isTall: { height: '100%' } })
-      //   usage: <Component isTall />
 
-      propStyles = propStyles || {}
-      propStyles[key] = {}
+      if (!isMediaQuery) {
+        let subStyles = nextStyles[key]
+        // catch invalid/falsy
+        if (!subStyles || typeof subStyles !== 'object') {
+          continue
+        }
+        // propStyles
+        //   definition: gloss({ isTall: { height: '100%' } })
+        //   usage: <Component isTall />
 
-      // they can nest (media queries/psuedoes), split it out, eg:
-      //  gloss({
-      //    isTall: {
-      //      '&:before': {}
-      //    }
-      //  })
-      for (const sKey in subStyles) {
-        // key = isTall
-        // sKey = &:before
-        if (isSubStyle(sKey)) {
-          // keep all sub-styles on their key
-          propStyles[key] = propStyles[key] || {}
-          propStyles[key][sKey] = subStyles[sKey]
-        } else {
-          // we put base styles here, see 'base' check above
-          propStyles[key].base = propStyles[key].base || {}
-          propStyles[key].base[sKey] = subStyles[sKey]
+        propStyles = propStyles || {}
+        propStyles[key] = {}
+
+        // they can nest (media queries/psuedoes), split it out, eg:
+        //  gloss({
+        //    isTall: {
+        //      '&:before': {}
+        //    }
+        //  })
+        for (const sKey in subStyles) {
+          // key = isTall
+          // sKey = &:before
+          if (isSubStyle(sKey)) {
+            // keep all sub-styles on their key
+            propStyles[key] = propStyles[key] || {}
+            propStyles[key][sKey] = subStyles[sKey]
+          } else {
+            // we put base styles here, see 'base' check above
+            propStyles[key].base = propStyles[key].base || {}
+            propStyles[key].base[sKey] = subStyles[sKey]
+          }
         }
       }
     }
   }
+
   return propStyles
 }
 

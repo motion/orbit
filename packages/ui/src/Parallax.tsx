@@ -91,6 +91,7 @@ export function ParallaxView({
     ref,
     throttle: 250,
     onChange({ width, height }) {
+      console.log('node size', height, store.height)
       state.current.nodeSize = { width, height }
       update()
     },

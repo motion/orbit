@@ -1,4 +1,4 @@
-import { Col, Image, Row, Space, toColor, View } from '@o/ui'
+import { Col, Image, ParallaxView, Row, Space, toColor } from '@o/ui'
 import React from 'react'
 
 import { fontProps } from '../../constants'
@@ -76,7 +76,9 @@ export default function DeploySection() {
         <Row space={60} margin={[0, '-180%']}>
           <Col flex={2} alignItems="flex-end" justifyContent="center">
             <FadeChild {...fadeAnimations.left} delay={450}>
-              <View
+              <ParallaxView
+                speed={0.1}
+                offset={-0.5}
                 borderRadius={10}
                 elevation={3}
                 width={400}
@@ -95,7 +97,7 @@ export default function DeploySection() {
                   src={arrow}
                   transform={{ scale: 0.6 }}
                 />
-              </View>
+              </ParallaxView>
             </FadeChild>
           </Col>
 
@@ -135,7 +137,9 @@ export default function DeploySection() {
 
           <Col flex={2} alignItems="flex-start" justifyContent="center">
             <FadeChild {...fadeAnimations.right} delay={800}>
-              <View
+              <ParallaxView
+                speed={-0.1}
+                // offset={0.25}
                 borderRadius={10}
                 elevation={3}
                 width={400}

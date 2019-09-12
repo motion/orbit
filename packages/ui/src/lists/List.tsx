@@ -4,7 +4,6 @@ import React, { forwardRef, useCallback, useContext, useEffect, useImperativeHan
 
 import { Center } from '../Center'
 import { splitCollapseProps } from '../Collapsable'
-import { createContextualProps } from '../helpers/createContextualProps'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { ProvideHighlight } from '../Highlight'
 import { useFilter, UseFilterProps } from '../hooks/useFilter'
@@ -19,6 +18,7 @@ import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
 import { ListItem } from './ListItem'
 import { HandleSelection, ListItemProps, ListItemSimpleProps } from './ListItemViewProps'
+import { PropsContext, useListProps } from './ListPropsContext'
 import { Direction, selectablePropKeys, SelectableProps, SelectableStore, SelectableStoreProvider, useCreateSelectableStore } from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
@@ -68,10 +68,6 @@ function toListItemProps(props?: any): ListItemSimpleProps & { item?: any } {
   }
   return props
 }
-
-const PropsContext = createContextualProps<ListProps>()
-export const ListPassProps = PropsContext.PassProps
-export const useListProps = PropsContext.useProps
 
 const nullFn = () => null
 
@@ -159,7 +155,7 @@ export const List = memoIsEqualDeep(
         if (getVisibility() !== true) {
           return
         }
-        console.log('got shortuct', shortcut)
+        console.log('got shortuct', shortcut, props)
         switch (shortcut) {
           case 'open':
             if (onOpen) {

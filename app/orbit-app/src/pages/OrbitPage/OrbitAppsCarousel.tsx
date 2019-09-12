@@ -1,6 +1,6 @@
 import { AppDefinition, AppIcon, ensure, react, Templates, UpdatePriority, useAppDefinition, useReaction, useStore } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, FullScreen, Geometry, Row, sleep, useDebounce, useDeepEqualState, useNodeSize, useOnMount, useParentNodeSize, useScrollProgress, useTheme, View } from '@o/ui'
+import { Card, CardProps, FullScreen, Geometry, Row, sleep, useDebounce, useDeepEqualState, useNodeSize, useOnMount, useScrollProgress, useTheme, View } from '@o/ui'
 import { MotionValue, useMotionValue } from 'framer-motion'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -26,8 +26,6 @@ export const OrbitAppsCarousel = memo(() => {
   const om = useOm()
   const rowRef = appsCarouselStore.rowRef
   const apps = om.state.apps.activeClientApps
-  const rowSize = useParentNodeSize({ ref: rowRef })
-  const rowWidth = rowSize.width ? rowSize.width * (1 - stackMarginLessPct) : 0
 
   const zoomOut = useMotionValue(1)
   const scrollIn = useScrollProgress({ ref: rowRef })
@@ -37,14 +35,11 @@ export const OrbitAppsCarousel = memo(() => {
   })
 
   useEffect(() => {
-    if (rowWidth) {
-      appsCarouselStore.setProps({
-        apps,
-        rowWidth,
-        zoomOut,
-      })
-    }
-  }, [apps, rowWidth])
+    appsCarouselStore.setProps({
+      apps,
+      zoomOut,
+    })
+  }, [apps])
 
   /**
    * Use this to update state after animations finish
@@ -64,14 +59,19 @@ export const OrbitAppsCarousel = memo(() => {
     },
   )
 
+  const frameRef = useRef<any>()
   const [frameSize, setFrameSize] = useDeepEqualState([0, 0])
   const setFrameSizeDebounce = useDebounce(setFrameSize, 300)
-  const frameRef = useRef<any>()
+
   useNodeSize({
     ref: frameRef,
     throttle: 100,
     onChange({ width, height }) {
       setFrameSizeDebounce([width, height])
+      const rowWidth = width ? width * (1 - stackMarginLessPct) : 0
+      appsCarouselStore.setProps({
+        rowWidth,
+      })
     },
   })
 
@@ -240,11 +240,13 @@ const OrbitAppCard = memo(
             marginRight={`-${stackMarginLessPct * 100}%`}
             width={frameWidth}
             height={frameHeight}
-            padding={borderRadius / 2}
+            // padding={borderRadius / 2}
           >
             <View
-              width={frameWidth + borderRadius}
-              height={frameHeight + borderRadius}
+              width="100%"
+              height="100%"
+              // width={frameWidth + borderRadius}
+              // height={frameHeight + borderRadius}
               animate
               zIndex={geometry.scrollIntersection().transform(x => 1 - Math.abs(x))}
               y={geometry
@@ -254,14 +256,16 @@ const OrbitAppCard = memo(
                 .spring({ damping: 50, stiffness: 500 })}
               rotateY={geometry
                 .scrollIntersection()
-                .transform([-1, 1], [12, -20])
-                .transform(x => (x > 5 ? 5 : x))
+                .transform([-1, 1], [12, -28])
+                .transform(x => (x > -4 ? -4 : x))
                 .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? prev : 0))
                 .spring({ stiffness: 250, damping: 50 })}
               opacity={geometry
                 .scrollIntersection()
                 .mergeTransform([zoomOut], (prev, zoomOut) => {
-                  return zoomOut === 1 ? prev : 1
+                  if (zoomOut) return prev
+                  if (index === appsCarouselStore.focusedIndex) return 1
+                  return -2
                 })
                 .transform([-1, 1], [0, 2.5])}
               scale={geometry
@@ -282,9 +286,9 @@ const OrbitAppCard = memo(
                     return `0%`
                   }
                   if (index > focused) {
-                    return '50%'
+                    return '100%'
                   }
-                  return '-50%'
+                  return '-100%'
                 })
                 .spring({ damping: 50, stiffness: 250 })}
               {...index === 0 && {
@@ -319,8 +323,8 @@ const OrbitAppCard = memo(
                 data-is="OrbitAppCard"
                 nodeRef={cardRef}
                 borderWidth={0}
-                padding={borderRadius * 0.5}
-                left={-borderRadius * 0.5}
+                // padding={borderRadius * 0.5}
+                // left={-borderRadius * 0.5}
                 scrollable
                 height="100%"
                 background={

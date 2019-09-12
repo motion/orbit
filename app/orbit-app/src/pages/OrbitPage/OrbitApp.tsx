@@ -72,6 +72,10 @@ class OrbitAppStore {
       // }
       return `${this.props.id}` === activePaneId
     },
+    {
+      defaultValue: false,
+      log: false,
+    },
   )
 }
 

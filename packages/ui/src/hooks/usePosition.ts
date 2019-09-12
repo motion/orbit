@@ -1,6 +1,7 @@
 import { RefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { useVisibility } from '../Visibility'
+import { useDebounce } from './useDebounce'
 import { useGet } from './useGet'
 import { useIntersectionObserver } from './useIntersectionObserver'
 import { useMutationObserver } from './useMutationObserver'
@@ -83,7 +84,7 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
     ref.current ? ref.current.offsetHeight : 0,
   ])
 
-  const measure = measureImmediate //useDebounce(measureImmediate, debounce)
+  const measure = useDebounce(measureImmediate, debounce, { trailing: true })
 
   useResizeObserver({
     ref,

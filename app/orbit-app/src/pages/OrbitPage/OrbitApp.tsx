@@ -73,6 +73,7 @@ class OrbitAppStore {
       // if (appsDrawerStore.isAnimating) {
       //   await when(() => !appsDrawerStore.isAnimating)
       // }
+      console.log('is active...', `${this.props.id}`, activePaneId)
       return `${this.props.id}` === activePaneId
     },
     {

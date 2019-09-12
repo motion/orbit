@@ -6,6 +6,8 @@ import { createRef } from 'react'
 
 import { om } from '../../om/om'
 
+export const cardSpringProps = { damping: 45, stiffness: 520 }
+
 const createUpdateableSpring = (
   defaultVal: number,
   config?: SpringProps,
@@ -81,7 +83,7 @@ class OrbitAppsCarouselStore {
   controlled = false
 
   // motion/springs
-  scrollOut = createUpdateableSpring(0, { damping: 50, stiffness: 250 })
+  scrollOut = createUpdateableSpring(0, cardSpringProps)
 
   start() {
     this.watchScrollOut()

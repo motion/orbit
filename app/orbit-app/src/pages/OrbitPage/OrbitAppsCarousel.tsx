@@ -7,7 +7,7 @@ import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from '
 import { useOm } from '../../om/om'
 import { useAppsDrawerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
-import { appsCarouselStore, stackMarginLessPct } from './OrbitAppsCarouselStore'
+import { appsCarouselStore, cardSpringProps, stackMarginLessPct } from './OrbitAppsCarouselStore'
 import { OrbitSearchResults } from './OrbitSearchResults'
 
 const updateOnWheel = e => {
@@ -260,13 +260,13 @@ const OrbitAppCard = memo(
                 .useTransform(zoomOut, out => {
                   return out ? 0 : -borderRadius
                 })
-                .spring({ damping: 50, stiffness: 500 })}
+                .spring(cardSpringProps)}
               rotateY={geometry
                 .scrollIntersection()
                 .transform([-1, 1], [12, -28])
                 .transform(x => (x > -4 ? -4 : x))
                 .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? prev : 0))
-                .spring({ stiffness: 250, damping: 50 })}
+                .spring(cardSpringProps)}
               opacity={geometry
                 .scrollIntersection()
                 .mergeTransform([zoomOut], (prev, zoomOut) => {
@@ -282,7 +282,7 @@ const OrbitAppCard = memo(
                   if (intersect >= 0) return 0.6
                   return 0.6 //todo
                 })
-                .spring({ damping: 50, stiffness: 500 })}
+                .spring(cardSpringProps)}
               x={geometry
                 .useTransform(zoomOut, x => {
                   if (x) {
@@ -297,7 +297,7 @@ const OrbitAppCard = memo(
                   }
                   return '-100%'
                 })
-                .spring({ damping: 50, stiffness: 250 })}
+                .spring(cardSpringProps)}
               {...index === 0 && {
                 onUpdate: () => {
                   clearTimeout(tm.current)
@@ -332,9 +332,6 @@ const OrbitAppCard = memo(
                 nodeRef={cardRef}
                 borderWidth={0}
                 paddingTop={borderRadius}
-                transform={{
-                  y: isFocusZoomed ? 0 : -borderRadius / 2,
-                }}
                 scrollable
                 height="100%"
                 background={
@@ -356,7 +353,18 @@ const OrbitAppCard = memo(
                   : {
                       boxShadow: [cardBoxShadow],
                     })}
-                transition="background 300ms ease"
+                // some delay so it happens at "end/beginning"
+                // makes it so it occludes cards behind them better if transparent
+                transition={
+                  isFocusZoomed ? 'background 200ms ease 0ms' : 'background 200ms ease 200ms'
+                }
+                // adjust for our top border
+                innerColProps={{
+                  transition: 'all ease 200ms',
+                  transform: {
+                    y: isFocusZoomed ? 0 : -borderRadius / 2,
+                  },
+                }}
                 {...cardProps}
               >
                 <OrbitApp

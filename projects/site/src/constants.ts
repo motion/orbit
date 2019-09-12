@@ -36,7 +36,7 @@ export const IS_CHROME = navigator.userAgent.toLowerCase().indexOf('chrome') > -
 
 export const bodyElement = IS_CHROME ? document.documentElement : document.body
 
-const hidden: { [key in keyof typeof mediaQueries]: Object } = Object.keys(mediaQueries).reduce(
+const hiddenWhen: { [key in keyof typeof mediaQueries]: Object } = Object.keys(mediaQueries).reduce(
   (acc, key) => {
     acc[key] = {
       [`${key}-display`]: 'none',
@@ -47,6 +47,17 @@ const hidden: { [key in keyof typeof mediaQueries]: Object } = Object.keys(media
   {},
 ) as any
 
+const visibleWhen: { [key in keyof typeof mediaQueries]: Object } = Object.keys(
+  mediaQueries,
+).reduce((acc, key) => {
+  acc[key] = {
+    display: 'none',
+    [`${key}-display`]: 'flex',
+  }
+  return acc
+}, {}) as any
+
 export const mediaStyles = {
-  hidden,
+  hiddenWhen,
+  visibleWhen,
 }

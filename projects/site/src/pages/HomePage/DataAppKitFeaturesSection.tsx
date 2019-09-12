@@ -6,7 +6,7 @@ import orbits from '../../public/images/orbits.svg'
 import { useSiteStore } from '../../SiteStore'
 import { linkProps } from '../../useLink'
 import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'
-import { MediaNotSmall } from '../../views/MediaView'
+import { MediaSmallHidden } from '../../views/MediaView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -52,7 +52,7 @@ export default memo(() => {
       />
 
       <Page.BackgroundParallax
-        {...mediaStyles.hidden.sm}
+        {...mediaStyles.hiddenWhen.sm}
         speed={-0.05}
         zIndex={-2}
         offset={-0.1}
@@ -189,10 +189,10 @@ export default memo(() => {
             <SectionP>
               <SectionIcon name="apps" />
               Apps talk to each other with simple typed APIs. Orbit comes with many data apps.
-              <MediaNotSmall>
+              <MediaSmallHidden>
                 <Space />
                 They can also sync data into a common format to display, share and export.
-              </MediaNotSmall>
+              </MediaSmallHidden>
             </SectionP>
           </SimpleSection>
 
@@ -200,12 +200,12 @@ export default memo(() => {
             <SectionP>
               <SectionIcon name="satellite" />
               The easiest collaboration story. No servers to setup or credentials to share.
-              <MediaNotSmall>
+              <MediaSmallHidden>
                 <>
                   <Space />
                   Press edit and in seconds deploy a rich app to everyone.
                 </>
-              </MediaNotSmall>
+              </MediaSmallHidden>
             </SectionP>
           </SimpleSection>
 
@@ -214,12 +214,12 @@ export default memo(() => {
               <SectionIcon name="shop" />A new platform designed from the ground up to make common
               apps easy to build, using modern TypeScript and an incredible build system designed
               for developer friendliness.
-              <MediaNotSmall>
+              <MediaSmallHidden>
                 <>
                   <Space />
                   Publish in seconds on the app store.
                 </>
-              </MediaNotSmall>
+              </MediaSmallHidden>
             </SectionP>
           </SimpleSection>
 
@@ -227,12 +227,12 @@ export default memo(() => {
             <SectionP>
               <SectionIcon name="widget" />A desktop-class UI kit with views that work together both
               in composition and shared prop types.
-              <MediaNotSmall>
+              <MediaSmallHidden>
                 <>
                   <Space />
                   Layouts, templates, combining views and more.
                 </>
-              </MediaNotSmall>
+              </MediaSmallHidden>
             </SectionP>
           </SimpleSection>
         </Grid>

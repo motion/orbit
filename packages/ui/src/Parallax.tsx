@@ -61,6 +61,7 @@ export function ParallaxView({
   const forceUpdate = useForceUpdate()
   const nodeSize = useNodeSize({
     ref,
+    throttle: 250,
   })
   const getKey = () => `${store.key}${nodeSize.height}${nodeSize.width}`
   const lastKey = useRef(getKey())

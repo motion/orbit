@@ -35,7 +35,7 @@ Page.Parallax = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) => {
   const parallax = useProps()
   return (
     <Parallax.View
-      {...mediaStyles.hidden.xs}
+      {...mediaStyles.hiddenWhen.xs}
       speed={0.2}
       style={{
         pointerEvents: 'none',

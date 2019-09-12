@@ -5,6 +5,7 @@ import React, { memo } from 'react'
 import { fontProps } from '../../constants'
 import { useScreenHeightVal } from '../../hooks/useScreenSize'
 import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'
+import { MediaSmallHidden } from '../../views/MediaView'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContentChrome } from '../../views/SectionContent'
 import { TitleText } from '../../views/TitleText'
@@ -35,7 +36,7 @@ const HeadContent = memo(() => {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const measured = fontsLoaded
   const pFit = useTextFit({ min: 16, updateKey: fontsLoaded })
-  const br = <View className="head-space" sm-height={100} height={50} lg-height={40} />
+  const br = <View className="head-space" sm-height={40} height={50} lg-height={40} />
 
   return (
     <SectionContentChrome>
@@ -64,57 +65,50 @@ const HeadContent = memo(() => {
 
           {br}
 
-          <View position="relative" flex={1} width="90%" maxWidth={800} margin={[0, 'auto']}>
-            <Paragraph
-              {...paragraphProps}
-              tagName="div"
-              height="auto"
-              transformOrigin="top left"
-              margin={[0, 'auto']}
-              textAlign="center"
-              alpha={0.7}
-              lineHeight={pFit.isMeasured ? `${pFit.height}px` : `40px`}
-              style={{
-                ...pFit.style,
-                height: 'auto',
-              }}
-            >
-              <FadeChild disable={!measured} delay={400}>
-                {texts[0]}
-              </FadeChild>
-              {br}
-              <FadeChild disable={!measured} delay={500}>
-                {texts[1]}
-              </FadeChild>
-              {br}
-              {texts[2] && (
-                <>
-                  <FadeChild disable={!measured} delay={600}>
-                    {texts[2]}
-                  </FadeChild>
-                  {br}
-                </>
-              )}
-              {/* <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
+          <MediaSmallHidden>
+            <View position="relative" flex={1} width="90%" maxWidth={800} margin={[0, 'auto']}>
+              <Paragraph
+                {...paragraphProps}
+                tagName="div"
+                height="auto"
+                transformOrigin="top left"
+                margin={[0, 'auto']}
+                textAlign="center"
+                alpha={0.7}
+                lineHeight={pFit.isMeasured ? `${pFit.height}px` : `40px`}
+                style={{
+                  ...pFit.style,
+                  height: 'auto',
+                }}
+              >
+                <FadeChild disable={!measured} delay={400}>
+                  {texts[0]}
+                </FadeChild>
+                {br}
+                <FadeChild disable={!measured} delay={500}>
+                  {texts[1]}
+                </FadeChild>
+                {/* <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
             <Smaller {...linkProps('/apps#faq')}>{subTexts[screen]}</Smaller>
           </FadeChild> */}
-            </Paragraph>
+              </Paragraph>
 
-            {/* this is just to measure */}
-            <Paragraph
-              className="measure-p"
-              nodeRef={pFit.ref}
-              {...paragraphProps}
-              opacity={0}
-              position="absolute"
-              whiteSpace="pre"
-              pointerEvents="none"
-            >
-              {texts[0]}
-              <br />
-              {texts[1]}
-            </Paragraph>
-          </View>
+              {/* this is just to measure */}
+              <Paragraph
+                className="measure-p"
+                nodeRef={pFit.ref}
+                {...paragraphProps}
+                opacity={0}
+                position="absolute"
+                whiteSpace="pre"
+                pointerEvents="none"
+              >
+                {texts[0]}
+                <br />
+                {texts[1]}
+              </Paragraph>
+            </View>
+          </MediaSmallHidden>
         </View>
       </View>
     </SectionContentChrome>

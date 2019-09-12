@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 
 import earth from '../../public/images/earth.jpg'
 import { FadeChild, FadeParent } from '../../views/FadeInView'
-import { MediaNotSmall } from '../../views/MediaView'
+import { MediaSmallHidden } from '../../views/MediaView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -94,7 +94,7 @@ export const AboutSection = memo(() => {
             </FadeChild>
           </Col>
 
-          <MediaNotSmall>
+          <MediaSmallHidden>
             <Col space="md" justifyContent="flex-end">
               <FadeChild delay={dly * 5}>
                 <TitleTextSub textAlign="left" alpha={1} size={1}>
@@ -114,7 +114,7 @@ export const AboutSection = memo(() => {
                 </SpaceGroup>
               </FadeChild>
             </Col>
-          </MediaNotSmall>
+          </MediaSmallHidden>
         </Grid>
 
         <View flex={1} minHeight={80} />

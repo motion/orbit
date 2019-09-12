@@ -2,7 +2,7 @@ import { Col, Image, Row, View } from '@o/ui'
 import React from 'react'
 
 import people from '../../assets/illustrations/undraw_server_down_s4lk.svg'
-import { MediaNotSmall } from '../../views/MediaView'
+import { MediaSmallHidden } from '../../views/MediaView'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
@@ -38,11 +38,11 @@ export default function WaistSection() {
           </Pitch>
         </Col>
 
-        <MediaNotSmall>
+        <MediaSmallHidden>
           <Col flex={2} padding={0}>
             <Image userSelect="none" width="100%" maxWidth={300} margin="auto" src={people} />
           </Col>
-        </MediaNotSmall>
+        </MediaSmallHidden>
       </Row>
       <View flex={1} />
     </SpacedPageContent>

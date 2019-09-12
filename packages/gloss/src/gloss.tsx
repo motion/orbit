@@ -555,20 +555,23 @@ function mergeStyles(
     if (validCSSAttr[key]) {
       // valid regular attr
       baseStyles[id][key] = nextStyles[key]
-    } else if (mediaQueries && (key[2] === '-' || key[3] === '-')) {
-      const len2 = key[2] === '-'
-      const styleKey = len2 ? key.slice(3) : key.slice(4)
-      const mediaName = len2 ? key.slice(0, 2) : key.slice(0, 3)
-      const mediaSelector = mediaQueries[mediaName]
-      if (mediaSelector) {
-        baseStyles[mediaSelector] = baseStyles[mediaSelector] || {}
-        baseStyles[mediaSelector][styleKey] = nextStyles[key]
-      }
     } else if (isSubStyle(key)) {
       for (const sKey in nextStyles[key]) {
         if (overwrite === true || !baseStyles[key] || baseStyles[key][sKey] === undefined) {
           baseStyles[key] = baseStyles[key] || {}
           baseStyles[key][sKey] = nextStyles[key][sKey]
+        }
+      }
+    } else if (mediaQueries) {
+      // media queries after subStyle, subStyle could have a - in it
+      const index = key.lastIndexOf('-')
+      if (index > -1) {
+        const styleKey = key.slice(index + 1)
+        const mediaName = key.slice(0, index)
+        const mediaSelector = mediaQueries[mediaName]
+        if (mediaSelector) {
+          baseStyles[mediaSelector] = baseStyles[mediaSelector] || {}
+          baseStyles[mediaSelector][styleKey] = nextStyles[key]
         }
       }
     } else {

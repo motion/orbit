@@ -100,6 +100,8 @@ export const SizablePane = memo(
         <Interactive
           data-is="SizablePane-Interactive"
           overflow="hidden"
+          // has to be relative for the border
+          position="relative"
           resizable={resizableProp}
           onResize={useCallback((w, h) => setSize(type === 'row' ? w : h), [type])}
           {...props}
@@ -112,7 +114,14 @@ export const SizablePane = memo(
     } else {
       element = (
         // @ts-ignore
-        <View data-is="SizablePane-PaneChrome" overflow="hidden" {...props} style={style}>
+        <View
+          data-is="SizablePane-PaneChrome"
+          // has to be relative for the border
+          position="relative"
+          overflow="hidden"
+          {...props}
+          style={style}
+        >
           {borderElement}
           {childElement}
         </View>

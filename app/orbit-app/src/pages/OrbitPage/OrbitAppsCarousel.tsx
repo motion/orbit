@@ -178,7 +178,7 @@ class AppCardStore {
       if (!zoomedIn) {
         await sleep(800)
       }
-      return false
+      return zoomedIn
       // TODO once we have concurrent we can play with this
       return true
     },

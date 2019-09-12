@@ -155,7 +155,6 @@ export const List = memoIsEqualDeep(
         if (getVisibility() !== true) {
           return
         }
-        console.log('got shortuct', shortcut, props)
         switch (shortcut) {
           case 'open':
             if (onOpen) {

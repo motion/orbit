@@ -3,7 +3,7 @@ import { ClearButton, ThemeContext, useSearch, View } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import React, { memo, useCallback, useState } from 'react'
 
-import { appsDrawerStore, queryStore, useOrbitWindowStore, usePaneManagerStore, useQueryStore } from '../../om/stores'
+import { appsDrawerStore, queryStore, useOrbitWindowStore, useQueryStore } from '../../om/stores'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 import { appsCarouselStore } from './OrbitAppsCarouselStore'
 import { useHeaderStore } from './OrbitHeader'
@@ -79,12 +79,6 @@ const handleKeyDown = async e => {
   }
 }
 
-function useActivePane() {
-  const paneManagerStore = usePaneManagerStore()
-  // we can be a little slower
-  return paneManagerStore.activePaneSlow
-}
-
 export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { fontSize: number }) {
   // separate value here, lets us interface with queryStore/search, + will be useful for concurrent
   const [inputVal, setInputVal] = useState('')
@@ -94,11 +88,10 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { f
   const headerStore = useHeaderStore()
   const { activeTheme } = React.useContext(ThemeContext)
   const [activeSpace] = useActiveSpace()
-  const activePane = useActivePane()
+  const focusedApp = headerStore.paneState.focusedApp
   const placeholder =
-    (activePane &&
-      activeSpace &&
-      (activePane.type === 'sources' ? `Manage ${activeSpace.name}` : activePane.name)) ||
+    (activeSpace &&
+      (focusedApp.identifier === 'sources' ? `Manage ${activeSpace.name}` : focusedApp.name)) ||
     ''
 
   /**

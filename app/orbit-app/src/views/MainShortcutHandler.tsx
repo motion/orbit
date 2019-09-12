@@ -1,8 +1,8 @@
+import { useStoresSimple } from '@o/kit'
 import { App } from '@o/stores'
 import { Direction, GlobalHotKeys, Popovers, useShortcutStore } from '@o/ui'
 import React, { memo, useMemo } from 'react'
 
-import { useStores } from '../hooks/useStores'
 import { useOm } from '../om/om'
 import { appsDrawerStore } from '../om/stores'
 import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarouselStore'
@@ -41,9 +41,11 @@ export default memo(function MainShortcutHandler(props: {
   children?: React.ReactNode
   handlers?: any
 }) {
-  const { queryStore, paneManagerStore } = useStores()
-  const shortcutStore = useShortcutStore()
+  const { queryStore, paneManagerStore } = useStoresSimple()
+  const shortcutStore = useShortcutStore({ react: false })
   const { actions, effects } = useOm()
+
+  console.warn('rendering main shortcut handler')
 
   const handlers = useMemo(() => {
     let res: any = {

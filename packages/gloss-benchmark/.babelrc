@@ -1,3 +1,10 @@
 {
-  "presets": [["@o/babel-preset-motion"]]
+  "presets": [
+    [
+      "@o/babel-preset-motion",
+      {
+        "disable": ["react-refresh/babel"]
+      }
+    ]
+  ]
 }

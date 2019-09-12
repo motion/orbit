@@ -5,7 +5,7 @@ import React, { memo } from 'react'
 import { fontProps } from '../../constants'
 import { useScreenHeightVal } from '../../hooks/useScreenSize'
 import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'
-import { MediaSmallHidden } from '../../views/MediaView'
+import { MediaSmall } from '../../views/MediaView'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContentChrome } from '../../views/SectionContent'
 import { TitleText } from '../../views/TitleText'
@@ -65,50 +65,62 @@ const HeadContent = memo(() => {
 
           {br}
 
-          <MediaSmallHidden>
-            <View position="relative" flex={1} width="90%" maxWidth={800} margin={[0, 'auto']}>
-              <Paragraph
-                {...paragraphProps}
-                tagName="div"
-                height="auto"
-                transformOrigin="top left"
-                margin={[0, 'auto']}
-                textAlign="center"
-                alpha={0.7}
-                lineHeight={pFit.isMeasured ? `${pFit.height}px` : `40px`}
-                style={{
-                  ...pFit.style,
-                  height: 'auto',
-                }}
-              >
-                <FadeChild disable={!measured} delay={400}>
-                  {texts[0]}
-                </FadeChild>
-                {br}
-                <FadeChild disable={!measured} delay={500}>
-                  {texts[1]}
-                </FadeChild>
-                {/* <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
-            <Smaller {...linkProps('/apps#faq')}>{subTexts[screen]}</Smaller>
-          </FadeChild> */}
-              </Paragraph>
-
-              {/* this is just to measure */}
-              <Paragraph
-                className="measure-p"
-                nodeRef={pFit.ref}
-                {...paragraphProps}
-                opacity={0}
-                position="absolute"
-                whiteSpace="pre"
-                pointerEvents="none"
-              >
+          <View
+            sm-visibility="hidden"
+            position="relative"
+            sm-position="absolute"
+            flex={1}
+            width="90%"
+            maxWidth={800}
+            margin={[0, 'auto']}
+          >
+            <Paragraph
+              {...paragraphProps}
+              tagName="div"
+              height="auto"
+              transformOrigin="top left"
+              margin={[0, 'auto']}
+              textAlign="center"
+              alpha={0.7}
+              lineHeight={pFit.isMeasured ? `${pFit.height}px` : `40px`}
+              style={{
+                ...pFit.style,
+                height: 'auto',
+              }}
+            >
+              <FadeChild disable={!measured} delay={400}>
                 {texts[0]}
-                <br />
+              </FadeChild>
+              {br}
+              <FadeChild disable={!measured} delay={500}>
                 {texts[1]}
-              </Paragraph>
-            </View>
-          </MediaSmallHidden>
+              </FadeChild>
+              {/* <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
+          <Smaller {...linkProps('/apps#faq')}>{subTexts[screen]}</Smaller>
+        </FadeChild> */}
+            </Paragraph>
+
+            {/* this is just to measure */}
+            <Paragraph
+              className="measure-p"
+              nodeRef={pFit.ref}
+              {...paragraphProps}
+              opacity={0}
+              position="absolute"
+              whiteSpace="pre"
+              pointerEvents="none"
+            >
+              {texts[0]}
+              <br />
+              {texts[1]}
+            </Paragraph>
+          </View>
+
+          <MediaSmall>
+            <Paragraph fontSize="1.5rem" lineHeight="3rem" alpha={0.7}>
+              {texts.join(' ')}
+            </Paragraph>
+          </MediaSmall>
         </View>
       </View>
     </SectionContentChrome>

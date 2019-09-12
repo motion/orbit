@@ -8,7 +8,7 @@ export function styleVal(val: any, theme: ThemeObject, props?: Object) {
 
 // resolves props into styles for valid css
 
-export function propStyleTheme(props: any, theme: ThemeObject): CSSPropertySet | null {
+export function propsToStyles(props: any, theme: ThemeObject): CSSPropertySet | null {
   let styles: CSSPropertySet | null = null
   // loop over props turning into styles
   for (let key in props) {
@@ -21,6 +21,8 @@ export function propStyleTheme(props: any, theme: ThemeObject): CSSPropertySet |
       }
       continue
     }
+
+    // psuedos
     const abbrev = Config.pseudoAbbreviations ? Config.pseudoAbbreviations[key] : null
     if (abbrev || key[0] === '&') {
       // adding psuedo styles, &:hover, etc
@@ -36,7 +38,12 @@ export function propStyleTheme(props: any, theme: ThemeObject): CSSPropertySet |
         styles = styles || {}
         styles[psuedoKey] = val
       }
-    } else if (key[2] === '-' || key[3] === '-') {
+      continue
+    }
+
+    // media queries
+    if (key === 'data-is') continue // we set this, avoid work
+    if (key.includes('-')) {
       // adding mediaQueries keys
       styles = styles || {}
       styles[key] = styleVal(props[key], theme, props)

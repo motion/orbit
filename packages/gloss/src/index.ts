@@ -32,7 +32,7 @@ export { Theme, ThemeSelect } from './theme/Theme'
 export { ThemeContext, ThemeContextType } from './theme/ThemeContext'
 export { ThemeProvide } from './theme/ThemeProvide'
 export * from './themes'
-export { propStyleTheme as propsToStyles } from './themes/propStyleTheme'
+export { propsToStyles } from './themes/propStyleTheme'
 export { GlossConfig, SimpleStyleObject } from './types'
 
 process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()

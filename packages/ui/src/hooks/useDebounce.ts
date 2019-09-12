@@ -1,5 +1,12 @@
-import { debounce, DebounceSettings } from 'lodash'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { debounce } from 'lodash'
+import { useEffect, useMemo, useRef, useState } from 'react'
+
+// copied from lodash because otherwise webpack-lodash gets mad
+type DebounceSettings = {
+  leading?: boolean
+  maxWait?: number
+  trailing?: boolean
+}
 
 export function useDebounce<A extends (...args: any) => any>(
   fn: A,

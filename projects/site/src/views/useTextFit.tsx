@@ -11,7 +11,7 @@ export type UseTextFitProps = {
 
 export function useTextFit({
   min = 8,
-  throttle = 100,
+  throttle = 250,
   max = 200,
   extraScale = 1,
   updateKey,

@@ -145,18 +145,11 @@ export function gloss<Props = any, ThemeProps = Props>(
 
   let target: any = a || 'div'
   let rawStyles = b
-  let ignoreAttrs: Object
   const hasGlossyParent = !!target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+  let ignoreAttrs: Object = (hasGlossyParent && target.ignoreAttrs) || baseIgnoreAttrs
   const targetConfig: GlossInternalConfig | null = hasGlossyParent
     ? target.internal.getConfig()
     : null
-
-  setTimeout(() => {
-    if (!ignoreAttrs) {
-      ignoreAttrs =
-        ThemedView.ignoreAttrs || (hasGlossyParent && target.ignoreAttrs) || baseIgnoreAttrs
-    }
-  }, 0)
 
   // shorthand: gloss({ ... })
   if (
@@ -201,7 +194,7 @@ export function gloss<Props = any, ThemeProps = Props>(
     if (!hasCompiled) {
       hasCompiled = true
       themeFn = compileTheme(ThemedView)
-      staticClasses = addStyles(Styles.styles, ThemedView.displayName, targetElementName)
+      staticClasses = addStyles(Styles.styles, ThemedView.displayName)
       config = getCompiledConfig(ThemedView, ogConfig)
       getEl = config.getElement
     }
@@ -258,7 +251,6 @@ export function gloss<Props = any, ThemeProps = Props>(
       props,
       themeFn,
       theme,
-      targetElementName,
     )
 
     dynClasses.current = dynClassNames
@@ -401,7 +393,6 @@ const pseudoSort = (a: string, b: string) => (psuedoScore(a) > psuedoScore(b) ? 
 function addStyles(
   styles: any,
   displayName?: string,
-  tagName?: string,
   prevClassNames?: Set<string> | null,
   moreSpecific?: boolean,
 ) {
@@ -418,7 +409,7 @@ function addStyles(
     // add the stylesheets and classNames
     // TODO could do a simple "diff" so that fast-changing styles only change the "changing" props
     // it would likely help things like when you animate based on mousemove, may be slower in default case
-    const className = addRules(displayName, rules, key, tagName, moreSpecific)
+    const className = addRules(displayName, rules, key, moreSpecific)
     classNames = classNames || []
     classNames.push(className)
 
@@ -458,7 +449,6 @@ function addDynamicStyles(
   props: CSSPropertySet,
   themeFn?: ThemeFn | null,
   theme?: ThemeObject,
-  tagName?: string,
 ) {
   const dynStyles = {}
   let classNames = new Set<string>()
@@ -507,7 +497,7 @@ function addDynamicStyles(
   }
 
   // add dyn styles
-  const dynClassNames = addStyles(dynStyles, displayName, tagName, prevClassNames, true)
+  const dynClassNames = addStyles(dynStyles, displayName, prevClassNames, true)
   if (dynClassNames) {
     for (const cn of dynClassNames) {
       classNames.add(cn)
@@ -566,10 +556,10 @@ function mergeStyles(
       // media queries after subStyle, subStyle could have a - in it
       const index = key.lastIndexOf('-')
       if (index > -1) {
-        const styleKey = key.slice(index + 1)
         const mediaName = key.slice(0, index)
         const mediaSelector = mediaQueries[mediaName]
         if (mediaSelector) {
+          const styleKey = key.slice(index + 1)
           baseStyles[mediaSelector] = baseStyles[mediaSelector] || {}
           baseStyles[mediaSelector][styleKey] = nextStyles[key]
         }
@@ -729,13 +719,7 @@ function compileTheme(viewOG: GlossView<any>) {
 }
 
 // adds rules to stylesheet and returns classname
-function addRules(
-  displayName = '_',
-  rules: BaseRules,
-  namespace: string,
-  tagName?: string,
-  moreSpecific?: boolean,
-) {
+function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSpecific?: boolean) {
   // if these rules have been cached to a className then retrieve it
   const cachedClass = rulesToClass.get(rules)
   if (cachedClass) {
@@ -750,7 +734,7 @@ function addRules(
   // this is the first time we've found this className
   if (!tracker.has(className)) {
     // build up the correct selector, explode on commas to allow multiple selectors
-    const selector = getSelector(className, namespace, tagName)
+    const selector = getSelector(className, namespace)
     // insert the new style text
     tracker.set(className, {
       displayName,
@@ -773,9 +757,10 @@ function addRules(
   return moreSpecific ? `${SPECIFIC_PREFIX}${className}` : className
 }
 // has to return a .s-id and .id selector for use in parents passing down styles
-function getSelector(className: string, namespace: string, tagName: string = '') {
+function getSelector(className: string, namespace: string) {
   if (namespace[0] === '@') {
-    return `${tagName}.${className}, body ${tagName}.${SPECIFIC_PREFIX}${className}`
+    // double specificity hack
+    return `.${className}.${className}, body .${SPECIFIC_PREFIX}${className}.${SPECIFIC_PREFIX}${className}`
   }
   if (namespace.indexOf('&') !== -1) {
     // namespace === '&:hover, &:focus, & > div'

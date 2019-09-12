@@ -1,6 +1,6 @@
 import { CSSPropertySetStrict } from '@o/css'
 import { HighlightOptions, highlightText, on } from '@o/utils'
-import { colorTheme, CSSPropertySet, getTextSizeTheme, gloss, propStyleTheme } from 'gloss'
+import { colorTheme, CSSPropertySet, getTextSizeTheme, gloss, propsToStyles } from 'gloss'
 import keycode from 'keycode'
 import * as React from 'react'
 
@@ -337,7 +337,7 @@ const TextBlock = gloss({
   oneLineEllipse: {
     overflow: 'hidden',
   },
-}).theme(propStyleTheme, colorTheme, selectableTheme)
+}).theme(propsToStyles, colorTheme, selectableTheme)
 
 export function selectableTheme(props) {
   return {
@@ -350,7 +350,7 @@ export function selectableTheme(props) {
 const TextEllipse = gloss({
   display: 'inline',
   maxWidth: '100%',
-}).theme(propStyleTheme, ellipseTheme)
+}).theme(propsToStyles, ellipseTheme)
 
 function ellipseTheme({ ellipse, doClamp, maxHeight }) {
   if (ellipse === 1 || ellipse === true)

@@ -1,11 +1,29 @@
-Technical todos:
+Sep 12:
 
-- fix toggle into dev mode regression
-- get startup time down
-- get clean workspace build better
+- make dock apps float next to dock and not come from bottom:
+  - make them "flip" in a bit, centered
+  - keep dock open when they open
+  - move dock a bit right
+  - fix header not getting small enough *use new media query stuff*
+
+- fix some app stuff:
+  - startup time, no rebuild all node apps
+  - fix graphql
+  - improve startup build logic
+  - show a window immediately on startup that shows status of builds
+  - fix dev mode toggle regression
+  - no watch in prod mode plz
+  - fix sorting apps
+
+- dev mode runthrough
+  - test errors/error recovery
+  - improve "retry" button
+  - fix/improve open in vscode (go to app folder)
+  - show better dev status (building spinner in header)
+
 - handle deleting apps, adding apps better
-- handle errors in dev mode
-- show build status messages better
+- get clean workspace build better
+
 
 
 The plan from jun for Sep:
@@ -15,22 +33,6 @@ The plan from jun for Sep:
 - Improved demo flow x2 (apps, bugs, etc)
 - Build to production
 - Website improved with better docs / home text
-
----
-
-1) Am I on track?
-
-Yes, but will need to work really hard on demo apps, and be sure to do docs every day.
-
-2) My daily plan should be?
-
-- A lot of DX initially, to see if we can make myself faster
-- Half day:
-  - stability, performance, "Orbit" high level stuff
-- Quarter day:
-  - apps, focused entirely on demo apps dfeeling good
-- One hour:
-  - website/docs
 
 ---
 

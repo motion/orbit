@@ -51,7 +51,8 @@ export const OrbitAppsCarousel = memo(() => {
   const hidden = useReaction(() => appsCarouselStore.hidden)
   const scrollable = useReaction(
     () => (appsCarouselStore.zoomedIn ? false : 'x'),
-    async (next, { when }) => {
+    async (next, { when, sleep }) => {
+      await sleep(20)
       await when(() => !appsCarouselStore.isAnimating)
       return next
     },

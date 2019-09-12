@@ -16,6 +16,9 @@ root.require.__proxiedRequire = true
 require('isomorphic-fetch')
 require('abortcontroller-polyfill/dist/polyfill-patch-fetch')
 
+// temp fix: see gloss/config.js et all
+process.env.RENDER_TARGET = 'node'
+
 // this is the entry for every process
 
 // @ts-ignore

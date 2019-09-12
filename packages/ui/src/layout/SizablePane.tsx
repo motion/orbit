@@ -113,10 +113,10 @@ export const SizablePane = memo(
       )
     } else {
       element = (
-        // @ts-ignore
         <View
           data-is="SizablePane-PaneChrome"
           // has to be relative for the border
+          // @ts-ignore
           position="relative"
           overflow="hidden"
           {...props}

@@ -98,6 +98,7 @@ export async function getAppsConfig(
     outputDir: baseOutputDir,
     publicPath: '/',
     outputFile: 'base.dll.js',
+    devtool: null,
     output: {
       library: 'base',
     },
@@ -213,6 +214,7 @@ export async function getAppsConfig(
             ignore: ['electron-log', 'configstore'],
             target: 'web',
             hot: true,
+            devtool: null,
             watch,
           },
           extraConfig[name],
@@ -338,6 +340,7 @@ async function getSharedDllParams(params: WebpackParams): Promise<WebpackParams>
     ignore: ['electron-log', 'configstore', 'typeorm'],
     watch: false,
     target: 'web',
+    devtool: null,
     publicPath: '/',
     outputFile: 'shared.dll.js',
     output: {

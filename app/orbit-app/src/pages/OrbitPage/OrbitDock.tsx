@@ -1,12 +1,13 @@
 import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useActiveUser, useReaction, useStore } from '@o/kit'
 import { App } from '@o/stores'
 import { ActiveDraggables, Col, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
-import { Box, FullScreen, gloss, useTheme } from 'gloss'
+import { Box, gloss, useTheme } from 'gloss'
 import { partition } from 'lodash'
 import React, { memo, useContext, useMemo, useRef } from 'react'
 
+import { AppsDrawerStore } from '../../om/AppsDrawerStore'
 import { useOm } from '../../om/om'
-import { appsDrawerStore, paneManagerStore } from '../../om/stores'
+import { appsDrawerStore, paneManagerStore, useAppsDrawerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
 
 type DockOpenState = 'open' | 'closed' | 'pinned'
@@ -18,6 +19,9 @@ class OrbitDockStore {
   nextHovered: { index: number; at: number } | null = null
 
   get isOpen() {
+    if (appsDrawerStore.isOpen) {
+      return true
+    }
     return this.state !== 'closed'
   }
 
@@ -143,7 +147,7 @@ export const OrbitDock = memo(() => {
       top={56}
       nodeRef={nodeRef}
       right={0}
-      padding={[25, 10, 10, 0]}
+      padding={[15, 0, 10, 0]}
       space="lg"
       onMouseEnter={store.hoverEnter}
       onMouseLeave={store.hoverLeave}
@@ -196,62 +200,59 @@ export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
           }}
         />
       ))}
-
-      <FullScreen
-        data-is="DockShadow"
-        top={30}
-        bottom={30}
-        left="50%"
-        right="50%"
-        transform={{
-          x: 50,
-        }}
-        borderRadius={100}
-        boxShadow={[
-          {
-            spread: 30,
-            blur: 40,
-            color: theme.background.isDark() ? [30, 30, 30, 0.68] : [0, 0, 0, 0.25],
-          },
-        ]}
-        zIndex={-1}
-      />
     </Dock>
   )
 }
 
-const dockButtonProps = (index: number, dockStore: OrbitDockStore): Partial<DockButtonProps> => ({
-  onMouseMove: () => {
-    if (appsDrawerStore.isOpen) return
-    // wait for settle
-    if (dockStore.hoveredIndex === -1) {
-      dockStore.hoverEnterButton(index)
-    }
-  },
-  onMouseEnter: () => {
-    if (appsDrawerStore.isOpen) return
-    dockStore.hoverEnterButton(index)
-  },
-  onMouseLeave: () => {
-    dockStore.hoverLeaveButton()
-  },
-  labelProps: {
-    transition: `all ease-out 80ms ${100 - index * 30}ms`,
-    background: [0, 0, 0, 0.65],
-    elevation: 1,
-    opacity: 0,
-    transform: {
-      y: -10,
+const dockButtonProps = (
+  index: number,
+  dockStore: OrbitDockStore,
+  drawerStore: AppsDrawerStore,
+): Partial<DockButtonProps> => {
+  const drawerOpen = drawerStore.isOpen
+  return {
+    onMouseMove: () => {
+      if (appsDrawerStore.isOpen) return
+      // wait for settle
+      if (dockStore.hoveredIndex === -1) {
+        dockStore.hoverEnterButton(index)
+      }
     },
-    ...(dockStore.isOpen && {
-      transition: `all ease-out 400ms ${230 + index * 30}ms`,
-      opacity: 1,
+    onMouseEnter: () => {
+      if (appsDrawerStore.isOpen) return
+      dockStore.hoverEnterButton(index)
+    },
+    onMouseLeave: () => {
+      dockStore.hoverLeaveButton()
+    },
+    labelProps: {
+      transition: `all ease-out 80ms ${100 - index * 30}ms`,
+      background: [0, 0, 0, 0.65],
+      elevation: 1,
+      opacity: 0,
       transform: {
-        y: 0,
+        y: -10,
       },
-    }),
-  },
-})
+      ...(!drawerOpen &&
+        dockStore.isOpen && {
+          transition: `all ease-out 400ms ${230 + index * 30}ms`,
+          opacity: 1,
+          transform: {
+            y: 0,
+          },
+        }),
+      ...(drawerOpen && {
+        hoverStyle: {
+          transition: `all ease-out 200ms`,
+          opacity: 1,
+          transform: {
+            y: 0,
+          },
+        },
+      }),
+    },
+  }
+}
 
 const themes = [
   { name: 'Auto', value: 'automatic', icon: 'right-join' },
@@ -260,6 +261,7 @@ const themes = [
 ] as const
 
 const DockThemeButton = memo(({ index }: { index: number }) => {
+  const drawerStore = useAppsDrawerStore()
   const dockStore = orbitDockStore.useStore()
   const [user, updateUser] = useActiveUser()
   const curTheme = user.settings!.theme
@@ -275,7 +277,7 @@ const DockThemeButton = memo(({ index }: { index: number }) => {
       }
       icon={theme.icon}
       label={`Theme: ${theme.name}`}
-      {...dockButtonProps(index, dockStore)}
+      {...dockButtonProps(index, dockStore, drawerStore)}
     />
   )
 })
@@ -287,6 +289,7 @@ const vibrancies = [
 ] as const
 
 const DockVibrancyButton = memo(({ index }: { index: number }) => {
+  const drawerStore = useAppsDrawerStore()
   const dockStore = orbitDockStore.useStore()
   const [user, updateUser] = useActiveUser()
   const curVibrancy = user.settings!.vibrancy || 'some'
@@ -303,7 +306,7 @@ const DockVibrancyButton = memo(({ index }: { index: number }) => {
       }
       icon={vibrancy.icon}
       label={`Vibrancy: ${vibrancy.name}`}
-      {...dockButtonProps(index, dockStore)}
+      {...dockButtonProps(index, dockStore, drawerStore)}
     />
   )
 })
@@ -316,6 +319,7 @@ const OrbitDockButton = memo(function OrbitDockButton({
   app: AppBit
   index: number
 } & Partial<DockButtonProps>) {
+  const drawerStore = useAppsDrawerStore()
   const dockStore = orbitDockStore.useStore()
   const definition = getAppDefinition(app.identifier!)
   const buttonRef = useRef(null)
@@ -337,12 +341,11 @@ const OrbitDockButton = memo(function OrbitDockButton({
         active={isActive}
         onClick={() => {
           om.actions.router.showAppPage({ id: `${app.id!}`, toggle: 'docked' })
-          dockStore.close()
         }}
         icon={definition.icon || 'layers'}
         label={app.name}
         nodeRef={buttonRef}
-        {...dockButtonProps(index, dockStore)}
+        {...dockButtonProps(index, dockStore, drawerStore)}
         {...rest}
       />
       {nodePosition && (

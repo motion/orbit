@@ -45,7 +45,7 @@ export const light: ThemeObject = Object.freeze({
     borderColorActive: [215, 215, 215],
     borderColorHover: [215, 215, 215],
     borderColorLight: [215, 215, 215, 0.5],
-    headerBackground: linearGradient([255, 255, 255, 0.35], [255, 255, 255, 0.25]),
+    headerBackground: linearGradient([255, 255, 255, 0.3], [255, 255, 255, 0.25]),
     sidebarBackground: '#f5f7f9',
     sidebarBackgroundTransparent: [255, 255, 255, 0.7],
     appCardBackground: '#f5f7f9',

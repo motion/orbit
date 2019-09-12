@@ -268,7 +268,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     const durationArg = show ? durationOut : durationIn
     const duration = durationArg && durationArg >= 0 ? durationArg : _duration
     if (!this.state.mounted) {
-      return <Overlay key="hoverglow" ref={this.rootRef} style={{ opacity: 0 }} />
+      return <Overlay key="hoverglow" nodeRef={this.rootRef} style={{ opacity: 0 }} />
     }
     // find width / height (full == match size of container)
     let width = size || propWidth || 0
@@ -309,7 +309,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     const glow = (
       <Overlay
         key="hoverglow"
-        ref={this.rootRef}
+        nodeRef={this.rootRef}
         style={{
           WebkitAppRegion: draggable ? 'drag' : 'no-drag',
           borderLeftRadius: borderLeftRadius || borderRadius,

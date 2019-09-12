@@ -4,8 +4,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react, UpdatePriority, useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 import { createRef, useRef } from 'react'
+import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 
 import { sleep } from '../../helpers'
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
@@ -251,11 +251,13 @@ const OrbitDockOpenButton = memo(() => {
     <View position="relative">
       <HeaderButtonPassProps>
         <Button
-          margin={[0, 20, 0, 0]}
+          color={theme => (theme.background.isDark() ? '#fff' : '#000')}
+          margin={[0, 122, 0, 0]}
           width={30}
           height={30}
           icon="selection"
           iconSize={18}
+          transition="none"
           iconProps={{
             transform: {
               rotate: '90deg',

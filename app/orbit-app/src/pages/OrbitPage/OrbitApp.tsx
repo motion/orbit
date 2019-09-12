@@ -43,7 +43,10 @@ class OrbitAppStore {
         ticks++
         await whenIdle()
         await sleep(20)
-        await when(() => !appsCarouselStore.isAnimating)
+        if (appsCarouselStore.isAnimating) {
+          await sleep(100)
+          await when(() => !appsCarouselStore.isAnimating)
+        }
       }
       return should
     },
@@ -274,10 +277,14 @@ const FadeIn = (props: any) => {
 
   return (
     <FadeInDiv
-      style={{
-        opacity: shown ? 1 : 0,
-        transform: `translateX(${shown ? 0 : -10}px)`,
-      }}
+      style={
+        {
+          opacity: shown ? 1 : 0,
+          transform: `translateX(${shown ? 0 : -10}px)`,
+          // this is important so apps dont go outside bounds on accident
+          position: 'relative',
+        } as const
+      }
     >
       {props.children}
     </FadeInDiv>

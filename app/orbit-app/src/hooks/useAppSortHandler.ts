@@ -11,6 +11,7 @@ export function useAppSortHandler() {
       paneSort = [...new Set<number>(paneSort)].filter(isDefined)
       // update
       updateSpace(space => {
+        console.log('ok now lets finish sorting.......', [...space.paneSort!], [...paneSort])
         space.paneSort = paneSort
       })
     },

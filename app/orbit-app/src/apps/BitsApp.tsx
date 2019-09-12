@@ -1,5 +1,5 @@
 import { Bit, createApp, useBitSearch, useStore } from '@o/kit'
-import { CardStack, DefinitionList, Form, FormFieldsObj, Layout, Pane, Table, useActiveSearchQuery } from '@o/ui'
+import { CardStack, DefinitionList, Form, FormFieldsObj, Layout, Pane, Scale, Table, useActiveSearchQuery } from '@o/ui'
 import React, { useMemo } from 'react'
 
 /**
@@ -35,7 +35,7 @@ class BitsAppStore {
   }
 }
 
-function BitsApp() {
+export function BitsApp() {
   const bits = useBitSearch({ take: 5000 })
   const store = useStore(BitsAppStore)
 
@@ -50,48 +50,50 @@ function BitsApp() {
   return (
     <Layout type="column">
       <Pane resizable>
-        <Table
-          searchable
-          query={useActiveSearchQuery()}
-          selectable="multi"
-          onSelect={store.onSelect}
-          shareable
-          items={bits}
-          columns={{
-            id: {
-              value: 'ID',
-            },
-            title: {
-              value: 'title',
-              flex: 2,
-            },
-            body: {
-              value: 'Body',
-              flex: 2,
-            },
-            appId: {
-              value: 'appId',
-            },
-            authorId: {
-              value: 'authorId',
-            },
-            photo: {
-              value: 'Photo',
-            },
-            email: {
-              value: 'Email',
-            },
-            data: {
-              value: 'Data',
-            },
-            createdAt: {
-              value: 'Created',
-            },
-            updatedAt: {
-              value: 'Updated',
-            },
-          }}
-        />
+        <Scale size={1.2}>
+          <Table
+            searchable
+            query={useActiveSearchQuery()}
+            selectable="multi"
+            onSelect={store.onSelect}
+            shareable
+            items={bits}
+            columns={{
+              id: {
+                value: 'ID',
+              },
+              title: {
+                value: 'title',
+                flex: 2,
+              },
+              body: {
+                value: 'Body',
+                flex: 2,
+              },
+              appId: {
+                value: 'appId',
+              },
+              authorId: {
+                value: 'authorId',
+              },
+              photo: {
+                value: 'Photo',
+              },
+              email: {
+                value: 'Email',
+              },
+              data: {
+                value: 'Data',
+              },
+              createdAt: {
+                value: 'Created',
+              },
+              updatedAt: {
+                value: 'Updated',
+              },
+            }}
+          />
+        </Scale>
       </Pane>
       <Pane flex={1.3}>
         <Layout type="row">

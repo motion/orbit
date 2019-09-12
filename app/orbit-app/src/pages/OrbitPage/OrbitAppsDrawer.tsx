@@ -1,21 +1,23 @@
 import { getAppDefinition } from '@o/kit'
 import { Card, FullScreen, useNodeSize, useTheme } from '@o/ui'
 import { useAnimation } from 'framer-motion'
-import React, { memo, useEffect, useLayoutEffect, useRef } from 'react'
+import React, { memo, useEffect, useRef } from 'react'
 
 import { useOm } from '../../om/om'
 import { appsDrawerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
 
-export const yOffset = 15
-
 const variants = {
   open: {
-    y: yOffset,
+    y: 0,
+    opacity: 1,
+    rotateX: '0%',
     transition: { stiffness: 150, damping: 30 },
   },
   closed: {
-    y: '110%',
+    y: '20%',
+    opacity: 0,
+    rotateX: '10%',
     transition: { stiffness: 150, damping: 30 },
   },
 }
@@ -41,7 +43,16 @@ export const OrbitAppsDrawer = memo(() => {
   const hasDarkBackground = theme.background.isDark()
 
   return (
-    <FullScreen pointerEvents="none" className="orbit-apps-drawer" zIndex={1000}>
+    <FullScreen
+      perspective="1200px"
+      pointerEvents="none"
+      className="orbit-apps-drawer"
+      zIndex={1000}
+      top={20}
+      left={20}
+      right={60}
+      bottom={20}
+    >
       <Card
         nodeRef={frameRef}
         background={theme.backgroundStronger}
@@ -58,7 +69,7 @@ export const OrbitAppsDrawer = memo(() => {
         initial="closed"
         animate={animation}
         variants={variants}
-        pointerEvents="auto"
+        pointerEvents={appsDrawer.isOpen ? 'auto' : 'none'}
         position="relative"
         overflow="hidden"
       >
@@ -67,7 +78,6 @@ export const OrbitAppsDrawer = memo(() => {
           return (
             <FullScreen
               key={app.id}
-              bottom={yOffset}
               opacity={0}
               transform={{
                 y: frameSize.height,

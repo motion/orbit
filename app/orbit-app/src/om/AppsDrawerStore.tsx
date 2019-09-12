@@ -1,10 +1,11 @@
-import { AppBit, ensure, PaneManagerStore, react } from '@o/kit'
+import { AppBit, ensure, react } from '@o/kit'
 import { AnimationControls } from 'framer-motion'
+
+import { paneManagerStore } from './stores'
 
 export class AppsDrawerStore {
   // @ts-ignore
   props: {
-    paneManagerStore: PaneManagerStore
     apps?: AppBit[]
     height?: number
     animation?: AnimationControls
@@ -16,8 +17,7 @@ export class AppsDrawerStore {
   isAnimating = false
 
   activeDrawerId = react(
-    () =>
-      this.props.paneManagerStore.activePane ? +this.props.paneManagerStore.activePane.id : -1,
+    () => (paneManagerStore.activePane ? +paneManagerStore.activePane.id : -1),
     activeId => {
       ensure('is a drawer app', (this.props.apps || []).some(x => x.id === activeId))
       return activeId
@@ -49,9 +49,7 @@ export class AppsDrawerStore {
   }
 
   get isOpen() {
-    const id = this.props.paneManagerStore.activePane
-      ? this.props.paneManagerStore.activePane.id
-      : -1
+    const id = paneManagerStore.activePane ? paneManagerStore.activePane.id : -1
     return this.isDrawerPage(+id)
   }
 

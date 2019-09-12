@@ -1,4 +1,4 @@
-import { isDefined } from '@o/utils'
+import { isDefined, selectDefined } from '@o/utils'
 import { ReactRefreshPlugin } from '@o/webpack-react-refresh'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
 import IgnoreNotFoundExportPlugin from 'ignore-not-found-export-webpack-plugin'
@@ -170,9 +170,10 @@ export function makeWebpackConfig(
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
     },
-    devtool:
-      devtool ||
-      (mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-source-map'),
+    devtool: selectDefined(
+      devtool,
+      mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-source-map',
+    ),
     externals: [
       // having this on in development mode for node made exports fail
       target === 'web' && {
@@ -414,9 +415,7 @@ require('@o/kit').OrbitHot.fileLeave();
       hot &&
         new webpack.HotModuleReplacementPlugin({
           // multiStep is faster for app HMR but slower when developing the big bundles
-          // so its good for production mode
-          // disbling again, its really slow on big bundles
-          // multiStep: mode === 'production',
+          multiStep: mode !== 'production',
         }),
 
       // new (require('bundle-analyzer-plugin').default)({

@@ -2,7 +2,7 @@ import { ColorLike } from '@o/color'
 import { isEqual } from '@o/fast-compare'
 import { on } from '@o/utils'
 import { Box, gloss, isGlossView, Theme, ThemeContext } from 'gloss'
-import { debounce, isNumber, last, pick } from 'lodash'
+import { debounce, isNumber, pick } from 'lodash'
 import * as React from 'react'
 
 import { Arrow } from './Arrow'
@@ -146,25 +146,6 @@ type PopoverDirection = 'top' | 'bottom' | 'left' | 'right' | 'auto'
 type PositionStateX = { arrowLeft: number; left: number }
 type PositionStateY = { arrowTop: number; top: number; maxHeight: number }
 type Bounds = { top: number; left: number; width: number; height: number }
-
-export class PopoverManager {
-  state = new Set<Popover>()
-  closeTm = {}
-  closeGroup(group: string, ignore: any) {
-    this.state.forEach(item => {
-      if (item === ignore) return
-      if (item.props.group === group) {
-        item.forceClose({ animate: false })
-      }
-    })
-  }
-  closeLast() {
-    last([...this.state]).forceClose({ animate: false })
-  }
-  closeAll() {
-    this.state.forEach(x => x.forceClose({ animate: false }))
-  }
-}
 
 const getIsManuallyPositioned = ({ top, left }: { top?: number; left?: number }) => {
   return isNumber(top) && isNumber(left)

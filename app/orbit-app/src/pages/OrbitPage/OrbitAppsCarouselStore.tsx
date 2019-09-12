@@ -147,12 +147,21 @@ class OrbitAppsCarouselStore {
       this.uncontrolledTm = setTimeout(this.setUncontrolled, 50)
     })
   }
-  updateScroll = react(() => this.state.index, this.setScrollSpring)
+  // update!
+  updateScroll = react(
+    () => this.state.index,
+    // runs on every frame
+    this.setScrollSpring,
+    {
+      log: false,
+    },
+  )
   setScrollSpring(index: number) {
     if (index === this.scrollOut.value.get()) return
     if (this.rowRef.current) {
       clearTimeout(this.uncontrolledTm)
-      this.rowRef.current.style['scrollSnapType'] = 'initial'
+      // @ts-ignore
+      this.rowRef.current.style.scrollSnapType = 'initial'
       this.controlled = true
       this.scrollOut.value.set(index)
     }
@@ -299,7 +308,7 @@ class OrbitAppsCarouselStore {
   }
 }
 
-export const stackMarginLessPct = 0.6
+export const stackMarginLessPct = 0.7
 export const appsCarouselStore = createUsableStore(OrbitAppsCarouselStore)
 export const useAppsCarousel = appsCarouselStore.useStore
 window['appsCarousel'] = appsCarouselStore

@@ -28,7 +28,7 @@ export function Menu() {
   const menuStore = useCreateMenuStore({
     paneManagerStore,
     queryStore,
-    menuItems: menuApps,
+    menuItems: menuApps as any,
     onMenuHover: index => {
       const app = menuApps.find(x => x.index === index)
       if (app) {

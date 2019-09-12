@@ -47,12 +47,13 @@ export const IconShape = memo(
       }
     }
 
-    const [svgPath, setSVGPath] = useState(`${shapes[shape]}`)
+    const [svgPathRaw, setSVGPath] = useState('')
+    const svgPath = svgPathRaw || cache[iconPath]
 
     useEffect(() => {
       if (!iconPath) return
       if (cache[iconPath]) {
-        return setSVGPath(cache[iconPath])
+        return
       }
 
       // TODO move this off thread - this interrupts carousel animation

@@ -1,6 +1,5 @@
 import { getAppInfo } from '@o/apps-manager'
 import { getGlobalConfig } from '@o/config'
-import { isEqual } from '@o/fast-compare'
 import { isOrbitApp, readPackageJson } from '@o/libs-node'
 import { Logger } from '@o/logger'
 import { CommandOpts, resolveCommand } from '@o/mediator'
@@ -230,14 +229,10 @@ async function shouldRebuildApp(appRoot: string) {
     // ensure buildInfo hash is equal
     const current = await getBuildInfo(appRoot)
     const existing = await readBuildInfo(appRoot)
-    if (isEqual(current, existing) === false) {
-      if (current && existing) {
-        for (const key in current) {
-          if (!isEqual(current[key], existing[key])) {
-            log.verbose(`changed on key ${key} old ${existing[key]} new ${current[key]}`)
-          }
-        }
-      }
+    if (JSON.stringify(current) !== JSON.stringify(existing)) {
+      log.info(
+        `changed,\n${JSON.stringify(current, null, 2)}\nvs\n${JSON.stringify(existing, null, 2)}`,
+      )
       throw new ShouldRebuildNewBuildInfo()
     }
     return false

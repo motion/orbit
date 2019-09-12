@@ -1,5 +1,5 @@
 const ReactRefreshRuntimeInjection = `
-if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
   const ReactRefreshRuntime = require('react-refresh/runtime');
   ReactRefreshRuntime.injectIntoGlobalHook(window);
   window.$RefreshReg$ = () => {};

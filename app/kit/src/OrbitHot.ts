@@ -221,19 +221,19 @@ class HotHandler {
       this.performReload()
       return
     }
-    if (this.props.log) {
-      if (!renewedModules || renewedModules.length === 0) {
-        console.debug('[HMR] Nothing hot updated.')
-      } else {
-        console.debug('[HMR] Updated modules:')
-        renewedModules.forEach(moduleId => {
-          console.debug('[HMR]  - ' + (moduleMap[moduleId] || moduleId))
-        })
-      }
-      if (this.upToDate()) {
-        console.debug('[HMR] App is up to date.')
-      }
+    // if (this.props.log) {
+    if (!renewedModules || renewedModules.length === 0) {
+      console.log('[HMR] Nothing hot updated.')
+    } else {
+      // console.log('[HMR] Updated modules:')
+      renewedModules.forEach(moduleId => {
+        console.log('[HMR]  - ' + (moduleMap[moduleId] || moduleId))
+      })
     }
+    if (this.upToDate()) {
+      console.log('[HMR] App is up to date.')
+    }
+    // }
   }
 }
 

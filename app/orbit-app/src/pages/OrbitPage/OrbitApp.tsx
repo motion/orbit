@@ -1,12 +1,13 @@
 import { isEqual } from '@o/fast-compare'
 import { AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getApps, ProvideStores, RenderAppFn, useAppBit } from '@o/kit'
-import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopeState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
-import { ensure, react, useStore, useStoreSimple } from '@o/use-store'
+import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopeState, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
+import { react, useStore, useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
+import { when } from 'overmind'
 import React, { memo, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { useOm } from '../../om/om'
-import { orbitStore, paneManagerStore } from '../../om/stores'
+import { appsDrawerStore, orbitStore, paneManagerStore } from '../../om/stores'
 import { appsCarouselStore } from './OrbitAppsCarouselStore'
 import { OrbitMain } from './OrbitMain'
 import { OrbitSidebar } from './OrbitSidebar'
@@ -17,6 +18,7 @@ type OrbitAppProps = {
   id: number
   identifier: string
   appDef?: AppDefinition
+  // force render, typically it waits for paneManagerStore
   shouldRenderApp?: boolean
   disableInteraction?: boolean
   isVisible?: boolean
@@ -24,6 +26,7 @@ type OrbitAppProps = {
 }
 
 const loadOrder: number[] = []
+let lastLoad = Date.now()
 
 class OrbitAppStore {
   // @ts-ignore
@@ -31,20 +34,28 @@ class OrbitAppStore {
     uid: number
   }
 
+  /**
+   * Will stagger load things in background to avoid lots of apps rendering
+   */
   shouldRender = react(
-    () => [this.props.shouldRenderApp || false],
+    () => [this.props.shouldRenderApp],
     async ([should], { when, sleep }) => {
-      ensure('should', !!should)
-      // stagger load
-      await sleep(loadOrder.indexOf(this.props.uid) * 40)
-      // wait three ticks before loading
-      let ticks = 0
-      while (ticks < 3) {
-        ticks++
-        await whenIdle()
-        await sleep(20)
-        await when(() => !appsCarouselStore.isAnimating)
+      if (should && Date.now() - lastLoad < 100) {
+        // stagger load
+        await sleep(loadOrder.indexOf(this.props.uid) * 40)
+        // wait three ticks before loading
+        let ticks = 0
+        while (ticks < 3) {
+          ticks++
+          await whenIdle()
+          await sleep(20)
+          if (appsCarouselStore.isAnimating) {
+            await sleep(100)
+            await when(() => !appsCarouselStore.isAnimating)
+          }
+        }
       }
+      lastLoad = Date.now()
       return should
     },
     {
@@ -52,12 +63,33 @@ class OrbitAppStore {
     },
   )
 
-  isActive = react(() => {
-    return selectDefined(
+  /**
+   * Accounts for animations
+   */
+  isActive = react(
+    () => [
       this.props.isVisible,
-      !this.props.disableInteraction && paneManagerStore.activePane.id === `${this.props.id}`,
-    )
-  })
+      this.props.disableInteraction,
+      `${this.props.id}` === paneManagerStore.activePane.id,
+    ],
+    async ([isVisible, disableInteraction, isActive], { sleep, when }) => {
+      if (isVisible === false || disableInteraction) {
+        return false
+      }
+      await sleep(40)
+      if (appsCarouselStore.isAnimating) {
+        await when(() => !appsCarouselStore.isAnimating)
+      }
+      if (appsDrawerStore.isAnimating) {
+        await when(() => !appsDrawerStore.isAnimating)
+      }
+      return isActive
+    },
+    {
+      defaultValue: false,
+      log: false,
+    },
+  )
 }
 
 export const OrbitApp = memo((props: OrbitAppProps) => {
@@ -198,7 +230,9 @@ export const OrbitAppRenderOfDefinition = ({
         <AppViewsContext.Provider value={viewsContext}>
           <ErrorBoundary name={`OrbitApp: ${identifier}`} displayInline>
             <Suspense fallback={<Loading />} {...{ delayMs: 400 }}>
-              {appElement}
+              <View className="app-frame" flex={1}>
+                {appElement}
+              </View>
             </Suspense>
           </ErrorBoundary>
         </AppViewsContext.Provider>
@@ -274,10 +308,14 @@ const FadeIn = (props: any) => {
 
   return (
     <FadeInDiv
-      style={{
-        opacity: shown ? 1 : 0,
-        transform: `translateX(${shown ? 0 : -10}px)`,
-      }}
+      style={
+        {
+          opacity: shown ? 1 : 0,
+          transform: `translateX(${shown ? 0 : -10}px)`,
+          // this is important so apps dont go outside bounds on accident
+          position: 'relative',
+        } as const
+      }
     >
       {props.children}
     </FadeInDiv>

@@ -6,8 +6,8 @@ import React, { memo, useMemo } from 'react'
 
 import { om, useOm } from '../../om/om'
 import { appsDrawerStore, paneManagerStore } from '../../om/stores'
+import { headerButtonProps } from './headerButtonProps'
 import { useAppsCarousel } from './OrbitAppsCarouselStore'
-import { headerButtonProps } from './OrbitHeader'
 
 export const OrbitHeaderOpenAppMenu = memo(
   ({ isDeveloping, setIsDeveloping }: { isDeveloping: boolean; setIsDeveloping: any }) => {

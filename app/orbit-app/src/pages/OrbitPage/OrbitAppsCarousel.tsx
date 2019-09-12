@@ -1,11 +1,12 @@
 import { AppDefinition, AppIcon, ensure, react, Templates, UpdatePriority, useAppDefinition, useReaction, useStore } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, FullScreen, Geometry, Row, SimpleText, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useScrollProgress, useTheme, View } from '@o/ui'
+import { Card, CardProps, FullScreen, Geometry, Row, sleep, useDebounce, useDeepEqualState, useNodeSize, useOnMount, useScrollableParent, useScrollProgress, useTheme, View } from '@o/ui'
 import { MotionValue, useMotionValue } from 'framer-motion'
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useOm } from '../../om/om'
-import { OrbitApp, whenIdle } from './OrbitApp'
+import { useAppsDrawerStore } from '../../om/stores'
+import { OrbitApp } from './OrbitApp'
 import { appsCarouselStore, stackMarginLessPct } from './OrbitAppsCarouselStore'
 import { OrbitSearchResults } from './OrbitSearchResults'
 
@@ -19,14 +20,12 @@ const updateOnWheel = e => {
   }
 }
 
+const borderRadius = 15
+
 export const OrbitAppsCarousel = memo(() => {
   const om = useOm()
   const rowRef = appsCarouselStore.rowRef
   const apps = om.state.apps.activeClientApps
-  const frameRef = useRef<HTMLElement>(null)
-  const frameSize = useNodeSize({ ref: frameRef })
-  const rowSize = useParentNodeSize({ ref: rowRef })
-  const rowWidth = rowSize.width ? rowSize.width * (1 - stackMarginLessPct) : 0
 
   const zoomOut = useMotionValue(1)
   const scrollIn = useScrollProgress({ ref: rowRef })
@@ -36,14 +35,11 @@ export const OrbitAppsCarousel = memo(() => {
   })
 
   useEffect(() => {
-    if (rowWidth) {
-      appsCarouselStore.setProps({
-        apps,
-        rowWidth,
-        zoomOut,
-      })
-    }
-  }, [apps, rowWidth])
+    appsCarouselStore.setProps({
+      apps,
+      zoomOut,
+    })
+  }, [apps])
 
   /**
    * Use this to update state after animations finish
@@ -51,7 +47,8 @@ export const OrbitAppsCarousel = memo(() => {
   const hidden = useReaction(() => appsCarouselStore.hidden)
   const scrollable = useReaction(
     () => (appsCarouselStore.zoomedIn ? false : 'x'),
-    async (next, { when }) => {
+    async (next, { when, sleep }) => {
+      await sleep(20)
       await when(() => !appsCarouselStore.isAnimating)
       return next
     },
@@ -62,6 +59,22 @@ export const OrbitAppsCarousel = memo(() => {
     },
   )
 
+  const frameRef = useRef<any>()
+  const [frameSize, setFrameSize] = useDeepEqualState([0, 0])
+  const setFrameSizeDebounce = useDebounce(setFrameSize, 300)
+
+  useNodeSize({
+    ref: frameRef,
+    throttle: 100,
+    onChange({ width, height }) {
+      setFrameSizeDebounce([width, height])
+      const rowWidth = Math.round(width ? width * (1 - stackMarginLessPct) : 0)
+      appsCarouselStore.setProps({
+        rowWidth,
+      })
+    },
+  })
+
   // useLayoutEffect(() => {
   //   rowRef.current!.scrollLeft = scrollSpring.x.getValue()
   // }, [scrollable])
@@ -69,14 +82,13 @@ export const OrbitAppsCarousel = memo(() => {
   console.warn('OrbitAppsCarousel.render()')
 
   return (
-    <View data-is="OrbitAppsCarousel" width="100%" height="100%">
-      <FullScreen pointerEvents="none" zIndex={3}>
+    <OrbitAppsCarouselFrame>
+      <FullScreen nodeRef={frameRef} pointerEvents="none" zIndex={3}>
         <OrbitSearchResults />
       </FullScreen>
       <View
         width="100%"
         height="100%"
-        nodeRef={frameRef}
         {...hidden && {
           pointerEvents: 'none',
           opacity: 0,
@@ -102,21 +114,56 @@ export const OrbitAppsCarousel = memo(() => {
           nodeRef={appsCarouselStore.setRowNode}
           onWheel={updateOnWheel}
         >
+          <GeometryScrollUpdater />
           {apps.map((app, index) => (
             <OrbitAppCard
               key={app.id}
               index={index}
               app={app}
               identifier={app.identifier!}
-              width={frameSize.width}
-              height={frameSize.height}
               zoomOut={zoomOut}
               scrollIn={scrollIn}
+              frameWidth={frameSize[0]}
+              frameHeight={frameSize[1]}
             />
           ))}
         </Row>
       </View>
-    </View>
+    </OrbitAppsCarouselFrame>
+  )
+})
+
+function GeometryScrollUpdater() {
+  const scrollableParentStore = useScrollableParent()
+  window['scrollableParentStore'] = scrollableParentStore
+
+  // bugfix: when we went uncontrolled we didnt finish the scroll progress...
+  // TODO when integrating the scrollLeft into motion, geometry can maybe handle
+  // this internally
+  useReaction(
+    () => appsCarouselStore.controlled,
+    async controlled => {
+      if (!controlled) {
+        scrollableParentStore.setScrollOffset(appsCarouselStore.state.index)
+      }
+    },
+  )
+
+  return null
+}
+
+const OrbitAppsCarouselFrame = memo(props => {
+  const { isOpen } = useAppsDrawerStore()
+
+  return (
+    <View
+      data-is="OrbitAppsCarousel"
+      width="100%"
+      height="100%"
+      transition="opacity ease 300ms"
+      opacity={isOpen ? 0.25 : 1}
+      {...props}
+    />
   )
 })
 
@@ -130,56 +177,49 @@ type OrbitAppCardProps = CardProps & {
   app: AppBit
   zoomOut: MotionValue
   scrollIn: MotionValue
+  frameWidth: number
+  frameHeight: number
 }
 
 class AppCardStore {
   // @ts-ignore
   props: Pick<OrbitAppCardProps, 'index'>
 
-  isIntersected = false
-  shouldRender = false
-
-  renderApp = react(
+  shouldRender = react(
     () => [
-      this.isIntersected,
+      appsCarouselStore.focusedIndex === this.props.index,
       appsCarouselStore.state.zoomedOut === false,
       appsCarouselStore.isAnimating,
     ],
-    async ([isIntersected, zoomedIn, isAnimating], { sleep }) => {
-      if (this.shouldRender) return
-      ensure('is intersected', isIntersected)
+    async ([isFocused, zoomedIn, isAnimating], { getValue }) => {
+      if (getValue()) return
+      ensure('isFocused', isFocused)
       ensure('not animating', !isAnimating)
       if (!zoomedIn) {
-        await whenIdle()
-        await sleep(250)
-        await whenIdle()
+        await sleep(800)
       }
-      this.shouldRender = true
+      return zoomedIn
+      // TODO once we have concurrent we can play with this
+      return true
     },
   )
-
-  setIsIntersected(val: boolean) {
-    this.isIntersected = val
-  }
 }
 
 const OrbitAppCard = memo(
-  ({ app, identifier, index, zoomOut, scrollIn, ...cardProps }: OrbitAppCardProps) => {
+  ({
+    app,
+    identifier,
+    index,
+    zoomOut,
+    scrollIn,
+    frameWidth,
+    frameHeight,
+    ...cardProps
+  }: OrbitAppCardProps) => {
     const definition = useAppDefinition(identifier)!
     const store = useStore(AppCardStore, { index })
     const theme = useTheme()
     const cardRef = useRef(null)
-
-    useIntersectionObserver({
-      ref: cardRef,
-      options: {
-        threshold: 1,
-      },
-      onChange(x) {
-        const isIntersecting = !!(x.length && x[0].isIntersecting)
-        store.setIsIntersected(isIntersecting)
-      },
-    })
 
     const cardBoxShadow = [15, 30, 120, [0, 0, 0, theme.background.isDark() ? 0.5 : 0.25]]
 
@@ -199,6 +239,20 @@ const OrbitAppCard = memo(
     // i thought scale transform doesnt affect layout?
     const mouseDown = useRef(0)
     const tm = useRef<any>(0)
+
+    if (!frameWidth || !frameHeight) {
+      return null
+    }
+
+    /**
+     * ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️
+     *
+     *    NOTE: DO NOT USE "calculated" widths anywhere on these outer views.
+     *    That includes width="100%" or width="calc(...)"
+     *    They slow down performance a *lot*!
+     *
+     * ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️
+     */
     return (
       <Geometry>
         {(geometry, ref) => (
@@ -208,21 +262,32 @@ const OrbitAppCard = memo(
             data-is="OrbitAppCard-Container"
             scrollSnapAlign="center"
             marginRight={`-${stackMarginLessPct * 100}%`}
-            width="100vw"
+            width={frameWidth}
+            height={frameHeight}
+            position="relative"
           >
             <View
+              width={frameWidth}
+              height={frameHeight + borderRadius}
               animate
               zIndex={geometry.scrollIntersection().transform(x => 1 - Math.abs(x))}
+              y={geometry
+                .useTransform(zoomOut, out => {
+                  return out ? 0 : -borderRadius
+                })
+                .spring({ damping: 50, stiffness: 500 })}
               rotateY={geometry
                 .scrollIntersection()
-                .transform([-1, 1], [15, -25])
-                .transform(x => (x > -12 ? -12 : x))
+                .transform([-1, 1], [12, -28])
+                .transform(x => (x > -4 ? -4 : x))
                 .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? prev : 0))
                 .spring({ stiffness: 250, damping: 50 })}
               opacity={geometry
                 .scrollIntersection()
                 .mergeTransform([zoomOut], (prev, zoomOut) => {
-                  return zoomOut === 1 ? prev : 1
+                  if (zoomOut) return prev
+                  if (index === appsCarouselStore.focusedIndex) return 1
+                  return -2
                 })
                 .transform([-1, 1], [0, 2.5])}
               scale={geometry
@@ -240,12 +305,12 @@ const OrbitAppCard = memo(
                   }
                   const focused = appsCarouselStore.focusedIndex
                   if (index === focused) {
-                    return '0%'
+                    return `0%`
                   }
                   if (index > focused) {
-                    return '50%'
+                    return '100%'
                   }
-                  return '-50%'
+                  return '-100%'
                 })
                 .spring({ damping: 50, stiffness: 250 })}
               {...index === 0 && {
@@ -254,7 +319,7 @@ const OrbitAppCard = memo(
                   appsCarouselStore.isAnimating = true
                   tm.current = setTimeout(() => {
                     appsCarouselStore.isAnimating = false
-                  }, 45)
+                  }, 75)
                 },
               }}
               transformOrigin="center center"
@@ -276,22 +341,14 @@ const OrbitAppCard = memo(
                 mouseDown.current = -1
               }}
             >
-              <Row
-                alignItems="center"
-                justifyContent="center"
-                space="sm"
-                padding
-                position="absolute"
-                bottom={-40}
-                left={0}
-                right={0}
-              >
-                <SimpleText>{app.name}</SimpleText>
-              </Row>
+              <AppLoadingScreen definition={definition} app={app} visible={!store.shouldRender} />
               <Card
                 data-is="OrbitAppCard"
                 nodeRef={cardRef}
                 borderWidth={0}
+                paddingTop={borderRadius}
+                scrollable
+                height="100%"
                 background={
                   isFocusZoomed
                     ? !definition.viewConfig ||
@@ -300,8 +357,7 @@ const OrbitAppCard = memo(
                       : theme.appCardBackground
                     : theme.backgroundStronger
                 }
-                // borderRadius={isFocusZoomed ? 0 : 20}
-                borderRadius={0}
+                borderRadius={borderRadius}
                 {...(isFocused
                   ? {
                       boxShadow: [
@@ -312,10 +368,20 @@ const OrbitAppCard = memo(
                   : {
                       boxShadow: [cardBoxShadow],
                     })}
-                transition="background 300ms ease"
+                // some delay so it happens at "end/beginning"
+                // makes it so it occludes cards behind them better if transparent
+                transition={
+                  isFocusZoomed ? 'background 200ms ease 150ms' : 'background 200ms ease 0ms'
+                }
+                // adjust for our top border
+                innerColProps={{
+                  transition: 'all ease 200ms',
+                  transform: {
+                    y: isFocusZoomed ? 0 : -borderRadius * 0.75,
+                  },
+                }}
                 {...cardProps}
               >
-                <AppLoadingScreen definition={definition} app={app} visible={!store.shouldRender} />
                 <OrbitApp
                   id={app.id!}
                   identifier={definition.id}
@@ -341,13 +407,17 @@ type AppLoadingScreenProps = {
 const AppLoadingScreen = memo((props: AppLoadingScreenProps) => {
   return (
     <Templates.Message
+      pointerEvents="none"
+      className="app-loading-screen"
       title={props.app.name}
       icon={<AppIcon identifier={props.definition.id} colors={props.app.colors} />}
       opacity={props.visible ? 1 : 0}
       transform={{
         y: props.visible ? 0 : 50,
+        z: 0,
       }}
       transition="all ease 200ms"
+      zIndex={1}
       position="absolute"
       top={0}
       left={0}

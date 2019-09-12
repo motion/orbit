@@ -220,7 +220,7 @@ export const alternates: ThemeSet = Object.freeze({
       borderWidth: 0,
     }),
   flat: parent => {
-    const background = parent.background.inverseLighten(0.04)
+    const background = parent.background.inverseLighten(0.05).setAlpha(0.5)
     return {
       ...parent,
       color: parent.color,

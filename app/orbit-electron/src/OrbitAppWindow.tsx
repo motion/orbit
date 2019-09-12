@@ -5,8 +5,8 @@ import { App, Electron } from '@o/stores'
 import { react, useStore } from '@o/use-store'
 import { BrowserWindowConstructorOptions } from 'electron'
 import { join } from 'path'
-import * as React from 'react'
 import { stringify } from 'query-string'
+import * as React from 'react'
 
 import { ROOT } from './constants'
 import { getDefaultAppBounds } from './helpers/getDefaultAppBounds'
@@ -96,7 +96,7 @@ export function OrbitAppWindow({
         nodeIntegration: true,
         webSecurity: false,
       }}
-      titleBarStyle="customButtonsOnHover"
+      titleBarStyle="hiddenInset"
       ref={forwardRef}
       file={url}
       defaultPosition={store.position.slice()}

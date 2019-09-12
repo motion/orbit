@@ -55,7 +55,7 @@ export const Layout = memo((props: any) => {
   // try it, uncomment this and then try with/without forceUpdate:
   // console.log('rendering layout'); return <div />;
   updateLayout = forceUpdate
-  const siteStore = useSiteStore(undefined, { react: false })
+  const siteStore = useSiteStore({ react: false })
   const sidebarWidth = 300
   const route = useCurrentRoute()
   const [theme] = usePageTheme()

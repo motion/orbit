@@ -1,4 +1,4 @@
-import { useMediaLayout, UseMediaOptions } from '@o/ui'
+import { useMediaLayout } from '@o/ui'
 
 import { widths } from '../constants'
 
@@ -16,13 +16,19 @@ export function useIsTiny(): boolean {
   return useMediaLayout(sizes.tiny)
 }
 
-export function useScreenSize(
-  options?: UseMediaOptions<'small' | 'medium' | 'large'>,
-): ScreenSize | undefined {
-  const res = useMediaLayout([sizes.small, sizes.medium, sizes.large], options)
+const getSize = ([isSmall, isMedium, isLarge]: any): ScreenSize => {
+  return isLarge ? 'large' : isMedium ? 'medium' : isSmall ? 'small' : 'small'
+}
+
+export function useScreenSize(options?: {
+  onChange?: (size: ScreenSize) => any
+}): ScreenSize | undefined {
+  const res = useMediaLayout([sizes.small, sizes.medium, sizes.large], {
+    ...options,
+    onChange: options.onChange ? x => options.onChange(getSize(x)) : null,
+  })
   if (!options || !options.onChange) {
-    const [isSmall, isMedium, isLarge] = res
-    return isLarge ? 'large' : isMedium ? 'medium' : isSmall ? 'small' : 'small'
+    return getSize(res)
   }
 }
 

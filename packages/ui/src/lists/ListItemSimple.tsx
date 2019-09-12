@@ -329,6 +329,8 @@ const ListItemSubtitle = gloss(View, {
   alignItems: 'center',
   flex: 1,
   overflow: 'hidden',
+  // prevents RoundButton/location from getting cropped
+  minHeight: 'min-content',
 })
 
 const AfterHeader = gloss(Box, {

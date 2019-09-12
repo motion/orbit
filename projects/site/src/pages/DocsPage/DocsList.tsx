@@ -107,7 +107,7 @@ export let MultipleSelection = (
 )
 
 export let Scaling = (
-  <Scale size={2}>
+  <Scale size={1.5}>
     <List items={rows.slice(0, 20)} height={300} />
   </Scale>
 )

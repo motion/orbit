@@ -7,7 +7,7 @@ import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from '
 import { useOm } from '../../om/om'
 import { useAppsDrawerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
-import { appsCarouselStore, cardSpringProps, stackMarginLessPct } from './OrbitAppsCarouselStore'
+import { appsCarouselStore, stackMarginLessPct } from './OrbitAppsCarouselStore'
 import { OrbitSearchResults } from './OrbitSearchResults'
 
 const updateOnWheel = e => {
@@ -165,29 +165,24 @@ class AppCardStore {
   // @ts-ignore
   props: Pick<OrbitAppCardProps, 'index'>
 
-  isIntersected = false
-  shouldRender = false
-
-  renderApp = react(
+  shouldRender = react(
     () => [
       appsCarouselStore.focusedIndex === this.props.index,
       appsCarouselStore.state.zoomedOut === false,
       appsCarouselStore.isAnimating,
     ],
-    async ([isIntersected, zoomedIn, isAnimating]) => {
-      if (this.shouldRender) return
-      ensure('is intersected', isIntersected)
+    async ([isFocused, zoomedIn, isAnimating], { getValue }) => {
+      if (getValue()) return
+      ensure('isFocused', isFocused)
       ensure('not animating', !isAnimating)
       if (!zoomedIn) {
         await sleep(800)
       }
-      this.shouldRender = true
+      return false
+      // TODO once we have concurrent we can play with this
+      return true
     },
   )
-
-  setIsIntersected(val: boolean) {
-    this.isIntersected = val
-  }
 }
 
 const OrbitAppCard = memo(
@@ -260,13 +255,13 @@ const OrbitAppCard = memo(
                 .useTransform(zoomOut, out => {
                   return out ? 0 : -borderRadius
                 })
-                .spring(cardSpringProps)}
+                .spring({ damping: 50, stiffness: 500 })}
               rotateY={geometry
                 .scrollIntersection()
                 .transform([-1, 1], [12, -28])
                 .transform(x => (x > -4 ? -4 : x))
                 .mergeTransform([zoomOut], (prev, zoomOut) => (zoomOut === 1 ? prev : 0))
-                .spring(cardSpringProps)}
+                .spring({ stiffness: 250, damping: 50 })}
               opacity={geometry
                 .scrollIntersection()
                 .mergeTransform([zoomOut], (prev, zoomOut) => {
@@ -282,7 +277,7 @@ const OrbitAppCard = memo(
                   if (intersect >= 0) return 0.6
                   return 0.6 //todo
                 })
-                .spring(cardSpringProps)}
+                .spring({ damping: 50, stiffness: 500 })}
               x={geometry
                 .useTransform(zoomOut, x => {
                   if (x) {
@@ -297,7 +292,7 @@ const OrbitAppCard = memo(
                   }
                   return '-100%'
                 })
-                .spring(cardSpringProps)}
+                .spring({ damping: 50, stiffness: 250 })}
               {...index === 0 && {
                 onUpdate: () => {
                   clearTimeout(tm.current)
@@ -356,13 +351,13 @@ const OrbitAppCard = memo(
                 // some delay so it happens at "end/beginning"
                 // makes it so it occludes cards behind them better if transparent
                 transition={
-                  isFocusZoomed ? 'background 200ms ease 0ms' : 'background 200ms ease 200ms'
+                  isFocusZoomed ? 'background 200ms ease 150ms' : 'background 200ms ease 0ms'
                 }
                 // adjust for our top border
                 innerColProps={{
                   transition: 'all ease 200ms',
                   transform: {
-                    y: isFocusZoomed ? 0 : -borderRadius / 2,
+                    y: isFocusZoomed ? 0 : -borderRadius * 0.75,
                   },
                 }}
                 {...cardProps}

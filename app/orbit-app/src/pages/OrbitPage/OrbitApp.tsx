@@ -1,13 +1,13 @@
 import { isEqual } from '@o/fast-compare'
 import { AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getApps, ProvideStores, RenderAppFn, useAppBit } from '@o/kit'
 import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopeState, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
-import { ensure, react, useStore, useStoreSimple } from '@o/use-store'
+import { react, useStore, useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
 import { when } from 'overmind'
 import React, { memo, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { useOm } from '../../om/om'
-import { orbitStore, paneManagerStore } from '../../om/stores'
+import { appsDrawerStore, orbitStore, paneManagerStore } from '../../om/stores'
 import { appsCarouselStore } from './OrbitAppsCarouselStore'
 import { OrbitMain } from './OrbitMain'
 import { OrbitSidebar } from './OrbitSidebar'
@@ -37,8 +37,7 @@ class OrbitAppStore {
   shouldRender = react(
     () => [this.props.shouldRenderApp],
     async ([should], { when, sleep }) => {
-      ensure('should', !!should)
-      if (Date.now() - lastLoad < 100) {
+      if (should && Date.now() - lastLoad < 100) {
         // stagger load
         await sleep(loadOrder.indexOf(this.props.uid) * 40)
         // wait three ticks before loading
@@ -70,9 +69,9 @@ class OrbitAppStore {
       if (appsCarouselStore.isAnimating) {
         await when(() => !appsCarouselStore.isAnimating)
       }
-      // if (appsDrawerStore.isAnimating) {
-      //   await when(() => !appsDrawerStore.isAnimating)
-      // }
+      if (appsDrawerStore.isAnimating) {
+        await when(() => !appsDrawerStore.isAnimating)
+      }
       console.log('is active...', `${this.props.id}`, activePaneId)
       return `${this.props.id}` === activePaneId
     },

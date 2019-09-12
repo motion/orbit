@@ -47,9 +47,9 @@ class HeaderStore {
       await whenIdle()
       await whenIdle()
       await when(() => !appsCarouselStore.isAnimating)
+      ensure('this.inputRef.current', !!this.inputRef.current)
       ensure('not already active', document.activeElement !== this.inputRef.current)
       // this causes re-paints, dont do it too eagerly
-      ensure('this.inputRef.current', !!this.inputRef.current)
       this.inputRef.current!.focus()
       moveCursorToEndOfTextarea(this.inputRef.current)
     },

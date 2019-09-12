@@ -26,6 +26,7 @@ type OrbitAppProps = {
 }
 
 const loadOrder: number[] = []
+let lastLoad = Date.now()
 
 class OrbitAppStore {
   // @ts-ignore
@@ -37,17 +38,19 @@ class OrbitAppStore {
     () => [this.props.shouldRenderApp],
     async ([should], { when, sleep }) => {
       ensure('should', !!should)
-      // stagger load
-      await sleep(loadOrder.indexOf(this.props.uid) * 40)
-      // wait three ticks before loading
-      let ticks = 0
-      while (ticks < 3) {
-        ticks++
-        await whenIdle()
-        await sleep(20)
-        if (appsCarouselStore.isAnimating) {
-          await sleep(100)
-          await when(() => !appsCarouselStore.isAnimating)
+      if (Date.now() - lastLoad < 100) {
+        // stagger load
+        await sleep(loadOrder.indexOf(this.props.uid) * 40)
+        // wait three ticks before loading
+        let ticks = 0
+        while (ticks < 3) {
+          ticks++
+          await whenIdle()
+          await sleep(20)
+          if (appsCarouselStore.isAnimating) {
+            await sleep(100)
+            await when(() => !appsCarouselStore.isAnimating)
+          }
         }
       }
       return should

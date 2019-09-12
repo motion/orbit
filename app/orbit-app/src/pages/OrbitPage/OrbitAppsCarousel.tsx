@@ -179,7 +179,7 @@ class AppCardStore {
       ensure('is intersected', isIntersected)
       ensure('not animating', !isAnimating)
       if (!zoomedIn) {
-        await sleep(300)
+        await sleep(800)
       }
       this.shouldRender = true
     },
@@ -229,6 +229,15 @@ const OrbitAppCard = memo(
       return null
     }
 
+    /**
+     * ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️
+     *
+     *    NOTE: DO NOT USE "calculated" widths anywhere on these outer views.
+     *    That includes width="100%" or width="calc(...)"
+     *    They slow down performance a *lot*!
+     *
+     * ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️
+     */
     return (
       <Geometry>
         {(geometry, ref) => (
@@ -240,18 +249,16 @@ const OrbitAppCard = memo(
             marginRight={`-${stackMarginLessPct * 100}%`}
             width={frameWidth}
             height={frameHeight}
-            // padding={borderRadius / 2}
+            position="relative"
           >
             <View
-              width="100%"
-              height="100%"
-              // width={frameWidth + borderRadius}
-              // height={frameHeight + borderRadius}
+              width={frameWidth}
+              height={frameHeight + borderRadius}
               animate
               zIndex={geometry.scrollIntersection().transform(x => 1 - Math.abs(x))}
               y={geometry
                 .useTransform(zoomOut, out => {
-                  return out ? 0 : -borderRadius * 0.5
+                  return out ? 0 : -borderRadius
                 })
                 .spring({ damping: 50, stiffness: 500 })}
               rotateY={geometry
@@ -319,12 +326,15 @@ const OrbitAppCard = memo(
                 mouseDown.current = -1
               }}
             >
+              <AppLoadingScreen definition={definition} app={app} visible={!store.shouldRender} />
               <Card
                 data-is="OrbitAppCard"
                 nodeRef={cardRef}
                 borderWidth={0}
-                // padding={borderRadius * 0.5}
-                // left={-borderRadius * 0.5}
+                paddingTop={borderRadius}
+                transform={{
+                  y: isFocusZoomed ? 0 : -borderRadius / 2,
+                }}
                 scrollable
                 height="100%"
                 background={
@@ -349,7 +359,6 @@ const OrbitAppCard = memo(
                 transition="background 300ms ease"
                 {...cardProps}
               >
-                <AppLoadingScreen definition={definition} app={app} visible={!store.shouldRender} />
                 <OrbitApp
                   id={app.id!}
                   identifier={definition.id}
@@ -375,13 +384,17 @@ type AppLoadingScreenProps = {
 const AppLoadingScreen = memo((props: AppLoadingScreenProps) => {
   return (
     <Templates.Message
+      pointerEvents="none"
+      className="app-loading-screen"
       title={props.app.name}
       icon={<AppIcon identifier={props.definition.id} colors={props.app.colors} />}
       opacity={props.visible ? 1 : 0}
       transform={{
         y: props.visible ? 0 : 50,
+        z: 0,
       }}
       transition="all ease 200ms"
+      zIndex={1}
       position="absolute"
       top={0}
       left={0}

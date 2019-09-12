@@ -5,14 +5,13 @@ import React, { lazy, memo, Suspense, useEffect, useRef, useState } from 'react'
 import { requestIdleCallback } from '../etc/requestIdle'
 import { Header } from '../Header'
 import { Page } from '../views/Page'
-import AllInOnePitchDemoSection from './HomePage/AllInOnePitchDemoSection'
 import { HeadSection } from './HomePage/HeadSection'
 import { LoadingPage } from './LoadingPage'
 
 const DeploySection = loadOnIntersect(lazy(() => retry(() => import('./HomePage/DeploySection'))))
-// const AllInOnePitchDemoSection = loadOnIntersect(
-//   lazy(() => retry(() => import('./HomePage/AllInOnePitchDemoSection'))),
-// )
+const AllInOnePitchDemoSection = loadOnIntersect(
+  lazy(() => retry(() => import('./HomePage/AllInOnePitchDemoSection'))),
+)
 const DataAppKitFeaturesSection = loadOnIntersect(
   lazy(() => retry(() => import('./HomePage/DataAppKitFeaturesSection'))),
 )

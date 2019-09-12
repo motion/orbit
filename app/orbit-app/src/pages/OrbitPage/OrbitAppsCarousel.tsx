@@ -1,6 +1,6 @@
 import { AppDefinition, AppIcon, ensure, react, Templates, UpdatePriority, useAppDefinition, useReaction, useStore } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, FullScreen, Geometry, Row, sleep, useDebounce, useDeepEqualState, useNodeSize, useOnMount, useScrollProgress, useTheme, View } from '@o/ui'
+import { Card, CardProps, FullScreen, Geometry, Row, sleep, useDebounce, useDeepEqualState, useNodeSize, useOnMount, useScrollableParent, useScrollProgress, useTheme, View } from '@o/ui'
 import { MotionValue, useMotionValue } from 'framer-motion'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -114,6 +114,7 @@ export const OrbitAppsCarousel = memo(() => {
           nodeRef={appsCarouselStore.setRowNode}
           onWheel={updateOnWheel}
         >
+          <GeometryScrollUpdater />
           {apps.map((app, index) => (
             <OrbitAppCard
               key={app.id}
@@ -131,6 +132,17 @@ export const OrbitAppsCarousel = memo(() => {
     </OrbitAppsCarouselFrame>
   )
 })
+
+function GeometryScrollUpdater() {
+  const scrollableParentStore = useScrollableParent()
+  useReaction(() => {
+    appsCarouselStore.zoomedIn
+    const motion = scrollableParentStore.scrollIntersectionState.scrollProgress
+    console.log('force an update')
+    motion.set(motion.get())
+  })
+  return null
+}
 
 const OrbitAppsCarouselFrame = memo(props => {
   const { isOpen } = useAppsDrawerStore()

@@ -1,6 +1,6 @@
 import { useStoresSimple } from '@o/kit'
 import { App } from '@o/stores'
-import { Direction, GlobalHotKeys, Popovers, useShortcutStore } from '@o/ui'
+import { Direction, GlobalHotKeys, GlobalPopovers, useShortcutStore } from '@o/ui'
 import React, { memo, useMemo } from 'react'
 
 import { useOm } from '../om/om'
@@ -70,8 +70,8 @@ export default memo(function MainShortcutHandler(props: {
       },
       ESCAPE: () => {
         // close any open popovers
-        if (Popovers.state.size > 0) {
-          Popovers.closeLast()
+        if (GlobalPopovers.state.size > 0) {
+          GlobalPopovers.closeLast()
           return
         }
         // close dock if open

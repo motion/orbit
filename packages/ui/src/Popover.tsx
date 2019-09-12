@@ -8,6 +8,7 @@ import * as React from 'react'
 import { Arrow } from './Arrow'
 import { BreadcrumbReset } from './Breadcrumbs'
 import { zIndex } from './constants'
+import { GlobalPopovers } from './GlobalPopovers'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
@@ -146,7 +147,7 @@ type PositionStateX = { arrowLeft: number; left: number }
 type PositionStateY = { arrowTop: number; top: number; maxHeight: number }
 type Bounds = { top: number; left: number; width: number; height: number }
 
-class PopoverManager {
+export class PopoverManager {
   state = new Set<Popover>()
   closeTm = {}
   closeGroup(group: string, ignore: any) {
@@ -164,8 +165,6 @@ class PopoverManager {
     this.state.forEach(x => x.forceClose({ animate: false }))
   }
 }
-
-export const Popovers = new PopoverManager()
 
 const getIsManuallyPositioned = ({ top, left }: { top?: number; left?: number }) => {
   return isNumber(top) && isNumber(left)
@@ -517,13 +516,13 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
   unmounted = false
 
   componentWillUnmount() {
-    Popovers.state.delete(this)
+    GlobalPopovers.state.delete(this)
     this.unmounted = true
   }
 
   componentDidUpdate(_prevProps, prevState) {
     if (!this.showPopover) {
-      Popovers.state.delete(this)
+      GlobalPopovers.state.delete(this)
     }
     this.updateMeasure()
     if (this.props.onChangeVisibility) {
@@ -563,7 +562,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
 
   addToOpenPopoversList() {
     if (typeof this.props.open === 'undefined') {
-      Popovers.state.add(this)
+      GlobalPopovers.state.add(this)
     }
   }
 
@@ -982,7 +981,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
   }
 
   closeOthersWithinGroup() {
-    Popovers.closeGroup(this.props.group, this)
+    GlobalPopovers.closeGroup(this.props.group, this)
   }
 
   get isMeasuring() {

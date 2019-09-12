@@ -29,6 +29,7 @@ export const Menu = ({
       background
       borderRadius={borderRadius}
       elevation={4}
+      distance={15}
       {...props}
     >
       <Col

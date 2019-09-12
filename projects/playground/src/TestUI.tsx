@@ -18,7 +18,7 @@ export function TestUI() {
 }
 
 function TestMediaQueries() {
-  return <View responsive sm-background="red" background="green" width={100} height={100} />
+  return <View sm-background="red" background="green" width={100} height={100} />
 }
 
 const variants = {

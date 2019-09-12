@@ -2,7 +2,7 @@ import { ThemeObject } from '@o/css'
 import { uniqueId } from 'lodash'
 import React, { useContext, useMemo } from 'react'
 
-import { Config } from '../config'
+import { Config } from '../configureGloss'
 import { ThemeContext, ThemeContextType } from './ThemeContext'
 
 export type ThemeSelect = ((theme: ThemeObject) => ThemeObject) | string | false | undefined

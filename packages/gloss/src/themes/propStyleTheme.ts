@@ -1,6 +1,6 @@
 import { CSSPropertySet, ThemeObject, validCSSAttr } from '@o/css'
 
-import { Config } from '../config'
+import { Config } from '../configureGloss'
 
 export function styleVal(val: any, theme: ThemeObject, props?: Object) {
   return typeof val === 'function' ? val(theme, props) : val

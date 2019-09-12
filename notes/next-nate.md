@@ -272,3 +272,5 @@ small:
     - do a few smart props that we know are usually POJOs
 
 - https://github.com/humandx/slate-automerge
+
+- monobase for the individual docs sites...

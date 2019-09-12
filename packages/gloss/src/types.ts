@@ -2,7 +2,7 @@ import { ThemeObject } from '@o/css'
 
 export type Psuedos = '&:hover' | '&:active' | '&:focus' | '&:disabled'
 
-export type GlossOptions = {
+export type GlossConfig = {
   toColor: Function
   isColor: Function
   pseudoAbbreviations?: { [key: string]: Psuedos }

@@ -1,6 +1,6 @@
 import { CSSPropertySet } from '@o/css'
 
-import { Config } from '../config'
+import { Config } from '../configureGloss'
 import { ThemeFn } from '../gloss'
 import { mergeStyles } from '../helpers/mergeStyles'
 import { PseudoStyleProps } from './psuedoStyleTheme'

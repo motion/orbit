@@ -1,4 +1,4 @@
-import { toColor } from '@o/ui'
+import { toColor } from '@o/color'
 import { ThemeObject } from 'gloss'
 import { fromStyles } from 'gloss-theme'
 

@@ -80,7 +80,7 @@ const shouldExtractCSS = target !== 'node' && isProd && !IS_RUNNING
 //   cheap-source-map (no line numbers...)
 //   cheap-module-eval-source-map (seems alright in both...)
 //   cheap-module-source-map (works well in electron, no line numbers in browser...)
-const devtool = flags.devtool || isProd ? 'source-map' : false
+const devtool = flags.devtool || isProd ? 'source-map' : 'cheap-eval-source-map'
 
 // const appSrc = Path.join(entry, '..')
 const tsConfig = Path.join(cwd, 'tsconfig.json')

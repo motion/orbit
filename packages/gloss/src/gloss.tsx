@@ -2,7 +2,7 @@ import { CSSPropertySet, CSSPropertySetLoose, cssString, styleToClassName, Theme
 import { isEqual } from '@o/fast-compare'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
-import { Config } from './config'
+import { Config } from './configureGloss'
 import { useTheme } from './helpers/useTheme'
 import { validPropLoose, ValidProps } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
@@ -44,7 +44,7 @@ export type ThemeFn<Props = any> = (
   previous?: CSSPropertySetLoose | null,
 ) => CSSPropertySetLoose | undefined | null
 
-export type GlossConfig<Props> = {
+export type GlossViewOpts<Props> = {
   displayName?: string
   ignoreAttrs?: { [key: string]: boolean }
   defaultProps?: Partial<Props>
@@ -59,7 +59,7 @@ type GlossInternalConfig = {
   targetElement: any
   styles: any
   conditionalStyles: Object
-  config: GlossConfig<any> | null
+  config: GlossViewOpts<any> | null
 }
 
 type GlossInternals<Props> = {
@@ -83,7 +83,7 @@ export interface GlossView<RawProps, ThemeProps = RawProps, Props = GlossProps<R
   // extra:
   ignoreAttrs?: { [key: string]: boolean }
   theme: (...themeFns: ThemeFn<ThemeProps>[]) => GlossView<RawProps>
-  withConfig: (config: GlossConfig<Props>) => GlossView<RawProps>
+  withConfig: (config: GlossViewOpts<Props>) => GlossView<RawProps>
   internal: GlossInternals<Props>
 }
 
@@ -183,11 +183,11 @@ export function gloss<Props = any, ThemeProps = Props>(
   let staticClasses: string[] | null = null
 
   // this elements helpers
-  let ogConfig: GlossConfig<Props> | null = null
-  let config: GlossConfig<Props> | null = null
+  let ogConfig: GlossViewOpts<Props> | null = null
+  let config: GlossViewOpts<Props> | null = null
 
   let hasCompiled = false
-  let getEl: GlossConfig<Props>['getElement'] | null = null
+  let getEl: GlossViewOpts<Props>['getElement'] | null = null
 
   /**
    *
@@ -528,7 +528,6 @@ function addDynamicStyles(
 }
 
 const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
-const mediaQueries = Config.mediaQueries
 
 //
 // this... THIS...
@@ -538,6 +537,7 @@ const mediaQueries = Config.mediaQueries
 //  BUT its also used nested! See themeFn => mergePropStyles
 //  likely can be refactored, but just need to study it a bit before you do
 //
+let mediaQueries
 function mergeStyles(
   id: string,
   baseStyles: Object,
@@ -545,6 +545,7 @@ function mergeStyles(
   overwrite?: boolean,
 ): Object | undefined {
   // this is just for the conditional prop styles
+  mediaQueries = mediaQueries || Config.mediaQueries
   let propStyles
   for (const key in nextStyles) {
     // dont overwrite as we go down
@@ -657,9 +658,9 @@ function getAllStyles(
  */
 function getCompiledConfig(
   viewOG: GlossView<any>,
-  config: GlossConfig<any> | null,
-): GlossConfig<any> {
-  const compiledConf: GlossConfig<any> = { ...config }
+  config: GlossViewOpts<any> | null,
+): GlossViewOpts<any> {
+  const compiledConf: GlossViewOpts<any> = { ...config }
   let cur = viewOG
   while (cur) {
     const curConf = cur.internal.getConfig().config

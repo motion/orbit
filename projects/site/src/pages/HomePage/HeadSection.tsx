@@ -34,8 +34,8 @@ const paragraphProps = {
 const HeadContent = memo(() => {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const measured = fontsLoaded
-  const br = <View sm-height={100} height={50} lg-height={40} />
   const pFit = useTextFit({ min: 16, updateKey: fontsLoaded })
+  const br = <View className="head-space" sm-height={100} height={50} lg-height={40} />
 
   return (
     <SectionContentChrome>

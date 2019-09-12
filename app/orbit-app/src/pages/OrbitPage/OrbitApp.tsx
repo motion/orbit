@@ -34,6 +34,9 @@ class OrbitAppStore {
     uid: number
   }
 
+  /**
+   * Will stagger load things in background to avoid lots of apps rendering
+   */
   shouldRender = react(
     () => [this.props.shouldRenderApp],
     async ([should], { when, sleep }) => {
@@ -52,6 +55,7 @@ class OrbitAppStore {
           }
         }
       }
+      lastLoad = Date.now()
       return should
     },
     {
@@ -59,6 +63,9 @@ class OrbitAppStore {
     },
   )
 
+  /**
+   * Accounts for animations
+   */
   isActive = react(
     () => [
       this.props.isVisible,

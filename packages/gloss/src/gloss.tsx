@@ -381,9 +381,9 @@ function createGlossView<Props>(GlossView: any, config) {
 
 // keeps priority of hover/active/focus as expected
 const psuedoScore = (x: string) => {
-  const hasFocus = x.includes('&:focus') ? 1 : 0
-  const hasHover = x.includes('&:hover') ? 2 : 0
-  const hasActive = x.includes('&:active') ? 3 : 0
+  const hasFocus = x.indexOf('&:focus') > -1 ? 1 : 0
+  const hasHover = x.indexOf('&:hover') > -1 ? 2 : 0
+  const hasActive = x.indexOf('&:active') > -1 ? 3 : 0
   return hasActive + hasHover + hasFocus
 }
 
@@ -556,7 +556,7 @@ function mergeStyles(
       let isMediaQuery = false
       if (mediaQueries) {
         // media queries after subStyle, subStyle could have a - in it
-        const index = key.lastIndexOf('-')
+        const index = key.indexOf('-')
         if (index > -1) {
           const mediaName = key.slice(0, index)
           const mediaSelector = mediaQueries[mediaName]

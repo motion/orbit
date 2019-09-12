@@ -7,7 +7,7 @@ export const GlossDefaultConfig: GlossConfig = {
   toColor: colorToString,
   mediaQueries: {
     sm: '@media screen and (max-width: 500px)',
-    'not-sm': '@media screen and (min-width: 501px)',
+    notsm: '@media screen and (min-width: 501px)',
     lg: '@media screen and (min-width: 900px)',
   },
   pseudoAbbreviations: {

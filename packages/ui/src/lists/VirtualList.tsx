@@ -1,21 +1,25 @@
-import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
+// import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
+import { DragDropContext, Draggable, Droppable, reorder } from '@o/react-beautiful-dnd'
 import { idFn, selectDefined } from '@o/utils'
 import memoize from 'memoize-one'
 import React, { forwardRef, FunctionComponent, memo, RefObject, useCallback, useRef } from 'react'
 
 import { defaultSortPressDelay } from '../constants'
+import { composeRefs } from '../helpers/composeRefs'
 import { Config } from '../helpers/configureUI'
 import { createContextualProps } from '../helpers/createContextualProps'
 import { rowItemCompare } from '../helpers/rowItemCompare'
 import { GenericComponent } from '../types'
 import { DynamicListControlled, DynamicListProps } from './DynamicList'
+import { ListItem } from './ListItem'
 import { HandleSelection } from './ListItemViewProps'
 import { SelectableDynamicList } from './SelectableList'
 import { SelectableProps, SelectableStore } from './SelectableStore'
-import { VirtualListItem } from './VirtualListItem'
+
+console.log('ok', reorder)
 
 export type VirtualListProps<A = any, B = any> = SelectableProps &
-  SortableContainerProps &
+  // SortableContainerProps &
   Omit<DynamicListProps, 'children' | 'itemCount' | 'itemData'> & {
     onSelect?: HandleSelection
     onOpen?: HandleSelection
@@ -45,16 +49,31 @@ export type VirtualListProps<A = any, B = any> = SelectableProps &
     separatorProps?: any
   }
 
-const SortableList = SortableContainer(SelectableDynamicList, { withRef: true })
+// const SortableList = SortableContainer(SelectableDynamicList, { withRef: true })
 
 const { useProps } = createContextualProps<Partial<VirtualListProps>>()
+
+function getListItemProps(props, selectableStore, items, index) {
+  const { getItemProps, sortable, itemProps } = props
+  const item = items[index]
+  const dynamicProps = getItemProps && getItemProps(item, index, items)
+  return {
+    index,
+    disabled: !sortable,
+    ...getSeparatorProps(props, items, item, index),
+    ...itemProps,
+    ...item,
+    ...dynamicProps,
+    selectableStore,
+  }
+}
 
 const ListRow = memo(
   forwardRef((props: any, ref) => {
     const { data, index, style } = props
     const { items, listProps } = data
     const selectableStore: SelectableStore = data.selectableStore
-    const { getItemProps, ItemView, sortable, onSelect, onOpen, itemProps } = listProps
+    const { getItemProps, ItemView, onSelect, onOpen, itemProps } = listProps
     const item = items[index]
     const dynamicProps = getItemProps && getItemProps(item, index, items)
     const finishSelect = useRef(false)
@@ -73,53 +92,52 @@ const ListRow = memo(
       itemProps ? itemProps.onMouseEnter : undefined,
       idFn,
     )
+    const key = Config.getItemKey(item, index)
+    const RenderView = ItemView || ListItem
     return (
-      <VirtualListItem
-        forwardRef={ref}
-        key={Config.getItemKey(item, index)}
-        ItemView={ItemView}
-        onClick={useCallback(e => onSelect && onSelect(index, e), [])}
-        onDoubleClick={useCallback(e => onOpen && onOpen(index, e), [])}
-        disabled={!sortable}
-        {...getSeparatorProps(listProps, items, item, index)}
-        // base props
-        {...itemProps}
-        {...item}
-        {...dynamicProps}
-        // our overrides that fallback
-        onMouseUp={useCallback(e => {
-          if (finishSelect.current) {
-            finishSelect.current = false
-            selectableStore && selectableStore.setRowActive(index, e)
-          }
-          onMouseUp(e)
-        }, [])}
-        onMouseDown={useCallback(
-          e => {
-            e.persist()
-            // add delay when sortable
-            const setRowActive = () => {
-              selectableStore && selectableStore.setRowMouseDown(index, e)
-              finishSelect.current = false
-            }
-            if (sortable) {
-              finishSelect.current = true
-            }
-            setRowActive()
-            onMouseDown(e)
-          },
-          [sortable, onMouseDown],
+      <Draggable draggableId={key} index={index} key={key}>
+        {(provided, snapshot) => (
+          <RenderView
+            nodeRef={composeRefs(ref, provided.innerRef)}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            onClick={useCallback(e => onSelect && onSelect(index, e), [])}
+            onDoubleClick={useCallback(e => onOpen && onOpen(index, e), [])}
+            {...getListItemProps(listProps, selectableStore, items, index)}
+            // base props
+            // our overrides that fallback
+            // onMouseUp={useCallback(e => {
+            //   if (finishSelect.current) {
+            //     finishSelect.current = false
+            //     selectableStore && selectableStore.setRowActive(index, e)
+            //   }
+            //   onMouseUp(e)
+            // }, [])}
+            // onMouseDown={useCallback(
+            //   e => {
+            //     e.persist()
+            //     // add delay when sortable
+            //     const setRowActive = () => {
+            //       selectableStore && selectableStore.setRowMouseDown(index, e)
+            //       finishSelect.current = false
+            //     }
+            //     if (sortable) {
+            //       finishSelect.current = true
+            //     }
+            //     setRowActive()
+            //     onMouseDown(e)
+            //   },
+            //   [sortable, onMouseDown],
+            // )}
+            // onMouseEnter={useCallback(e => {
+            //   selectableStore && selectableStore.onHoverRow(index)
+            //   onMouseEnter(e)
+            // }, [])}
+            // cant override
+            style={style}
+          />
         )}
-        onMouseEnter={useCallback(e => {
-          selectableStore && selectableStore.onHoverRow(index)
-          onMouseEnter(e)
-        }, [])}
-        // cant override
-        selectableStore={selectableStore}
-        index={index}
-        realIndex={index}
-        style={style}
-      />
+      </Draggable>
     )
   }),
   rowItemCompare,
@@ -155,50 +173,70 @@ export const VirtualList = memo((virtualProps: VirtualListProps) => {
   }
 
   return (
-    <SortableList
-      ref={sortableContainerRef}
-      selectableStore={selectableStore}
-      itemCount={props.items.length}
-      itemData={createItemData(props.items, selectableStore, props)}
-      lockAxis="y"
-      helperClass="sortableHelper"
-      {...props}
-      pressDelay={getPressDelay(props)}
-      // see selectableStore "// distance move until cancel"
-      // pressThreshold={8}
-      onSortStart={useCallback(
-        (sort, event) => {
-          if (selectableStore.state === 'selecting') {
-            isForcingSortEnd.current = true
-            sortableContainerRef.current.handleSortEnd()
-            return event.preventDefault()
-          }
-          selectableStore && selectableStore.setSorting(true)
-          onSortStart && onSortStart(sort, event)
-        },
-        [onSortStart],
-      )}
-      onSortEnd={useCallback(
-        (sort, event) => {
-          if (isForcingSortEnd.current) {
-            isForcingSortEnd.current = false
-            return
-          }
-          selectableStore && selectableStore.setSorting(false)
-          if (selectableStore.state === 'selecting') return
-          onSortEnd && onSortEnd(sort, event)
-        },
-        [onSortStart],
-      )}
-      shouldCancelStart={useCallback(e => {
-        if (isRightClick(e)) {
-          return true
-        }
-        return selectableStore && selectableStore.state === 'selecting'
-      }, [])}
-    >
-      {ListRow as any}
-    </SortableList>
+    <DragDropContext>
+      <Droppable
+        droppableId="droppable"
+        mode="VIRTUAL"
+        renderClone={(provided, snapshot, descriptor) => {
+          const RenderView = props.ItemView || ListItem
+          return (
+            <RenderView
+              {...getListItemProps(props, selectableStore, props.items, descriptor.index)}
+              nodeRef={provided.innerRef}
+              {...provided.draggableProps}
+            />
+          )
+        }}
+      >
+        {droppableProvided => (
+          <SelectableDynamicList
+            ref={sortableContainerRef}
+            innerRef={droppableProvided.innerRef}
+            selectableStore={selectableStore}
+            itemCount={props.items.length}
+            itemData={createItemData(props.items, selectableStore, props)}
+            {...props}
+            // lockAxis="y"
+            // helperClass="sortableHelper"
+            // pressDelay={getPressDelay(props)}
+            // see selectableStore "// distance move until cancel"
+            // pressThreshold={8}
+            // onSortStart={useCallback(
+            //   (sort, event) => {
+            //     if (selectableStore.state === 'selecting') {
+            //       isForcingSortEnd.current = true
+            //       sortableContainerRef.current.handleSortEnd()
+            //       return event.preventDefault()
+            //     }
+            //     selectableStore && selectableStore.setSorting(true)
+            //     onSortStart && onSortStart(sort, event)
+            //   },
+            //   [onSortStart],
+            // )}
+            // onSortEnd={useCallback(
+            //   (sort, event) => {
+            //     if (isForcingSortEnd.current) {
+            //       isForcingSortEnd.current = false
+            //       return
+            //     }
+            //     selectableStore && selectableStore.setSorting(false)
+            //     if (selectableStore.state === 'selecting') return
+            //     onSortEnd && onSortEnd(sort, event)
+            //   },
+            //   [onSortStart],
+            // )}
+            // shouldCancelStart={useCallback(e => {
+            //   if (isRightClick(e)) {
+            //     return true
+            //   }
+            //   return selectableStore && selectableStore.state === 'selecting'
+            // }, [])}
+          >
+            {ListRow as any}
+          </SelectableDynamicList>
+        )}
+      </Droppable>
+    </DragDropContext>
   )
 })
 

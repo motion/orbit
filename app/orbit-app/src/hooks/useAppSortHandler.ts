@@ -1,5 +1,5 @@
 import { isDefined, useActiveSpace } from '@o/kit'
-import { arrayMove } from '@o/react-sortable-hoc'
+import { arrayMove } from '@o/ui'
 import { useCallback } from 'react'
 
 export function useAppSortHandler() {

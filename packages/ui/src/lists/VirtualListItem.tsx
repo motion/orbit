@@ -1,4 +1,3 @@
-import { SortableElement } from '@o/react-sortable-hoc'
 import * as React from 'react'
 
 import { rowItemCompare } from '../helpers/rowItemCompare'
@@ -44,4 +43,4 @@ export class VirtualListItemInner extends React.Component<VirtualListItemProps<a
   }
 }
 
-export const VirtualListItem = SortableElement(VirtualListItemInner)
+export const VirtualListItem = VirtualListItemInner

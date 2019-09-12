@@ -2442,10 +2442,10 @@
     codemirror-graphql "^0.8.3"
     markdown-it "^8.4.2"
 
-"@o/react-sortable-hoc@1.10.4":
-  version "1.10.4"
-  resolved "https://registry.npmjs.org/@o/react-sortable-hoc/-/react-sortable-hoc-1.10.4.tgz#0a5b7db19854fd13cc541766d7b2e7c08314ea4a"
-  integrity sha512-l3lvlIOkorRHvrbWlX4KtugZ2TBHXyHqGz8bTLKpLDUEPiSWqCI1Tr/QPsVY0uqQBAY9APADyJiunN5/vByXmA==
+"@o/react-sortable-hoc@1.10.5":
+  version "1.10.5"
+  resolved "https://registry.npmjs.org/@o/react-sortable-hoc/-/react-sortable-hoc-1.10.5.tgz#f597c0c6e053f6e99775795a2bb26797ef04be1a"
+  integrity sha512-sScV/IXPtnEf6shNYR0AYgQ/AK4gJ265EjrQkVOkAsp0ltc4CC7fvl/ad4oLeXT1fR9oLDROFPXt/xyZ2qnAsQ==
   dependencies:
     "@babel/runtime" "^7.2.0"
     invariant "^2.2.4"
@@ -18761,7 +18761,7 @@ react-native@^0.60.5:
     stacktrace-parser "^0.1.3"
     whatwg-fetch "^3.0.0"
 
-react-navi@0.13.6:
+react-navi@^0.13.6:
   version "0.13.6"
   resolved "https://registry.npmjs.org/react-navi/-/react-navi-0.13.6.tgz#ee0249cb28e961a0af4f2dce459d993d7ff3d50f"
   integrity sha512-2dG5j5qpxwI5SJru9ilyYxp8Jp3SOB0lkjbshcWv1L5+8Z4fv/UEmAWa5m1v+2We4w8okO4LH5nlgAmG1szlCg==
@@ -18802,11 +18802,6 @@ react-reconciler@^0.21.0:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.15.0"
-
-react-refresh@0.4.1:
-  version "0.4.1"
-  resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.4.1.tgz#2b1e4b1fe932de30c32aec25a0ac777e60bc156e"
-  integrity sha512-My+vtJ3hCT2sOog3g0h9a9J96IaHkIAcencxhe7HtMVQYpNNyJnr+bE9bjcwfwTBi13tkb7oDDCbRtfvK7iiKQ==
 
 react-refresh@^0.4.1:
   version "0.4.2"

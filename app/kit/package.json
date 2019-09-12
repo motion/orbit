@@ -18,7 +18,7 @@
     "@o/editor": "*",
     "@o/mediator": "^2.6.0",
     "@o/models": "^2.6.0",
-    "@o/react-sortable-hoc": "1.10.4",
+    "@o/react-sortable-hoc": "1.10.5",
     "@o/stores": "^2.6.0",
     "@o/ui": "^2.6.0",
     "@o/use-store": "^2.6.0",

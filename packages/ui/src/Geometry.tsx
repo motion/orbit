@@ -152,7 +152,7 @@ class GeometryStore {
             return 0
           }
           const state = scrollIntersectionState.children.get(this.nodeRef.current)
-          return (state.offset - scroll) * state.total
+          return state ? (state.offset - scroll) * state.total : 0
         })
       })
     })

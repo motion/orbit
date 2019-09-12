@@ -24,9 +24,9 @@ export function createStoreContext<Instance>(constructor: { new (): Instance }) 
     useCreateStore(props?: InferProps<Instance> | false, opts?: UseStoreOptions) {
       return useStore(props === false ? false : constructor, props as any, opts)
     },
-    useStore(props?: InferProps<Instance>, options?: UseStoreOptions): Instance | null {
+    useStore(options?: UseStoreOptions /* , props?: InferProps<Instance> */): Instance | null {
       const value = useContext(Context)
-      const store = useStore(value, props as any, options)
+      const store = useStore(value, undefined, options)
       return store
     },
   }

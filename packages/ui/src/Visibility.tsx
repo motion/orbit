@@ -31,7 +31,7 @@ export function useVisibility() {
 export function useGetVisibility() {
   // support may not be provided
   try {
-    const store = Vis.useStore(undefined, { react: false })
+    const store = Vis.useStore({ react: false })
     return () => store.visible
   } catch {
     // no visibility store

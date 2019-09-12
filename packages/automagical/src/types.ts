@@ -37,6 +37,7 @@ export type ReactionOptions = {
   name?: string
   priority?: UpdatePriority
   debug?: boolean
+  avoidRender?: boolean
 }
 
 export interface MagicalObject {

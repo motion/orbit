@@ -21,14 +21,15 @@ const TitleParagraph = (props: SimpleTextProps) => {
   return <Paragraph alpha={0.7} {...props} />
 }
 
+const scale = 0.9
 const para = {
   display: 'flex',
-  fontSize: `3.4vw`,
-  lineHeight: `5vw`,
-  'lg-fontSize': 38,
-  'lg-lineHeight': '3rem',
-  'sm-fontSize': 22,
-  'sm-lineHeight': '2.8rem',
+  fontSize: `${3.4 * scale}vw`,
+  lineHeight: `${5 * scale}vw`,
+  'lg-fontSize': 38 * scale,
+  'lg-lineHeight': `${3 * scale}rem`,
+  'sm-fontSize': 22 * scale,
+  'sm-lineHeight': `${2.8 * scale}rem`,
   'sm-display': 'inline',
 } as const
 
@@ -36,7 +37,7 @@ const HeadContent = memo(() => {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const measured = fontsLoaded
   // const pFit = useTextFit({ min: 16, updateKey: fontsLoaded })
-  const br = <View className="head-space" sm-height={10} height={20} lg-height={40} />
+  const br = <View className="head-space" height="3.5vh" maxHeight={70} />
 
   return (
     <SectionContentChrome>
@@ -61,18 +62,20 @@ const HeadContent = memo(() => {
             whiteSpace="nowrap"
             maxHeight={160}
           >
-            <FadeChild disable={!measured}>The Smart HUD</FadeChild>
+            <FadeChild disable={!measured}>Apps for teams</FadeChild>
           </TextFitTitle>
 
           {br}
 
           <View display="block" minHeight="min-content">
             <TitleParagraph {...para}>
-              The beautiful, moldable app platform for teams.
+              {/* first line */}
+              Build a suite of internal tools in no time.
             </TitleParagraph>
             &nbsp;
             <TitleParagraph {...para}>
-              Orbit is an all-new platform for internal&nbsp;apps.
+              {/* second line */}
+              Orbit is an easy, all-in-one platform for teams'&nbsp;apps.
             </TitleParagraph>
           </View>
         </View>
@@ -146,82 +149,13 @@ export function HeadSection() {
         <Col flex={6} nodeRef={Fade.ref} alignItems="center" justifyContent="center">
           <HeadContent />
         </Col>
-        <View flex={1} />
-        <Space size="xxl" />
+        <View flex={1.5} />
         <HeadJoin />
+        <View flex={1.5} />
       </Col>
     </Fade.FadeProvide>
   )
 }
-
-// const SubSection = memo(({ title, children, index, titleColor }: any) => {
-//   return (
-//     <Col flex={1} minWidth={160} maxWidth={220}>
-//       <FadeChild {...fadeUpProps} delay={200 + index * 200}>
-//         <Paragraph
-//           textAlign="center"
-//           textTransform="uppercase"
-//           alpha={0.65}
-//           color={titleColor}
-//           size={1}
-//           fontWeight={600}
-//         >
-//           {title}
-//         </Paragraph>
-//         <Space size="sm" />
-//         <SimpleText textAlign="center" selectable alpha={0.75} size={1} sizeLineHeight={1.1}>
-//           {children}
-//         </SimpleText>
-//       </FadeChild>
-//     </Col>
-//   )
-// })
-
-// {false && (
-//   <Page.Parallax zIndex={1} speed={0}>
-//     <FullScreen userSelect="none" top="auto" transform={{ y: 50 }} zIndex={1000}>
-//       <View
-//         position="absolute"
-//         bottom="12%"
-//         left={0}
-//         right={0}
-//         alignItems="center"
-//         justifyContent="center"
-//         height={160}
-//       >
-//         <View
-//           height={160}
-//           margin={[0, 'auto']}
-//           width={200}
-//           position="relative"
-//           alignItems="center"
-//           justifyContent="center"
-//         >
-//           <Image
-//             position="absolute"
-//             top={0}
-//             transform={{ scale: 0.5 }}
-//             transformOrigin="top center"
-//             src={macbook}
-//           />
-//           <View
-//             className="macbook-shadow"
-//             boxShadow={[[0, 20, 80, 10, '#000']]}
-//             zIndex={-1}
-//             position="absolute"
-//             top={10}
-//             left={0}
-//             right={0}
-//             bottom={10}
-//           />
-//           <RoundButton aria-label="See how Orbit Works" primary="#290C3C" padding={[10, 20]}>
-//             See how Orbit works
-//           </RoundButton>
-//         </View>
-//       </View>
-//     </FullScreen>
-//   </Page.Parallax>
-// )}
 
 // const RoundButton = ({ primary = colors.red, ...props }: ViewProps & { primary?: any }) => (
 //   <View

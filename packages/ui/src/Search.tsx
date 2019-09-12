@@ -34,7 +34,7 @@ export const ProvideSearch = searchStore.Provider
 const defaultProps = {}
 
 export const useActiveSearchQuery = (props: { disabled?: boolean } = defaultProps) => {
-  const store = searchStore.useStore(undefined, { react: false })
+  const store = searchStore.useStore({ react: false })
   const getIsVisible = useGetVisibility()
   const getCurrentQuery = () => {
     const next = getIsVisible() && !props.disabled ? store.query : false

@@ -13,7 +13,7 @@ export default createApp({
 })
 
 export function SearchResultsApp() {
-  const searchStore = SearchStore.useStore(undefined, { react: false })!
+  const searchStore = SearchStore.useStore({ react: false })!
   const item = useReaction(() => {
     const item = searchStore.selectedItem
     ensure('item', !!item)

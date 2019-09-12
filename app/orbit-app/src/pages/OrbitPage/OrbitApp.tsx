@@ -1,8 +1,9 @@
 import { isEqual } from '@o/fast-compare'
 import { AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getApps, ProvideStores, RenderAppFn, useAppBit } from '@o/kit'
-import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopeState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
+import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopeState, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
 import { ensure, react, useStore, useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
+import { when } from 'overmind'
 import React, { memo, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { useOm } from '../../om/om'
@@ -17,6 +18,7 @@ type OrbitAppProps = {
   id: number
   identifier: string
   appDef?: AppDefinition
+  // force render, typically it waits for paneManagerStore
   shouldRenderApp?: boolean
   disableInteraction?: boolean
   isVisible?: boolean
@@ -32,7 +34,7 @@ class OrbitAppStore {
   }
 
   shouldRender = react(
-    () => [this.props.shouldRenderApp || false],
+    () => [this.props.shouldRenderApp],
     async ([should], { when, sleep }) => {
       ensure('should', !!should)
       // stagger load
@@ -55,12 +57,22 @@ class OrbitAppStore {
     },
   )
 
-  isActive = react(() => {
-    return selectDefined(
-      this.props.isVisible,
-      !this.props.disableInteraction && paneManagerStore.activePane.id === `${this.props.id}`,
-    )
-  })
+  isActive = react(
+    () => [this.props.isVisible, this.props.disableInteraction, paneManagerStore.activePane.id],
+    async ([isVisible, disableInteraction, activePaneId], { sleep, when }) => {
+      if (!isVisible || disableInteraction) {
+        return false
+      }
+      await sleep(40)
+      if (appsCarouselStore.isAnimating) {
+        await when(() => !appsCarouselStore.isAnimating)
+      }
+      // if (appsDrawerStore.isAnimating) {
+      //   await when(() => !appsDrawerStore.isAnimating)
+      // }
+      return `${this.props.id}` === activePaneId
+    },
+  )
 }
 
 export const OrbitApp = memo((props: OrbitAppProps) => {
@@ -201,7 +213,9 @@ export const OrbitAppRenderOfDefinition = ({
         <AppViewsContext.Provider value={viewsContext}>
           <ErrorBoundary name={`OrbitApp: ${identifier}`} displayInline>
             <Suspense fallback={<Loading />} {...{ delayMs: 400 }}>
-              {appElement}
+              <View className="app-frame" flex={1}>
+                {appElement}
+              </View>
             </Suspense>
           </ErrorBoundary>
         </AppViewsContext.Provider>

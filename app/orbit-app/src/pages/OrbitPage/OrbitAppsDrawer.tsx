@@ -22,30 +22,29 @@ const variants = {
   },
 }
 
+let tm
 export const OrbitAppsDrawer = memo(() => {
   const theme = useTheme()
   const { state } = useOm()
   const apps = state.apps.activeSettingsApps
   const frameRef = useRef<HTMLElement>(null)
   const frameSize = useNodeSize({ ref: frameRef, throttle: 300 })
-  const height = frameSize.height
   const appsDrawer = appsDrawerStore.useStore()
   const animation = useAnimation()
 
   useEffect(() => {
     appsDrawerStore.setProps({
       apps,
-      height,
       animation,
     })
-  }, [animation, apps, height])
+  }, [animation, apps])
 
   const hasDarkBackground = theme.background.isDark()
 
   return (
     <FullScreen
       perspective="1200px"
-      pointerEvents="none"
+      pointerEvents={appsDrawer.isOpen ? 'auto' : 'none'}
       className="orbit-apps-drawer"
       zIndex={1000}
       top={20}
@@ -68,8 +67,16 @@ export const OrbitAppsDrawer = memo(() => {
         height="100%"
         initial="closed"
         animate={animation}
+        onUpdate={() => {
+          clearTimeout(tm)
+          console.log('update now')
+          appsDrawerStore.isAnimating = true
+          tm = setTimeout(() => {
+            console.log('done')
+            appsDrawerStore.isAnimating = false
+          }, 60)
+        }}
         variants={variants}
-        pointerEvents={appsDrawer.isOpen ? 'auto' : 'none'}
         position="relative"
         overflow="hidden"
       >
@@ -79,19 +86,11 @@ export const OrbitAppsDrawer = memo(() => {
             <FullScreen
               key={app.id}
               opacity={0}
-              transform={{
-                y: frameSize.height,
-                z: 0,
-              }}
               // this fixes a really weird bug where they had wrong absolute position
               visibility="hidden"
               {...shouldShow && {
                 visibility: 'visible',
                 opacity: 1,
-                transform: {
-                  y: 0,
-                  z: 0,
-                },
               }}
             >
               <OrbitApp

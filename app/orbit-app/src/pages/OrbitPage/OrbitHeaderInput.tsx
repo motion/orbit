@@ -6,7 +6,7 @@ import React, { memo, useCallback, useState } from 'react'
 import { appsDrawerStore, queryStore, useOrbitWindowStore, useQueryStore } from '../../om/stores'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 import { appsCarouselStore } from './OrbitAppsCarouselStore'
-import { useHeaderStore } from './OrbitHeader'
+import { useHeaderStore } from './OrbitHeaderStore'
 import { orbitSearchResultsStore } from './OrbitSearchResults'
 
 const Keys = {
@@ -82,7 +82,7 @@ const handleKeyDown = async e => {
 export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { fontSize: number }) {
   // separate value here, lets us interface with queryStore/search, + will be useful for concurrent
   const [inputVal, setInputVal] = useState('')
-  const search = useSearch(undefined, { react: false })
+  const search = useSearch({ react: false })
   const qs = useQueryStore()
   const orbitWindowStore = useOrbitWindowStore()
   const headerStore = useHeaderStore()

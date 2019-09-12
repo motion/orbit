@@ -13,7 +13,7 @@ import { useOm } from '../../om/om'
 import { usePaneManagerStore } from '../../om/stores'
 import { OrbitTab, tabHeight, TabProps } from '../../views/OrbitTab'
 import { appsCarouselStore } from './OrbitAppsCarouselStore'
-import { useHeaderStore } from './OrbitHeader'
+import { useHeaderStore } from './OrbitHeaderStore'
 
 const isOnSettings = (app?: AppBit) =>
   app &&

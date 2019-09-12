@@ -59,6 +59,7 @@ export const DockButton = (props: DockButtonProps) => {
   } = DockButtonPropsContext.useProps(props)
   const dockStore = DockStoreContext.useStore()
   const show = selectDefined(dockStore.items[id], visible)
+  const [hovering, setHovering] = useState(false)
 
   useLayoutEffect(() => {
     dockStore.next[id] = visible
@@ -91,10 +92,22 @@ export const DockButton = (props: DockButtonProps) => {
         pointerEvents="auto"
         {...!show && { marginRight: -(50 + 15), opacity: 0 }}
         {...buttonProps}
+        {...showLabelOnHover && {
+          onMouseEnter() {
+            setHovering(true)
+          },
+          onMouseLeave() {
+            setHovering(false)
+          },
+        }}
       />
       {!!props.label && (
         <Theme name="tooltip">
-          <TagLabel size="xxs" {...labelProps}>
+          <TagLabel
+            size="xxs"
+            {...labelProps}
+            {...showLabelOnHover && hovering && labelProps.hoverStyle}
+          >
             {props.label}
           </TagLabel>
         </Theme>
@@ -109,8 +122,11 @@ export type TagLabelProps = TagProps & {
 }
 
 const TagLabel = ({
+  // arrow props
   arrowSize = 12,
   towards,
+  background,
+  // chrome props
   maxWidth,
   position,
   top,
@@ -118,22 +134,50 @@ const TagLabel = ({
   bottom,
   right,
   display,
-  background,
   opacity,
   transform,
   transition,
+  hoverStyle,
+  focusStyle,
+  disabled,
+  disabledStyle,
+  active,
+  activeStyle,
+  hover,
+  // tag props
   ...props
 }: TagLabelProps) => {
   13
   return (
     <TagLabelChrome
-      {...{ position, top, left, bottom, right, display, opacity, transform, transition }}
+      {...{
+        maxWidth,
+        position,
+        top,
+        left,
+        bottom,
+        right,
+        display,
+        opacity,
+        transform,
+        transition,
+        hoverStyle,
+        focusStyle,
+        disabled,
+        disabledStyle,
+        active,
+        activeStyle,
+        hover,
+      }}
     >
       {/* TODO do other directions */}
       {towards === 'right' && (
         <Arrow
           position="absolute"
-          top={`calc(50% - ${arrowSize / 2}px)`}
+          top={`50%`}
+          transform={{
+            y: -arrowSize / 2,
+          }}
           right={-arrowSize * 2}
           size={arrowSize}
           towards={towards}

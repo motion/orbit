@@ -4,7 +4,7 @@ import page from 'page'
 import queryString from 'query-string'
 
 import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarouselStore'
-import { headerStore } from '../pages/OrbitPage/OrbitHeader'
+import { headerStore } from '../pages/OrbitPage/OrbitHeaderStore'
 import { orbitSearchResultsStore } from '../pages/OrbitPage/OrbitSearchResults'
 import { paneManagerStore } from './stores'
 
@@ -214,6 +214,7 @@ const isNumString = (x: number | string) => +x == x
 
 const closeDrawer: Action = om => {
   const lastPage = om.state.router.lastPage
+  console.log('OK LAST TIME', lastPage, om.state.apps.lastActiveApp)
   if (om.state.apps.lastActiveApp) {
     const id = `${om.state.apps.lastActiveApp.id}`
     if (lastPage && lastPage.name === 'app' && lastPage.params!.id === id) {

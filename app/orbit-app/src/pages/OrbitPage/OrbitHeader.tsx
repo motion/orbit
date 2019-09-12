@@ -1,143 +1,32 @@
 import { AppIcon, useModels, useStore } from '@o/kit'
 import { BuildStatusModel } from '@o/models'
-import { App, Electron } from '@o/stores'
+import { App } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
-import { createUsableStore, ensure, react, UpdatePriority, useReaction } from '@o/use-store'
+import { useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
+import { useRef } from 'react'
 
-import { sleep } from '../../helpers'
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
-import { appsDrawerStore, queryStore, useOrbitStore } from '../../om/stores'
-import { whenIdle } from './OrbitApp'
+import { appsDrawerStore, useOrbitStore } from '../../om/stores'
+import { headerButtonProps } from './headerButtonProps'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarouselStore'
-import { orbitDockStore } from './OrbitDock'
+import { orbitDockStore } from './OrbitDockStore'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitHeaderOpenAppMenu } from './OrbitHeaderOpenAppMenu'
+import { headerStore, useHeaderStore } from './OrbitHeaderStore'
 import { OrbitNav } from './OrbitNav'
-
-export const headerButtonProps = {
-  circular: true,
-  background: 'transparent',
-  glint: false,
-  glintBottom: false,
-  borderWidth: 0,
-  margin: [-1, 2],
-  opacity: 0.75,
-  hoverStyle: { opacity: 1, background: theme => theme.backgroundStronger },
-  transition: 'all ease 200ms',
-  tooltipProps: {
-    distance: 18,
-  },
-  iconSize: 14,
-  activeStyle: false,
-} as const
 
 const HeaderButtonPassProps = (props: any) => {
   return <SurfacePassProps {...headerButtonProps} {...props} />
 }
 
-const moveCursorToEndOfTextarea = el => {
-  el.setSelectionRange(el.value.length, el.value.length)
-}
-const selectTextarea = el => {
-  el.setSelectionRange(0, el.value.length)
-}
-
-class HeaderStore {
-  inputRef = createRef<HTMLDivElement>()
-
-  get highlightWords() {
-    const { activeMarks } = queryStore.queryFilters
-    if (!activeMarks) {
-      return
-    }
-    const markPositions = activeMarks.map(x => [x[0], x[1], x[2]])
-    return () => markPositions
-  }
-
-  onInput = () => {
-    if (!this.inputRef.current) {
-      return
-    }
-    queryStore.setQuery(this.inputRef.current.innerText)
-  }
-
-  triggerFocus = 0
-  async focus() {
-    if (!this.inputRef || !this.inputRef.current) return
-    if (document.activeElement === this.inputRef.current) return
-    this.triggerFocus = Date.now()
-  }
-
-  doFocus = react(
-    () => this.triggerFocus,
-    async (_, { when }) => {
-      await whenIdle()
-      await whenIdle()
-      await when(() => !appsCarouselStore.isAnimating)
-      ensure('not already active', document.activeElement !== this.inputRef.current)
-      // this causes re-paints, dont do it too eagerly
-      ensure('this.inputRef.current', !!this.inputRef.current)
-      this.inputRef.current!.focus()
-      moveCursorToEndOfTextarea(this.inputRef.current)
-    },
-  )
-
-  focusInputOnVisible = react(
-    () => Electron.state.showOrbitMain,
-    async (shown, { sleep }) => {
-      ensure('shown', shown)
-      ensure('ref', !!this.inputRef.current)
-      // wait for after it shows
-      await sleep(40)
-      this.focus()
-      selectTextarea(this.inputRef.current)
-    },
-  )
-
-  focusInputOnClearQuery = react(
-    () => queryStore.hasQuery,
-    query => {
-      ensure('no query', !query)
-      this.focus()
-    },
-  )
-
-  handleMouseUp = async () => {
-    await sleep(0)
-    await whenIdle()
-    this.focus()
-  }
-
-  paneState = react(
-    () => [appsCarouselStore.focusedApp, appsCarouselStore.zoomedIn],
-    async ([focusedApp, zoomedIn], { sleep }) => {
-      await sleep(20)
-      if (appsCarouselStore.isAnimating) {
-        await sleep(100)
-        await whenIdle()
-      }
-      return { focusedApp, zoomedIn }
-    },
-    {
-      defaultValue: [appsCarouselStore.focusedApp, appsCarouselStore.zoomedIn],
-      priority: UpdatePriority.Idle,
-    },
-  )
-}
-
-export const headerStore = createUsableStore(HeaderStore)
-window['headerStore'] = headerStore
-export const useHeaderStore = headerStore.useStore
-
 export const OrbitHeader = memo(() => {
   const om = useOm()
   const containerRef = useRef()
   const { focusedApp, zoomedIn } = headerStore.useStore().paneState
-  console.warn('render OrbitHeader', focusedApp)
+  console.warn('render OrbitHeader2', focusedApp)
   const orbitStore = useOrbitStore()
   const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()
@@ -180,7 +69,6 @@ export const OrbitHeader = memo(() => {
       onMouseUp={headerStore.handleMouseUp}
     >
       <OrbitHeaderEditingBg isActive={isDeveloping} />
-
       <HeaderTop height={slim ? 40 : 50}>
         <HeaderButtonPassProps>
           <HeaderSide space="sm" slim={slim}>
@@ -188,7 +76,6 @@ export const OrbitHeader = memo(() => {
             {homeButtonElement}
           </HeaderSide>
         </HeaderButtonPassProps>
-
         <HeaderContain space spaceAround isActive={false} isDeveloping={isDeveloping}>
           <OrbitHeaderInput fontSize={slim ? 15 : 18} />
 
@@ -228,13 +115,11 @@ export const OrbitHeader = memo(() => {
             </Row>
           </Row>
         </HeaderContain>
-
         <HeaderSide space="sm" spaceAround="md" justifyContent="flex-end" slim={slim}>
           <View flex={1} />
           <OrbitDockOpenButton />
         </HeaderSide>
       </HeaderTop>
-
       {/* this stays slightly below the active tab and looks nice */}
       <BorderBottom
         borderColor={(isDeveloping && theme.headerBorderBottom) || theme.borderColor}
@@ -252,7 +137,7 @@ const OrbitDockOpenButton = memo(() => {
       <HeaderButtonPassProps>
         <Button
           color={theme => (theme.background.isDark() ? '#fff' : '#000')}
-          margin={[0, 122, 0, 0]}
+          margin={[0, 10, 0, 0]}
           width={30}
           height={30}
           icon="selection"
@@ -266,7 +151,7 @@ const OrbitDockOpenButton = memo(() => {
           circular
           onMouseEnter={orbitDock.hoverEnter}
           onMouseLeave={orbitDock.hoverLeave}
-          onClick={orbitDock.togglePinned}
+          onClick={orbitDock.onClickDockOpen}
           {...orbitDock.state === 'pinned' && {
             background: [0, 0, 0, 0.3],
           }}

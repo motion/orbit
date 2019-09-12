@@ -37,7 +37,7 @@ const ButtonInner = (props: ButtonProps) => {
       alignItems="center"
       flexDirection="row"
       WebkitAppRegion="no-drag"
-      glow
+      // glow
       outline="0"
       borderStyle="solid"
       cursor="default"

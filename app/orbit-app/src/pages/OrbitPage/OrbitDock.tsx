@@ -1,7 +1,7 @@
-import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useActiveUser, useReaction, useStore } from '@o/kit'
+import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, getAppDefinition, RenderAppProps, useActiveUser, useReaction, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { ActiveDraggables, Col, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
-import { Box, gloss, useTheme } from 'gloss'
+import { Col, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
+import { Box, gloss } from 'gloss'
 import { partition } from 'lodash'
 import React, { memo, useContext, useMemo, useRef } from 'react'
 
@@ -9,119 +9,7 @@ import { AppsDrawerStore } from '../../om/AppsDrawerStore'
 import { useOm } from '../../om/om'
 import { appsDrawerStore, paneManagerStore, useAppsDrawerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
-
-type DockOpenState = 'open' | 'closed' | 'pinned'
-
-class OrbitDockStore {
-  state: DockOpenState = 'closed'
-  nextState: { state: DockOpenState; delay: number } | null = null
-  hoveredIndex = -1
-  nextHovered: { index: number; at: number } | null = null
-
-  get isOpen() {
-    if (appsDrawerStore.isOpen) {
-      return true
-    }
-    return this.state !== 'closed'
-  }
-
-  setState(next: DockOpenState = 'open') {
-    if (next === this.state) return
-    this.state = next
-    this.nextState = null
-  }
-
-  deferUpdateState = react(
-    () => this.nextState,
-    async (nextState, { sleep }) => {
-      if (nextState) {
-        await sleep(nextState.delay)
-        this.state = nextState.state
-        this.nextState = null
-      }
-    },
-  )
-
-  close = () => {
-    this.setState('closed')
-    this.nextHovered = null
-    // hide hover immediately on force close
-    this.hoveredIndex = -1
-  }
-
-  hoverLeave = () => {
-    if (this.state !== 'pinned') {
-      this.nextState = {
-        state: 'closed',
-        delay: 500,
-      }
-    }
-  }
-
-  hoverEnter = () => {
-    if (this.state !== 'pinned') {
-      this.nextState = {
-        state: 'open',
-        delay: 0,
-      }
-    }
-  }
-
-  hoverEnterButton = (index: number = this.hoveredIndex) => {
-    if (this.nextHovered && this.nextHovered.index === index) return
-    this.nextHovered = { index, at: Date.now() }
-  }
-
-  hoverLeaveButton = () => {
-    if (this.nextHovered && this.nextHovered.index === -1) return
-    this.nextHovered = { index: -1, at: Date.now() }
-  }
-
-  addCancelableDragOnMenuOpen = react(
-    () => this.hoveredIndex,
-    index => {
-      if (index > -1) {
-        ActiveDraggables.add(this.hoverEnterButton)
-      } else {
-        ActiveDraggables.remove(this.hoverEnterButton)
-      }
-    },
-  )
-
-  deferUpdateHoveringButton = react(
-    () => this.nextHovered,
-    async (next, { sleep }) => {
-      if (!next) return
-      if (this.hoveredIndex === -1 || next.index === -1) {
-        await sleep(next.index > -1 ? 100 : 200)
-      }
-      this.hoveredIndex = next.index
-      await sleep(100)
-      if (next.index > -1) {
-        this.hoverEnter()
-      } else {
-        this.hoverLeave()
-      }
-    },
-    {
-      lazy: true,
-    },
-  )
-
-  togglePinned = () => {
-    switch (this.state) {
-      case 'pinned':
-        this.setState('closed')
-        return
-      case 'closed':
-        this.setState('pinned')
-        return
-      case 'open':
-        this.setState('pinned')
-        return
-    }
-  }
-}
+import { OrbitDockStore, orbitDockStore } from './OrbitDockStore'
 
 export const OrbitDock = memo(() => {
   const store = orbitDockStore.useStore()
@@ -174,12 +62,7 @@ export const OrbitDock = memo(() => {
   )
 })
 
-export const orbitDockStore = createUsableStore(OrbitDockStore)
-window['orbitDockStore'] = orbitDockStore
-
 export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
-  const theme = useTheme()
-
   return (
     <Dock position="relative" flexDirection="column" className="orbit-dock" bottom="auto">
       {props.apps.map((app, index) => (
@@ -211,6 +94,7 @@ const dockButtonProps = (
 ): Partial<DockButtonProps> => {
   const drawerOpen = drawerStore.isOpen
   return {
+    showLabelOnHover: true,
     onMouseMove: () => {
       if (appsDrawerStore.isOpen) return
       // wait for settle
@@ -241,15 +125,13 @@ const dockButtonProps = (
             y: 0,
           },
         }),
-      ...(drawerOpen && {
-        hoverStyle: {
-          transition: `all ease-out 200ms`,
-          opacity: 1,
-          transform: {
-            y: 0,
-          },
+      hoverStyle: {
+        transition: `all ease-out 200ms`,
+        opacity: 1,
+        transform: {
+          y: 0,
         },
-      }),
+      },
     },
   }
 }

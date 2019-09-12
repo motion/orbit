@@ -1,17 +1,16 @@
 import { AppBit, ensure, react } from '@o/kit'
 import { AnimationControls } from 'framer-motion'
 
+import { om } from './om'
 import { paneManagerStore } from './stores'
 
 export class AppsDrawerStore {
   // @ts-ignore
   props: {
-    apps?: AppBit[]
-    height?: number
+    apps: AppBit[]
     animation?: AnimationControls
   } = {
     apps: [],
-    height: 0,
   }
 
   isAnimating = false
@@ -28,17 +27,23 @@ export class AppsDrawerStore {
   )
 
   updateDrawerAnimation = react(
-    () => [this.isOpen, this.props.height],
+    () => [this.isOpen],
     () => {
       ensure('this.props.animation', !!this.props.animation)
-      ensure('this.props.height', !!this.props.height)
       if (this.isOpen) {
         this.animateOpen()
       } else {
         this.animateClosed()
       }
     },
+    {
+      lazy: true,
+    },
   )
+
+  close() {
+    om.actions.router.closeDrawer()
+  }
 
   animateOpen() {
     this.props.animation!.start('open')

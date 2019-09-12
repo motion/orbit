@@ -6,7 +6,7 @@ import React, { memo, useMemo } from 'react'
 import { useOm } from '../om/om'
 import { appsDrawerStore } from '../om/stores'
 import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarouselStore'
-import { orbitDockStore } from '../pages/OrbitPage/OrbitDock'
+import { orbitDockStore } from '../pages/OrbitPage/OrbitDockStore'
 
 // TODO these would be easier to search if they all prefixed with something
 
@@ -80,8 +80,8 @@ export default memo(function MainShortcutHandler(props: {
           return
         }
         // clear input if written in
-        if (queryStore.hasQuery) {
-          queryStore.clearQuery()
+        if (queryStore!.hasQuery) {
+          queryStore!.clearQuery()
           return
         }
         // close app drawer if open

@@ -60,9 +60,13 @@ class OrbitAppStore {
   )
 
   isActive = react(
-    () => [this.props.isVisible, this.props.disableInteraction, paneManagerStore.activePane.id],
-    async ([isVisible, disableInteraction, activePaneId], { sleep, when }) => {
-      if (!isVisible || disableInteraction) {
+    () => [
+      this.props.isVisible,
+      this.props.disableInteraction,
+      `${this.props.id}` === paneManagerStore.activePane.id,
+    ],
+    async ([isVisible, disableInteraction, isActive], { sleep, when }) => {
+      if (isVisible === false || disableInteraction) {
         return false
       }
       await sleep(40)
@@ -72,8 +76,7 @@ class OrbitAppStore {
       if (appsDrawerStore.isAnimating) {
         await when(() => !appsDrawerStore.isAnimating)
       }
-      console.log('is active...', `${this.props.id}`, activePaneId)
-      return `${this.props.id}` === activePaneId
+      return isActive
     },
     {
       defaultValue: false,

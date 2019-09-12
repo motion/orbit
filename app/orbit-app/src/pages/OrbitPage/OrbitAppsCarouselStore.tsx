@@ -299,7 +299,7 @@ class OrbitAppsCarouselStore {
   }
 }
 
-export const stackMarginLessPct = 0.6
+export const stackMarginLessPct = 0.7
 export const appsCarouselStore = createUsableStore(OrbitAppsCarouselStore)
 export const useAppsCarousel = appsCarouselStore.useStore
 window['appsCarousel'] = appsCarouselStore

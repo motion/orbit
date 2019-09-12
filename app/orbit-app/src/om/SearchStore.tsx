@@ -228,7 +228,7 @@ class SearchStoreStore {
 
       // split into chunks to avoid heavy work
       // react concurrent + react window lazy loading could do this work better
-      for (const take of [10, 10, 20, 20]) {
+      for (const take of [5, 5, 10, 10, 10, 10]) {
         const success = await addSearchResults({
           take,
         })

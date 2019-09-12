@@ -10,6 +10,9 @@ if (!root.require.__proxiedRequire) {
   global['require'] = root.require
 }
 
+// temp fix: see gloss/config.js et all
+process.env.RENDER_TARGET = 'node'
+
 const { workersRoot } = require('./OrbitWorkersRoot')
 
 const log = new Logger('orbit-workers')

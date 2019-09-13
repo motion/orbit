@@ -60,6 +60,7 @@ export const PlainIcon = ({
   svg,
   tooltip,
   tooltipProps,
+  name,
   ...props
 }: IconProps) => {
   const theme = useTheme(props)
@@ -82,11 +83,10 @@ export const PlainIcon = ({
     }
   }
 
-  let name = props.name
-  if (typeof props.name === 'string') {
-    const nameTrim = props.name.trim()
+  if (typeof name === 'string') {
+    const nameTrim = name.trim()
     if (nameTrim.indexOf('<svg') === 0) {
-      svg = props.name
+      svg = name
       name = ''
     }
   }
@@ -104,9 +104,7 @@ export const PlainIcon = ({
         opacity={opacity}
         {...props}
       >
-        <svg
-          width={`${size}px`}
-          height={`${size}px`}
+        <div
           style={{
             fill: 'currentColor',
             alignItems: 'center',
@@ -126,7 +124,7 @@ export const PlainIcon = ({
     // choose which pixel grid is most appropriate for given icon size
     const pixelGridSize = size >= SIZE_LARGE ? SIZE_LARGE : SIZE_STANDARD
     // render path elements, or nothing if icon name is unknown.
-    const iconName = findName(props.name)
+    const iconName = findName(name)
     const paths = renderSvgPaths(pixelGridSize, iconName)
     const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
 

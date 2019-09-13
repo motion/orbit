@@ -4,7 +4,7 @@ import { capitalize } from 'lodash'
 import pluralize from 'pluralize'
 import React, { memo, useCallback, useRef } from 'react'
 
-import { API } from './api.node'
+import ListsApi from './api.node'
 
 const Editor = getEditor()
 
@@ -13,7 +13,7 @@ export default createApp({
   name: 'Lists',
   icon: 'list',
   iconColors: ['rgb(57, 204, 204)', 'rgb(61, 153, 112)'],
-  api: () => API,
+  api: ListsApi,
   app: () => {
     const treeList = useCreateTreeList(id)
     return (
@@ -41,7 +41,6 @@ export function ListsAppIndex(props: NavigatorProps) {
   return (
     <>
       <TreeList
-        title="ok"
         use={treeList}
         sortable
         alwaysSelected

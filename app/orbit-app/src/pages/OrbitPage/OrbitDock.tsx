@@ -1,6 +1,6 @@
 import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, getAppDefinition, RenderAppProps, useActiveUser, useReaction, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { Col, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
+import { Col, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, useDebounceValue, usePosition, useWindowSize, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { partition } from 'lodash'
 import React, { memo, useContext, useMemo, useRef } from 'react'
@@ -8,8 +8,11 @@ import React, { memo, useContext, useMemo, useRef } from 'react'
 import { AppsDrawerStore } from '../../om/AppsDrawerStore'
 import { useOm } from '../../om/om'
 import { appsDrawerStore, paneManagerStore, useAppsDrawerStore } from '../../om/stores'
+import { dockWidth } from './dockWidth'
 import { OrbitApp } from './OrbitApp'
 import { OrbitDockStore, orbitDockStore } from './OrbitDockStore'
+
+const dockRightSpace = (dockWidth - 38) / 2
 
 export const OrbitDock = memo(() => {
   const store = orbitDockStore.useStore()
@@ -23,48 +26,80 @@ export const OrbitDock = memo(() => {
     activeDockApps,
     _ => _.identifier === 'settings' || _.identifier === 'apps',
   )
-  const nodeRef = useRef(null)
-  const size = useNodeSize({
-    ref: nodeRef,
-    throttle: 200,
-  })
 
   return (
-    <Col
-      position="absolute"
-      top={56}
-      nodeRef={nodeRef}
-      right={0}
-      padding={[15, 0, 10, 0]}
-      space="lg"
-      onMouseEnter={store.hoverEnter}
-      onMouseLeave={store.hoverLeave}
-      zIndex={100000000}
-      pointerEvents={store.state === 'closed' ? 'none' : 'inherit'}
-      transform={
-        store.isOpen
-          ? {
-              x: 0,
-            }
-          : {
-              x: size.width + 40,
-            }
-      }
-      transition={store.isOpen ? `all ease 300ms` : `all ease-out 300ms 150ms`}
-    >
-      <OrbitDockPanel offset={0} apps={topDockApps} />
-      <OrbitDockPanel offset={topDockApps.length} apps={bottomDockApps} />
-      <Dock space="sm" position="relative" flexDirection="column" bottom="auto">
-        <DockThemeButton index={topDockApps.length + bottomDockApps.length} />
-        <DockVibrancyButton index={topDockApps.length + bottomDockApps.length + 1} />
-      </Dock>
-    </Col>
+    <>
+      <Col
+        position="absolute"
+        top={66}
+        right={0}
+        space="lg"
+        onMouseEnter={store.hoverEnter}
+        onMouseLeave={store.hoverLeave}
+        zIndex={100000000}
+        pointerEvents={store.state === 'closed' ? 'none' : 'inherit'}
+        transform={
+          store.isOpen
+            ? {
+                x: 0,
+              }
+            : {
+                x: '100%',
+              }
+        }
+        transition={store.isOpen ? `all ease 300ms` : `all ease-out 300ms 150ms`}
+      >
+        <OrbitDockPanel offset={0} apps={topDockApps} />
+        <OrbitDockPanel offset={topDockApps.length} apps={bottomDockApps} />
+        <Dock
+          right={dockRightSpace}
+          space="sm"
+          position="relative"
+          flexDirection="column"
+          bottom="auto"
+        >
+          <DockThemeButton index={topDockApps.length + bottomDockApps.length} />
+          <DockVibrancyButton index={topDockApps.length + bottomDockApps.length + 1} />
+        </Dock>
+      </Col>
+      <DockBackground isOpen={store.isOpen} elevation={3} />
+    </>
   )
 })
 
+const DockBackground = gloss<ViewProps & { isOpen: boolean }>(View, {
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  width: dockWidth,
+  zIndex: 1,
+  transition: `all ease-out 300ms 150ms`,
+  opacity: 0,
+  transform: {
+    x: '100%',
+  },
+
+  isOpen: {
+    transition: `all ease 300ms`,
+    opacity: 1,
+    transform: {
+      x: 0,
+    },
+  },
+}).theme((_, theme) => ({
+  background: theme.background.setAlpha(0.75),
+}))
+
 export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
   return (
-    <Dock position="relative" flexDirection="column" className="orbit-dock" bottom="auto">
+    <Dock
+      right={dockRightSpace}
+      position="relative"
+      flexDirection="column"
+      className="orbit-dock"
+      bottom="auto"
+    >
       {props.apps.map((app, index) => (
         <OrbitDockButton
           key={app.id}
@@ -94,6 +129,10 @@ const dockButtonProps = (
 ): Partial<DockButtonProps> => {
   const drawerOpen = drawerStore.isOpen
   return {
+    background: 'transparent',
+    glint: false,
+    elevation: 0,
+    space: 16,
     showLabelOnHover: true,
     onMouseMove: () => {
       if (appsDrawerStore.isOpen) return
@@ -222,7 +261,7 @@ const OrbitDockButton = memo(function OrbitDockButton({
         id={`${app.id}`}
         active={isActive}
         onClick={() => {
-          om.actions.router.showAppPage({ id: `${app.id!}`, toggle: 'docked' })
+          om.actions.router.showAppPage({ id: `${app.id!}` })
         }}
         icon={definition.icon || 'layers'}
         label={app.name}

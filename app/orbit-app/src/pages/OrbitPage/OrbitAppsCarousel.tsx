@@ -152,9 +152,8 @@ function GeometryScrollUpdater() {
   return null
 }
 
-const OrbitAppsCarouselFrame = memo(props => {
+const OrbitAppsCarouselFrame = props => {
   const { isOpen } = useAppsDrawerStore()
-
   return (
     <View
       data-is="OrbitAppsCarousel"
@@ -165,7 +164,7 @@ const OrbitAppsCarouselFrame = memo(props => {
       {...props}
     />
   )
-})
+}
 
 /**
  * Handles visibility of the app as it moves in and out of viewport

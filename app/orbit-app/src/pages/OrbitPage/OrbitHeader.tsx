@@ -10,6 +10,7 @@ import { useRef } from 'react'
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
 import { appsDrawerStore, useOrbitStore } from '../../om/stores'
+import { dockWidth } from './dockWidth'
 import { headerButtonProps } from './headerButtonProps'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarouselStore'
 import { orbitDockStore } from './OrbitDockStore'
@@ -116,7 +117,7 @@ export const OrbitHeader = memo(() => {
             </Row>
           </Row>
         </HeaderContain>
-        <HeaderSide space="sm" spaceAround="md" justifyContent="flex-end" slim={slim}>
+        <HeaderSide space="sm" justifyContent="flex-end" slim={slim}>
           <View flex={1} />
           <OrbitDockOpenButton />
         </HeaderSide>
@@ -134,11 +135,10 @@ export const OrbitHeader = memo(() => {
 const OrbitDockOpenButton = memo(() => {
   const orbitDock = orbitDockStore.useStore()
   return (
-    <View position="relative">
+    <View position="relative" width={dockWidth} alignItems="center">
       <HeaderButtonPassProps>
         <Button
           color={theme => (theme.background.isDark() ? '#fff' : '#000')}
-          margin={[0, 10, 0, 0]}
           width={30}
           height={30}
           icon="selection"
@@ -256,7 +256,7 @@ const OrbitHeaderContainer = gloss<any>(View, {
   position: 'relative',
   overflow: 'hidden',
   transition: 'all ease 300ms',
-  zIndex: 0,
+  zIndex: 2,
 }).theme((props, theme) => ({
   background: props.background || theme.headerBackground || theme.background,
 }))

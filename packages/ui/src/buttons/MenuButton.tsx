@@ -55,7 +55,7 @@ export const MenuButton = memo((props: MenuButtonProps) => {
           >
             {spaceElement}
             {!!children && <BorderLeft top={4} bottom={4} />}
-            <Icon size={12 * scaledSize} name="caret-down" {...openIconProps} />
+            <Icon size={12 * scaledSize} name="caret-down" color={rest.color} {...openIconProps} />
             {spaceElement}
           </View>
         }

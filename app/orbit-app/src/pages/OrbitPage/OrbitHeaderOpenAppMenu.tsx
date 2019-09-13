@@ -124,6 +124,11 @@ export const OrbitHeaderOpenAppMenu = memo(
     return (
       <MenuButton
         size={1}
+        alt="translucent"
+        // background={theme => theme.background.setAlpha(0.33)}
+        // borderColor={theme => theme.borderColor.setAlpha(0.5)}
+        // color={theme => theme.parent.background}
+        glint={false}
         sizeRadius={1.6}
         fontWeight={500}
         tooltip="Open to desktop (⌘ + ⏎)"

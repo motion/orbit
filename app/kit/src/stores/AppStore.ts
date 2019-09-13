@@ -19,7 +19,7 @@ export class AppStore {
     this.menuItems = items
   }
 
-  sidebarWidth = Math.min(450, Math.max(240, window.innerWidth / 3.2))
+  sidebarWidth = Math.min(450, Math.max(240, window.innerWidth / 3.4))
   lastSidebarWidth = react(() => this.sidebarWidth, {
     delayValue: true,
     defaultValue: this.sidebarWidth,

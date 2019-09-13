@@ -47,10 +47,10 @@ export const OrbitAppsDrawer = memo(() => {
       pointerEvents={appsDrawer.isOpen ? 'auto' : 'none'}
       className="orbit-apps-drawer"
       zIndex={1000}
-      top={20}
-      left={20}
-      right={60}
-      bottom={20}
+      top={15}
+      left={15}
+      right={70}
+      bottom={15}
     >
       <Card
         nodeRef={frameRef}

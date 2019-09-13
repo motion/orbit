@@ -194,6 +194,7 @@ class AppCardStore {
     async ([isFocused, zoomedIn, isAnimating], { getValue }) => {
       if (getValue()) return
       ensure('isFocused', isFocused)
+      await sleep(50)
       ensure('not animating', !isAnimating)
       if (!zoomedIn) {
         await sleep(800)

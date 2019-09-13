@@ -255,6 +255,7 @@ class OrbitAppsCarouselStore {
       this.animateAndScrollTo(this.focusedIndex)
     }
   }
+
   setZoomedOut(next: boolean = true) {
     this.state.zoomedOut = next
     this.zoomIntoNextApp = false

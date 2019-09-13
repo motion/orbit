@@ -77,7 +77,7 @@ export const OrbitHeader = memo(() => {
           </HeaderSide>
         </HeaderButtonPassProps>
         <HeaderContain space spaceAround isActive={false} isDeveloping={isDeveloping}>
-          <OrbitHeaderInput fontSize={slim ? 15 : 18} />
+          <OrbitHeaderInput fontSize={slim ? 15 : 20} />
 
           <Row space transition="all ease 300ms">
             <SurfacePassProps sizeRadius={1.5} sizeHeight={0.9} sizeIcon={1.1} sizePadding={1.2}>
@@ -86,6 +86,7 @@ export const OrbitHeader = memo(() => {
 
             <Row
               space
+              alignItems="center"
               {...!isOnTearablePane && zoomedIn && { pointerEvents: 'none', opacity: 0.3 }}
             >
               {!isTorn && (

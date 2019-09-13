@@ -123,7 +123,7 @@ export const OrbitHeaderOpenAppMenu = memo(
 
     return (
       <MenuButton
-        size={1.105}
+        size={1}
         sizeRadius={1.6}
         fontWeight={500}
         tooltip="Open to desktop (⌘ + ⏎)"
@@ -134,7 +134,7 @@ export const OrbitHeaderOpenAppMenu = memo(
         opacity={disabled ? 0.5 : 1}
         openIconProps={useMemo(
           () => ({
-            name: isDeveloping ? 'edit' : 'chevron-down',
+            name: isDeveloping ? 'edit' : 'caret-down',
           }),
           [isDeveloping],
         )}

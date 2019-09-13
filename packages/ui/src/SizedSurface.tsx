@@ -2,9 +2,10 @@ import { mergeDefined } from '@o/utils'
 import React from 'react'
 
 import { useScale } from './Scale'
+import { useSurfaceProps } from './SizedSurfacePropsContext'
 import { getSize } from './Sizes'
 import { Size } from './Space'
-import { Surface, SurfaceProps, SurfaceSpecificProps, useSurfaceProps } from './Surface'
+import { Surface, SurfaceProps, SurfaceSpecificProps } from './Surface'
 
 export const LINE_HEIGHT = 30
 

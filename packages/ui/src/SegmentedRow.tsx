@@ -3,7 +3,8 @@ import React from 'react'
 
 import { BreadcrumbInfo, Breadcrumbs, BreadcrumbsProps } from './Breadcrumbs'
 import { SizedSurfaceProps } from './SizedSurface'
-import { SurfacePassProps, SurfaceProps, useSurfaceProps } from './Surface'
+import { SurfacePassProps, useSurfaceProps } from './SizedSurfacePropsContext'
+import { SurfaceProps } from './Surface'
 
 // manages a row of surfaces nicely
 // will round the start/end corners

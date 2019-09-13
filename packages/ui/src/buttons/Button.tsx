@@ -5,7 +5,7 @@ import React, { memo, useCallback } from 'react'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { useUncontrolled } from '../helpers/useUncontrolled'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
-import { useSurfaceProps } from '../Surface'
+import { useSurfaceProps } from '../SizedSurfacePropsContext'
 
 export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> &
   SizedSurfaceProps & {

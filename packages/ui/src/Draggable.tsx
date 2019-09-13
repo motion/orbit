@@ -61,11 +61,11 @@ type UseDraggableProps = {
   ref: RefObject<HTMLElement>
   enabled: boolean
   delay?: number
-  onDragStart?: () => any
+  onDragStart?: (...args: any[]) => any
   onDragEnd?: () => any
 }
 
-export function useDraggable({ enabled, item, ref, delay = 800 }: UseDraggableProps) {
+export function useDraggable({ enabled, item, ref, delay = 800, onDragStart }: UseDraggableProps) {
   const store = Context.useStore()
 
   // starts dragging if you hold for `delay` time and dont move mouse
@@ -87,6 +87,7 @@ export function useDraggable({ enabled, item, ref, delay = 800 }: UseDraggablePr
         window.removeEventListener('mousemove', clearDrag)
         window.removeEventListener('mouseup', mouseUp)
         store.setDragging(item, e)
+        onDragStart && onDragStart(e, item)
       }, delay)
     }
     node.addEventListener('mousedown', onMouseDown)

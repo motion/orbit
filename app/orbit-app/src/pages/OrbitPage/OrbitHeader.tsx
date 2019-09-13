@@ -1,5 +1,5 @@
-import { AppIcon, useModels, useStore } from '@o/kit'
-import { BuildStatusModel } from '@o/models'
+import { AppIcon, command, useModels, useStore } from '@o/kit'
+import { BuildStatusModel, DragDropCommand } from '@o/models'
 import { App } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
 import { useReaction } from '@o/use-store'
@@ -107,7 +107,14 @@ export const OrbitHeader = memo(() => {
                   hoverStyle={{
                     opacity: 1,
                   }}
-                  onClick={om.actions.router.toggleSetupAppPage}
+                  // onClick={om.actions.router.toggleSetupAppPage}
+                  onMouseDown={e => {
+                    command(DragDropCommand, {
+                      type: 'json',
+                      data: {},
+                      at: { x: e.clientX, y: e.clientY },
+                    })
+                  }}
                 />
               )}
               <OrbitHeaderOpenAppMenu

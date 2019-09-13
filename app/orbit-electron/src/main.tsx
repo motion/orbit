@@ -3,9 +3,10 @@ import 'raf/polyfill'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
-import { NewFallbackServerPortCommand, SendClientDataCommand, ToggleOrbitMainCommand } from '@o/models'
+import { DragDropCommand, NewFallbackServerPortCommand, SendClientDataCommand, ToggleOrbitMainCommand } from '@o/models'
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'
+import { nativeImage } from 'electron'
 import electronDebug from 'electron-debug'
 import * as React from 'react'
 import waitOn from 'wait-on'
@@ -72,6 +73,18 @@ export async function main() {
         resolveCommand(ToggleOrbitMainCommand, async next => {
           const showOrbitMain = typeof next === 'boolean' ? next : !Electron.state.showOrbitMain
           Electron.setState({ showOrbitMain })
+        }),
+
+        resolveCommand(DragDropCommand, async (props) => {
+          console.log('got', props)
+          const { ipcMain } = require('electron')
+          ipcMain.on('ondragstart', (event, _filePath) => {
+            event.sender.startDrag({
+              // todo write json to a tmp file
+              file: '/Users/nw/desktop/orb3.jpg',
+              icon: nativeImage.createFromPath('/Users/nw/desktop/orb3.jpg'),
+            })
+          })
         }),
       ],
     })

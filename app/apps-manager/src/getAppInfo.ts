@@ -8,7 +8,7 @@ const log = new Logger('getAppInfo')
 export async function getAppInfo(appRoot: string): Promise<AppDefinition | null> {
   try {
     const path = join(appRoot, 'dist', 'appInfo.json')
-    log.info(`getAppInfo ${path}`)
+    log.debug(`getAppInfo ${path}`)
     const appDef = await readJSON(path)
     if (!appDef) {
       throw new Error(`No appInfo export default found`)

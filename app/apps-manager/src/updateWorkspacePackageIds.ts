@@ -19,7 +19,7 @@ export async function updateWorkspacePackageIds(workspaceRoot: string) {
   await Promise.all(
     paths.map(async ({ packageId, directory }) => {
       const appInfo = await getAppInfo(directory)
-      log.verbose(`got ${packageId} ${JSON.stringify(appInfo)}`)
+      log.debug(`got ${packageId} ${JSON.stringify(appInfo)}`)
       if (appInfo) {
         if (appInfo.id) {
           setIdentifierToPackageId(appInfo.id, packageId)

@@ -31,7 +31,7 @@ export async function requireAppDefinition({
     }
   }
 
-  log.verbose(packageRoot)
+  log.debug(packageRoot)
 
   // can specify preferred definition
   let definition: AppDefinition | null = null
@@ -41,7 +41,7 @@ export async function requireAppDefinition({
   }
 
   if (definition) {
-    log.verbose(`got def ${definition.name}`)
+    log.debug(`got def ${definition.name}`)
     // update cache
     setIdentifierToPackageId(definition.id, packageId)
     return {

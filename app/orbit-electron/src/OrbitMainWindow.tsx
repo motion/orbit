@@ -33,6 +33,8 @@ function focusApp(shown: boolean) {
 class OrbitMainWindowStore {
   props: {
     enabled: boolean
+  } = {
+    enabled: false,
   }
 
   alwaysOnTop = true
@@ -49,17 +51,19 @@ class OrbitMainWindowStore {
     return (this.windowRef && this.windowRef.window) || null
   }
 
-  updateSize = react(
+  updateScreenSize = react(
     () => Electron.state.screenSize,
     screenSize => {
+      log.info(`updateScreenSize`, this.props.enabled, screenSize)
       ensure('enabled', !!this.props.enabled)
       ensure('has size', screenSize[0] !== 0)
       const bounds = getDefaultAppBounds(screenSize)
+      // update if never changed
+      if (!this.initialBounds || isEqual(this.initialBounds, this.bounds)) {
+        this.bounds = bounds
+      }
       if (!this.initialBounds) {
         this.initialBounds = bounds
-      }
-      if (isEqual(this.initialBounds, this.bounds)) {
-        this.bounds = bounds
       }
     },
   )
@@ -121,8 +125,13 @@ export function OrbitMainWindow(props: { restartKey?: any }) {
   const store = useStore(OrbitMainWindowStore, {
     enabled: isMainWindow,
   })
+  global['OrbitMainWindowStore'] = OrbitMainWindowStore
 
-  log.info(`render ${Electron.appConf.appRole} ${windowId} ${store.show}`)
+  log.info(
+    `render ${Electron.appConf.appRole} ${isMainWindow} ${windowId} ${store.show} ${JSON.stringify(
+      store.bounds,
+    )}`,
+  )
 
   useMainWindowEffects({ isMainWindow })
 

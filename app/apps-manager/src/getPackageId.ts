@@ -9,7 +9,7 @@ export const identifierToPackageId: { [key: string]: string } = {}
 const log = new Logger('getPackageId')
 
 export function setIdentifierToPackageId(identifier: string, packageId: string) {
-  log.verbose(`setIdentifierToPackageId ${identifier} ${packageId}`)
+  log.debug(`setIdentifierToPackageId ${identifier} ${packageId}`)
   identifierToPackageId[identifier] = packageId
 }
 
@@ -21,7 +21,7 @@ export async function getPackageId(
     await updateWorkspacePackageIds(options.rescanWorkspacePath)
   }
   const info = JSON.stringify(identifierToPackageId, null, 2)
-  log.verbose(`getPackageId ${identifier}, checking loaded app identifiers`, info)
+  log.debug(`getPackageId ${identifier}, checking loaded app identifiers`, info)
   if (identifierToPackageId[identifier]) {
     return identifierToPackageId[identifier]
   }

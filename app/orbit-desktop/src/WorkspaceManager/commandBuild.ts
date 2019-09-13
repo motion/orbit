@@ -163,7 +163,7 @@ async function getBuildInfo(appDir: string) {
     )).join(''),
   )
   const orbitConfig = JSON.stringify(omit(globalConfig.paths, 'nodeBinary'))
-  log.verbose(`getBuildInfo orbitConfig ${orbitConfig}`)
+  log.debug(`getBuildInfo orbitConfig ${orbitConfig}`)
   return {
     configFiles,
     appHash,

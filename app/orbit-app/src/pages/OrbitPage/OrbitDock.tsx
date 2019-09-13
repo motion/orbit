@@ -264,6 +264,9 @@ const OrbitDockButton = memo(function OrbitDockButton({
       <DockButton
         id={`${app.id}`}
         opacity={isActive ? 1 : 0.85}
+        hoverStyle={{
+          opacity: 1,
+        }}
         onClick={() => {
           om.actions.router.showAppPage({ id: `${app.id!}` })
         }}

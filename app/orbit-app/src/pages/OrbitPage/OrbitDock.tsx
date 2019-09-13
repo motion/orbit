@@ -1,11 +1,10 @@
 import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, getAppDefinition, RenderAppProps, useActiveUser, useReaction, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { Col, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, useDebounceValue, usePosition, useWindowSize, View, ViewProps } from '@o/ui'
+import { Col, Divider, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, useDebounceValue, usePosition, useWindowSize, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { partition } from 'lodash'
 import React, { memo, useContext, useMemo, useRef } from 'react'
 
-import { AppsDrawerStore } from '../../om/AppsDrawerStore'
 import { useOm } from '../../om/om'
 import { appsDrawerStore, paneManagerStore, useAppsDrawerStore } from '../../om/stores'
 import { dockWidth } from './dockWidth'
@@ -31,8 +30,9 @@ export const OrbitDock = memo(() => {
     <>
       <Col
         position="absolute"
-        top={66}
+        top={70}
         right={0}
+        bottom={15}
         space="lg"
         onMouseEnter={store.hoverEnter}
         onMouseLeave={store.hoverLeave}
@@ -50,7 +50,17 @@ export const OrbitDock = memo(() => {
         transition={store.isOpen ? `all ease 300ms` : `all ease-out 300ms 150ms`}
       >
         <OrbitDockPanel offset={0} apps={topDockApps} />
+
+        <View width={dockWidth * 0.8} marginRight={dockWidth * 0.1} alignSelf="flex-end">
+          <Divider />
+        </View>
+
         <OrbitDockPanel offset={topDockApps.length} apps={bottomDockApps} />
+
+        <View width={dockWidth * 0.8} marginRight={dockWidth * 0.1} alignSelf="flex-end">
+          <Divider />
+        </View>
+
         <Dock
           right={dockRightSpace}
           space="sm"
@@ -127,9 +137,8 @@ export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
 const dockButtonProps = (
   index: number,
   dockStore: OrbitDockStore,
-  drawerStore: AppsDrawerStore,
+  showLabel: boolean,
 ): Partial<DockButtonProps> => {
-  const drawerOpen = drawerStore.isOpen
   return {
     background: 'transparent',
     glint: false,
@@ -158,7 +167,7 @@ const dockButtonProps = (
       transform: {
         y: -10,
       },
-      ...(!drawerOpen &&
+      ...(showLabel &&
         dockStore.isOpen && {
           transition: `all ease-out 400ms ${230 + index * 30}ms`,
           opacity: 1,
@@ -200,7 +209,8 @@ const DockThemeButton = memo(({ index }: { index: number }) => {
       }
       icon={theme.icon}
       label={`Theme: ${theme.name}`}
-      {...dockButtonProps(index, dockStore, drawerStore)}
+      showLabelOnHover
+      {...dockButtonProps(index, dockStore, false)}
     />
   )
 })
@@ -227,9 +237,10 @@ const DockVibrancyButton = memo(({ index }: { index: number }) => {
           x.settings!.vibrancy = vibrancies[(vibrancyIndex + 1) % vibrancies.length].value
         })
       }
+      showLabelOnHover
       icon={vibrancy.icon}
       label={`Vibrancy: ${vibrancy.name}`}
-      {...dockButtonProps(index, dockStore, drawerStore)}
+      {...dockButtonProps(index, dockStore, false)}
     />
   )
 })
@@ -273,7 +284,7 @@ const OrbitDockButton = memo(function OrbitDockButton({
         icon={definition.icon || 'layers'}
         label={app.name}
         nodeRef={buttonRef}
-        {...dockButtonProps(index, dockStore, drawerStore)}
+        {...dockButtonProps(index, dockStore, !drawerStore.isOpen)}
         {...rest}
       />
       {nodePosition && (

@@ -4,8 +4,8 @@ import { App } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 import { useRef } from 'react'
+import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
@@ -256,7 +256,8 @@ const OrbitHeaderContainer = gloss<any>(View, {
   position: 'relative',
   overflow: 'hidden',
   transition: 'all ease 300ms',
-  zIndex: 2,
+  // above OrbitPageInnerChrome/DockBackground
+  zIndex: 5,
 }).theme((props, theme) => ({
   background: props.background || theme.headerBackground || theme.background,
 }))

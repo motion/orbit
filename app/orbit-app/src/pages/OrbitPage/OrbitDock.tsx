@@ -83,7 +83,8 @@ const DockBackground = gloss<ViewProps & { isOpen: boolean }>(View, {
   right: 0,
   bottom: 0,
   width: dockWidth,
-  zIndex: 1,
+  // above OrbitAppsDrawer, below OrbitHeader
+  zIndex: 4,
   transition: `all ease-out 300ms 150ms`,
   opacity: 0,
   transform: {
@@ -274,7 +275,7 @@ const OrbitDockButton = memo(function OrbitDockButton({
     <>
       <DockButton
         id={`${app.id}`}
-        opacity={isActive ? 1 : 0.85}
+        opacity={isActive ? 1 : drawerStore.isOpen ? 0.75 : 0.85}
         hoverStyle={{
           opacity: 1,
         }}

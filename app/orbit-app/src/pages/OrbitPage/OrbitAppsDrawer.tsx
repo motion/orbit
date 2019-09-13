@@ -1,5 +1,5 @@
 import { getAppDefinition } from '@o/kit'
-import { Card, FullScreen, useNodeSize, useTheme } from '@o/ui'
+import { Card, FullScreen, useTheme } from '@o/ui'
 import { useAnimation } from 'framer-motion'
 import React, { memo, useEffect, useRef } from 'react'
 
@@ -9,16 +9,19 @@ import { OrbitApp } from './OrbitApp'
 
 const variants = {
   open: {
-    y: 0,
+    x: 0,
     opacity: 1,
-    rotateX: '0%',
-    transition: { stiffness: 150, damping: 30 },
+    // breaks
+    // rotateY: '0%',
+    // transition: { type: 'spring', stiffness: 500, damping: 25 },
+    transition: { ease: 'easeIn', duration: 0.12 },
   },
   closed: {
-    y: '20%',
+    x: 20,
     opacity: 0,
-    rotateX: '10%',
-    transition: { stiffness: 150, damping: 30 },
+    // rotateY: '10%',
+    // transition: { type: 'spring', stiffness: 500, damping: 25 },
+    transition: { ease: 'easeIn', duration: 0.12 },
   },
 }
 
@@ -28,8 +31,8 @@ export const OrbitAppsDrawer = memo(() => {
   const { state } = useOm()
   const apps = state.apps.activeSettingsApps
   const frameRef = useRef<HTMLElement>(null)
-  const frameSize = useNodeSize({ ref: frameRef, throttle: 300 })
   const appsDrawer = appsDrawerStore.useStore()
+  const activeDrawerId = appsDrawer.activeDrawerId
   const animation = useAnimation()
 
   useEffect(() => {
@@ -46,7 +49,8 @@ export const OrbitAppsDrawer = memo(() => {
       perspective="1200px"
       pointerEvents={appsDrawer.isOpen ? 'auto' : 'none'}
       className="orbit-apps-drawer"
-      zIndex={1000}
+      // below DockBackground
+      zIndex={4}
       top={15}
       left={15}
       right={70}
@@ -54,6 +58,9 @@ export const OrbitAppsDrawer = memo(() => {
     >
       <Card
         nodeRef={frameRef}
+        initial="closed"
+        animate={animation}
+        variants={variants}
         background={theme.backgroundStronger}
         boxShadow={[
           {
@@ -65,8 +72,6 @@ export const OrbitAppsDrawer = memo(() => {
         borderWidth={0}
         width="100%"
         height="100%"
-        initial="closed"
-        animate={animation}
         onUpdate={() => {
           clearTimeout(tm)
           console.log('update now')
@@ -76,12 +81,11 @@ export const OrbitAppsDrawer = memo(() => {
             appsDrawerStore.isAnimating = false
           }, 60)
         }}
-        variants={variants}
         position="relative"
         overflow="hidden"
       >
         {apps.map(app => {
-          const shouldShow = app.id === appsDrawer.activeDrawerId
+          const shouldShow = app.id === activeDrawerId
           return (
             <FullScreen
               key={app.id}

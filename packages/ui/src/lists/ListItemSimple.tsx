@@ -174,6 +174,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
         </Theme>
       )}
       <SizedSurface
+        className="list-item-surface"
         flexDirection="row"
         alignItems="center"
         subTheme="listItem"

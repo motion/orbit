@@ -275,7 +275,7 @@ export class Logger {
         true,
         // log direct to console if in high log mode
         logLevel > 3 ? 'info' : 'debug',
-        ...this.namespace,
+        this.namespace,
         ...messages,
       )
     } else if (level === 'info') {
@@ -304,7 +304,7 @@ export class Logger {
         this.timers.push({ time: Date.now(), message: messages[0] })
       }
     } else if (level === 'debug') {
-      this.flush(true, 'debug', ...this.namespace, ...messages)
+      this.flush(true, 'debug', this.namespace, ...messages)
     } else {
       this.flush(
         true,

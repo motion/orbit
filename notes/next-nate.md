@@ -1,3 +1,32 @@
+----
+
+# Features section for site
+
+## Technical:
+
+- React Refresh+ (with app split)
+- Webpack 5
+- Typescript 7 (optional chaining, nullish coalscing etc)
+- React Concurrent
+- Suspense powered app APIs
+- Multiprocess
+
+## Interface:
+
+- Framer Motion powered UI kit
+- <Geometry />
+- Virtualized, Groupable, Filterable Tables + Lists
+- Drag to select, keyboard shift+option selections
+- Persisted Resizable Grid Layouts
+
+## Platform:
+
+- Query Builder
+- GraphQL Explorer
+- Bit Syncing
+
+----
+
 Sep 12:
 
 - make dock apps float next to dock and not come from bottom:
@@ -23,7 +52,6 @@ Sep 12:
 
 - handle deleting apps, adding apps better
 - get clean workspace build better
-
 
 
 The plan from jun for Sep:

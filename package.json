@@ -99,7 +99,7 @@
     "sb-promisify": "^2.0.2",
     "sqlite": "^3.0.3",
     "ts-jest": "24.0.0",
-    "typescript": "3.5.3",
+    "typescript": "3.7.0-dev.20190913",
     "webpack-cli": "^3.3.7"
   },
   "resolutions": {

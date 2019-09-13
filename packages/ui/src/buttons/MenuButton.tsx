@@ -19,7 +19,7 @@ export type MenuButtonProps = ButtonProps &
 export const MenuButton = memo((props: MenuButtonProps) => {
   const { items, scrollable, children, openIconProps, open, openOnHover, size, ...rest } = props
   const sizedSurfaceProps = useSizedSurfaceProps(props)
-  const sizePx = +getSize('sm') * size
+  const sizePx = +getSize('sm') * getSize(size)
   const scaledSize = useScaledSize(size)
   const height = useSurfaceHeight(size)
   // using the same group ensures the tooltip closes when the menu opens

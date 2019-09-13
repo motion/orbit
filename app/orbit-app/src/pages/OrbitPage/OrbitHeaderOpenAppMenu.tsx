@@ -123,7 +123,7 @@ export const OrbitHeaderOpenAppMenu = memo(
 
     return (
       <MenuButton
-        size={1.1}
+        size={1.105}
         sizeRadius={1.6}
         fontWeight={500}
         tooltip="Open to desktop (⌘ + ⏎)"

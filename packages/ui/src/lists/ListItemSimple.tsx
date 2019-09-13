@@ -1,13 +1,13 @@
+import { isEqual } from '@o/fast-compare'
 import { idFn, isDefined, selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
 import { Box, gloss, Theme, ThemeContext, useTheme } from 'gloss'
-import React, { isValidElement, useCallback } from 'react'
+import React, { isValidElement, memo, useCallback } from 'react'
 
 import { BorderBottom } from '../Border'
 import { Button } from '../buttons/Button'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { useFocus } from '../Focus'
-import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { HighlightText } from '../Highlight'
 import { Icon } from '../Icon'
 import { ListSeparator } from '../ListSeparator'
@@ -25,7 +25,14 @@ import { useIsSelected } from './useIsSelected'
 
 // this wrapper required for virtualization to measure/style */}
 // prevents hard re-renders on resize by taking out the style prop
-export function ListItemSimple({ style, nodeRef, ...listProps }: ListItemSimpleProps) {
+export function ListItemSimple({
+  style,
+  nodeRef,
+  // @ts-ignore
+  draggableItem,
+  ...listProps
+}: ListItemSimpleProps) {
+  draggableItem
   return (
     <div style={style} ref={nodeRef}>
       <ListItemInner {...listProps} />
@@ -34,7 +41,7 @@ export function ListItemSimple({ style, nodeRef, ...listProps }: ListItemSimpleP
 }
 
 // TODO re-check if this memo is worth perf
-const ListItemInner = memoIsEqualDeep(function ListItemInner(props: ListItemSimpleProps) {
+const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
   const {
     date,
     location,
@@ -308,7 +315,7 @@ const ListItemInner = memoIsEqualDeep(function ListItemInner(props: ListItemSimp
       </SizedSurface>
     </Theme>
   )
-})
+}, isEqual)
 
 const ListItemTitleBar = gloss(Row, {
   width: '100%',

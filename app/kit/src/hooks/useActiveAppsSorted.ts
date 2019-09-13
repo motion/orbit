@@ -14,5 +14,6 @@ export const sortApps: (apps: AppBit[], paneSort: number[]) => AppBit[] = memoWe
 export function useActiveAppsSorted() {
   const activeApps = useActiveApps()
   const paneSort = useActivePaneSort()
-  return useMemo(() => sortApps(activeApps, paneSort), [paneSort, activeApps])
+  console.warn('paneSort', paneSort)
+  return useMemo(() => sortApps(activeApps, paneSort), [JSON.stringify(paneSort), activeApps])
 }

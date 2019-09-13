@@ -108,7 +108,10 @@ const FadeStoreContext = createStoreContext(
 )
 
 type FadeChildProps = ViewProps & {
+  // granular delay, 300, 400, etc
   delay?: number
+  // easier delay, 1, 2, 3
+  delayIndex?: number
   disable?: boolean
   fullscreen?: boolean
   reverse?: boolean
@@ -121,6 +124,7 @@ export const FadeChild = memo(
     transition = transitions.normal,
     children,
     delay,
+    delayIndex,
     disable,
     fullscreen,
     reverse,
@@ -163,7 +167,10 @@ export const FadeChild = memo(
         data-is="FadeChild"
         style={style}
         animate={shown ? animate : undefined}
-        transition={{ ...(transition as any), delay: (delay || 1) / 1000 }}
+        transition={{
+          ...(transition as any),
+          delay: delayIndex ? delayIndex / 5 : (delay || 1) / 1000,
+        }}
         {...rest}
       >
         {children}

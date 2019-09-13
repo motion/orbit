@@ -171,19 +171,19 @@ export default memo(() => {
         nodeRef={Fade.ref}
         header={
           <>
-            <FadeChild delay={0}>
+            <FadeChild delayIndex={0}>
               <PillButton>How</PillButton>
             </FadeChild>
-            <FadeChild delay={200}>
+            <FadeChild delayIndex={1}>
               <TitleText size="xxxl" sm-size="20px">
                 Make apps, easy.
               </TitleText>
             </FadeChild>
             <TitleTextSub margin="auto" minWidth={320}>
-              <FadeChild sm-display="inline" delay={350}>
+              <FadeChild sm-display="inline" delayIndex={2}>
                 &nbsp;Build tools as a team, sharing a rich set of building blocks.&nbsp;
               </FadeChild>
-              <FadeChild sm-display="inline" delay={500}>
+              <FadeChild sm-display="inline" delayIndex={3}>
                 Orbit comes with everything you need.
               </FadeChild>
             </TitleTextSub>
@@ -193,27 +193,27 @@ export default memo(() => {
         <Col maxWidth="100%" margin={[0, 'auto']}>
           <Row space {...mediaStyles.hiddenWhen.notsm}>
             <SubSection maxWidth="33%">
-              <FadeChild {...fadeAnimations.left} delay={600}>
+              <FadeChild {...fadeAnimations.left} delayIndex={4}>
                 <PillButtonDark>Import</PillButtonDark>
                 <Space />
                 <CenterText>
-                  Plug in the <Inline color="#E01C5A">{elements[index].beforeName}</Inline> data app
-                  with a click.
+                  Plug in the <Inline color="#E01C5A">{elements[index].beforeName}</Inline> data
+                  source & others with a click.
                 </CenterText>
               </FadeChild>
             </SubSection>
             <SubSection flex={2} padding={[true, 'xxl']}>
-              <FadeChild delay={600}>
+              <FadeChild delayIndex={4}>
                 <PillButtonDark>Display</PillButtonDark>
                 <Space />
                 <CenterText maxWidth={400} margin={[0, 'auto']}>
-                  Develop using powerful, simple views built on React and Typescript, all without
-                  setting up a build environment.
+                  Develop using powerful, simple views built on React and Typescript, with an
+                  amazing built in build system.
                 </CenterText>
               </FadeChild>
             </SubSection>
             <SubSection maxWidth="33%">
-              <FadeChild {...fadeAnimations.right} delay={700}>
+              <FadeChild {...fadeAnimations.right} delayIndex={4}>
                 <PillButtonDark>Export</PillButtonDark>
                 <Space />
                 <CenterText>
@@ -228,7 +228,7 @@ export default memo(() => {
 
           <Row space>
             <Flex alignItems="center" sm-display="none">
-              <FadeChild {...fadeAnimations.left} delay={800}>
+              <FadeChild {...fadeAnimations.left} delayIndex={5}>
                 <Image
                   userSelect="none"
                   alignSelf="center"
@@ -241,7 +241,7 @@ export default memo(() => {
               <FadeChild
                 key={`arrowBefore-${page}`}
                 {...fadeAnimations.left}
-                delay={800}
+                delayIndex={6}
                 alignSelf="flex-end"
               >
                 <Image
@@ -261,7 +261,7 @@ export default memo(() => {
               margin={0}
               sm-margin={[0, '-5%']}
             >
-              <FadeChild width="100%" delay={400}>
+              <FadeChild width="100%" delayIndex={5}>
                 <Button
                   alt="flat"
                   cursor="pointer"
@@ -290,12 +290,7 @@ export default memo(() => {
                 />
               </FadeChild>
 
-              <FadeChild
-                transition={transitions.slowNotBouncy}
-                delay={600}
-                marginBottom={-200}
-                zIndex={10}
-              >
+              <FadeChild {...fadeAnimations.up} delayIndex={5} marginBottom={-200} zIndex={10}>
                 <TiltSquircle
                   {...linkProps(elements[index].link)}
                   tagName="div"
@@ -330,7 +325,7 @@ export default memo(() => {
               <FadeChild
                 transition={transitions.slowNotBouncy}
                 {...fadeAnimations.up}
-                delay={800}
+                delayIndex={7}
                 width="100%"
                 height={300}
                 position="relative"
@@ -379,7 +374,7 @@ export default memo(() => {
             </Flex>
 
             <Flex alignItems="center" sm-display="none">
-              <FadeChild {...fadeAnimations.right} delay={400}>
+              <FadeChild {...fadeAnimations.right} delayIndex={5}>
                 <Image
                   userSelect="none"
                   alignSelf="center"
@@ -392,7 +387,7 @@ export default memo(() => {
                 />
               </FadeChild>
               <Space size="xxl" />
-              <FadeChild delay={600} alignSelf="flex-start">
+              <FadeChild delayIndex={6} alignSelf="flex-start">
                 <Image
                   key={`arrowAfter-${page}`}
                   custom={direction}

@@ -15,6 +15,7 @@ export function ManageApps() {
     app,
     definition: getAppDefinition(app.identifier!),
   }))
+  console.log('activeApps', activeApps)
   const viewAppDefs = useUserVisualAppDefinitions()
   const handleSortEnd = useAppSortHandler()
   const [dataApps, viewApps] = partition(activeApps, x => isDataDefinition(x.definition))
@@ -38,7 +39,7 @@ export function ManageApps() {
   }
 
   return (
-    <Section title="Apps" size="md" padding space="lg" scrollable="y">
+    <Section title="Apps" size="md" padding space="lg" scrollable="y" titleBorder>
       <SubSection padding={[true, 0]} title="View apps">
         {!viewApps.length && (
           <View height={200} position="relative">

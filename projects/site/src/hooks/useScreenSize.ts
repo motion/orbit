@@ -20,9 +20,11 @@ const getSize = ([isSmall, isMedium, isLarge]: any): ScreenSize => {
   return isLarge ? 'large' : isMedium ? 'medium' : isSmall ? 'small' : 'small'
 }
 
-export function useScreenSize(options?: {
-  onChange?: (size: ScreenSize) => any
-}): ScreenSize | undefined {
+export function useScreenSize(
+  options: {
+    onChange?: (size: ScreenSize) => any
+  } = {},
+): ScreenSize | undefined {
   const res = useMediaLayout([sizes.small, sizes.medium, sizes.large], {
     ...options,
     onChange: options.onChange ? x => options.onChange(getSize(x)) : null,

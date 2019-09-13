@@ -203,7 +203,7 @@ class ShouldRebuildMissingApi {}
 class ShouldRebuildMissingNodeApp {}
 class ShouldRebuildNewBuildInfo {}
 
-async function shouldRebuildApp(appRoot: string) {
+export async function shouldRebuildApp(appRoot: string) {
   try {
     // do some basic sanity checks
     // no buildInfo yet

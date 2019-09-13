@@ -1,3 +1,4 @@
+import { isEqual } from '@o/fast-compare'
 import { Logger } from '@o/logger'
 import { ChangeDesktopThemeCommand } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
@@ -37,14 +38,13 @@ class OrbitMainWindowStore {
   alwaysOnTop = true
   hasMoved = false
   isReady = false
-  size = [0, 0]
-  position = [0, 0]
-  initialState = {
+  bounds = {
     size: [0, 0],
     position: [0, 0],
   }
-
+  initialBounds = null
   windowRef = null
+
   get orbitRef(): BrowserWindow | null {
     return (this.windowRef && this.windowRef.window) || null
   }
@@ -54,27 +54,24 @@ class OrbitMainWindowStore {
     screenSize => {
       ensure('enabled', !!this.props.enabled)
       ensure('has size', screenSize[0] !== 0)
-      if (this.size[0] !== 0) {
-        ensure('not been moved yet', !this.hasMoved)
-      }
       const bounds = getDefaultAppBounds(screenSize)
-      this.position = bounds.position
-      this.size = bounds.size
-      this.initialState = {
-        size: this.size,
-        position: this.position,
+      if (!this.initialBounds) {
+        this.initialBounds = bounds
+      }
+      if (isEqual(this.initialBounds, this.bounds)) {
+        this.bounds = bounds
       }
     },
   )
 
   setSize = size => {
     this.hasMoved = true
-    this.size = size
+    this.bounds.size = size
   }
 
   setPosition = position => {
     this.hasMoved = true
-    this.position = position
+    this.bounds.position = position
   }
 
   handleRef = ref => {
@@ -119,29 +116,31 @@ class OrbitMainWindowStore {
   }
 }
 
-export function OrbitMainWindow() {
+export function OrbitMainWindow(props: { restartKey?: any }) {
   const { isMainWindow, windowId } = useStore(Electron)
   const store = useStore(OrbitMainWindowStore, {
     enabled: isMainWindow,
   })
 
-  log.info(`render ${Electron.appConf.appRole} ${windowId} ${store.show}`, store.initialState)
+  log.info(`render ${Electron.appConf.appRole} ${windowId} ${store.show}`)
 
   useMainWindowEffects({ isMainWindow })
 
   // wait for screensize/measure
-  if (!store.initialState.size[0]) {
+  if (!store.bounds.size[0]) {
     return null
   }
 
   return (
     <OrbitAppWindow
+      key={props.restartKey}
       windowId={windowId}
       locationQuery={{
         ...(process.env.NODE_ENV !== 'development' && {
           renderMode: 'react.concurrent',
         }),
       }}
+      // titleBarStyle="customButtonsOnHover"
       show={store.show}
       onReadyToShow={store.setIsReady}
       // TODO i think i need to make this toggle on show for a few ms, then go back to normal
@@ -149,8 +148,8 @@ export function OrbitMainWindow() {
       focus={isMainWindow}
       // alwaysOnTop={store.isReady ? [store.alwaysOnTop, 'floating', 1] : false}
       forwardRef={store.handleRef}
-      defaultPosition={store.initialState.position}
-      defaultSize={store.initialState.size}
+      defaultPosition={store.bounds.position}
+      defaultSize={store.bounds.size}
       onResize={store.setSize}
       onPosition={store.setPosition}
       onMove={store.setPosition}

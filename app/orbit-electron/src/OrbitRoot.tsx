@@ -30,7 +30,7 @@ export function OrbitRoot() {
       <MenuItems
         restart={() => setState(state => ({ ...setState, restartKey: state.restartKey + 1 }))}
       />
-      <OrbitMainWindow key={state.restartKey} />
+      <OrbitMainWindow restartKey={state.restartKey} />
     </ReactronApp>
   )
 }

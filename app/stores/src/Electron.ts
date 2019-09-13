@@ -23,7 +23,7 @@ class ElectronStore {
   lastAction = null
 
   state = deep({
-    showOrbitMain: false,
+    showOrbitMain: true,
     focusedWindowId: 'app',
     screenSize: [0, 0],
     updateState: {

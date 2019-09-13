@@ -28,7 +28,7 @@ function getChild(child: any, props: PassPropsProps) {
   if (isValidElement(child)) {
     return cloneElement(child, {
       ...props,
-      ...child.props,
+      ...(child.props as any),
     })
   }
   const Child = child

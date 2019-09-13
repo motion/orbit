@@ -156,7 +156,7 @@ export const OrbitSearchResults = memo(() => {
       }
     : {
         transform: {
-          rotateY: '2deg',
+          // rotateY: '2deg',
           scale: 1,
           x: 0,
         },

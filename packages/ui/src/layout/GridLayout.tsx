@@ -72,9 +72,9 @@ export type GridLayoutProps = GridLayoutPropsChildren | GridLayoutPropsItems
 const defaultProps: Partial<GridLayoutProps> = {
   columns: {
     xxs: 1,
-    xs: 1,
-    sm: 2,
-    md: 4,
+    xs: 2,
+    sm: 3,
+    md: 5,
     lg: 6,
   },
 }

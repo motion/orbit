@@ -92,6 +92,7 @@ const DockBackground = gloss<ViewProps & { isOpen: boolean }>(View, {
 }))
 
 export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
+  const [, windowHeight] = useWindowSize({ throttle: 300 })
   return (
     <Dock
       right={dockRightSpace}
@@ -108,6 +109,7 @@ export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
           circular={false}
           borderRadius={0}
           glintBottom={false}
+          windowHeight={windowHeight}
           {...index === 0 && {
             borderTopRadius: 8,
             borderBottomRadius: 0,
@@ -235,10 +237,12 @@ const DockVibrancyButton = memo(({ index }: { index: number }) => {
 const OrbitDockButton = memo(function OrbitDockButton({
   index,
   app,
+  windowHeight,
   ...rest
 }: {
   app: AppBit
   index: number
+  windowHeight: number
 } & Partial<DockButtonProps>) {
   const drawerStore = useAppsDrawerStore()
   const dockStore = orbitDockStore.useStore()
@@ -249,8 +253,9 @@ const OrbitDockButton = memo(function OrbitDockButton({
   const nodePosition = usePosition({
     measureKey: fullyOpened,
     ref: buttonRef,
-    debounce: 500,
+    debounce: 300,
   })
+  console.log('now', nodePosition, fullyOpened, dockStore.isOpen, dockStore.hoveredIndex)
   const showMenu = dockStore.hoveredIndex === index
   const isActive = useReaction(
     () => paneManagerStore.activePane && paneManagerStore.activePane.id === `${app.id}`,
@@ -271,6 +276,7 @@ const OrbitDockButton = memo(function OrbitDockButton({
       />
       {nodePosition && (
         <FloatingAppWindow
+          windowHeight={windowHeight}
           buttonRect={nodePosition}
           showMenu={showMenu}
           definition={definition}
@@ -282,62 +288,62 @@ const OrbitDockButton = memo(function OrbitDockButton({
   )
 })
 
-const FloatingAppWindow = memo(({ showMenu, buttonRect, app, definition, index }: any) => {
-  const [, windowHeight] = useWindowSize({ throttle: 100 })
+const FloatingAppWindow = memo(
+  ({ showMenu, buttonRect, app, definition, index, windowHeight }: any) => {
+    const width = 300
+    const height = 380
+    const top = buttonRect.top - 15
+    const left = buttonRect.left - width - 20
 
-  const width = 300
-  const height = 380
-  const top = buttonRect.top - 15
-  const left = buttonRect.left - width - 20
-
-  return (
-    <FloatingCard
-      disableDrag
-      elevation={4}
-      defaultWidth={width}
-      defaultHeight={height}
-      defaultTop={top}
-      defaultLeft={left}
-      bounds={{
-        top: 70,
-        right: 60,
-        left: 20,
-        bottom: 20,
-      }}
-      maxHeight={windowHeight - 80}
-      padding={0}
-      zIndex={10000000000000}
-      visible={showMenu}
-      pointerEvents={showMenu ? 'auto' : 'none'}
-      onMouseEnter={() => {
-        orbitDockStore.hoverEnterButton(index)
-      }}
-      onMouseLeave={() => {
-        orbitDockStore.hoverLeaveButton()
-      }}
-      outside={<FloatingLabel visible={showMenu}>{app.name}</FloatingLabel>}
-    >
-      <AppViewsContext.Provider
-        value={useMemo(
-          () => ({
-            Sidebar: DockSidebarView,
-          }),
-          [],
-        )}
+    return (
+      <FloatingCard
+        disableDrag
+        elevation={4}
+        defaultWidth={width}
+        defaultHeight={height}
+        defaultTop={top}
+        defaultLeft={left}
+        bounds={{
+          top: 70,
+          right: 60,
+          left: 20,
+          bottom: 20,
+        }}
+        maxHeight={windowHeight - 80}
+        padding={0}
+        zIndex={10000000000000}
+        visible={showMenu}
+        pointerEvents={showMenu ? 'auto' : 'none'}
+        onMouseEnter={() => {
+          orbitDockStore.hoverEnterButton(index)
+        }}
+        onMouseLeave={() => {
+          orbitDockStore.hoverLeaveButton()
+        }}
+        outside={<FloatingLabel visible={showMenu}>{app.name}</FloatingLabel>}
       >
-        <OrbitApp
-          id={app.id!}
-          identifier={app.identifier!}
-          appDef={definition}
-          shouldRenderApp
-          renderApp={DockAppRender}
-          // dont let them update on search changes, etc
-          isVisible={false}
-        />
-      </AppViewsContext.Provider>
-    </FloatingCard>
-  )
-})
+        <AppViewsContext.Provider
+          value={useMemo(
+            () => ({
+              Sidebar: DockSidebarView,
+            }),
+            [],
+          )}
+        >
+          <OrbitApp
+            id={app.id!}
+            identifier={app.identifier!}
+            appDef={definition}
+            shouldRenderApp
+            renderApp={DockAppRender}
+            // dont let them update on search changes, etc
+            isVisible={false}
+          />
+        </AppViewsContext.Provider>
+      </FloatingCard>
+    )
+  },
+)
 
 const DockAppRender = (props: RenderAppProps) => {
   return <>{props.sidebar}</>

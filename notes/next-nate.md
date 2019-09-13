@@ -25,6 +25,7 @@
 - Query Builder
 - GraphQL Explorer
 - Bit Syncing
+- Cosal NLP
 
 ----
 

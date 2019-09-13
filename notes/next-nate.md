@@ -10,6 +10,7 @@
 - React Concurrent
 - Suspense powered app APIs
 - Multiprocess
+- Electron 8/9 - v8 lite
 
 ## Interface:
 

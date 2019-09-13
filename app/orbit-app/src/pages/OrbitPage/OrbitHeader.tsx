@@ -4,9 +4,10 @@ import { App } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import { useRef } from 'react'
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
+import { useRef } from 'react'
 
+import { mediaQueries } from '../../constants'
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
 import { appsDrawerStore, useOrbitStore } from '../../om/stores'
@@ -282,6 +283,19 @@ const HeaderSide = gloss<RowProps & { slim?: boolean }>(Row, {
   height: '100%',
   alignItems: 'center',
   justifyContent: 'flex-end',
+
+  [mediaQueries.small]: {
+    width: 'auto',
+    minWidth: 'auto',
+  },
+})
+
+const getMedia = q => window.matchMedia(q.slice(q.indexOf('(') - 1))
+
+getMedia(mediaQueries.small).addListener(({ matches }) => {
+  electronRequire('electron')
+    .remote.getCurrentWindow()
+    .setWindowButtonVisibility(!matches)
 })
 
 const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
@@ -299,9 +313,10 @@ const HeaderContain = gloss<RowProps & { isActive?: boolean; isDeveloping: boole
   maxWidth: 950,
   borderRadius: 100,
 
-  '@media screen and (max-width: 780px)': {
+  [mediaQueries.small]: {
+    flex: 50,
     minWidth: 'auto',
-    background: 'red',
+    margin: 'auto',
   },
 }).theme(({ isActive }, theme) => ({
   background: isActive ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075] : 'none',

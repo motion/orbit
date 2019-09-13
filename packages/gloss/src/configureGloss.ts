@@ -2,14 +2,18 @@ import { colorToString } from './helpers/helpers'
 import { preProcessTheme } from './helpers/preProcessTheme'
 import { GlossConfig } from './types'
 
+export const defaultMediaQueries = {
+  sm: '@media screen and (max-width: 500px)',
+  notsm: '@media screen and (min-width: 501px)',
+  md: '@media screen and (min-width: 780px)',
+  lg: '@media screen and (min-width: 900px)',
+  xl: '@media screen and (min-width: 1100px)',
+}
+
 export const GlossDefaultConfig: GlossConfig = {
   isColor: color => color && !!color.rgb,
   toColor: colorToString,
-  mediaQueries: {
-    sm: '@media screen and (max-width: 500px)',
-    notsm: '@media screen and (min-width: 501px)',
-    lg: '@media screen and (min-width: 900px)',
-  },
+  mediaQueries: defaultMediaQueries,
   pseudoAbbreviations: {
     hoverStyle: '&:hover',
     activeStyle: '&:active',

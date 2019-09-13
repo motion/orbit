@@ -3,10 +3,9 @@ import 'raf/polyfill'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
-import { DragDropCommand, NewFallbackServerPortCommand, SendClientDataCommand, ToggleOrbitMainCommand } from '@o/models'
+import { NewFallbackServerPortCommand, SendClientDataCommand, ToggleOrbitMainCommand } from '@o/models'
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'
-import { nativeImage } from 'electron'
 import electronDebug from 'electron-debug'
 import * as React from 'react'
 import waitOn from 'wait-on'
@@ -58,6 +57,18 @@ export async function main() {
       })
     })
 
+    // drag/drop test
+    const { ipcMain, nativeImage } = require('electron')
+    console.log('WHAT THE FUCK')
+    ipcMain.on('ondragstart', (event, _filePath) => {
+      console.log('WE GOT ONE')
+      event.sender.startDrag({
+        // todo write json to a tmp file
+        file: '/Users/nw/Desktop/desktop/swiftui.png',
+        icon: nativeImage.createFromPath('/Users/nw/Desktop/desktop/swiftui.png'),
+      })
+    })
+
     // require after desktop starts to avoid reconnect errors
     const { Mediator } = require('./mediator')
     const port = await Mediator.command(NewFallbackServerPortCommand)
@@ -73,18 +84,6 @@ export async function main() {
         resolveCommand(ToggleOrbitMainCommand, async next => {
           const showOrbitMain = typeof next === 'boolean' ? next : !Electron.state.showOrbitMain
           Electron.setState({ showOrbitMain })
-        }),
-
-        resolveCommand(DragDropCommand, async (props) => {
-          console.log('got', props)
-          const { ipcMain } = require('electron')
-          ipcMain.on('ondragstart', (event, _filePath) => {
-            event.sender.startDrag({
-              // todo write json to a tmp file
-              file: '/Users/nw/desktop/orb3.jpg',
-              icon: nativeImage.createFromPath('/Users/nw/desktop/orb3.jpg'),
-            })
-          })
         }),
       ],
     })

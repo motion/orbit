@@ -205,14 +205,3 @@ export const CallAppBitApiMethodCommand = new Command<
 >('CallAppBitApiMethodCommand')
 
 export const OracleCommand = new Command<void, OracleActions>('OracleCommand')
-
-type Draggable<A> = A & {
-  at: {
-    x: number
-    y: number
-  }
-}
-
-export const DragDropCommand = new Command<void, Draggable<{ type: 'json'; data: Object }>>(
-  'DragDropCommand',
-)

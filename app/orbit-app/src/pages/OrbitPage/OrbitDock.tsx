@@ -255,7 +255,6 @@ const OrbitDockButton = memo(function OrbitDockButton({
     ref: buttonRef,
     debounce: 300,
   })
-  console.log('now', nodePosition, fullyOpened, dockStore.isOpen, dockStore.hoveredIndex)
   const showMenu = dockStore.hoveredIndex === index
   const isActive = useReaction(
     () => paneManagerStore.activePane && paneManagerStore.activePane.id === `${app.id}`,
@@ -264,7 +263,7 @@ const OrbitDockButton = memo(function OrbitDockButton({
     <>
       <DockButton
         id={`${app.id}`}
-        active={isActive}
+        opacity={isActive ? 1 : 0.85}
         onClick={() => {
           om.actions.router.showAppPage({ id: `${app.id!}` })
         }}

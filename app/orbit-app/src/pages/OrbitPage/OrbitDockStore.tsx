@@ -96,7 +96,6 @@ export class OrbitDockStore {
   clearHoverOnDrawerOpen = react(
     () => appsDrawerStore.isOpen,
     () => {
-      this.hoverEnterButton(-1)
       this.hoveredIndex = -1
     },
   )

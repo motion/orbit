@@ -79,11 +79,13 @@ export const DockButton = (props: DockButtonProps) => {
         {...!show && { marginRight: -(50 + 15), opacity: 0 }}
         {...buttonProps}
         {...showLabelOnHover && {
-          onMouseEnter() {
+          onMouseEnter(e) {
             setHovering(true)
+            props.onMouseEnter && props.onMouseEnter(e)
           },
-          onMouseLeave() {
+          onMouseLeave(e) {
             setHovering(false)
+            props.onMouseLeave && props.onMouseLeave(e)
           },
         }}
       />

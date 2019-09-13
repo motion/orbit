@@ -11,6 +11,8 @@
 - Suspense powered app APIs
 - Multiprocess
 - Electron 8/9 - v8 lite
+- React Devtools, Mobx
+- Granular logging, log()
 
 ## Interface:
 

@@ -95,9 +95,8 @@ export const OrbitHeader = memo(() => {
                 href="#"
                 className="undraggable"
                 onDragStart={e => {
-                  console.log('ok??')
                   e.preventDefault()
-                  electronRequire('electron').ipcRenderer.send('ondragstart', '/what')
+                  electronRequire('electron').ipcRenderer.send('ondragstart', '{ "test": "hi" }')
                 }}
               >
                 ok ok ok

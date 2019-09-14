@@ -176,7 +176,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
       <SizedSurface
         className="list-item-surface"
         flexDirection="row"
-        alignItems="center"
+        alignItems="stretch"
         subTheme="listItem"
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && handleClick) || undefined}

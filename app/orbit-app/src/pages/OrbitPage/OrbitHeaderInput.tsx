@@ -7,7 +7,7 @@ import { appsDrawerStore, queryStore, useOrbitWindowStore, useQueryStore } from 
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 import { appsCarouselStore } from './OrbitAppsCarouselStore'
 import { useHeaderStore } from './OrbitHeaderStore'
-import { orbitSearchResultsStore } from './OrbitSearchResults'
+import { orbitSearchResultsStore } from './OrbitSearchResultsStore'
 
 const Keys = {
   up: 38,

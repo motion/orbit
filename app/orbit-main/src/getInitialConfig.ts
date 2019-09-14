@@ -35,6 +35,7 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
   const dotApp = Path.join(__dirname, '..', '..', '..', '..', '..')
   const userData = app.getPath('userData')
   const desktop = app.getPath('desktop')
+  const temp = app.getPath('temp')
   const [
     server,
     bridge,
@@ -61,6 +62,7 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
       nodeBinary,
       resources: Path.join(app.getAppPath(), '..'),
       dotApp,
+      temp,
       desktop,
     },
     urls: {

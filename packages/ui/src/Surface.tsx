@@ -625,7 +625,8 @@ const Element = gloss<SurfaceFrameProps & { disabled?: boolean }>({
   flexDirection: 'row',
   border: 'none',
   background: 'transparent',
-  height: '100%',
+  // otherwise it wont be full height so impossible to position things at start/end
+  height: 'inherit',
   ellipse: {
     display: 'block',
     overflow: 'hidden',

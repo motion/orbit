@@ -71,8 +71,20 @@ class GeometryStore {
 
   constructor(private nodeRef: RefObject<HTMLElement>) {}
 
-  onRender() {
+  beforeRenderChildren() {
     this.curCall = 0
+  }
+
+  afterRenderChildren() {
+    for (const store of this.stores) {
+      const hooks = []
+      for (const hook of store.animationHooks.hooks) {
+        hooks.push(hook(hooks))
+      }
+      store.values = hooks
+      store.freeze()
+    }
+    this.freeze()
   }
 
   clear() {
@@ -158,11 +170,14 @@ class GeometryStore {
   }
 }
 
-export function Geometry(props: {
-  children: (geometry: GeometryStore, ref: any) => React.ReactNode
-}) {
-  const nodeRef = useRef()
-  const geometry = useLazyRef(() => new GeometryStore(nodeRef)).current
+export type GeometryRenderer = (
+  geometry: GeometryStore,
+  ref: RefObject<HTMLElement>,
+) => React.ReactNode
+
+export function useGeometry(getChildren: GeometryRenderer) {
+  const ref = useRef()
+  const geometry = useLazyRef(() => new GeometryStore(ref)).current
   const update = useForceUpdate()
 
   useOnHotReload(() => {
@@ -170,18 +185,12 @@ export function Geometry(props: {
     update()
   })
 
-  geometry.onRender()
-  const childrenElements = props.children(geometry, nodeRef)
+  geometry.beforeRenderChildren()
+  const children = getChildren(geometry, ref)
+  geometry.afterRenderChildren()
+  return children
+}
 
-  for (const store of geometry.stores) {
-    const hooks = []
-    for (const hook of store.animationHooks.hooks) {
-      hooks.push(hook(hooks))
-    }
-    store.values = hooks
-    store.freeze()
-  }
-  geometry.freeze()
-
-  return <>{childrenElements}</>
+export function Geometry(props: { children: GeometryRenderer }) {
+  return useGeometry(props.children)
 }

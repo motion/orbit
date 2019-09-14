@@ -6,7 +6,10 @@ import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/med
 import { NewFallbackServerPortCommand, SendClientDataCommand, ToggleOrbitMainCommand } from '@o/models'
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'
+import { stringHash } from '@o/ui'
 import electronDebug from 'electron-debug'
+import { writeFileSync } from 'fs'
+import { join } from 'path'
 import * as React from 'react'
 import waitOn from 'wait-on'
 
@@ -60,11 +63,13 @@ export async function main() {
     // drag/drop test
     const { ipcMain, nativeImage } = require('electron')
     console.log('WHAT THE FUCK')
-    ipcMain.on('ondragstart', (event, _filePath) => {
-      console.log('WE GOT ONE')
+    ipcMain.on('ondragstart', (event, data) => {
+      const filename = `drop-${stringHash(data.slice(0, 100))}.json`
+      const filepath = join(getGlobalConfig().paths.temp, filename)
+      writeFileSync(filepath, data)
       event.sender.startDrag({
         // todo write json to a tmp file
-        file: '/Users/nw/Desktop/desktop/swiftui.png',
+        file: filepath,
         icon: nativeImage.createFromPath('/Users/nw/Desktop/desktop/swiftui.png'),
       })
     })

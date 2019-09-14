@@ -5,7 +5,7 @@ import queryString from 'query-string'
 
 import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarouselStore'
 import { headerStore } from '../pages/OrbitPage/OrbitHeaderStore'
-import { orbitSearchResultsStore } from '../pages/OrbitPage/OrbitSearchResults'
+import { orbitSearchResultsStore } from '../pages/OrbitPage/OrbitSearchResultsStore'
 import { paneManagerStore } from './stores'
 
 export const urls = {

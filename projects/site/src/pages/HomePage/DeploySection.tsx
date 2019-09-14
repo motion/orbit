@@ -5,7 +5,7 @@ import { fontProps } from '../../constants'
 import appScreenshot from '../../public/images/app-screenshot.jpg'
 import arrow from '../../public/images/callout-arrow.svg'
 import codeScreenshot from '../../public/images/code-screenshot.jpg'
-import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'
+import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { ParagraphIntro } from '../../views/ParagraphIntro'
@@ -61,21 +61,21 @@ export default function DeploySection() {
         }}
         header={
           <>
-            <FadeChild delay={0}>
+            <FadeInView delay={0}>
               <PillButton>Create</PillButton>
-            </FadeChild>
-            <FadeChild delay={300}>
+            </FadeInView>
+            <FadeInView delay={300}>
               <TitleText textAlign="center" size="xl">
                 Best DX, ever.
               </TitleText>
-            </FadeChild>
+            </FadeInView>
           </>
         }
       >
         <Space size={60} />
         <Row space={60} margin={[0, '-180%']}>
           <Col flex={2} alignItems="flex-end" justifyContent="center">
-            <FadeChild {...fadeAnimations.left} delay={450}>
+            <FadeInView {...fadeAnimations.left} delay={450}>
               <ParallaxView
                 speed={0.1}
                 offset={-0.5}
@@ -98,25 +98,25 @@ export default function DeploySection() {
                   transform={{ scale: 0.6 }}
                 />
               </ParallaxView>
-            </FadeChild>
+            </FadeInView>
           </Col>
 
           <Col space="xxl" flex={2} minWidth={300} maxWidth={340}>
-            <FadeChild delay={500}>
+            <FadeInView delay={500}>
               <ParagraphIntro {...fontProps.TitleFont} sizeLineHeight={1.1} size={1.75}>
                 Orbit pushes forward how apps work, and how we build them, with a radical focus on
                 making code as easy as possible.
               </ParagraphIntro>
-            </FadeChild>
+            </FadeInView>
 
-            <FadeChild delay={650}>
+            <FadeInView delay={650}>
               <Para size={1.4} sizeLineHeight={1.25}>
                 Create apps that work together, but run in isolation. Plug in data sources with
                 ease. Develop with instant feedback, everything you need is included.
               </Para>
-            </FadeChild>
+            </FadeInView>
 
-            <FadeChild delay={800}>
+            <FadeInView delay={800}>
               <Para
                 tagName="a"
                 href="ok"
@@ -132,11 +132,11 @@ export default function DeploySection() {
               >
                 Read how Orbit gives you control.
               </Para>
-            </FadeChild>
+            </FadeInView>
           </Col>
 
           <Col flex={2} alignItems="flex-start" justifyContent="center">
-            <FadeChild {...fadeAnimations.right} delay={800}>
+            <FadeInView {...fadeAnimations.right} delay={800}>
               <ParallaxView
                 speed={-0.1}
                 // offset={0.25}
@@ -150,7 +150,7 @@ export default function DeploySection() {
                 backgroundRepeat="no-repeat"
                 overflow="hidden"
               />
-            </FadeChild>
+            </FadeInView>
           </Col>
         </Row>
       </SpacedPageContent>

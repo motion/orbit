@@ -4,7 +4,7 @@ import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
 import { useScreenHeightVal } from '../../hooks/useScreenSize'
-import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'
+import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContentChrome } from '../../views/SectionContent'
 import { TitleText } from '../../views/TitleText'
@@ -62,7 +62,7 @@ const HeadContent = memo(() => {
             whiteSpace="nowrap"
             maxHeight={160}
           >
-            <FadeChild disable={!measured}>Apps for teams</FadeChild>
+            <FadeInView disable={!measured}>Apps for teams</FadeInView>
           </TextFitTitle>
 
           {br}
@@ -87,7 +87,7 @@ const HeadContent = memo(() => {
 const HeadJoin = memo(() => {
   return (
     <View flex={1} width="100%" position="absolute" bottom="15%" alignItems="center">
-      <FadeChild {...fadeAnimations.up} delay={500}>
+      <FadeInView {...fadeAnimations.up} delay={500}>
         <SurfacePassProps elevation={5} {...fontProps.TitleFont}>
           <Theme name="orbitOneDark">
             <Scale size={useScreenVal(0.9, 1, 1.1)}>
@@ -106,7 +106,7 @@ const HeadJoin = memo(() => {
             </Scale>
           </Theme>
         </SurfacePassProps>
-      </FadeChild>
+      </FadeInView>
       {/* <View
         position="absolute"
         overflow="hidden"

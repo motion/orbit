@@ -3,7 +3,7 @@ import React from 'react'
 
 import { colors } from '../../colors'
 import { linkProps } from '../../useLink'
-import { FadeChild } from '../../views/FadeInView'
+import { FadeInView } from '../../views/FadeInView'
 import { TitleText } from '../../views/TitleText'
 import { useScreenVal } from '../HomePage/SpacedPageContent'
 import { BlogLayout } from './BlogLayout'
@@ -22,7 +22,7 @@ export function BlogPageIndex() {
   return (
     <BlogLayout space>
       {all.map((post, index) => (
-        <FadeChild key={post.date} delay={index * 150}>
+        <FadeInView key={post.date} delay={index * 150}>
           <Post
             padding={useScreenVal('md', 'xl', 'xl')}
             {...linkProps(`/blog/${all[index].id}`)}
@@ -42,7 +42,7 @@ export function BlogPageIndex() {
             <Space size="sm" />
             <PostMeta post={post} />
           </Post>
-        </FadeChild>
+        </FadeInView>
       ))}
     </BlogLayout>
   )

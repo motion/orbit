@@ -7,7 +7,7 @@ import { colors } from '../colors'
 import { Header } from '../Header'
 import { linkProps } from '../useLink'
 import { ContentSection } from '../views/ContentSection'
-import { FadeChild, FadeParent } from '../views/FadeInView'
+import { FadeInView, FadeParent } from '../views/FadeInView'
 import { MDX } from '../views/MDX'
 import { SectionContent } from '../views/SectionContent'
 import { TitleText } from '../views/TitleText'
@@ -89,7 +89,7 @@ export function GuidesPageIndex() {
     <>
       <GuidesLayout space title="Guides">
         {all.map((post, index) => (
-          <FadeChild key={post.date} delay={index * 150}>
+          <FadeInView key={post.date} delay={index * 150}>
             <DocsFeatureCard
               icon="ok"
               background={colors.purple}
@@ -97,7 +97,7 @@ export function GuidesPageIndex() {
               title={post.title}
               {...linkProps(`/guides/${all[index].id}`)}
             />
-          </FadeChild>
+          </FadeInView>
         ))}
       </GuidesLayout>
     </>

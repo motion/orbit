@@ -1,14 +1,13 @@
-import { Col, Image, Row, View } from '@o/ui'
+import { Col, Image, Row, Space } from '@o/ui'
 import React from 'react'
 
 import people from '../../assets/illustrations/undraw_server_down_s4lk.svg'
 import { MediaSmallHidden } from '../../views/MediaView'
-import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
 import { TitleTextSub } from './TitleTextSub'
 
-export default function WaistSection() {
+export default function SecuritySection() {
   return (
     <SpacedPageContent
       padding={[0, '5%']}
@@ -16,25 +15,26 @@ export default function WaistSection() {
       maxWidth={860}
       header={
         <>
-          <PillButton>Security</PillButton>
-          <TitleText textAlign="center" maxWidth={520}>
-            Tell Security they can firewall Orbit completely
+          <TitleText textAlign="center" maxWidth={520} fontWeight={300} size="md">
+            Completely on-device, open source & customizable.
           </TitleText>
         </>
       }
     >
-      <View flex={1} />
+      <Space size="xxxl" />
       <Row flex={1} space="xl">
         <Col flex={3} space="lg">
           <Pitch alpha={1} size="xxs">
-            Unlike just about every other platform, Orbit never sends single bit of data outside
-            your firewall.
+            Orbit never sends single bit of data outside your firewall.
           </Pitch>
 
           <Pitch fontWeight={200} alpha={0.7} size={0.5} sizeLineHeight={1.3}>
-            Get incredibly powerful internal tools without setting up infrastructure or having to
-            trust a startup with any of your data -- interface with sensitive internal databases
-            with ease, Orbit gives you complete control.
+            That's right, Orbit runs by default completely privately, on your device, with no cloud,
+            no server, no worry.
+          </Pitch>
+          <Pitch fontWeight={200} alpha={0.7} size={0.5} sizeLineHeight={1.3}>
+            And with a push to a Github repo there's no servers to setup, with complete control and
+            privacy from the start.
           </Pitch>
         </Col>
 
@@ -44,7 +44,6 @@ export default function WaistSection() {
           </Col>
         </MediaSmallHidden>
       </Row>
-      <View flex={1} />
     </SpacedPageContent>
   )
 }

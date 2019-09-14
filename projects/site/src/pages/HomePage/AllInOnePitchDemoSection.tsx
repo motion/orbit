@@ -6,7 +6,7 @@ import { mediaStyles } from '../../constants'
 import listScreen from '../../public/images/screen-list.jpg'
 import tableScreen from '../../public/images/screen-table.jpg'
 import { linkProps } from '../../useLink'
-import { fadeAnimations, FadeChild, transitions, useFadePage } from '../../views/FadeInView'
+import { fadeAnimations, FadeInView, transitions, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -171,21 +171,21 @@ export default memo(() => {
         nodeRef={Fade.ref}
         header={
           <>
-            <FadeChild delayIndex={0}>
+            <FadeInView delayIndex={0}>
               <PillButton>How</PillButton>
-            </FadeChild>
-            <FadeChild delayIndex={1}>
+            </FadeInView>
+            <FadeInView delayIndex={1}>
               <TitleText size="xxxl" sm-size="20px">
                 Make apps, easy.
               </TitleText>
-            </FadeChild>
+            </FadeInView>
             <TitleTextSub margin="auto" minWidth={320}>
-              <FadeChild sm-display="inline" delayIndex={2}>
+              <FadeInView sm-display="inline" delayIndex={2}>
                 &nbsp;Build tools as a team, sharing a rich set of building blocks.&nbsp;
-              </FadeChild>
-              <FadeChild sm-display="inline" delayIndex={3}>
+              </FadeInView>
+              <FadeInView sm-display="inline" delayIndex={3}>
                 Orbit comes with everything you need.
-              </FadeChild>
+              </FadeInView>
             </TitleTextSub>
           </>
         }
@@ -193,34 +193,34 @@ export default memo(() => {
         <Col maxWidth="100%" margin={[0, 'auto']}>
           <Row space {...mediaStyles.hiddenWhen.notsm}>
             <SubSection maxWidth="33%">
-              <FadeChild {...fadeAnimations.left} delayIndex={4}>
+              <FadeInView {...fadeAnimations.left} delayIndex={4}>
                 <PillButtonDark>Import</PillButtonDark>
                 <Space />
                 <CenterText>
                   Plug in the <Inline color="#E01C5A">{elements[index].beforeName}</Inline> data
                   source & others with a click.
                 </CenterText>
-              </FadeChild>
+              </FadeInView>
             </SubSection>
             <SubSection flex={2} padding={[true, 'xxl']}>
-              <FadeChild delayIndex={4}>
+              <FadeInView delayIndex={4}>
                 <PillButtonDark>Display</PillButtonDark>
                 <Space />
                 <CenterText maxWidth={400} margin={[0, 'auto']}>
                   Develop using powerful, simple views built on React and Typescript, with an
                   amazing built in build system.
                 </CenterText>
-              </FadeChild>
+              </FadeInView>
             </SubSection>
             <SubSection maxWidth="33%">
-              <FadeChild {...fadeAnimations.right} delayIndex={4}>
+              <FadeInView {...fadeAnimations.right} delayIndex={4}>
                 <PillButtonDark>Export</PillButtonDark>
                 <Space />
                 <CenterText>
                   Install <Inline color="#F14336">{elements[index].afterName}</Inline>, use it's
                   simple API to send your results out.
                 </CenterText>
-              </FadeChild>
+              </FadeInView>
             </SubSection>
           </Row>
 
@@ -228,7 +228,7 @@ export default memo(() => {
 
           <Row space>
             <Flex alignItems="center" sm-display="none">
-              <FadeChild {...fadeAnimations.left} delayIndex={5}>
+              <FadeInView {...fadeAnimations.left} delayIndex={5}>
                 <Image
                   userSelect="none"
                   alignSelf="center"
@@ -236,9 +236,9 @@ export default memo(() => {
                   height={80}
                   src={elements[index].iconBefore}
                 />
-              </FadeChild>
+              </FadeInView>
               <Space size="xxl" />
-              <FadeChild
+              <FadeInView
                 key={`arrowBefore-${page}`}
                 {...fadeAnimations.left}
                 delayIndex={6}
@@ -252,7 +252,7 @@ export default memo(() => {
                     scale: 0.8,
                   }}
                 />
-              </FadeChild>
+              </FadeInView>
             </Flex>
             <Flex
               flex={2}
@@ -261,7 +261,7 @@ export default memo(() => {
               margin={0}
               sm-margin={[0, '-5%']}
             >
-              <FadeChild width="100%" delayIndex={5}>
+              <FadeInView width="100%" delayIndex={5}>
                 <Button
                   alt="flat"
                   cursor="pointer"
@@ -288,9 +288,9 @@ export default memo(() => {
                   icon="chevron-right"
                   onClick={() => paginate(1)}
                 />
-              </FadeChild>
+              </FadeInView>
 
-              <FadeChild {...fadeAnimations.up} delayIndex={5} marginBottom={-200} zIndex={10}>
+              <FadeInView {...fadeAnimations.up} delayIndex={5} marginBottom={-200} zIndex={10}>
                 <TiltSquircle
                   {...linkProps(elements[index].link)}
                   tagName="div"
@@ -320,9 +320,9 @@ export default memo(() => {
                     {elements[index].body}
                   </Paragraph>
                 </TiltSquircle>
-              </FadeChild>
+              </FadeInView>
 
-              <FadeChild
+              <FadeInView
                 transition={transitions.slowNotBouncy}
                 {...fadeAnimations.up}
                 delayIndex={7}
@@ -370,11 +370,11 @@ export default memo(() => {
                     />
                   </View>
                 </AnimatePresence>
-              </FadeChild>
+              </FadeInView>
             </Flex>
 
             <Flex alignItems="center" sm-display="none">
-              <FadeChild {...fadeAnimations.right} delayIndex={5}>
+              <FadeInView {...fadeAnimations.right} delayIndex={5}>
                 <Image
                   userSelect="none"
                   alignSelf="center"
@@ -385,9 +385,9 @@ export default memo(() => {
                   variants={variants}
                   src={elements[index].iconAfter}
                 />
-              </FadeChild>
+              </FadeInView>
               <Space size="xxl" />
-              <FadeChild delayIndex={6} alignSelf="flex-start">
+              <FadeInView delayIndex={6} alignSelf="flex-start">
                 <Image
                   key={`arrowAfter-${page}`}
                   custom={direction}
@@ -400,7 +400,7 @@ export default memo(() => {
                   }}
                   src={require('../../public/images/curve-arrow.svg')}
                 />
-              </FadeChild>
+              </FadeInView>
             </Flex>
           </Row>
 

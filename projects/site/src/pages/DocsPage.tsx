@@ -11,7 +11,7 @@ import { Navigation } from '../Navigation'
 import { useSiteStore } from '../SiteStore'
 import { linkProps } from '../useLink'
 import { ContentSection } from '../views/ContentSection'
-import { FadeChild, useFadePage } from '../views/FadeInView'
+import { FadeInView, useFadePage } from '../views/FadeInView'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { DocsContents } from './DocsContents'
@@ -157,9 +157,9 @@ const DocsPage = memo((props: { children?: any }) => {
 
   const sidebarChildren = (
     <React.Fragment key="content">
-      <FadeChild style={{ flex: 1 }}>
+      <FadeInView style={{ flex: 1 }}>
         <DocsList />
-      </FadeChild>
+      </FadeInView>
     </React.Fragment>
   )
 

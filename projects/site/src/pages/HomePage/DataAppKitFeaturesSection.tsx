@@ -5,7 +5,7 @@ import { mediaStyles } from '../../constants'
 import orbits from '../../public/images/orbits.svg'
 import { useSiteStore } from '../../SiteStore'
 import { linkProps } from '../../useLink'
-import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'
+import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -57,7 +57,7 @@ export default memo(() => {
         scale={0.5}
         transformOrigin="bottom center"
       >
-        <FadeChild delay={800} height="100%" width="100%">
+        <FadeInView delay={800} height="100%" width="100%">
           <FullScreen
             left={-100}
             right={-100}
@@ -67,7 +67,7 @@ export default memo(() => {
             backgroundPosition="top center"
             backgroundRepeat="no-repeat"
           />
-        </FadeChild>
+        </FadeInView>
       </Page.BackgroundParallax>
 
       <SpacedPageContent
@@ -79,19 +79,19 @@ export default memo(() => {
         sm-margin={['-33%', 0, '10%']}
         header={
           <>
-            <FadeChild>
+            <FadeInView>
               <PillButton>App Store</PillButton>
-            </FadeChild>
-            <FadeChild delay={100}>
+            </FadeInView>
+            <FadeInView delay={100}>
               <TitleText textAlign="center" size="xxl">
                 The app store with more.
               </TitleText>
-            </FadeChild>
+            </FadeInView>
             <TitleTextSub>
-              <FadeChild delay={200}>
+              <FadeInView delay={200}>
                 The app store with more - every app can sync in data, expose GraphQL and TypeScript
                 APIs, and render content.
-              </FadeChild>
+              </FadeInView>
             </TitleTextSub>
             <Space size="xl" />
           </>
@@ -130,13 +130,13 @@ export default memo(() => {
 
         <Space size="lg" />
 
-        <FadeChild delay={0}>
+        <FadeInView delay={0}>
           <Row space margin={[0, 'auto']}>
             <BodyButton {...linkProps('/apps')} size="lg">
               Explore apps
             </BodyButton>
           </Row>
-        </FadeChild>
+        </FadeInView>
       </SpacedPageContent>
     </FadeDataApps.FadeProvide>
   )
@@ -144,7 +144,7 @@ export default memo(() => {
 
 const Integration = memoIsEqualDeep(({ icon, title, index, ...props }: any) => {
   return (
-    <FadeChild
+    <FadeInView
       {...(index % 1 == 0 ? fadeAnimations.left : fadeAnimations.right)}
       delay={index * 50 + 100}
     >
@@ -172,6 +172,6 @@ const Integration = memoIsEqualDeep(({ icon, title, index, ...props }: any) => {
           </Paragraph>
         </View>
       </ParallaxView>
-    </FadeChild>
+    </FadeInView>
   )
 })

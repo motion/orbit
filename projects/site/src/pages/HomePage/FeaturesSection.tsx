@@ -1,7 +1,7 @@
 import { Grid, Space, View } from '@o/ui'
 import React, { memo } from 'react'
 
-import { FadeChild, useFadePage } from '../../views/FadeInView'
+import { FadeInView, useFadePage } from '../../views/FadeInView'
 import { MediaSmallHidden } from '../../views/MediaView'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
@@ -21,10 +21,10 @@ export default memo(() => {
         margin="auto"
         header={
           <>
-            <FadeChild delay={0}>
+            <FadeInView delay={0}>
               <PillButton>App Kit</PillButton>
-            </FadeChild>
-            <FadeChild delay={100}>
+            </FadeInView>
+            <FadeInView delay={100}>
               <TitleText
                 textAlign="center"
                 // TODO
@@ -33,9 +33,11 @@ export default memo(() => {
               >
                 Batteries Included.
               </TitleText>
-            </FadeChild>
+            </FadeInView>
             <TitleTextSub>
-              <FadeChild delay={200}>The vertically integrated workspace for work apps.</FadeChild>
+              <FadeInView delay={200}>
+                The vertically integrated workspace for work apps.
+              </FadeInView>
             </TitleTextSub>
           </>
         }
@@ -46,7 +48,7 @@ export default memo(() => {
       <Grid
         nodeRef={Fade.ref}
         alignItems="start"
-        space={30}
+        space="15%"
         itemMinWidth={280}
         maxWidth={800}
         margin={[0, 'auto']}

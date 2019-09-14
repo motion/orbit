@@ -3,7 +3,7 @@ import { isDefined } from '@o/utils'
 import { Box } from 'gloss'
 import React from 'react'
 
-import { fadeAnimations, FadeChild } from '../../views/FadeInView'
+import { fadeAnimations, FadeInView } from '../../views/FadeInView'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 
@@ -17,7 +17,7 @@ export const SimpleSection = ({ delay = 100, index = undefined, title, children,
   const isLeft = isDefined(index) && index % 2 === 0
   return (
     <SectionChrome space {...rest}>
-      <FadeChild {...(isLeft ? fadeAnimations.right : fadeAnimations.left)} delay={delay}>
+      <FadeInView {...(isLeft ? fadeAnimations.right : fadeAnimations.left)} delay={delay}>
         <SectionTitle>
           {isDefined(index) && (
             <Badge opacity={0} lg-opacity={1}>
@@ -40,7 +40,7 @@ export const SimpleSection = ({ delay = 100, index = undefined, title, children,
         </SectionTitle>
         <Space />
         <SectionBody>{children}</SectionBody>
-      </FadeChild>
+      </FadeInView>
     </SectionChrome>
   )
 }

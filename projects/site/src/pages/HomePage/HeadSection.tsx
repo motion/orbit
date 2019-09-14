@@ -75,7 +75,7 @@ const HeadContent = memo(() => {
             &nbsp;
             <TitleParagraph {...para}>
               {/* second line */}
-              Orbit is an easy, all-in-one platform for teams'&nbsp;apps.
+              Orbit is an easy, all-in-one platform for your&nbsp;intranet.
             </TitleParagraph>
           </View>
         </View>

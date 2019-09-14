@@ -3,7 +3,7 @@ import { mount, route } from 'navi'
 import React from 'react'
 
 import { Header } from '../Header'
-import { FadeChild, FadeParent } from '../views/FadeInView'
+import { FadeInView, FadeParent } from '../views/FadeInView'
 import { SectionContent } from '../views/SectionContent'
 import { EarlyAccessContent } from './HomePage/EarlyAccessContent'
 import { Footer } from './HomePage/Footer'
@@ -25,21 +25,21 @@ export function BetaPage() {
         <Space size="xxl" />
 
         <View position="relative">
-          <FadeChild minHeight={800} delay={200}>
+          <FadeInView minHeight={800} delay={200}>
             <EarlyAccessContent theme={BetaPage.theme} />
-          </FadeChild>
+          </FadeInView>
 
-          <FadeChild delay={400} fullscreen style={{ pointerEvents: 'none' }}>
+          <FadeInView delay={400} fullscreen style={{ pointerEvents: 'none' }}>
             <LineSep opacity={0.2} noOverlay top="auto" bottom={-70} transform={{ scaleX: -1 }} />
-          </FadeChild>
+          </FadeInView>
         </View>
 
-        <FadeChild delay={600}>
+        <FadeInView delay={600}>
           <SectionContent minHeight={450} position="relative" padding={[100, 32]}>
             <Footer />
             <Space size="xl" />
           </SectionContent>
-        </FadeChild>
+        </FadeInView>
       </Theme>
     </FadeParent>
   )

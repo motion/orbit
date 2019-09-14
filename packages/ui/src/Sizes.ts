@@ -1,4 +1,4 @@
-import { Sizes } from './Space'
+import { Size, Sizes } from './Space'
 
 const sizes = {
   xxxs: 0.6,
@@ -12,7 +12,7 @@ const sizes = {
   xxxl: 1.8,
 }
 
-export const getSize = (size: Sizes): Sizes extends any[] ? number[] : number => {
+export const getSize = (size: Sizes | Size): Sizes extends any[] ? number[] : number => {
   if (!size || size === true) return 1
   if (typeof size === 'string') return sizes[size]
   if (Array.isArray(size)) {

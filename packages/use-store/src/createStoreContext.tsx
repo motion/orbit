@@ -15,6 +15,7 @@ export function createStoreContext<Instance>(constructor: { new (): Instance }) 
     ProvideStore: ({ value, children }: { value: Instance; children: any }) => {
       return <Context.Provider value={unwrapProxy(value)}>{children}</Context.Provider>
     },
+    // @ts-ignore
     Provider: ({ children, ...props }: InferProps<Instance> & { children: any }) => {
       const store = useStore(constructor, props as any, { react: false })
       return <Context.Provider value={unwrapProxy(store)}>{children}</Context.Provider>

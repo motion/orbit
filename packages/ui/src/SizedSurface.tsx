@@ -1,12 +1,12 @@
 import { mergeDefined } from '@o/utils'
 import React from 'react'
 
+import { LINE_HEIGHT } from './constants'
 import { useScale } from './Scale'
+import { useSurfaceProps } from './SizedSurfacePropsContext'
 import { getSize } from './Sizes'
 import { Size } from './Space'
-import { Surface, SurfaceProps, SurfaceSpecificProps, useSurfaceProps } from './Surface'
-
-export const LINE_HEIGHT = 30
+import { Surface, SurfaceProps, SurfaceSpecificProps } from './Surface'
 
 export type SizedSurfaceSpecificProps = SurfaceSpecificProps & {
   /** Controlled height, relative adjusted to size */
@@ -29,8 +29,6 @@ export type SizedSurfaceSpecificProps = SurfaceSpecificProps & {
 }
 
 export type SizedSurfaceProps = SurfaceProps & SizedSurfaceSpecificProps
-
-export const sizeProps = ['sizeHeight', 'sizeFont', 'sizePadding', 'sizeRadius', 'sizeIcon']
 
 const num = (x: number | boolean) => (x === true ? 1 : +x)
 const clampRound = (x: number) => Math.round(x * 100) / 100

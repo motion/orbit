@@ -7,7 +7,7 @@ import { AppDefinition, CommandBuildOptions, StatusReply } from '@o/models'
 import { ensureDir, readFile, writeJSON } from 'fs-extra'
 import { join } from 'path'
 
-import { getAppEntry } from './commandBuild'
+import { getAppEntry, shouldRebuildApp } from './commandBuild'
 
 // let just use typescript and extract that
 
@@ -19,6 +19,12 @@ export async function buildAppInfo(
     watch: false,
   },
 ): Promise<StatusReply<AppDefinition>> {
+  if (!(await shouldRebuildApp(options.projectRoot))) {
+    return {
+      type: 'success',
+      message: 'Already built appInfo',
+    }
+  }
   log.info(`Generating app info`, options)
   try {
     // build appInfo first, we can then use it to determine if we need to build web/node

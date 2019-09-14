@@ -3,15 +3,14 @@ import { toColor } from '@o/color'
 import { isDefined, mergeDefined } from '@o/utils'
 import fuzzySort from 'fuzzysort'
 import { useTheme } from 'gloss'
-import React, { createContext, forwardRef, memo, useContext } from 'react'
+import React, { forwardRef, memo, useContext } from 'react'
 
 import { Config } from './helpers/configureUI'
+import { IconPropsContext } from './IconPropsContext'
 import { useScale } from './Scale'
 import { Tooltip } from './Tooltip'
 import { ViewProps } from './View/types'
 import { View } from './View/View'
-
-export { IconName } from '@blueprintjs/icons'
 
 export type IconProps = ViewProps & {
   size?: number
@@ -21,9 +20,6 @@ export type IconProps = ViewProps & {
   svg?: string
   ignoreColor?: boolean
 }
-
-// TODO use createContextProps
-export const IconPropsContext = createContext<Partial<IconProps>>(null)
 
 const names = Object.keys(IconSvgPaths16)
 
@@ -64,6 +60,7 @@ export const PlainIcon = ({
   svg,
   tooltip,
   tooltipProps,
+  name,
   ...props
 }: IconProps) => {
   const theme = useTheme(props)
@@ -86,10 +83,11 @@ export const PlainIcon = ({
     }
   }
 
-  if (typeof props.name === 'string') {
-    const nameTrim = props.name.trim()
+  if (typeof name === 'string') {
+    const nameTrim = name.trim()
     if (nameTrim.indexOf('<svg') === 0) {
-      svg = props.name
+      svg = name
+      name = ''
     }
   }
 
@@ -100,15 +98,13 @@ export const PlainIcon = ({
       <View
         width={size}
         height={size}
-        data-name={props.name}
+        data-name={name}
         className={`ui-icon ${props.className || ''}`}
         color={color}
         opacity={opacity}
         {...props}
       >
-        <svg
-          width={`${size}px`}
-          height={`${size}px`}
+        <div
           style={{
             fill: 'currentColor',
             alignItems: 'center',
@@ -128,7 +124,7 @@ export const PlainIcon = ({
     // choose which pixel grid is most appropriate for given icon size
     const pixelGridSize = size >= SIZE_LARGE ? SIZE_LARGE : SIZE_STANDARD
     // render path elements, or nothing if icon name is unknown.
-    const iconName = findName(props.name)
+    const iconName = findName(name)
     const paths = renderSvgPaths(pixelGridSize, iconName)
     const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
 

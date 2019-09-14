@@ -1,7 +1,7 @@
 import { Row } from 'gloss'
 import React from 'react'
 import { BorderBottom } from '../Border'
-import { SurfacePassProps } from '../Surface'
+import { SurfacePassProps } from "../SizedSurfacePropsContext";
 
 export type TopBarProps = {
   before?: React.ReactNode

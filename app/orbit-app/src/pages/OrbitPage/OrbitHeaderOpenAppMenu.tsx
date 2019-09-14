@@ -124,7 +124,13 @@ export const OrbitHeaderOpenAppMenu = memo(
     return (
       <MenuButton
         size={1}
+        alt="translucent"
+        // background={theme => theme.background.setAlpha(0.33)}
+        // borderColor={theme => theme.borderColor.setAlpha(0.5)}
+        // color={theme => theme.parent.background}
+        glint={false}
         sizeRadius={1.6}
+        fontWeight={500}
         tooltip="Open to desktop (⌘ + ⏎)"
         onClick={effects.openCurrentApp}
         elevation={1.5}
@@ -133,7 +139,7 @@ export const OrbitHeaderOpenAppMenu = memo(
         opacity={disabled ? 0.5 : 1}
         openIconProps={useMemo(
           () => ({
-            name: isDeveloping ? 'edit' : 'chevron-down',
+            name: isDeveloping ? 'edit' : 'caret-down',
           }),
           [isDeveloping],
         )}

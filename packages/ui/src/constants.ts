@@ -1,3 +1,5 @@
+export const LINE_HEIGHT = 30
+
 export const isNode =
   typeof process !== 'undefined' && process['release'] && process['release'].name === 'node'
 

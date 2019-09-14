@@ -2,7 +2,7 @@ import { Absolute, ListItem, ListShortcuts, Popover, Portal, RoundButton, Row, S
 import React, { memo } from 'react'
 
 import { fontProps } from '../constants'
-import { FadeChild } from '../views/FadeInView'
+import { FadeInView } from '../views/FadeInView'
 import { Key } from '../views/Key'
 import { ListSubTitle } from '../views/ListSubTitle'
 import { SearchInput } from '../views/SearchInput'
@@ -15,7 +15,7 @@ export const DocsPageHeader = memo(
     return (
       <Portal prepend style={{ position: 'sticky', top: 10, zIndex: 10000000 }}>
         <ListShortcuts>
-          <FadeChild style={{ flex: 1 }}>
+          <FadeInView style={{ flex: 1 }}>
             <Row
               position="relative"
               margin={[0, 'auto', 0, 'auto']}
@@ -113,7 +113,7 @@ export const DocsPageHeader = memo(
                 </SurfacePassProps>
               </Absolute>
             </Row>
-          </FadeChild>
+          </FadeInView>
         </ListShortcuts>
       </Portal>
     )

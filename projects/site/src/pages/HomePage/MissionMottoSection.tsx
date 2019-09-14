@@ -2,7 +2,7 @@ import { Col, Grid, ListItem, SimpleText, SpaceGroup, TextProps, Theme, View } f
 import React, { memo } from 'react'
 
 import earth from '../../public/images/earth.jpg'
-import { FadeChild, FadeParent } from '../../views/FadeInView'
+import { FadeInView, FadeParent } from '../../views/FadeInView'
 import { MediaSmallHidden } from '../../views/MediaView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
@@ -57,52 +57,52 @@ export const AboutSection = memo(() => {
         sm-padding={0}
         header={
           <>
-            <FadeChild>
+            <FadeInView>
               <PillButton>About</PillButton>
-            </FadeChild>
-            <FadeChild delay={dly * 1}>
+            </FadeInView>
+            <FadeInView delay={dly * 1}>
               <TitleText textAlign="center">A better deal for developers</TitleText>
-            </FadeChild>
+            </FadeInView>
           </>
         }
       >
         <View flex={1} />
         <Grid space="10%" itemMinWidth={340} height="70%">
           <Col space="lg">
-            <FadeChild delay={dly * 2}>
+            <FadeInView delay={dly * 2}>
               <TitleTextSub textAlign="left" alpha={1}>
                 It's way too hard to build a decent application that gives you control, and lets you
                 deploy where you want.
               </TitleTextSub>
-            </FadeChild>
+            </FadeInView>
 
-            <FadeChild delay={dly * 3}>
+            <FadeInView delay={dly * 3}>
               <SubParagraph>
                 Let's give developers more control and users a better experience out of the box.
               </SubParagraph>
-            </FadeChild>
+            </FadeInView>
 
-            <FadeChild delay={dly * 4}>
+            <FadeInView delay={dly * 4}>
               <SubParagraph>
                 It starts with apps that are easier to build and are built to last: open source, and
                 cross-platform by default.
               </SubParagraph>
-            </FadeChild>
+            </FadeInView>
 
-            <FadeChild delay={dly * 5}>
+            <FadeInView delay={dly * 5}>
               <SubParagraph>We're excited to share it with you.</SubParagraph>
-            </FadeChild>
+            </FadeInView>
           </Col>
 
           <MediaSmallHidden>
             <Col space="md" justifyContent="flex-end">
-              <FadeChild delay={dly * 5}>
+              <FadeInView delay={dly * 5}>
                 <TitleTextSub textAlign="left" alpha={1} size={1}>
                   Our goals
                 </TitleTextSub>
-              </FadeChild>
+              </FadeInView>
 
-              <FadeChild delay={dly * 6}>
+              <FadeInView delay={dly * 6}>
                 <SpaceGroup space="md">
                   <Item>Build apps without infrastructure.</Item>
 
@@ -112,7 +112,7 @@ export const AboutSection = memo(() => {
 
                   <Item>Give users control over their data.</Item>
                 </SpaceGroup>
-              </FadeChild>
+              </FadeInView>
             </Col>
           </MediaSmallHidden>
         </Grid>

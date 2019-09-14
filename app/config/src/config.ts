@@ -12,6 +12,7 @@ export type GlobalConfig = {
     dotApp: string
     resources: string
     desktop: string
+    temp: string
   }
   urls: {
     auth: string

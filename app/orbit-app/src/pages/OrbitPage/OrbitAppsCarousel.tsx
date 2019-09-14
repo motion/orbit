@@ -152,9 +152,8 @@ function GeometryScrollUpdater() {
   return null
 }
 
-const OrbitAppsCarouselFrame = memo(props => {
+const OrbitAppsCarouselFrame = props => {
   const { isOpen } = useAppsDrawerStore()
-
   return (
     <View
       data-is="OrbitAppsCarousel"
@@ -165,7 +164,7 @@ const OrbitAppsCarouselFrame = memo(props => {
       {...props}
     />
   )
-})
+}
 
 /**
  * Handles visibility of the app as it moves in and out of viewport
@@ -194,6 +193,7 @@ class AppCardStore {
     async ([isFocused, zoomedIn, isAnimating], { getValue }) => {
       if (getValue()) return
       ensure('isFocused', isFocused)
+      await sleep(50)
       ensure('not animating', !isAnimating)
       if (!zoomedIn) {
         await sleep(800)
@@ -294,9 +294,13 @@ const OrbitAppCard = memo(
                 .scrollIntersection()
                 .mergeTransform([zoomOut], (intersect, zoomOut) => {
                   if (zoomOut === 0) return index === appsCarouselStore.focusedIndex ? 1 : 0.5
-                  if (intersect >= 0) return 0.6
-                  return 0.6 //todo
+                  if (intersect >= -0) return 0.6
+                  return 0.6
+                  // todo - need to add a new thing to geometry, something like:
+                  // .transformIf(x => x < 0.6, [0, 1], [10, 20])
+                  // return Math.min(Math.max(0.5, 1 - intersect * -0.8), 0.6) //todo
                 })
+                // .transform([0.25, 0.6], [0.45, 0.6])
                 .spring({ damping: 50, stiffness: 500 })}
               x={geometry
                 .useTransform(zoomOut, x => {

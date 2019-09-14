@@ -9,7 +9,7 @@ import { scrollTo } from '../etc/helpers'
 import { Navigation } from '../Navigation'
 import { linkProps } from '../useLink'
 import { CodeBlock } from '../views/CodeBlock'
-import { FadeChild } from '../views/FadeInView'
+import { FadeInView } from '../views/FadeInView'
 import { MDX } from '../views/MDX'
 import { docsItems } from './docsItems'
 import { Example } from './DocsPage/Example'
@@ -84,12 +84,12 @@ export const DocsContents = memo(
             titleBorder
             space
             title={
-              <FadeChild>
+              <FadeInView>
                 <Title size={(title || '').length > 22 ? 2 : 2.5}>{title || 'No title'}</Title>
-              </FadeChild>
+              </FadeInView>
             }
             belowTitle={
-              <FadeChild>
+              <FadeInView>
                 <SurfacePassProps
                   chromeless
                   cursor="pointer"
@@ -148,7 +148,7 @@ export const DocsContents = memo(
                     )}
                   </Row>
                 </SurfacePassProps>
-              </FadeChild>
+              </FadeInView>
             }
             afterTitle={
               <>
@@ -165,7 +165,7 @@ export const DocsContents = memo(
               </>
             }
           >
-            <FadeChild delay={100}>{children}</FadeChild>
+            <FadeInView delay={100}>{children}</FadeInView>
 
             <Space size="xxl" />
 

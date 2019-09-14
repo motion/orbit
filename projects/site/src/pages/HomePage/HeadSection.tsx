@@ -1,10 +1,10 @@
-import { Col, Scale, SimpleTextProps, Space, SurfacePassProps, Theme, TitleProps, View } from '@o/ui'
+import { Col, FullScreen, Scale, SimpleTextProps, Space, SurfacePassProps, Theme, TitleProps, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
 import { useScreenHeightVal } from '../../hooks/useScreenSize'
-import { fadeAnimations, FadeChild, useFadePage } from '../../views/FadeInView'
+import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContentChrome } from '../../views/SectionContent'
 import { TitleText } from '../../views/TitleText'
@@ -21,7 +21,7 @@ const TitleParagraph = (props: SimpleTextProps) => {
   return <Paragraph alpha={0.7} {...props} />
 }
 
-const scale = 0.9
+const scale = 0.8
 const para = {
   display: 'flex',
   fontSize: `${3.4 * scale}vw`,
@@ -62,7 +62,7 @@ const HeadContent = memo(() => {
             whiteSpace="nowrap"
             maxHeight={160}
           >
-            <FadeChild disable={!measured}>Apps for teams</FadeChild>
+            <FadeInView disable={!measured}>Apps for teams</FadeInView>
           </TextFitTitle>
 
           {br}
@@ -75,7 +75,7 @@ const HeadContent = memo(() => {
             &nbsp;
             <TitleParagraph {...para}>
               {/* second line */}
-              Orbit is an easy, all-in-one platform for teams'&nbsp;apps.
+              Orbit is an easy, all-in-one platform for your&nbsp;intranet.
             </TitleParagraph>
           </View>
         </View>
@@ -86,8 +86,8 @@ const HeadContent = memo(() => {
 
 const HeadJoin = memo(() => {
   return (
-    <View flex={1} width="100%" position="absolute" bottom="15%" alignItems="center">
-      <FadeChild {...fadeAnimations.up} delay={500}>
+    <View flex={1} width="100%" alignItems="center">
+      <FadeInView {...fadeAnimations.up} delay={500}>
         <SurfacePassProps elevation={5} {...fontProps.TitleFont}>
           <Theme name="orbitOneDark">
             <Scale size={useScreenVal(0.9, 1, 1.1)}>
@@ -106,7 +106,7 @@ const HeadJoin = memo(() => {
             </Scale>
           </Theme>
         </SurfacePassProps>
-      </FadeChild>
+      </FadeInView>
       {/* <View
         position="absolute"
         overflow="hidden"
@@ -135,6 +135,8 @@ export function HeadSection() {
     threshold: 0,
   })
 
+  console.log(require('../../public/images/screen.jpg'))
+
   return (
     <Fade.FadeProvide>
       <Col
@@ -149,9 +151,14 @@ export function HeadSection() {
         <Col flex={6} nodeRef={Fade.ref} alignItems="center" justifyContent="center">
           <HeadContent />
         </Col>
-        <View flex={1.5} />
         <HeadJoin />
-        <View flex={1.5} />
+        <View position="relative" height={500} flex={8} minWidth={1200} margin={[0, '-10%']}>
+          <FullScreen
+            backgroundImage={`url(${require('../../public/images/screen.jpg')})`}
+            backgroundPosition="top center"
+            backgroundSize="cover"
+          />
+        </View>
       </Col>
     </Fade.FadeProvide>
   )
@@ -180,7 +187,7 @@ export function HeadSection() {
 // const DownloadButton = props => {
 //   const parallax = useParallax()
 //   return (
-//     <FadeChild delay={1000}>
+//     <FadeInView delay={1000}>
 //       <Center bottom="auto" top={0}>
 //         <RoundButton
 //           aria-label="Download Button"
@@ -199,6 +206,6 @@ export function HeadSection() {
 //           <div style={{ width: 25 }} />
 //         </RoundButton>
 //       </Center>
-//     </FadeChild>
+//     </FadeInView>
 //   )
 // }

@@ -1,5 +1,5 @@
 import { createStoreContext } from '@o/kit'
-import { useIntersectionObserver, View, ViewProps } from '@o/ui'
+import { MotionProps, useIntersectionObserver, View, ViewProps } from '@o/ui'
 import React, { memo, useCallback, useRef, useState } from 'react'
 
 export type FadeInProps = ViewProps & {
@@ -10,11 +10,11 @@ export type FadeInProps = ViewProps & {
   shown?: boolean
 }
 
-export const transitions = {
+export const transitions: { [key: string]: MotionProps['transition'] } = {
   slowNotBouncy: {
     type: 'spring',
-    damping: 13,
-    stiffness: 80,
+    damping: 18,
+    stiffness: 60,
   },
   slowConfig: {
     type: 'spring',
@@ -24,7 +24,7 @@ export const transitions = {
   normal: {
     type: 'spring',
     damping: 12,
-    stiffness: 100,
+    stiffness: 60,
   },
   fast: {
     type: 'spring',
@@ -108,19 +108,25 @@ const FadeStoreContext = createStoreContext(
 )
 
 type FadeChildProps = ViewProps & {
+  // granular delay, 300, 400, etc
   delay?: number
+  // easier delay, 1, 2, 3
+  delayIndex?: number
   disable?: boolean
   fullscreen?: boolean
   reverse?: boolean
 }
 
-export const FadeChild = memo(
+const initialScreenWidth = window.innerWidth
+
+export const FadeInView = memo(
   ({
     style = fadeAnimations.down.style,
     animate = fadeAnimations.down.animate,
     transition = transitions.normal,
     children,
     delay,
+    delayIndex,
     disable,
     fullscreen,
     reverse,
@@ -141,29 +147,32 @@ export const FadeChild = memo(
       ;[style, animate] = [animate, style]
     }
 
-    // if (isTiny) {
-    //   return (
-    //     <div
-    //       style={{
-    //         display: 'flex',
-    //         flexDirection: 'column',
-    //         justifyContent: 'inherit',
-    //         alignItems: 'inherit',
-    //         ...style,
-    //       }}
-    //       {...rest}
-    //     >
-    //       {children}
-    //     </div>
-    //   )
-    // }
+    if (initialScreenWidth < 480) {
+      return (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'inherit',
+            alignItems: 'inherit',
+            ...style,
+          }}
+          {...rest as any}
+        >
+          {children}
+        </div>
+      )
+    }
 
     return (
       <View
         data-is="FadeChild"
         style={style}
         animate={shown ? animate : undefined}
-        transition={{ ...(transition as any), delay: (delay || 1) / 1000 }}
+        transition={{
+          ...(transition as any),
+          delay: delayIndex ? delayIndex / 5 : (delay || 1) / 1000,
+        }}
         {...rest}
       >
         {children}

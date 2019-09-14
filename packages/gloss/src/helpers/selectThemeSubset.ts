@@ -48,7 +48,10 @@ export function selectThemeSubset(subTheme: ThemeSelect, theme: ThemeObject): Th
   }
 
   // proxy back to full theme
-  const fullTheme = mergeTheme(theme, selectedTheme)
+  const fullTheme = {
+    ...mergeTheme(theme, selectedTheme),
+    parent: theme,
+  }
 
   // write to cache
   if (!cacheKey.get(theme)) {

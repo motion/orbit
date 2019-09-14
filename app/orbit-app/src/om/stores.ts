@@ -24,7 +24,7 @@ export const useNewAppStore = newAppStore.useStore
 export const paneManagerStore = createUsableStore(PaneManagerStore)
 export const usePaneManagerStore = paneManagerStore.useStore
 
-export const appsDrawerStore = createUsableStore(AppsDrawerStore, { paneManagerStore })
+export const appsDrawerStore = createUsableStore(AppsDrawerStore)
 export const useAppsDrawerStore = appsDrawerStore.useStore
 
 export const Stores = {

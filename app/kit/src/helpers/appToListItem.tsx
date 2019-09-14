@@ -11,7 +11,7 @@ export const appToListItem = (app: AppBit, index: number): ListItemProps => {
     title: app.name,
     icon: <AppIcon identifier={app.identifier} colors={app.colors} />,
     after: (
-      <SimpleText alpha={0.5} size={1.5}>
+      <SimpleText alignSelf="center" alpha={0.5} size={1.1}>
         ⌘ + {index + 2}
       </SimpleText>
     ),

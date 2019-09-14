@@ -35,7 +35,7 @@ export const HomePage = memo(() => {
       <LoadingPage />
       <Header />
       <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
-        <Page>
+        <Page pages={1.4}>
           <HeadSection />
         </Page>
         <Page>
@@ -47,10 +47,10 @@ export const HomePage = memo(() => {
         <Page pages={0.75}>
           <DataAppKitFeaturesSection />
         </Page>
-        <Page>
+        <Page pages={1.2}>
           <FeaturesSection />
         </Page>
-        <Page pages={0.75}>
+        <Page pages={0.8}>
           <SecuritySection />
         </Page>
         <Page pages={0.75}>

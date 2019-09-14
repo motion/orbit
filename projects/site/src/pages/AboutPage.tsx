@@ -8,7 +8,7 @@ import { scrollTo } from '../etc/helpers'
 import { Header } from '../Header'
 import confettiImage from '../public/images/confetti.jpg'
 import { linkProps } from '../useLink'
-import { FadeChild, useFadePage } from '../views/FadeInView'
+import { FadeInView, useFadePage } from '../views/FadeInView'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { useScreenVal } from './HomePage/SpacedPageContent'
@@ -44,7 +44,7 @@ export function AboutPage() {
             <Row id="main" alignItems="flex-start">
               <Col id="sidebar" width={200} pointerEvents="auto" sm-width={0} sm-opacity={0}>
                 <Col position="relative" className="sidebar__inner" flex={1}>
-                  <FadeChild delay={200}>
+                  <FadeInView delay={200}>
                     <Space size={35} />
                     <PassProps
                       titleProps={{ fontSize: 18, padding: [10, 20], textAlign: 'right' }}
@@ -76,10 +76,10 @@ export function AboutPage() {
                       />
                     </PassProps>
                     <BorderRight top={10} opacity={0.5} />
-                  </FadeChild>
+                  </FadeInView>
                 </Col>
               </Col>
-              <FadeChild delay={400} style={{ flex: 1 }}>
+              <FadeInView delay={400} style={{ flex: 1 }}>
                 <Col
                   id="mission"
                   padding={[0, useScreenVal('sm', 'xxl', 100)]}
@@ -142,7 +142,7 @@ export function AboutPage() {
                     </BigParagraph>
                   </Col>
                 </Col>
-              </FadeChild>
+              </FadeInView>
             </Row>
           </SectionContent>
 

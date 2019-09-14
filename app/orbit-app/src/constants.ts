@@ -24,3 +24,7 @@ export const SHADOW_PAD = 15
 const protocol = `${window.location.protocol}//`
 export const API_HOST = `${window.location.host}`
 export const API_URL = `${protocol}${API_HOST}`
+
+export const mediaQueries = {
+  small: '@media screen and (max-width: 820px)',
+}

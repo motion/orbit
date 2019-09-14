@@ -3,7 +3,8 @@ import React, { memo, useRef } from 'react'
 import { BorderLeft } from '../Border'
 import { Icon, IconProps } from '../Icon'
 import { Menu, MenuProps } from '../Menu'
-import { useSizedSurfaceProps, useSurfaceHeight } from '../SizedSurface'
+import { useScaledSize, useSizedSurfaceProps, useSurfaceHeight } from '../SizedSurface'
+import { getSize } from '../Sizes'
 import { Space } from '../Space'
 import { SimpleText } from '../text/SimpleText'
 import { View } from '../View/View'
@@ -16,17 +17,21 @@ export type MenuButtonProps = ButtonProps &
   }
 
 export const MenuButton = memo((props: MenuButtonProps) => {
-  const { items, scrollable, children, openIconProps, open, openOnHover, ...rest } = props
+  const { items, scrollable, children, openIconProps, open, openOnHover, size, ...rest } = props
   const sizedSurfaceProps = useSizedSurfaceProps(props)
-  const height = useSurfaceHeight(rest.size)
+  const sizePx = getSize(size)
+  const spaceSizePx = +getSize('sm') * sizePx
+  const scaledSize = useScaledSize(size)
+  const height = useSurfaceHeight(size)
   // using the same group ensures the tooltip closes when the menu opens
   const group = useRef(`${Math.random()}`).current
+  const spaceElement = <Space size={sizedSurfaceProps.sizePadding} scale={0.55 * sizePx} />
   return (
-    <Button tooltipProps={{ group }} space="sm" {...rest}>
+    <Button tooltipProps={{ group }} paddingRight={0} size={size} {...rest}>
       {!!children && (
         <>
-          <SimpleText>{children}</SimpleText>
-          <Space size={sizedSurfaceProps.sizePadding} scale={0.55} />
+          <SimpleText size={size}>{children}</SimpleText>
+          {spaceElement}
         </>
       )}
       <Menu
@@ -37,6 +42,7 @@ export const MenuButton = memo((props: MenuButtonProps) => {
           open,
           items,
           openOnHover,
+          size,
         }}
         target={
           <View
@@ -47,9 +53,10 @@ export const MenuButton = memo((props: MenuButtonProps) => {
             position="relative"
             justifyContent="center"
           >
-            <Space size={sizedSurfaceProps.sizePadding} scale={0.55} />
+            {spaceElement}
             {!!children && <BorderLeft top={4} bottom={4} />}
-            <Icon size={12} name="caret-down" {...openIconProps} />
+            <Icon size={12 * scaledSize} name="caret-down" color={rest.color} {...openIconProps} />
+            {spaceElement}
           </View>
         }
       />

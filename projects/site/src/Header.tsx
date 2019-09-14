@@ -5,7 +5,7 @@ import React, { memo, useLayoutEffect, useState } from 'react'
 import { useScreenSize } from './hooks/useScreenSize'
 import { LinkState } from './LinkState'
 import { useSiteStore } from './SiteStore'
-import { FadeChild, transitions, useFadePage } from './views/FadeInView'
+import { FadeInView, transitions, useFadePage } from './views/FadeInView'
 import { HeaderContain, LinkSection } from './views/HeaderContain'
 import { HeaderContext } from './views/HeaderContext'
 import { LinksLeft, LinksRight } from './views/HeaderLink'
@@ -59,13 +59,13 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
                 <LinksLeft />
               </LinkRow>
             </LinkSection>
-            <FadeChild
+            <FadeInView
               // disable={!LinkState.didAnimateOut}
               transition={shown ? transitions.normal : transitions.fastStatic}
               delay={shown ? 100 : 0}
             >
               <LogoVertical />
-            </FadeChild>
+            </FadeInView>
             <LinkSection>
               <LinkRow>
                 <LinksRight />
@@ -97,13 +97,13 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
           {...rest}
         >
           <HeaderContain height={50}>
-            <FadeChild
+            <FadeInView
               disable={!LinkState.didAnimateOut}
               transition={shown ? transitions.normal : transitions.fastStatic}
               delay={shown ? 0 : 0}
             >
               <LogoHorizontal slim />
-            </FadeChild>
+            </FadeInView>
           </HeaderContain>
           {!noBorder && <BorderBottom opacity={0.5} />}
         </Row>

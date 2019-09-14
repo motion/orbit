@@ -93,6 +93,13 @@ export class OrbitDockStore {
     },
   )
 
+  clearHoverOnDrawerOpen = react(
+    () => appsDrawerStore.isOpen,
+    () => {
+      this.hoveredIndex = -1
+    },
+  )
+
   deferUpdateHoveringButton = react(
     () => this.nextHovered,
     async (next, { sleep }) => {

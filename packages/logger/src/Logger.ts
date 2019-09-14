@@ -15,7 +15,7 @@ import { LoggerSettings } from './LoggerSettings'
  *
  */
 
-type LogType = 'verbose' | 'info' | 'warning' | 'error' | 'timer' | 'vtimer'
+type LogType = 'verbose' | 'info' | 'warning' | 'error' | 'timer' | 'vtimer' | 'debug'
 
 // for now just log because its not being output anywhere
 const debug =
@@ -25,12 +25,14 @@ type LoggerOpts = {
   trace?: boolean
 }
 
-const getLogLevel = () => {
+const getLogLevel = (defaultTo = 0) => {
+  let _
   if (typeof window !== 'undefined' && typeof window['enableLog'] !== 'undefined') {
-    return window['enableLog']
+    _ = window['enableLog']
   } else {
-    return process.env.LOG_LEVEL
+    _ = process.env.LOG_LEVEL
   }
+  return _ ? +_ : defaultTo
 }
 
 const has = (x, y) => x.indexOf(y) > -1
@@ -78,6 +80,13 @@ export class Logger {
    */
   verbose(...messages: any[]) {
     this.log('verbose', messages)
+  }
+
+  /**
+   * Even more verbose than verbose.
+   */
+  debug(...messages: any[]) {
+    this.log('debug', messages)
   }
 
   /**
@@ -148,7 +157,7 @@ export class Logger {
   }
 
   private shouldLogAll(type: LogType) {
-    const level = getLogLevel() ? +getLogLevel() : 1
+    const level = getLogLevel(1)
     if (type === 'error') {
       return true
     }
@@ -165,6 +174,12 @@ export class Logger {
    * Executes logging.
    */
   private log(level: LogType, messages: any[]) {
+    const logLevel = getLogLevel(0)
+
+    // in verbose/debug we can avoid flush altogether for performance
+    if (level === 'verbose' && logLevel <= 1) return
+    if (level === 'debug' && logLevel <= 4) return
+
     // don't log if we have logging disabled
     const index = LoggerSettings.disables.indexOf(this.namespace)
     if (level !== 'error' && index !== -1) return
@@ -183,7 +198,6 @@ export class Logger {
     const isDevelopment = process.env.NODE_ENV === 'development'
     const isTrace = this.opts.trace && isDevelopment
     const shouldLogAll = this.shouldLogAll(level)
-    const logLevel = getLogLevel() ? +getLogLevel() : 0
 
     // for syncer process with no-logging mode we do not log objects in messages
     if (!shouldLogAll) {
@@ -258,10 +272,10 @@ export class Logger {
       )
     } else if (level === 'verbose') {
       this.flush(
-        logLevel > 1,
+        true,
         // log direct to console if in high log mode
         logLevel > 3 ? 'info' : 'debug',
-        ...colored(this.namespace, `color: ${color}; font-weight: bold`),
+        this.namespace,
         ...messages,
       )
     } else if (level === 'info') {
@@ -289,6 +303,8 @@ export class Logger {
         this.flush(shouldLog, type, `${this.namespace}`, ...messages)
         this.timers.push({ time: Date.now(), message: messages[0] })
       }
+    } else if (level === 'debug') {
+      this.flush(true, 'debug', this.namespace, ...messages)
     } else {
       this.flush(
         true,

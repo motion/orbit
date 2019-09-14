@@ -209,6 +209,12 @@ export const alternates: ThemeSet = Object.freeze({
     buttonBackgroundBlur: '#f6f6f6',
     buttonBackgroundActiveHighlight: '#ededed',
   }),
+  translucent: parent =>
+    fromStyles({
+      color: parent.color,
+      background: parent.background.setAlpha(0.33),
+      borderColor: parent.background.setAlpha(0.5),
+    }),
   clear: parent =>
     fromStyles({
       glintColor: transparent,

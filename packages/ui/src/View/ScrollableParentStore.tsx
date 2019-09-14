@@ -130,7 +130,6 @@ export function ScrollableIntersection({
         }
 
         // done, trigger update
-        console.log('did measure, we can prevent updates tho')
         scrollableParent.scrollIntersectionState.ready = true
         scrollProgress.set(scrollProgress.get())
       }, 0)

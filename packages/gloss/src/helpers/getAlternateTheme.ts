@@ -54,6 +54,7 @@ function createAlternateTheme(theme: ThemeObject, alt: string): ThemeObject {
   // @ts-ignore
   return {
     ...altTheme,
+    parent: theme,
     _alternateName: alt,
     _isAlternate: true,
     _originalTheme: theme,

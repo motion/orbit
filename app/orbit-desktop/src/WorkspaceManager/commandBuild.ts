@@ -163,7 +163,7 @@ async function getBuildInfo(appDir: string) {
     )).join(''),
   )
   const orbitConfig = JSON.stringify(omit(globalConfig.paths, 'nodeBinary'))
-  log.verbose(`getBuildInfo orbitConfig ${orbitConfig}`)
+  log.debug(`getBuildInfo orbitConfig ${orbitConfig}`)
   return {
     configFiles,
     appHash,
@@ -203,7 +203,7 @@ class ShouldRebuildMissingApi {}
 class ShouldRebuildMissingNodeApp {}
 class ShouldRebuildNewBuildInfo {}
 
-async function shouldRebuildApp(appRoot: string) {
+export async function shouldRebuildApp(appRoot: string) {
   try {
     // do some basic sanity checks
     // no buildInfo yet

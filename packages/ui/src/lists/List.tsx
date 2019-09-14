@@ -220,6 +220,16 @@ export const List = memoIsEqualDeep(
           />
         )}
         {showPlaceholder && (placeholder || <ListPlaceholder {...allProps} />)}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+.selectable-mouse-down * {
+  user-select: none !important;
+}
+
+            `,
+          }}
+        />
       </SelectableStoreProvider>
     )
 
@@ -266,16 +276,6 @@ export const List = memoIsEqualDeep(
         {...collapseProps}
       >
         {children}
-
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-            .selectable-mouse-down * {
-                user-select: none !important;
-              }
-            `,
-          }}
-        />
       </Section>
     )
   }),

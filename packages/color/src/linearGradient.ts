@@ -40,4 +40,8 @@ export class LinearGradient {
   isDark() {
     return this.getColors()[1].isDark()
   }
+
+  setAlpha(pct: number) {
+    return new LinearGradient(this.getColors().map(x => x.setAlpha(pct)))
+  }
 }

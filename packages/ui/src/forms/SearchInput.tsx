@@ -81,7 +81,7 @@ export const ClearButton = gloss<ButtonProps & { invisible?: boolean }>(Button, 
   defaultProps: {
     icon: 'cross',
     circular: true,
-    size: 0.65,
+    size: 0.75,
     sizeIcon: 1.5,
     alt: 'flat',
     glint: false,

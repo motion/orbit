@@ -94,7 +94,7 @@ export function OrbitAppWindow({
       show={store.show}
       webPreferences={{
         nodeIntegration: true,
-        webSecurity: false,
+        // webSecurity: false,
       }}
       titleBarStyle="hiddenInset"
       ref={forwardRef}

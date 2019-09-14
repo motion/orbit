@@ -8,13 +8,13 @@ import { Badge } from './Badge'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
-import { createContextualProps } from './helpers/createContextualProps'
-import { Icon, IconProps, IconPropsContext } from './Icon'
+import { Icon, IconProps } from './Icon'
+import { IconPropsContext } from './IconPropsContext'
 import { InvertScale } from './InvertScale'
 import { PassProps } from './PassProps'
 import { PopoverProps } from './Popover'
 import { getSegmentedStyle } from './SegmentedRow'
-import { SizedSurfaceProps } from './SizedSurface'
+import { SizedSurfacePropsContext } from './SizedSurfacePropsContext'
 import { getSize } from './Sizes'
 import { Size, Space } from './Space'
 import { scaledTextSizeTheme } from './text/SimpleText'
@@ -157,12 +157,6 @@ export type SurfaceSpecificProps = {
 }
 
 export type SurfaceProps = Omit<ViewProps, 'size'> & SurfaceSpecificProps
-
-// TODO this is using SizedSurfaceProps, needs some work to separate the two
-const SizedSurfacePropsContext = createContextualProps<SizedSurfaceProps>()
-export const SurfacePassPropsReset = SizedSurfacePropsContext.Reset
-export const SurfacePassProps = SizedSurfacePropsContext.PassProps
-export const useSurfaceProps = SizedSurfacePropsContext.useProps
 
 const getBorderRadius = (t, b, l, r, tl, tr, bl, br) => {
   return {
@@ -580,7 +574,7 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
     fontWeight: props.fontWeight || theme.fontWeight,
     overflow: props.overflow || theme.overflow,
     // note: base theme styles go *above* propsToStyles...
-    ...(!props.chromeless && themeStyle),
+    ...themeStyle,
     // TODO this could be automatically handled in propStyles if we want...
     ...(!props.chromeless && props.active && { '&:hover': themeStyle['&:active'] }),
     ...(props.chromeless && chromelessStyle),
@@ -631,7 +625,8 @@ const Element = gloss<SurfaceFrameProps & { disabled?: boolean }>({
   flexDirection: 'row',
   border: 'none',
   background: 'transparent',
-  height: '100%',
+  // otherwise it wont be full height so impossible to position things at start/end
+  height: 'inherit',
   ellipse: {
     display: 'block',
     overflow: 'hidden',

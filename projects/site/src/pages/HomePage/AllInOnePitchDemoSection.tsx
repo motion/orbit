@@ -172,7 +172,7 @@ export default memo(() => {
         header={
           <>
             <FadeInView delayIndex={0}>
-              <PillButton>How</PillButton>
+              <PillButton>Platform</PillButton>
             </FadeInView>
             <FadeInView delayIndex={1}>
               <TitleText size="xxxl" sm-size="20px">
@@ -184,7 +184,7 @@ export default memo(() => {
                 &nbsp;Build tools as a team, sharing a rich set of building blocks.&nbsp;
               </FadeInView>
               <FadeInView sm-display="inline" delayIndex={3}>
-                Orbit comes with everything you need.
+                Orbit has everything you'd want.
               </FadeInView>
             </TitleTextSub>
           </>

@@ -35,7 +35,7 @@ export const HomePage = memo(() => {
       <LoadingPage />
       <Header />
       <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
-        <Page>
+        <Page pages={1.4}>
           <HeadSection />
         </Page>
         <Page>

@@ -4,8 +4,8 @@ import { App } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import { useRef } from 'react'
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
+import { useRef } from 'react'
 
 import { mediaQueries } from '../../constants'
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
@@ -91,7 +91,7 @@ export const OrbitHeader = memo(() => {
               alignItems="center"
               {...!isOnTearablePane && zoomedIn && { pointerEvents: 'none', opacity: 0.3 }}
             >
-              <a
+              {/* <a
                 href="#"
                 className="undraggable"
                 onDragStart={e => {
@@ -100,7 +100,7 @@ export const OrbitHeader = memo(() => {
                 }}
               >
                 ok ok ok
-              </a>
+              </a> */}
 
               {!isTorn && (
                 <Button

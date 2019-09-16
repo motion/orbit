@@ -22,7 +22,7 @@ const TitleParagraph = (props: SimpleTextProps) => {
   return <Paragraph alpha={0.7} {...props} />
 }
 
-const scale = 0.8
+const scale = 0.75
 const para = {
   display: 'flex',
   fontSize: `${3.4 * scale}vw`,
@@ -182,7 +182,7 @@ export function HeadSection() {
       >
         <Space size="xxl" />
         <View flex={0.5} />
-        <Col flex={6} nodeRef={Fade.ref} alignItems="center" justifyContent="center">
+        <Col flex={10} nodeRef={Fade.ref} alignItems="center" justifyContent="center">
           <HeadContent />
         </Col>
         <View position="relative" height={500} flex={8} minWidth={1200} margin={[0, '-10%']}>
@@ -201,6 +201,7 @@ export function HeadSection() {
             backgroundImage={`url(${require('../../public/images/screen.jpg')})`}
             backgroundPosition="top center"
             backgroundSize="cover"
+            minHeight={500}
           />
         </View>
       </Col>

@@ -29,7 +29,7 @@ class SiteStore {
     // }
     return Math.max(
       // min-height
-      980,
+      1020,
       Math.min(
         desiredHeight,
         // max-height

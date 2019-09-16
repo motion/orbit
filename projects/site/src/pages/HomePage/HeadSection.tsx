@@ -41,7 +41,48 @@ export function HeadSection() {
         >
           <HeadContent />
         </Col>
-        <View
+        <Page.ParallaxView
+          speed={0.25}
+          offset={0.51}
+          zIndex={100}
+          position="absolute"
+          left="50%"
+          top={0}
+          marginLeft={-70 / 2}
+        >
+          <View
+            animate
+            transformOrigin="center center"
+            width={70}
+            height={70}
+            whileHover={{
+              scale: 1.2,
+            }}
+            whileTap={{
+              rotate: '360deg',
+            }}
+          >
+            <FadeInView
+              delayIndex={3}
+              background={[255, 255, 255, 0.1]}
+              borderRadius={100}
+              alignItems="center"
+              justifyContent="center"
+              width="100%"
+              height="100%"
+              pointerEvents="auto"
+              cursor="pointer"
+              transition="all ease 1s"
+              hoverStyle={{
+                background: [255, 255, 255, 0.15],
+              }}
+            >
+              <Icon size={24} color="#fff" name="play" />
+            </FadeInView>
+          </View>
+        </Page.ParallaxView>
+        <Page.ParallaxView
+          speed={-0.15}
           className="app-screenshot"
           position="relative"
           height={500}
@@ -49,52 +90,15 @@ export function HeadSection() {
           margin={[0, '-10%']}
           userSelect="none"
         >
-          <Page.ParallaxView
-            speed={0.25}
-            offset={-1}
-            zIndex={100}
-            position="absolute"
-            left="50%"
-            top={0}
-            marginLeft={-70 / 2}
-          >
-            <View
-              animate
-              transformOrigin="center center"
-              width={70}
-              height={70}
-              whileHover={{
-                scale: 1.2,
-              }}
-              whileTap={{
-                rotate: '360deg',
-              }}
-            >
-              <View
-                background={[255, 255, 255, 0.1]}
-                borderRadius={100}
-                alignItems="center"
-                justifyContent="center"
-                width="100%"
-                height="100%"
-                pointerEvents="auto"
-                cursor="pointer"
-                transition="all ease 1s"
-                hoverStyle={{
-                  background: [255, 255, 255, 0.15],
-                }}
-              >
-                <Icon size={24} color="#fff" name="play" />
-              </View>
-            </View>
-          </Page.ParallaxView>
-          <Image
-            display="block"
-            src={require('../../public/images/screen.jpg')}
-            width="100%"
-            height="auto"
-          />
-        </View>
+          <FadeInView {...fadeAnimations.up} delayIndex={4}>
+            <Image
+              display="block"
+              src={require('../../public/images/screen.jpg')}
+              width="100%"
+              height="auto"
+            />
+          </FadeInView>
+        </Page.ParallaxView>
       </Col>
     </Fade.FadeProvide>
   )
@@ -163,12 +167,12 @@ const HeadContent = memo(() => {
 
           <View display="block" minHeight="min-content">
             <TitleParagraph {...para}>
-              {/* first line */}A home base for teams to build internal tools together.
+              {/* first line */}The home base for teams to build amazing internal tools.
             </TitleParagraph>
             &nbsp;
             <TitleParagraph {...para}>
               {/* second line */}
-              Orbit is your heads-up display for&nbsp;apps.
+              Orbit is a head-up display for data&nbsp;&&nbsp;apps.
             </TitleParagraph>
             {br}
             <View position="relative" marginBottom={-95} marginTop={10}>

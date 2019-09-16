@@ -148,7 +148,7 @@ export default memo(() => {
       <Page.BackgroundParallax
         speed={-0.25}
         offset={-0.25}
-        x="-45%"
+        x="-65%"
         top="-10%"
         scale={1.25}
         className="glow-one"
@@ -160,7 +160,7 @@ export default memo(() => {
       <Page.BackgroundParallax
         speed={0.4}
         offset={1}
-        x="40%"
+        x="60%"
         scale={1.68}
         className="glow-two"
         opacity={0.35}
@@ -181,10 +181,7 @@ export default memo(() => {
             </FadeInView>
             <TitleTextSub margin="auto" minWidth={320}>
               <FadeInView sm-display="inline" delayIndex={2}>
-                &nbsp;Build tools as a team, sharing a rich set of building blocks.&nbsp;
-              </FadeInView>
-              <FadeInView sm-display="inline" delayIndex={3}>
-                Orbit has everything you'd want.
+                &nbsp;The richest set of tools to building powerful apps.&nbsp;
               </FadeInView>
             </TitleTextSub>
           </>

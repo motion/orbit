@@ -1,4 +1,4 @@
-import { ErrorBoundary, Loading, Theme, useIntersectionObserver } from '@o/ui'
+import { ErrorBoundary, Loading, Theme, useIntersectionObserver, View } from '@o/ui'
 import { once } from 'lodash'
 import React, { lazy, memo, Suspense, useEffect, useRef, useState } from 'react'
 
@@ -35,14 +35,16 @@ export const HomePage = memo(() => {
       <LoadingPage />
       <Header />
       <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
-        <Page pages={1.5} zIndex={-1}>
+        <Page pages="auto" zIndex={0}>
           <HeadSection />
         </Page>
         <Page>
           <AllInOnePitchDemoSection />
         </Page>
-        <Page>
-          <DeploySection />
+        <Page pages={0.9}>
+          <View>
+            <DeploySection />
+          </View>
         </Page>
         <Page pages={0.75}>
           <DataAppKitFeaturesSection />

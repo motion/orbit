@@ -1,11 +1,12 @@
-import { Col, FullScreen, Scale, SimpleTextProps, Space, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
+import { Col, Image, Scale, SimpleTextProps, Space, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
 import { useScreenHeightVal } from '../../hooks/useScreenSize'
+import { useSiteStore } from '../../SiteStore'
+import { linkProps } from '../../useLink'
 import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
-import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContentChrome } from '../../views/SectionContent'
 import { TitleText } from '../../views/TitleText'
@@ -39,21 +40,18 @@ const HeadContent = memo(() => {
   const measured = fontsLoaded
   // const pFit = useTextFit({ min: 16, updateKey: fontsLoaded })
   const br = <View className="head-space" height="3.5vh" maxHeight={70} />
+  const sectionHeight = useSiteStore().sectionHeight
 
   return (
     <SectionContentChrome>
       <View
         className="head-text-section"
-        position="absolute"
-        left="5%"
-        right="5%"
-        top={0}
-        bottom={0}
+        minHeight={sectionHeight}
         textAlign="center"
         alignItems="center"
         justifyContent="center"
       >
-        <View width="100%">
+        <View width="100%" alignItems="center">
           <TextFitTitle
             fontWeight={100}
             alignSelf="center"
@@ -63,6 +61,24 @@ const HeadContent = memo(() => {
             whiteSpace="nowrap"
             maxHeight={160}
           >
+            <FadeInView delayIndex={10} disable={!measured}>
+              <Tag
+                size={0.85}
+                sizeHeight={1.01}
+                sizePadding={1.4}
+                sizeRadius={4}
+                alt="lightBlue"
+                zIndex={1000}
+                position="absolute"
+                top={-60}
+                right={-10}
+                borderWidth={2}
+                hoverStyle
+                {...linkProps('/blog/update-two')}
+              >
+                Orbit enters private beta!
+              </Tag>
+            </FadeInView>
             <FadeInView disable={!measured}>Apps for teams</FadeInView>
           </TextFitTitle>
 
@@ -70,25 +86,17 @@ const HeadContent = memo(() => {
 
           <View display="block" minHeight="min-content">
             <TitleParagraph {...para}>
-              {/* first line */}
-              Build a suite of internal tools in no time.
+              {/* first line */}A home base for teams to build internal tools together.
             </TitleParagraph>
             &nbsp;
             <TitleParagraph {...para}>
               {/* second line */}
-              Orbit is the open, moldable platform for intranet&nbsp;apps.
+              Orbit is a beautiful heads-up display for&nbsp;apps.
             </TitleParagraph>
             {br}
-            <Tag
-              size={0.9}
-              sizeHeight={1.025}
-              sizePadding={1.2}
-              sizeRadius={4}
-              alt="lightBlue"
-              zIndex={1000}
-            >
-              Orbit enters private beta!
-            </Tag>
+            <View position="relative" marginBottom={-90}>
+              <HeadJoin />
+            </View>
           </View>
         </View>
       </View>
@@ -119,7 +127,59 @@ const HeadJoin = memo(() => {
           </Theme>
         </SurfacePassProps>
       </FadeInView>
-      {/* <View
+    </View>
+  )
+})
+
+export function HeadSection() {
+  const fontsLoaded = useWaitForFonts(['Eesti Pro'])
+  const Fade = useFadePage({
+    threshold: 0,
+  })
+
+  return (
+    <Fade.FadeProvide>
+      <Col
+        right={useScreenHeightVal(40, 0)}
+        left={useScreenHeightVal(40, 0)}
+        opacity={fontsLoaded ? 1 : 0}
+        margin={['auto', 0]}
+        height="calc(100% - 120px)"
+      >
+        <Space size="xxl" />
+        <View flex={0.5} />
+        <Col
+          flex={6}
+          maxHeight="70vh"
+          nodeRef={Fade.ref}
+          alignItems="center"
+          justifyContent="center"
+        >
+          <HeadContent />
+        </Col>
+        <View
+          className="app-screenshot"
+          position="relative"
+          height={500}
+          flex={8}
+          margin={[0, '-10%']}
+        >
+          <Image
+            display="block"
+            src={require('../../public/images/screen.jpg')}
+            width="100%"
+            height="auto"
+          />
+          {/* <FullScreen
+            className="screen-image"
+            backgroundImage={`url(${require('../../public/images/screen.jpg')})`}
+            backgroundPosition="top center"
+            backgroundSize="cover"
+
+            minHeight={500}
+          /> */}
+        </View>
+        {/* <View
         position="absolute"
         overflow="hidden"
         backgroundImage={`url(${appScreen})`}
@@ -133,77 +193,6 @@ const HeadJoin = memo(() => {
         boxShadow={[[0, 0, 100, [0, 0, 0]]]}
         pointerEvents="auto"
       /> */}
-      {/* <DownloadButton
-          onMouseEnter={() => setHoverDownload(true)}
-          onMouseLeave={() => setHoverDownload(false)}
-        /> */}
-    </View>
-  )
-})
-
-export function HeadSection() {
-  const fontsLoaded = useWaitForFonts(['Eesti Pro'])
-  const Fade = useFadePage({
-    threshold: 0,
-  })
-
-  console.log(require('../../public/images/screen.jpg'))
-
-  return (
-    <Fade.FadeProvide>
-      <Page.BackgroundParallax
-        speed={-0.25}
-        offset={1.2}
-        x="-99%"
-        scale={1.35}
-        className="glow-one"
-        opacity={0.36}
-        background="radial-gradient(circle closest-side, #D25CCD, transparent)"
-        zIndex={2}
-      />
-
-      <Page.BackgroundParallax
-        speed={0.25}
-        offset={-0.18}
-        x="105%"
-        scale={1.45}
-        className="glow-one"
-        opacity={0.3}
-        background="radial-gradient(circle closest-side, #EDA853, transparent)"
-        zIndex={2}
-      />
-
-      <Col
-        right={useScreenHeightVal(40, 0)}
-        left={useScreenHeightVal(40, 0)}
-        opacity={fontsLoaded ? 1 : 0}
-        margin={['auto', 0]}
-        height="calc(100% - 120px)"
-      >
-        <Space size="xxl" />
-        <View flex={0.5} />
-        <Col flex={10} nodeRef={Fade.ref} alignItems="center" justifyContent="center">
-          <HeadContent />
-        </Col>
-        <View position="relative" height={500} flex={8} minWidth={1200} margin={[0, '-10%']}>
-          <View
-            position="absolute"
-            top={0}
-            zIndex={2}
-            alignItems="center"
-            justifyContent="center"
-            right={0}
-            left={0}
-          >
-            <HeadJoin />
-          </View>
-          <FullScreen
-            backgroundImage={`url(${require('../../public/images/screen.jpg')})`}
-            backgroundPosition="top center"
-            backgroundSize="cover"
-            minHeight={500}
-          />
-        </View>
       </Col>
     </Fade.FadeProvide>
   )

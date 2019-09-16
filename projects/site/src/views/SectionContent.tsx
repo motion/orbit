@@ -7,7 +7,7 @@ import * as Constants from '../constants'
 export type SectionContentProps = ViewProps & {
   outside?: React.ReactNode
   forwardRef?: any
-  pages?: number
+  pages?: number | 'auto'
 }
 
 export const SectionContent = ({

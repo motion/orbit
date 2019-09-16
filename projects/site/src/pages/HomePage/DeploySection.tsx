@@ -1,4 +1,4 @@
-import { Col, Image, ParallaxView, Row, Space, toColor } from '@o/ui'
+import { Col, Image, ParallaxView, Row, Space, toColor, View } from '@o/ui'
 import React from 'react'
 
 import { fontProps } from '../../constants'
@@ -37,7 +37,7 @@ export default function DeploySection() {
         offset={0.4}
         x="-40%"
         scale={2.7}
-        background="radial-gradient(circle closest-side, #AD3BFF, transparent)"
+        background="radial-gradient(circle closest-side, #1AAFFF, transparent)"
       />
 
       {/* dark red bottom right */}
@@ -53,12 +53,6 @@ export default function DeploySection() {
 
       <SpacedPageContent
         nodeRef={Fade.ref}
-        sm-transform={{
-          y: 0,
-        }}
-        transform={{
-          y: '-10%',
-        }}
         header={
           <>
             <FadeInView delay={0}>
@@ -153,6 +147,7 @@ export default function DeploySection() {
             </FadeInView>
           </Col>
         </Row>
+        <View flex={10} />
       </SpacedPageContent>
     </Fade.FadeProvide>
   )

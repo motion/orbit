@@ -3,7 +3,6 @@ import React, { memo } from 'react'
 
 import { mediaStyles } from '../../constants'
 import orbits from '../../public/images/orbits.svg'
-import { useSiteStore } from '../../SiteStore'
 import { linkProps } from '../../useLink'
 import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
@@ -12,32 +11,13 @@ import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { apps } from './apps'
 import { BodyButton } from './BodyButton'
-import { blackWavePattern } from './purpleWaveUrl'
 import { SpacedPageContent } from './SpacedPageContent'
 import { TitleTextSub } from './TitleTextSub'
 
-const dly = 200
-
 export default memo(() => {
-  const { sectionHeight } = useSiteStore()
   const FadeDataApps = useFadePage({ threshold: 0 })
-  const Fade = useFadePage()
   return (
     <FadeDataApps.FadeProvide>
-      <Page.BackgroundParallax
-        speed={0.1}
-        offset={0}
-        zIndex={-20}
-        backgroundSize="cover"
-        left="-20%"
-        right="-20%"
-        bottom="-50%"
-        backgroundColor="transparent"
-        backgroundPosition="top center"
-        opacity={0.4}
-        backgroundImage={blackWavePattern}
-      />
-
       {/* dark red bottom right */}
       <Page.BackgroundParallax
         speed={0.35}

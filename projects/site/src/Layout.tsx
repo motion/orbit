@@ -243,6 +243,7 @@ const PeekHeader = memo((props: { isActive?: boolean }) => {
         transition="all ease 200ms"
         opacity={show ? 1 : 0}
         transform={{ y: show ? 0 : -40 }}
+        pointerEvents={show ? 'auto' : 'none'}
         className="peek-header"
       >
         <Header slim boxShadow={[[0, 0, 30, [0, 0, 0, 1]]]} />

@@ -18,7 +18,7 @@ export function Page(props: SectionContentProps) {
       <Parallax.Container>
         <SectionContent
           className="page"
-          height={siteStore.sectionHeight * (props.pages || 1)}
+          height={props.pages === 'auto' ? 'auto' : siteStore.sectionHeight * (props.pages || 1)}
           paddingTop={30}
           paddingBottom={30}
           {...props}

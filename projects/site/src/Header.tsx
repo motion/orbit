@@ -90,12 +90,13 @@ export const Header = memo(({ slim, noBorder, before, ...rest }: HeaderProps) =>
           onClick={siteStore.toggleSidebar}
         />
         {before}
+
         <Row
           pointerEvents="auto"
           background={theme.background.lighten(0.05)}
           position="relative"
           zIndex={1000000}
-          opacity={siteStore.showSidebar ? 0 : 1}
+          opacity={slim ? 1 : siteStore.showSidebar ? 0 : 1}
           {...rest}
         >
           <HeaderContain height={50}>

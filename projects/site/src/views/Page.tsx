@@ -31,7 +31,7 @@ export function Page(props: SectionContentProps) {
   )
 }
 
-Page.Parallax = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) => {
+Page.ParallaxView = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) => {
   const parallax = useProps()
   return (
     <Parallax.View
@@ -55,7 +55,7 @@ Page.BackgroundParallax = memo((props: ParallaxViewProps) => {
     setShown(true)
   }, [])
   return (
-    <Page.Parallax
+    <Page.ParallaxView
       zIndex={(props.zIndex || 0) + zIndex - 2}
       className="page-background"
       transition="opacity ease 1500ms"

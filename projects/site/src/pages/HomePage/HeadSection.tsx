@@ -1,4 +1,4 @@
-import { Col, Image, Scale, SimpleTextProps, Space, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
+import { Col, Icon, Image, Scale, SimpleTextProps, Space, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
@@ -7,20 +7,97 @@ import { useScreenHeightVal } from '../../hooks/useScreenSize'
 import { useSiteStore } from '../../SiteStore'
 import { linkProps } from '../../useLink'
 import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
+import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContentChrome } from '../../views/SectionContent'
 import { TitleText } from '../../views/TitleText'
 import { Join } from './Join'
 import { useScreenVal } from './SpacedPageContent'
 
-const TextFitTitle = (props: TitleProps) => {
-  return (
-    <TitleText userSelect="text" fontSize="12vw" lineHeight="8.5rem" lg-fontSize={135} {...props} />
-  )
-}
+export function HeadSection() {
+  const fontsLoaded = useWaitForFonts(['Eesti Pro'])
+  const Fade = useFadePage({
+    threshold: 0,
+  })
 
-const TitleParagraph = (props: SimpleTextProps) => {
-  return <Paragraph alpha={0.7} {...props} />
+  return (
+    <Fade.FadeProvide>
+      <Col
+        right={useScreenHeightVal(40, 0)}
+        left={useScreenHeightVal(40, 0)}
+        opacity={fontsLoaded ? 1 : 0}
+        margin={['auto', 0]}
+        height="calc(100% - 120px)"
+      >
+        <Space size="xxl" />
+        <Col
+          flex={8}
+          maxHeight="70vh"
+          minHeight={750}
+          sm-minHeight="auto"
+          nodeRef={Fade.ref}
+          alignItems="center"
+          justifyContent="center"
+        >
+          <HeadContent />
+        </Col>
+        <View
+          className="app-screenshot"
+          position="relative"
+          height={500}
+          flex={7}
+          margin={[0, '-10%']}
+          userSelect="none"
+        >
+          <Page.ParallaxView
+            speed={0.25}
+            offset={-1}
+            zIndex={100}
+            position="absolute"
+            left="50%"
+            top={0}
+            marginLeft={-70 / 2}
+          >
+            <View
+              animate
+              transformOrigin="center center"
+              width={70}
+              height={70}
+              whileHover={{
+                scale: 1.2,
+              }}
+              whileTap={{
+                rotate: '360deg',
+              }}
+            >
+              <View
+                background={[255, 255, 255, 0.1]}
+                borderRadius={100}
+                alignItems="center"
+                justifyContent="center"
+                width="100%"
+                height="100%"
+                pointerEvents="auto"
+                cursor="pointer"
+                transition="all ease 1s"
+                hoverStyle={{
+                  background: [255, 255, 255, 0.15],
+                }}
+              >
+                <Icon size={24} color="#fff" name="play" />
+              </View>
+            </View>
+          </Page.ParallaxView>
+          <Image
+            display="block"
+            src={require('../../public/images/screen.jpg')}
+            width="100%"
+            height="auto"
+          />
+        </View>
+      </Col>
+    </Fade.FadeProvide>
+  )
 }
 
 const scale = 0.75
@@ -91,10 +168,10 @@ const HeadContent = memo(() => {
             &nbsp;
             <TitleParagraph {...para}>
               {/* second line */}
-              Orbit is a beautiful heads-up display for&nbsp;apps.
+              Orbit is your heads-up display for&nbsp;apps.
             </TitleParagraph>
             {br}
-            <View position="relative" marginBottom={-90}>
+            <View position="relative" marginBottom={-95} marginTop={10}>
               <HeadJoin />
             </View>
           </View>
@@ -131,115 +208,12 @@ const HeadJoin = memo(() => {
   )
 })
 
-export function HeadSection() {
-  const fontsLoaded = useWaitForFonts(['Eesti Pro'])
-  const Fade = useFadePage({
-    threshold: 0,
-  })
-
+const TextFitTitle = (props: TitleProps) => {
   return (
-    <Fade.FadeProvide>
-      <Col
-        right={useScreenHeightVal(40, 0)}
-        left={useScreenHeightVal(40, 0)}
-        opacity={fontsLoaded ? 1 : 0}
-        margin={['auto', 0]}
-        height="calc(100% - 120px)"
-      >
-        <Space size="xxl" />
-        <View flex={0.5} />
-        <Col
-          flex={6}
-          maxHeight="70vh"
-          nodeRef={Fade.ref}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <HeadContent />
-        </Col>
-        <View
-          className="app-screenshot"
-          position="relative"
-          height={500}
-          flex={8}
-          margin={[0, '-10%']}
-        >
-          <Image
-            display="block"
-            src={require('../../public/images/screen.jpg')}
-            width="100%"
-            height="auto"
-          />
-          {/* <FullScreen
-            className="screen-image"
-            backgroundImage={`url(${require('../../public/images/screen.jpg')})`}
-            backgroundPosition="top center"
-            backgroundSize="cover"
-
-            minHeight={500}
-          /> */}
-        </View>
-        {/* <View
-        position="absolute"
-        overflow="hidden"
-        backgroundImage={`url(${appScreen})`}
-        backgroundSize="cover"
-        backgroundPosition="center center"
-        backgroundRepeat="no-repeat"
-        borderRadius={10}
-        width="100%"
-        height="100%"
-        zIndex={-1}
-        boxShadow={[[0, 0, 100, [0, 0, 0]]]}
-        pointerEvents="auto"
-      /> */}
-      </Col>
-    </Fade.FadeProvide>
+    <TitleText userSelect="text" fontSize="12vw" lineHeight="8.5rem" lg-fontSize={135} {...props} />
   )
 }
 
-// const RoundButton = ({ primary = colors.red, ...props }: ViewProps & { primary?: any }) => (
-//   <View
-//     tagName="a"
-//     flexDirection="row"
-//     position="relative"
-//     alignItems="center"
-//     justifyContent="center"
-//     border={[2, primary]}
-//     borderRadius={100}
-//     background="#080412"
-//     backgroundSize="105% 200%"
-//     transition="all ease 300ms"
-//     hoverStyle={{
-//       border: [2, toColor(primary).lighten(0.3)],
-//     }}
-//     textDecoration="none"
-//     {...props}
-//   />
-// )
-
-// const DownloadButton = props => {
-//   const parallax = useParallax()
-//   return (
-//     <FadeInView delay={1000}>
-//       <Center bottom="auto" top={0}>
-//         <RoundButton
-//           aria-label="Download Button"
-//           width={159}
-//           height={45}
-//           onClick={e => {
-//             e.preventDefault()
-//             parallax.scrollTo(5)
-//           }}
-//           {...props}
-//         >
-//           <Image userSelect="none" position="absolute" right={22} src={downmark} />
-//           <Text zIndex={1} size={1.15} fontWeight={700} letterSpacing={1} pointerEvents="none">
-//             Download
-//           </Text>
-//           <div style={{ width: 25 }} />
-//         </RoundButton>
-//       </Center>
-//     </FadeInView>
-//   )
-// }
+const TitleParagraph = (props: SimpleTextProps) => {
+  return <Paragraph alpha={0.7} {...props} />
+}

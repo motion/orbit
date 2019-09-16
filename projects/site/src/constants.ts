@@ -28,7 +28,8 @@ export const mediaQueries = {
   xs: `@media screen and (max-width: ${widths.xs - 1}px)`,
   sm: `@media screen and (max-width: ${widths.sm}px)`,
   notsm: `@media screen and (min-width: ${widths.sm + 1}px)`,
-  md: `@media screen and (min-width: ${widths.md}px)`,
+  md: `@media screen and (max-width: ${widths.md}px)`,
+  notmd: `@media screen and (min-width: ${widths.md + 1}px)`,
   lg: `@media screen and (min-width: ${widths.lg}px)`,
 }
 

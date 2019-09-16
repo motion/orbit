@@ -55,7 +55,7 @@ export const Layout = memo((props: any) => {
   // try it, uncomment this and then try with/without forceUpdate:
   // console.log('rendering layout'); return <div />;
   updateLayout = forceUpdate
-  const siteStore = useSiteStore({ react: false })
+  const siteStore = useSiteStore()
   const sidebarWidth = 300
   const route = useCurrentRoute()
   const [theme] = usePageTheme()
@@ -94,7 +94,7 @@ export const Layout = memo((props: any) => {
       <PageLoading />
       <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
       <View
-        className={`theme-${theme}`}
+        className={`view-layout theme-${theme}`}
         minHeight="100vh"
         minWidth="100vw"
         overflow={isDefined(maxHeight) ? 'hidden' : 'visible'}

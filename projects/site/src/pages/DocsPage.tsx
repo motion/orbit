@@ -105,7 +105,7 @@ const DocsPage = memo((props: { children?: any }) => {
   })
   const screen = useScreenSize()
   const siteStore = useSiteStore()
-  const [showSidebar, setShowSidebar] = useState(true)
+  const [showSidebar, setShowSidebar] = useState(false)
   const inputRef = useRef(null)
   const [themeName, setThemeName] = usePageTheme()
 
@@ -116,6 +116,7 @@ const DocsPage = memo((props: { children?: any }) => {
 
   useEffect(() => {
     let sub = Navigation.subscribe(() => {
+      setShowSidebar(false)
       if (document.activeElement !== inputRef.current) {
         inputRef.current.focus()
       }
@@ -157,7 +158,7 @@ const DocsPage = memo((props: { children?: any }) => {
 
   const sidebarChildren = (
     <React.Fragment key="content">
-      <FadeInView style={{ flex: 1 }}>
+      <FadeInView style={{ flex: 1, pointerEvents: 'auto' }}>
         <DocsList />
       </FadeInView>
     </React.Fragment>
@@ -166,20 +167,52 @@ const DocsPage = memo((props: { children?: any }) => {
   return (
     <DocsStoreContext.Provider>
       <Fade.FadeProvide>
-        <DocsPageHeader
-          {...{
-            isSmall,
-            inputRef,
-            setTheme: setThemeName,
-            theme: themeName,
-            setShowSidebar,
-            siteStore,
-            showSidebar,
+        <Portal
+          prepend
+          style={{
+            position: 'sticky',
+            top: 10,
+            zIndex: 10000000,
           }}
-        />
+        >
+          <DocsPageHeader
+            {...{
+              isSmall,
+              inputRef,
+              setTheme: setThemeName,
+              theme: themeName,
+              setShowSidebar,
+              siteStore,
+              showSidebar,
+            }}
+          />
+        </Portal>
 
         <Portal prepend>
-          <Header slim noBorder />
+          <Header
+            slim
+            noBorder
+            before={
+              <>
+                {isSmall && (
+                  <Button
+                    position="fixed"
+                    pointerEvents="auto"
+                    icon={showSidebar ? 'arrowleft' : 'arrowright'}
+                    tooltip="Toggle menu"
+                    top={-3}
+                    left={10}
+                    zIndex={10000000}
+                    iconSize={16}
+                    size={2}
+                    fontSize={16}
+                    chromeless
+                    onClick={() => setShowSidebar(!showSidebar)}
+                  />
+                )}
+              </>
+            }
+          />
         </Portal>
 
         {isSmall && (
@@ -190,9 +223,20 @@ const DocsPage = memo((props: { children?: any }) => {
                 zIndex={10000000}
                 elevation={25}
                 width={260}
-                pointerEvents="auto"
                 background={theme => theme.background}
               >
+                <Button
+                  chromeless
+                  size={1.5}
+                  icon="cross"
+                  position="absolute"
+                  top={0}
+                  right={0}
+                  onClick={() => setShowSidebar(false)}
+                  pointerEvents="auto"
+                  zIndex={100}
+                  opacity={0.5}
+                />
                 {sidebarChildren}
               </Sidebar>
             </FixedLayout>

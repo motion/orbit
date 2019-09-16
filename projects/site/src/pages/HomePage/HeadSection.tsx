@@ -76,7 +76,7 @@ const HeadContent = memo(() => {
             &nbsp;
             <TitleParagraph {...para}>
               {/* second line */}
-              Orbit is an easy, all-in-one platform for your&nbsp;intranet.
+              Orbit is the open, moldable platform for intranet&nbsp;apps.
             </TitleParagraph>
             {br}
             <Tag

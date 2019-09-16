@@ -15,9 +15,10 @@ import { LogoVertical } from './views/LogoVertical'
 export type HeaderProps = {
   slim?: boolean
   noBorder?: boolean
+  before?: React.ReactNode
 } & RowProps
 
-export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
+export const Header = memo(({ slim, noBorder, before, ...rest }: HeaderProps) => {
   const theme = useTheme()
   const siteStore = useSiteStore()
   const headerStore = HeaderContext.useCreateStore()
@@ -75,11 +76,11 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
         </Row>
         {/* small */}
         <Button
-          sm-opacity={0}
-          sm-pointerEvents="none"
-          className="fixed-menu"
+          className="sidebar-open-button"
+          notmd-display="none"
+          pointerEvents="auto"
           position="fixed"
-          top={3}
+          top={-3}
           right={10}
           zIndex={1000000000}
           icon="menu"
@@ -88,12 +89,13 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
           chromeless
           onClick={siteStore.toggleSidebar}
         />
+        {before}
         <Row
           pointerEvents="auto"
           background={theme.background.lighten(0.05)}
           position="relative"
           zIndex={1000000}
-          opacity={slim ? 1 : 0}
+          opacity={siteStore.showSidebar ? 0 : 1}
           {...rest}
         >
           <HeaderContain height={50}>

@@ -52,7 +52,7 @@ export const HomePage = memo(() => {
         <Page pages={1.2}>
           <FeaturesSection />
         </Page>
-        <Page pages={0.8}>
+        <Page pages={0.7}>
           <SecuritySection />
         </Page>
         <Page pages={0.75}>

@@ -43,12 +43,12 @@ export function HeadSection() {
         </Col>
         <Page.ParallaxView
           speed={0.25}
-          offset={0.51}
           zIndex={100}
           position="absolute"
           left="50%"
           top={0}
           marginLeft={-70 / 2}
+          debug
         >
           <View
             animate

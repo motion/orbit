@@ -1,9 +1,11 @@
 import { createStoreContext, useReaction } from '@o/use-store'
 import { idFn } from '@o/utils'
-import { useTransform, useViewportScroll } from 'framer-motion'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useMotionValue } from 'framer-motion'
 import React from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
+import { Geometry } from './Geometry'
+import { composeRefs } from './helpers/composeRefs'
 import { useNodeSize } from './hooks/useNodeSize'
 import { Rect, usePosition } from './hooks/usePosition'
 import { ViewProps } from './View/types'
@@ -56,18 +58,20 @@ export type ParallaxViewProps = Omit<ViewProps, 'direction'> & {
   offset?: number
   speed?: number
   direction?: 'x' | 'y'
+  debug?: boolean
 }
 
 export function ParallaxView({
   offset = 0,
   speed = -1,
   direction = 'y',
+  debug,
   ...viewProps
 }: ParallaxViewProps) {
   const ref = useRef(null)
   const store = ParallaxContainerStore.useStore({ react: false })
-  const { scrollY } = useViewportScroll()
   const dirVal = useReaction(() => store[direction === 'y' ? 'top' : 'left'])
+  const pctHeight = useMotionValue(1)
   const state = useRef({
     pctHeight: 0,
     parentSize: 0,
@@ -75,23 +79,25 @@ export function ParallaxView({
   })
 
   const update = () => {
-    const nodeSize = state.current.nodeSize[direction === 'y' ? 'height' : 'width']
-    let pctHeight = offset >= 0 ? (store.height - nodeSize) / store.height : nodeSize / store.height
-    if (pctHeight >= 1) {
-      pctHeight = 0.99
-    } else if (pctHeight < 0) {
-      // we went negative, child bigger than container
-      pctHeight = 0.99
+    const nodeSize = Math.max(1, state.current.nodeSize[direction === 'y' ? 'height' : 'width'])
+    let next = offset >= 0 ? nodeSize / store.height : nodeSize / store.height
+    if (next >= 1) {
+      next = 0.99
     }
-    state.current.pctHeight = pctHeight
-    scrollY.set(scrollY.get())
+    if (next <= 0) {
+      // we went negative, assume child bigger than container
+      next = 0.99
+    }
+    state.current.pctHeight = next
+    pctHeight.set(next)
+    // debug && console.log('next', scrollY, next, offset, nodeSize, store.height)
+    // scrollY.set(scrollY.get())
   }
 
   useNodeSize({
     ref,
     throttle: 250,
     onChange({ width, height }) {
-      console.log('node size', height, store.height)
       state.current.nodeSize = { width, height }
       update()
     },
@@ -109,26 +115,41 @@ export function ParallaxView({
     },
   )
 
-  let val = useTransform(scrollY, [dirVal, dirVal + 1], [0, -1], {
-    clamp: false,
-  })
-  val = useTransform(val, [0, -1], [0, speed], {
-    clamp: false,
-  })
-
-  val = useTransform(
-    val,
-    x => x + offset * state.current.pctHeight * store[direction === 'y' ? 'height' : 'width'],
-  )
-
   return (
-    <View
-      nodeRef={ref}
-      {...viewProps}
-      animate
-      transformOrigin="top center"
-      {...{ [direction]: val }}
-    />
+    <Geometry>
+      {(geometry, gref) => (
+        <View
+          nodeRef={composeRefs(gref, ref)}
+          {...viewProps}
+          animate
+          transformOrigin="top center"
+          {...{
+            [direction]: geometry
+              .useViewportScroll(direction)
+              .mergeTransform([pctHeight], (scroll, _) => {
+                return scroll
+              })
+              .transform([dirVal, dirVal + 1], [0, -1], { clamp: false })
+              .transform([0, -1], [0, speed], { clamp: false })
+              .transform(x => {
+                // debug &&
+                //   console.log(
+                //     '>>',
+                //     scrollY.get(),
+                //     x,
+                //     offset,
+                //     state.current.pctHeight,
+                //     store[direction === 'y' ? 'height' : 'width'],
+                //   )
+                return (
+                  x +
+                  offset * state.current.pctHeight * store[direction === 'y' ? 'height' : 'width']
+                )
+              }),
+          }}
+        />
+      )}
+    </Geometry>
   )
 }
 

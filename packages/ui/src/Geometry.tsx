@@ -1,5 +1,5 @@
 import { decorate, useForceUpdate } from '@o/use-store'
-import { MotionValue, useSpring, useTransform } from 'framer-motion'
+import { MotionValue, useSpring, useTransform, useViewportScroll } from 'framer-motion'
 import { SpringProps } from 'popmotion'
 import React from 'react'
 import { RefObject, useCallback, useContext, useEffect, useRef } from 'react'
@@ -113,6 +113,17 @@ class GeometryStore {
   }
 
   /**
+   * Viewport scroll
+   */
+  useViewportScroll(key: 'x' | 'y' | 'xProgress' | 'yProgress') {
+    return this.setupStore(store => {
+      store.animationHooks.addHook(() => {
+        return useViewportScroll()[`scroll${key[0].toUpperCase()}${key.slice(1)}`]
+      })
+    })
+  }
+
+  /**
    * Use an existing MotionValue and transform it
    */
   useTransform<T>(value: MotionValue<T>, transform?: (val: T) => T) {
@@ -188,7 +199,7 @@ export function useGeometry(getChildren: GeometryRenderer) {
   geometry.beforeRenderChildren()
   const children = getChildren(geometry, ref)
   geometry.afterRenderChildren()
-  return children
+  return children as JSX.Element
 }
 
 export function Geometry(props: { children: GeometryRenderer }) {

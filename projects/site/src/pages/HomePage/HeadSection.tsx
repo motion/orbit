@@ -1,10 +1,11 @@
-import { Col, FullScreen, Scale, SimpleTextProps, Space, SurfacePassProps, Theme, TitleProps, View } from '@o/ui'
+import { Col, FullScreen, Scale, SimpleTextProps, Space, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
 import { useScreenHeightVal } from '../../hooks/useScreenSize'
 import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
+import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContentChrome } from '../../views/SectionContent'
 import { TitleText } from '../../views/TitleText'
@@ -77,6 +78,17 @@ const HeadContent = memo(() => {
               {/* second line */}
               Orbit is an easy, all-in-one platform for your&nbsp;intranet.
             </TitleParagraph>
+            {br}
+            <Tag
+              size={0.9}
+              sizeHeight={1.025}
+              sizePadding={1.2}
+              sizeRadius={4}
+              alt="lightBlue"
+              zIndex={1000}
+            >
+              Orbit enters private beta!
+            </Tag>
           </View>
         </View>
       </View>
@@ -139,6 +151,28 @@ export function HeadSection() {
 
   return (
     <Fade.FadeProvide>
+      <Page.BackgroundParallax
+        speed={-0.25}
+        offset={1.2}
+        x="-99%"
+        scale={1.35}
+        className="glow-one"
+        opacity={0.36}
+        background="radial-gradient(circle closest-side, #D25CCD, transparent)"
+        zIndex={2}
+      />
+
+      <Page.BackgroundParallax
+        speed={0.25}
+        offset={-0.18}
+        x="105%"
+        scale={1.45}
+        className="glow-one"
+        opacity={0.3}
+        background="radial-gradient(circle closest-side, #EDA853, transparent)"
+        zIndex={2}
+      />
+
       <Col
         right={useScreenHeightVal(40, 0)}
         left={useScreenHeightVal(40, 0)}
@@ -151,8 +185,18 @@ export function HeadSection() {
         <Col flex={6} nodeRef={Fade.ref} alignItems="center" justifyContent="center">
           <HeadContent />
         </Col>
-        <HeadJoin />
         <View position="relative" height={500} flex={8} minWidth={1200} margin={[0, '-10%']}>
+          <View
+            position="absolute"
+            top={0}
+            zIndex={2}
+            alignItems="center"
+            justifyContent="center"
+            right={0}
+            left={0}
+          >
+            <HeadJoin />
+          </View>
           <FullScreen
             backgroundImage={`url(${require('../../public/images/screen.jpg')})`}
             backgroundPosition="top center"

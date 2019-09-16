@@ -35,7 +35,7 @@ export const HomePage = memo(() => {
       <LoadingPage />
       <Header />
       <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
-        <Page pages={1.4}>
+        <Page pages={1.4} zIndex={-1}>
           <HeadSection />
         </Page>
         <Page>
@@ -83,6 +83,7 @@ const startLoading = once(async () => {
     await onIdle()
     await new Promise(res => setTimeout(res, 100))
     const next = allUpcoming.reduce((a, b) => (b.top < a.top ? b : a), { top: Infinity })
+    // console.log('loading', next)
     next.load()
     allUpcoming.splice(allUpcoming.findIndex(x => x.load === next.load), 1)
   }

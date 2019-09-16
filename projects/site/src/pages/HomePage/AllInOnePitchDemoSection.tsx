@@ -147,10 +147,10 @@ export default memo(() => {
       {/* pink left */}
       <Page.BackgroundParallax
         speed={-0.25}
-        offset={-0.8}
+        offset={-0.25}
         x="-45%"
         top="-10%"
-        scale={2}
+        scale={1.25}
         className="glow-one"
         opacity={0.23}
         background="radial-gradient(circle closest-side, #D25CCD, transparent)"

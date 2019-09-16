@@ -31,7 +31,7 @@ export type SizedSurfaceSpecificProps = SurfaceSpecificProps & {
 export type SizedSurfaceProps = SurfaceProps & SizedSurfaceSpecificProps
 
 const num = (x: number | boolean) => (x === true ? 1 : +x)
-const clampRound = (x: number) => Math.round(x * 100) / 100
+const clampRound = (x: number) => Math.round(x)
 
 export const getSizedRadius = (size: number, sizeRadius: number | true) => {
   return clampRound(num(sizeRadius) * 6 * size)

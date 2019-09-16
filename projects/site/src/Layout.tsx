@@ -93,6 +93,21 @@ export const Layout = memo((props: any) => {
     <ProvideUI themes={themes} activeTheme={theme}>
       <PageLoading />
       <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
+      {/* small */}
+      <Button
+        className="sidebar-open-button"
+        notmd-display="none"
+        pointerEvents="auto"
+        position="fixed"
+        top={-3}
+        right={10}
+        zIndex={1000000000}
+        icon="menu"
+        iconSize={16}
+        size={2}
+        chromeless
+        onClick={siteStore.toggleSidebar}
+      />
       <View
         className={`view-layout theme-${theme}`}
         minHeight="100vh"

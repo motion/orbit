@@ -13,6 +13,7 @@ const ShakePlugin = require('webpack-common-shake').Plugin
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { BundleStatsWebpackPlugin } = require('bundle-stats')
 
+const WebpackDeepScopeAnalysisPlugin = require('webpack-deep-scope-plugin').default
 const LodashWebpackPlugin = require('lodash-webpack-plugin')
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 // const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
@@ -120,7 +121,7 @@ const optimization = {
     namedChunks: true,
     usedExports: true,
     sideEffects: true,
-    minimize: true,
+    minimize: false,
     concatenateModules: true,
     ...(target === 'node'
       ? {
@@ -327,6 +328,8 @@ async function makeConfig() {
 
       mode === 'development' && hot && new webpack.HotModuleReplacementPlugin(),
       mode === 'development' && hot && new ReactRefreshPlugin(),
+
+      mode === 'production' && new WebpackDeepScopeAnalysisPlugin(),
 
       // tsConfigExists &&
       //   !isProd &&

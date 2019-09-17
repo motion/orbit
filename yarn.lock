@@ -7434,6 +7434,14 @@ deep-is@~0.1.3:
   resolved "https://registry.npmjs.org/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
   integrity sha1-s2nW+128E+7PUk+RsHD+7cNXzzQ=
 
+deep-scope-analyser@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.npmjs.org/deep-scope-analyser/-/deep-scope-analyser-1.7.0.tgz#23015b3a1d23181b1d9cebd25b783a7378ead8da"
+  integrity sha512-rl5Dmt2IZkFpZo6XbEY1zG8st2Wpq8Pi/dV2gz8ZF6BDYt3fnor2JNxHwdO1WLo0k6JbmYp0x8MNy8kE4l1NtA==
+  dependencies:
+    esrecurse "^4.2.1"
+    estraverse "^4.2.0"
+
 deepmerge@^2.0.1:
   version "2.2.1"
   resolved "https://registry.npmjs.org/deepmerge/-/deepmerge-2.2.1.tgz#5d3ff22a01c00f645405a2fbc17d0778a1801170"
@@ -8737,7 +8745,7 @@ esquery@^1.0.1:
   dependencies:
     estraverse "^4.0.0"
 
-esrecurse@^4.1.0:
+esrecurse@^4.1.0, esrecurse@^4.2.1:
   version "4.2.1"
   resolved "https://registry.npmjs.org/esrecurse/-/esrecurse-4.2.1.tgz#007a3b9fdbc2b3bb87e4879ea19c92fdbd3942cf"
   integrity sha512-64RBB++fIOAXPw3P9cy89qfMlvZEXZkqqJkjqqXIvzP5ezRZjW+lPWjw35UX/3EhUPFYbg5ER4JYgDw4007/DQ==
@@ -18602,13 +18610,6 @@ react-fela@^7.3.1:
     fela-dom "^7.0.9"
     prop-types "^15.5.8"
 
-react-flip-toolkit@^6.6.4:
-  version "6.6.9"
-  resolved "https://registry.npmjs.org/react-flip-toolkit/-/react-flip-toolkit-6.6.9.tgz#43aebc081f4469456c51a66cbf14a75247408a83"
-  integrity sha512-0q0/zn0r2an0GfW4TOs4oDHO8ZtWXi1Z0+104m5Z/haJskkLvCqITFfoEmFN5c+NH7qa01c6UyBd2IhupMhxQw==
-  dependencies:
-    rematrix "0.2.2"
-
 react-grid-layout@0.16.6:
   version "0.16.6"
   resolved "https://registry.npmjs.org/react-grid-layout/-/react-grid-layout-0.16.6.tgz#9b2407a2b946c2260ebaf66f13b556e1da4efeb2"
@@ -19362,11 +19363,6 @@ remark-squeeze-paragraphs@3.0.4:
   integrity sha512-Wmz5Yj9q+W1oryo8BV17JrOXZgUKVcpJ2ApE2pwnoHwhFKSk4Wp2PmFNbmJMgYSqAdFwfkoe+TSYop5Fy8wMgA==
   dependencies:
     mdast-squeeze-paragraphs "^3.0.0"
-
-rematrix@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.npmjs.org/rematrix/-/rematrix-0.2.2.tgz#c96a050260782db9908904885991256e23beda5d"
-  integrity sha512-agFFS3RzrLXJl5LY5xg/xYyXvUuVAnkhgKO7RaO9J1Ssth6yvbO+PIiV67V59MB5NCdAK2flvGvNT4mdKVniFA==
 
 remove-trailing-separator@^1.0.1:
   version "1.1.0"
@@ -22998,6 +22994,13 @@ webpack-common-shake@^2.1.0:
     common-shake "^2.1.0"
     webpack "^4.16.5"
     webpack-sources "^1.1.0"
+
+webpack-deep-scope-plugin@1.6.2:
+  version "1.6.2"
+  resolved "https://registry.npmjs.org/webpack-deep-scope-plugin/-/webpack-deep-scope-plugin-1.6.2.tgz#131eac79739021e42ebc07066ea8869107f37b85"
+  integrity sha512-S5ZM1i7oTIVPIS1z/Fu41tqFzaXpy8vZnwEDC9I7NLj5XD8GGrDZbDXtG5FCGkHPGxtAzF4O21DKZZ76vpBGzw==
+  dependencies:
+    deep-scope-analyser "^1.7.0"
 
 webpack-dev-middleware@3.7.0:
   version "3.7.0"

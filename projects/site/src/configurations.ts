@@ -26,12 +26,9 @@ function configure() {
   // run after configureUI
   if (process.env.NODE_ENV === 'development') {
     window['Themes'] = require('./themes').themes
-  }
-  window['enableLog'] = false
-  // @ts-ignore
-  window['debug'] = require('@o/ui').debug
+    window['enableLog'] = false
+    window['debug'] = require('@o/ui').debug
 
-  if (process.env.NODE_ENV === 'development') {
     // dev tools for stores
     configureUseStore({
       debugStoreState: true,

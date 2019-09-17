@@ -1,8 +1,8 @@
-import { createStoreContext, useReaction } from '@o/use-store'
+import { createStoreContext } from '@o/use-store'
 import { idFn } from '@o/utils'
 import { useMotionValue } from 'framer-motion'
-import React from 'react'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React from 'react'
 
 import { Geometry } from './Geometry'
 import { composeRefs } from './helpers/composeRefs'
@@ -59,39 +59,38 @@ export type ParallaxViewProps = Omit<ViewProps, 'direction'> & {
   speed?: number
   direction?: 'x' | 'y'
   debug?: boolean
+  clamp?: boolean
 }
 
 export function ParallaxView({
   offset = 0,
   speed = -1,
   direction = 'y',
+  clamp = false,
   debug,
   ...viewProps
 }: ParallaxViewProps) {
   const ref = useRef(null)
-  const store = ParallaxContainerStore.useStore({ react: false })
-  const dirVal = useReaction(() => store[direction === 'y' ? 'top' : 'left'])
-  const pctHeight = useMotionValue(1)
+  const parent = ParallaxContainerStore.useStore()
+  const offsetKey = direction === 'y' ? 'top' : 'left'
+  const sizeKey = direction === 'y' ? 'height' : 'width'
+  const dirVal = parent[offsetKey]
+  const offsetPct = useMotionValue(1)
   const state = useRef({
-    pctHeight: 0,
-    parentSize: 0,
     nodeSize: { width: 0, height: 0 },
   })
 
   const update = () => {
-    const nodeSize = Math.max(1, state.current.nodeSize[direction === 'y' ? 'height' : 'width'])
-    let next = offset >= 0 ? nodeSize / store.height : nodeSize / store.height
+    const nodeSize = Math.max(1, state.current.nodeSize[sizeKey])
+    const parentSize = Math.max(1, parent[sizeKey])
+    let next = offset >= 0 ? (parentSize - nodeSize) / parentSize : nodeSize / parentSize
     if (next >= 1) {
       next = 0.99
-    }
-    if (next <= 0) {
-      // we went negative, assume child bigger than container
+    } else if (next < 0) {
+      // we went negative, child bigger than container
       next = 0.99
     }
-    state.current.pctHeight = next
-    pctHeight.set(next)
-    // debug && console.log('next', scrollY, next, offset, nodeSize, store.height)
-    // scrollY.set(scrollY.get())
+    offsetPct.set(next)
   }
 
   useNodeSize({
@@ -103,20 +102,8 @@ export function ParallaxView({
     },
   })
 
-  // update based on store changes
-  useReaction(
-    () => {
-      state.current.parentSize = store[direction === 'y' ? 'height' : 'width']
-      update()
-    },
-    {
-      avoidRender: true,
-      name: 'ParallaxView.parentSize',
-    },
-  )
-
   return (
-    <Geometry>
+    <Geometry key={dirVal}>
       {(geometry, gref) => (
         <View
           nodeRef={composeRefs(gref, ref)}
@@ -126,34 +113,21 @@ export function ParallaxView({
           {...{
             [direction]: geometry
               .useViewportScroll(direction)
-              .mergeTransform([pctHeight], (scroll, _) => {
-                return scroll
-              })
               .transform([dirVal, dirVal + 1], [0, -1], { clamp: false })
               .transform([0, -1], [0, speed], { clamp: false })
-              .transform(x => {
-                // debug &&
-                //   console.log(
-                //     '>>',
-                //     scrollY.get(),
-                //     x,
-                //     offset,
-                //     state.current.pctHeight,
-                //     store[direction === 'y' ? 'height' : 'width'],
-                //   )
-                return (
-                  x +
-                  offset * state.current.pctHeight * store[direction === 'y' ? 'height' : 'width']
-                )
+              .mergeTransform([offsetPct], (pos, offsetPctVal) => {
+                const offsetVal = offset * offsetPctVal * parent[sizeKey]
+                const position = pos + offsetVal
+                if (clamp) {
+                  const min = 0
+                  const max = parent[sizeKey] - state.current.nodeSize[sizeKey]
+                  return Math.max(min, Math.min(max, position))
+                }
+                return position
               }),
           }}
         />
       )}
     </Geometry>
   )
-}
-
-export const Parallax = {
-  Container: ParallaxContainer,
-  View: ParallaxView,
 }

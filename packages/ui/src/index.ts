@@ -1,7 +1,7 @@
-// until next hotkeys patches types
 import * as popcorn from '@popmotion/popcorn'
 import pluralizeOg from 'pluralize'
 
+// until next hotkeys patches types
 if (process.env.NODE_ENV === 'development') {
   module.hot && module.hot.accept()
 }
@@ -251,6 +251,7 @@ export * from './View/Row'
 export * from './Visibility'
 export * from './forms/SimpleFormField'
 export * from './Parallax'
+export * from './ParallaxNS'
 export * from './helpers/whenIdle'
 export * from './hooks/useLazyRef'
 export * from './Geometry'

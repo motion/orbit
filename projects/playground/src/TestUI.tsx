@@ -6,13 +6,13 @@ import * as React from 'react'
 export function TestUI() {
   return (
     <>
-      <TestMediaQueries />
+      {/* <TestMediaQueries /> */}
       {/* <TestUIPopovers /> */}
       {/* <TestUIGlossSpeed /> */}
       {/* <TestUIEditor /> */}
       {/* <TestUIMotion /> */}
       {/* <TestUIAnimation /> */}
-      {/* <TestUIParallax /> */}
+      <TestUIParallax />
     </>
   )
 }
@@ -177,8 +177,8 @@ export function TestUIParallax() {
     <>
       <Parallax.Container height="100vh" background="orange">
         <Parallax.View
-          speed={0.5}
           offset={0.5}
+          speed={0.5}
           x={100}
           position="absolute"
           background="yellow"
@@ -186,7 +186,23 @@ export function TestUIParallax() {
           left={20}
           width={100}
           height={100}
-        />
+        >
+          offset 0.5 speed 0.5
+        </Parallax.View>
+        <Parallax.View
+          offset={0}
+          speed={1}
+          x={200}
+          position="absolute"
+          background="yellow"
+          top={0}
+          left={20}
+          width={100}
+          height={100}
+          clamp
+        >
+          offset 0 speed 0.5
+        </Parallax.View>
       </Parallax.Container>
       <Parallax.Container height="100vh" background="red">
         <Parallax.View

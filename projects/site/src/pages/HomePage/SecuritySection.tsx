@@ -54,13 +54,13 @@ export default function SecuritySection() {
             </Pitch>
 
             <Pitch fontWeight={200} alpha={0.75} size={0.5} sizeLineHeight={1.2}>
-              <strong>How?</strong> Orbit never sends a single bit of data outside your firewall.
-              That's right, Orbit runs by default completely privately, on your device: no cloud, no
-              servers, no worry.
+              <strong>How?</strong> Orbit runs privately on your device, never sending a single bit
+              of data outside your firewall. And it's completely open source. No cloud, no servers,
+              no telemetry, no worry.
             </Pitch>
             <Pitch fontWeight={200} alpha={0.75} size={0.5} sizeLineHeight={1.2}>
-              And with a push to a Github repo there's no servers to setup, with complete control
-              and privacy from the start.
+              And with a single command you can deploy your intranet to an internal server or our
+              private cloud with peace of mind.
             </Pitch>
           </Col>
 

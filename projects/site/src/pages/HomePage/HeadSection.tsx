@@ -170,7 +170,7 @@ const HeadContent = memo(() => {
 
           <View display="block" minHeight="min-content">
             <TitleParagraph {...para}>
-              {/* first line */}The home base for teams to build amazing internal tools.
+              {/* first line */}The home base for teams to code amazing internal tools.
             </TitleParagraph>
             &nbsp;
             <TitleParagraph {...para}>

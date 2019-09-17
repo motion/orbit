@@ -25,9 +25,6 @@ const MissionMottoSection = loadOnIntersect(
 const SecuritySection = loadOnIntersect(
   lazy(() => retry(() => import('./HomePage/SecuritySection'))),
 )
-// const EarlyAccessBetaSection = loadOnIntersect(
-//   lazy(() => retry(() => import('./HomePage/EarlyAccessBetaSection'))),
-// )
 
 export const HomePage = memo(() => {
   return (

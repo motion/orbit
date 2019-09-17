@@ -169,7 +169,7 @@ export default memo(() => {
 
       <SpacedPageContent
         nodeRef={Fade.ref}
-        padding={['15vh', '5%']}
+        padding={['15vh', '0%']}
         header={
           <>
             <FadeInView delayIndex={0}>

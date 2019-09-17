@@ -52,7 +52,7 @@ export default function DeploySection() {
       />
 
       <SpacedPageContent
-        padding={['15vh', '5%']}
+        padding={['15vh', 0]}
         nodeRef={Fade.ref}
         header={
           <>

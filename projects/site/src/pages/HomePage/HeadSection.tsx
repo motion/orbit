@@ -94,6 +94,8 @@ export function HeadSection() {
               display="block"
               src={require('../../public/images/screen.jpg')}
               width="100%"
+              maxWidth={1200}
+              margin="auto"
               height="auto"
             />
           </FadeInView>

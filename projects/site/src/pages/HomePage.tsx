@@ -58,7 +58,7 @@ export const HomePage = memo(() => {
         <Page pages="auto">
           <MissionMottoSection />
         </Page>
-        <Page pages={0.75}>
+        <Page pages={0.6}>
           <Theme name="home">
             <FooterSection hideJoin />
           </Theme>

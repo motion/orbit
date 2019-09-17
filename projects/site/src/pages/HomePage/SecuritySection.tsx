@@ -33,25 +33,32 @@ export default function SecuritySection() {
                 The platform for us.
               </TitleText>
             </FadeInView>
-            <TitleText alpha={0.8} textAlign="center" maxWidth={520} fontWeight={300} size="md">
+            <TitleText
+              alpha={0.8}
+              textAlign="center"
+              maxWidth={520}
+              fontWeight={300}
+              sizeLineHeight={1.3}
+              size="md"
+            >
               Completely on-device, open source & customizable.
             </TitleText>
           </>
         }
       >
         <Space size="xxxl" />
-        <Row flex={1} space="xl">
-          <Col flex={3} space="lg">
+        <Row flex={1} space="xxxl">
+          <Col flex={3} space="xl">
             <Pitch alpha={1} size="xxs">
-              Orbit is a desktop app platform that never sends a single bit of data outside your
-              firewall.
+              Orbit is a desktop app platform that wants to bring the balance of power back to us.
             </Pitch>
 
-            <Pitch fontWeight={200} alpha={0.75} size={0.5} sizeLineHeight={1.3}>
-              That's right, Orbit runs by default completely privately, on your device, with no
-              cloud, no server, no worry.
+            <Pitch fontWeight={200} alpha={0.75} size={0.5} sizeLineHeight={1.2}>
+              <strong>How?</strong> Orbit never sends a single bit of data outside your firewall.
+              That's right, Orbit runs by default completely privately, on your device: no cloud, no
+              servers, no worry.
             </Pitch>
-            <Pitch fontWeight={200} alpha={0.75} size={0.5} sizeLineHeight={1.3}>
+            <Pitch fontWeight={200} alpha={0.75} size={0.5} sizeLineHeight={1.2}>
               And with a push to a Github repo there's no servers to setup, with complete control
               and privacy from the start.
             </Pitch>

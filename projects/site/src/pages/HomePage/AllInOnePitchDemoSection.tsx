@@ -169,6 +169,7 @@ export default memo(() => {
 
       <SpacedPageContent
         nodeRef={Fade.ref}
+        padding={['15vh', '5%']}
         header={
           <>
             <FadeInView delayIndex={0}>
@@ -187,7 +188,7 @@ export default memo(() => {
           </>
         }
       >
-        <Col maxWidth="100%" margin={[0, 'auto']}>
+        <Col maxWidth="100%" margin={[0, 'auto']} sm-margin={0}>
           <Row space {...mediaStyles.visibleWhen.notsm}>
             <SubSection maxWidth="33%">
               <FadeInView {...fadeAnimations.left} delayIndex={4}>
@@ -224,7 +225,7 @@ export default memo(() => {
           <Space />
 
           <Row space>
-            <Flex alignItems="center" sm-display="none" debug>
+            <Flex alignItems="center" sm-display="none">
               <FadeInView {...fadeAnimations.left} delayIndex={5}>
                 <Image
                   userSelect="none"

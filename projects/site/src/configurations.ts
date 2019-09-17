@@ -13,7 +13,6 @@ function configure() {
   window['ResizeObserver'] = ResizeObserver
 
   // run configureUI first!
-  console.log('setting media queries', Constants.mediaQueries)
   configureUI({
     mediaQueries: Constants.mediaQueries,
     defaultProps: {

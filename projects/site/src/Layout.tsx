@@ -161,7 +161,7 @@ const LayoutSidebar = memo(() => {
             transform: `translateX(${siteStore.showSidebar ? 0 : sidebarWidth}px)`,
           }}
         >
-          <Button
+          {/* <Button
             position="absolute"
             top={20}
             right={20}
@@ -171,7 +171,7 @@ const LayoutSidebar = memo(() => {
             zIndex={1000}
             cursor="pointer"
             onClick={siteStore.toggleSidebar}
-          />
+          /> */}
           <Fade.FadeProvide>
             <HeaderLink href="/" {...linkProps}>
               Home

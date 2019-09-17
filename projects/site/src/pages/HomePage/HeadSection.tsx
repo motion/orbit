@@ -89,7 +89,7 @@ export function HeadSection() {
               </FadeInView>
             </View>
           </Page.ParallaxView>
-          <FadeInView {...fadeAnimations.up} delayIndex={4} marginBottom={-150}>
+          <FadeInView {...fadeAnimations.up} delayIndex={4} marginBottom="-20%">
             <Image
               display="block"
               src={require('../../public/images/screen.jpg')}

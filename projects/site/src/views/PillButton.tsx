@@ -4,9 +4,6 @@ import React from 'react'
 import { fontProps } from '../constants'
 
 export function PillButton({ children, ...props }: ButtonProps) {
-  if (props.debug) {
-    debugger
-  }
   return (
     <SizedSurface
       sizeRadius={100}

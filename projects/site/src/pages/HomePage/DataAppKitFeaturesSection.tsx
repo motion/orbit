@@ -32,12 +32,12 @@ export default memo(() => {
       <Page.BackgroundParallax
         {...mediaStyles.hiddenWhen.sm}
         speed={-0.05}
+        offset={-0.3}
         zIndex={-2}
-        offset={-0.1}
         scale={0.5}
         transformOrigin="bottom center"
       >
-        <FadeInView delay={800} height="100%" width="100%">
+        <FadeInView delay={800} height="90%" width="100%">
           <FullScreen
             left={-100}
             right={-100}
@@ -55,6 +55,7 @@ export default memo(() => {
         height="auto"
         maxHeight={100000}
         margin={0}
+        padding={['15vh', '5%']}
         xs-margin={0}
         sm-margin={['-33%', 0, '10%']}
         header={
@@ -64,12 +65,12 @@ export default memo(() => {
             </FadeInView>
             <FadeInView delay={100}>
               <TitleText textAlign="center" size="xxl">
-                The app store with more.
+                Global collaboration.
               </TitleText>
             </FadeInView>
             <TitleTextSub>
               <FadeInView delay={200}>
-                The app store with more - every app can sync in data, expose GraphQL and TypeScript
+                An open app store with more - every app can sync data, expose GraphQL and TypeScript
                 APIs, and render content.
               </FadeInView>
             </TitleTextSub>

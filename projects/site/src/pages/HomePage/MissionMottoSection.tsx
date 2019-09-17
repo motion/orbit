@@ -53,7 +53,7 @@ export const AboutSection = memo(() => {
   return (
     <FadeParent>
       <SpacedPageContent
-        padding={[0, '10%']}
+        padding={['15vh', '5%']}
         sm-padding={0}
         header={
           <>
@@ -61,7 +61,7 @@ export const AboutSection = memo(() => {
               <PillButton>About</PillButton>
             </FadeInView>
             <FadeInView delay={dly * 1}>
-              <TitleText textAlign="center">A better deal for developers</TitleText>
+              <TitleText textAlign="center">A better deal for developers.</TitleText>
             </FadeInView>
           </>
         }

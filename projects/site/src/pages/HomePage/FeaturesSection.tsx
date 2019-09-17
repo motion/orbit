@@ -1,9 +1,10 @@
-import { Grid, Space, View } from '@o/ui'
-import React, { memo } from 'react'
+import { Grid, Row, Space, View } from '@o/ui'
+import React, { memo, useState } from 'react'
 
 import { FadeInView, useFadePage } from '../../views/FadeInView'
 import { MediaSmallHidden } from '../../views/MediaView'
 import { PillButton } from '../../views/PillButton'
+import { PillButtonDark } from '../../views/PillButtonDark'
 import { TitleText } from '../../views/TitleText'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
 import { SpacedPageContent } from './SpacedPageContent'
@@ -13,23 +14,31 @@ const dly = 200
 
 export default memo(() => {
   const Fade = useFadePage()
+  const [activeSection, setActiveSection] = useState('Features')
+  const btnProps = (section: string) => {
+    return {
+      cursor: 'pointer',
+      letterSpacing: 3,
+      onClick: () => {
+        setActiveSection(section)
+      },
+    } as const
+  }
   return (
     <Fade.FadeProvide>
       <SpacedPageContent
+        nodeRef={Fade.ref}
         height="auto"
         flex={1}
         margin="auto"
         header={
           <>
             <FadeInView delay={0}>
-              <PillButton>App Kit</PillButton>
-            </FadeInView>
-            <FadeInView delay={100}>
               <TitleText
                 textAlign="center"
-                // TODO
                 size="xxl"
-                // size={useScreenVal('lg', 'xxxl', 'xxxl')}
+                // TODO
+                // sm-size="lg"
               >
                 Batteries Included.
               </TitleText>
@@ -43,16 +52,23 @@ export default memo(() => {
         }
       />
 
-      <View flex={1} maxHeight={50} />
+      <Space />
 
-      <Grid
-        nodeRef={Fade.ref}
-        alignItems="start"
-        space="15%"
-        itemMinWidth={280}
-        maxWidth={800}
-        margin={[0, 'auto']}
-      >
+      <Row justifyContent="center" space margin={[0, 'auto']}>
+        {['Features', 'Tech', 'Platform'].map(section => (
+          <React.Fragment key={section}>
+            {section === activeSection ? (
+              <PillButton {...btnProps(section)}>{section}</PillButton>
+            ) : (
+              <PillButtonDark {...btnProps(section)}>{section}</PillButtonDark>
+            )}
+          </React.Fragment>
+        ))}
+      </Row>
+
+      <View flex={1} minHeight={80} />
+
+      <Grid space={80} alignItems="start" itemMinWidth={280} maxWidth={800} margin={[0, 'auto']}>
         <SimpleSection delay={dly * 1} title="Apps work together.">
           <SectionP>
             <SectionIcon name="apps" />
@@ -91,14 +107,14 @@ export default memo(() => {
           </SectionP>
         </SimpleSection>
 
-        <SimpleSection delay={dly * 4} title="Cross-platform, fast interface.">
+        <SimpleSection delay={dly * 4} title="Next-gen interface.">
           <SectionP>
-            <SectionIcon name="widget" />A desktop-class UI kit with views that work together both
-            in composition and shared prop types.
+            <SectionIcon name="widget" />A desktop-class UI kit -- fast, intuitive, with views that
+            work well together and adapt to your data structures.
             <MediaSmallHidden>
               <>
                 <Space />
-                Layouts, templates, combining views and more.
+                With layouts and templates for many use cases.
               </>
             </MediaSmallHidden>
           </SectionP>

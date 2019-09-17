@@ -38,27 +38,27 @@ export const HomePage = memo(() => {
         <Page pages="auto" zIndex={0}>
           <HeadSection />
         </Page>
-        <Page zIndex={1}>
+        <Page zIndex={1} pages="auto">
           <AllInOnePitchDemoSection />
         </Page>
-        <Page pages={0.9}>
+        <Page pages="auto">
           <View>
             <DeploySection />
           </View>
         </Page>
-        <Page pages={0.75}>
+        <Page pages="auto">
           <DataAppKitFeaturesSection />
         </Page>
-        <Page pages={1.2}>
+        <Page pages="auto">
           <FeaturesSection />
         </Page>
-        <Page pages={0.7}>
+        <Page pages="auto">
           <SecuritySection />
         </Page>
-        <Page pages={0.75}>
+        <Page pages="auto">
           <MissionMottoSection />
         </Page>
-        <Page pages={0.75}>
+        <Page pages="auto">
           <Theme name="home">
             <FooterSection hideJoin />
           </Theme>

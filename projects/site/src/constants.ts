@@ -1,16 +1,18 @@
 export const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
+const systemFont = `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif`
+
 export const fontProps = {
   TitleFont: {
     fontFamily: 'GTEesti',
     WebkitFontSmoothing: 'initial',
   },
   BodyFont: {
-    fontFamily: 'Colfax',
+    fontFamily: `Colfax, ${systemFont}`,
     WebkitFontSmoothing: 'antialiased',
   },
   SystemFont: {
-    fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif`,
+    fontFamily: systemFont,
   },
 }
 

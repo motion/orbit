@@ -49,7 +49,7 @@ export function ParallaxContainer(props: ParallaxContainerProps) {
 
   return (
     <ParallaxContainerStore.ProvideStore value={store}>
-      <View {...props} nodeRef={ref} />
+      <View position="relative" {...props} nodeRef={ref} />
     </ParallaxContainerStore.ProvideStore>
   )
 }

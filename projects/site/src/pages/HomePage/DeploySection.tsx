@@ -52,6 +52,7 @@ export default function DeploySection() {
       />
 
       <SpacedPageContent
+        padding={['15vh', '5%']}
         nodeRef={Fade.ref}
         header={
           <>
@@ -72,7 +73,7 @@ export default function DeploySection() {
             <FadeInView {...fadeAnimations.left} delay={450}>
               <ParallaxView
                 speed={0.1}
-                offset={-0.5}
+                offset={0}
                 borderRadius={10}
                 elevation={3}
                 width={400}
@@ -133,7 +134,7 @@ export default function DeploySection() {
             <FadeInView {...fadeAnimations.right} delay={800}>
               <ParallaxView
                 speed={-0.1}
-                // offset={0.25}
+                offset={0.05}
                 borderRadius={10}
                 elevation={3}
                 width={400}

@@ -489,9 +489,6 @@ function addDynamicStyles(
     dynStyles[id] = dynStyles[id] || {}
     const themeStyles = themeFn(props, next)
     const themePropStyles = mergeStyles(id, dynStyles, themeStyles, true)
-    if (props['sm-display'] === 'none') {
-      debugger
-    }
     if (themePropStyles) {
       mergePropStyles(id, dynStyles, themePropStyles, props)
     }
@@ -561,7 +558,6 @@ function mergeStyles(
         if (index > 0) {
           const mediaName = key.slice(0, index)
           const mediaSelector = mediaQueries[mediaName]
-          console.log('got em', key, mediaName, mediaSelector, mediaQueries)
           if (mediaSelector) {
             const styleKey = key.slice(index + 1)
             baseStyles[mediaSelector] = baseStyles[mediaSelector] || {}

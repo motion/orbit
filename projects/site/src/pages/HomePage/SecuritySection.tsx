@@ -15,7 +15,7 @@ export default function SecuritySection() {
     <Fade.FadeProvide>
       <SpacedPageContent
         nodeRef={Fade.ref}
-        padding={['15vh', '5%']}
+        padding={['12vh', '5%']}
         margin="auto"
         maxWidth={860}
         header={
@@ -30,7 +30,7 @@ export default function SecuritySection() {
                 // TODO
                 // sm-size="lg"
               >
-                The platform for us.
+                A platform for us.
               </TitleText>
             </FadeInView>
             <TitleText
@@ -39,9 +39,9 @@ export default function SecuritySection() {
               maxWidth={520}
               fontWeight={300}
               sizeLineHeight={1.3}
-              size="md"
+              size="sm"
             >
-              Completely on-device, open source & customizable.
+              Completely on-device, open source &&nbsp;customizable.
             </TitleText>
           </>
         }

@@ -22,6 +22,16 @@ export function HeadSection() {
 
   return (
     <Fade.FadeProvide>
+      <Page.BackgroundParallax
+        speed={0.35}
+        zIndex={1}
+        opacity={0.2}
+        offset={1.1}
+        x="5%"
+        scale={1.5}
+        background="radial-gradient(circle closest-side, #1D4B84, transparent)"
+      />
+
       <Col
         right={useScreenHeightVal(40, 0)}
         left={useScreenHeightVal(40, 0)}
@@ -50,56 +60,6 @@ export function HeadSection() {
           margin={[0, '-10%']}
           userSelect="none"
         >
-          <Page.ParallaxView
-            speed={0.25}
-            zIndex={100}
-            position="absolute"
-            left="50%"
-            top={0}
-            marginLeft={-80 / 2}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <View
-              animate
-              transformOrigin="center center"
-              width={80}
-              height={80}
-              whileHover={{
-                scale: 1.2,
-              }}
-              whileTap={{
-                rotate: '360deg',
-              }}
-            >
-              <FadeInView
-                delayIndex={3}
-                background={[255, 255, 255, 0.1]}
-                borderRadius={100}
-                alignItems="center"
-                justifyContent="center"
-                width="100%"
-                height="100%"
-                pointerEvents="auto"
-                cursor="pointer"
-                transition="all ease 1s"
-                hoverStyle={{
-                  background: [255, 255, 255, 0.15],
-                }}
-              >
-                <Icon size={28} color="#fff" name="play" />
-              </FadeInView>
-            </View>
-            <Space />
-            <View
-              padding={[3, 8]}
-              background={[255, 255, 255, 0.1]}
-              borderRadius={100}
-              border={[2, '#00000055']}
-            >
-              <SimpleText>Watch the demo</SimpleText>
-            </View>
-          </Page.ParallaxView>
           <FadeInView {...fadeAnimations.up} delayIndex={4} marginBottom="-20%">
             <Image
               display="block"
@@ -112,6 +72,57 @@ export function HeadSection() {
           </FadeInView>
         </Page.ParallaxView>
       </Col>
+      <Page.ParallaxView
+        speed={0.1}
+        offset={0.82}
+        zIndex={100}
+        position="absolute"
+        left="50%"
+        top={0}
+        marginLeft={-80 / 2}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <View
+          animate
+          transformOrigin="center center"
+          width={80}
+          height={80}
+          whileHover={{
+            scale: 1.2,
+          }}
+          whileTap={{
+            rotate: '360deg',
+          }}
+        >
+          <FadeInView
+            delayIndex={3}
+            background={[255, 255, 255, 0.1]}
+            borderRadius={100}
+            alignItems="center"
+            justifyContent="center"
+            width="100%"
+            height="100%"
+            pointerEvents="auto"
+            cursor="pointer"
+            transition="all ease 1s"
+            hoverStyle={{
+              background: [255, 255, 255, 0.15],
+            }}
+          >
+            <Icon size={28} color="#fff" name="play" />
+          </FadeInView>
+        </View>
+        <Space />
+        <View
+          padding={[3, 8]}
+          background={[255, 255, 255, 0.1]}
+          borderRadius={100}
+          border={[2, '#00000055']}
+        >
+          <SimpleText>Watch the demo</SimpleText>
+        </View>
+      </Page.ParallaxView>
     </Fade.FadeProvide>
   )
 }

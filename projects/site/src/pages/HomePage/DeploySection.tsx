@@ -52,7 +52,7 @@ export default function DeploySection() {
       />
 
       <SpacedPageContent
-        padding={['15vh', 0]}
+        padding={['12vh', 0]}
         nodeRef={Fade.ref}
         header={
           <>
@@ -61,7 +61,7 @@ export default function DeploySection() {
             </FadeInView>
             <FadeInView delay={300}>
               <TitleText textAlign="center" size="xl">
-                Best DX, ever.
+                Best developer experience, ever.
               </TitleText>
             </FadeInView>
           </>

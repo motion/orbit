@@ -146,11 +146,10 @@ export default memo(() => {
     <Fade.FadeProvide>
       {/* pink left */}
       <Page.BackgroundParallax
-        speed={-0.25}
-        offset={-0.25}
+        speed={-0.4}
+        offset={0.3}
         x="-65%"
-        top="-10%"
-        scale={1.25}
+        scale={1.4}
         className="glow-one"
         opacity={0.23}
         background="radial-gradient(circle closest-side, #D25CCD, transparent)"
@@ -169,7 +168,7 @@ export default memo(() => {
 
       <SpacedPageContent
         nodeRef={Fade.ref}
-        padding={['15vh', '0%']}
+        padding={['12vh', '0%']}
         header={
           <>
             <FadeInView delayIndex={0}>

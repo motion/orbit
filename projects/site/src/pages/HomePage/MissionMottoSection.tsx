@@ -50,7 +50,7 @@ export const AboutSection = memo(() => {
   return (
     <FadeParent>
       <SpacedPageContent
-        padding={['15vh', '10%']}
+        padding={['12vh', '10%']}
         sm-padding={0}
         header={
           <>
@@ -113,8 +113,6 @@ export const AboutSection = memo(() => {
             </Col>
           </MediaSmallHidden>
         </Grid>
-
-        <View flex={1} minHeight={80} />
       </SpacedPageContent>
     </FadeParent>
   )

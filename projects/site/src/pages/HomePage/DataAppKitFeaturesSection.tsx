@@ -32,7 +32,7 @@ export default memo(() => {
       <Page.BackgroundParallax
         {...mediaStyles.hiddenWhen.sm}
         speed={-0.05}
-        offset={0.2}
+        offset={0}
         zIndex={-2}
         scale={0.5}
         transformOrigin="bottom center"
@@ -55,7 +55,7 @@ export default memo(() => {
         height="auto"
         maxHeight={100000}
         margin={0}
-        padding={['15vh', 0]}
+        padding={['12vh', 0]}
         xs-margin={0}
         header={
           <>

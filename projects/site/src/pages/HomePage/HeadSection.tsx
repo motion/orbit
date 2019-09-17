@@ -1,4 +1,4 @@
-import { Col, Icon, Image, Scale, SimpleTextProps, Space, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
+import { Col, Icon, Image, Scale, SimpleText, SimpleTextProps, Space, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
@@ -57,6 +57,8 @@ export function HeadSection() {
             left="50%"
             top={0}
             marginLeft={-80 / 2}
+            alignItems="center"
+            justifyContent="center"
           >
             <View
               animate
@@ -87,6 +89,15 @@ export function HeadSection() {
               >
                 <Icon size={28} color="#fff" name="play" />
               </FadeInView>
+            </View>
+            <Space />
+            <View
+              padding={[3, 8]}
+              background={[255, 255, 255, 0.1]}
+              borderRadius={100}
+              border={[2, '#00000055']}
+            >
+              <SimpleText>Watch the demo</SimpleText>
             </View>
           </Page.ParallaxView>
           <FadeInView {...fadeAnimations.up} delayIndex={4} marginBottom="-20%">

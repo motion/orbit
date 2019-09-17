@@ -42,46 +42,6 @@ export function HeadSection() {
           <HeadContent />
         </Col>
         <Page.ParallaxView
-          speed={0.25}
-          zIndex={100}
-          position="absolute"
-          left="50%"
-          top={0}
-          marginLeft={-70 / 2}
-          debug
-        >
-          <View
-            animate
-            transformOrigin="center center"
-            width={70}
-            height={70}
-            whileHover={{
-              scale: 1.2,
-            }}
-            whileTap={{
-              rotate: '360deg',
-            }}
-          >
-            <FadeInView
-              delayIndex={3}
-              background={[255, 255, 255, 0.1]}
-              borderRadius={100}
-              alignItems="center"
-              justifyContent="center"
-              width="100%"
-              height="100%"
-              pointerEvents="auto"
-              cursor="pointer"
-              transition="all ease 1s"
-              hoverStyle={{
-                background: [255, 255, 255, 0.15],
-              }}
-            >
-              <Icon size={24} color="#fff" name="play" />
-            </FadeInView>
-          </View>
-        </Page.ParallaxView>
-        <Page.ParallaxView
           speed={-0.15}
           className="app-screenshot"
           position="relative"
@@ -90,6 +50,45 @@ export function HeadSection() {
           margin={[0, '-10%']}
           userSelect="none"
         >
+          <Page.ParallaxView
+            speed={0.25}
+            zIndex={100}
+            position="absolute"
+            left="50%"
+            top={0}
+            marginLeft={-70 / 2}
+          >
+            <View
+              animate
+              transformOrigin="center center"
+              width={70}
+              height={70}
+              whileHover={{
+                scale: 1.2,
+              }}
+              whileTap={{
+                rotate: '360deg',
+              }}
+            >
+              <FadeInView
+                delayIndex={3}
+                background={[255, 255, 255, 0.1]}
+                borderRadius={100}
+                alignItems="center"
+                justifyContent="center"
+                width="100%"
+                height="100%"
+                pointerEvents="auto"
+                cursor="pointer"
+                transition="all ease 1s"
+                hoverStyle={{
+                  background: [255, 255, 255, 0.15],
+                }}
+              >
+                <Icon size={24} color="#fff" name="play" />
+              </FadeInView>
+            </View>
+          </Page.ParallaxView>
           <FadeInView {...fadeAnimations.up} delayIndex={4}>
             <Image
               display="block"

@@ -90,6 +90,7 @@ export class Join extends React.Component<any> {
             cursor="pointer"
             maxWidth={300}
             alignSelf="center"
+            glint={false}
           >
             Early access
           </Button>

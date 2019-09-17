@@ -154,6 +154,8 @@ const HeadContent = memo(() => {
                 right={-10}
                 borderWidth={2}
                 hoverStyle
+                iconAfter
+                icon="chevron-right"
                 {...linkProps('/blog/update-two')}
               >
                 Orbit enters private beta!

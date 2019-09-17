@@ -6,7 +6,7 @@ import { fontProps } from '../../constants'
 import { useScreenHeightVal } from '../../hooks/useScreenSize'
 import { useSiteStore } from '../../SiteStore'
 import { linkProps } from '../../useLink'
-import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
+import { fadeAnimations, FadeInView, transitions, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContentChrome } from '../../views/SectionContent'
@@ -141,7 +141,7 @@ const HeadContent = memo(() => {
             whiteSpace="nowrap"
             maxHeight={160}
           >
-            <FadeInView delayIndex={10} disable={!measured}>
+            <FadeInView delayIndex={10} disable={!measured} transition={transitions.bouncy}>
               <Tag
                 size={0.85}
                 sizeHeight={1.01}

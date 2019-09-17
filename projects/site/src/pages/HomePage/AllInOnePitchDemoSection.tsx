@@ -172,16 +172,16 @@ export default memo(() => {
         header={
           <>
             <FadeInView delayIndex={0}>
-              <PillButton>Platform</PillButton>
+              <PillButton>Build</PillButton>
             </FadeInView>
             <FadeInView delayIndex={1}>
               <TitleText size="xxxl" sm-fontSize="42px">
-                Plug in data, easy.
+                Add data, easy.
               </TitleText>
             </FadeInView>
             <TitleTextSub margin="auto" minWidth={320}>
               <FadeInView sm-display="inline" delayIndex={2}>
-                Create apps, plug in data and deploy, easier than ever.
+                Create an app, plug in data, deploy. Easier than ever.
               </FadeInView>
             </TitleTextSub>
           </>
@@ -204,8 +204,8 @@ export default memo(() => {
                 <PillButtonDark>Display</PillButtonDark>
                 <Space />
                 <CenterText maxWidth={400} margin={[0, 'auto']}>
-                  Develop using powerful, simple views built on React and Typescript, with an
-                  amazing built in build system.
+                  A fully integrated workspace with rich, powerful views: virtualized, customizable,
+                  designed for large data.
                 </CenterText>
               </FadeInView>
             </SubSection>

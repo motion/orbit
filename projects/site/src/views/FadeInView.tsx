@@ -28,8 +28,8 @@ export const transitions: { [key: string]: MotionProps['transition'] } = {
   },
   normal: {
     type: 'spring',
-    damping: 12,
-    stiffness: 60,
+    damping: 10,
+    stiffness: 80,
   },
   fast: {
     type: 'spring',

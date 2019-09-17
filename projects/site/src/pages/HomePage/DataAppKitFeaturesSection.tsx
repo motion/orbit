@@ -1,4 +1,4 @@
-import { FullScreen, Image, memoIsEqualDeep, ParallaxView, Row, Space, View } from '@o/ui'
+import { FullScreen, Image, memoIsEqualDeep, Row, Space, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import { mediaStyles } from '../../constants'
@@ -19,15 +19,15 @@ export default memo(() => {
   return (
     <FadeDataApps.FadeProvide>
       {/* dark red bottom right */}
-      <Page.BackgroundParallax
-        speed={0.35}
+      {/* <Page.BackgroundParallax
+        speed={0.5}
         zIndex={-2}
-        opacity={0.3}
+        opacity={0.8}
         offset={1.1}
         x="5%"
         scale={1.5}
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
-      />
+      /> */}
 
       <Page.BackgroundParallax
         {...mediaStyles.hiddenWhen.sm}
@@ -55,7 +55,7 @@ export default memo(() => {
         height="auto"
         maxHeight={100000}
         margin={0}
-        padding={['12vh', 0]}
+        padding={['18vh', 0]}
         xs-margin={0}
         header={
           <>
@@ -128,30 +128,27 @@ const Integration = memoIsEqualDeep(({ icon, title, index, ...props }: any) => {
       {...(index % 1 == 0 ? fadeAnimations.left : fadeAnimations.right)}
       delay={index * 50 + 100}
     >
-      {/* TODO */}
-      <ParallaxView speed={0} offset={0}>
-        <View
-          userSelect="none"
-          height={150}
-          width={150}
-          alignItems="center"
-          justifyContent="center"
-          {...props}
-        >
-          <Image
-            src={icon}
-            transition="all ease 200ms"
-            maxWidth={56}
-            width="50%"
-            height="auto"
-            hoverStyle={{ opacity: 1 }}
-          />
-          <Space />
-          <Paragraph selectable={false} size="sm">
-            {title}
-          </Paragraph>
-        </View>
-      </ParallaxView>
+      <View
+        userSelect="none"
+        height={150}
+        width={150}
+        alignItems="center"
+        justifyContent="center"
+        {...props}
+      >
+        <Image
+          src={icon}
+          transition="all ease 200ms"
+          maxWidth={56}
+          width="50%"
+          height="auto"
+          hoverStyle={{ opacity: 1 }}
+        />
+        <Space />
+        <Paragraph selectable={false} size="sm">
+          {title}
+        </Paragraph>
+      </View>
     </FadeInView>
   )
 })

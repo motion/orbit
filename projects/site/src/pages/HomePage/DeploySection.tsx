@@ -9,7 +9,6 @@ import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { ParagraphIntro } from '../../views/ParagraphIntro'
-import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
 
@@ -52,16 +51,13 @@ export default function DeploySection() {
       />
 
       <SpacedPageContent
-        padding={['12vh', 0]}
+        padding={['6vh', 0]}
         nodeRef={Fade.ref}
         header={
           <>
-            <FadeInView delay={0}>
-              <PillButton>Create</PillButton>
-            </FadeInView>
-            <FadeInView delay={300}>
-              <TitleText textAlign="center" size="xl">
-                Best developer experience, ever.
+            <FadeInView delayIndex={0}>
+              <TitleText textAlign="center" size="xxl">
+                Best DX, ever.
               </TitleText>
             </FadeInView>
           </>
@@ -70,7 +66,7 @@ export default function DeploySection() {
         <Space size={60} />
         <Row space={60} margin={[0, '-180%']}>
           <Col flex={2} alignItems="flex-end" justifyContent="center">
-            <FadeInView {...fadeAnimations.left} delay={450}>
+            <FadeInView {...fadeAnimations.left} delayIndex={2}>
               <ParallaxView
                 speed={0.1}
                 offset={0}
@@ -97,21 +93,21 @@ export default function DeploySection() {
           </Col>
 
           <Col space="xxl" flex={2} minWidth={300} maxWidth={340}>
-            <FadeInView delay={500}>
+            <FadeInView delayIndex={1}>
               <ParagraphIntro {...fontProps.TitleFont} sizeLineHeight={1.1} size={1.75}>
                 Orbit pushes forward how apps work, and how we build them, with a radical focus on
                 making code as easy as possible.
               </ParagraphIntro>
             </FadeInView>
 
-            <FadeInView delay={650}>
+            <FadeInView delayIndex={2}>
               <Para size={1.4} sizeLineHeight={1.25}>
                 Create apps that work together, but run in isolation. Plug in data sources with
                 ease. Develop with instant feedback, everything you need is included.
               </Para>
             </FadeInView>
 
-            <FadeInView delay={800}>
+            <FadeInView delayIndex={3}>
               <Para
                 tagName="a"
                 href="ok"
@@ -131,7 +127,7 @@ export default function DeploySection() {
           </Col>
 
           <Col flex={2} alignItems="flex-start" justifyContent="center">
-            <FadeInView {...fadeAnimations.right} delay={800}>
+            <FadeInView {...fadeAnimations.right} delayIndex={3}>
               <ParallaxView
                 speed={-0.1}
                 offset={0.05}

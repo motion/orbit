@@ -22,7 +22,7 @@ export function HeadSection() {
 
   return (
     <Fade.FadeProvide>
-      <Page.BackgroundParallax
+      {/* <Page.BackgroundParallax
         speed={0.35}
         zIndex={1}
         opacity={0.2}
@@ -30,7 +30,7 @@ export function HeadSection() {
         x="5%"
         scale={1.5}
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
-      />
+      /> */}
 
       <Col
         right={useScreenHeightVal(40, 0)}
@@ -60,7 +60,7 @@ export function HeadSection() {
           margin={[0, '-10%']}
           userSelect="none"
         >
-          <FadeInView {...fadeAnimations.up} delayIndex={4} marginBottom="-20%">
+          <FadeInView {...fadeAnimations.up} delayIndex={4} marginBottom="-10%">
             <Image
               display="block"
               src={require('../../public/images/screen.jpg')}
@@ -143,7 +143,7 @@ const HeadContent = memo(() => {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const measured = fontsLoaded
   // const pFit = useTextFit({ min: 16, updateKey: fontsLoaded })
-  const br = <View className="head-space" height="3.5vh" maxHeight={70} />
+  const br = <View className="head-space" height={20} sm-height={15} />
   const sectionHeight = useSiteStore().sectionHeight
 
   return (
@@ -190,7 +190,12 @@ const HeadContent = memo(() => {
 
           {br}
 
-          <View display="block" minHeight="min-content">
+          <FadeInView
+            // transition={transitions.bouncy}
+            delayIndex={3}
+            display="block"
+            minHeight="min-content"
+          >
             <TitleParagraph {...para}>
               {/* first line */}The home base for teams to code amazing internal tools.
             </TitleParagraph>
@@ -203,7 +208,7 @@ const HeadContent = memo(() => {
             <View position="relative" marginBottom={-95} marginTop={10}>
               <HeadJoin />
             </View>
-          </View>
+          </FadeInView>
         </View>
       </View>
     </SectionContentChrome>
@@ -239,7 +244,14 @@ const HeadJoin = memo(() => {
 
 const TextFitTitle = (props: TitleProps) => {
   return (
-    <TitleText userSelect="text" fontSize="12vw" lineHeight="8.5rem" lg-fontSize={135} {...props} />
+    <TitleText
+      userSelect="text"
+      fontSize="12vw"
+      lineHeight="90%"
+      notsm-lineHeight={135}
+      lg-fontSize={135}
+      {...props}
+    />
   )
 }
 

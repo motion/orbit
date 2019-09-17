@@ -15,7 +15,7 @@ export default function SecuritySection() {
     <Fade.FadeProvide>
       <SpacedPageContent
         nodeRef={Fade.ref}
-        padding={['12vh', '5%']}
+        padding={['18vh', '5%']}
         margin="auto"
         maxWidth={860}
         header={

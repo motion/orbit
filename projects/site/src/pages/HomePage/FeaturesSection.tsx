@@ -14,7 +14,7 @@ const dly = 200
 
 export default memo(() => {
   const Fade = useFadePage()
-  const [activeSection, setActiveSection] = useState('Features')
+  const [activeSection, setActiveSection] = useState('Apps')
   const btnProps = (section: string) => {
     return {
       cursor: 'pointer',
@@ -33,6 +33,7 @@ export default memo(() => {
         margin="auto"
         header={
           <>
+            <PillButtonDark>Features</PillButtonDark>
             <FadeInView delay={0}>
               <TitleText
                 textAlign="center"
@@ -55,7 +56,7 @@ export default memo(() => {
       <Space />
 
       <Row justifyContent="center" space margin={[0, 'auto']}>
-        {['Features', 'Tech', 'Platform'].map(section => (
+        {['Apps', 'Tech', 'Platform'].map(section => (
           <React.Fragment key={section}>
             {section === activeSection ? (
               <PillButton {...btnProps(section)}>{section}</PillButton>

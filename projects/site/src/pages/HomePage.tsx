@@ -38,7 +38,7 @@ export const HomePage = memo(() => {
         <Page pages="auto" zIndex={0}>
           <HeadSection />
         </Page>
-        <Page zIndex={1} pages="auto">
+        <Page pages="auto">
           <AllInOnePitchDemoSection />
         </Page>
         <Page pages="auto">

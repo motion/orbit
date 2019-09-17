@@ -157,13 +157,13 @@ export default memo(() => {
 
       {/* teal right */}
       <Page.BackgroundParallax
-        speed={0.4}
-        offset={1}
+        speed={0.3}
+        offset={0.2}
         x="60%"
-        scale={1.68}
+        scale={1.3}
         className="glow-two"
-        opacity={0.35}
-        background="radial-gradient(circle closest-side, #5639D0, transparent)"
+        opacity={0.4}
+        background="radial-gradient(circle closest-side, #12A1CC, transparent)"
       />
 
       <SpacedPageContent

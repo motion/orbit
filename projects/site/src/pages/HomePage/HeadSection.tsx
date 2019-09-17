@@ -56,13 +56,13 @@ export function HeadSection() {
             position="absolute"
             left="50%"
             top={0}
-            marginLeft={-70 / 2}
+            marginLeft={-80 / 2}
           >
             <View
               animate
               transformOrigin="center center"
-              width={70}
-              height={70}
+              width={80}
+              height={80}
               whileHover={{
                 scale: 1.2,
               }}
@@ -85,11 +85,11 @@ export function HeadSection() {
                   background: [255, 255, 255, 0.15],
                 }}
               >
-                <Icon size={24} color="#fff" name="play" />
+                <Icon size={28} color="#fff" name="play" />
               </FadeInView>
             </View>
           </Page.ParallaxView>
-          <FadeInView {...fadeAnimations.up} delayIndex={4}>
+          <FadeInView {...fadeAnimations.up} delayIndex={4} marginBottom={-150}>
             <Image
               display="block"
               src={require('../../public/images/screen.jpg')}

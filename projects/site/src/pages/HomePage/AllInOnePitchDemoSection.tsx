@@ -175,20 +175,20 @@ export default memo(() => {
               <PillButton>Platform</PillButton>
             </FadeInView>
             <FadeInView delayIndex={1}>
-              <TitleText size="xxxl" sm-size="20px">
-                Make apps, easy.
+              <TitleText size="xxxl" sm-fontSize="42px">
+                Plug in data, easy.
               </TitleText>
             </FadeInView>
             <TitleTextSub margin="auto" minWidth={320}>
               <FadeInView sm-display="inline" delayIndex={2}>
-                &nbsp;The richest set of tools to building powerful apps.&nbsp;
+                Create apps, plug in data and deploy, easier than ever.
               </FadeInView>
             </TitleTextSub>
           </>
         }
       >
         <Col maxWidth="100%" margin={[0, 'auto']}>
-          <Row space {...mediaStyles.hiddenWhen.notsm}>
+          <Row space {...mediaStyles.visibleWhen.notsm}>
             <SubSection maxWidth="33%">
               <FadeInView {...fadeAnimations.left} delayIndex={4}>
                 <PillButtonDark>Import</PillButtonDark>
@@ -224,7 +224,7 @@ export default memo(() => {
           <Space />
 
           <Row space>
-            <Flex alignItems="center" sm-display="none">
+            <Flex alignItems="center" sm-display="none" debug>
               <FadeInView {...fadeAnimations.left} delayIndex={5}>
                 <Image
                   userSelect="none"
@@ -294,7 +294,7 @@ export default memo(() => {
                   width={280}
                   height={280}
                   background={`linear-gradient(125deg, #78009F, #4C1966)`}
-                  boxShadow="0 20px 50px rgba(0,0,0,0.6)"
+                  boxShadow="0 20px 70px rgba(0,0,0,0.8)"
                   padding={30}
                   cursor="pointer"
                   key={`squircle-${page}`}

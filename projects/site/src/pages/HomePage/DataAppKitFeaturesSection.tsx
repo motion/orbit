@@ -18,16 +18,16 @@ export default memo(() => {
   const FadeDataApps = useFadePage({ threshold: 0 })
   return (
     <FadeDataApps.FadeProvide>
-      {/* dark red bottom right */}
-      {/* <Page.BackgroundParallax
-        speed={0.5}
+      {/* green left */}
+      <Page.BackgroundParallax
+        speed={-0.45}
         zIndex={-2}
-        opacity={0.8}
-        offset={1.1}
-        x="5%"
-        scale={1.5}
-        background="radial-gradient(circle closest-side, #1D4B84, transparent)"
-      /> */}
+        opacity={0.3}
+        offset={-0.3}
+        x="-40%"
+        scale={1.6}
+        background="radial-gradient(circle closest-side, #00A77F, transparent)"
+      />
 
       <Page.BackgroundParallax
         {...mediaStyles.hiddenWhen.sm}

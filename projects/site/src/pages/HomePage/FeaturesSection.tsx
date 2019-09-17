@@ -3,6 +3,7 @@ import React, { memo, useState } from 'react'
 
 import { FadeInView, useFadePage } from '../../views/FadeInView'
 import { MediaSmallHidden } from '../../views/MediaView'
+import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
 import { PillButtonDark } from '../../views/PillButtonDark'
 import { TitleText } from '../../views/TitleText'
@@ -26,6 +27,16 @@ export default memo(() => {
   }
   return (
     <Fade.FadeProvide>
+      <Page.BackgroundParallax
+        speed={0.4}
+        zIndex={-1}
+        opacity={0.45}
+        offset={1.1}
+        x="-55%"
+        scale={2.2}
+        background="radial-gradient(circle closest-side, #8B2028, transparent)"
+      />
+
       <SpacedPageContent
         nodeRef={Fade.ref}
         height="auto"

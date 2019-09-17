@@ -6,7 +6,6 @@ import appScreenshot from '../../public/images/app-screenshot.jpg'
 import arrow from '../../public/images/callout-arrow.svg'
 import codeScreenshot from '../../public/images/code-screenshot.jpg'
 import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
-import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { ParagraphIntro } from '../../views/ParagraphIntro'
 import { TitleText } from '../../views/TitleText'
@@ -18,7 +17,7 @@ export default function DeploySection() {
   const Fade = useFadePage()
   return (
     <Fade.FadeProvide>
-      <Page.BackgroundParallax
+      {/* <Page.BackgroundParallax
         speed={0.45}
         zIndex={-2}
         opacity={0.3}
@@ -26,10 +25,10 @@ export default function DeploySection() {
         x="0%"
         scale={1.6}
         background="radial-gradient(circle closest-side, #00A77F, transparent)"
-      />
+      /> */}
 
       {/* big purple bottom left */}
-      <Page.BackgroundParallax
+      {/* <Page.BackgroundParallax
         speed={-0.45}
         zIndex={-1}
         opacity={0.22}
@@ -37,10 +36,10 @@ export default function DeploySection() {
         x="-40%"
         scale={2.7}
         background="radial-gradient(circle closest-side, #1AAFFF, transparent)"
-      />
+      /> */}
 
       {/* dark red bottom right */}
-      <Page.BackgroundParallax
+      {/* <Page.BackgroundParallax
         speed={0.4}
         zIndex={-1}
         opacity={0.45}
@@ -48,7 +47,7 @@ export default function DeploySection() {
         x="55%"
         scale={2.2}
         background="radial-gradient(circle closest-side, #8B2028, transparent)"
-      />
+      /> */}
 
       <SpacedPageContent
         padding={['6vh', 0]}

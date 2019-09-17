@@ -146,10 +146,10 @@ export default memo(() => {
     <Fade.FadeProvide>
       {/* pink left */}
       <Page.BackgroundParallax
-        speed={-0.4}
+        speed={-0.5}
         offset={0.3}
         x="-65%"
-        scale={1.4}
+        scale={1.8}
         className="glow-one"
         opacity={0.23}
         background="radial-gradient(circle closest-side, #D25CCD, transparent)"

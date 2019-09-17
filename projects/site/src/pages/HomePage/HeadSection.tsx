@@ -185,7 +185,9 @@ const HeadContent = memo(() => {
                 Orbit enters private beta!
               </Tag>
             </FadeInView>
-            <FadeInView disable={!measured}>Apps for teams</FadeInView>
+            <FadeInView disable={!measured} delayIndex={2}>
+              Apps for teams
+            </FadeInView>
           </TextFitTitle>
 
           {br}

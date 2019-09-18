@@ -176,7 +176,7 @@ export default memo(() => {
             </FadeInView>
             <FadeInView delayIndex={1}>
               <TitleText size="xxxl" sm-fontSize="42px">
-                Add data, easy.
+                Data, meet app.
               </TitleText>
             </FadeInView>
             <TitleTextSub margin="auto" minWidth={320}>

@@ -9,6 +9,7 @@ import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { ParagraphIntro } from '../../views/ParagraphIntro'
+import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
 
@@ -56,8 +57,11 @@ export default function DeploySection() {
         header={
           <>
             <FadeInView delayIndex={0}>
+              <PillButton>Develop</PillButton>
+            </FadeInView>
+            <FadeInView delayIndex={0}>
               <TitleText textAlign="center" size="xxl">
-                Best DX, ever.
+                Powerful tools made easy.
               </TitleText>
             </FadeInView>
           </>
@@ -95,14 +99,14 @@ export default function DeploySection() {
           <Col space="xxl" flex={2} minWidth={300} maxWidth={340}>
             <FadeInView delayIndex={1}>
               <ParagraphIntro {...fontProps.TitleFont} sizeLineHeight={1.1} size={1.75}>
-                A radical focus on making code as easy as possible.
+                Orbit makes building apps as easy as a few lines of code.
               </ParagraphIntro>
             </FadeInView>
 
             <FadeInView delayIndex={2}>
               <Para size={1.4} sizeLineHeight={1.25}>
-                Everything works without setup or configuration. Instant feedback with inline
-                errors. Plug in data sources with ease. Plus, a comprehensive UI kit.
+                No setup or configuration. Instant feedback with easy to see errors. Plug in data
+                sources and libraries instantly. Plus, a truly comprehensive UI kit.
               </Para>
             </FadeInView>
 

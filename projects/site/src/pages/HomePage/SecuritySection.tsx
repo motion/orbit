@@ -30,7 +30,7 @@ export default function SecuritySection() {
                 // TODO
                 // sm-size="lg"
               >
-                A platform for us.
+                A platform for you.
               </TitleText>
             </FadeInView>
             <TitleText

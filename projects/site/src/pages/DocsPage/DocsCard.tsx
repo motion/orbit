@@ -11,8 +11,8 @@ export let Basic = (
   <Row space flexWrap="wrap">
     <ExampleCard>hello worl2</ExampleCard>
     <ExampleCard title="Elevation = 2" elevation={2} />
-    <ExampleCard coat="warn" location="warn" title="Alt = warn" elevation={4} />
-    <ExampleCard badge="1" coat="confirm" title="Alt = confirm" elevation={4} />
+    <ExampleCard coat="warn" location="warn" title="Coat = warn" elevation={4} />
+    <ExampleCard badge="1" coat="confirm" title="Coat = confirm" elevation={4} />
     <ExampleCard width={300} height={300} location="hi" badge="1" size="lg" title="Size LG">
       hello worl2
     </ExampleCard>

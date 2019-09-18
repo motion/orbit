@@ -432,13 +432,6 @@ fieldset {
   background: transparent;
 }
 
-div.alt {
-  font-size: 75%;
-  color: rgba(0, 0, 0, 0.5);
-  margin-bottom: 16px;
-  margin-top: -16px;
-}
-
 .mini-scrollbars ::-webkit-scrollbar {
   width: 1px;
   border-radius: 20px;

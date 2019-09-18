@@ -13,9 +13,9 @@ export let Basic = (
 
 export let Coats = (
   <Row space flexWrap="wrap">
-    {['error', 'warn', 'confirm', 'bordered', 'selected'].map(alt => (
-      <SizedSurface key={alt} coat={alt} icon="cog" iconAfter>
-        Alt {alt}
+    {['error', 'warn', 'confirm', 'bordered', 'selected'].map(coat => (
+      <SizedSurface key={coat} coat={coat} icon="cog" iconAfter>
+        Coat {coat}
       </SizedSurface>
     ))}
   </Row>

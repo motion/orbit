@@ -31,36 +31,36 @@ export let Basic = () => {
 export let Coats = (
   <Col space>
     <Row space flexWrap="wrap">
-      {['error', 'warn', 'confirm', 'bordered', 'selected', 'flat', 'clear'].map(alt => (
-        <Button key={alt} coat={alt} icon="cog" iconAfter>
-          Alt {alt}
+      {['error', 'warn', 'confirm', 'bordered', 'selected', 'flat', 'clear'].map(coat => (
+        <Button key={coat} coat={coat} icon="cog" iconAfter>
+          Coat {coat}
         </Button>
       ))}
     </Row>
     <Row space flexWrap="wrap">
-      {['error', 'warn', 'confirm'].map(alt => (
-        <RoundButton key={alt} coat={alt} icon="cog" size="lg">
-          Alt {alt}
+      {['error', 'warn', 'confirm'].map(coat => (
+        <RoundButton key={coat} coat={coat} icon="cog" size="lg">
+          Coat {coat}
         </RoundButton>
       ))}
     </Row>
     <Row space flexWrap="wrap">
-      {['error', 'warn', 'confirm'].map(alt => (
-        <Button key={alt} coat={alt} icon="cog" size="lg" sizePadding={1.2} sizeRadius={1.2}>
-          Alt {alt}
+      {['error', 'warn', 'confirm'].map(coat => (
+        <Button key={coat} coat={coat} icon="cog" size="lg" sizePadding={1.2} sizeRadius={1.2}>
+          Coat {coat}
         </Button>
       ))}
     </Row>
     <Row space flexWrap="wrap">
-      {['error', 'warn', 'confirm'].map(alt => (
-        <Button key={alt} coat={alt} icon="cog" size="xxxl">
-          Alt {alt}
+      {['error', 'warn', 'confirm'].map(coat => (
+        <Button key={coat} coat={coat} icon="cog" size="xxxl">
+          Coat {coat}
         </Button>
       ))}
     </Row>
     <Row space flexWrap="wrap">
-      {['error', 'warn', 'confirm'].map(alt => (
-        <Button key={alt} coat={alt} icon="cog" size="xxxl" circular />
+      {['error', 'warn', 'confirm'].map(coat => (
+        <Button key={coat} coat={coat} icon="cog" size="xxxl" circular />
       ))}
     </Row>
   </Col>

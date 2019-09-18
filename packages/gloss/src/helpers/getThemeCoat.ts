@@ -22,7 +22,7 @@ export function getThemeCoat(name: string | undefined, inTheme: ThemeObject): Th
   if (theme._isCoat) {
     theme = theme._originalTheme
   }
-  // find, set, cache alt theme
+  // find, set, cache coat theme
   if (!cache.has(theme)) {
     cache.set(theme, {})
   }
@@ -34,12 +34,12 @@ export function getThemeCoat(name: string | undefined, inTheme: ThemeObject): Th
   if (cached) {
     return cached
   }
-  const next = createAlternateTheme(theme, name)
+  const next = createCoatTheme(theme, name)
   coats[name] = next
   return next
 }
 
-function createAlternateTheme(theme: ThemeObject, coat: string): ThemeObject {
+function createCoatTheme(theme: ThemeObject, coat: string): ThemeObject {
   if (!theme.coats) {
     throw new Error('No coats in themes')
   }

@@ -136,7 +136,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
   )
 
   const hasAfterTitle = isDefined(props.afterTitle, afterHeaderElement)
-  const altTheme = isSelected ? (isFocused ? 'selected' : 'selectedInactive') : null
+  const coat = isSelected ? (isFocused ? 'selected' : 'selectedInactive') : null
 
   // its a lot easier at times to just get the props from the click event
   const handleClick = useCallback(
@@ -159,7 +159,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
   )
 
   return (
-    <Theme coat={altTheme}>
+    <Theme coat={coat}>
       {above}
       {/* unset the theme for the separator */}
       {!!separator && (

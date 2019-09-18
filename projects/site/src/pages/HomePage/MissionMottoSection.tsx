@@ -1,4 +1,4 @@
-import { Col, Grid, ListItem, SimpleText, SpaceGroup, TextProps, Theme, View } from '@o/ui'
+import { Col, Grid, ListItem, SimpleText, TextProps, Theme, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import earth from '../../public/images/earth.jpg'
@@ -100,15 +100,13 @@ export const AboutSection = memo(() => {
               </FadeInView>
 
               <FadeInView delayIndex={6}>
-                <SpaceGroup space="md">
-                  <Item>Build apps without infrastructure.</Item>
+                <Item>Build apps without infrastructure.</Item>
 
-                  <Item>Deliver a truly native-feeling, multi-platform app experience.</Item>
+                <Item>Deliver a truly native-feeling, multi-platform app experience.</Item>
 
-                  <Item>Make DX a first-class citizen.</Item>
+                <Item>Make DX a first-class citizen.</Item>
 
-                  <Item>Give users control over their data.</Item>
-                </SpaceGroup>
+                <Item>Give users control over their data.</Item>
               </FadeInView>
             </Col>
           </MediaSmallHidden>

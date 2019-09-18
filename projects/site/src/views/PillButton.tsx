@@ -12,6 +12,7 @@ export function PillButton({ children, ...props }: ButtonProps) {
       {...fontProps.TitleFont}
       fontWeight={600}
       fontSize={12}
+      lineHeight={20}
       letterSpacing={3}
       whiteSpace="pre"
       textTransform="uppercase"

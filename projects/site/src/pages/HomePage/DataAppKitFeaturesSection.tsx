@@ -69,8 +69,8 @@ export default memo(() => {
             </FadeInView>
             <TitleTextSub>
               <FadeInView delay={200}>
-                An open app store with more - every app can sync data, expose GraphQL and TypeScript
-                APIs, and render content.
+                Sync data, use GraphQL and TypeScript APIs, render content and more. Apps provide
+                everything you need to build up.
               </FadeInView>
             </TitleTextSub>
             <Space size="xl" />

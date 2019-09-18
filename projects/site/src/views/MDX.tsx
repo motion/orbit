@@ -35,23 +35,25 @@ export const components = {
     </>
   ),
   h2: props => (
-    <>
-      <TitleText marginTop={16} fontWeight={400} size="sm" {...props} />
+    <View>
+      {contentSpaceLg}
+      <TitleText fontWeight={400} size="sm" {...props} />
       {contentSpace}
-    </>
+    </View>
   ),
   h3: props => (
-    <>
+    <View>
+      {contentSpaceLg}
+      <TitleText size="xxxs" {...props} />
       {contentSpace}
-      <TitleText marginTop={16} size="xs" {...props} />
-      {contentSpace}
-    </>
+    </View>
   ),
   h4: props => (
-    <>
-      <TitleText size="xxs" {...props} />
+    <View>
+      {contentSpaceLg}
+      <TitleText size="xxxs" fontWeight={400} alpha={0.6} {...props} />
       {contentSpace}
-    </>
+    </View>
   ),
   pre: props => <div {...props} />,
   code: props => (

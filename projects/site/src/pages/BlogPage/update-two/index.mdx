@@ -1,18 +1,70 @@
-We're introducing Orbit into private beta today after a long development period. I'm excited to
-introduce it to you.
+We're introducing Orbit into private beta today after quite a long development period. I'm excited
+to introduce it to you.
 
-Orbit is an attempt to build on a vision of a future of computing -- one where apps work together
-better, where data is under our control, and where we can in the future augment ourselves with a
-knowledgebase that spans everything we do.
+Orbit is a platform for building apps, starting with a focus on apps that work together as internal
+tools for teams. Our goals are to make development as fun and easy as possible while not sacrificing
+real power. Part of being fun is that you need to include everything you'd want in the box, and
+that's what Orbit aims to do, and part of why it's taken so long to get here.
 
-Orbit learns a lot from the past, and looks to move computing towards a better future. We'd love it
-if you [signed up for our insider list](#end) to receive updates on development and early access.
+We'd love it if you [sign up to the insider list](#end), we'll only update on development progress
+and invite you to early access.
 
-## A brief history of operation
+<div className="graphic">
+  <div style={{ margin: '20px -20%', maxWidth: '100vw' }}>
+    <img
+      width="100%"
+      alt="On-Device = Data stays on your computer"
+      src={require('./screen2.jpeg')}
+    />
+  </div>
+</div>
 
-An in depth, bloody accounting of every decision and development over the last few months.
+## What it is
 
-## A brief tour of Orbit
+I like to think of Orbit as a heads up display for your computer. It's like Spotlight, if Spotlight
+had an app store and applications you could build, and if the data sources you plugged into it were
+accessible across applications.
+
+Orbit has a few principles that make it really fun.
+
+### Keep it light
+
+Every Orbit app should have a single purpose, and show only a single main screen with an optional
+list next to it.
+
+### Everything searchable
+
+Orbit has an always-on searchbar for everything. And with a single property you any table or list in
+Orbit becomes searchable.
+
+### Wildly open
+
+Orbit apps work together. That's not marketing speak, it's the most key concept behind the platform.
+Every app can have any of the following abilities:
+
+- Sync - import data into a common format, called a Bit.
+- Display - it's own content, embedded into any other app.
+- API - expose a Typescript API to any other app.
+- Graph can expose a GraphQL API to any other app.
+
+This makes for a perfect "workspace" for your team to collaborate on apps together. It also unlocks
+huge abilities that our platforms just don't attempt, as their apps are completely closed.
+
+A great example is the Slack app. The Slack app uses all four abilities: Sync, Graph, Display, and
+API. That means once you import the Slack API
+
+### Secure first
+
+Orbit apps run entirely offline, locally on your device. Thats right: you can firewall the upload on
+the Orbit app and nothing will leave your computer. We think this is so important - how can you
+build a unified data platformw wihtout trust and control? That answer is, you can't.
+
+## A brief history
+
+Orbit didn't start as an internal tools platform, and in the future it wants to expand to be a
+platform for anyone -- the most fun way to build real-world applications for any platform. If you
+want to understand better some of what Orbit is doing, read on. If you just want to know more on the
+_how_, skip ahead to the next section.
 
 ## A look forward
 

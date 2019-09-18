@@ -12,8 +12,14 @@ import { IntroText } from './IntroText'
 import { Key } from './Key'
 import { TitleText } from './TitleText'
 
-const contentSpaceLg = <Space size="xl" />
-const contentSpace = <Space size="lg" />
+let contentSpaceLg
+let contentSpace
+
+// fix production minificatio err
+(() => {
+  contentSpaceLg = <Space size="xl" />
+  contentSpace = <Space size="lg" />
+})()
 
 export const components = {
   // custom

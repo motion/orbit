@@ -1,5 +1,6 @@
 import React, { Fragment, isValidElement } from 'react'
 
+import { hasMediaQueries, spaceMediaQueryKeys } from './mediaQueryKeys'
 import { Size, Space } from './Space'
 
 export type SpaceGroupProps = {
@@ -45,19 +46,30 @@ function getChildrenForSpacing(childs: React.ReactNode) {
   return children
 }
 
-export function createSpacedChildren({
-  children,
-  space = true,
-  spaceAround,
-  separator,
-  beforeSpace,
-  afterSpace,
-}: SpaceGroupProps) {
+export function createSpacedChildren(
+  { children, space = true, spaceAround, separator, beforeSpace, afterSpace }: SpaceGroupProps,
+  otherProps: {
+    // allow media query sizes like sm-size md-size
+    [key: string]: any
+  },
+) {
   if (!children) {
     return null
   }
   const childs = getChildrenForSpacing(children)
   const total = childs.length
+
+  // media query props
+  let sizeMediaQueries = null
+  if (hasMediaQueries) {
+    for (const key in spaceMediaQueryKeys) {
+      if (key in otherProps) {
+        sizeMediaQueries = sizeMediaQueries || {}
+        sizeMediaQueries[key.replace('-space', '-size')] = otherProps[key]
+        console.log('sizeMediaQueries', sizeMediaQueries)
+      }
+    }
+  }
 
   if ((!space && !spaceAround) || (!spaceAround && total <= 1)) {
     return (
@@ -69,7 +81,7 @@ export function createSpacedChildren({
     )
   }
 
-  const spaceElement = separator || <Space size={space} />
+  const spaceElement = separator || <Space size={space} {...sizeMediaQueries} />
   const spaceAroundElement =
     separator || spaceAround === true ? spaceElement : <Space size={spaceAround} />
 

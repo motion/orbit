@@ -194,6 +194,7 @@ const HeadContent = memo(() => {
             delayIndex={3}
             display="block"
             minHeight="min-content"
+            debug
           >
             <TitleParagraph {...para}>
               {/* first line */}A home base for teams to create internal tools with ease.

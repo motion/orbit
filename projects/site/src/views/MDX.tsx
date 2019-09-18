@@ -12,14 +12,8 @@ import { IntroText } from './IntroText'
 import { Key } from './Key'
 import { TitleText } from './TitleText'
 
-let contentSpaceLg
-let contentSpace
-
-// fix production minificatio err
-(() => {
-  contentSpaceLg = <Space size="xl" />
-  contentSpace = <Space size="lg" />
-})()
+const contentSpaceLg = <Space size="xl" />
+const contentSpace = <Space size="lg" />
 
 export const components = {
   // custom
@@ -92,19 +86,23 @@ export const components = {
       {contentSpace}
     </>
   ),
-  p: props => (
-    <>
-      <Paragraph
-        className="body-text"
-        margin={0}
-        fontSize="inherit"
-        lineHeight="inherit"
-        color="inherit"
-        {...props}
-      />
-      {contentSpace}
-    </>
-  ),
+  p: props => {
+    console.warn('rendering p')
+    debugger
+    return (
+      <>
+        <Paragraph
+          className="body-text"
+          margin={0}
+          fontSize="inherit"
+          lineHeight="inherit"
+          color="inherit"
+          {...props}
+        />
+        {contentSpace}
+      </>
+    )
+  },
   description: props => (
     <>
       <Paragraph

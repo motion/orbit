@@ -68,7 +68,7 @@ export default function DeploySection() {
         }
       >
         <Space size={60} />
-        <Row space={60} margin={[0, '-180%']} sm-margin="0">
+        <Row space={60} sm-space={0} margin={[0, '-180%']} sm-margin="0">
           <Col sm-display="none" flex={2} alignItems="flex-end" justifyContent="center">
             <FadeInView {...fadeAnimations.left} delayIndex={2}>
               <View

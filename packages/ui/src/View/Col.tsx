@@ -44,13 +44,16 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
 
     // spaceable
     if (space || spaceAround || beforeSpace || afterSpace) {
-      element = createSpacedChildren({
-        space,
-        spaceAround,
-        beforeSpace,
-        afterSpace,
-        children,
-      })
+      element = createSpacedChildren(
+        {
+          space,
+          spaceAround,
+          beforeSpace,
+          afterSpace,
+          children,
+        },
+        colProps,
+      )
     }
 
     // collapsable

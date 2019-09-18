@@ -121,7 +121,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
   const locationElement = !!location && (
     <>
       <RoundButtonSmall
-        alt="flat"
+        coat="flat"
         borderWidth={0}
         margin={[2, 0]}
         maxWidth={120}
@@ -159,7 +159,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
   )
 
   return (
-    <Theme alt={altTheme}>
+    <Theme coat={altTheme}>
       {above}
       {/* unset the theme for the separator */}
       {!!separator && (
@@ -177,7 +177,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
         className="list-item-surface"
         flexDirection="row"
         alignItems="stretch"
-        subTheme="listItem"
+        themeSubSelect="listItem"
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && handleClick) || undefined}
         {...listItemAdjustedPadding}

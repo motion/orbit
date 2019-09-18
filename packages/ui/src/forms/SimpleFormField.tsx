@@ -50,7 +50,7 @@ export function SimpleFormField({
       {children}
       {error && (
         <>
-          <SimpleText alt="error">{error}</SimpleText>
+          <SimpleText coat="error">{error}</SimpleText>
         </>
       )}
     </>

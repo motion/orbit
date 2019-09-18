@@ -34,8 +34,8 @@ export type GlossProps<Props> = Props & {
   children?: React.ReactNode
   nodeRef?: any
   style?: any
-  alt?: string
-  subTheme?: ThemeSelect
+  coat?: string
+  themeSubSelect?: ThemeSelect
 }
 
 export type ThemeFn<Props = any> = (

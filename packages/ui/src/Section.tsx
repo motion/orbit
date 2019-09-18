@@ -173,7 +173,7 @@ export function Section(direct: SectionProps) {
 
     titleEl = (
       <Scale size={titleScale}>
-        <Theme alt="flat">
+        <Theme coat="flat">
           <TitleRow
             backgrounded={selectDefined(backgrounded, bordered)}
             title={title}

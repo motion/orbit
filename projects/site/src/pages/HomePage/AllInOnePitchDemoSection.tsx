@@ -260,7 +260,7 @@ export default memo(() => {
             >
               <FadeInView width="100%" delayIndex={5}>
                 <Button
-                  alt="flat"
+                  coat="flat"
                   cursor="pointer"
                   size={1.8}
                   iconSize={20}
@@ -273,7 +273,7 @@ export default memo(() => {
                   onClick={() => paginate(-1)}
                 />
                 <Button
-                  alt="flat"
+                  coat="flat"
                   cursor="pointer"
                   size={1.8}
                   iconSize={20}

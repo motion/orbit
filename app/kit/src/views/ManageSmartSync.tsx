@@ -6,7 +6,7 @@ import { WhiteList } from '../hooks/useWhiteList'
 export function ManageSmartSync({ whitelist }: { whitelist: WhiteList }) {
   return (
     <SizedSurface
-      alt={whitelist.isWhitelisting ? 'selected' : null}
+      coat={whitelist.isWhitelisting ? 'selected' : null}
       sizeRadius
       sizePadding
       sizeHeight={1}

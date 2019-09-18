@@ -24,7 +24,7 @@ export const Footer = () => {
       scrollable="y"
     >
       <Col {...sectionMinWidth} flex={1} space="sm">
-        <SmallTitle alt="lightRed">Orbit</SmallTitle>
+        <SmallTitle coat="lightRed">Orbit</SmallTitle>
         <SmallLink href="/">Home</SmallLink>
         <SmallLink href="/beta">Download</SmallLink>
         <SmallLink href="/start">Getting Started</SmallLink>

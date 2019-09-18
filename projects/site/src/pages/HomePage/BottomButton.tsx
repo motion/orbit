@@ -13,7 +13,7 @@ export const BottomButton = ({
   return (
     <Button
       color={theme.color}
-      alt="clear"
+      coat="clear"
       elementProps={{
         href,
         tagName: 'a',

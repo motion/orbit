@@ -1,5 +1,5 @@
 import { MDXProvider } from '@mdx-js/react'
-import { gloss, Paragraph, Space, Tag, View } from '@o/ui'
+import { gloss, Image, Paragraph, SimpleText, Space, Tag, View } from '@o/ui'
 import React from 'react'
 
 import componentNames from '../../tmp/componentNames.json'
@@ -14,6 +14,9 @@ import { TitleText } from './TitleText'
 
 const contentSpaceLg = <Space size="xl" />
 const contentSpace = <Space size="lg" />
+const Alt = props => (
+  <SimpleText marginTop={-16} marginBottom={16} fontSize="75%" alpha={0.5} {...props} />
+)
 
 function getComponents() {
   return {
@@ -26,6 +29,29 @@ function getComponents() {
       <>
         <IntroText {...props} />
         {contentSpaceLg}
+      </>
+    ),
+
+    Alt,
+
+    LargeImage: ({ alt, ...rest }) => (
+      <>
+        <Image
+          width="140%"
+          margin="20px -20%"
+          sm-margin={0}
+          sm-width="100%"
+          /*  coat={alt} */
+          {...rest}
+        />
+        {!!alt && <Alt>{alt}</Alt>}
+      </>
+    ),
+
+    Image: ({ alt, ...rest }) => (
+      <>
+        <Image /* coat={alt} */ {...rest} />
+        {!!alt && <Alt>{alt}</Alt>}
       </>
     ),
 

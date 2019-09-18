@@ -64,7 +64,7 @@ export const HelpfulLinks = () => {
           <Grid space="xl" itemMinWidth={100}>
             {interfacelinks.map(link => (
               <Button
-                alt="bordered"
+                coat="bordered"
                 size={1.2}
                 sizeHeight={2}
                 key={link.href}
@@ -85,7 +85,7 @@ export const HelpfulLinks = () => {
           <Grid space="xl" itemMinWidth={100}>
             {datalinks.map(link => (
               <Button
-                alt="bordered"
+                coat="bordered"
                 size={1.2}
                 sizeHeight={2}
                 key={link.href}

@@ -2,7 +2,7 @@ import { linearGradient, toColor } from '@o/color'
 import { ThemeObject, ThemeSet } from '@o/css'
 import { colorize, fromStyles } from 'gloss-theme'
 
-import { alternates } from './themeAlternates'
+import { coats } from './themeCoats'
 import { transparent } from './themeColors'
 
 const color = [255, 255, 255]
@@ -16,12 +16,12 @@ const backgroundStrongest = background.lighten(0.45)
 const darkFadeBackground = [0, 0, 0, 0.15]
 const darkButtonBg = linearGradient([77, 77, 77], [70, 70, 70])
 
-const darkenedAlts: ThemeSet = Object.keys(alternates).reduce((acc, key) => {
+const darkenedCoats: ThemeSet = Object.keys(coats).reduce((acc, key) => {
   // for dark theme, make "light" themes darker
   if (key.indexOf('light') === 0) {
     acc[key] = fromStyles({
-      background: alternates[key].background!.darken(0.5).desaturate(0.2),
-      borderColor: alternates[key].borderColor!.darken(0.6).desaturate(0.2),
+      background: coats[key].background!.darken(0.5).desaturate(0.2),
+      borderColor: coats[key].borderColor!.darken(0.6).desaturate(0.2),
       color: '#fff',
     })
   }
@@ -30,14 +30,14 @@ const darkenedAlts: ThemeSet = Object.keys(alternates).reduce((acc, key) => {
 
 const selectedColor = toColor('#363165')
 
-const darkAlternates: ThemeSet = {
-  ...alternates,
-  ...darkenedAlts,
-  delete: darkenedAlts.lightRed,
-  error: darkenedAlts.lightRed,
-  warn: darkenedAlts.lightYellow,
-  approve: darkenedAlts.lightGreen,
-  success: darkenedAlts.lightGreen,
+const darkCoats: ThemeSet = {
+  ...coats,
+  ...darkenedCoats,
+  delete: darkenedCoats.lightRed,
+  error: darkenedCoats.lightRed,
+  warn: darkenedCoats.lightYellow,
+  approve: darkenedCoats.lightGreen,
+  success: darkenedCoats.lightGreen,
   action: fromStyles({
     background: selectedColor.lighten(0.2),
     buttonBackground: linearGradient(selectedColor.lighten(0.2), selectedColor),
@@ -54,7 +54,7 @@ const darkAlternates: ThemeSet = {
     backgroundStrongest: selectedColor.darken(0.3),
   }),
   bordered: {
-    ...alternates.bordered,
+    ...coats.bordered,
     ...colorize({
       background: transparent,
       backgroundHover: transparent,
@@ -67,7 +67,7 @@ const darkAlternates: ThemeSet = {
 }
 
 export const dark: ThemeObject = {
-  alternates: darkAlternates,
+  coats: darkCoats,
   backgroundZebra: background.lighten(0.2).setAlpha(0.35),
   backgroundStrongest,
   backgroundStronger,
@@ -133,7 +133,7 @@ Object.assign(
     buttonGlintColorBottom: [0, 0, 0, 0.3],
     colorBlur: '#bbb',
     colorActive: '#fff',
-    tabColorActive: darkAlternates.selected.background!.lighten(0.5),
+    tabColorActive: darkCoats.selected.background!.lighten(0.5),
     tabBackgroundHover: [255, 255, 255, 0.1],
     tabBackgroundActive: [255, 255, 255, 0.125],
     tabBackgroundSelected: dark.backgroundStronger,

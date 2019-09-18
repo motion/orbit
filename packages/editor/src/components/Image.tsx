@@ -63,7 +63,7 @@ export class Image extends React.Component<Props, State> {
               <StyledImg
                 {...attributes}
                 src={src}
-                alt={caption}
+                coat={caption}
                 isSelected={isSelected}
                 isLoading={isLoading}
                 loading="lazy"
@@ -120,7 +120,7 @@ const ErrorMessage = styled.div`
 
 // This wrapper allows us to pass non-standard HTML attributes through to the DOM element
 // https://www.styled-components.com/docs/basics#passed-props
-const Img = props => <img alt={props.alt} {...props} />
+const Img = props => <img coat={props.alt} {...props} />
 
 const HiddenImg = styled(Img)`
   display: none;

@@ -9,7 +9,7 @@ export type SelectableViewProps = SizedSurfaceProps & {
 
 export function SelectableSurface({ selected, ...props }: SelectableViewProps) {
   return (
-    <Theme alt={selected ? 'selected' : undefined}>
+    <Theme coat={selected ? 'selected' : undefined}>
       <SizedSurface {...props} />
     </Theme>
   )

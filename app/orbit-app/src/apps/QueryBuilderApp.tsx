@@ -24,7 +24,7 @@ function QueryBuilderApp() {
     return (
       <Scale size={0.8}>
         <Templates.Message title="No data apps" subTitle="Add data apps to use Query Builder.">
-          <Button alt="action" onClick={() => om.actions.router.showAppPage({ id: 'apps' })}>
+          <Button coat="action" onClick={() => om.actions.router.showAppPage({ id: 'apps' })}>
             Install apps
           </Button>
         </Templates.Message>
@@ -371,7 +371,7 @@ const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
         titleBorder
         title={props.title}
         beforeTitle={
-          <Button alt="flat" circular icon="chevron-left" onClick={props.navigation.back} />
+          <Button coat="flat" circular icon="chevron-left" onClick={props.navigation.back} />
         }
         titleProps={{
           editable: true,
@@ -412,7 +412,7 @@ const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
 
             <SeparatorVertical height={40} />
 
-            <Button alt="action" onClick={queryBuilder.saveQuery}>
+            <Button coat="action" onClick={queryBuilder.saveQuery}>
               Save
             </Button>
           </>
@@ -478,12 +478,12 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
           <Pane flex={2} resizable>
             <Col padding space>
               <Row>
-                <Tag size={1.2} alt="lightGray">
+                <Tag size={1.2} coat="lightGray">
                   {method.name}
                 </Tag>
                 <View flex={1} />
                 <Button
-                  alt="approve"
+                  coat="approve"
                   margin={[0, 'auto']}
                   size="lg"
                   iconAfter
@@ -533,7 +533,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             collapsable
           >
             <SimpleFormField label="Name">
-              <Tag alt="lightBlue">$0</Tag>
+              <Tag coat="lightBlue">$0</Tag>
             </SimpleFormField>
             <FormField label="Type">
               <Select options={['String']} />
@@ -688,11 +688,11 @@ const ArgumentField = memo(
         <Row space alignItems="center">
           <Row opacity={isActive ? 1 : 0.35} space alignItems="center">
             <SubTitle>{arg.name}</SubTitle>
-            <Tag alt="lightGreen" size={0.75} fontWeight={200}>
+            <Tag coat="lightGreen" size={0.75} fontWeight={200}>
               {arg.type}
             </Tag>
             {arg.isOptional && (
-              <Tag alt="lightBlue" size={0.75} fontWeight={200}>
+              <Tag coat="lightBlue" size={0.75} fontWeight={200}>
                 Optional
               </Tag>
             )}

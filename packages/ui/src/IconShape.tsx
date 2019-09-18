@@ -80,7 +80,7 @@ export const IconShape = memo(
 
     const scale = size / 28
     const theme = useTheme({
-      ignoreAlternate: true,
+      ignroeCoat: true,
     })
 
     const themeColor = theme.iconFillColor || theme.color
@@ -100,7 +100,7 @@ export const IconShape = memo(
             left={1}
             zIndex={0}
             borderRadius={size / 3.2}
-            boxShadow={[[0, 0, 0, 3, theme.alternates.selected['background']]]}
+            boxShadow={[[0, 0, 0, 3, theme.coats.selected['background']]]}
           />
         )}
         {!cutout && (

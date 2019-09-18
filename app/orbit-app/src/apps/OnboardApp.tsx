@@ -124,7 +124,7 @@ function OnboardToolbar() {
         {buttons[flow.index]}
         {flow.index < flow.total - 1 && <Button onClick={flow.next}>Next</Button>}
         {flow.index === flow.total - 1 && (
-          <Button alt="action" onClick={onboardStore.finishOnboard}>
+          <Button coat="action" onClick={onboardStore.finishOnboard}>
             Finish
           </Button>
         )}

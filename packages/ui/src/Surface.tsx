@@ -225,7 +225,7 @@ export function Surface(direct: SurfaceProps) {
     size: ogSize,
     sizeLineHeight,
     tagName,
-    subTheme,
+    themeSubSelect: subTheme,
     tooltip,
     tooltipProps,
     padding,
@@ -234,7 +234,7 @@ export function Surface(direct: SurfaceProps) {
     after,
     borderPosition = 'outside',
     borderWidth,
-    alt,
+    coat,
     before,
     dangerouslySetInnerHTML,
     space,
@@ -328,7 +328,7 @@ export function Surface(direct: SurfaceProps) {
     const innerElements = (
       <PassProps
         passCondition={acceptsIcon}
-        alt={alt}
+        coat={coat}
         size={getIconSize(props)}
         opacity={selectDefined(props.alpha, props.opacity)}
         hoverStyle={props.hoverStyle}
@@ -349,7 +349,7 @@ export function Surface(direct: SurfaceProps) {
         {before}
         {!!badge && (
           <Badge
-            alt={alt}
+            coat={coat}
             zIndex={typeof props.zIndex === 'number' ? props.zIndex + 1 : 100}
             position="absolute"
             top="-18%"
@@ -378,10 +378,16 @@ export function Surface(direct: SurfaceProps) {
               }}
           >
             {glint && !props.chromeless && (
-              <Glint alt={alt} size={size} {...borderProps} subTheme={subTheme} />
+              <Glint coat={coat} size={size} {...borderProps} themeSubSelect={subTheme} />
             )}
             {glintBottom && !props.chromeless && (
-              <Glint alt={alt} size={size} bottom={0} {...borderProps} subTheme={subTheme} />
+              <Glint
+                coat={coat}
+                size={size}
+                bottom={0}
+                {...borderProps}
+                themeSubSelect={subTheme}
+              />
             )}
           </GlintContain>
         )}
@@ -462,7 +468,7 @@ export function Surface(direct: SurfaceProps) {
 
   const iconContext = useMemo<Partial<IconProps>>(() => {
     return {
-      alt,
+      coat,
       opacity: iconOpacity,
       color: iconColor,
       justifyContent: 'center',
@@ -471,17 +477,17 @@ export function Surface(direct: SurfaceProps) {
         color: iconColorHover,
       },
     }
-  }, [alt, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
+  }, [coat, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
 
   // @ts-ignore
   const surfaceFrameProps: SurfaceFrameProps = {
     className: `${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`,
-    subTheme,
+    themeSubSelect: subTheme,
     lineHeight,
     padding,
     borderWidth,
     borderPosition,
-    alt,
+    coat,
     applyPsuedoColors: true,
     disabled,
     ...(!showElement && elementProps),

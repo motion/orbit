@@ -99,7 +99,7 @@ export class Join extends React.Component<any> {
           <Col maxWidth={500} margin={[0, 'auto']}>
             <Space size="lg" />
             <Message
-              alt={success ? 'success' : error ? 'error' : undefined}
+              coat={success ? 'success' : error ? 'error' : undefined}
               dangerouslySetInnerHTML={{
                 __html: message,
               }}

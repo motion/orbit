@@ -33,12 +33,12 @@ export function PropsTable(props: { props: Object }) {
         <Col space key={row.name}>
           <TitleRow padding bordered borderSize={2}>
             <Row space alignItems="center">
-              <Tag alt="lightBlue">{row.name}</Tag>
-              <Tag alt="lightGreen" size={0.75}>
+              <Tag coat="lightBlue">{row.name}</Tag>
+              <Tag coat="lightGreen" size={0.75}>
                 {row.type}
               </Tag>
               {row.required && (
-                <Tag alt="lightRed" size={0.75}>
+                <Tag coat="lightRed" size={0.75}>
                   Required
                 </Tag>
               )}

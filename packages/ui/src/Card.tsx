@@ -49,7 +49,7 @@ export function Card(props: CardProps) {
     size,
     iconBefore,
     headerProps,
-    alt,
+    coat,
     onClickTitle,
     titlePadding,
     innerColProps,
@@ -63,7 +63,7 @@ export function Card(props: CardProps) {
   const hasTitleClick = !!(collapseOnClick || onClickTitle || (headerProps && headerProps.onClick))
   const hasTitle = selectDefined(title, afterTitle, subTitle, icon, date, location)
   return (
-    <Theme alt={isSelected ? 'selected' : alt || null}>
+    <Theme coat={isSelected ? 'selected' : coat || null}>
       <SizedSurface
         data-is="Card"
         borderWidth={1}
@@ -71,7 +71,7 @@ export function Card(props: CardProps) {
         flex={
           toggle.isCollapsable === true && toggle.val === true ? 'inherit' : sizedSurfaceProps.flex
         }
-        subTheme="card"
+        themeSubSelect="card"
         sizeRadius={sizeRadius}
         noInnerElement
         size={size}

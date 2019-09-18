@@ -31,7 +31,7 @@ export function ManageApps() {
           You have {viewAppDefs.length} view {pluralize('app', viewAppDefs.length)}, you can set it
           up in the toolbar, or:
         </SubTitle>
-        <Button alt="action" onClick={() => om.actions.router.showAppPage({ id: 'setupApp' })}>
+        <Button coat="action" onClick={() => om.actions.router.showAppPage({ id: 'setupApp' })}>
           Setup app
         </Button>
       </Templates.Message>

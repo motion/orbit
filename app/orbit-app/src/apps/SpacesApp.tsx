@@ -131,7 +131,7 @@ export function SpaceEdit({ space }: { space: Space }) {
         {[].map((int, index) => (
           <ListItem
             key={int.id}
-            alt={index === 0 ? 'selected' : null}
+            coat={index === 0 ? 'selected' : null}
             icon={int.identifier}
             title={int.name}
           />

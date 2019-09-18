@@ -12,7 +12,7 @@ export let Basic = () => {
     <Col space>
       <Row space flexWrap="wrap">
         <Button
-          alt="info"
+          coat="info"
           onClick={() => {
             banner.set({
               message: `I don't have a title`,
@@ -23,7 +23,7 @@ export let Basic = () => {
           Replace Info Banner
         </Button>
         <Button
-          alt="warn"
+          coat="warn"
           onClick={() => {
             banner.set({
               title: 'Warning',
@@ -35,7 +35,7 @@ export let Basic = () => {
           Replace Warning Banner
         </Button>
         <Button
-          alt="error"
+          coat="error"
           onClick={() => {
             banner.set({
               title: 'Error',

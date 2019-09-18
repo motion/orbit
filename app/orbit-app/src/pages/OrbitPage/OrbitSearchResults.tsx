@@ -41,10 +41,10 @@ export const OrbitSearchResults = memo(() => {
   const highlightTheme: ThemeObject = useMemo(() => {
     return {
       ...theme,
-      alternates: {
-        ...theme.alternates!,
+      coats: {
+        ...theme.coats!,
         selected: {
-          ...theme.alternates!.selected,
+          ...theme.coats!.selected,
           listItemBackground: theme.background.isDark()
             ? linearGradient('to right', 'rgba(255,255,255,0.2)', 'transparent')
             : theme.backgroundHighlight,

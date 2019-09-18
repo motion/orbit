@@ -165,7 +165,7 @@ const HeadContent = memo(() => {
                 sizeHeight={1.01}
                 sizePadding={1.4}
                 sizeRadius={4}
-                alt="lightBlue"
+                coat="lightBlue"
                 zIndex={1000}
                 position="absolute"
                 top={-60}

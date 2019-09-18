@@ -193,7 +193,20 @@ export default memo(() => {
           <SimpleSection key={`${activeSection}${index}`} delay={dly * (index + 1)} title={title}>
             <SectionP>
               <SectionIcon name={icon} />
-              {flatMap(body, (x, _, i) => (i === body.length - 1 ? x : [x, <Space />]))}
+              {flatMap(body, (x, i) => {
+                return (
+                  <React.Fragment key={`${activeSection}${i}`}>
+                    {+i === body.length - 1 ? (
+                      x
+                    ) : (
+                      <>
+                        {x}
+                        <Space />
+                      </>
+                    )}
+                  </React.Fragment>
+                )
+              })}
             </SectionP>
           </SimpleSection>
         ))}

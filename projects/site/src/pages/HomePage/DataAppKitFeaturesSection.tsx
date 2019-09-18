@@ -17,15 +17,15 @@ export default memo(() => {
   const FadeDataApps = useFadePage({ threshold: 0 })
   return (
     <FadeDataApps.FadeProvide>
-      {/* green left */}
+      {/* deep purple right */}
       <Page.BackgroundParallax
-        speed={-0.45}
+        offset={-0.3}
+        speed={0.45}
         zIndex={-2}
         opacity={0.3}
-        offset={-0.3}
-        x="-40%"
-        scale={1.6}
-        background="radial-gradient(circle closest-side, #00A77F, transparent)"
+        x="50%"
+        scale={1.9}
+        background="radial-gradient(circle closest-side, #7523AD, transparent)"
       />
 
       <Page.BackgroundParallax

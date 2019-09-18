@@ -203,12 +203,12 @@ const HeadContent = memo(() => {
             minHeight="min-content"
           >
             <TitleParagraph {...para}>
-              {/* first line */}A custom home for teams. Create amazing internal tools easily.
+              {/* first line */}A home base for teams to create internal tools with ease.
             </TitleParagraph>
             &nbsp;
             <TitleParagraph {...para}>
               {/* second line */}
-              Orbit is the heads-up display for data&nbsp;&&nbsp;apps.
+              Orbit is a heads-up display for data&nbsp;&&nbsp;apps.
             </TitleParagraph>
             {br}
             <View position="relative" marginBottom={-95} marginTop={10}>

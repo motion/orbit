@@ -29,6 +29,20 @@ type UsePositionProps = {
   onlyWhenIntersecting?: boolean
 }
 
+function elementOffset(elem) {
+  let top = 0
+  let left = 0
+  do {
+    if (!isNaN(elem.offsetTop)) {
+      top += elem.offsetTop
+    }
+    if (!isNaN(elem.offsetLeft)) {
+      left += elem.offsetLeft
+    }
+  } while ((elem = elem.offsetParent))
+  return { top, left }
+}
+
 export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
   const { measureKey, ref, preventMeasure, debounce = 100 } = props
   const [pos, setPos] = useState<Rect | null>(null)
@@ -61,7 +75,9 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
             // not visible in dom yet
             return
           }
-          const { top, left, width, height } = node.getBoundingClientRect()
+          const { width, height } = node.getBoundingClientRect()
+          // we need offset from top of document not relative...
+          const { top, left } = elementOffset(node)
           set({ top, left, width, height })
         } else {
           set(null)
@@ -78,10 +94,7 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
     [ref],
   )
 
-  useLayoutEffect(measureImmediate, [
-    ref.current ? ref.current.offsetWidth : 0,
-    ref.current ? ref.current.offsetHeight : 0,
-  ])
+  useLayoutEffect(measureImmediate, [ref.current])
 
   const measure = useDebounce(measureImmediate, debounce, { trailing: true })
 
@@ -122,7 +135,7 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
   //   },
   // })
 
-  useEffect(measure, [ref, measureKey, ...mountArgs])
+  useLayoutEffect(measure, [ref, measureKey, ...mountArgs])
 
   useEffect(() => {
     if (disable) {

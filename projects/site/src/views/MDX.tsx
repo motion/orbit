@@ -156,7 +156,6 @@ function getComponents() {
 }
 
 const components = getComponents()
-console.log('components', components)
 
 export function MDX({ children, ...props }: any) {
   return (

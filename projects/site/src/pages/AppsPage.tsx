@@ -222,7 +222,7 @@ const FAQItem = ({ main, paragraphs, question }) => {
             selectable
             size="xxxs"
             alpha={0.65}
-            fontWeight={100}
+            fontWeight={300}
             sizeLineHeight={1.25}
             {...fontProps.BodyFont}
           >

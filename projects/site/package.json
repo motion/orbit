@@ -20,7 +20,7 @@
     "gloss-theme": "^2.6.0",
     "@o/utils": "*",
     "@babel/runtime": "^7.4.5",
-    "@mdx-js/react": "1.0.2",
+    "@mdx-js/react": "^1.4.5",
     "immer": "^3.1.2",
     "@o/babel-preset-motion": "^2.6.0",
     "@o/kit": "^2.6.0",

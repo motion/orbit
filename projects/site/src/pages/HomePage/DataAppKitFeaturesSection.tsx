@@ -1,7 +1,6 @@
 import { FullScreen, Image, memoIsEqualDeep, Row, Space, View } from '@o/ui'
 import React, { memo } from 'react'
 
-import { mediaStyles } from '../../constants'
 import orbits from '../../public/images/orbits.svg'
 import { linkProps } from '../../useLink'
 import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
@@ -30,17 +29,20 @@ export default memo(() => {
       />
 
       <Page.BackgroundParallax
-        {...mediaStyles.hiddenWhen.sm}
         speed={-0.05}
         offset={0}
         zIndex={-2}
         scale={0.5}
         transformOrigin="bottom center"
+        top={-20}
+        // keeps it from cropping on small screen
+        left="-40%"
+        right="-40%"
       >
         <FadeInView delay={800} height="90%" width="100%">
           <FullScreen
-            left={-100}
-            right={-100}
+            left={-120}
+            right={-120}
             maxHeight={450}
             className="orbitals"
             backgroundImage={`url(${orbits})`}

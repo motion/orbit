@@ -68,8 +68,8 @@ export default function DeploySection() {
         }
       >
         <Space size={60} />
-        <Row space={60} margin={[0, '-180%']}>
-          <Col flex={2} alignItems="flex-end" justifyContent="center">
+        <Row space={60} margin={[0, '-180%']} sm-margin="0">
+          <Col sm-display="none" flex={2} alignItems="flex-end" justifyContent="center">
             <FadeInView {...fadeAnimations.left} delayIndex={2}>
               <View
                 // speed={0.1}
@@ -131,7 +131,7 @@ export default function DeploySection() {
             </FadeInView>
           </Col>
 
-          <Col flex={2} alignItems="flex-start" justifyContent="center">
+          <Col sm-display="none" flex={2} alignItems="flex-start" justifyContent="center">
             <FadeInView {...fadeAnimations.right} delayIndex={3}>
               <View
                 // speed={-0.1}

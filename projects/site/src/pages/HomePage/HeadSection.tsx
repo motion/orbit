@@ -200,7 +200,7 @@ const HeadContent = memo(() => {
             &nbsp;
             <TitleParagraph {...para}>
               {/* second line */}
-              Orbit is a heads-up display for data&nbsp;&&nbsp;apps.
+              Your new heads-up display for data&nbsp;&&nbsp;apps.
             </TitleParagraph>
             {br}
             <View position="relative" marginBottom={-95} marginTop={10}>

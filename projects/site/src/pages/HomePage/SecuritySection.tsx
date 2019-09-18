@@ -30,19 +30,10 @@ export default function SecuritySection() {
                 // TODO
                 // sm-size="lg"
               >
-                A platform for you.
+                An platform to trust
               </TitleText>
             </FadeInView>
-            <TitleText
-              alpha={0.8}
-              textAlign="center"
-              maxWidth={520}
-              fontWeight={300}
-              sizeLineHeight={1.3}
-              size="sm"
-            >
-              Completely on-device, open source &&nbsp;customizable.
-            </TitleText>
+            <TitleTextSub>Completely on-device, open source &&nbsp;customizable.</TitleTextSub>
           </>
         }
       >

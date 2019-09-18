@@ -66,13 +66,13 @@ export default memo(() => {
             </FadeInView>
             <FadeInView delay={100}>
               <TitleText textAlign="center" size="xxl">
-                Global collaboration.
+                An app store for all.
               </TitleText>
             </FadeInView>
             <TitleTextSub>
               <FadeInView delay={200}>
-                Sync data, use GraphQL and TypeScript APIs, render content and more. Apps provide
-                everything you need to build up.
+                Apps can sync data, use GraphQL and TypeScript APIs and render content.
+                They're&nbsp;everything you need to build upwards.
               </FadeInView>
             </TitleTextSub>
             <Space size="xl" />

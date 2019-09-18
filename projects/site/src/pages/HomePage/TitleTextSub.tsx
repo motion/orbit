@@ -7,7 +7,7 @@ import { TitleText } from '../../views/TitleText'
 export const TitleTextSub = forwardRef<any, TextProps>((props, ref) => (
   <View nodeRef={ref} maxWidth={800} minWidth={300} textAlign="center">
     <TitleText
-      size="xxs"
+      size="xxxs"
       sizeLineHeight={1.35}
       fontWeight={400}
       alpha={0.8}

@@ -36,14 +36,16 @@ function getComponents() {
 
     LargeImage: ({ alt, ...rest }) => (
       <>
-        <Image width="140%" margin="20px -20%" sm-margin={0} sm-width="100%" alt={alt} {...rest} />
+        <View width="140%" margin="20px -20%" sm-margin={0} sm-width="100%">
+          <Image width="100%" height="auto" alt={alt} {...rest} />
+        </View>
         {!!alt && <Alt>{alt}</Alt>}
       </>
     ),
 
     Image: ({ alt, ...rest }) => (
       <>
-        <Image alt={alt} {...rest} />
+        <Image width="100%" height="auto" alt={alt} {...rest} />
         {!!alt && <Alt>{alt}</Alt>}
       </>
     ),

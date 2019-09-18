@@ -59,7 +59,7 @@ export const SectionContentChrome = gloss(View, {
     width: '100%',
     minWidth: 'auto',
     maxWidth: 'auto',
-    paddingLeft: '5%',
-    paddingRight: '5%',
+    paddingLeft: '3%',
+    paddingRight: '3%',
   },
 })

@@ -1,12 +1,13 @@
-import { Col, ColProps, useTheme } from '@o/ui'
+import { ColProps, useTheme, View } from '@o/ui'
 import React from 'react'
 
 export const ContentSection = (props: ColProps) => {
   const theme = useTheme()
   return (
-    <Col
+    <View
       className="content-section"
       padding={['md', '5%']}
+      sm-padding={['md', 0]}
       width="100%"
       maxWidth={760}
       fontSize={17}

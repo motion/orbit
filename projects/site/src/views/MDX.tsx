@@ -36,7 +36,7 @@ function getComponents() {
 
     LargeImage: ({ alt, ...rest }) => (
       <>
-        <View width="140%" margin="20px -20%" sm-margin={0} sm-width="100%">
+        <View width="140%" margin="20px -20%" md-margin={[20, -20]} md-width="calc(100% + 40px)">
           <Image width="100%" height="auto" alt={alt} {...rest} />
         </View>
         {!!alt && <Alt>{alt}</Alt>}
@@ -65,14 +65,14 @@ function getComponents() {
     ),
     h3: props => (
       <View>
-        {contentSpaceLg}
+        {contentSpace}
         <TitleText size="xxxs" {...props} />
         {contentSpace}
       </View>
     ),
     h4: props => (
       <View>
-        {contentSpaceLg}
+        {contentSpace}
         <TitleText size="xxxs" fontWeight={400} alpha={0.6} {...props} />
         {contentSpace}
       </View>

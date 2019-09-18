@@ -52,8 +52,7 @@ export default compose(
 export function BlogPage(props: { title?: string; children?: any }) {
   return (
     <FadeParent>
-      {/* force no hoist */}
-      <MDX ref={null}>
+      <MDX>
         <Header slim noBorder />
         <main className="main-contents">{props.children}</main>
       </MDX>

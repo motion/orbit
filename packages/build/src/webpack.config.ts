@@ -121,7 +121,7 @@ const optimization = {
     namedChunks: true,
     usedExports: true,
     sideEffects: true,
-    minimize: false,
+    minimize: true,
     concatenateModules: true,
     ...(target === 'node'
       ? {

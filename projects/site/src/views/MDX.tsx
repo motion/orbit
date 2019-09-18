@@ -15,149 +15,155 @@ import { TitleText } from './TitleText'
 const contentSpaceLg = <Space size="xl" />
 const contentSpace = <Space size="lg" />
 
-export const components = {
-  // custom
-  Tag,
-  Example,
-  Key,
+function getComponents() {
+  return {
+    // custom
+    Tag,
+    Example,
+    Key,
 
-  IntroText: props => (
-    <>
-      <IntroText {...props} />
-      {contentSpaceLg}
-    </>
-  ),
+    IntroText: props => (
+      <>
+        <IntroText {...props} />
+        {contentSpaceLg}
+      </>
+    ),
 
-  h1: props => (
-    <>
-      <TitleText size="lg" {...props} />
-      {contentSpace}
-    </>
-  ),
-  h2: props => (
-    <View>
-      {contentSpaceLg}
-      <TitleText fontWeight={400} size="sm" {...props} />
-      {contentSpace}
-    </View>
-  ),
-  h3: props => (
-    <View>
-      {contentSpaceLg}
-      <TitleText size="xxxs" {...props} />
-      {contentSpace}
-    </View>
-  ),
-  h4: props => (
-    <View>
-      {contentSpaceLg}
-      <TitleText size="xxxs" fontWeight={400} alpha={0.6} {...props} />
-      {contentSpace}
-    </View>
-  ),
-  pre: props => <div {...props} />,
-  code: props => (
-    <>
-      <CodeBlock {...props} />
-      {contentSpace}
-    </>
-  ),
-  li: props => (
-    <>
-      <li style={{ marginLeft: 26 }} {...props} />
-      <Space size="sm" />
-    </>
-  ),
-  ul: props => (
-    <>
-      <ul className="body-text" {...props} />
-      {contentSpace}
-    </>
-  ),
+    h1: props => (
+      <>
+        <TitleText size="lg" {...props} />
+        {contentSpace}
+      </>
+    ),
+    h2: props => (
+      <View>
+        {contentSpaceLg}
+        <TitleText fontWeight={400} size="sm" {...props} />
+        {contentSpace}
+      </View>
+    ),
+    h3: props => (
+      <View>
+        {contentSpaceLg}
+        <TitleText size="xxxs" {...props} />
+        {contentSpace}
+      </View>
+    ),
+    h4: props => (
+      <View>
+        {contentSpaceLg}
+        <TitleText size="xxxs" fontWeight={400} alpha={0.6} {...props} />
+        {contentSpace}
+      </View>
+    ),
+    pre: props => <div {...props} />,
+    code: props => (
+      <>
+        <CodeBlock {...props} />
+        {contentSpace}
+      </>
+    ),
+    li: props => (
+      <>
+        <li style={{ marginLeft: 26 }} {...props} />
+        <Space size="sm" />
+      </>
+    ),
+    ul: props => (
+      <>
+        <ul className="body-text" {...props} />
+        {contentSpace}
+      </>
+    ),
 
-  a: props => {
-    const { tagName, ...lp } = linkProps(props.href)
-    return <a {...lp} {...props} />
-  },
+    a: props => {
+      const { tagName, ...lp } = linkProps(props.href)
+      return <a {...lp} {...props} />
+    },
 
-  ol: props => (
-    <>
-      <ol className="body-text" {...props} />
-      {contentSpace}
-    </>
-  ),
-  p: props => {
-    console.warn('rendering p')
-    debugger
-    return (
+    ol: props => (
+      <>
+        <ol className="body-text" {...props} />
+        {contentSpace}
+      </>
+    ),
+    p: props => {
+      return (
+        <>
+          <Paragraph
+            className="body-text"
+            margin={0}
+            fontSize="inherit"
+            lineHeight="inherit"
+            color="inherit"
+            {...props}
+          />
+          {contentSpace}
+        </>
+      )
+    },
+    description: props => (
       <>
         <Paragraph
           className="body-text"
           margin={0}
+          {...props}
           fontSize="inherit"
           lineHeight="inherit"
-          color="inherit"
-          {...props}
         />
         {contentSpace}
       </>
-    )
-  },
-  description: props => (
-    <>
-      <Paragraph
-        className="body-text"
-        margin={0}
-        {...props}
-        fontSize="inherit"
-        lineHeight="inherit"
-      />
-      {contentSpace}
-    </>
-  ),
-  blockquote: props => (
-    <View>
-      {contentSpace}
-      <Paragraph
-        {...fontProps.TitleFont}
-        padding={[12, 20, 0]}
-        margin={[0, 20]} // top/bottom wont work here
-        borderLeft={theme => [2, theme.borderColor]}
-        fontSize="110%"
-        lineHeight="inherit"
-        alpha={0.5}
-        {...props}
-      />
-      {contentSpaceLg}
-    </View>
-  ),
+    ),
+    blockquote: props => (
+      <View>
+        {contentSpace}
+        <Paragraph
+          {...fontProps.TitleFont}
+          padding={[12, 20, 0]}
+          margin={[0, 20]} // top/bottom wont work here
+          borderLeft={theme => [2, theme.borderColor]}
+          fontSize="110%"
+          lineHeight="inherit"
+          alpha={0.5}
+          {...props}
+        />
+        {contentSpaceLg}
+      </View>
+    ),
 
-  inlineCode: ({ children, ...props }) => {
-    if (typeof children === 'string') {
-      const len = children.length
-      const end = children.slice(len - 2, len)
-      if (children[0] === '<' && end === '/>' && children.length < 100) {
-        const displayName = children.slice(1, len - 2).trim()
-        if (!!componentNames.find(x => x === displayName)) {
-          return (
-            <LinkedInlineCode
-              onClick={() => {
-                Navigation.navigate(`/docs/${displayName.toLowerCase().replace(' ', '-')}`)
-              }}
-            >
-              {children}
-            </LinkedInlineCode>
-          )
+    inlineCode: ({ children, ...props }) => {
+      if (typeof children === 'string') {
+        const len = children.length
+        const end = children.slice(len - 2, len)
+        if (children[0] === '<' && end === '/>' && children.length < 100) {
+          const displayName = children.slice(1, len - 2).trim()
+          if (!!componentNames.find(x => x === displayName)) {
+            return (
+              <LinkedInlineCode
+                onClick={() => {
+                  Navigation.navigate(`/docs/${displayName.toLowerCase().replace(' ', '-')}`)
+                }}
+              >
+                {children}
+              </LinkedInlineCode>
+            )
+          }
         }
       }
-    }
-    return <InlineCode {...props}>{children}</InlineCode>
-  },
+      return <InlineCode {...props}>{children}</InlineCode>
+    },
+  }
 }
+
+const components = getComponents()
+console.log('components', components)
 
 export function MDX({ children, ...props }: any) {
   return (
-    <MDXProvider {...props} components={{ ...components, ...props.components }}>
+    <MDXProvider
+      {...props}
+      components={props.components ? { ...components, ...props.components } : components}
+    >
       {children}
     </MDXProvider>
   )

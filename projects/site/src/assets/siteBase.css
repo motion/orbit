@@ -3,8 +3,8 @@ html {
 }
 
 body {
-  font-family: 'Colfax', 'system-ui', 'BlinkMacSystemFont', 'Helvetica Neue', 'Helvetica',
-    sans-serif;
+  font-family: -apple-system, 'SF Pro Text', BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+    Helvetica, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Droid Sans', sans-serif;
   margin: 0;
   padding: 0;
   color: #333;

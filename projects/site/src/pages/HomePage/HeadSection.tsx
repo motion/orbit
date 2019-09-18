@@ -189,7 +189,7 @@ const HeadContent = memo(() => {
                 Orbit enters private beta!
               </Tag>
             </FadeInView>
-            <FadeInView disable={!measured} delayIndex={2}>
+            <FadeInView disable={!measured} delayIndex={2} {...fontProps.TitleFont}>
               Apps for teams
             </FadeInView>
           </TextFitTitle>
@@ -203,12 +203,12 @@ const HeadContent = memo(() => {
             minHeight="min-content"
           >
             <TitleParagraph {...para}>
-              {/* first line */}A home base for teams. Code amazing internal tools easily.
+              {/* first line */}A custom home base for teams. Create amazing internal tools easily.
             </TitleParagraph>
             &nbsp;
             <TitleParagraph {...para}>
               {/* second line */}
-              Orbit is a head-up display for data&nbsp;&&nbsp;apps.
+              Orbit is the head-up display for data&nbsp;&&nbsp;apps.
             </TitleParagraph>
             {br}
             <View position="relative" marginBottom={-95} marginTop={10}>

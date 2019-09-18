@@ -1,4 +1,4 @@
-import './assets/font-colfax/stylesheet.css'
+// import './assets/font-colfax/stylesheet.css'
 import './assets/font-gteesti/stylesheet.css'
 import './assets/siteBase.css'
 import 'requestidlecallback-polyfill'

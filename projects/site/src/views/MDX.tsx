@@ -91,6 +91,7 @@ function getComponents() {
       return (
         <>
           <Paragraph
+            ref={null}
             className="body-text"
             margin={0}
             fontSize="inherit"
@@ -160,6 +161,7 @@ const components = getComponents()
 export function MDX({ children, ...props }: any) {
   return (
     <MDXProvider
+      ref={null}
       {...props}
       components={props.components ? { ...components, ...props.components } : components}
     >

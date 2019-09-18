@@ -33,7 +33,7 @@ export function BlogPageIndex() {
               // color={colors.purple}
               selectable={false}
               textAlign="left"
-              size="xxxs"
+              size="sm"
             >
               {post.title}
             </TitleText>

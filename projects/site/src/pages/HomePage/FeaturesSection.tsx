@@ -66,7 +66,7 @@ export default memo(() => {
 
       <Space />
 
-      <Row justifyContent="center" space margin={[0, 'auto']}>
+      <Row justifyContent="center" space="lg" margin={[0, 'auto']}>
         {['Apps', 'Tech', 'Platform'].map(section => (
           <React.Fragment key={section}>
             {section === activeSection ? (

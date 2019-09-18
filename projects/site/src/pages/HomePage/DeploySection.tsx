@@ -95,15 +95,14 @@ export default function DeploySection() {
           <Col space="xxl" flex={2} minWidth={300} maxWidth={340}>
             <FadeInView delayIndex={1}>
               <ParagraphIntro {...fontProps.TitleFont} sizeLineHeight={1.1} size={1.75}>
-                Orbit pushes forward how apps work, and how we build them, with a radical focus on
-                making code as easy as possible.
+                A radical focus on making code as easy as possible.
               </ParagraphIntro>
             </FadeInView>
 
             <FadeInView delayIndex={2}>
               <Para size={1.4} sizeLineHeight={1.25}>
-                Create apps that work together, but run in isolation. Plug in data sources with
-                ease. Develop with instant feedback, everything you need is included.
+                Everything works without setup or configuration. Instant feedback with inline
+                errors. Plug in data sources with ease. Plus, a comprehensive UI kit.
               </Para>
             </FadeInView>
 

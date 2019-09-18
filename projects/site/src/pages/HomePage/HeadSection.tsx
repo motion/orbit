@@ -127,16 +127,18 @@ export function HeadSection() {
   )
 }
 
-const scale = 0.75
+const scale = 0.8
 const para = {
   display: 'flex',
   fontSize: `${3.4 * scale}vw`,
-  lineHeight: `${5 * scale}vw`,
+  lineHeight: `${5.1 * scale}vw`,
   'lg-fontSize': 38 * scale,
-  'lg-lineHeight': `${3 * scale}rem`,
+  'lg-lineHeight': `${3.2 * scale}rem`,
   'sm-fontSize': 22 * scale,
   'sm-lineHeight': `${2.8 * scale}rem`,
   'sm-display': 'inline',
+  fontWeight: 400,
+  'notmd-fontWeight': 300,
 } as const
 
 const HeadContent = memo(() => {
@@ -199,7 +201,7 @@ const HeadContent = memo(() => {
             minHeight="min-content"
           >
             <TitleParagraph {...para}>
-              {/* first line */}The home base for teams to code amazing internal tools.
+              {/* first line */}A home base for teams. Code amazing internal tools easily.
             </TitleParagraph>
             &nbsp;
             <TitleParagraph {...para}>

@@ -160,7 +160,6 @@ export const FadeInView = memo(
             flexDirection: 'column',
             justifyContent: 'inherit',
             alignItems: 'inherit',
-            ...style,
           }}
           {...rest as any}
         >

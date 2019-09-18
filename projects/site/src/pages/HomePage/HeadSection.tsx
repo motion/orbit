@@ -3,7 +3,6 @@ import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
-import { useScreenHeightVal } from '../../hooks/useScreenSize'
 import { useSiteStore } from '../../SiteStore'
 import { linkProps } from '../../useLink'
 import { fadeAnimations, FadeInView, transitions, useFadePage } from '../../views/FadeInView'
@@ -32,13 +31,7 @@ export function HeadSection() {
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
       /> */}
 
-      <Col
-        right={useScreenHeightVal(40, 0)}
-        left={useScreenHeightVal(40, 0)}
-        opacity={fontsLoaded ? 1 : 0}
-        margin={['auto', 0]}
-        height="calc(100% - 120px)"
-      >
+      <Col opacity={fontsLoaded ? 1 : 0} margin={['auto', 0]} height="calc(100% - 120px)">
         <Space size="xxl" />
         <Col
           flex={8}
@@ -262,5 +255,5 @@ const TextFitTitle = (props: TitleProps) => {
 }
 
 const TitleParagraph = (props: SimpleTextProps) => {
-  return <Paragraph alpha={0.7} {...props} />
+  return <Paragraph alpha={0.7} xs-display="inline" {...props} />
 }

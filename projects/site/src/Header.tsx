@@ -1,6 +1,6 @@
 import { BorderBottom, Row, RowProps } from '@o/ui'
 import { Box, gloss, useTheme } from 'gloss'
-import React, { memo, useLayoutEffect, useState } from 'react'
+import React, { memo, useLayoutEffect, useRef, useState } from 'react'
 
 import { useScreenSize } from './hooks/useScreenSize'
 import { LinkState } from './LinkState'
@@ -22,21 +22,24 @@ export const Header = memo(({ slim, noBorder, before, ...rest }: HeaderProps) =>
   const theme = useTheme()
   const siteStore = useSiteStore()
   const headerStore = HeaderContext.useCreateStore()
-  const { shown } = headerStore
+  // only animate once
+  const [shown, setShown] = useState(false)
   const Fade = useFadePage({ shown, threshold: 0 })
 
   useScreenSize({
     onChange(size) {
-      if (size === 'small') {
-        headerStore.setShown(siteStore.showSidebar)
-      } else {
-        headerStore.setShown(true)
-      }
+      const next = size === 'small' ? siteStore.showSidebar : true
+      setShown(last => {
+        // only update once
+        if (last === true) return true
+        headerStore.setShown(next)
+        return next
+      })
     },
   })
 
   const linksLeft = (
-    <LinkSection alignRight>
+    <LinkSection md-display="none" alignRight>
       <LinkRow>
         <LinksLeft />
       </LinkRow>
@@ -44,7 +47,7 @@ export const Header = memo(({ slim, noBorder, before, ...rest }: HeaderProps) =>
   )
 
   const linksRight = (
-    <LinkSection>
+    <LinkSection md-display="none">
       <LinkRow>
         <LinksRight />
       </LinkRow>
@@ -58,7 +61,6 @@ export const Header = memo(({ slim, noBorder, before, ...rest }: HeaderProps) =>
         <Row
           nodeRef={Fade.ref}
           position="absolute"
-          xs-position="relative"
           top={0}
           left={0}
           right={0}
@@ -73,7 +75,7 @@ export const Header = memo(({ slim, noBorder, before, ...rest }: HeaderProps) =>
           <HeaderContain>
             {linksLeft}
             <FadeInView
-              // disable={!LinkState.didAnimateOut}
+              disable={!LinkState.didAnimateOut}
               transition={shown ? transitions.normal : transitions.fastStatic}
               delay={shown ? 100 : 0}
             >

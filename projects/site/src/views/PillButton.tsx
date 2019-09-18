@@ -4,9 +4,6 @@ import React from 'react'
 import { fontProps } from '../constants'
 
 export function PillButton({ children, ...props }: ButtonProps) {
-  if (props.debug) {
-    debugger
-  }
   return (
     <SizedSurface
       sizeRadius={100}
@@ -15,6 +12,7 @@ export function PillButton({ children, ...props }: ButtonProps) {
       {...fontProps.TitleFont}
       fontWeight={600}
       fontSize={12}
+      lineHeight={20}
       letterSpacing={3}
       whiteSpace="pre"
       textTransform="uppercase"

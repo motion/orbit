@@ -1,4 +1,4 @@
-import { BorderBottom, Button, Row, RowProps } from '@o/ui'
+import { BorderBottom, Row, RowProps } from '@o/ui'
 import { Box, gloss, useTheme } from 'gloss'
 import React, { memo, useLayoutEffect, useState } from 'react'
 
@@ -15,9 +15,10 @@ import { LogoVertical } from './views/LogoVertical'
 export type HeaderProps = {
   slim?: boolean
   noBorder?: boolean
+  before?: React.ReactNode
 } & RowProps
 
-export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
+export const Header = memo(({ slim, noBorder, before, ...rest }: HeaderProps) => {
   const theme = useTheme()
   const siteStore = useSiteStore()
   const headerStore = HeaderContext.useCreateStore()
@@ -33,6 +34,22 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
       }
     },
   })
+
+  const linksLeft = (
+    <LinkSection alignRight>
+      <LinkRow>
+        <LinksLeft />
+      </LinkRow>
+    </LinkSection>
+  )
+
+  const linksRight = (
+    <LinkSection>
+      <LinkRow>
+        <LinksRight />
+      </LinkRow>
+    </LinkSection>
+  )
 
   return (
     <HeaderContext.ProvideStore value={headerStore}>
@@ -54,11 +71,7 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
           {...rest}
         >
           <HeaderContain>
-            <LinkSection alignRight>
-              <LinkRow>
-                <LinksLeft />
-              </LinkRow>
-            </LinkSection>
+            {linksLeft}
             <FadeInView
               // disable={!LinkState.didAnimateOut}
               transition={shown ? transitions.normal : transitions.fastStatic}
@@ -66,47 +79,35 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
             >
               <LogoVertical />
             </FadeInView>
-            <LinkSection>
-              <LinkRow>
-                <LinksRight />
-              </LinkRow>
-            </LinkSection>
+            {linksRight}
           </HeaderContain>
         </Row>
-        {/* small */}
-        <Button
-          sm-opacity={0}
-          sm-pointerEvents="none"
-          className="fixed-menu"
-          position="fixed"
-          top={3}
-          right={10}
-          zIndex={1000000000}
-          icon="menu"
-          iconSize={16}
-          size={2}
-          chromeless
-          onClick={siteStore.toggleSidebar}
-        />
-        <Row
-          pointerEvents="auto"
-          background={theme.background.lighten(0.05)}
-          position="relative"
-          zIndex={1000000}
-          opacity={slim ? 1 : 0}
-          {...rest}
-        >
-          <HeaderContain height={50}>
-            <FadeInView
-              disable={!LinkState.didAnimateOut}
-              transition={shown ? transitions.normal : transitions.fastStatic}
-              delay={shown ? 0 : 0}
-            >
-              <LogoHorizontal slim />
-            </FadeInView>
-          </HeaderContain>
-          {!noBorder && <BorderBottom opacity={0.5} />}
-        </Row>
+
+        {before}
+
+        {slim && (
+          <Row
+            pointerEvents="auto"
+            background={theme.background.lighten(0.05)}
+            position="relative"
+            zIndex={1000000}
+            opacity={slim ? 1 : siteStore.showSidebar ? 0 : 1}
+            {...rest}
+          >
+            <HeaderContain height={50}>
+              {linksLeft}
+              <FadeInView
+                disable={!LinkState.didAnimateOut}
+                transition={shown ? transitions.normal : transitions.fastStatic}
+                delay={shown ? 0 : 0}
+              >
+                <LogoHorizontal slim />
+              </FadeInView>
+              {linksRight}
+            </HeaderContain>
+            {!noBorder && <BorderBottom opacity={0.5} />}
+          </Row>
+        )}
       </Fade.FadeProvide>
     </HeaderContext.ProvideStore>
   )

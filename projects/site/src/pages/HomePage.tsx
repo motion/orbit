@@ -1,4 +1,4 @@
-import { ErrorBoundary, Loading, Theme, useIntersectionObserver } from '@o/ui'
+import { ErrorBoundary, Loading, Theme, useIntersectionObserver, View } from '@o/ui'
 import { once } from 'lodash'
 import React, { lazy, memo, Suspense, useEffect, useRef, useState } from 'react'
 
@@ -25,9 +25,6 @@ const MissionMottoSection = loadOnIntersect(
 const SecuritySection = loadOnIntersect(
   lazy(() => retry(() => import('./HomePage/SecuritySection'))),
 )
-// const EarlyAccessBetaSection = loadOnIntersect(
-//   lazy(() => retry(() => import('./HomePage/EarlyAccessBetaSection'))),
-// )
 
 export const HomePage = memo(() => {
   return (
@@ -35,28 +32,27 @@ export const HomePage = memo(() => {
       <LoadingPage />
       <Header />
       <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
-        <Page pages={1.4}>
+        <Page pages="auto" zIndex={0}>
           <HeadSection />
         </Page>
-        <Page>
+        <Page pages="auto">
           <AllInOnePitchDemoSection />
         </Page>
-        <Page>
-          <DeploySection />
+        <Page pages="auto">
+          <View>
+            <DeploySection />
+          </View>
         </Page>
-        <Page pages={0.75}>
+        <Page pages="auto">
           <DataAppKitFeaturesSection />
         </Page>
-        <Page pages={1.2}>
+        <Page pages="auto">
           <FeaturesSection />
         </Page>
-        <Page pages={0.8}>
+        <Page pages="auto">
           <SecuritySection />
         </Page>
-        <Page pages={0.75}>
-          <MissionMottoSection />
-        </Page>
-        <Page pages={0.75}>
+        <Page pages={0.6}>
           <Theme name="home">
             <FooterSection hideJoin />
           </Theme>
@@ -83,6 +79,7 @@ const startLoading = once(async () => {
     await onIdle()
     await new Promise(res => setTimeout(res, 100))
     const next = allUpcoming.reduce((a, b) => (b.top < a.top ? b : a), { top: Infinity })
+    // console.log('loading', next)
     next.load()
     allUpcoming.splice(allUpcoming.findIndex(x => x.load === next.load), 1)
   }

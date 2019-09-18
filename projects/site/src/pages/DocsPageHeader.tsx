@@ -1,7 +1,8 @@
-import { Absolute, ListItem, ListShortcuts, Popover, Portal, RoundButton, Row, SurfacePassProps } from '@o/ui'
+import { Absolute, ListItem, ListShortcuts, Popover, RoundButton, Row, SurfacePassProps } from '@o/ui'
 import React, { memo } from 'react'
 
 import { fontProps } from '../constants'
+import { useSiteStore } from '../SiteStore'
 import { FadeInView } from '../views/FadeInView'
 import { Key } from '../views/Key'
 import { ListSubTitle } from '../views/ListSubTitle'
@@ -11,9 +12,10 @@ import { useScreenVal } from './HomePage/SpacedPageContent'
 
 export const DocsPageHeader = memo(
   ({ isSmall, inputRef, setTheme, theme, setShowSidebar, showSidebar }: any) => {
+    const siteStore = useSiteStore()
     const docsStore = DocsStoreContext.useStore()
     return (
-      <Portal prepend style={{ position: 'sticky', top: 10, zIndex: 10000000 }}>
+      <>
         <ListShortcuts>
           <FadeInView style={{ flex: 1 }}>
             <Row
@@ -25,6 +27,7 @@ export const DocsPageHeader = memo(
               maxWidth={980}
               alignItems="center"
               justifyContent="center"
+              opacity={siteStore.showSidebar ? 0 : 1}
             >
               <SearchInput
                 nodeRef={inputRef}
@@ -33,7 +36,7 @@ export const DocsPageHeader = memo(
                 flex={1}
                 size="xl"
                 placeholder={isSmall ? 'Search...' : 'Search the docs...'}
-                after={!isSmall && <Key tooltip="Shortcut: t">t</Key>}
+                after={<Key tooltip="Shortcut: t">t</Key>}
                 {...fontProps.SystemFont}
               />
 
@@ -102,20 +105,13 @@ export const DocsPageHeader = memo(
                       tooltip="Toggle all code collapsed"
                       onClick={siteStore.toggleCodeCollapsed}
                     /> */}
-                    {isSmall && (
-                      <RoundButton
-                        icon={showSidebar ? 'arrowleft' : 'arrowright'}
-                        tooltip="Toggle menu"
-                        onClick={() => setShowSidebar(!showSidebar)}
-                      />
-                    )}
                   </Row>
                 </SurfacePassProps>
               </Absolute>
             </Row>
           </FadeInView>
         </ListShortcuts>
-      </Portal>
+      </>
     )
   },
 )

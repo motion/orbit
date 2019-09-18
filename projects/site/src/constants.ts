@@ -1,16 +1,18 @@
 export const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
+const systemFont = `-apple-system, "SF Pro Text", BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Droid Sans', sans-serif`
+
 export const fontProps = {
   TitleFont: {
     fontFamily: 'GTEesti',
     WebkitFontSmoothing: 'initial',
   },
   BodyFont: {
-    fontFamily: 'Colfax',
-    WebkitFontSmoothing: 'antialiased',
+    fontFamily: `${systemFont}`,
+    // WebkitFontSmoothing: 'antialiased',
   },
   SystemFont: {
-    fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif`,
+    fontFamily: systemFont,
   },
 }
 
@@ -28,7 +30,8 @@ export const mediaQueries = {
   xs: `@media screen and (max-width: ${widths.xs - 1}px)`,
   sm: `@media screen and (max-width: ${widths.sm}px)`,
   notsm: `@media screen and (min-width: ${widths.sm + 1}px)`,
-  md: `@media screen and (min-width: ${widths.md}px)`,
+  md: `@media screen and (max-width: ${widths.md}px)`,
+  notmd: `@media screen and (min-width: ${widths.md + 1}px)`,
   lg: `@media screen and (min-width: ${widths.lg}px)`,
 }
 

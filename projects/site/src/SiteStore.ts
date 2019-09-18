@@ -21,7 +21,7 @@ class SiteStore {
   }
 
   get sectionHeight() {
-    let maxHeight = 1300
+    let maxHeight = 1200
     let desiredHeight = this.windowHeight
     // // taller on mobile
     // if (this.screenSize === 'small') {
@@ -29,7 +29,7 @@ class SiteStore {
     // }
     return Math.max(
       // min-height
-      980,
+      1020,
       Math.min(
         desiredHeight,
         // max-height

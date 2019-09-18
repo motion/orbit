@@ -146,11 +146,10 @@ export default memo(() => {
     <Fade.FadeProvide>
       {/* pink left */}
       <Page.BackgroundParallax
-        speed={-0.25}
-        offset={-0.8}
-        x="-45%"
-        top="-10%"
-        scale={2}
+        speed={-0.5}
+        offset={0.3}
+        x="-65%"
+        scale={1.8}
         className="glow-one"
         opacity={0.23}
         background="radial-gradient(circle closest-side, #D25CCD, transparent)"
@@ -158,40 +157,38 @@ export default memo(() => {
 
       {/* teal right */}
       <Page.BackgroundParallax
-        speed={0.4}
-        offset={1}
-        x="40%"
-        scale={1.68}
+        speed={0.3}
+        offset={0.2}
+        x="60%"
+        scale={1.3}
         className="glow-two"
-        opacity={0.35}
-        background="radial-gradient(circle closest-side, #5639D0, transparent)"
+        opacity={0.4}
+        background="radial-gradient(circle closest-side, #12A1CC, transparent)"
       />
 
       <SpacedPageContent
         nodeRef={Fade.ref}
+        padding={['12vh', '0%']}
         header={
           <>
             <FadeInView delayIndex={0}>
-              <PillButton>Platform</PillButton>
+              <PillButton>Build</PillButton>
             </FadeInView>
             <FadeInView delayIndex={1}>
-              <TitleText size="xxxl" sm-size="20px">
-                Make apps, easy.
+              <TitleText size="xxxl" sm-fontSize="42px">
+                Data, meet app.
               </TitleText>
             </FadeInView>
             <TitleTextSub margin="auto" minWidth={320}>
               <FadeInView sm-display="inline" delayIndex={2}>
-                &nbsp;Build tools as a team, sharing a rich set of building blocks.&nbsp;
-              </FadeInView>
-              <FadeInView sm-display="inline" delayIndex={3}>
-                Orbit has everything you'd want.
+                Create an app, plug in data, deploy. Easier than ever.
               </FadeInView>
             </TitleTextSub>
           </>
         }
       >
-        <Col maxWidth="100%" margin={[0, 'auto']}>
-          <Row space {...mediaStyles.hiddenWhen.notsm}>
+        <Col maxWidth="100%" margin={[0, 'auto']} sm-margin={0}>
+          <Row space {...mediaStyles.visibleWhen.notsm}>
             <SubSection maxWidth="33%">
               <FadeInView {...fadeAnimations.left} delayIndex={4}>
                 <PillButtonDark>Import</PillButtonDark>
@@ -207,8 +204,8 @@ export default memo(() => {
                 <PillButtonDark>Display</PillButtonDark>
                 <Space />
                 <CenterText maxWidth={400} margin={[0, 'auto']}>
-                  Develop using powerful, simple views built on React and Typescript, with an
-                  amazing built in build system.
+                  A fully integrated workspace with rich, powerful views: virtualized, customizable,
+                  designed for large data.
                 </CenterText>
               </FadeInView>
             </SubSection>
@@ -297,7 +294,7 @@ export default memo(() => {
                   width={280}
                   height={280}
                   background={`linear-gradient(125deg, #78009F, #4C1966)`}
-                  boxShadow="0 20px 50px rgba(0,0,0,0.6)"
+                  boxShadow="0 20px 70px rgba(0,0,0,0.8)"
                   padding={30}
                   cursor="pointer"
                   key={`squircle-${page}`}

@@ -5,7 +5,6 @@ import React, { FunctionComponent, memo, useCallback, useEffect, useRef } from '
 
 import { Button } from './buttons/Button'
 import { zIndex } from './constants'
-import { FlipAnimate, FlipAnimateItem } from './FlipAnimate'
 import { Portal } from './helpers/portal'
 import { useOnUnmount } from './hooks/useOnUnmount'
 import { useWindowSize } from './hooks/useWindowSize'
@@ -125,21 +124,19 @@ export const ProvideBanner = memo(
             alignItems="flex-end"
             padding={[20, 10]}
           >
-            <FlipAnimate>
-              {bannerStore.banners.map((banner, index) => {
-                const id = `${JSON.stringify(banner).slice(0, 20)}${index}`
-                return (
-                  <FlipAnimateItem
-                    id={id}
-                    key={id}
-                    animateKey={banner.type}
-                    // onExit={exitAnimate}
-                  >
-                    <BannerView {...banner} close={() => bannerStore.hide(banner.key)} />
-                  </FlipAnimateItem>
-                )
-              })}
-            </FlipAnimate>
+            {bannerStore.banners.map((banner, index) => {
+              const id = `${JSON.stringify(banner).slice(0, 20)}${index}`
+              return (
+                <React.Fragment
+                  key={id}
+                  // id={id}
+                  //   animateKey={banner.type}
+                  // onExit={exitAnimate}
+                >
+                  <BannerView {...banner} close={() => bannerStore.hide(banner.key)} />
+                </React.Fragment>
+              )
+            })}
           </FullScreen>
         </Portal>
       </BannerManager.ProvideStore>

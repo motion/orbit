@@ -13,6 +13,7 @@ export type GridProps = ColProps & {
   itemMaxWidth?: number | string
   itemMinHeight?: number | string
   itemMaxHeight?: number | string
+  gap?: number | string
 }
 
 export const Grid = (props: GridProps) => (

@@ -6,13 +6,13 @@ import * as React from 'react'
 export function TestUI() {
   return (
     <>
-      <TestMediaQueries />
+      {/* <TestMediaQueries /> */}
       {/* <TestUIPopovers /> */}
       {/* <TestUIGlossSpeed /> */}
       {/* <TestUIEditor /> */}
       {/* <TestUIMotion /> */}
       {/* <TestUIAnimation /> */}
-      {/* <TestUIParallax /> */}
+      <TestUIParallax />
     </>
   )
 }
@@ -175,10 +175,10 @@ export function TestUIMotion() {
 export function TestUIParallax() {
   return (
     <>
-      <Parallax.Container height="100vh" background="orange">
+      <Parallax.Container height="80vh" background="orange">
         <Parallax.View
-          speed={0.5}
           offset={0.5}
+          speed={0.5}
           x={100}
           position="absolute"
           background="yellow"
@@ -186,9 +186,25 @@ export function TestUIParallax() {
           left={20}
           width={100}
           height={100}
-        />
+        >
+          offset 0.5 speed 0.5
+        </Parallax.View>
+        <Parallax.View
+          offset={0}
+          speed={1}
+          x={200}
+          position="absolute"
+          background="yellow"
+          top={0}
+          left={20}
+          width={100}
+          height={100}
+          clamp
+        >
+          offset 0 speed 1
+        </Parallax.View>
       </Parallax.Container>
-      <Parallax.Container height="100vh" background="red">
+      <Parallax.Container height="80vh" background="red">
         <Parallax.View
           position="absolute"
           background="yellow"
@@ -197,6 +213,22 @@ export function TestUIParallax() {
           width={100}
           height={100}
         />
+
+        {[1, 2, 3, 4, 5].map(i => (
+          <Parallax.View
+            key={i}
+            speed={0.2}
+            offset={0}
+            position="absolute"
+            background="green"
+            top="50%"
+            left={100 * i}
+            width={100}
+            height={100}
+          >
+            {i}
+          </Parallax.View>
+        ))}
       </Parallax.Container>
       <Parallax.Container height="100vh" background="lightgreen" />
     </>

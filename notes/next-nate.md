@@ -1,35 +1,3 @@
-----
-
-# Features section for site
-
-## Technical:
-
-- React Refresh+ (with app split)
-- Webpack 5
-- Typescript 7 (optional chaining, nullish coalscing etc)
-- React Concurrent
-- Suspense powered app APIs
-- Multiprocess
-- Electron 8/9 - v8 lite
-- React Devtools, Mobx
-- Granular logging, log()
-
-## Interface:
-
-- Framer Motion powered UI kit
-- <Geometry />
-- Virtualized, Groupable, Filterable Tables + Lists
-- Drag to select, keyboard shift+option selections
-- Persisted Resizable Grid Layouts
-
-## Platform:
-
-- Query Builder
-- GraphQL Explorer
-- Bit Syncing
-- Cosal NLP
-
-----
 
 Sep 12:
 

@@ -3,7 +3,6 @@ import { RefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } 
 import { useVisibility } from '../Visibility'
 import { useDebounce } from './useDebounce'
 import { useGet } from './useGet'
-import { useIntersectionObserver } from './useIntersectionObserver'
 import { useMutationObserver } from './useMutationObserver'
 import { useResizeObserver } from './useResizeObserver'
 
@@ -108,19 +107,20 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
     onChange: measure,
   })
 
-  useIntersectionObserver({
-    disable,
-    ref,
-    options: {
-      threshold: 0,
-    },
-    onChange: entries => {
-      if (!entries) return
-      const [entry] = entries
-      state.current.intersected = entry.isIntersecting
-      measure(entry.boundingClientRect)
-    },
-  })
+  // this will return invalid top/left (relative to viewport not relative to document...)
+  // useIntersectionObserver({
+  //   disable,
+  //   ref,
+  //   options: {
+  //     threshold: 0,
+  //   },
+  //   onChange: entries => {
+  //     if (!entries) return
+  //     const [entry] = entries
+  //     state.current.intersected = entry.isIntersecting
+  //     measure(entry.boundingClientRect)
+  //   },
+  // })
 
   useEffect(measure, [ref, measureKey, ...mountArgs])
 

@@ -55,7 +55,7 @@ export const Layout = memo((props: any) => {
   // try it, uncomment this and then try with/without forceUpdate:
   // console.log('rendering layout'); return <div />;
   updateLayout = forceUpdate
-  const siteStore = useSiteStore({ react: false })
+  const siteStore = useSiteStore()
   const sidebarWidth = 300
   const route = useCurrentRoute()
   const [theme] = usePageTheme()
@@ -93,8 +93,23 @@ export const Layout = memo((props: any) => {
     <ProvideUI themes={themes} activeTheme={theme}>
       <PageLoading />
       <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
+      {/* small */}
+      <Button
+        className="sidebar-open-button"
+        notmd-display="none"
+        pointerEvents="auto"
+        position="fixed"
+        top={-3}
+        right={10}
+        zIndex={1000000000}
+        icon="menu"
+        iconSize={16}
+        size={2}
+        chromeless
+        onClick={siteStore.toggleSidebar}
+      />
       <View
-        className={`theme-${theme}`}
+        className={`view-layout theme-${theme}`}
         minHeight="100vh"
         minWidth="100vw"
         overflow={isDefined(maxHeight) ? 'hidden' : 'visible'}
@@ -146,7 +161,7 @@ const LayoutSidebar = memo(() => {
             transform: `translateX(${siteStore.showSidebar ? 0 : sidebarWidth}px)`,
           }}
         >
-          <Button
+          {/* <Button
             position="absolute"
             top={20}
             right={20}
@@ -156,7 +171,7 @@ const LayoutSidebar = memo(() => {
             zIndex={1000}
             cursor="pointer"
             onClick={siteStore.toggleSidebar}
-          />
+          /> */}
           <Fade.FadeProvide>
             <HeaderLink href="/" {...linkProps}>
               Home
@@ -228,6 +243,7 @@ const PeekHeader = memo((props: { isActive?: boolean }) => {
         transition="all ease 200ms"
         opacity={show ? 1 : 0}
         transform={{ y: show ? 0 : -40 }}
+        pointerEvents={show ? 'auto' : 'none'}
         className="peek-header"
       >
         <Header slim boxShadow={[[0, 0, 30, [0, 0, 0, 1]]]} />

@@ -101,7 +101,6 @@ const whiteSpaceRegex = /[\s]+/g
  */
 const shouldUpdateMap = new WeakMap<object, boolean>()
 function glossIsEqual(a: any, b: any) {
-  return false
   let shouldUpdate = false
   let shouldUpdateInner = false
   for (const key in b) {
@@ -167,11 +166,10 @@ export function gloss<Props = any, ThemeProps = Props>(
   }
 
   const targetElement = !!targetConfig ? targetConfig.targetElement : target
-  const targetElementName = typeof targetElement === 'string' ? targetElement : ''
   const id = `${viewId()}`
   const Styles = getAllStyles(id, targetConfig, rawStyles || null)
-
   const conditionalStyles = Styles.conditionalStyles
+
   let themeFn: ThemeFn | null = null
   let staticClasses: string[] | null = null
 
@@ -201,9 +199,9 @@ export function gloss<Props = any, ThemeProps = Props>(
 
     const theme = useTheme()
     const dynClasses = useRef<Set<string> | null>(null)
-    const last = useRef<{ props: Object; theme: ThemeObject }>()
 
     // for smarter update tracking
+    const last = useRef<{ props: Object; theme: ThemeObject }>()
     let shouldAvoidStyleUpdate = false
     if (!last.current) {
       last.current = {
@@ -557,7 +555,7 @@ function mergeStyles(
       if (mediaQueries) {
         // media queries after subStyle, subStyle could have a - in it
         const index = key.indexOf('-')
-        if (index > -1) {
+        if (index > 0) {
           const mediaName = key.slice(0, index)
           const mediaSelector = mediaQueries[mediaName]
           if (mediaSelector) {
@@ -736,7 +734,9 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSp
   const style = cssString(rules)
 
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
-  const className = styleToClassName(style)
+  // ensure we are unique for unique namespaces, TODO we could not add it to hash and just have a separate
+  // tracker check below like tracker.get(className).has(namespace) or something similar
+  const className = styleToClassName(style + (namespace[0] === '@' ? namespace : ''))
 
   // this is the first time we've found this className
   if (!tracker.has(className)) {

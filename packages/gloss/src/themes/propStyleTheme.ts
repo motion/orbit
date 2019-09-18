@@ -43,7 +43,7 @@ export function propsToStyles(props: any, theme: ThemeObject): CSSPropertySet | 
 
     // media queries
     if (key === 'data-is') continue // we set this, avoid work
-    if (key.indexOf('-') > -1) {
+    if (key.indexOf('-') > 0) {
       // adding mediaQueries keys
       styles = styles || {}
       styles[key] = styleVal(props[key], theme, props)

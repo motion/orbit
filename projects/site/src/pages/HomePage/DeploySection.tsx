@@ -1,4 +1,4 @@
-import { Col, Image, ParallaxView, Row, Space, toColor } from '@o/ui'
+import { Col, Image, ListItem, Row, SimpleText, Space, toColor, View } from '@o/ui'
 import React from 'react'
 
 import { fontProps } from '../../constants'
@@ -20,28 +20,28 @@ export default function DeploySection() {
   return (
     <Fade.FadeProvide>
       <Page.BackgroundParallax
-        speed={0.45}
+        speed={0.25}
         zIndex={-2}
-        opacity={0.3}
-        offset={0.3}
-        x="0%"
-        scale={1.6}
-        background="radial-gradient(circle closest-side, #00A77F, transparent)"
+        opacity={0.4}
+        offset={-0.4}
+        x="-30%"
+        scale={2}
+        background="radial-gradient(circle closest-side, #2F30C9, transparent)"
       />
 
       {/* big purple bottom left */}
-      <Page.BackgroundParallax
+      {/* <Page.BackgroundParallax
         speed={-0.45}
         zIndex={-1}
         opacity={0.22}
         offset={0.4}
         x="-40%"
         scale={2.7}
-        background="radial-gradient(circle closest-side, #AD3BFF, transparent)"
-      />
+        background="radial-gradient(circle closest-side, #1AAFFF, transparent)"
+      /> */}
 
       {/* dark red bottom right */}
-      <Page.BackgroundParallax
+      {/* <Page.BackgroundParallax
         speed={0.4}
         zIndex={-1}
         opacity={0.45}
@@ -49,36 +49,31 @@ export default function DeploySection() {
         x="55%"
         scale={2.2}
         background="radial-gradient(circle closest-side, #8B2028, transparent)"
-      />
+      /> */}
 
       <SpacedPageContent
+        padding={['4vh', 0, '8vh']}
         nodeRef={Fade.ref}
-        sm-transform={{
-          y: 0,
-        }}
-        transform={{
-          y: '-10%',
-        }}
         header={
           <>
-            <FadeInView delay={0}>
-              <PillButton>Create</PillButton>
+            <FadeInView delayIndex={0}>
+              <PillButton>Develop</PillButton>
             </FadeInView>
-            <FadeInView delay={300}>
-              <TitleText textAlign="center" size="xl">
-                Best DX, ever.
+            <FadeInView delayIndex={0}>
+              <TitleText textAlign="center" size="xxl">
+                Powerful tools made easy.
               </TitleText>
             </FadeInView>
           </>
         }
       >
         <Space size={60} />
-        <Row space={60} margin={[0, '-180%']}>
-          <Col flex={2} alignItems="flex-end" justifyContent="center">
-            <FadeInView {...fadeAnimations.left} delay={450}>
-              <ParallaxView
-                speed={0.1}
-                offset={-0.5}
+        <Row space={60} margin={[0, '-180%']} sm-margin="0">
+          <Col sm-display="none" flex={2} alignItems="flex-end" justifyContent="center">
+            <FadeInView {...fadeAnimations.left} delayIndex={2}>
+              <View
+                // speed={0.1}
+                // offset={0}
                 borderRadius={10}
                 elevation={3}
                 width={400}
@@ -97,26 +92,27 @@ export default function DeploySection() {
                   src={arrow}
                   transform={{ scale: 0.6 }}
                 />
-              </ParallaxView>
+              </View>
             </FadeInView>
           </Col>
 
           <Col space="xxl" flex={2} minWidth={300} maxWidth={340}>
-            <FadeInView delay={500}>
+            <FadeInView delayIndex={1}>
               <ParagraphIntro {...fontProps.TitleFont} sizeLineHeight={1.1} size={1.75}>
-                Orbit pushes forward how apps work, and how we build them, with a radical focus on
-                making code as easy as possible.
+                Orbit makes building apps as easy as a few lines of code.
               </ParagraphIntro>
             </FadeInView>
 
-            <FadeInView delay={650}>
-              <Para size={1.4} sizeLineHeight={1.25}>
-                Create apps that work together, but run in isolation. Plug in data sources with
-                ease. Develop with instant feedback, everything you need is included.
-              </Para>
+            <FadeInView delayIndex={2}>
+              <Col space="md">
+                <Item>No setup or configuration.</Item>
+                <Item>Instant feedback with easy to see errors.</Item>
+                <Item>Plug in data instantly.</Item>
+                <Item>A uniquely comprehensive UI kit.</Item>
+              </Col>
             </FadeInView>
 
-            <FadeInView delay={800}>
+            <FadeInView delayIndex={3}>
               <Para
                 tagName="a"
                 href="ok"
@@ -130,16 +126,16 @@ export default function DeploySection() {
                 pointable
                 fontSize={16}
               >
-                Read how Orbit gives you control.
+                Get started with Orbit.
               </Para>
             </FadeInView>
           </Col>
 
-          <Col flex={2} alignItems="flex-start" justifyContent="center">
-            <FadeInView {...fadeAnimations.right} delay={800}>
-              <ParallaxView
-                speed={-0.1}
-                // offset={0.25}
+          <Col sm-display="none" flex={2} alignItems="flex-start" justifyContent="center">
+            <FadeInView {...fadeAnimations.right} delayIndex={3}>
+              <View
+                // speed={-0.1}
+                // offset={0.05}
                 borderRadius={10}
                 elevation={3}
                 width={400}
@@ -153,7 +149,17 @@ export default function DeploySection() {
             </FadeInView>
           </Col>
         </Row>
+        <View flex={10} />
       </SpacedPageContent>
     </Fade.FadeProvide>
   )
 }
+
+const Item = props => (
+  <ListItem
+    hoverStyle={false}
+    activeStyle={false}
+    title={<SimpleText flex={1} size="sm" alpha={0.75} {...props} />}
+    icon="tick"
+  />
+)

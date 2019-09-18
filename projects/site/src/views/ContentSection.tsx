@@ -6,12 +6,12 @@ export const ContentSection = (props: ColProps) => {
   return (
     <Col
       className="content-section"
-      padding={['md', 'sm']}
+      padding={['md', '5%']}
       width="100%"
       maxWidth={760}
-      fontSize={16}
+      fontSize={17}
       margin={[0, 'auto']}
-      lineHeight={26}
+      lineHeight={28}
       color={theme.color.setAlpha(0.85)}
       {...props}
     />

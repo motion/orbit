@@ -7,7 +7,7 @@ import { BottomButton } from './BottomButton'
 
 export const Footer = () => {
   const sectionMinWidth = {
-    'sm-minWidht': 250,
+    'sm-minWidth': 250,
     minWidth: 150,
   }
   return (
@@ -15,13 +15,13 @@ export const Footer = () => {
       sm-flexDirection="column"
       flexDirection="row"
       flexWrap="wrap"
-      flex={8}
       space="lg"
-      padding
+      padding={[0, true, 'xxxl']}
       width="100%"
+      minHeight={250}
+      flex={8}
       alignItems="flex-end"
       scrollable="y"
-      minHeight="min-content"
     >
       <Col {...sectionMinWidth} flex={1} space="sm">
         <SmallTitle alt="lightRed">Orbit</SmallTitle>

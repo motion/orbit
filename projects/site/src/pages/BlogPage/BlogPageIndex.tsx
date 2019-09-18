@@ -1,11 +1,9 @@
 import { Avatar, gloss, Row, Space, View } from '@o/ui'
 import React from 'react'
 
-import { colors } from '../../colors'
 import { linkProps } from '../../useLink'
 import { FadeInView } from '../../views/FadeInView'
 import { TitleText } from '../../views/TitleText'
-import { useScreenVal } from '../HomePage/SpacedPageContent'
 import { BlogLayout } from './BlogLayout'
 import { posts } from './posts'
 
@@ -20,26 +18,26 @@ export function BlogPageIndex() {
     .sort((a, b) => (new Date(a.date).getTime() > new Date(b.date).getTime() ? -1 : 1))
 
   return (
-    <BlogLayout space>
+    <BlogLayout space="md">
       {all.map((post, index) => (
         <FadeInView key={post.date} delay={index * 150}>
           <Post
-            padding={useScreenVal('md', 'xl', 'xl')}
+            padding="md"
             {...linkProps(`/blog/${all[index].id}`)}
             hoverStyle={{
               background: '#f9f9f9',
             }}
           >
             <TitleText
-              fontWeight={200}
-              color={colors.purple}
+              fontWeight={400}
+              // color={colors.purple}
               selectable={false}
               textAlign="left"
-              size="md"
+              size="xxxs"
             >
               {post.title}
             </TitleText>
-            <Space size="sm" />
+            <Space size="md" />
             <PostMeta post={post} />
           </Post>
         </FadeInView>

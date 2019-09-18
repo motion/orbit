@@ -8,5 +8,5 @@ const titleProps = {
 }
 
 export const TitleText = (props: TitleProps) => (
-  <Title className="font-smooth" selectable sizeLineHeight={1.1} {...titleProps} {...props} />
+  <Title className="font-smooth" selectable sizeLineHeight={1.3} {...titleProps} {...props} />
 )

@@ -1,5 +1,5 @@
 import { MDXProvider } from '@mdx-js/react'
-import { gloss, Paragraph, Space, Tag } from '@o/ui'
+import { gloss, Paragraph, Space, Tag, View } from '@o/ui'
 import React from 'react'
 
 import componentNames from '../../tmp/componentNames.json'
@@ -36,20 +36,20 @@ export const components = {
   ),
   h2: props => (
     <>
-      <TitleText marginTop={16} size="md" {...props} />
-      {contentSpaceLg}
+      <TitleText marginTop={16} fontWeight={400} size="sm" {...props} />
+      {contentSpace}
     </>
   ),
   h3: props => (
     <>
       {contentSpace}
-      <TitleText marginTop={16} size="sm" {...props} />
+      <TitleText marginTop={16} size="xs" {...props} />
       {contentSpace}
     </>
   ),
   h4: props => (
     <>
-      <TitleText size="xs" {...props} />
+      <TitleText size="xxs" {...props} />
       {contentSpace}
     </>
   ),
@@ -110,18 +110,20 @@ export const components = {
     </>
   ),
   blockquote: props => (
-    <>
+    <View>
+      {contentSpace}
       <Paragraph
         {...fontProps.TitleFont}
-        padding={[8, 20, 0]}
-        margin={20}
+        padding={[12, 20, 0]}
+        margin={[0, 20]} // top/bottom wont work here
         borderLeft={theme => [2, theme.borderColor]}
         fontSize="110%"
         lineHeight="inherit"
         alpha={0.5}
         {...props}
       />
-    </>
+      {contentSpaceLg}
+    </View>
   ),
 
   inlineCode: ({ children, ...props }) => {

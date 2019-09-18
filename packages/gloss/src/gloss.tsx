@@ -736,7 +736,7 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSp
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
   // ensure we are unique for unique namespaces, TODO we could not add it to hash and just have a separate
   // tracker check below like tracker.get(className).has(namespace) or something similar
-  const className = styleToClassName(style + (namespace[0] === '@' ? namespace : ''))
+  const className = styleToClassName(style + (isSubStyle(namespace) ? namespace : ''))
 
   // this is the first time we've found this className
   if (!tracker.has(className)) {

@@ -13,7 +13,10 @@ import { wrappingSpaceTheme } from './wrappingSpaceTheme'
 export function ScrollableView(props: ScrollableViewProps) {
   const ref = useRef(null)
   const scrollableParent = ScrollableParentContext.useCreateStore({ ref })
-  const { children, scrollable, parentSpacing, hideScrollbars } = props
+  const { children, scrollable, parentSpacing, hideScrollbars, minHeight, ...rest } = props
+
+  // ignore minHeight, use in paddedview
+  minHeight
 
   // add padding inside scrollable so we get proper padding after end elements
   const content = wrapWithPaddedView(children, props)
@@ -26,7 +29,7 @@ export function ScrollableView(props: ScrollableViewProps) {
       <ScrollableChrome
         scrollable={scrollable}
         parentSpacing={parentSpacing}
-        {...props}
+        {...rest}
         nodeRef={composeRefs(props.nodeRef, ref)}
         className={`${hideScrollbars ? 'hide-scrollbars' : ''} ${props.className || ''}`}
         padding={0}
@@ -64,6 +67,7 @@ export function wrapWithPaddedView(
         isWrapped={isWrapped}
         padding={props.padding}
         flex={props.flex}
+        minHeight={props.minHeight}
       >
         {element}
       </PaddedView>

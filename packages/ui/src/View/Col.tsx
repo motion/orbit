@@ -75,7 +75,8 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
     }
 
     return (
-      <View {...defaultProps} {...props} padding={0}>
+      // minHeight and padding are handled by paddedView
+      <View {...defaultProps} {...props} padding={0} minHeight="auto">
         {wrapWithPaddedView(wrapWithSuspense(element, suspense), props)}
       </View>
     )

@@ -14556,6 +14556,11 @@ mamacro@^0.0.3:
   resolved "https://registry.npmjs.org/mamacro/-/mamacro-0.0.3.tgz#ad2c9576197c9f1abf308d0787865bd975a3f3e4"
   integrity sha512-qMEwh+UujcQ+kbz3T6V+wAmO2U8veoq2w+3wY8MquqwVA3jChfwY+Tk52GZKDfACEPjuZ7r2oJLejwpt8jtwTA==
 
+many-keys-map@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/many-keys-map/-/many-keys-map-1.0.2.tgz#ae0a38510529be67738a9d1bb98ddc2f09a9f282"
+  integrity sha512-bOXZsgmnTHkvWQCpq9WBnX5JNfJ1WTq9+QdzXe1UA3eu0+8llCrDSPOTKo1IVUrnzW0N0f9pZd95CDpKUC73uw==
+
 map-age-cleaner@^0.1.1:
   version "0.1.3"
   resolved "https://registry.npmjs.org/map-age-cleaner/-/map-age-cleaner-0.1.3.tgz#7d583a7306434c055fe474b0f45078e6e1b4b92a"

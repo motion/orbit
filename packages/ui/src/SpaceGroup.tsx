@@ -1,6 +1,6 @@
 import React, { Fragment, isValidElement } from 'react'
 
-import { hasMediaQueries, spaceMediaQueryKeys } from './mediaQueryKeys'
+import { hasMediaQueries, mediaQueryKeysSpace } from './mediaQueryKeys'
 import { Size, Space } from './Space'
 
 export type SpaceGroupProps = {
@@ -16,7 +16,7 @@ const childrenToArr = (x: React.ReactNode): JSX.Element[] =>
   React.Children.toArray(x).filter(y => y !== null && y !== false) as any
 
 export function SpaceGroup(props: SpaceGroupProps) {
-  return createSpacedChildren(props)
+  return createSpacedChildren(props, props)
 }
 
 function getChildrenForSpacing(childs: React.ReactNode) {
@@ -48,8 +48,8 @@ function getChildrenForSpacing(childs: React.ReactNode) {
 
 export function createSpacedChildren(
   { children, space = true, spaceAround, separator, beforeSpace, afterSpace }: SpaceGroupProps,
-  otherProps: {
-    // allow media query sizes like sm-size md-size
+  // allow media query sizes like sm-size md-size
+  allProps: {
     [key: string]: any
   },
 ) {
@@ -62,11 +62,10 @@ export function createSpacedChildren(
   // media query props
   let sizeMediaQueries = null
   if (hasMediaQueries) {
-    for (const key in spaceMediaQueryKeys) {
-      if (key in otherProps) {
+    for (const key in mediaQueryKeysSpace) {
+      if (key in allProps) {
         sizeMediaQueries = sizeMediaQueries || {}
-        sizeMediaQueries[key.replace('-space', '-size')] = otherProps[key]
-        console.log('sizeMediaQueries', sizeMediaQueries)
+        sizeMediaQueries[key.replace('-space', '-size')] = allProps[key]
       }
     }
   }

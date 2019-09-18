@@ -1,21 +1,19 @@
 import React from 'react'
 
 import { Config } from '../helpers/configureUI'
-import { getTextSize } from '../Sizes'
 import { Text, TextProps } from './Text'
 
 export type TitleProps = TextProps
 
-export const Title = ({ size = 'xl', children, ...props }: TitleProps) => {
-  const sz = getTextSize(size) * 1.4 + 0.75
-  const sizeLineHeight = Math.max(0.1, sz * 0.15 - 1) + sz * 0.075 + 0.9
+export const Title = ({ size, children, ...props }: TitleProps) => {
   return (
     <Text
       className="ui-title"
       fontWeight={700}
       {...Config.defaultProps.title}
-      size={sz}
-      sizeLineHeight={sizeLineHeight}
+      size={size}
+      sizeFont={2}
+      sizeLineHeight={1.25}
       {...props}
     >
       {children}

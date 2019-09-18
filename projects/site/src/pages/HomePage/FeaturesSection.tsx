@@ -159,12 +159,7 @@ export default memo(() => {
               <PillButton>Features</PillButton>
             </FadeInView>
             <FadeInView delayIndex={1}>
-              <TitleText
-                textAlign="center"
-                size="xxl"
-                // TODO
-                // sm-size="lg"
-              >
+              <TitleText textAlign="center" size="xxl">
                 Batteries Included
               </TitleText>
             </FadeInView>

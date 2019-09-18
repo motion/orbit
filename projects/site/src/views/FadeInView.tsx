@@ -160,22 +160,6 @@ export const FadeInView = memo(
             delay: delayIndex ? delayIndex / 5 : (delay || 1) / 1000,
           }
 
-    // if () {
-    //   return (
-    //     <div
-    //       style={{
-    //         display: 'flex',
-    //         flexDirection: 'column',
-    //         justifyContent: 'inherit',
-    //         alignItems: 'inherit',
-    //       }}
-    //       {...rest as any}
-    //     >
-    //       {children}
-    //     </div>
-    //   )
-    // }
-
     return (
       <View
         data-is="FadeChild"

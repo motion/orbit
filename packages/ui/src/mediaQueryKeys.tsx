@@ -3,13 +3,15 @@ import { Config } from './helpers/configureUI'
 const mediaQueryKeys = Object.keys(Config.mediaQueries)
 
 export const hasMediaQueries = !!mediaQueryKeys.length
-export const spaceMediaQueryKeys = mediaQueryKeys
+
+export const mediaQueryKeysSpace = mediaQueryKeys
   .map(key => `${key}-space`)
   .reduce((acc, cur) => {
     acc[cur] = true
     return acc
   }, {})
-export const sizeMediaQueryKeys = mediaQueryKeys
+
+export const mediaQueryKeysSize = mediaQueryKeys
   .map(key => `${key}-size`)
   .reduce((acc, cur) => {
     acc[cur] = true

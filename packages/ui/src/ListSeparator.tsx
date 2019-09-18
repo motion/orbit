@@ -3,7 +3,8 @@ import React, { memo } from 'react'
 
 import { BorderBottom, BorderTop } from './Border'
 import { useScale } from './Scale'
-import { scaledTextSizeTheme, SimpleText, SimpleTextProps } from './text/SimpleText'
+import { scaledTextSizeTheme } from './text/scaledTextSizeTheme'
+import { SimpleText, SimpleTextProps } from './text/SimpleText'
 
 export type ListSeparatorProps = SimpleTextProps & {
   subTheme?: ThemeSelect

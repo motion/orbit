@@ -60,8 +60,8 @@ export default function DeploySection() {
               <PillButton>Develop</PillButton>
             </FadeInView>
             <FadeInView delayIndex={0}>
-              <TitleText textAlign="center" size="xxl">
-                Powerful tools made easy.
+              <TitleText textAlign="center" size="lg">
+                Powerful tools made easy
               </TitleText>
             </FadeInView>
           </>

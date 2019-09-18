@@ -228,7 +228,7 @@ select:-webkit-autofill:focus {
 
 .theme-home *::selection,
 .theme-dark *::selection {
-  background: rgba(100, 100, 100, 0.25);
+  background: rgba(100, 100, 100, 0.45);
   color: #fff;
   text-shadow: none;
 }

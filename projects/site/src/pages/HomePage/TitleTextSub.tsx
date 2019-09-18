@@ -1,18 +1,18 @@
-import { TextProps, View } from '@o/ui'
+import { TitleProps, View } from '@o/ui'
 import React, { forwardRef } from 'react'
 
 import { fontProps } from '../../constants'
 import { TitleText } from '../../views/TitleText'
 
-export const TitleTextSub = forwardRef<any, TextProps>((props, ref) => (
-  <View nodeRef={ref} maxWidth={800} minWidth={300} textAlign="center">
+export const TitleTextSub = ({ nodeRef, ...props }: TitleProps) => (
+  <View nodeRef={nodeRef} maxWidth={800} minWidth={300} textAlign="center">
     <TitleText
-      size="xxxs"
-      sizeLineHeight={1.35}
+      sizeFont={1}
+      sizeLineHeight={1.5}
       fontWeight={400}
       alpha={0.8}
       {...fontProps.BodyFont}
       {...props}
     />
   </View>
-))
+)

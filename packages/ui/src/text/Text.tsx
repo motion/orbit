@@ -1,13 +1,13 @@
 import { CSSPropertySetStrict } from '@o/css'
 import { HighlightOptions, highlightText, on } from '@o/utils'
-import { colorTheme, CSSPropertySet, getTextSizeTheme, gloss, propsToStyles } from 'gloss'
+import { colorTheme, CSSPropertySet, gloss, propsToStyles } from 'gloss'
 import keycode from 'keycode'
 import * as React from 'react'
 
 import { Config } from '../helpers/configureUI'
 import { ScaleContext } from '../Scale'
-import { getTextSize } from '../Sizes'
 import { Size } from '../Space'
+import { getMediaQueryTextSizeTheme } from './scaledTextSizeTheme'
 
 type ChildrenHlFn = (Highlights) => JSX.Element | null
 
@@ -31,6 +31,7 @@ export type TextProps = CSSPropertySetStrict &
     placeholder?: string
     lineHeight?: number
     sizeLineHeight?: number | boolean
+    sizeFont?: number | boolean
     measure?: boolean
     onMeasure?: Function
     sizeMethod?: string
@@ -208,19 +209,17 @@ export class Text extends React.PureComponent<TextProps> {
     } = this.props
     const { doClamp, textHeight } = this.state
     const scale = this.context ? this.context.size : 1
-    const size = scale * getTextSize(this.props.size)
-    const textStyle = getTextSizeTheme({
-      sizeLineHeight: this.props.sizeLineHeight,
-      lineHeight: this.props.lineHeight,
-      fontSize: this.props.fontSize,
-      size,
-      sizeMethod: this.props.sizeMethod,
-    })
-    const numLinesToShow = doClamp && Math.floor(textHeight / textStyle.lineHeightNum)
+    const { fontSizeNum: _fontSizeNum, lineHeightNum, ...textStyles } = getMediaQueryTextSizeTheme(
+      this.props,
+      {
+        scale,
+        size: props.size,
+      },
+    )
+
+    const numLinesToShow = doClamp && Math.floor(textHeight / lineHeightNum)
     const maxHeight =
-      typeof ellipse === 'number' && textStyle.lineHeightNum
-        ? `${ellipse * textStyle.lineHeightNum}px`
-        : 'auto'
+      typeof ellipse === 'number' && lineHeightNum ? `${ellipse * lineHeightNum}px` : 'auto'
     const oneLineEllipse = ellipse === 1
 
     // so we can toggle between html or text
@@ -308,10 +307,7 @@ export class Text extends React.PureComponent<TextProps> {
         ignoreColor={ignoreColor}
         color={color}
         ellipse={ellipse}
-        fontSize={textStyle.fontSize}
-        lineHeight={textStyle.lineHeight}
-        marginTop={textStyle.marginTop}
-        marginBottom={textStyle.marginBottom}
+        {...textStyles}
         onDoubleClick={this.handleDoubleClick}
         {...props}
         {...finalProps}

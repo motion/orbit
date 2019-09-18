@@ -90,8 +90,7 @@ export interface GlossView<RawProps, ThemeProps = RawProps, Props = GlossProps<R
 const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
 export const tracker: StyleTracker = new Map()
 export const sheet = new StyleSheet(true)
-const rulesToClass = new WeakMap()
-const gc = new GarbageCollector(sheet, tracker, rulesToClass)
+const gc = new GarbageCollector(sheet, tracker)
 const whiteSpaceRegex = /[\s]+/g
 
 /**
@@ -725,12 +724,6 @@ function compileTheme(viewOG: GlossView<any>) {
 
 // adds rules to stylesheet and returns classname
 function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSpecific?: boolean) {
-  // if these rules have been cached to a className then retrieve it
-  const cachedClass = rulesToClass.get(rules)
-  if (cachedClass) {
-    return cachedClass
-  }
-
   const style = cssString(rules)
 
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
@@ -757,8 +750,6 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSp
     } else {
       sheet.insert(className, `${selector} {\n${style}\n}`)
     }
-
-    rulesToClass.set(rules, className)
   }
 
   return moreSpecific ? `${SPECIFIC_PREFIX}${className}` : className
@@ -781,4 +772,13 @@ function getSelector(className: string, namespace: string) {
     return namespacedSelectors
   }
   return `body .${SPECIFIC_PREFIX}${className}, .${className}`
+}
+
+if (process.env.NODE_ENV === 'development') {
+  window['gloss'] = {
+    tracker,
+    gc,
+    sheet,
+    shouldUpdateMap,
+  }
 }

@@ -65,8 +65,8 @@ export default memo(() => {
               <PillButton>App Store</PillButton>
             </FadeInView>
             <FadeInView delay={100}>
-              <TitleText textAlign="center" size="xxl">
-                An app store for all.
+              <TitleText textAlign="center" size="lg">
+                An app store for all
               </TitleText>
             </FadeInView>
             <TitleTextSub>

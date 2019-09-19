@@ -32,7 +32,7 @@ export function ScrollableView(props: ScrollableViewProps) {
         {...rest}
         nodeRef={composeRefs(props.nodeRef, ref)}
         className={`${hideScrollbars ? 'hide-scrollbars' : ''} ${props.className || ''}`}
-        padding={0}
+        padding="disable-padding"
       >
         {content}
       </ScrollableChrome>

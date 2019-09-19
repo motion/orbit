@@ -72,7 +72,8 @@ export function HeadSection() {
         position="absolute"
         left="50%"
         top={0}
-        marginLeft={-80 / 2}
+        marginLeft={`${-180 / 2}px`}
+        width={180}
         alignItems="center"
         justifyContent="center"
       >

@@ -187,7 +187,7 @@ export default memo(() => {
           </>
         }
       >
-        <Col maxWidth="100%" margin={[0, 'auto']} sm-margin={0}>
+        <Col maxWidth="100%" margin={[30, 'auto', 0]} sm-margin={0}>
           <Row space {...mediaStyles.visibleWhen.notsm}>
             <SubSection maxWidth="33%">
               <FadeInView {...fadeAnimations.left} delayIndex={4}>

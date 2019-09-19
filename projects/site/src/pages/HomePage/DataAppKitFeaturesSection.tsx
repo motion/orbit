@@ -24,13 +24,14 @@ export default memo(() => {
         zIndex={-2}
         opacity={0.3}
         x="50%"
-        scale={1.9}
+        scale={2.5}
         background="radial-gradient(circle closest-side, #7523AD, transparent)"
       />
 
       <Page.BackgroundParallax
         speed={-0.075}
         offset={0}
+        opacity={0.5}
         zIndex={-2}
         scale={0.5}
         transformOrigin="bottom center"
@@ -57,7 +58,8 @@ export default memo(() => {
         height="auto"
         maxHeight={100000}
         margin={0}
-        padding={['18vh', 0]}
+        // extra on top for the orbits
+        padding={['22vh', 0, '20vh']}
         xs-margin={0}
         header={
           <>

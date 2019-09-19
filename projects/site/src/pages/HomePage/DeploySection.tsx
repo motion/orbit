@@ -7,28 +7,25 @@ import arrow from '../../public/images/callout-arrow.svg'
 import codeScreenshot from '../../public/images/code-screenshot.jpg'
 import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
 import { Link } from '../../views/Link'
-import { Page } from '../../views/Page'
-import { Paragraph } from '../../views/Paragraph'
 import { ParagraphIntro } from '../../views/ParagraphIntro'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
 
-const Para = props => <Paragraph sizeLineHeight={1.1} size={1.2} alpha={0.72} {...props} />
-
 export default function DeploySection() {
   const Fade = useFadePage()
   return (
     <Fade.FadeProvide>
-      <Page.BackgroundParallax
-        speed={0.25}
+      {/* blue above */}
+      {/* <Page.BackgroundParallax
+        speed={0.5}
+        offset={-0.2}
         zIndex={-2}
         opacity={0.4}
-        offset={-0.4}
         x="-30%"
-        scale={2}
+        scale={1.5}
         background="radial-gradient(circle closest-side, #2F30C9, transparent)"
-      />
+      /> */}
 
       {/* big purple bottom left */}
       {/* <Page.BackgroundParallax
@@ -124,7 +121,7 @@ export default function DeploySection() {
             </FadeInView>
 
             <FadeInView delayIndex={3}>
-              <Link fontWeight={600} size="xl" href="/start">
+              <Link fontWeight={600} size="lg" href="/start">
                 Get started with Orbit ›
               </Link>
             </FadeInView>

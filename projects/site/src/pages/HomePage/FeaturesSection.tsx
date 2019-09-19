@@ -138,13 +138,13 @@ export default memo(() => {
   return (
     <Fade.FadeProvide>
       <Page.BackgroundParallax
-        speed={0.4}
+        speed={0.3}
         zIndex={-1}
         opacity={0.45}
-        offset={1.1}
+        offset={1.5}
         x="-55%"
-        scale={2.2}
-        background="radial-gradient(circle closest-side, #8B2028, transparent)"
+        scale={1.5}
+        background="radial-gradient(circle closest-side, #8B1944, transparent)"
       />
 
       <SpacedPageContent

@@ -30,7 +30,7 @@ export function HeadSection() {
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
       />
 
-      <Page.ParallaxView
+      {/* <Page.ParallaxView
         className="floating-cube"
         width={120}
         position="absolute"
@@ -42,7 +42,7 @@ export function HeadSection() {
         })}
       >
         <Image src={require('../../public/images/test.png')} width="100%" height="auto" />
-      </Page.ParallaxView>
+      </Page.ParallaxView> */}
 
       <Col opacity={fontsLoaded ? 1 : 0} margin={['auto', 0]} height="calc(100% - 120px)">
         <Space size="xxl" />

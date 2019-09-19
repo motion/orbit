@@ -18,7 +18,7 @@ import { useStickySidebar } from './useStickySidebar'
 export default mount({
   '/': route({
     title: 'About',
-    view: <AboutPage />,
+    view: <AboutPage ref={null} />,
   }),
 })
 

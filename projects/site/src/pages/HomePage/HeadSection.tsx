@@ -197,7 +197,7 @@ const HeadTextSection = memo(() => {
             whiteSpace="nowrap"
             maxHeight={160}
           >
-            <FadeInView delayIndex={10} disable={!measured} transition={transitions.bouncy}>
+            <FadeInView delayIndex={12} disable={!measured} transition={transitions.bouncy}>
               <Tag
                 size={0.85}
                 sizeHeight={1.01}

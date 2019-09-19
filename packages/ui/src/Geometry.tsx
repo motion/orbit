@@ -64,12 +64,12 @@ export class AnimationStore {
   }
 }
 
-class GeometryStore {
+export class GeometryStore<A = any> {
   stores: AnimationStore[] = []
   curCall = 0
   frozen = false
 
-  constructor(private nodeRef: RefObject<HTMLElement>) {}
+  constructor(private nodeRef: RefObject<HTMLElement>, public props: A) {}
 
   beforeRenderChildren() {
     this.curCall = 0
@@ -181,14 +181,18 @@ class GeometryStore {
   }
 }
 
-export type GeometryRenderer = (
-  geometry: GeometryStore,
+export type GeometryRenderer<A extends GeometryStore> = (
+  geometry: A,
   ref: RefObject<HTMLElement>,
 ) => React.ReactNode
 
-export function useGeometry(getChildren: GeometryRenderer) {
+export function useGeometry<A extends GeometryStore>(
+  getChildren: GeometryRenderer<A>,
+  GeometryConstructor: { new (...args: any): A },
+  geometryProps?: any,
+) {
   const ref = useRef()
-  const geometry = useLazyRef(() => new GeometryStore(ref)).current
+  const geometry = useLazyRef(() => new GeometryConstructor(ref, geometryProps)).current
   const update = useForceUpdate()
 
   useOnHotReload(() => {
@@ -202,6 +206,6 @@ export function useGeometry(getChildren: GeometryRenderer) {
   return children as JSX.Element
 }
 
-export function Geometry(props: { children: GeometryRenderer }) {
-  return useGeometry(props.children)
+export function Geometry(props: { children: GeometryRenderer<GeometryStore> }) {
+  return useGeometry(props.children, GeometryStore)
 }

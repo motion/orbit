@@ -296,6 +296,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     this.currentRect = node.getBoundingClientRect()
   }
 
+  // @ts-ignore
   useResizeObserver = (node, cb: ResizeObserverCallback) => {
     // watch resizes
     // @ts-ignore

@@ -19,8 +19,6 @@ export function Page(props: SectionContentProps) {
         <SectionContent
           className="page"
           height={props.pages === 'auto' ? 'auto' : siteStore.sectionHeight * (props.pages || 1)}
-          paddingTop={30}
-          paddingBottom={30}
           {...props}
           flex="none"
           xs-height="auto"

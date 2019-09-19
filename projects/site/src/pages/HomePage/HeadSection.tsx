@@ -30,6 +30,20 @@ export function HeadSection() {
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
       />
 
+      <Page.ParallaxView
+        className="floating-cube"
+        width={120}
+        position="absolute"
+        offset={0.5}
+        zIndex={10000}
+        parallaxAnimate={geometry => ({
+          y: geometry.useParallax(),
+          x: geometry.useParallax().transform(x => -x * 0.5 + 340),
+        })}
+      >
+        <Image src={require('../../public/images/test.png')} width="100%" height="auto" />
+      </Page.ParallaxView>
+
       <Col opacity={fontsLoaded ? 1 : 0} margin={['auto', 0]} height="calc(100% - 120px)">
         <Space size="xxl" />
         <Col
@@ -41,7 +55,7 @@ export function HeadSection() {
           alignItems="center"
           justifyContent="center"
         >
-          <HeadContent />
+          <HeadTextSection />
         </Col>
         <Page.ParallaxView
           speed={-0.15}
@@ -52,14 +66,14 @@ export function HeadSection() {
           margin={[0, '-10%']}
           userSelect="none"
         >
-          <FadeInView {...fadeAnimations.up} delayIndex={4} marginBottom="-10%">
+          <FadeInView {...fadeAnimations.up} delayIndex={4}>
             <Image
               display="block"
               src={require('../../public/images/screen.jpg')}
-              width="100%"
+              width="auto"
+              height={500}
               maxWidth={1200}
               margin="auto"
-              height="auto"
             />
           </FadeInView>
         </Page.ParallaxView>
@@ -134,11 +148,11 @@ const para = {
   'notmd-fontWeight': 300,
 } as const
 
-const HeadContent = memo(() => {
+const HeadTextSection = memo(() => {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const measured = fontsLoaded
   // const pFit = useTextFit({ min: 16, updateKey: fontsLoaded })
-  const br = <View className="head-space" height={20} sm-height={15} />
+  const br = <View className="head-space" height={30} sm-height={15} />
   const sectionHeight = useSiteStore().sectionHeight
 
   return (
@@ -181,33 +195,53 @@ const HeadContent = memo(() => {
                 Orbit enters private beta!
               </Tag>
             </FadeInView>
-            <FadeInView disable={!measured} delayIndex={2} {...fontProps.TitleFont}>
-              Apps for teams
+            <FadeInView
+              disable={!measured}
+              delayIndex={2}
+              {...fadeAnimations.up}
+              {...fontProps.TitleFont}
+            >
+              Amazing internal tools
             </FadeInView>
           </TextFitTitle>
-
           {br}
-
           <FadeInView
-            // transition={transitions.bouncy}
             delayIndex={3}
             display="block"
             minHeight="min-content"
+            sm-display="inline"
+            {...fadeAnimations.up}
           >
             <TitleParagraph {...para}>
-              {/* first line */}A home base for teams to create internal tools with ease.
-            </TitleParagraph>
-            &nbsp;
-            <TitleParagraph {...para}>
-              {/* second line */}
-              Your new heads-up display for data&nbsp;&&nbsp;apps.
+              {/* first line */}Create internal tools you'd never have attempted before.
             </TitleParagraph>
           </FadeInView>
-
+          &nbsp;
+          <FadeInView
+            delayIndex={4}
+            display="block"
+            minHeight="min-content"
+            sm-display="inline"
+            {...fadeAnimations.up}
+          >
+            <TitleParagraph {...para}>
+              {/* second line */}
+              With an all-in-one data&nbsp;&&nbsp;app studio for teams.
+            </TitleParagraph>
+          </FadeInView>
           {br}
-          <View position="relative" marginBottom={-95} marginTop={10}>
+          <FadeInView
+            delayIndex={5}
+            display="block"
+            minHeight="min-content"
+            sm-display="inline"
+            marginBottom={-95}
+            marginTop={10}
+            position="relative"
+            {...fadeAnimations.up}
+          >
             <HeadJoin />
-          </View>
+          </FadeInView>
         </View>
       </View>
     </SectionContentChrome>
@@ -241,14 +275,16 @@ const HeadJoin = memo(() => {
   )
 })
 
+const titleSize = 9
+
 const TextFitTitle = (props: TitleProps) => {
   return (
     <TitleText
       userSelect="text"
-      fontSize="12vw"
-      lineHeight="90%"
-      notsm-lineHeight={135}
-      lg-fontSize={135}
+      // @ts-ignore
+      lineHeight="95%"
+      fontSize={`${titleSize}vw`}
+      lg-fontSize={titleSize * 11.5}
       {...props}
     />
   )

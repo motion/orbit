@@ -1,4 +1,4 @@
-import { Col, Icon, Image, Row, SimpleText, Space, toColor, View } from '@o/ui'
+import { Col, Icon, Image, Row, SimpleText, Space, Tooltip, View } from '@o/ui'
 import React from 'react'
 
 import { fontProps } from '../../constants'
@@ -6,6 +6,7 @@ import appScreenshot from '../../public/images/app-screenshot.jpg'
 import arrow from '../../public/images/callout-arrow.svg'
 import codeScreenshot from '../../public/images/code-screenshot.jpg'
 import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
+import { Link } from '../../views/Link'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { ParagraphIntro } from '../../views/ParagraphIntro'
@@ -60,8 +61,13 @@ export default function DeploySection() {
               <PillButton>Develop</PillButton>
             </FadeInView>
             <FadeInView delayIndex={0}>
-              <TitleText textAlign="center" size="lg">
-                An all-in-one workspace
+              <TitleText textAlign="center" size="xxl">
+                Next level{' '}
+                <Tooltip label="Developer Experience">
+                  <View display="inline" borderBottom={[1, 'dotted', [255, 255, 255, 0.5]]}>
+                    DX
+                  </View>
+                </Tooltip>
               </TitleText>
             </FadeInView>
           </>
@@ -98,13 +104,18 @@ export default function DeploySection() {
 
           <Col space="xxl" flex={2} minWidth={300} maxWidth={340}>
             <FadeInView delayIndex={1}>
-              <ParagraphIntro {...fontProps.TitleFont} sizeLineHeight={1.1} size={1.75}>
+              <ParagraphIntro
+                {...fontProps.TitleFont}
+                sizeLineHeight={1.1}
+                size={1.75}
+                fontWeight={200}
+              >
                 Orbit makes building apps as easy as a few lines of code.
               </ParagraphIntro>
             </FadeInView>
 
             <FadeInView delayIndex={2}>
-              <Col space="md">
+              <Col space="sm">
                 <Item>No setup or configuration.</Item>
                 <Item>Instant feedback with easy to see errors.</Item>
                 <Item>Plug in data instantly.</Item>
@@ -113,21 +124,9 @@ export default function DeploySection() {
             </FadeInView>
 
             <FadeInView delayIndex={3}>
-              <Para
-                tagName="a"
-                href="ok"
-                color="#E368E7"
-                transition="all ease 250ms"
-                hoverColor={toColor('#E368E7').lighten(0.1)}
-                fontWeight={500}
-                textDecorationColor="#444"
-                textDecoration="underline"
-                display="inline-block"
-                pointable
-                fontSize={16}
-              >
-                Get started with Orbit.
-              </Para>
+              <Link fontWeight={600} size="xl" href="/start">
+                Get started with Orbit ›
+              </Link>
             </FadeInView>
           </Col>
 
@@ -156,8 +155,8 @@ export default function DeploySection() {
 }
 
 const Item = props => (
-  <Row space padding>
-    <Icon name="tick" />
-    <SimpleText flex={1} size="sm" alpha={0.75} {...props} />
+  <Row space padding={['sm', 0]}>
+    <Icon opacity={0.5} name="tick" />
+    <SimpleText flex={1} size="md" alpha={0.75} {...props} />
   </Row>
 )

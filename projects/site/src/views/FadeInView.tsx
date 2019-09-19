@@ -186,7 +186,7 @@ export type UseFadePageProps = FadeInProps & { off?: boolean }
 
 export const useFadePage = ({
   delay = 200,
-  threshold = 0.1,
+  threshold = 0.2,
   off,
   ...props
 }: UseFadePageProps = {}) => {

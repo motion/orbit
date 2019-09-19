@@ -580,6 +580,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
         height: Math.min(window.innerHeight, popoverBounds.height),
       },
     }
+    console.log('nextState', nextState)
 
     // if changed, update
     const prevState = pick(this.state, Object.keys(nextState))
@@ -1135,7 +1136,10 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
     return (
       <>
         {React.isValidElement(target) && this.controlledTarget(target)}
-        <Portal className="ui-popover" style={{ zIndex, position: 'fixed', ...portalStyle }}>
+        <Portal
+          className="ui-popover"
+          style={{ zIndex, position: 'absolute', top: 0, left: 0, ...portalStyle }}
+        >
           <span
             className="popover-portal"
             style={{

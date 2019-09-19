@@ -29,7 +29,7 @@ export default memo(() => {
       />
 
       <Page.BackgroundParallax
-        speed={-0.05}
+        speed={-0.075}
         offset={0}
         zIndex={-2}
         scale={0.5}
@@ -66,13 +66,13 @@ export default memo(() => {
             </FadeInView>
             <FadeInView delay={100}>
               <TitleText textAlign="center" size="xl">
-                An app store for all
+                Plugins for everything
               </TitleText>
             </FadeInView>
             <TitleTextSub>
               <FadeInView delay={200}>
-                Apps can sync data, use GraphQL and TypeScript APIs and render content.
-                They're&nbsp;everything you need to build upwards.
+                The app store means you can use data, GraphQL and TypeScript APIs, and
+                show&nbsp;content. It's&nbsp;everything you need to build upwards.
               </FadeInView>
             </TitleTextSub>
             <Space size="xl" />
@@ -88,7 +88,7 @@ export default memo(() => {
           justifyContent="center"
           pointerEvents="none"
           transform={{
-            y: '-100%',
+            y: -160,
           }}
         >
           {apps.map((app, index) => {
@@ -127,8 +127,8 @@ export default memo(() => {
 const Integration = memoIsEqualDeep(({ icon, title, index, ...props }: any) => {
   return (
     <FadeInView
-      {...(index % 1 == 0 ? fadeAnimations.left : fadeAnimations.right)}
-      delay={index * 50 + 100}
+      {...(index % 1 == 0 ? fadeAnimations.up : fadeAnimations.down)}
+      delay={index * 100 + 250}
     >
       <View
         userSelect="none"

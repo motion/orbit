@@ -10,7 +10,7 @@ export type ThemeSelect = ((theme: ThemeObject) => ThemeObject) | string | false
 type ThemeProps = {
   theme?: string | ThemeObject
   themeSubSelect?: ThemeSelect
-  coat?: string
+  coat?: string | false
   name?: string
   children: any
 }

@@ -200,7 +200,7 @@ export default memo(() => {
               </FadeInView>
             </SubSection>
             <SubSection flex={2} padding={[true, 'xxl']}>
-              <FadeInView delayIndex={4}>
+              <FadeInView delayIndex={5} {...fadeAnimations.up}>
                 <PillButtonDark>Display</PillButtonDark>
                 <Space />
                 <CenterText maxWidth={400} margin={[0, 'auto']}>
@@ -258,7 +258,7 @@ export default memo(() => {
               margin={0}
               sm-margin={[0, '-5%']}
             >
-              <FadeInView width="100%" delayIndex={5}>
+              <FadeInView width="100%" delayIndex={7} {...fadeAnimations.up}>
                 <Button
                   coat="flat"
                   cursor="pointer"
@@ -287,7 +287,7 @@ export default memo(() => {
                 />
               </FadeInView>
 
-              <FadeInView {...fadeAnimations.up} delayIndex={5} marginBottom={-200} zIndex={10}>
+              <FadeInView {...fadeAnimations.up} delayIndex={6} marginBottom={-200} zIndex={10}>
                 <TiltSquircle
                   {...linkProps(elements[index].link)}
                   tagName="div"
@@ -401,11 +401,11 @@ export default memo(() => {
             </Flex>
           </Row>
 
-          <Row margin={[32, 'auto', 0]}>
+          <FadeInView delayIndex={8} flexDirection="row" margin={[32, 'auto', 0]}>
             {[0, 1, 2].map(x => (
               <Dot key={`dot-${x}`} active={x === index} onClick={() => goTo(x)} />
             ))}
-          </Row>
+          </FadeInView>
         </Col>
       </SpacedPageContent>
     </Fade.FadeProvide>

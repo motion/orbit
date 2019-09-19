@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Message, Space } from '@o/ui'
+import { Button, Col, Input, Message, Space } from '@o/ui'
 import jsonp from 'jsonp'
 import React from 'react'
 
@@ -53,13 +53,13 @@ export class Join extends React.Component<any> {
     const message = success || error || ''
     return (
       <>
-        <Form
+        <form
           action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
           method="post"
           id="mc-embedded-subscribe-form-1"
           name="mc-embedded-subscribe-form"
           target="_blank"
-          nodeRef={this.form}
+          ref={this.form}
           onSubmit={this.submit}
           {...props}
         >
@@ -94,7 +94,7 @@ export class Join extends React.Component<any> {
           >
             Early access
           </Button>
-        </Form>
+        </form>
         {!!message && (
           <Col maxWidth={500} margin={[0, 'auto']}>
             <Space size="lg" />

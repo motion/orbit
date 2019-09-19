@@ -9,7 +9,7 @@ import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { DataType } from '../types'
 import { getElevation } from '../View/elevation'
 import { useVisibility } from '../Visibility'
-import { useParentForm } from './Form'
+import { useParentForm } from './FormContext'
 
 export type InputType =
   | 'text'

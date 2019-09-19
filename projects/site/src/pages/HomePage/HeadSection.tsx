@@ -234,7 +234,7 @@ const HeadTextSection = memo(() => {
               {/* first line */}Create internal tools you'd never have attempted before.
             </TitleParagraph>
           </FadeInView>
-          &nbsp;
+          <span style={{ userSelect: 'none' }}>&nbsp;</span>
           <View sm-display="none">
             <FadeInView delayIndex={4} minHeight="min-content" {...fadeAnimations.up}>
               <TitleParagraph {...para}>

@@ -9,7 +9,6 @@ import { scrollTo } from '../etc/helpers'
 import { Navigation } from '../Navigation'
 import { linkProps } from '../useLink'
 import { CodeBlock } from '../views/CodeBlock'
-import { FadeInView } from '../views/FadeInView'
 import { MDX } from '../views/MDX'
 import { docsItems } from './docsItems'
 import { Example } from './DocsPage/Example'
@@ -83,72 +82,66 @@ export const DocsContents = memo(
             titlePadding={padding}
             titleBorder
             space
-            title={
-              <FadeInView>
-                <Title size={(title || '').length > 22 ? 2 : 2.5}>{title || 'No title'}</Title>
-              </FadeInView>
-            }
+            title={<Title size={(title || '').length > 22 ? 2 : 2.5}>{title || 'No title'}</Title>}
             belowTitle={
-              <FadeInView>
-                <SurfacePassProps
-                  chromeless
-                  cursor="pointer"
-                  tagName="a"
-                  textDecoration="none"
-                  borderWidth={0}
-                  glint={false}
-                  sizeRadius={0}
-                  sizePadding={0}
-                  marginRight={30}
-                  size="lg"
-                  alpha={0.65}
-                  hoverStyle={{
-                    color: colors.purple,
-                  }}
-                >
-                  <Row>
-                    {!!types && (
-                      <Button
-                        iconSize={16}
-                        icon="t"
-                        tooltip="Component Props"
-                        onClick={e => {
-                          e.stopPropagation()
-                          scrollTo('#component-props')
-                        }}
-                      >
-                        Props
-                      </Button>
-                    )}
-                    {!!source && (
-                      <Button
-                        iconSize={16}
-                        icon="code"
-                        tooltip="View Component Source"
-                        onClick={e => {
-                          e.stopPropagation()
-                          scrollTo('#component-source')
-                        }}
-                      >
-                        Component
-                      </Button>
-                    )}
-                    {!!source && (
-                      <Button
-                        iconSize={16}
-                        icon="code"
-                        tooltip="View Source for this Page"
-                        onClick={e => {
-                          e.stopPropagation()
-                          scrollTo('#component-source')
-                        }}
-                      >
-                        Page
-                      </Button>
-                    )}
-                  </Row>
-                </SurfacePassProps>
-              </FadeInView>
+              <SurfacePassProps
+                chromeless
+                cursor="pointer"
+                tagName="a"
+                textDecoration="none"
+                borderWidth={0}
+                glint={false}
+                sizeRadius={0}
+                sizePadding={0}
+                marginRight={30}
+                size="lg"
+                alpha={0.65}
+                hoverStyle={{
+                  color: colors.purple,
+                }}
+              >
+                <Row>
+                  {!!types && (
+                    <Button
+                      iconSize={16}
+                      icon="t"
+                      tooltip="Component Props"
+                      onClick={e => {
+                        e.stopPropagation()
+                        scrollTo('#component-props')
+                      }}
+                    >
+                      Props
+                    </Button>
+                  )}
+                  {!!source && (
+                    <Button
+                      iconSize={16}
+                      icon="code"
+                      tooltip="View Component Source"
+                      onClick={e => {
+                        e.stopPropagation()
+                        scrollTo('#component-source')
+                      }}
+                    >
+                      Component
+                    </Button>
+                  )}
+                  {!!source && (
+                    <Button
+                      iconSize={16}
+                      icon="code"
+                      tooltip="View Source for this Page"
+                      onClick={e => {
+                        e.stopPropagation()
+                        scrollTo('#component-source')
+                      }}
+                    >
+                      Page
+                    </Button>
+                  )}
+                </Row>
+              </SurfacePassProps>
             }
             afterTitle={
               <>
@@ -165,7 +158,7 @@ export const DocsContents = memo(
               </>
             }
           >
-            <FadeInView delay={100}>{children}</FadeInView>
+            {children}
 
             <Space size="xxl" />
 

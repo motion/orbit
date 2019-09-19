@@ -162,21 +162,18 @@ export default memo(() => {
                 Batteries Included
               </TitleText>
             </FadeInView>
+            <FadeInView delayIndex={1} {...fadeAnimations.up}>
+              <Row justifyContent="center" space="lg" margin={[0, 'auto']}>
+                {['Apps', 'Tech', 'Platform'].map(section => (
+                  <React.Fragment key={section}>
+                    <PillButtonDark {...btnProps(section)}>{section}</PillButtonDark>
+                  </React.Fragment>
+                ))}
+              </Row>
+            </FadeInView>
           </>
         }
       />
-
-      <Space />
-
-      <FadeInView delayIndex={1} {...fadeAnimations.up}>
-        <Row justifyContent="center" space="lg" margin={[0, 'auto']}>
-          {['Apps', 'Tech', 'Platform'].map(section => (
-            <React.Fragment key={section}>
-              <PillButtonDark {...btnProps(section)}>{section}</PillButtonDark>
-            </React.Fragment>
-          ))}
-        </Row>
-      </FadeInView>
 
       <View flex={1} minHeight={80} />
 

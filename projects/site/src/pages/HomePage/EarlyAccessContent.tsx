@@ -16,7 +16,7 @@ export const EarlyAccessContent = (props: { theme?: string }) => {
       header={
         <>
           <PillButton>Beta</PillButton>
-          <TitleText size="xxl">Early Access</TitleText>
+          <TitleText size="xl">Early Access</TitleText>
           <TitleTextSub>Join orbit insiders for early access.</TitleTextSub>
         </>
       }

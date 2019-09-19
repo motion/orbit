@@ -30,12 +30,11 @@ export default memo(() => {
 
       <Page.BackgroundParallax
         speed={-0.075}
-        offset={0}
+        offset={0.3}
         opacity={0.5}
         zIndex={-2}
         scale={0.5}
         transformOrigin="bottom center"
-        top={-20}
         // keeps it from cropping on small screen
         left="-40%"
         right="-40%"
@@ -59,20 +58,20 @@ export default memo(() => {
         maxHeight={100000}
         margin={0}
         // extra on top for the orbits
-        padding={['22vh', 0, '20vh']}
+        padding={['32vh', 0, '20vh']}
         xs-margin={0}
         header={
           <>
-            <FadeInView>
+            <FadeInView delayIndex={0}>
               <PillButton>App Store</PillButton>
             </FadeInView>
-            <FadeInView delay={100}>
+            <FadeInView delayIndex={1}>
               <TitleText textAlign="center" size="xl">
                 Plugins for everything
               </TitleText>
             </FadeInView>
             <TitleTextSub>
-              <FadeInView delay={200}>
+              <FadeInView delayIndex={2}>
                 The app store means you can use data, GraphQL and TypeScript APIs, and
                 show&nbsp;content. It's&nbsp;everything you need to build upwards.
               </FadeInView>
@@ -114,7 +113,7 @@ export default memo(() => {
 
         <Space size="lg" />
 
-        <FadeInView delay={0}>
+        <FadeInView delayIndex={3} {...fadeAnimations.up}>
           <Row space margin={[0, 'auto']}>
             <BodyButton {...linkProps('/apps')} size="lg">
               Explore apps

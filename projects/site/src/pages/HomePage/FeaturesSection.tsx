@@ -2,7 +2,7 @@ import { Grid, Row, Space, View } from '@o/ui'
 import { flatMap } from 'lodash'
 import React, { memo, useState } from 'react'
 
-import { FadeInView, useFadePage } from '../../views/FadeInView'
+import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
 import { PillButtonDark } from '../../views/PillButtonDark'
@@ -168,7 +168,7 @@ export default memo(() => {
 
       <Space />
 
-      <FadeInView delayIndex={2}>
+      <FadeInView delayIndex={1} {...fadeAnimations.up}>
         <Row justifyContent="center" space="lg" margin={[0, 'auto']}>
           {['Apps', 'Tech', 'Platform'].map(section => (
             <React.Fragment key={section}>
@@ -180,29 +180,31 @@ export default memo(() => {
 
       <View flex={1} minHeight={80} />
 
-      <Grid space={80} alignItems="start" itemMinWidth={280} maxWidth={800} margin={[0, 'auto']}>
-        {sections[activeSection].map(({ title, icon, body }, index) => (
-          <SimpleSection key={`${activeSection}${index}`} delay={dly * (index + 1)} title={title}>
-            <SectionP>
-              <SectionIcon name={icon} />
-              {flatMap(body, (x, i) => {
-                return (
-                  <React.Fragment key={`${activeSection}${i}`}>
-                    {+i === body.length - 1 ? (
-                      x
-                    ) : (
-                      <>
-                        {x}
-                        <Space />
-                      </>
-                    )}
-                  </React.Fragment>
-                )
-              })}
-            </SectionP>
-          </SimpleSection>
-        ))}
-      </Grid>
+      <FadeInView delayIndex={2} {...fadeAnimations.up}>
+        <Grid space={80} alignItems="start" itemMinWidth={280} maxWidth={800} margin={[0, 'auto']}>
+          {sections[activeSection].map(({ title, icon, body }, index) => (
+            <SimpleSection key={`${activeSection}${index}`} delay={dly * (index + 1)} title={title}>
+              <SectionP>
+                <SectionIcon name={icon} />
+                {flatMap(body, (x, i) => {
+                  return (
+                    <React.Fragment key={`${activeSection}${i}`}>
+                      {+i === body.length - 1 ? (
+                        x
+                      ) : (
+                        <>
+                          {x}
+                          <Space />
+                        </>
+                      )}
+                    </React.Fragment>
+                  )
+                })}
+              </SectionP>
+            </SimpleSection>
+          ))}
+        </Grid>
+      </FadeInView>
 
       <View flex={1} sm-flex={0} lg-flex={2} />
 

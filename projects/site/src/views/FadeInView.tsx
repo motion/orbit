@@ -11,25 +11,30 @@ export type FadeInProps = ViewProps & {
 }
 
 export const transitions: { [key: string]: MotionProps['transition'] } = {
-  slowNotBouncy: {
+  slowStiff: {
     type: 'spring',
     damping: 18,
-    stiffness: 60,
+    stiffness: 50,
   },
   slow: {
     type: 'spring',
-    damping: 20,
-    stiffness: 70,
+    damping: 12,
+    stiffness: 50,
+  },
+  slowBouncy: {
+    type: 'spring',
+    damping: 10,
+    stiffness: 40,
   },
   bouncy: {
     type: 'spring',
     damping: 5,
-    stiffness: 70,
+    stiffness: 75,
   },
   normal: {
     type: 'spring',
-    damping: 10,
-    stiffness: 80,
+    damping: 12,
+    stiffness: 60,
   },
   fast: {
     type: 'spring',
@@ -158,7 +163,7 @@ export const FadeInView = memo(
         ? { duration: 0 }
         : {
             ...(transition as any),
-            delay: delayIndex ? delayIndex / 3 : (delay || 1) / 1000,
+            delay: delayIndex ? delayIndex / 3 + 0.1 : (delay || 1) / 1000,
           }
 
     return (
@@ -187,7 +192,7 @@ export type UseFadePageProps = FadeInProps & { off?: boolean }
 
 export const useFadePage = ({
   delay = 200,
-  threshold = 0.6,
+  threshold = 0.4,
   off,
   ...props
 }: UseFadePageProps = {}) => {

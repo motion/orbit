@@ -48,7 +48,7 @@ export function HeadSection() {
         <Space size="xxl" />
         <Col
           flex={8}
-          maxHeight="70vh"
+          maxHeight="80vh"
           minHeight={750}
           sm-minHeight="auto"
           nodeRef={Fade.ref}
@@ -64,11 +64,11 @@ export function HeadSection() {
           position="relative"
           height={300}
           flex={7}
-          margin={[-100, '-10%', -30]}
+          margin={['-15%', '-10%', -30]}
           userSelect="none"
           zIndex={-1}
         >
-          <FadeInView {...fadeAnimations.up} transition={transitions.slow} delayIndex={7}>
+          <FadeInView {...fadeAnimations.up} transition={transitions.slowBouncy} delayIndex={6}>
             <View
               transform={{
                 perspective: 10000,
@@ -91,7 +91,7 @@ export function HeadSection() {
       </Col>
       <Page.ParallaxView
         speed={0.1}
-        offset={0.6}
+        offset={0.7}
         zIndex={100}
         position="absolute"
         left="50%"
@@ -186,6 +186,7 @@ const HeadTextSection = memo(() => {
         justifyContent="center"
         zIndex={10}
         position="relative"
+        marginTop="5vh"
       >
         <View width="100%" alignItems="center">
           <TextFitTitle
@@ -244,7 +245,7 @@ const HeadTextSection = memo(() => {
           </View>
           {br}
           <FadeInView
-            delayIndex={5}
+            delayIndex={6}
             display="block"
             minHeight="min-content"
             sm-display="inline"

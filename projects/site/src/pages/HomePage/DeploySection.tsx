@@ -1,4 +1,4 @@
-import { Col, Image, ListItem, Row, SimpleText, Space, toColor, View } from '@o/ui'
+import { Col, Icon, Image, Row, SimpleText, Space, toColor, View } from '@o/ui'
 import React from 'react'
 
 import { fontProps } from '../../constants'
@@ -156,10 +156,8 @@ export default function DeploySection() {
 }
 
 const Item = props => (
-  <ListItem
-    hoverStyle={false}
-    activeStyle={false}
-    title={<SimpleText flex={1} size="sm" alpha={0.75} {...props} />}
-    icon="tick"
-  />
+  <Row space padding>
+    <Icon name="tick" />
+    <SimpleText flex={1} size="sm" alpha={0.75} {...props} />
+  </Row>
 )

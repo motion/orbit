@@ -1,5 +1,5 @@
 import { isDefined, selectDefined } from '@o/utils'
-import fuzzySort from 'fuzzysort'
+import FuzzySearch from 'fuzzy-search'
 import { sortBy } from 'lodash'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
@@ -98,13 +98,13 @@ export function useFilter(props: UseFilterProps<ListItemProps>) {
         next.push(item)
         continue
       }
-      const res = fuzzySort.single(searchQuery, searchIndex[index])
-      if (res && res.score > -50) {
+      const searcher = new FuzzySearch([sortedItems[index]], filterKeys)
+      if (searcher.search(searchQuery).lenght) {
         next.push(item)
       }
     }
     return next
-  }, [sortedItems, searchIndex, searchQuery])
+  }, [sortedItems, searchIndex, searchQuery, ...filterKeys])
 
   const shouldGroup = filteredItems.length > (props.groupMinimum || 0)
 

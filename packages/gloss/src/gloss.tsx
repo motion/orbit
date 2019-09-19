@@ -785,7 +785,7 @@ function getSelector(className: string, namespace: string) {
   return `body .${SPECIFIC_PREFIX}${className}, .${className}`
 }
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
   window['gloss'] = {
     tracker,
     gc,

@@ -152,6 +152,7 @@ const alias = {
   react: 'react',
   'react-dom': 'react-dom',
   'react-refresh': 'react-refresh',
+  // path: false,
 }
 
 const babelrcOptions = {

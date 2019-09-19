@@ -23,7 +23,7 @@
     "@seznam/compose-react-refs": "^1.0.1",
     "autoresponsive-react": "1.1.31",
     "date-fns": "2.0.0-alpha.7",
-    "fuzzysort": "1.1.4",
+    "fuzzy-search": "3.0.1",
     "gloss": "^2.6.0",
     "gloss-theme": "^2.6.0",
     "hash-sum": "2.0.0",

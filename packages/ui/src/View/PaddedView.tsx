@@ -86,7 +86,6 @@ export function usePadding(props: PaddingSpecificProps) {
   const base = getPaddingBaseValue(props.padding, scale)
   for (const key of paddingSides) {
     const val = getPaddingSideValue(base, props, paddingSides, key)
-    console.log('now we gots', key, val)
     if (isDefined(val)) {
       res[key] = val
     }

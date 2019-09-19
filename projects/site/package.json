@@ -27,7 +27,7 @@
     "@o/ui": "^2.6.0",
     "@o/use-store": "^2.6.0",
     "@o/wait-for-fonts": "^2.6.0",
-    "array.prototype.flatmap": "^1.2.1",
+    "array-flat-polyfill": "^1.0.1",
     "jsonp": "^0.2.1",
     "lodash": "4.17.11",
     "memoize-weak": "1.0.2",

@@ -14,7 +14,6 @@ export class ReactRefreshPlugin {
             loader: require.resolve('./HotModuleLoader'),
           })
         }
-
         return data
       })
     })

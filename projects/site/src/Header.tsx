@@ -1,4 +1,4 @@
-import { BorderBottom, Row, RowProps } from '@o/ui'
+import { BorderBottom, Row, RowProps, ViewProps } from '@o/ui'
 import { Box, gloss, useTheme } from 'gloss'
 import React, { memo, useLayoutEffect, useRef, useState } from 'react'
 
@@ -16,9 +16,10 @@ export type HeaderProps = {
   slim?: boolean
   noBorder?: boolean
   before?: React.ReactNode
+  logoProps?: ViewProps
 } & RowProps
 
-export const Header = memo(({ slim, noBorder, before, ...rest }: HeaderProps) => {
+export const Header = memo(({ slim, noBorder, before, logoProps, ...rest }: HeaderProps) => {
   const theme = useTheme()
   const siteStore = useSiteStore()
   const headerStore = HeaderContext.useCreateStore()
@@ -58,37 +59,40 @@ export const Header = memo(({ slim, noBorder, before, ...rest }: HeaderProps) =>
     <HeaderContext.ProvideStore value={headerStore}>
       {/* large */}
       <Fade.FadeProvide>
-        <Row
-          nodeRef={Fade.ref}
-          position="absolute"
-          top={0}
-          left={0}
-          right={0}
-          zIndex={1000000}
-          alignItems="center"
-          justifyContent="space-around"
-          padding={[30, 0]}
-          opacity={slim ? 0 : 1}
-          pointerEvents={slim ? 'none' : 'auto'}
-          {...rest}
-        >
-          <HeaderContain>
-            {linksLeft}
-            <FadeInView
-              disable={!LinkState.didAnimateOut}
-              transition={shown ? transitions.normal : transitions.fastStatic}
-              delay={shown ? 100 : 0}
-            >
-              <LogoVertical />
-            </FadeInView>
-            {linksRight}
-          </HeaderContain>
-        </Row>
+        {!slim && (
+          <Row
+            nodeRef={Fade.ref}
+            position="absolute"
+            top={0}
+            left={0}
+            right={0}
+            zIndex={1000000}
+            alignItems="center"
+            justifyContent="space-around"
+            padding={[30, 0]}
+            opacity={slim ? 0 : 1}
+            pointerEvents={slim ? 'none' : 'auto'}
+            {...rest}
+          >
+            <HeaderContain>
+              {linksLeft}
+              <FadeInView
+                disable={!LinkState.didAnimateOut}
+                transition={shown ? transitions.normal : transitions.fastStatic}
+                delay={shown ? 100 : 0}
+              >
+                <LogoVertical {...logoProps} />
+              </FadeInView>
+              {linksRight}
+            </HeaderContain>
+          </Row>
+        )}
 
         {before}
 
         {slim && (
           <Row
+            nodeRef={Fade.ref}
             pointerEvents="auto"
             background={theme.background.lighten(0.05)}
             position="relative"
@@ -103,7 +107,7 @@ export const Header = memo(({ slim, noBorder, before, ...rest }: HeaderProps) =>
                 transition={shown ? transitions.normal : transitions.fastStatic}
                 delay={shown ? 0 : 0}
               >
-                <LogoHorizontal slim />
+                <LogoHorizontal slim {...logoProps} />
               </FadeInView>
               {linksRight}
             </HeaderContain>

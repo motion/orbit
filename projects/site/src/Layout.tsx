@@ -246,7 +246,16 @@ const PeekHeader = memo((props: { isActive?: boolean }) => {
         pointerEvents={show ? 'auto' : 'none'}
         className="peek-header"
       >
-        <Header slim boxShadow={[[0, 0, 30, [0, 0, 0, 1]]]} />
+        <Header
+          slim
+          boxShadow={[[0, 0, 30, [0, 0, 0, 1]]]}
+          logoProps={{
+            onClick(e) {
+              e.preventDefault()
+              scrollTo(0)
+            },
+          }}
+        />
       </FullScreen>
     </Theme>
   )

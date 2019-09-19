@@ -61,41 +61,42 @@ export class Join extends React.Component<any> {
           target="_blank"
           ref={this.form}
           onSubmit={this.submit}
-          {...props}
         >
-          {header}
+          <Col {...props}>
+            {header}
 
-          <Row group>
-            <Input
-              type="email"
-              nodeRef={this.email}
-              name="EMAIL"
-              id="mce-EMAIL"
-              placeholder="Email address..."
-              flex={1}
-              size={1.25}
-              sizeRadius={5}
-              sizePadding={1.5}
-              defaultValue=""
-              {...inputProps}
-            />
-            <Button
-              size={1.25}
-              sizeRadius={5}
-              sizeFont={0.8}
-              sizePadding={2}
-              type="submit"
-              disabled={submitting}
-              opacity={submitting ? 0.5 : 1}
-              pointerEvents={submitting ? 'none' : 'auto'}
-              cursor="pointer"
-              maxWidth={300}
-              alignSelf="center"
-              glint={false}
-            >
-              Early access
-            </Button>
-          </Row>
+            <Row group>
+              <Input
+                type="email"
+                nodeRef={this.email}
+                name="EMAIL"
+                id="mce-EMAIL"
+                placeholder="Email address..."
+                flex={1}
+                size={1.25}
+                sizeRadius={5}
+                sizePadding={1.5}
+                defaultValue=""
+                {...inputProps}
+              />
+              <Button
+                size={1.25}
+                sizeRadius={5}
+                sizeFont={0.8}
+                sizePadding={2}
+                type="submit"
+                disabled={submitting}
+                opacity={submitting ? 0.5 : 1}
+                pointerEvents={submitting ? 'none' : 'auto'}
+                cursor="pointer"
+                maxWidth={300}
+                alignSelf="center"
+                glint={false}
+              >
+                Early access
+              </Button>
+            </Row>
+          </Col>
         </form>
         {!!message && (
           <Col maxWidth={500} margin={[0, 'auto']}>

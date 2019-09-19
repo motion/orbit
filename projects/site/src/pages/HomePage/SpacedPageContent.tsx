@@ -26,7 +26,14 @@ export const SpacedPageContent = ({
       sm-space={downSpace}
       {...props}
     >
-      <Col className="intersect-ref" space={space} sm-space={downSpace} nodeRef={nodeRef}>
+      <Col
+        className="spaced-page-content-inner intersect-ref"
+        flex={1}
+        space={space}
+        sm-space={downSpace}
+        nodeRef={nodeRef}
+        width="100%"
+      >
         <Col space={downSpace} sm-space={down2Space} alignItems="center">
           {header}
         </Col>

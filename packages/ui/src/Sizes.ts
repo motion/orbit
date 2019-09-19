@@ -26,10 +26,10 @@ export const getSize = (size: Sizes | Size): Sizes extends any[] ? number[] : nu
 }
 
 const textSizes = {
-  xxxxs: 0.5,
-  xxxs: 0.6,
-  xxs: 0.7,
-  xs: 0.8,
+  xxxxs: 0.6,
+  xxxs: 0.7,
+  xxs: 0.8,
+  xs: 0.9,
   sm: 1.0,
   md: 1.2,
   lg: 1.5,

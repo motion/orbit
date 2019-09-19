@@ -62,9 +62,9 @@ export function HeadSection() {
           offset={0}
           className="app-screenshot"
           position="relative"
-          height={300}
+          height={500}
           flex={7}
-          margin={['-15%', '-10%', -30]}
+          margin={['-15%', '-10%', 90]}
           userSelect="none"
           zIndex={-1}
         >
@@ -91,11 +91,11 @@ export function HeadSection() {
       </Col>
       <Page.ParallaxView
         speed={0.1}
-        offset={0.7}
+        offset={0.5}
         zIndex={100}
         position="absolute"
         left="50%"
-        top="2%"
+        top="15vh"
         marginLeft={`${-180 / 2}px`}
         width={180}
         alignItems="center"
@@ -267,7 +267,7 @@ const HeadJoin = memo(() => {
       <FadeInView {...fadeAnimations.up} delay={500}>
         <SurfacePassProps elevation={5} {...fontProps.TitleFont}>
           <Theme name="orbitOneDark">
-            <Scale size={useScreenVal(0.9, 1, 1.1)}>
+            <Scale size={useScreenVal(1, 1.1, 1.2)}>
               <Join
                 inputProps={{
                   minWidth: useScreenVal('auto', 300, 300),

@@ -15,11 +15,11 @@ async function start() {
   }
   if (!window['ResizeObserver']) {
     polyfills.push(async () => {
-      window['ResizeObserver'] = await import('resize-observer-polyfill')
+      window['ResizeObserver'] = (await import('resize-observer-polyfill')).default
     })
   }
 
-  await Promise.all(polyfills)
+  await Promise.all(polyfills.map(x => x()))
 
   require('./configurations')
   require('./startSite')

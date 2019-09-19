@@ -1,4 +1,4 @@
-import { Paragraph } from '@o/ui'
+import { Paragraph, Scale } from '@o/ui'
 import { Theme } from 'gloss'
 import React from 'react'
 
@@ -17,12 +17,14 @@ export const EarlyAccessContent = (props: { theme?: string }) => {
         <>
           <PillButton>Beta</PillButton>
           <TitleText size="xl">Early Access</TitleText>
-          <TitleTextSub>Join orbit insiders for early access.</TitleTextSub>
+          <TitleTextSub>Join orbit insiders for early access & updates.</TitleTextSub>
         </>
       }
     >
       <Theme name={props.theme || 'darkAlt'}>
-        <SignupForm />
+        <Scale size={1.2}>
+          <SignupForm />
+        </Scale>
       </Theme>
       <Paragraph margin={[0, 'auto']}>
         Have a unique use case? <Link href="mailto:hi@tryorbit.com">Contact us</Link>.

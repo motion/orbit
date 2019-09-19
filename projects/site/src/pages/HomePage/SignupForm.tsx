@@ -1,20 +1,20 @@
-import { View, ViewProps } from '@o/ui'
+import { SimpleText, View, ViewProps } from '@o/ui'
 import React, { memo } from 'react'
 
 import { Join } from './Join'
-import { TitleTextSmallCaps } from './TitleTextSmallCaps'
 
 export const SignupForm = memo((props: ViewProps) => {
   return (
     <View
       sm-width="100%"
+      md-width="80%"
       width="50%"
-      maxWidth={600}
-      minWidth={340}
+      notmd-maxWidth={600}
+      notmd-minWidth={340}
       margin="auto"
-      borderRadius={12}
+      borderRadius={14}
       overflow="hidden"
-      elevation={2}
+      elevation={1}
       background={theme => theme.backgroundStrong}
       alignSelf="center"
       {...props}
@@ -23,7 +23,15 @@ export const SignupForm = memo((props: ViewProps) => {
         <Join
           header={
             <>
-              <TitleTextSmallCaps alpha={0.7}>Beta Signup</TitleTextSmallCaps>
+              <SimpleText
+                textAlign="center"
+                textTransform="uppercase"
+                letterSpacing={1}
+                alpha={0.6}
+                size="xs"
+              >
+                Beta Signup
+              </SimpleText>
             </>
           }
           space="md"

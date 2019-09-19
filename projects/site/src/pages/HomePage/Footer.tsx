@@ -61,7 +61,7 @@ export const Footer = () => {
         space="md"
         sm-alignItems="center"
       >
-        <SmallTitle alpha={0.6}>Follow Orbit for more updates</SmallTitle>
+        <SmallTitle alpha={0.6}>Stay in touch</SmallTitle>
         <Space size="xs" />
         <Row space>
           <BottomButton href="https://github.com/tryorbit">

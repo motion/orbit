@@ -21,15 +21,14 @@ export function HeadSection() {
 
   return (
     <Fade.FadeProvide>
-      {/* <Page.BackgroundParallax
-        speed={0.35}
-        zIndex={1}
-        opacity={0.2}
-        offset={1.1}
-        x="5%"
+      <Page.BackgroundParallax
+        speed={-0.35}
+        offset={-0.9}
+        zIndex={-1}
+        opacity={0.4}
         scale={1.5}
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
-      /> */}
+      />
 
       <Col opacity={fontsLoaded ? 1 : 0} margin={['auto', 0]} height="calc(100% - 120px)">
         <Space size="xxl" />
@@ -203,11 +202,12 @@ const HeadContent = memo(() => {
               {/* second line */}
               Your new heads-up display for data&nbsp;&&nbsp;apps.
             </TitleParagraph>
-            {br}
-            <View position="relative" marginBottom={-95} marginTop={10}>
-              <HeadJoin />
-            </View>
           </FadeInView>
+
+          {br}
+          <View position="relative" marginBottom={-95} marginTop={10}>
+            <HeadJoin />
+          </View>
         </View>
       </View>
     </SectionContentChrome>

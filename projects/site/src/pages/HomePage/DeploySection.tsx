@@ -61,7 +61,7 @@ export default function DeploySection() {
             </FadeInView>
             <FadeInView delayIndex={0}>
               <TitleText textAlign="center" size="lg">
-                Powerful tools made easy
+                An all-in-one workspace
               </TitleText>
             </FadeInView>
           </>

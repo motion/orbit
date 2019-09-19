@@ -175,8 +175,8 @@ export default memo(() => {
               <PillButton>Build</PillButton>
             </FadeInView>
             <FadeInView delayIndex={1}>
-              <TitleText textAlign="center" size="xl">
-                Data, meet app
+              <TitleText textAlign="center" size="xxl">
+                Make apps, easy
               </TitleText>
             </FadeInView>
             <TitleTextSub margin="auto" minWidth={320}>

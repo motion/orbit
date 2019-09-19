@@ -157,7 +157,7 @@ export const FadeInView = memo(
         ? { duration: 0 }
         : {
             ...(transition as any),
-            delay: delayIndex ? delayIndex / 5 : (delay || 1) / 1000,
+            delay: delayIndex ? delayIndex / 3 : (delay || 1) / 1000,
           }
 
     return (

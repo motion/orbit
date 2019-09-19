@@ -65,7 +65,7 @@ export default memo(() => {
               <PillButton>App Store</PillButton>
             </FadeInView>
             <FadeInView delay={100}>
-              <TitleText textAlign="center" size="lg">
+              <TitleText textAlign="center" size="xl">
                 An app store for all
               </TitleText>
             </FadeInView>
@@ -88,7 +88,7 @@ export default memo(() => {
           justifyContent="center"
           pointerEvents="none"
           transform={{
-            y: '-80%',
+            y: '-100%',
           }}
         >
           {apps.map((app, index) => {

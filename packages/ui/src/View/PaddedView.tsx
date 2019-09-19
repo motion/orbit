@@ -1,6 +1,6 @@
 import { GlossPropertySet } from '@o/css'
 import { isDefined, selectDefined } from '@o/utils'
-import { Base, gloss } from 'gloss'
+import { Box, gloss } from 'gloss'
 
 import { hasMediaQueries, mediaQueryKeys } from '../mediaQueryKeys'
 import { useScale } from '../Scale'
@@ -18,7 +18,7 @@ export const PaddedView = gloss<
     Pick<ScrollableViewProps, 'scrollable' | 'parentSpacing'> & {
       isWrapped?: boolean
     }
->(Base, {
+>(Box, {
   flexDirection: 'inherit',
   flexWrap: 'inherit',
   // dont flex! this ruins the pad and width/height

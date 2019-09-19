@@ -9,7 +9,7 @@ export const IntroText = (props: TextProps) => {
   const allButLast = words.slice(0, words.length - 1).join(' ')
   const last = words[words.length - 1]
   return (
-    <Text size={1.7} sizeLineHeight={1.35} fontWeight={400}>
+    <Text size={1.5} sizeLineHeight={1.3} fontWeight={400}>
       {allButLast}{' '}
       <span style={{ display: 'inline-block' }}>
         {last}

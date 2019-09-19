@@ -1,6 +1,6 @@
 import GithubIcon from '!raw-loader!../public/logos/github.svg'
 import { themes } from '@o/kit'
-import { Button, gloss, Icon, Row, scrollTo, Section, Space, SurfacePassProps, Tag, Title } from '@o/ui'
+import { Button, gloss, Icon, Row, scrollTo, Section, Space, SurfacePassProps, Tag } from '@o/ui'
 import { ThemeProvide } from 'gloss'
 import React, { memo } from 'react'
 
@@ -9,6 +9,7 @@ import { Navigation } from '../Navigation'
 import { linkProps } from '../useLink'
 import { CodeBlock } from '../views/CodeBlock'
 import { MDX } from '../views/MDX'
+import { TitleText } from '../views/TitleText'
 import { docsItems } from './docsItems'
 import { Example } from './DocsPage/Example'
 import { useScreenVal } from './HomePage/SpacedPageContent'
@@ -81,7 +82,11 @@ export const DocsContents = memo(
             titlePadding={padding}
             titleBorder
             space
-            title={<Title size={(title || '').length > 22 ? 2 : 2.5}>{title || 'No title'}</Title>}
+            title={
+              <TitleText size={(title || '').length > 16 ? 'lg' : 'xl'}>
+                {title || 'No title'}
+              </TitleText>
+            }
             belowTitle={
               <SurfacePassProps
                 chromeless
@@ -99,7 +104,7 @@ export const DocsContents = memo(
                   color: colors.purple,
                 }}
               >
-                <Row>
+                <Row margin={[0, -16, -8]}>
                   {!!types && (
                     <Button
                       iconSize={16}

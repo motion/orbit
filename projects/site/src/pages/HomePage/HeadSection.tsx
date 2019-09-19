@@ -68,7 +68,7 @@ export function HeadSection() {
           userSelect="none"
           zIndex={-1}
         >
-          <FadeInView {...fadeAnimations.up} delayIndex={4}>
+          <FadeInView {...fadeAnimations.up} transition={transitions.slow} delayIndex={7}>
             <View
               transform={{
                 perspective: 10000,

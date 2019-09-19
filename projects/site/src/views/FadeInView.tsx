@@ -16,10 +16,10 @@ export const transitions: { [key: string]: MotionProps['transition'] } = {
     damping: 18,
     stiffness: 60,
   },
-  slowConfig: {
+  slow: {
     type: 'spring',
     damping: 20,
-    stiffness: 140,
+    stiffness: 70,
   },
   bouncy: {
     type: 'spring',

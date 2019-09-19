@@ -18,9 +18,15 @@ import { useStickySidebar } from './useStickySidebar'
 export default mount({
   '/': route({
     title: 'About',
-    view: <AboutPage ref={null} />,
+    view: <AboutPage />,
   }),
 })
+
+const BigParagraph = (props: TextProps) => (
+  <Title selectable size="xs" alpha={0.6} fontWeight={100} sizeLineHeight={1.35} {...props} />
+)
+
+const BigTitle = (props: TextProps) => <Title selectable size={1.5} fontWeight={100} {...props} />
 
 export function AboutPage() {
   const Fade = useFadePage({
@@ -158,11 +164,5 @@ export function AboutPage() {
     </Page>
   )
 }
-
-const BigParagraph = (props: TextProps) => (
-  <Title selectable size="xs" alpha={0.6} fontWeight={100} sizeLineHeight={1.35} {...props} />
-)
-
-const BigTitle = (props: TextProps) => <Title selectable size={1.5} fontWeight={100} {...props} />
 
 AboutPage.theme = 'dark'

@@ -1,20 +1,17 @@
-import fuzzySort from 'fuzzysort'
+import FuzzySearch from 'fuzzy-search'
 
 export const fuzzyFilter = <A extends { [key: string]: any }[]>(
   query: string,
   results: A,
-  extraOpts?: Fuzzysort.KeyOptions,
+  extraOpts?: {
+    keys: string[]
+  },
 ): A => {
   if (!query) {
     return results
   }
-  const res = fuzzySort
-    .go(query, results, {
-      keys: ['title', 'name'],
-      // threshold: -25,
-      limit: 8,
-      ...extraOpts,
-    })
-    .map(x => x.obj) as A
-  return res
+  const searcher = new FuzzySearch(results, extraOpts ? extraOpts.keys : ['title', 'name'], {
+    caseSensitive: false,
+  })
+  return searcher.search(query)
 }

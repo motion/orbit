@@ -1,10 +1,9 @@
-import { BorderRight, Col, Divider, Image, ListItemSimple, PassProps, Space, TextProps, Theme, Title, View } from '@o/ui'
+import { BorderRight, Col, Divider, Image, ListItemSimple, PassProps, scrollTo, Space, TextProps, Theme, Title, View } from '@o/ui'
 import { Inline, Row } from 'gloss'
 import { mount, route } from 'navi'
 import React from 'react'
 
 import { fontProps } from '../constants'
-import { scrollTo } from '../etc/helpers'
 import { Header } from '../Header'
 import confettiImage from '../public/images/confetti.jpg'
 import { linkProps } from '../useLink'

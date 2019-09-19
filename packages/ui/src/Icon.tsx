@@ -1,9 +1,9 @@
 import { IconName, IconSvgPaths16, IconSvgPaths20 } from '@blueprintjs/icons'
 import { toColor } from '@o/color'
 import { isDefined, mergeDefined } from '@o/utils'
-import fuzzySort from 'fuzzysort'
+import FuzzySearch from 'fuzzy-search'
 import { useTheme } from 'gloss'
-import React, { forwardRef, memo, useContext } from 'react'
+import React, { memo, useContext } from 'react'
 
 import { Config } from './helpers/configureUI'
 import { IconPropsContext } from './IconPropsContext'
@@ -22,6 +22,7 @@ export type IconProps = ViewProps & {
 }
 
 const names = Object.keys(IconSvgPaths16)
+const searcher = new FuzzySearch(names.map(name => ({ name })), ['name'])
 
 const cache = {}
 export const findName = (name: string) => {
@@ -31,8 +32,8 @@ export const findName = (name: string) => {
   }
   if (cache[name]) return cache[name]
   if (IconSvgPaths16[name]) return name
-  const matches = fuzzySort.go(name, names)
-  const match = matches.length ? matches[0].target : 'none'
+  const result = searcher.search(name)
+  const match = result.length ? result[0].target : 'none'
   cache[name] = match
   return match
 }

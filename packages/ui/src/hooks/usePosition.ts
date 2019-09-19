@@ -1,5 +1,6 @@
 import { RefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
+import { elementOffset } from '../helpers/elementOffset'
 import { useVisibility } from '../Visibility'
 import { useDebounce } from './useDebounce'
 import { useGet } from './useGet'
@@ -27,20 +28,6 @@ type UsePositionProps = {
   preventMeasure?: boolean
   debounce?: number
   onlyWhenIntersecting?: boolean
-}
-
-function elementOffset(elem) {
-  let top = 0
-  let left = 0
-  do {
-    if (!isNaN(elem.offsetTop)) {
-      top += elem.offsetTop
-    }
-    if (!isNaN(elem.offsetLeft)) {
-      left += elem.offsetLeft
-    }
-  } while ((elem = elem.offsetParent))
-  return { top, left }
 }
 
 export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {

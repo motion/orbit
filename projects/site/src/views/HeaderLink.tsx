@@ -4,14 +4,20 @@ import { usePageTheme } from '../Layout'
 import { LinkState } from '../LinkState'
 import { fadeAnimations, FadeInView, transitions } from './FadeInView'
 import { HeaderContext } from './HeaderContext'
-import { Link } from './LinkProps'
+import { Link } from './Link'
 
 export const HeaderLink = ({ delay, children, ...props }: any) => {
   const [theme] = usePageTheme()
   const header = HeaderContext.useStore()
   const leaving = header && header.shown === false
   return (
-    <Link width="33%" fontWeight={400} fontSize={theme === 'home' ? 18 : 16} {...props}>
+    <Link
+      coat={false}
+      width="33%"
+      fontWeight={400}
+      fontSize={theme === 'home' ? 18 : 16}
+      {...props}
+    >
       <FadeInView
         disable={!LinkState.didAnimateOut}
         delay={leaving ? 0 : delay}

@@ -2,7 +2,7 @@ import { Paragraph } from '@o/ui'
 import { Theme } from 'gloss'
 import React from 'react'
 
-import { Link } from '../../views/LinkProps'
+import { Link } from '../../views/Link'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { SignupForm } from './SignupForm'

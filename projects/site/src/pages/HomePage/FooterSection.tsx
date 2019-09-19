@@ -9,7 +9,13 @@ import { blackWavePattern } from './purpleWaveUrl'
 export default memo(function FeetSection(props: { hideJoin?: boolean }) {
   return (
     <>
-      <View padding="xxl" justifyContent="space-between" alignItems="center">
+      <View
+        padding="xxl"
+        justifyContent="space-between"
+        alignItems="center"
+        marginTop="auto"
+        minHeight={600}
+      >
         <Space size="xl" />
         <View flex={3} />
         <AboveFooter hideJoin={props.hideJoin} />
@@ -26,8 +32,8 @@ export default memo(function FeetSection(props: { hideJoin?: boolean }) {
         left="-40%"
         right="-40%"
         width="180%"
-        top="0%"
-        bottom="-90%"
+        top="-120%"
+        bottom="-190%"
         backgroundPosition="top center"
         opacity={1}
         backgroundImage={blackWavePattern}

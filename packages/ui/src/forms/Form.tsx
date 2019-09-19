@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { createStoreContext, ensure, react, shallow, useReaction, useStore } from '@o/use-store'
+import { ensure, react, shallow, useReaction, useStore } from '@o/use-store'
 import { selectDefined } from '@o/utils'
 import React, { HTMLProps, Ref, useCallback } from 'react'
 
@@ -9,6 +9,7 @@ import { Space } from '../Space'
 import { TableFilterIncludeExclude } from '../tables/types'
 import { Message } from '../text/Message'
 import { DataType } from '../types'
+import { FormContext, useCreateForm, useParentForm } from './FormContext'
 import { FormField } from './FormField'
 import { InputType } from './Input'
 
@@ -65,7 +66,7 @@ type FormFieldType =
 
 export type FormStoreProps = Pick<FormProps<FormFieldsObj>, 'fields' | 'errors'>
 
-class FormStore {
+export class FormStore {
   // @ts-ignore
   props: FormStoreProps
   globalError: string = ''
@@ -192,10 +193,6 @@ class FormStore {
     return selectFields
   }
 }
-
-const FormContext = createStoreContext(FormStore)
-export const useCreateForm = FormContext.useCreateStore
-export const useParentForm = FormContext.useStore
 
 export function Form({
   children,

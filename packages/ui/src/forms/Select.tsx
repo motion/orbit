@@ -7,7 +7,7 @@ import { ActionMeta } from 'react-select/src/types'
 import { ListItemSimple } from '../lists/ListItemSimple'
 import { SimpleText } from '../text/SimpleText'
 import { View } from '../View/View'
-import { useParentForm } from './Form'
+import { useParentForm } from './FormContext'
 
 const selectStyles = (theme: ThemeObject) => ({
   placeholder: provided => ({

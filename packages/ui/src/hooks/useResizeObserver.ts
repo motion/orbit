@@ -1,12 +1,12 @@
 import { EffectCallback, RefObject, useEffect, useRef } from 'react'
-import ResizeObserver from 'resize-observer-polyfill'
 
 import { useGet } from './useGet'
 
 export function useResizeObserver(
   props: {
     ref: RefObject<HTMLElement>
-    onChange: ResizeObserverCallback
+    // @ts-ignore
+    onChange: any
     disable?: boolean
   },
   mountArgs?: any[],
@@ -18,6 +18,7 @@ export function useResizeObserver(
   useEffect(() => {
     if (disable) return
     if (!ref || !ref.current) return
+    // @ts-ignore
     let resizeObserver = new ResizeObserver((...args) => {
       onChange()(...args)
     })

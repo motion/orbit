@@ -10,7 +10,7 @@ import React, { useMemo } from 'react'
 export default createApp({
   id: 'bits',
   name: 'Manage Bits',
-  icon: 'item',
+  icon: 'it',
   app: BitsApp,
 })
 

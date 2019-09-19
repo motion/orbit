@@ -34,7 +34,7 @@ export type GlossProps<Props> = Props & {
   children?: React.ReactNode
   nodeRef?: any
   style?: any
-  coat?: string
+  coat?: string | false
   themeSubSelect?: ThemeSelect
 }
 
@@ -76,6 +76,7 @@ type GlossInternals<Props> = {
 export interface GlossView<RawProps, ThemeProps = RawProps, Props = GlossProps<RawProps>> {
   // copied from FunctionComponent
   (props: Props, context?: any): React.ReactElement<any> | null
+  shouldUpdateMap: WeakMap<any, boolean>
   propTypes?: React.ValidationMap<Props>
   contextTypes?: React.ValidationMap<any>
   defaultProps?: Partial<Props>
@@ -98,32 +99,37 @@ const whiteSpaceRegex = /[\s]+/g
  * rely on react elements (TODO document that, but weve never used it internally even on accident),
  * which means we can do nice optimization by tracking if only non-elements changed.
  */
-const shouldUpdateMap = new WeakMap<object, boolean>()
-function glossIsEqual(a: any, b: any) {
-  let shouldUpdate = false
-  let shouldUpdateInner = false
-  for (const key in b) {
-    const bVal = b[key]
-    if (isValidElement(bVal)) {
-      shouldUpdate = true
-      continue
-    }
-    if (!isEqual(a[key], bVal)) {
-      shouldUpdate = true
-      shouldUpdateInner = true
-    }
-  }
-  // ensure we didnt remove/add keys
-  if (!shouldUpdate) {
-    for (const key in a) {
-      if (!(key in b)) {
-        shouldUpdate = true
-        shouldUpdateInner = true
+function createGlossIsEqual() {
+  const shouldUpdateMap = new WeakMap<object, boolean>()
+  return {
+    shouldUpdateMap,
+    isEqual(a: any, b: any) {
+      let shouldUpdate = false
+      let shouldUpdateInner = false
+      for (const key in b) {
+        const bVal = b[key]
+        if (isValidElement(bVal)) {
+          shouldUpdate = true
+          continue
+        }
+        if (!isEqual(a[key], bVal)) {
+          shouldUpdate = true
+          shouldUpdateInner = true
+        }
       }
-    }
+      // ensure we didnt remove/add keys
+      if (!shouldUpdate) {
+        for (const key in a) {
+          if (!(key in b)) {
+            shouldUpdate = true
+            shouldUpdateInner = true
+          }
+        }
+      }
+      shouldUpdateMap.set(b, shouldUpdateInner)
+      return !shouldUpdate
+    },
   }
-  shouldUpdateMap.set(b, shouldUpdateInner)
-  return !shouldUpdate
 }
 
 let idCounter = 1
@@ -178,6 +184,7 @@ export function gloss<Props = any, ThemeProps = Props>(
 
   let hasCompiled = false
   let getEl: GlossViewOpts<Props>['getElement'] | null = null
+  let shouldUpdateMap: WeakMap<any, boolean>
 
   /**
    *
@@ -194,6 +201,7 @@ export function gloss<Props = any, ThemeProps = Props>(
       staticClasses = addStyles(Styles.styles, ThemedView.displayName)
       config = getCompiledConfig(ThemedView, ogConfig)
       getEl = config.getElement
+      shouldUpdateMap = GlossView['shouldUpdateMap']
     }
 
     const theme = useTheme()
@@ -212,6 +220,7 @@ export function gloss<Props = any, ThemeProps = Props>(
       if (last.current.theme !== theme) {
         last.current.theme = theme
       } else {
+        // @ts-ignore
         shouldAvoidStyleUpdate = shouldUpdateMap.get(props) === false
       }
     }
@@ -366,7 +375,9 @@ export function gloss<Props = any, ThemeProps = Props>(
 }
 
 function createGlossView<Props>(GlossView: any, config) {
-  const res: GlossView<Props> = memo(GlossView, glossIsEqual) as any
+  const { isEqual, shouldUpdateMap } = createGlossIsEqual()
+  GlossView.shouldUpdateMap = shouldUpdateMap
+  const res: GlossView<Props> = memo(GlossView, isEqual) as any
   res.internal = config
   res[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
   res.theme = (...themeFns) => {
@@ -774,11 +785,10 @@ function getSelector(className: string, namespace: string) {
   return `body .${SPECIFIC_PREFIX}${className}, .${className}`
 }
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
   window['gloss'] = {
     tracker,
     gc,
     sheet,
-    shouldUpdateMap,
   }
 }

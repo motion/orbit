@@ -23,7 +23,7 @@ process.env.RENDER_TARGET = 'node'
 
 // @ts-ignore
 global.WebSocket = WebSocket
-require('array.prototype.flatmap').shim()
+require('array-flat-polyfill')
 
 Error.stackTraceLimit = Infinity
 

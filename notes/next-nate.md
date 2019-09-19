@@ -57,6 +57,7 @@ Detailed September Plan:
   - [ ] Should I do anything more????
   1. Floating "selection" may be it.
   2. "Move Data" modal, see block below
+  3. See DataDog, could pull some auto-dashboard example apps
 
 - [ ] Demo apps that would be compelling:
   - [ ] StackOverflow Clone
@@ -90,7 +91,6 @@ Either select items or define query
 
 GO TO PROD / DEV TASKS
 
-- [ ] FastRefresh once Webpack plugin is ready for both our own stack + the individual apps.
 - [ ] Webpack 5 will be instrumental in more easily going to production, check if its ready for integration as its picked up some steam.
 - [ ] React Window is being re-written again by bvaughn, there are bugs in it currently, an afternoon to revisit and see if we can upgrade to that version
 
@@ -100,34 +100,9 @@ GO TO PROD / DEV TASKS
 
 NEW SITE SECTIONS:
 
-1. "heads up display" + "apps for teams" + "simple"
-2. screenshot/illustration
-3. Make apps, easy (show more)
-4. Augment your OS (show interaction with home)
-5. Best DX, ever (hover to define DX) (SHOW MORE)
-6. IN as easy as OUT (show OCR/pinning + syncing/graph)
-7. BATTERIES => FEATURES
-   1. Have 3 buttons on the top with sections:
-      1. (Development)
-         1. Webpack 5
-         2. Fast Refresh
-         3. 100ms HMR
-         4. Visual App Manager
-         5. 0-config Build system
-      2. (Interface)
-         1. Virtualized Tables/Lists
-         2. Powerful Selections
-         3. Forms, Flows
-         4. 80 Components, 50 hooks
-         5. Suspense integrated / hooks
-      3. (Apps)
-         1. Syncers/Multi-Process
-         2. QueryBuilder
-         3. GraphQL
-         4. Drag/Drop
-         5. Shared Bits
-         6. Clipboard
-         7. NLP/Searchable
+1. Augment your OS (show interaction with home)
+2. Best DX, ever (hover to define DX) (SHOW MORE)
+3. IN as easy as OUT (show OCR/pinning + syncing/graph)
 
 (if anything, just show footer here and have a FEATURES page)
 
@@ -136,14 +111,6 @@ NEW SITE SECTIONS:
 
 Features page could show each individual app in more depth basically,
 very simple layout with some brighter colors and screenshots.
-
-
-Really nice app flow:
-
-Notes app
-RSS app
-
-Have them both work together.
 
 ---
 

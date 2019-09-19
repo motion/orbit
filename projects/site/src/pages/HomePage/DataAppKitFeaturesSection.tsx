@@ -24,13 +24,14 @@ export default memo(() => {
         zIndex={-2}
         opacity={0.3}
         x="50%"
-        scale={1.9}
+        scale={2.5}
         background="radial-gradient(circle closest-side, #7523AD, transparent)"
       />
 
       <Page.BackgroundParallax
-        speed={-0.05}
+        speed={-0.075}
         offset={0}
+        opacity={0.5}
         zIndex={-2}
         scale={0.5}
         transformOrigin="bottom center"
@@ -57,7 +58,8 @@ export default memo(() => {
         height="auto"
         maxHeight={100000}
         margin={0}
-        padding={['18vh', 0]}
+        // extra on top for the orbits
+        padding={['22vh', 0, '20vh']}
         xs-margin={0}
         header={
           <>
@@ -65,14 +67,14 @@ export default memo(() => {
               <PillButton>App Store</PillButton>
             </FadeInView>
             <FadeInView delay={100}>
-              <TitleText textAlign="center" size="lg">
-                An app store for all
+              <TitleText textAlign="center" size="xl">
+                Plugins for everything
               </TitleText>
             </FadeInView>
             <TitleTextSub>
               <FadeInView delay={200}>
-                Apps can sync data, use GraphQL and TypeScript APIs and render content.
-                They're&nbsp;everything you need to build upwards.
+                The app store means you can use data, GraphQL and TypeScript APIs, and
+                show&nbsp;content. It's&nbsp;everything you need to build upwards.
               </FadeInView>
             </TitleTextSub>
             <Space size="xl" />
@@ -88,7 +90,7 @@ export default memo(() => {
           justifyContent="center"
           pointerEvents="none"
           transform={{
-            y: '-80%',
+            y: -160,
           }}
         >
           {apps.map((app, index) => {
@@ -127,8 +129,8 @@ export default memo(() => {
 const Integration = memoIsEqualDeep(({ icon, title, index, ...props }: any) => {
   return (
     <FadeInView
-      {...(index % 1 == 0 ? fadeAnimations.left : fadeAnimations.right)}
-      delay={index * 50 + 100}
+      {...(index % 1 == 0 ? fadeAnimations.up : fadeAnimations.down)}
+      delay={index * 100 + 250}
     >
       <View
         userSelect="none"

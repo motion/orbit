@@ -16,10 +16,10 @@ export const transitions: { [key: string]: MotionProps['transition'] } = {
     damping: 18,
     stiffness: 60,
   },
-  slowConfig: {
+  slow: {
     type: 'spring',
     damping: 20,
-    stiffness: 140,
+    stiffness: 70,
   },
   bouncy: {
     type: 'spring',
@@ -135,6 +135,7 @@ export const FadeInView = memo(
     disable,
     fullscreen,
     reverse,
+    display,
     ...rest
   }: FadeChildProps) => {
     // const isTiny = useIsTiny()
@@ -142,7 +143,7 @@ export const FadeInView = memo(
     const shown = !disable && (fadeStore.shown !== null ? fadeStore.shown : false)
 
     style = {
-      display: 'flex',
+      display: display || 'flex',
       flexDirection: 'column',
       ...style,
       ...(fullscreen && fullscreenStyle),
@@ -157,7 +158,7 @@ export const FadeInView = memo(
         ? { duration: 0 }
         : {
             ...(transition as any),
-            delay: delayIndex ? delayIndex / 5 : (delay || 1) / 1000,
+            delay: delayIndex ? delayIndex / 3 : (delay || 1) / 1000,
           }
 
     return (
@@ -186,7 +187,7 @@ export type UseFadePageProps = FadeInProps & { off?: boolean }
 
 export const useFadePage = ({
   delay = 200,
-  threshold = 0.1,
+  threshold = 0.6,
   off,
   ...props
 }: UseFadePageProps = {}) => {

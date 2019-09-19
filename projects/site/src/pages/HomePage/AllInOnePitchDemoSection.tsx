@@ -159,6 +159,8 @@ export default memo(() => {
       <Page.BackgroundParallax
         speed={0.3}
         offset={0.2}
+        top="20%"
+        bottom="-20%"
         x="60%"
         scale={1.3}
         className="glow-two"
@@ -175,8 +177,8 @@ export default memo(() => {
               <PillButton>Build</PillButton>
             </FadeInView>
             <FadeInView delayIndex={1}>
-              <TitleText textAlign="center" size="xl">
-                Data, meet app
+              <TitleText textAlign="center" size="xxl">
+                Make apps, easy
               </TitleText>
             </FadeInView>
             <TitleTextSub margin="auto" minWidth={320}>
@@ -187,7 +189,7 @@ export default memo(() => {
           </>
         }
       >
-        <Col maxWidth="100%" margin={[0, 'auto']} sm-margin={0}>
+        <Col maxWidth="100%" margin={[30, 'auto', 0]} sm-margin={0}>
           <Row space {...mediaStyles.visibleWhen.notsm}>
             <SubSection maxWidth="33%">
               <FadeInView {...fadeAnimations.left} delayIndex={4}>
@@ -200,7 +202,7 @@ export default memo(() => {
               </FadeInView>
             </SubSection>
             <SubSection flex={2} padding={[true, 'xxl']}>
-              <FadeInView delayIndex={4}>
+              <FadeInView delayIndex={5} {...fadeAnimations.up}>
                 <PillButtonDark>Display</PillButtonDark>
                 <Space />
                 <CenterText maxWidth={400} margin={[0, 'auto']}>
@@ -258,7 +260,7 @@ export default memo(() => {
               margin={0}
               sm-margin={[0, '-5%']}
             >
-              <FadeInView width="100%" delayIndex={5}>
+              <FadeInView width="100%" delayIndex={7} {...fadeAnimations.up}>
                 <Button
                   coat="flat"
                   cursor="pointer"
@@ -287,7 +289,7 @@ export default memo(() => {
                 />
               </FadeInView>
 
-              <FadeInView {...fadeAnimations.up} delayIndex={5} marginBottom={-200} zIndex={10}>
+              <FadeInView {...fadeAnimations.up} delayIndex={6} marginBottom={-200} zIndex={10}>
                 <TiltSquircle
                   {...linkProps(elements[index].link)}
                   tagName="div"
@@ -401,11 +403,11 @@ export default memo(() => {
             </Flex>
           </Row>
 
-          <Row margin={[32, 'auto', 0]}>
+          <FadeInView delayIndex={8} flexDirection="row" margin={[32, 'auto', 0]}>
             {[0, 1, 2].map(x => (
               <Dot key={`dot-${x}`} active={x === index} onClick={() => goTo(x)} />
             ))}
-          </Row>
+          </FadeInView>
         </Col>
       </SpacedPageContent>
     </Fade.FadeProvide>

@@ -157,7 +157,6 @@ class SearchStoreStore {
 
         addResults(
           fuzzyFilter(query, lastResults, {
-            threshold: -300,
             keys: ['title', 'item.title'],
           }),
         )

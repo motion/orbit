@@ -1,6 +1,5 @@
 import { gloss } from 'gloss'
 import React, { memo } from 'react'
-import { GlobalHotKeys } from 'react-hotkeys'
 
 import { Button } from '../buttons/Button'
 import { Portal } from '../helpers/portal'
@@ -10,6 +9,8 @@ import { SurfaceProps } from '../Surface'
 import { ViewProps } from '../View/types'
 import { View } from '../View/View'
 import { ProvideVisibility } from '../Visibility'
+
+// import { GlobalHotKeys } from 'react-hotkeys'
 
 export type SimpleModalProps = SectionProps &
   SizedSurfaceProps & {
@@ -51,12 +52,12 @@ export const Modal = memo(
           pointerEvents: 'none',
         }}
       >
-        {props.open && (
+        {/* {props.open && (
           <GlobalHotKeys
             keyMap={modalKeyMap}
             handlers={{ close: props.onChangeOpen.bind(null, false) }}
           />
-        )}
+        )} */}
         <ModalBackground
           onClick={onClickBackground}
           open={props.open}

@@ -65,4 +65,4 @@ export const PostMeta = ({ post }) => {
   )
 }
 
-const Post = gloss(View, {})
+const Post = gloss(View)

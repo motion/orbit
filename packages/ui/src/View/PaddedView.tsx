@@ -1,6 +1,6 @@
 import { GlossPropertySet } from '@o/css'
-import { isDefined, selectDefined } from '@o/utils'
-import { Base, gloss } from 'gloss'
+import { isDefined } from '@o/utils'
+import { Box, gloss } from 'gloss'
 
 import { hasMediaQueries, mediaQueryKeys } from '../mediaQueryKeys'
 import { useScale } from '../Scale'
@@ -18,7 +18,7 @@ export const PaddedView = gloss<
     Pick<ScrollableViewProps, 'scrollable' | 'parentSpacing'> & {
       isWrapped?: boolean
     }
->(Base, {
+>(Box, {
   flexDirection: 'inherit',
   flexWrap: 'inherit',
   // dont flex! this ruins the pad and width/height
@@ -59,9 +59,9 @@ const mediaQueryKeysPaddingSides: {
 } = mediaQueryKeys.reduce((acc, cur) => {
   acc[cur] = [
     `${cur}-paddingTop`,
-    `${cur}-paddingLeft`,
     `${cur}-paddingRight`,
     `${cur}-paddingBottom`,
+    `${cur}-paddingLeft`,
   ]
   return acc
 }, {})
@@ -75,6 +75,11 @@ type PaddingSpecificProps = PaddingProps & {
 
 export function usePadding(props: PaddingSpecificProps) {
   const scale = useScale()
+
+  if (props.padding === 'disable-padding') {
+    return null
+  }
+
   const res: any = {}
 
   // base padding
@@ -130,6 +135,19 @@ function getPaddingSideValue(
   sideKeys: string[],
   key: string,
 ) {
-  const res = selectDefined(props[key], base ? base[sideKeys.indexOf(key)] : undefined, base)
-  return isDefined(res) ? getSizableValue(res) : res
+  if (isDefined(props[key])) {
+    return getSizableValue(props[key])
+  }
+  if (base) {
+    const keyIndex = sideKeys.indexOf(key)
+    if (Array.isArray(base)) {
+      // account for shorthand
+      if (base.length - 1 < keyIndex) {
+        return base[keyIndex % 2]
+      }
+      return base[keyIndex]
+    } else {
+      return base
+    }
+  }
 }

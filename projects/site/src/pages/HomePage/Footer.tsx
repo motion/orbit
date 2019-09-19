@@ -1,7 +1,7 @@
 import { Col, Icon, Row, SimpleTextProps, Space } from '@o/ui'
 import React from 'react'
 
-import { Link, LinkProps } from '../../views/LinkProps'
+import { Link, LinkProps } from '../../views/Link'
 import { Text } from '../../views/Text'
 import { BottomButton } from './BottomButton'
 
@@ -23,7 +23,7 @@ export const Footer = () => {
       alignItems="flex-end"
       scrollable="y"
     >
-      <Col {...sectionMinWidth} flex={1} space="sm">
+      <Col {...sectionMinWidth} flex={1} space="md">
         <SmallTitle coat="lightRed">Orbit</SmallTitle>
         <SmallLink href="/">Home</SmallLink>
         <SmallLink href="/beta">Download</SmallLink>
@@ -34,7 +34,7 @@ export const Footer = () => {
         <SmallLink href="/beta">Beta</SmallLink>
       </Col>
 
-      <Col {...sectionMinWidth} flex={1} space="sm">
+      <Col {...sectionMinWidth} flex={1} space="md">
         <SmallTitle>Support & Terms</SmallTitle>
         <SmallLink href="mailto:hi@tryorbit.com">Contact us</SmallLink>
         <SmallLink href="/privacy">Privacy Policy</SmallLink>
@@ -42,7 +42,7 @@ export const Footer = () => {
         <SmallLink href="/faq">FAQ</SmallLink>
       </Col>
 
-      <Col {...sectionMinWidth} flex={1} space="sm">
+      <Col {...sectionMinWidth} flex={1} space="md">
         <SmallTitle>Community</SmallTitle>
         <SmallLink href="/about">About</SmallLink>
         <SmallLink href="/blog">Blog</SmallLink>
@@ -51,7 +51,7 @@ export const Footer = () => {
         <SmallLink href="https://github.com/tryorbit">Github</SmallLink>
       </Col>
 
-      <Col sm-order={-1} minWidth={200} flex={2} space="sm">
+      <Col sm-order={-1} minWidth={200} flex={2} space="md">
         <SmallTitle>Follow Orbit for more updates</SmallTitle>
         <Space size="xs" />
         <Row space>
@@ -106,5 +106,13 @@ const SmallTitle = (props: SimpleTextProps) => (
 )
 
 const SmallLink = (props: Partial<LinkProps>) => (
-  <Link width="100%" textAlign="left" fontWeight={500} fontSize={15} href="" {...props} />
+  <Link
+    coat={false}
+    width="100%"
+    textAlign="left"
+    fontWeight={500}
+    fontSize={15}
+    href=""
+    {...props}
+  />
 )

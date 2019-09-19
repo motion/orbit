@@ -1,6 +1,3 @@
-import * as popcorn from '@popmotion/popcorn'
-import pluralizeOg from 'pluralize'
-
 // until next hotkeys patches types
 if (process.env.NODE_ENV === 'development') {
   module.hot && module.hot.accept()
@@ -14,18 +11,8 @@ export * from '@o/utils'
 export * from 'framer-motion'
 
 export { AnimatePresence } from 'framer-motion'
-
-/**
- * The "lodash" of animation primitives.
- * Used by framer motion internally, or in examples at least:
- * https://popmotion.io/popcorn/
- */
-export const animation = popcorn
-
-// add types
-export const pluralize = (word: string, count: number, inclusize?: boolean) => {
-  return pluralizeOg(word, count, inclusize)
-}
+export { animation } from './helpers/animation'
+export { pluralize } from './helpers/pluralize'
 
 export {
   Absolute,
@@ -43,8 +30,8 @@ export {
   useTheme,
   useThemeContext,
 } from 'gloss'
-export { arrayMove } from '@o/react-sortable-hoc'
-export { GlobalHotKeys, HotKeys, KeySequence } from 'react-hotkeys'
+export { arrayMove } from './helpers/arrayMove'
+export { GlobalHotKeys, HotKeys, KeySequence } from './helpers/reactHotkeys'
 export { IconName } from '@blueprintjs/icons'
 
 export { configureUI, ConfigureUIProps } from './helpers/configureUI'
@@ -262,3 +249,6 @@ export * from './hooks/useMemoList'
 export * from './lists/ListPropsContext'
 export * from './View/ScrollableParentStore'
 export { getSize, getTextSize, getSizeRelative } from './Sizes'
+export * from './helpers/createUpdateableSpring'
+export * from './helpers/elementOffset'
+export * from './helpers/scrollTo'

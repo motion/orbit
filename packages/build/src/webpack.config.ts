@@ -7,8 +7,8 @@ import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
 
+const ReactRefreshPlugin = require('@o/webpack-fast-refresh')
 // reduced a 5mb bundle by 0.01mb...
-const { ReactRefreshPlugin } = require('@o/webpack-react-refresh')
 const ShakePlugin = require('webpack-common-shake').Plugin
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { BundleStatsWebpackPlugin } = require('bundle-stats')
@@ -152,6 +152,7 @@ const alias = {
   react: 'react',
   'react-dom': 'react-dom',
   'react-refresh': 'react-refresh',
+  // path: false,
 }
 
 const babelrcOptions = {
@@ -170,6 +171,7 @@ async function makeConfig() {
   // console.log('tsEntries', tsEntries)
 
   const config = {
+    cache: { type: 'filesystem' },
     target,
     mode,
     entry,
@@ -324,7 +326,10 @@ async function makeConfig() {
 
       new webpack.DefinePlugin(defines),
 
-      target !== 'node' && new webpack.IgnorePlugin({ resourceRegExp: /electron-log/ }),
+      target !== 'node' &&
+        new webpack.IgnorePlugin({
+          resourceRegExp: /^(electron-log)$/,
+        }),
 
       mode === 'development' && hot && new webpack.HotModuleReplacementPlugin(),
       mode === 'development' && hot && new ReactRefreshPlugin(),

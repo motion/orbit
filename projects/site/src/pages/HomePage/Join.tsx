@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Message, Space } from '@o/ui'
+import { Button, Col, Input, Message, Row, Space } from '@o/ui'
 import jsonp from 'jsonp'
 import React from 'react'
 
@@ -53,48 +53,50 @@ export class Join extends React.Component<any> {
     const message = success || error || ''
     return (
       <>
-        <Form
+        <form
           action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
           method="post"
           id="mc-embedded-subscribe-form-1"
           name="mc-embedded-subscribe-form"
           target="_blank"
-          nodeRef={this.form}
+          ref={this.form}
           onSubmit={this.submit}
           {...props}
         >
           {header}
 
-          <Input
-            type="email"
-            nodeRef={this.email}
-            name="EMAIL"
-            id="mce-EMAIL"
-            placeholder="Email address..."
-            flex={1}
-            size={1.25}
-            sizeRadius={5}
-            sizePadding={1.5}
-            defaultValue=""
-            {...inputProps}
-          />
-          <Button
-            size={1.25}
-            sizeRadius={5}
-            sizeFont={0.8}
-            sizePadding={2}
-            type="submit"
-            disabled={submitting}
-            opacity={submitting ? 0.5 : 1}
-            pointerEvents={submitting ? 'none' : 'auto'}
-            cursor="pointer"
-            maxWidth={300}
-            alignSelf="center"
-            glint={false}
-          >
-            Early access
-          </Button>
-        </Form>
+          <Row group>
+            <Input
+              type="email"
+              nodeRef={this.email}
+              name="EMAIL"
+              id="mce-EMAIL"
+              placeholder="Email address..."
+              flex={1}
+              size={1.25}
+              sizeRadius={5}
+              sizePadding={1.5}
+              defaultValue=""
+              {...inputProps}
+            />
+            <Button
+              size={1.25}
+              sizeRadius={5}
+              sizeFont={0.8}
+              sizePadding={2}
+              type="submit"
+              disabled={submitting}
+              opacity={submitting ? 0.5 : 1}
+              pointerEvents={submitting ? 'none' : 'auto'}
+              cursor="pointer"
+              maxWidth={300}
+              alignSelf="center"
+              glint={false}
+            >
+              Early access
+            </Button>
+          </Row>
+        </form>
         {!!message && (
           <Col maxWidth={500} margin={[0, 'auto']}>
             <Space size="lg" />

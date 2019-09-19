@@ -8,7 +8,7 @@ import { ThemeContext } from '../theme/ThemeContext'
 
 export function useTheme(props?: {
   themeSubSelect?: ThemeSelect
-  coat?: string
+  coat?: string | false
   ignroeCoat?: boolean
 }) {
   let theme = useContext(ThemeContext).activeTheme

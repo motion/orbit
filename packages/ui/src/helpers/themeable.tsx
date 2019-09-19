@@ -4,7 +4,7 @@ import React from 'react'
 export type ThemeableProps = {
   theme?: string | ThemeObject
   themeSubSelect?: ThemeSelect
-  coat?: string
+  coat?: string | false
 }
 
 export function themeable<A extends any>(Component: A): A {

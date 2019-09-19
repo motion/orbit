@@ -35,7 +35,7 @@ export class ErrorBoundary extends Component<{ name: string; displayInline?: boo
       return (
         <Button
           tooltip="Clear error and retry"
-          alt="warn"
+          coat="warn"
           margin="auto"
           onClick={() => this.setState({ error: null })}
         >

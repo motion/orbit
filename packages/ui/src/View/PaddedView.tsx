@@ -1,7 +1,8 @@
 import { GlossPropertySet } from '@o/css'
-import { selectDefined } from '@o/utils'
+import { isDefined, selectDefined } from '@o/utils'
 import { Base, gloss } from 'gloss'
 
+import { hasMediaQueries, mediaQueryKeys } from '../mediaQueryKeys'
 import { useScale } from '../Scale'
 import { Sizes } from '../Space'
 import { getSizableValue } from './getSizableValue'
@@ -44,31 +45,91 @@ export const PaddedView = gloss<
   wrappingSpaceTheme,
 )
 
-export function usePadding(
-  props: PaddingProps & {
-    paddingTop?: any
-    paddingLeft?: any
-    paddingRight?: any
-    paddingBottom?: any
-  },
-) {
-  const scale = useScale()
-  let padding = getSizableValue(props.padding)
-  padding = Array.isArray(padding)
-    ? padding.map(x => (typeof x === 'number' ? x * scale : x))
-    : typeof padding === 'number'
-    ? padding * scale
-    : padding
+const paddingSides = ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft']
 
+const mediaQueryKeysPadding = mediaQueryKeys
+  .map(key => `${key}-padding`)
+  .reduce((acc, cur) => {
+    acc[cur] = true
+    return acc
+  }, {})
+
+const mediaQueryKeysPaddingSides: {
+  [key: string]: string[]
+} = mediaQueryKeys.reduce((acc, cur) => {
+  acc[cur] = [
+    `${cur}-paddingTop`,
+    `${cur}-paddingLeft`,
+    `${cur}-paddingRight`,
+    `${cur}-paddingBottom`,
+  ]
+  return acc
+}, {})
+
+type PaddingSpecificProps = PaddingProps & {
+  paddingTop?: any
+  paddingLeft?: any
+  paddingRight?: any
+  paddingBottom?: any
+}
+
+export function usePadding(props: PaddingSpecificProps) {
+  const scale = useScale()
   const res: any = {}
-  const paddingTop = selectDefined(props.paddingTop, padding[0], padding)
-  const paddingRight = selectDefined(props.paddingRight, padding[1], padding)
-  const paddingBottom = selectDefined(props.paddingBottom, padding[2], padding[0], padding)
-  const paddingLeft = selectDefined(props.paddingLeft, padding[3], padding[1], padding)
-  // dont set unless necessary
-  if (paddingTop) res.paddingTop = paddingTop
-  if (paddingRight) res.paddingRight = paddingRight
-  if (paddingLeft) res.paddingLeft = paddingLeft
-  if (paddingBottom) res.paddingBottom = paddingBottom
+
+  // base padding
+  const base = getPaddingBaseValue(props.padding, scale)
+  for (const key of paddingSides) {
+    const val = getPaddingSideValue(base, props, paddingSides, key)
+    if (isDefined(val)) {
+      res[key] = val
+    }
+  }
+
+  // media query padding
+  // warning: this is probably too expensive for now... we should iterate over props instead
+  if (hasMediaQueries) {
+    let basePaddings = null
+    for (const key in mediaQueryKeysPadding) {
+      if (isDefined(props[key])) {
+        basePaddings = basePaddings || {}
+        basePaddings[key.replace('-padding', '')] = getPaddingBaseValue(props[key], scale)
+      }
+    }
+
+    for (const mediaKey in mediaQueryKeysPaddingSides) {
+      const sides = mediaQueryKeysPaddingSides[mediaKey]
+      for (const paddingSide of sides) {
+        if (isDefined(props[paddingSide])) {
+          res[paddingSide] = getPaddingSideValue(
+            basePaddings ? basePaddings[mediaKey] : undefined,
+            props,
+            sides,
+            paddingSide,
+          )
+        }
+      }
+    }
+  }
+
   return res
+}
+
+function getPaddingBaseValue(value: any, scale: number) {
+  const res = getSizableValue(value)
+  return Array.isArray(res)
+    ? res.map(x => (typeof x === 'number' ? x * scale : x))
+    : typeof res === 'number'
+    ? res * scale
+    : res
+}
+
+function getPaddingSideValue(
+  base: Object | undefined,
+  props: PaddingSpecificProps,
+  sideKeys: string[],
+  key: string,
+) {
+  const res = selectDefined(props[key], base ? base[sideKeys.indexOf(key)] : undefined, base)
+  return isDefined(res) ? getSizableValue(res) : res
 }

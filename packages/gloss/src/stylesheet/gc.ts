@@ -25,8 +25,6 @@ export type StyleTracker = Map<
   }
 >
 
-type RulesToClass = WeakMap<BaseRules, string>
-
 export class GarbageCollector {
   // used to keep track of what classes are actively in use
   usedClasses = new Map<string, number>()
@@ -36,16 +34,14 @@ export class GarbageCollector {
   // uid registered queue
   activeUids = new Set<string>()
 
-  constructor(sheet: StyleSheet, tracker: StyleTracker, rulesToClass: RulesToClass) {
+  constructor(sheet: StyleSheet, tracker: StyleTracker) {
     this.sheet = sheet
     this.tracker = tracker
-    this.rulesToClass = rulesToClass
   }
 
   tracker: StyleTracker
   sheet: StyleSheet
   garbageTimer?: any
-  rulesToClass: RulesToClass
 
   hasQueuedCollection(): boolean {
     return Boolean(this.garbageTimer)
@@ -107,8 +103,6 @@ export class GarbageCollector {
       const trackerInfo = this.tracker.get(name)
       if (!trackerInfo) throw 'trying to remove unknown class'
       if (trackerInfo) {
-        const { rules } = trackerInfo
-        this.rulesToClass.delete(rules)
         this.sheet.delete(name)
         this.tracker.delete(name)
         this.usedClasses.delete(name)

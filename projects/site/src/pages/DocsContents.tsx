@@ -25,7 +25,7 @@ export const DocsContents = memo(
     const nextPrevious = (
       <>
         <SurfacePassProps
-          alt="bordered"
+          coat="bordered"
           size={1.5}
           sizeFont={0.75}
           flex={1}
@@ -152,7 +152,7 @@ export const DocsContents = memo(
             }
             afterTitle={
               <>
-                {beta && <Tag alt="lightRed">Beta</Tag>}
+                {beta && <Tag coat="lightRed">Beta</Tag>}
                 {!!source && (
                   <Button
                     tooltip="Source in Github"

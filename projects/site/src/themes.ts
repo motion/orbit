@@ -7,7 +7,7 @@ import { colors } from './colors'
 
 const buttonBackground = linearGradient(colors.purple.lighten(0.035), colors.purple)
 
-const selectedTheme = KitThemes.light.alternates.selected as ThemeObject
+const selectedTheme = KitThemes.light.coats.selected as ThemeObject
 const transparent = 'transparent'
 
 const selectedMinimal = {
@@ -21,8 +21,8 @@ const selectedMinimal = {
 
 const light = {
   ...KitThemes.light,
-  alternates: {
-    ...KitThemes.light.alternates,
+  coats: {
+    ...KitThemes.light.coats,
     selectedMinimal,
   },
   ...colorize({
@@ -32,8 +32,8 @@ const light = {
 
 const dark = {
   ...KitThemes.dark,
-  alternates: {
-    ...KitThemes.dark.alternates,
+  coats: {
+    ...KitThemes.dark.coats,
     selectedMinimal,
   },
   ...colorize({

@@ -175,8 +175,8 @@ export default memo(() => {
               <PillButton>Build</PillButton>
             </FadeInView>
             <FadeInView delayIndex={1}>
-              <TitleText size="xxxl" sm-fontSize="42px">
-                Data, meet app.
+              <TitleText textAlign="center" size="xl">
+                Data, meet app
               </TitleText>
             </FadeInView>
             <TitleTextSub margin="auto" minWidth={320}>
@@ -260,7 +260,7 @@ export default memo(() => {
             >
               <FadeInView width="100%" delayIndex={5}>
                 <Button
-                  alt="flat"
+                  coat="flat"
                   cursor="pointer"
                   size={1.8}
                   iconSize={20}
@@ -273,7 +273,7 @@ export default memo(() => {
                   onClick={() => paginate(-1)}
                 />
                 <Button
-                  alt="flat"
+                  coat="flat"
                   cursor="pointer"
                   size={1.8}
                   iconSize={20}

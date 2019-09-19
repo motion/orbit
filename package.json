@@ -39,6 +39,7 @@
     "electron:unpatch": "if [ -f  node_modules/electron/dist2 ]; then rm node_modules/electron/dist && mv node_modules/electron/dist2 node_modules/electron/dist; fi",
     "playground:start": "cd projects/playground && yarn start",
     "fix-permissions": "chmod ug+x app/orbit/_/index.js",
+    "site:serve": "cd projects/site && yarn serve",
     "site:build": "cd projects/site && yarn build",
     "site:start": "cd projects/site && yarn start",
     "site:deploy": "cd projects/site && yarn deploy",

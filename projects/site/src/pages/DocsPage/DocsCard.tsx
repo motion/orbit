@@ -11,8 +11,8 @@ export let Basic = (
   <Row space flexWrap="wrap">
     <ExampleCard>hello worl2</ExampleCard>
     <ExampleCard title="Elevation = 2" elevation={2} />
-    <ExampleCard alt="warn" location="warn" title="Alt = warn" elevation={4} />
-    <ExampleCard badge="1" alt="confirm" title="Alt = confirm" elevation={4} />
+    <ExampleCard coat="warn" location="warn" title="Coat = warn" elevation={4} />
+    <ExampleCard badge="1" coat="confirm" title="Coat = confirm" elevation={4} />
     <ExampleCard width={300} height={300} location="hi" badge="1" size="lg" title="Size LG">
       hello worl2
     </ExampleCard>
@@ -33,7 +33,7 @@ export let Floating = () => {
   return (
     <>
       <Col padding>
-        <Button alt="action" size="lg" onClick={() => setShow(!show)}>
+        <Button coat="action" size="lg" onClick={() => setShow(!show)}>
           Toggle Floating Card
         </Button>
       </Col>
@@ -45,7 +45,7 @@ export let Floating = () => {
         height={200}
         attach="bottom right"
         bounds={{ top: 20, left: 20, right: 20, bottom: 20 }}
-        alt="warn"
+        coat="warn"
         location="warn"
         elevation={4}
       >

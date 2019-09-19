@@ -33,13 +33,13 @@ export const CardSimple = ({
       hoverStyle={hasClick}
       activeStyle={hasClick}
       cursor={hasClick ? 'pointer' : 'inherit'}
-      subTheme="cardSimple"
+      themeSubSelect="cardSimple"
       {...props}
       noInnerElement
     >
       <Col padding={padding} space={space} group={group} scrollable={scrollable}>
         {!!title && (
-          <Tag alt="lightGray" onClick={onClickTitle} {...titleProps}>
+          <Tag coat="lightGray" onClick={onClickTitle} {...titleProps}>
             {title}
           </Tag>
         )}

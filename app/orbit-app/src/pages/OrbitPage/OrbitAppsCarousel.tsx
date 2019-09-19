@@ -364,10 +364,7 @@ const OrbitAppCard = memo(
                 borderRadius={borderRadius}
                 {...(isFocused
                   ? {
-                      boxShadow: [
-                        [0, 0, 0, 3, theme.alternates!.selected['background']],
-                        cardBoxShadow,
-                      ],
+                      boxShadow: [[0, 0, 0, 3, theme.coats!.selected['background']], cardBoxShadow],
                     }
                   : {
                       boxShadow: [cardBoxShadow],

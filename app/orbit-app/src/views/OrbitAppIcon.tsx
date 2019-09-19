@@ -17,7 +17,7 @@ export const OrbitAppIcon = memo(
     const banner = useBanner()
     const isPermanent = app.tabDisplay === 'permanent' || app.tabDisplay === 'permanentLast'
     return (
-      <Theme alt={isSelected ? 'selected' : undefined}>
+      <Theme coat={isSelected ? 'selected' : undefined}>
         <AppIconContainer isSelected={isSelected} isDraggable={!isPermanent}>
           <SurfacePassProps chromeless iconSize={12} opacity={0.5}>
             <Row position="absolute" top={10} right={10}>

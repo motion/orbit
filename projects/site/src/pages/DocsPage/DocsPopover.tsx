@@ -9,7 +9,7 @@ export let Basic = (
     elevation={8}
     width={300}
     target={
-      <Button alt="action" size="lg">
+      <Button coat="action" size="lg">
         Open on Click
       </Button>
     }
@@ -42,7 +42,7 @@ function BasicPopover({ children = baseChildren, ...props }) {
       elevation={8}
       width={300}
       target={
-        <Button alt="action" size="lg">
+        <Button coat="action" size="lg">
           Open on Click
         </Button>
       }

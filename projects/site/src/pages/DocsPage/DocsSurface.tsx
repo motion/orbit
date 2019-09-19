@@ -11,11 +11,11 @@ export let Basic = (
   </Row>
 )
 
-export let Alternates = (
+export let Coats = (
   <Row space flexWrap="wrap">
-    {['error', 'warn', 'confirm', 'bordered', 'selected'].map(alt => (
-      <SizedSurface key={alt} alt={alt} icon="cog" iconAfter>
-        Alt {alt}
+    {['error', 'warn', 'confirm', 'bordered', 'selected'].map(coat => (
+      <SizedSurface key={coat} coat={coat} icon="cog" iconAfter>
+        Coat {coat}
       </SizedSurface>
     ))}
   </Row>
@@ -51,7 +51,7 @@ export let Group = (
 )
 
 export let PassMultipleProps = (
-  <SurfacePassProps icon="home" alt="action" size="lg">
+  <SurfacePassProps icon="home" coat="action" size="lg">
     <Row space>
       <SizedSurface>Hello</SizedSurface>
       <SizedSurface>World</SizedSurface>

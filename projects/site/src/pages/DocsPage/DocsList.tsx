@@ -33,7 +33,7 @@ export let Simple = (
   <List height={300} items={rows} />
 )
 
-export let SimpleAlt = (
+export let SimpleCoat = (
   //
   <List
     items={simpleRows.map(row => ({

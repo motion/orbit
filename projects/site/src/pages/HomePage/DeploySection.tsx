@@ -60,15 +60,15 @@ export default function DeploySection() {
               <PillButton>Develop</PillButton>
             </FadeInView>
             <FadeInView delayIndex={0}>
-              <TitleText textAlign="center" size="xxl">
-                Powerful tools made easy.
+              <TitleText textAlign="center" size="lg">
+                Powerful tools made easy
               </TitleText>
             </FadeInView>
           </>
         }
       >
         <Space size={60} />
-        <Row space={60} margin={[0, '-180%']} sm-margin="0">
+        <Row space={60} sm-space={0} margin={[0, '-180%']} sm-margin="0">
           <Col sm-display="none" flex={2} alignItems="flex-end" justifyContent="center">
             <FadeInView {...fadeAnimations.left} delayIndex={2}>
               <View

@@ -17,7 +17,7 @@ export function SearchSuggestionBar() {
   return (
     <SpaceGroup space="sm">
       {!!dateText && !hasTextualDateFilter && (
-        <Button onClick={state.filters.clearDate} opacity={1} alt={filterAlt.date}>
+        <Button onClick={state.filters.clearDate} opacity={1} coat={filterAlt.date}>
           {dateText}
         </Button>
       )}
@@ -25,7 +25,7 @@ export function SearchSuggestionBar() {
         <Button
           key={`${filter.text}${filter.active}`}
           onClick={() => state.filters.toggleFilterActive(filter.text)}
-          alt={filterAlt[filter.type]}
+          coat={filterAlt[filter.type]}
         >
           {filter.text}
         </Button>

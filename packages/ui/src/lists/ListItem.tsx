@@ -19,7 +19,7 @@ export const ListItem = (props: ListItemProps) => {
     itemViewProps,
     people,
     hidePeople,
-    alt,
+    coat,
     draggable,
     showFullContent,
     nodeRef,
@@ -117,7 +117,7 @@ export const ListItem = (props: ListItemProps) => {
     // this focused={} conditional may look weird. it's because we want to disable the focus state while editing
     // so we look for edit, then turn off focus. `undefined` means "defer to parent value", so we are just ignoring
     <ProvideFocus focused={isEditing === true ? false : undefined}>
-      <Theme alt={alt}>
+      <Theme coat={coat}>
         <ListItemSimple
           nodeRef={composeRefs(listItemRef, nodeRef)}
           {...itemProps}

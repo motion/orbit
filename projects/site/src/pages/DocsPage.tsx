@@ -50,7 +50,6 @@ const DocsList = memo(() => {
     await whenIdle()
     await sleep(50)
     await whenIdle()
-    console.log('MOUNT')
     setMounted(true)
   })
 
@@ -90,7 +89,7 @@ const DocsList = memo(() => {
         if (!rows[0]) {
           console.warn('no row on select!', rows)
         } else {
-          console.log('nav to', rows[0].id)
+          console.debug('nav to', rows[0].id)
           curRow.current = rows[0]
           docsNavigate(rows[0].id)
         }

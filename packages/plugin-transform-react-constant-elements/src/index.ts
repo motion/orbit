@@ -7,10 +7,6 @@ export default declare((api, options) => {
 
   const { allowMutablePropsOnTags } = options
 
-  if (allowMutablePropsOnTags != null && !Array.isArray(allowMutablePropsOnTags)) {
-    throw new Error('.allowMutablePropsOnTags must be an array, null, or undefined.')
-  }
-
   const HOISTED = new WeakSet()
 
   const immutabilityVisitor = {
@@ -105,7 +101,7 @@ export default declare((api, options) => {
         // This transform takes the option `allowMutablePropsOnTags`, which is an array
         // of JSX tags to allow mutable props (such as objects, functions) on. Use sparingly
         // and only on tags you know will never modify their own props.
-        if (allowMutablePropsOnTags != null) {
+        if (allowMutablePropsOnTags) {
           // Get the element's name. If it's a member expression, we use the last part of the path.
           // So the option ["FormattedMessage"] would match "Intl.FormattedMessage".
           let namePath = path.get('openingElement.name')
@@ -114,7 +110,9 @@ export default declare((api, options) => {
           }
 
           const elementName = namePath.node.name
-          state.mutablePropsAllowed = allowMutablePropsOnTags.indexOf(elementName) > -1
+          state.mutablePropsAllowed = Array.isArray(allowMutablePropsOnTags)
+            ? allowMutablePropsOnTags.indexOf(elementName) > -1
+            : true
         }
 
         // Traverse all props passed to this element for immutability.

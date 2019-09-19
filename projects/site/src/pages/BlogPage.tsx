@@ -11,8 +11,8 @@ import { SectionContent } from '../views/SectionContent'
 import { TitleText } from '../views/TitleText'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { BlogPageIndex, PostMeta } from './BlogPage/BlogPageIndex'
-import { posts } from './BlogPage/posts'
 import { PostEntry } from './BlogPage/PostEntry'
+import { posts } from './BlogPage/posts'
 import { BlogTitle } from './BlogTitle'
 
 export default compose(
@@ -65,14 +65,16 @@ BlogPage.theme = 'light'
 function PostPage(props: { post: PostEntry; children?: any }) {
   return (
     <>
-      <BlogTitle paddingTop={50} />
+      <BlogTitle />
+      <Space size="xxxl" />
       <SectionContent>
         <ContentSection>
-          <TitleText size="xxl">{props.post.title}</TitleText>
-          <Space />
+          <TitleText size="lg" fontWeight={400}>
+            {props.post.title}
+          </TitleText>
+          <Space size="md" />
           <PostMeta post={props.post} />
-          <Space />
-          <Space />
+          <Space size="xl" />
           {props.children}
         </ContentSection>
       </SectionContent>

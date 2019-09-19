@@ -1,6 +1,6 @@
-import { ErrorBoundary, Loading, Theme, useIntersectionObserver, View } from '@o/ui'
+import { ErrorBoundary, Loading, Theme, useIntersectionObserver } from '@o/ui'
 import { once } from 'lodash'
-import React, { lazy, memo, Suspense, useEffect, useRef, useState } from 'react'
+import React, { lazy, memo, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { requestIdleCallback } from '../etc/requestIdle'
 import { Header } from '../Header'
@@ -8,23 +8,18 @@ import { Page } from '../views/Page'
 import { HeadSection } from './HomePage/HeadSection'
 import { LoadingPage } from './LoadingPage'
 
-const DeploySection = loadOnIntersect(lazy(() => retry(() => import('./HomePage/DeploySection'))))
-const AllInOnePitchDemoSection = loadOnIntersect(
-  lazy(() => retry(() => import('./HomePage/AllInOnePitchDemoSection'))),
-)
-const DataAppKitFeaturesSection = loadOnIntersect(
-  lazy(() => retry(() => import('./HomePage/DataAppKitFeaturesSection'))),
-)
-const FeaturesSection = loadOnIntersect(
-  lazy(() => retry(() => import('./HomePage/FeaturesSection'))),
-)
-const FooterSection = loadOnIntersect(lazy(() => retry(() => import('./HomePage/FooterSection'))))
-const MissionMottoSection = loadOnIntersect(
-  lazy(() => retry(() => import('./HomePage/MissionMottoSection'))),
-)
-const SecuritySection = loadOnIntersect(
-  lazy(() => retry(() => import('./HomePage/SecuritySection'))),
-)
+const Sections = {
+  DeploySection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/DeploySection')))),
+  AllInOnePitchDemoSection: loadOnIntersect(
+    lazy(() => retry(() => import('./HomePage/AllInOnePitchDemoSection'))),
+  ),
+  DataAppKitFeaturesSection: loadOnIntersect(
+    lazy(() => retry(() => import('./HomePage/DataAppKitFeaturesSection'))),
+  ),
+  FeaturesSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/FeaturesSection')))),
+  SecuritySection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/SecuritySection')))),
+  FooterSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/FooterSection')))),
+}
 
 export const HomePage = memo(() => {
   return (
@@ -36,25 +31,23 @@ export const HomePage = memo(() => {
           <HeadSection />
         </Page>
         <Page pages="auto">
-          <AllInOnePitchDemoSection />
+          <Sections.AllInOnePitchDemoSection />
         </Page>
         <Page pages="auto">
-          <View>
-            <DeploySection />
-          </View>
+          <Sections.DeploySection />
         </Page>
         <Page pages="auto">
-          <DataAppKitFeaturesSection />
+          <Sections.DataAppKitFeaturesSection />
         </Page>
         <Page pages="auto">
-          <FeaturesSection />
+          <Sections.FeaturesSection />
         </Page>
         <Page pages="auto">
-          <SecuritySection />
+          <Sections.SecuritySection />
         </Page>
         <Page pages={0.6}>
           <Theme name="home">
-            <FooterSection hideJoin />
+            <Sections.FooterSection hideJoin />
           </Theme>
         </Page>
       </main>
@@ -72,7 +65,7 @@ let allUpcoming = []
 const onIdle = () => new Promise(res => requestIdleCallback(res))
 
 const startLoading = once(async () => {
-  // let initial animation run
+  // let them all add
   await new Promise(res => setTimeout(res, 1000))
   // load rest of page
   while (allUpcoming.length) {
@@ -85,7 +78,7 @@ const startLoading = once(async () => {
   }
 })
 
-function loadOnIntersect(LazyComponent) {
+function loadOnIntersect(Component: any) {
   return props => {
     const [show, setShow] = useState(false)
     const ref = useRef(null)
@@ -101,12 +94,20 @@ function loadOnIntersect(LazyComponent) {
     })
 
     // preload them when ready
-    useEffect(() => {
-      allUpcoming.push({
-        top: ref.current.getBoundingClientRect().y,
-        load: () => setShow(true),
-      })
-      startLoading()
+    // or load the previous when its above
+    useLayoutEffect(() => {
+      const top = ref.current.getBoundingClientRect().y
+
+      // because we have auto sized heights we load everything above immediately
+      if (document.documentElement.scrollTop > top) {
+        setShow(true)
+      } else {
+        allUpcoming.push({
+          top,
+          load: () => setShow(true),
+        })
+        startLoading()
+      }
     }, [])
 
     const fallback = (
@@ -120,8 +121,8 @@ function loadOnIntersect(LazyComponent) {
             width: 2,
             position: 'absolute',
             // makes it load "before/after" by this px
-            top: -400,
-            bottom: -400,
+            top: -200,
+            bottom: -200,
           }}
           ref={ref}
         />
@@ -134,9 +135,9 @@ function loadOnIntersect(LazyComponent) {
     }
 
     return (
-      <ErrorBoundary name={`${LazyComponent.name}`}>
+      <ErrorBoundary name={`${Component.name}`}>
         <Suspense fallback={fallback}>
-          <LazyComponent {...props} />
+          <Component {...props} />
         </Suspense>
       </ErrorBoundary>
     )

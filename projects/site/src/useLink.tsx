@@ -43,6 +43,9 @@ export const createLink = memoize((href: string, header = null, isExternal = fal
   if (isExternal || checkExternal(href)) {
     return
   }
+  if (e.metaKey || e.ctrlKey) {
+    return
+  }
   clearTimeout(tm)
   e.preventDefault()
   // transition out body on slow

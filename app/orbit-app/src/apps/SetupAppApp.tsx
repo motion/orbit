@@ -43,7 +43,7 @@ function SetupAppMain() {
         <>
           <Button
             disabled={stackNav.currentItem && stackNav.currentItem.id === 'SetupAppCustom'}
-            alt="action"
+            coat="action"
             onClick={() => {
               stackNav.navigateTo({
                 id: 'SetupAppCustom',
@@ -146,13 +146,13 @@ function SetupAppCustom() {
 
       <Scale size="lg">
         <Toolbar>
-          <Button alt="action" iconAfter={false} icon="chevron-left" onClick={stackNav.back}>
+          <Button coat="action" iconAfter={false} icon="chevron-left" onClick={stackNav.back}>
             Back
           </Button>
           <View flex={1} />
           <Button
             disabled={!form.getValue('name')}
-            alt="confirm"
+            coat="confirm"
             onClick={async () => {
               const template = flow.data.selectedTemplate
               const name = form.getValue('name')
@@ -335,7 +335,7 @@ const SetupAppHomeToolbar = memo((_props: SetupAppHomeProps) => {
           </Button>
         ) : (
           <Button
-            alt="confirm"
+            coat="confirm"
             onClick={async () => {
               const definition = await getAppDefinition(flow.data.selectedAppIdentifier)
               installApp(definition, newAppStore.app)

@@ -109,7 +109,7 @@ export const OrbitHeader = memo(() => {
                   tooltipProps={{
                     distance: 16,
                   }}
-                  alt="flat"
+                  coat="flat"
                   icon="plus"
                   size="sm"
                   sizeIcon={1.6}

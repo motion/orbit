@@ -128,7 +128,7 @@ const colorThemes: ThemeSet = {
   }),
 }
 
-export const alternates: ThemeSet = Object.freeze({
+export const coats: ThemeSet = Object.freeze({
   ...colorThemes,
   info: colorThemes.lightBlue,
   error: colorThemes.lightRed,

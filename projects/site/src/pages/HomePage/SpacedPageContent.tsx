@@ -1,5 +1,5 @@
-import { Col, ViewProps } from '@o/ui'
-import React, { forwardRef } from 'react'
+import { Col, ColProps } from '@o/ui'
+import React from 'react'
 
 import { useScreenSize } from '../../hooks/useScreenSize'
 
@@ -7,11 +7,11 @@ export const SpacedPageContent = ({
   header = null,
   children,
   ...props
-}: ViewProps & { header?: any }) => {
+}: ColProps & { header?: any }) => {
   return (
-    <Col width="100%" sm-margin={0} margin={['auto', 0]} space="xl" {...props}>
+    <Col width="100%" sm-margin={0} margin={['auto', 0]} space="lg" sm-space="md" {...props}>
       <div style={{ display: 'flex', flex: 1 }} />
-      <Col space="xl" alignItems="center">
+      <Col space="xl" sm-space="md" alignItems="center">
         {header}
       </Col>
       {children}

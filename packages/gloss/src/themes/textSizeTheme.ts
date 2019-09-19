@@ -8,6 +8,7 @@ type TextStyles = {
 }
 
 export type TextSizeProps = {
+  sizeFont?: boolean | number
   sizeLineHeight?: boolean | number
   lineHeight?: number | string | any
   fontSize?: number | string | any
@@ -17,25 +18,32 @@ export type TextSizeProps = {
 
 // dont return undefined
 
-type TextSizeExtraProps = {
+export type TextSizeConfig = {
   scale?: number
   size?: number
 }
 
-export function getTextSizeTheme(props: TextSizeProps, extraProps?: TextSizeExtraProps) {
+export function getTextSizeTheme(props: TextSizeProps, extraProps?: TextSizeConfig) {
   const scale = (extraProps && extraProps.scale) || 1
   const size = ((extraProps && extraProps.size) || props.size || 1) * scale
+  const sizeFont = props.sizeFont === true ? 1 : props.sizeFont || 1
   const sizeLineHeight = (props.sizeLineHeight === true ? 1 : props.sizeLineHeight || 1) * scale
   const specifiedFontSize = typeof props.fontSize !== 'undefined'
   let fontSize = props.fontSize
+  // round fontsize/lineHeight the same direction
+  let shouldRoundUp = false
   if (!specifiedFontSize) {
     fontSize = size * 14
+    fontSize = sizeFont * fontSize
+    shouldRoundUp = fontSize % 1 >= 0.5
+    fontSize = Math.round(fontSize)
   }
   let styles: TextStyles | null = null
   let lineHeight = props.lineHeight
   if (typeof lineHeight === 'undefined' && typeof fontSize === 'number') {
     lineHeight = Math.log(fontSize * 500) * 2.25 + fontSize / 1.4 - 9.5
     lineHeight = lineHeight * sizeLineHeight
+    lineHeight = shouldRoundUp ? Math.ceil(lineHeight) : Math.floor(lineHeight)
   }
   let fontSizeNum
   let lineHeightNum

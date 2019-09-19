@@ -78,12 +78,12 @@ export function AppsMainAddAppContent({
       afterTitle={
         <>
           {def.auth && (
-            <Button alt="confirm" icon="lock" onClick={() => installApp(def!)}>
+            <Button coat="confirm" icon="lock" onClick={() => installApp(def!)}>
               Authenticate and add
             </Button>
           )}
           {!def.auth && !def.setup && (
-            <Button alt="confirm" icon="plus" onClick={() => installApp(def!, true)}>
+            <Button coat="confirm" icon="plus" onClick={() => installApp(def!, true)}>
               Add
             </Button>
           )}
@@ -98,7 +98,7 @@ export function AppsMainAddAppContent({
         )
       }
     >
-      {!!error && <Message alt="error">{error}</Message>}
+      {!!error && <Message coat="error">{error}</Message>}
 
       <SubSection title="Setup" titleSize="xs" subTitle="Customize and add app to workspace" space>
         <AppsMainNew customizeColor={!isDataDefinition(def)} />
@@ -117,7 +117,7 @@ export function AppsMainAddAppContent({
       </SubSection>
 
       {hasSetup && (
-        <Message alt="lightGray" icon="warn">
+        <Message coat="lightGray" icon="warn">
           This app stores data privately, only on your device. If your team enables decentralized
           key-sharing, it syncs private keys securely, <strong>only directly</strong> to others
           users in this space.

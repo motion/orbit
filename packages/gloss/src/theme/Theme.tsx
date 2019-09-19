@@ -9,8 +9,8 @@ export type ThemeSelect = ((theme: ThemeObject) => ThemeObject) | string | false
 
 type ThemeProps = {
   theme?: string | ThemeObject
-  subTheme?: ThemeSelect
-  alt?: string
+  themeSubSelect?: ThemeSelect
+  coat?: string
   name?: string
   children: any
 }
@@ -18,11 +18,11 @@ type ThemeProps = {
 export const cacheThemes = new WeakMap<any, ThemeContextType>()
 
 export const Theme = (props: ThemeProps) => {
-  const { theme, name, children, subTheme, alt } = props
+  const { theme, name, children, themeSubSelect, coat } = props
   const nextName = (typeof name === 'string' && name) || (typeof theme === 'string' && theme) || ''
   const prev = useContext(ThemeContext)
 
-  if (!theme && !name && !subTheme && !alt) {
+  if (!theme && !name && !themeSubSelect && !coat) {
     return children
   }
 
@@ -41,14 +41,14 @@ export const Theme = (props: ThemeProps) => {
     // getting the alt theme or create theme
     let previousOriginalTheme = prev.activeTheme
 
-    // if alt is defined and were already on alternate, swap to original theme before going to new alternate
-    if (typeof alt !== 'undefined') {
+    // if coat is defined and were already on coat, swap to original theme before going to new alternate
+    if (typeof coat !== 'undefined') {
       previousOriginalTheme = prev.activeTheme._originalTheme || prev.activeTheme
     }
 
     let nextTheme
 
-    if (props.alt || props.subTheme) {
+    if (coat || props.themeSubSelect) {
       nextTheme = Config.preProcessTheme
         ? Config.preProcessTheme(props, previousOriginalTheme)
         : prev.activeTheme
@@ -82,7 +82,8 @@ function createThemeFromObject(
   prev: ThemeContextType,
   next: ThemeObject,
 ): ThemeContextType {
-  const activeThemeName = `${prev.activeThemeName}.${props.alt || props.subTheme}.${uniqueId()}`
+  const activeThemeName = `${prev.activeThemeName}.${props.coat ||
+    props.themeSubSelect}.${uniqueId()}`
   return {
     ...prev,
     activeThemeName,

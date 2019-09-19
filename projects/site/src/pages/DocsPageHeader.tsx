@@ -64,19 +64,19 @@ export const DocsPageHeader = memo(
                     <ListItem
                       index={2}
                       title="Docs"
-                      alt={docsStore.section === 'docs' ? 'selected' : null}
+                      coat={docsStore.section === 'docs' ? 'selected' : null}
                       onClick={() => docsStore.toggleSection('docs')}
                     />
                     <ListItem
                       index={2}
                       title="APIs"
-                      alt={docsStore.section === 'apis' ? 'selected' : null}
+                      coat={docsStore.section === 'apis' ? 'selected' : null}
                       onClick={() => docsStore.toggleSection('apis')}
                     />
                     <ListItem
                       index={2}
                       title="Kit"
-                      alt={docsStore.section === 'kit' ? 'selected' : null}
+                      coat={docsStore.section === 'kit' ? 'selected' : null}
                       onClick={() => docsStore.toggleSection('kit')}
                     />
                   </>

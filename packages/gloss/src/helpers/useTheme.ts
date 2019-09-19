@@ -7,17 +7,17 @@ import { ThemeContext } from '../theme/ThemeContext'
 // can optionally pass in props accepted by theme
 
 export function useTheme(props?: {
-  subTheme?: ThemeSelect
-  alt?: string
-  ignoreAlternate?: boolean
+  themeSubSelect?: ThemeSelect
+  coat?: string
+  ignroeCoat?: boolean
 }) {
   let theme = useContext(ThemeContext).activeTheme
-  if (props && props.ignoreAlternate) {
+  if (props && props.ignroeCoat) {
     theme = theme._originalTheme || theme
   }
   if (
     props &&
-    (typeof props.alt !== 'undefined' || typeof props.subTheme !== 'undefined') &&
+    (typeof props.coat !== 'undefined' || typeof props.themeSubSelect !== 'undefined') &&
     Config.preProcessTheme
   ) {
     return Config.preProcessTheme(props, theme)

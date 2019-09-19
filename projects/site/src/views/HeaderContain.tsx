@@ -1,4 +1,5 @@
-import { Box, BoxProps, gloss } from 'gloss'
+import { View } from '@o/ui'
+import { BoxProps, gloss } from 'gloss'
 import React from 'react'
 
 import { SectionContent } from './SectionContent'
@@ -17,7 +18,7 @@ export function HeaderContain(props) {
   )
 }
 
-export const LinkSection = gloss<BoxProps & { alignRight?: boolean }>(Box, {
+export const LinkSection = gloss<BoxProps & { alignRight?: boolean }>(View, {
   flex: 4,
   flexDirection: 'row',
   justifyContent: 'space-between',

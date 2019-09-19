@@ -1,5 +1,5 @@
 import { MDXProvider } from '@mdx-js/react'
-import { gloss, Paragraph, Space, Tag } from '@o/ui'
+import { gloss, Image, Paragraph, SimpleText, Space, Tag, View } from '@o/ui'
 import React from 'react'
 
 import componentNames from '../../tmp/componentNames.json'
@@ -12,144 +12,179 @@ import { IntroText } from './IntroText'
 import { Key } from './Key'
 import { TitleText } from './TitleText'
 
+const contentSpaceSm = <Space size="sm" />
 const contentSpaceLg = <Space size="xl" />
 const contentSpace = <Space size="lg" />
+const Alt = props => (
+  <SimpleText marginTop={-16} marginBottom={16} fontSize="75%" alpha={0.5} {...props} />
+)
 
-export const components = {
-  // custom
-  Tag,
-  Example,
-  Key,
+function getComponents() {
+  return {
+    // custom
+    Tag,
+    Example,
+    Key,
 
-  IntroText: props => (
-    <>
-      <IntroText {...props} />
-      {contentSpaceLg}
-    </>
-  ),
+    IntroText: props => (
+      <>
+        <IntroText {...props} />
+        {contentSpaceLg}
+      </>
+    ),
 
-  h1: props => (
-    <>
-      <TitleText size="lg" {...props} />
-      {contentSpace}
-    </>
-  ),
-  h2: props => (
-    <>
-      <TitleText marginTop={16} size="md" {...props} />
-      {contentSpaceLg}
-    </>
-  ),
-  h3: props => (
-    <>
-      {contentSpace}
-      <TitleText marginTop={16} size="sm" {...props} />
-      {contentSpace}
-    </>
-  ),
-  h4: props => (
-    <>
-      <TitleText size="xs" {...props} />
-      {contentSpace}
-    </>
-  ),
-  pre: props => <div {...props} />,
-  code: props => (
-    <>
-      <CodeBlock {...props} />
-      {contentSpace}
-    </>
-  ),
-  li: props => (
-    <>
-      <li style={{ marginLeft: 26 }} {...props} />
-      <Space size="sm" />
-    </>
-  ),
-  ul: props => (
-    <>
-      <ul className="body-text" {...props} />
-      {contentSpace}
-    </>
-  ),
+    Alt,
 
-  a: props => {
-    const { tagName, ...lp } = linkProps(props.href)
-    return <a {...lp} {...props} />
-  },
+    LargeImage: ({ alt, ...rest }) => (
+      <>
+        <View width="140%" margin="20px -20%" md-margin={[20, -20]} md-width="calc(100% + 40px)">
+          <Image width="100%" height="auto" alt={alt} {...rest} />
+        </View>
+        {!!alt && <Alt>{alt}</Alt>}
+      </>
+    ),
 
-  ol: props => (
-    <>
-      <ol className="body-text" {...props} />
-      {contentSpace}
-    </>
-  ),
-  p: props => (
-    <>
-      <Paragraph
-        className="body-text"
-        margin={0}
-        fontSize="inherit"
-        lineHeight="inherit"
-        color="inherit"
-        {...props}
-      />
-      {contentSpace}
-    </>
-  ),
-  description: props => (
-    <>
-      <Paragraph
-        className="body-text"
-        margin={0}
-        {...props}
-        fontSize="inherit"
-        lineHeight="inherit"
-      />
-      {contentSpace}
-    </>
-  ),
-  blockquote: props => (
-    <>
-      <Paragraph
-        {...fontProps.TitleFont}
-        padding={[8, 20, 0]}
-        margin={20}
-        borderLeft={theme => [2, theme.borderColor]}
-        fontSize="110%"
-        lineHeight="inherit"
-        alpha={0.5}
-        {...props}
-      />
-    </>
-  ),
+    Image: ({ alt, ...rest }) => (
+      <>
+        <Image width="100%" height="auto" alt={alt} {...rest} />
+        {!!alt && <Alt>{alt}</Alt>}
+      </>
+    ),
 
-  inlineCode: ({ children, ...props }) => {
-    if (typeof children === 'string') {
-      const len = children.length
-      const end = children.slice(len - 2, len)
-      if (children[0] === '<' && end === '/>' && children.length < 100) {
-        const displayName = children.slice(1, len - 2).trim()
-        if (!!componentNames.find(x => x === displayName)) {
-          return (
-            <LinkedInlineCode
-              onClick={() => {
-                Navigation.navigate(`/docs/${displayName.toLowerCase().replace(' ', '-')}`)
-              }}
-            >
-              {children}
-            </LinkedInlineCode>
-          )
+    h1: props => (
+      <>
+        <TitleText size="lg" {...props} />
+        {contentSpace}
+      </>
+    ),
+    h2: props => (
+      <View>
+        {contentSpaceLg}
+        <TitleText fontWeight={400} size="sm" {...props} />
+        {contentSpace}
+      </View>
+    ),
+    h3: props => (
+      <View>
+        {contentSpaceSm}
+        <TitleText size="xxxs" {...props} />
+        {contentSpaceSm}
+      </View>
+    ),
+    h4: props => (
+      <View>
+        {contentSpaceSm}
+        <TitleText size="xxxs" fontWeight={400} alpha={0.6} {...props} />
+        {contentSpaceSm}
+      </View>
+    ),
+    pre: props => <div {...props} />,
+    code: props => (
+      <>
+        <CodeBlock {...props} />
+        {contentSpace}
+      </>
+    ),
+    li: props => (
+      <>
+        <li style={{ marginLeft: 26 }} {...props} />
+        <Space size="sm" />
+      </>
+    ),
+    ul: props => (
+      <>
+        <ul className="body-text" {...props} />
+        {contentSpace}
+      </>
+    ),
+
+    a: props => {
+      const { tagName, ...lp } = linkProps(props.href)
+      return <a {...lp} {...props} />
+    },
+
+    ol: props => (
+      <>
+        <ol className="body-text" {...props} />
+        {contentSpace}
+      </>
+    ),
+    p: props => {
+      return (
+        <>
+          <Paragraph
+            className="body-text"
+            margin={0}
+            fontSize="inherit"
+            lineHeight="inherit"
+            color="inherit"
+            {...props}
+          />
+          {contentSpace}
+        </>
+      )
+    },
+    description: props => (
+      <>
+        <Paragraph
+          className="body-text"
+          margin={0}
+          {...props}
+          fontSize="inherit"
+          lineHeight="inherit"
+        />
+        {contentSpace}
+      </>
+    ),
+    blockquote: props => (
+      <View>
+        {contentSpace}
+        <Paragraph
+          {...fontProps.TitleFont}
+          padding={[12, 20, 0]}
+          margin={[0, 20]} // top/bottom wont work here
+          borderLeft={theme => [2, theme.borderColor]}
+          fontSize="110%"
+          lineHeight="inherit"
+          alpha={0.5}
+          {...props}
+        />
+        {contentSpaceLg}
+      </View>
+    ),
+
+    inlineCode: ({ children, ...props }) => {
+      if (typeof children === 'string') {
+        const len = children.length
+        const end = children.slice(len - 2, len)
+        if (children[0] === '<' && end === '/>' && children.length < 100) {
+          const displayName = children.slice(1, len - 2).trim()
+          if (!!componentNames.find(x => x === displayName)) {
+            return (
+              <LinkedInlineCode
+                onClick={() => {
+                  Navigation.navigate(`/docs/${displayName.toLowerCase().replace(' ', '-')}`)
+                }}
+              >
+                {children}
+              </LinkedInlineCode>
+            )
+          }
         }
       }
-    }
-    return <InlineCode {...props}>{children}</InlineCode>
-  },
+      return <InlineCode {...props}>{children}</InlineCode>
+    },
+  }
 }
+
+const components = getComponents()
 
 export function MDX({ children, ...props }: any) {
   return (
-    <MDXProvider {...props} components={{ ...components, ...props.components }}>
+    <MDXProvider
+      {...props}
+      components={props.components ? { ...components, ...props.components } : components}
+    >
       {children}
     </MDXProvider>
   )

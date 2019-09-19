@@ -282,14 +282,14 @@ export function Form({
         <Section background="transparent" flex={1} {...sectionProps}>
           {formStore.globalError && (
             <>
-              <Message alt="error">{formStore.globalError}</Message>
+              <Message coat="error">{formStore.globalError}</Message>
               <Space />
             </>
           )}
 
           {!!formStore.errors && (
             <>
-              <Message alt="warn">Form has errors, please check.</Message>
+              <Message coat="warn">Form has errors, please check.</Message>
               <Space />
             </>
           )}
@@ -300,7 +300,7 @@ export function Form({
             <>
               <Space />
               <FormField label="">
-                <Button alignSelf="flex-end" size="lg" type="submit" alt="action">
+                <Button alignSelf="flex-end" size="lg" type="submit" coat="action">
                   {submitButton === true ? 'Submit' : submitButton}
                 </Button>
               </FormField>

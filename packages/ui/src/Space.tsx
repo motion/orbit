@@ -2,6 +2,7 @@ import { selectDefined } from '@o/utils'
 import { Box, gloss } from 'gloss'
 
 import { isBrowser } from './constants'
+import { mediaQueryKeysSize } from './mediaQueryKeys'
 import { useScale } from './Scale'
 
 // we need just a touch of css to collapse multiple spaces nicely
@@ -9,24 +10,16 @@ if (isBrowser) {
   require('./Space.css')
 }
 
-export type Size =
-  | 'xs'
-  | 'sm'
-  | 'md'
-  | 'lg'
-  | 'xl'
-  | 'xxl'
-  | 'xxxl'
-  | number
-  | boolean
-  | void
-  | string
-
+export type SizeName = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'
+export type Size = SizeName | number | boolean | void | string
 export type Sizes = Size | Size[]
 
 export type SpaceProps = {
   size?: Size
+  scale?: number
   flex?: number
+  // support media query style props sm-size, etc
+  [key: string]: any
 }
 
 export const spaceSizes = {
@@ -68,13 +61,29 @@ export function getSpacesSize(space: Sizes, scale: number = 1) {
   return getSpaceSize(space)
 }
 
-export const Space = gloss<SpaceProps & { scale?: number }>(Box)
+export const Space = gloss<SpaceProps>(Box)
   .theme(({ size, scale = 1, ...rest }) => {
-    const dim = getSpaceSize(size, selectDefined(scale, useScale()))
+    scale = selectDefined(scale, useScale())
+    const dim = getSpaceSize(size, scale)
+    // support media query spaces
+    let mediaQueryStyles = null
+    for (const key in rest) {
+      if (key in mediaQueryKeysSize) {
+        const val = rest[key]
+        const mediaDim = getSpaceSize(val, scale)
+        const mediaKey = key.replace('-size', '')
+        mediaQueryStyles = mediaQueryStyles || {}
+        mediaQueryStyles[`${mediaKey}-width`] = mediaDim
+        mediaQueryStyles[`${mediaKey}-height`] = mediaDim
+        // remove invalid style
+        delete rest[key]
+      }
+    }
     return {
       width: dim,
       height: dim,
       ...rest,
+      ...mediaQueryStyles,
     }
   })
   .withConfig({

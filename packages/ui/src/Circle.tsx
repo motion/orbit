@@ -2,7 +2,7 @@ import { Base, gloss, propsToStyles } from 'gloss'
 
 import { getSize } from './Sizes'
 import { Size } from './Space'
-import { scaledTextSizeTheme } from './text/SimpleText'
+import { scaledTextSizeTheme } from './text/scaledTextSizeTheme'
 
 export const Circle = gloss<{ size?: Size; background?: any }>(Base, {
   position: 'relative',

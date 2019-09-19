@@ -3,7 +3,6 @@ import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
-import { useScreenHeightVal } from '../../hooks/useScreenSize'
 import { useSiteStore } from '../../SiteStore'
 import { linkProps } from '../../useLink'
 import { fadeAnimations, FadeInView, transitions, useFadePage } from '../../views/FadeInView'
@@ -32,13 +31,7 @@ export function HeadSection() {
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
       /> */}
 
-      <Col
-        right={useScreenHeightVal(40, 0)}
-        left={useScreenHeightVal(40, 0)}
-        opacity={fontsLoaded ? 1 : 0}
-        margin={['auto', 0]}
-        height="calc(100% - 120px)"
-      >
+      <Col opacity={fontsLoaded ? 1 : 0} margin={['auto', 0]} height="calc(100% - 120px)">
         <Space size="xxl" />
         <Col
           flex={8}
@@ -79,7 +72,8 @@ export function HeadSection() {
         position="absolute"
         left="50%"
         top={0}
-        marginLeft={-80 / 2}
+        marginLeft={`${-180 / 2}px`}
+        width={180}
         alignItems="center"
         justifyContent="center"
       >
@@ -161,7 +155,6 @@ const HeadContent = memo(() => {
           <TextFitTitle
             fontWeight={100}
             alignSelf="center"
-            transformOrigin="top center"
             selectable
             textAlign="center"
             whiteSpace="nowrap"
@@ -173,7 +166,7 @@ const HeadContent = memo(() => {
                 sizeHeight={1.01}
                 sizePadding={1.4}
                 sizeRadius={4}
-                alt="lightBlue"
+                coat="lightBlue"
                 zIndex={1000}
                 position="absolute"
                 top={-60}
@@ -189,7 +182,7 @@ const HeadContent = memo(() => {
                 Orbit enters private beta!
               </Tag>
             </FadeInView>
-            <FadeInView disable={!measured} delayIndex={2}>
+            <FadeInView disable={!measured} delayIndex={2} {...fontProps.TitleFont}>
               Apps for teams
             </FadeInView>
           </TextFitTitle>
@@ -203,12 +196,12 @@ const HeadContent = memo(() => {
             minHeight="min-content"
           >
             <TitleParagraph {...para}>
-              {/* first line */}A home base for teams. Code amazing internal tools easily.
+              {/* first line */}A home base for teams to create internal tools with ease.
             </TitleParagraph>
             &nbsp;
             <TitleParagraph {...para}>
               {/* second line */}
-              Orbit is a head-up display for data&nbsp;&&nbsp;apps.
+              Your new heads-up display for data&nbsp;&&nbsp;apps.
             </TitleParagraph>
             {br}
             <View position="relative" marginBottom={-95} marginTop={10}>
@@ -262,5 +255,5 @@ const TextFitTitle = (props: TitleProps) => {
 }
 
 const TitleParagraph = (props: SimpleTextProps) => {
-  return <Paragraph alpha={0.7} {...props} />
+  return <Paragraph alpha={0.7} xs-display="inline" {...props} />
 }

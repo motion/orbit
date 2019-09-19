@@ -35,6 +35,7 @@ export const usePageTheme = () => {
             updateLayout()
             return next
           }
+          return prev
         })
       },
       [key],

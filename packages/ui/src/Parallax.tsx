@@ -1,8 +1,8 @@
 import { createStoreContext } from '@o/use-store'
 import { idFn } from '@o/utils'
 import { useMotionValue } from 'framer-motion'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import React from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { Geometry } from './Geometry'
 import { composeRefs } from './helpers/composeRefs'
@@ -74,7 +74,7 @@ export function ParallaxView({
   const parent = ParallaxContainerStore.useStore()
   const offsetKey = direction === 'y' ? 'top' : 'left'
   const sizeKey = direction === 'y' ? 'height' : 'width'
-  const dirVal = parent[offsetKey]
+  const dirVal = Math.max(0, parent[offsetKey])
   const offsetPct = useMotionValue(1)
   const state = useRef({
     nodeSize: { width: 0, height: 0 },
@@ -89,6 +89,9 @@ export function ParallaxView({
     } else if (next < 0) {
       // we went negative, child bigger than container
       next = 0.99
+    }
+    if (debug) {
+      console.log('debug', { parentSize, nodeSize, offset, speed })
     }
     offsetPct.set(next)
   }
@@ -122,6 +125,9 @@ export function ParallaxView({
                   const min = 0
                   const max = parent[sizeKey] - state.current.nodeSize[sizeKey]
                   return Math.max(min, Math.min(max, position))
+                }
+                if (debug) {
+                  console.log('final', { dirVal, position, offsetPctVal, offsetVal, pos })
                 }
                 return position
               }),

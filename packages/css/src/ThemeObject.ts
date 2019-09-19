@@ -9,7 +9,7 @@ export type AlternateThemeSet = {
 }
 
 export type ThemeObject = {
-  alternates?: AlternateThemeSet
+  coats?: AlternateThemeSet
   background: Color
   color: Color
   borderColor?: Color

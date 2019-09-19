@@ -152,32 +152,20 @@ export const FadeInView = memo(
       ;[style, animate] = [animate, style]
     }
 
-    if (initialScreenWidth < 480) {
-      return (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'inherit',
-            alignItems: 'inherit',
-            ...style,
-          }}
-          {...rest as any}
-        >
-          {children}
-        </div>
-      )
-    }
+    const finalTransition =
+      initialScreenWidth < 480
+        ? { duration: 0 }
+        : {
+            ...(transition as any),
+            delay: delayIndex ? delayIndex / 5 : (delay || 1) / 1000,
+          }
 
     return (
       <View
         data-is="FadeChild"
         style={style}
         animate={shown ? animate : undefined}
-        transition={{
-          ...(transition as any),
-          delay: delayIndex ? delayIndex / 5 : (delay || 1) / 1000,
-        }}
+        transition={finalTransition}
         {...rest}
       >
         {children}

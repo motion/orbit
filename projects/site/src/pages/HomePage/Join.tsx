@@ -72,14 +72,14 @@ export class Join extends React.Component<any> {
             id="mce-EMAIL"
             placeholder="Email address..."
             flex={1}
-            size={1.5}
+            size={1.25}
             sizeRadius={5}
             sizePadding={1.5}
             defaultValue=""
             {...inputProps}
           />
           <Button
-            size={1.5}
+            size={1.25}
             sizeRadius={5}
             sizeFont={0.8}
             sizePadding={2}
@@ -99,7 +99,7 @@ export class Join extends React.Component<any> {
           <Col maxWidth={500} margin={[0, 'auto']}>
             <Space size="lg" />
             <Message
-              alt={success ? 'success' : error ? 'error' : undefined}
+              coat={success ? 'success' : error ? 'error' : undefined}
               dangerouslySetInnerHTML={{
                 __html: message,
               }}

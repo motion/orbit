@@ -3,8 +3,8 @@ html {
 }
 
 body {
-  font-family: 'Colfax', 'system-ui', 'BlinkMacSystemFont', 'Helvetica Neue', 'Helvetica',
-    sans-serif;
+  font-family: -apple-system, 'SF Pro Text', BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+    Helvetica, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Droid Sans', sans-serif;
   margin: 0;
   padding: 0;
   color: #333;
@@ -228,7 +228,7 @@ select:-webkit-autofill:focus {
 
 .theme-home *::selection,
 .theme-dark *::selection {
-  background: rgba(100, 100, 100, 0.25);
+  background: rgba(100, 100, 100, 0.45);
   color: #fff;
   text-shadow: none;
 }
@@ -430,13 +430,6 @@ fieldset {
   height: 0px;
   width: 0px;
   background: transparent;
-}
-
-div.alt {
-  font-size: 75%;
-  color: rgba(0, 0, 0, 0.5);
-  margin-bottom: 16px;
-  margin-top: -16px;
 }
 
 .mini-scrollbars ::-webkit-scrollbar {

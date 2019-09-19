@@ -5,7 +5,7 @@ const systemFont = `-apple-system, "SF Pro Text", BlinkMacSystemFont, 'Segoe UI'
 export const fontProps = {
   TitleFont: {
     fontFamily: 'GTEesti',
-    WebkitFontSmoothing: 'initial',
+    // WebkitFontSmoothing: 'initial',
   },
   BodyFont: {
     fontFamily: `${systemFont}`,

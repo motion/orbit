@@ -44,13 +44,16 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
 
     // spaceable
     if (space || spaceAround || beforeSpace || afterSpace) {
-      element = createSpacedChildren({
-        space,
-        spaceAround,
-        beforeSpace,
-        afterSpace,
-        children,
-      })
+      element = createSpacedChildren(
+        {
+          space,
+          spaceAround,
+          beforeSpace,
+          afterSpace,
+          children,
+        },
+        colProps,
+      )
     }
 
     // collapsable
@@ -75,7 +78,8 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
     }
 
     return (
-      <View {...defaultProps} {...props} padding={0}>
+      // minHeight and padding are handled by paddedView
+      <View {...defaultProps} {...props} padding={0} minHeight="auto">
         {wrapWithPaddedView(wrapWithSuspense(element, suspense), props)}
       </View>
     )

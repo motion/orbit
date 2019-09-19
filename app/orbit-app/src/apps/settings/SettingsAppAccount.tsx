@@ -137,14 +137,14 @@ export default function SettingsAppAccount() {
             <>
               <Message>
                 You account was synced last time on {new Date(user.lastTimeSync).toString()}.
-                <Button alt="action" onClick={cloudSync}>
+                <Button coat="action" onClick={cloudSync}>
                   Sync now
                 </Button>
               </Message>
             </>
           )}
 
-          <Button alt="action" onClick={logout}>
+          <Button coat="action" onClick={logout}>
             Logout
           </Button>
         </>
@@ -170,7 +170,7 @@ export default function SettingsAppAccount() {
                 value={email}
                 onChange={event => setEmail((event.target as any).value)}
               />
-              <Button alt="action" onClick={sendEmail}>
+              <Button coat="action" onClick={sendEmail}>
                 Send Login Link
               </Button>
             </Row>

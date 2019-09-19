@@ -7,8 +7,8 @@ import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
 
+const ReactRefreshPlugin = require('@o/webpack-fast-refresh')
 // reduced a 5mb bundle by 0.01mb...
-const { ReactRefreshPlugin } = require('@o/webpack-react-refresh')
 const ShakePlugin = require('webpack-common-shake').Plugin
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { BundleStatsWebpackPlugin } = require('bundle-stats')
@@ -171,6 +171,7 @@ async function makeConfig() {
   // console.log('tsEntries', tsEntries)
 
   const config = {
+    cache: { type: 'filesystem' },
     target,
     mode,
     entry,

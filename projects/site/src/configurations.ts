@@ -1,6 +1,5 @@
 import { configureUI } from '@o/ui/config'
 import { configureUseStore, debugUseStore, IS_STORE } from '@o/use-store'
-import ResizeObserver from 'resize-observer-polyfill'
 
 import * as Constants from './constants'
 
@@ -8,9 +7,6 @@ function configure() {
   const hasConfigured = window['hasConfigured']
   window['hasConfigured'] = true
   if (hasConfigured) return
-
-  // required in production
-  window['ResizeObserver'] = ResizeObserver
 
   // run configureUI first!
   configureUI({

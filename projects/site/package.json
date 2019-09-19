@@ -28,6 +28,7 @@
     "@o/use-store": "^2.6.0",
     "@o/wait-for-fonts": "^2.6.0",
     "array-flat-polyfill": "^1.0.1",
+    "intersection-observer": "0.5.1",
     "jsonp": "^0.2.1",
     "lodash": "4.17.11",
     "memoize-weak": "1.0.2",
@@ -47,8 +48,7 @@
     "@welldone-software/why-did-you-render": "3.3.3",
     "static-mock-data": "4.0.0",
     "sticky-sidebar": "3.3.1",
-    "use-memo-one": "^1.1.0",
-    "zenscroll": "^4.0.2"
+    "use-memo-one": "^1.1.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.1",

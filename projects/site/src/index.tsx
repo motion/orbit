@@ -1,11 +1,30 @@
-// import './assets/font-colfax/stylesheet.css'
 import './assets/font-gteesti/stylesheet.css'
 import './assets/siteBase.css'
 import 'requestidlecallback-polyfill'
 
-require('array-flat-polyfill')
-require('react-dom') // ensure hmr patch applied
-require('./configurations')
-require('./startSite')
+// import './assets/font-colfax/stylesheet.css'
+async function start() {
+  let polyfills = []
+
+  // polyfills
+  if (!Array.prototype.flatMap) {
+    polyfills.push(import('array-flat-polyfill'))
+  }
+  if (!window['IntersectionObserver']) {
+    polyfills.push(import('intersection-observer'))
+  }
+  if (!window['ResizeObserver']) {
+    polyfills.push(async () => {
+      window['ResizeObserver'] = await import('resize-observer-polyfill')
+    })
+  }
+
+  await Promise.all(polyfills)
+
+  require('./configurations')
+  require('./startSite')
+}
+
+start()
 
 process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()

@@ -1,6 +1,5 @@
 import { debounce } from 'lodash'
 import React from 'react'
-import ResizeObserver from 'resize-observer-polyfill'
 
 import { innerHeight, innerWidth } from './utils/innerSize'
 import series from './utils/series'
@@ -53,6 +52,7 @@ export default class TextFit extends React.Component<TextFitProps> {
   pid = 0
   parent = React.createRef<HTMLDivElement>()
   child = React.createRef<HTMLDivElement>()
+  // @ts-ignore
   ro = new ResizeObserver(() => this.handleParentResize())
 
   state = {

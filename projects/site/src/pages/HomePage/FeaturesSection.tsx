@@ -49,11 +49,10 @@ const sections = {
   ],
   Tech: [
     {
-      title: 'React Concurrent, Suspense & Refresh',
+      title: 'The latest React, Typescript & Webpack',
       icon: 'apps',
       body: [
-        `Apps talk to each other with simple typed APIs. Orbit comes with many data apps.`,
-        `They can also sync data into a common format to display, share and export.`,
+        `React Refresh hot reloading, with React Concurrent rendering out of the box. Plus, support for Suspense data-loading built into every library and view.`,
       ],
     },
     {
@@ -65,7 +64,7 @@ const sections = {
       ],
     },
     {
-      title: `Background workers`,
+      title: `Mulitprocess`,
       icon: `shop`,
       body: [
         `A new platform designed from the ground up to make common apps easy to build, using modern TypeScript and an incredible build system designed for developer friendliness.`,
@@ -107,7 +106,7 @@ const sections = {
       ],
     },
     {
-      title: `Natural Language Search`,
+      title: `Clipboard`,
       icon: `widget`,
       body: [
         `A desktop-class UI kit -- fast, intuitive, with views that work well together and adapt to your data structures.`,

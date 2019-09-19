@@ -1,3 +1,6 @@
-import pluralizer from 'pluralize'
+import pluralizeOg from 'pluralize'
 
-export const pluralize = (amount: number, name: string) => pluralizer(name, amount)
+// add types
+export const pluralize = (word: string, count: number, inclusize?: boolean) => {
+  return pluralizeOg(word, count, inclusize)
+}

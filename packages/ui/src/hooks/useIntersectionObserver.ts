@@ -1,11 +1,6 @@
-import { RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { RefObject, useLayoutEffect, useRef, useState } from 'react'
 
-import { isBrowser } from '../constants'
 import { useGet } from './useGet'
-
-if (isBrowser) {
-  require('intersection-observer')
-}
 
 export function useIntersectionObserver(
   props: {

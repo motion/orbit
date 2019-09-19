@@ -1,11 +1,10 @@
-import { Button, ErrorBoundary, FullScreen, Portal, ProvideUI, Theme, Title, View } from '@o/ui'
+import { Button, ErrorBoundary, FullScreen, Portal, ProvideUI, scrollTo, Theme, Title, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { throttle } from 'lodash'
 import React, { memo, useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import { NotFoundBoundary, useCurrentRoute, useLoadingRoute } from 'react-navi'
 
-import { scrollTo } from './etc/helpers'
 import { Header } from './Header'
 import { useScreenSize } from './hooks/useScreenSize'
 import { useSiteStore } from './SiteStore'

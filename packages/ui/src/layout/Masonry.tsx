@@ -1,6 +1,5 @@
 import { isEqual } from '@o/fast-compare'
 import { gloss } from 'gloss'
-import { on } from '@o/utils'
 import React, { Children, cloneElement, isValidElement } from 'react'
 
 const rowHeight = 1
@@ -41,12 +40,17 @@ export class Masonry extends React.PureComponent<MasonryProps> {
 
   gridNode: HTMLElement = null
 
+  measureTm = null
+  componentWillUnmount() {
+    clearTimeout(this.measureTm)
+  }
+
   async setGrid(gridRef) {
     if (!gridRef) return
     if (this.state.measured) return
     this.gridNode = gridRef
     // small delay fixes bug that happens sometimes, low confidence
-    on(this, setTimeout(this.measureGrid, 30))
+    this.measureTm = setTimeout(this.measureGrid, 30)
   }
 
   measureGrid = () => {

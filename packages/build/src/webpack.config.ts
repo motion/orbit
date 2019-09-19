@@ -331,12 +331,6 @@ async function makeConfig() {
           resourceRegExp: /^(electron-log)$/,
         }),
 
-      target !== 'node' &&
-        mode === 'production' &&
-        new webpack.IgnorePlugin({
-          resourceRegExp: /^(assert|@o\/debug)$/,
-        }),
-
       mode === 'development' && hot && new webpack.HotModuleReplacementPlugin(),
       mode === 'development' && hot && new ReactRefreshPlugin(),
 

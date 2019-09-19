@@ -1,10 +1,6 @@
-import AwaitLock from 'await-lock'
-
 export * from './highlightText'
 export * from './on'
 export * from './randomWords'
-
-export const Lock = AwaitLock
 
 // type helpers, a little awkward here
 // enforce immutable style updates otherwise you hit insane cache issus

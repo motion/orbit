@@ -10,6 +10,7 @@ import { Paragraph } from '../views/Paragraph'
 import { PillButton } from '../views/PillButton'
 import { SearchInput } from '../views/SearchInput'
 import { SectionContent } from '../views/SectionContent'
+import { TitleText } from '../views/TitleText'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { apps } from './HomePage/apps'
 import { makeWavePattern } from './makeWavePattern'
@@ -74,27 +75,26 @@ export function AppsPage() {
         <main className="main-contents" style={{ minHeight: 1600 }}>
           <SectionContent flex={1} marginTop={54} paddingTop="5%" paddingBottom="5%">
             <Col space="xxxl">
-              <Title size="xxl" margin={[0, 'auto']}>
+              <TitleText size="lg" textAlign="center" margin={[0, 'auto']}>
                 Discover apps
-              </Title>
+              </TitleText>
               <AppSearch />
             </Col>
           </SectionContent>
 
           <AppDescription />
 
-          <SectionContent id="faq" background="#000">
+          <SectionContent id="faq" background="#050505">
             <Space size="xxxl" />
 
             <Col
-              sm-padding="0"
+              className="faq-section content"
               padding={[50, '15%']}
-              lg-padding={[100, '20%', 100]}
+              sm-padding="0"
               space="xxl"
               spaceAround
               flex={1}
               overflow="hidden"
-              className="content"
             >
               <PillButton>FAQ</PillButton>
 
@@ -275,13 +275,7 @@ const AppSearch = memo(() => {
       </View>
 
       <Col padding>
-        <Grid
-          alignItems="flex-start"
-          height={dim * 2 + 60}
-          space="xl"
-          itemMinWidth={dim}
-          overflow="hidden"
-        >
+        <Grid alignItems="flex-start" height={dim * 2 + 60} space="xl" itemMinWidth={dim}>
           {store.results}
         </Grid>
         <Space size="lg" />

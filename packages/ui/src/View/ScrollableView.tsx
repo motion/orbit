@@ -56,19 +56,12 @@ export function wrapWithPaddedView(
   props: ScrollableViewProps,
 ): JSX.Element {
   const hasPadding = Array.isArray(props.padding) ? props.padding.some(Boolean) : !!props.padding
-  // wrap inner with padding view only if necessary (this is super low level view)
+  // wrap inner with padding view only if necessary (this is a low level view)
   // this is necessary so CSS scrollable has proper "end margin"
   if (hasPadding) {
     const isWrapped = props.flexWrap === 'wrap'
     element = (
-      <PaddedView
-        scrollable={props.scrollable}
-        parentSpacing={props.parentSpacing}
-        isWrapped={isWrapped}
-        padding={props.padding}
-        flex={props.flex}
-        minHeight={props.minHeight}
-      >
+      <PaddedView {...props} isWrapped={isWrapped}>
         {element}
       </PaddedView>
     )

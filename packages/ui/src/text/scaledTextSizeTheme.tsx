@@ -1,3 +1,4 @@
+import { isDefined } from '@o/utils'
 import { getTextSizeTheme } from 'gloss'
 
 import { hasMediaQueries, mediaQueryKeysSize } from '../mediaQueryKeys'
@@ -18,7 +19,7 @@ export function getMediaQueryTextSizeTheme(props: any, sizing: { scale: number; 
   // media query size
   if (hasMediaQueries) {
     for (const key in mediaQueryKeysSize) {
-      if (!!props[key]) {
+      if (isDefined(props[key])) {
         const mediaKey = key.replace('-size', '')
         const mediaSizeVal = props[key]
         const mediaSize = getTextSize(mediaSizeVal)

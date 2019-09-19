@@ -1,3 +1,4 @@
+import { isDefined } from '@o/utils'
 import React, { Fragment, isValidElement } from 'react'
 
 import { hasMediaQueries, mediaQueryKeysSpace } from './mediaQueryKeys'
@@ -63,7 +64,7 @@ export function createSpacedChildren(
   let sizeMediaQueries = null
   if (hasMediaQueries) {
     for (const key in mediaQueryKeysSpace) {
-      if (key in allProps) {
+      if (isDefined(allProps[key])) {
         sizeMediaQueries = sizeMediaQueries || {}
         sizeMediaQueries[key.replace('-space', '-size')] = allProps[key]
       }

@@ -12,6 +12,7 @@ import { IntroText } from './IntroText'
 import { Key } from './Key'
 import { TitleText } from './TitleText'
 
+const contentSpaceSm = <Space size="sm" />
 const contentSpaceLg = <Space size="xl" />
 const contentSpace = <Space size="lg" />
 const Alt = props => (
@@ -65,16 +66,16 @@ function getComponents() {
     ),
     h3: props => (
       <View>
-        {contentSpace}
+        {contentSpaceSm}
         <TitleText size="xxxs" {...props} />
-        {contentSpace}
+        {contentSpaceSm}
       </View>
     ),
     h4: props => (
       <View>
-        {contentSpace}
+        {contentSpaceSm}
         <TitleText size="xxxs" fontWeight={400} alpha={0.6} {...props} />
-        {contentSpace}
+        {contentSpaceSm}
       </View>
     ),
     pre: props => <div {...props} />,

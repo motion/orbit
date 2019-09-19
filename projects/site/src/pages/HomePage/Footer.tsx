@@ -7,16 +7,18 @@ import { BottomButton } from './BottomButton'
 
 export const Footer = () => {
   const sectionMinWidth = {
-    'sm-minWidth': 250,
+    'sm-minWidth': '100%',
     minWidth: 150,
   }
   return (
     <Row
-      sm-flexDirection="column"
       flexDirection="row"
       flexWrap="wrap"
+      sm-flexDirection="column"
+      sm-flexWrap="nowrap"
       space="lg"
       padding={[0, true, 'xxxl']}
+      sm-padding={0}
       width="100%"
       minHeight={250}
       flex={8}
@@ -51,8 +53,15 @@ export const Footer = () => {
         <SmallLink href="https://github.com/tryorbit">Github</SmallLink>
       </Col>
 
-      <Col sm-order={-1} minWidth={200} flex={2} space="md">
-        <SmallTitle>Follow Orbit for more updates</SmallTitle>
+      <Col
+        {...sectionMinWidth}
+        sm-order={-1}
+        minWidth={200}
+        flex={2}
+        space="md"
+        sm-alignItems="center"
+      >
+        <SmallTitle alpha={0.6}>Follow Orbit for more updates</SmallTitle>
         <Space size="xs" />
         <Row space>
           <BottomButton href="https://github.com/tryorbit">

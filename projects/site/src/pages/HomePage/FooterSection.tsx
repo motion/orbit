@@ -11,6 +11,7 @@ export default memo(function FeetSection(props: { hideJoin?: boolean }) {
     <>
       <View
         padding="xxl"
+        sm-padding={0}
         justifyContent="space-between"
         alignItems="center"
         marginTop="auto"

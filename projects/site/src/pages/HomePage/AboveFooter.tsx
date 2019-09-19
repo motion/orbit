@@ -9,10 +9,11 @@ export const AboveFooter = (props: { hideJoin?: boolean }) => {
   return (
     <>
       <LogoVertical />
+      <Space size={75} />
       {!props.hideJoin && (
         <>
-          <Space size={75} />
           <SignupForm width="80%" background={theme.backgroundStrong} borderRadius={20} />
+          <Space size={75} />
         </>
       )}
     </>

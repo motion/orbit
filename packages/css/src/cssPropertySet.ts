@@ -549,6 +549,7 @@ type transformSyntax = {
   skewY?: number | string
   matrix?: string
   matrix3d?: string
+  perspective?: number | string
 }
 export type transform = 'none' | string | transformSyntax
 export type transformBox = 'border-box' | 'fill-box' | 'view-box'

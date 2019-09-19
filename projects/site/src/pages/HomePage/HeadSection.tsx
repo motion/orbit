@@ -58,77 +58,98 @@ export function HeadSection() {
           <HeadTextSection />
         </Col>
         <Page.ParallaxView
-          speed={-0.15}
+          speed={-0.05}
+          offset={0}
           className="app-screenshot"
           position="relative"
-          height={500}
+          height={300}
           flex={7}
-          margin={[0, '-10%']}
+          margin={[-100, '-10%', -30]}
           userSelect="none"
+          zIndex={-1}
         >
           <FadeInView {...fadeAnimations.up} delayIndex={4}>
-            <Image
-              display="block"
-              src={require('../../public/images/screen.jpg')}
-              width="auto"
-              height={500}
-              maxWidth={1200}
-              margin="auto"
-            />
+            <View
+              transform={{
+                perspective: 10000,
+                rotateY: '15deg',
+                rotateX: '58deg',
+                rotateZ: '-22deg',
+              }}
+            >
+              <Image
+                display="block"
+                src={require('../../public/images/screen.jpg')}
+                width="auto"
+                height={500}
+                maxWidth={1200}
+                margin="auto"
+              />
+            </View>
           </FadeInView>
         </Page.ParallaxView>
       </Col>
       <Page.ParallaxView
         speed={0.1}
-        offset={0.82}
+        offset={0.6}
         zIndex={100}
         position="absolute"
         left="50%"
-        top={0}
+        top="2%"
         marginLeft={`${-180 / 2}px`}
         width={180}
         alignItems="center"
         justifyContent="center"
       >
-        <View
-          animate
-          transformOrigin="center center"
-          width={80}
-          height={80}
-          whileHover={{
-            scale: 1.2,
-          }}
-          whileTap={{
-            rotate: '360deg',
-          }}
+        <FadeInView
+          delayIndex={6}
+          {...fadeAnimations.up}
+          flex={1}
+          alignItems="inherit"
+          justifyContent="inherit"
         >
-          <FadeInView
-            delayIndex={3}
-            background={[255, 255, 255, 0.1]}
-            borderRadius={100}
-            alignItems="center"
-            justifyContent="center"
-            width="100%"
-            height="100%"
-            pointerEvents="auto"
-            cursor="pointer"
-            transition="all ease 1s"
-            hoverStyle={{
-              background: [255, 255, 255, 0.15],
+          <View
+            animate
+            transformOrigin="center center"
+            width={80}
+            height={80}
+            whileHover={{
+              scale: 1.2,
+            }}
+            whileTap={{
+              rotate: '360deg',
+            }}
+            sm-transform={{
+              scale: 0.8,
             }}
           >
-            <Icon size={28} color="#fff" name="play" />
-          </FadeInView>
-        </View>
-        <Space />
-        <View
-          padding={[3, 8]}
-          background={[255, 255, 255, 0.1]}
-          borderRadius={100}
-          border={[2, '#00000055']}
-        >
-          <SimpleText>Watch the demo</SimpleText>
-        </View>
+            <View
+              background={[255, 255, 255, 0.1]}
+              borderRadius={100}
+              alignItems="center"
+              justifyContent="center"
+              width="100%"
+              height="100%"
+              pointerEvents="auto"
+              cursor="pointer"
+              transition="all ease 1s"
+              hoverStyle={{
+                background: [255, 255, 255, 0.15],
+              }}
+            >
+              <Icon size={28} color="#fff" name="play" />
+            </View>
+          </View>
+          <Space />
+          <View
+            padding={[3, 8]}
+            background={[255, 255, 255, 0.1]}
+            borderRadius={100}
+            border={[2, '#00000055']}
+          >
+            <SimpleText>Watch the demo</SimpleText>
+          </View>
+        </FadeInView>
       </Page.ParallaxView>
     </Fade.FadeProvide>
   )
@@ -163,6 +184,8 @@ const HeadTextSection = memo(() => {
         textAlign="center"
         alignItems="center"
         justifyContent="center"
+        zIndex={10}
+        position="relative"
       >
         <View width="100%" alignItems="center">
           <TextFitTitle
@@ -205,37 +228,26 @@ const HeadTextSection = memo(() => {
             </FadeInView>
           </TextFitTitle>
           {br}
-          <FadeInView
-            delayIndex={3}
-            display="block"
-            minHeight="min-content"
-            sm-display="inline"
-            {...fadeAnimations.up}
-          >
+          <FadeInView delayIndex={3} minHeight="min-content" {...fadeAnimations.up}>
             <TitleParagraph {...para}>
               {/* first line */}Create internal tools you'd never have attempted before.
             </TitleParagraph>
           </FadeInView>
           &nbsp;
-          <FadeInView
-            delayIndex={4}
-            display="block"
-            minHeight="min-content"
-            sm-display="inline"
-            {...fadeAnimations.up}
-          >
-            <TitleParagraph {...para}>
-              {/* second line */}
-              With an all-in-one data&nbsp;&&nbsp;app studio for teams.
-            </TitleParagraph>
-          </FadeInView>
+          <View sm-display="none">
+            <FadeInView delayIndex={4} minHeight="min-content" {...fadeAnimations.up}>
+              <TitleParagraph {...para}>
+                {/* second line */}
+                With an all-in-one data&nbsp;&&nbsp;app studio for teams.
+              </TitleParagraph>
+            </FadeInView>
+          </View>
           {br}
           <FadeInView
             delayIndex={5}
             display="block"
             minHeight="min-content"
             sm-display="inline"
-            marginBottom={-95}
             marginTop={10}
             position="relative"
             {...fadeAnimations.up}

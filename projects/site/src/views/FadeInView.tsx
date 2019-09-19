@@ -135,6 +135,7 @@ export const FadeInView = memo(
     disable,
     fullscreen,
     reverse,
+    display,
     ...rest
   }: FadeChildProps) => {
     // const isTiny = useIsTiny()
@@ -142,7 +143,7 @@ export const FadeInView = memo(
     const shown = !disable && (fadeStore.shown !== null ? fadeStore.shown : false)
 
     style = {
-      display: 'flex',
+      display: display || 'flex',
       flexDirection: 'column',
       ...style,
       ...(fullscreen && fullscreenStyle),

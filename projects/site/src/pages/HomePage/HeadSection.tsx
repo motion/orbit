@@ -30,20 +30,20 @@ const animation: {
     ...fadeAnimations.up,
   },
   join: {
-    delayIndex: allDelay + 5,
+    delayIndex: allDelay + 3,
     ...fadeAnimations.up,
   },
   watch: {
-    delayIndex: allDelay + 6,
+    delayIndex: allDelay + 4,
     ...fadeAnimations.up,
   },
   screen: {
-    delayIndex: allDelay + 8,
+    delayIndex: allDelay + 5,
     ...fadeAnimations.up,
     transition: transitions.slowBouncy,
   },
   blog: {
-    delayIndex: allDelay + 14,
+    delayIndex: allDelay + 16,
     transition: transitions.bouncy,
   },
 }

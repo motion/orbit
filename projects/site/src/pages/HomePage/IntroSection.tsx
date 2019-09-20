@@ -39,7 +39,7 @@ export function IntroSection() {
         background="radial-gradient(circle closest-side, #FFF358, #FFF358 80%, transparent 85%, transparent)"
       />
 
-      <SectionContent position="relative" padding={['5vh', 0, '10vh']} zIndex={10}>
+      <SectionContent position="relative" padding={['5vh', 0, '8vh']} zIndex={10}>
         <HalfGrid>
           {/* marginbottom is safari fix */}
           <Col marginBottom={50}>
@@ -52,6 +52,7 @@ export function IntroSection() {
               margin="auto"
               lg-marginLeft="-30%"
               lg-width="130%"
+              borderRadius={20}
             />
           </Col>
           <Col space="xl">

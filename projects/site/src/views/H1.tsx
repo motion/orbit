@@ -1,7 +1,7 @@
 import { View } from '@o/ui'
 import React from 'react'
 
-import { contentSpace, contentSpaceLg, contentSpaceSm } from './MDX'
+import { contentSpace, contentSpaceLg, contentSpaceSm } from './contentSpaceSm'
 import { TitleText } from './TitleText'
 
 export const H1 = props => (

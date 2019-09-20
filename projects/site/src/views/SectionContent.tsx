@@ -8,7 +8,7 @@ export type SectionContentProps = ViewProps & {
   outside?: React.ReactNode
   forwardRef?: any
   pages?: number | 'auto'
-  fullWidth?: boolean
+  readablePage?: boolean
 }
 
 export const SectionContent = ({
@@ -21,7 +21,7 @@ export const SectionContent = ({
   flex,
   minHeight,
   forwardRef,
-  fullWidth,
+  readablePage,
   ...props
 }: SectionContentProps) => {
   return (
@@ -35,7 +35,7 @@ export const SectionContent = ({
       nodeRef={forwardRef}
     >
       {outside}
-      <SectionContentChrome flex={flex} {...props}>
+      <SectionContentChrome flex={flex} readablePage={readablePage} {...props}>
         {children}
       </SectionContentChrome>
     </Section>
@@ -48,7 +48,7 @@ const Section = gloss(View, {
   alignItems: 'center',
 })
 
-export const SectionContentChrome = gloss(View, {
+export const SectionContentChrome = gloss<ViewProps & { readablePage?: boolean }>(View, {
   minHeight: '100%',
   // alignItems: 'center',
   width: '100%',
@@ -56,6 +56,10 @@ export const SectionContentChrome = gloss(View, {
   paddingLeft: Constants.sidePad,
   paddingRight: Constants.sidePad,
   position: 'relative',
+
+  readablePage: {
+    maxWidth: Constants.widths.md,
+  },
 
   [Constants.mediaQueries.sm]: {
     width: '100%',

@@ -19,7 +19,7 @@ export const fontProps = {
 export const widths = {
   xs: 420,
   sm: 700,
-  md: 860,
+  md: 820,
   lg: 1150,
 }
 

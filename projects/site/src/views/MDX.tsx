@@ -8,13 +8,10 @@ import { Navigation } from '../Navigation'
 import { Example } from '../pages/DocsPage/Example'
 import { linkProps } from '../useLink'
 import { CodeBlock } from './CodeBlock'
+import { contentSpace, contentSpaceLg } from './contentSpaceSm'
 import { H1, H2, H3, H4, H5 } from './H1'
 import { IntroText } from './IntroText'
 import { Key } from './Key'
-
-export const contentSpaceSm = <Space size="sm" />
-export const contentSpaceLg = <Space size="xl" />
-export const contentSpace = <Space size="lg" />
 
 const Alt = props => (
   <SimpleText marginTop={-16} marginBottom={16} fontSize="75%" alpha={0.5} {...props} />

@@ -19,73 +19,58 @@ const sections = {
     {
       title: 'Apps work together',
       icon: 'apps',
-      body: [
-        `Apps talk with simple typed APIs. Orbit comes with many data apps.`,
-        `They can also sync data into a common format to display, share and export.`,
-      ],
+      body: [`Apps talk with simple typed APIs or GraphQL and Orbit has many data apps.`],
     },
     {
-      title: `Spaces to collaborate`,
+      title: `A space to collaborate`,
       icon: `satellite`,
-      body: [
-        `The easiest collaboration story. No servers to setup or credentials to share.`,
-        `Press edit and in seconds deploy a rich app to everyone.`,
-      ],
+      body: [`The easiest collaboration story. No servers to setup or credentials to share.`],
     },
     {
       title: `Stunning, easy apps`,
       icon: `shop`,
-      body: [
-        `A new platform designed from the ground up to make common apps easy to build, using modern TypeScript and an incredible build system designed for developer friendliness.`,
-        `Publish in seconds on the app store.`,
-      ],
+      body: [`A UI Kit with everything - designed to look good with few lines of code.`],
     },
     {
-      title: `Next-gen interface`,
+      title: `An interface for data`,
       icon: `widget`,
       body: [
-        `A desktop-class UI kit -- fast, intuitive, with views that work well together and adapt to your data structures.`,
-        `With layouts and templates for many use cases.`,
+        `A desktop-class UI kit with views that work well together and adapt to your data structures.`,
       ],
     },
   ],
   [sectionNames[1]]: [
     {
       title: 'The latest React, Typescript & Webpack',
-      icon: 'apps',
+      icon: 'tech',
       body: [
         `React Refresh hot reloading, with React Concurrent rendering out of the box. Plus, support for Suspense data-loading built into every library and view.`,
       ],
     },
     {
-      title: `Worlds Best Hot Reloading`,
-      icon: `satellite`,
+      title: `Next-gen Hot Reload`,
+      icon: `refresh`,
       body: [
-        `The easiest collaboration story. No servers to setup or credentials to share.`,
-        `Press edit and in seconds deploy a rich app to everyone.`,
+        `We've pushed Webpack to it's limit with a per-app instant-HMR that toggles between development and production in realtime.`,
       ],
     },
     {
-      title: `Mulitprocess`,
-      icon: `shop`,
-      body: [
-        `A new platform designed from the ground up to make common apps easy to build, using modern TypeScript and an incredible build system designed for developer friendliness.`,
-        `Publish in seconds on the app store.`,
-      ],
+      title: `Multi-process`,
+      icon: `go`,
+      body: [`Go off-thread with just a few lines of code, so you can keep your app fast.`],
     },
     {
       title: `Incredible Dev Tooling`,
-      icon: `widget`,
+      icon: `pen`,
       body: [
-        `A desktop-class UI kit -- fast, intuitive, with views that work well together and adapt to your data structures.`,
-        `With layouts and templates for many use cases.`,
+        `From logging to data management, state inspection, error recovery and more - Orbit comes with great DX.`,
       ],
     },
   ],
   [sectionNames[2]]: [
     {
       title: 'Query Builder',
-      icon: 'apps',
+      icon: 'query',
       body: [
         `Apps talk to each other with simple typed APIs. Orbit comes with many data apps.`,
         `They can also sync data into a common format to display, share and export.`,

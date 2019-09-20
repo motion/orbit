@@ -57,8 +57,8 @@ export default function DeploySection() {
               <PillButton>Develop</PillButton>
             </FadeInView>
             <FadeInView delayIndex={0}>
-              <TitleText textAlign="center" size="xl">
-                First-class{' '}
+              <TitleText textAlign="center" size="lg">
+                Completely rethought{' '}
                 <Tooltip label="Developer Experience">
                   <View display="inline" borderBottom={[1, 'dotted', [255, 255, 255, 0.5]]}>
                     DX
@@ -103,21 +103,21 @@ export default function DeploySection() {
             <FadeInView delayIndex={1}>
               <ParagraphIntro
                 // {...fontProps.TitleFont}
-                sizeLineHeight={1.4}
-                size={1.75}
+                size="lg"
                 alpha={0.8}
                 fontWeight={400}
               >
-                Orbit makes building apps as easy as a few lines of code.
+                Orbit makes building apps as easy as a few lines of code with an incredible dev
+                environment built-in.
               </ParagraphIntro>
             </FadeInView>
 
             <FadeInView delayIndex={2}>
               <Col space="sm">
                 <Item>No setup at all.</Item>
-                <Item>Instant hot-reload with error recovery.</Item>
-                <Item>See state and logging easily.</Item>
-                <Item>A uniquely comprehensive toolkit.</Item>
+                <Item>Per-app fast refresh with error recovery.</Item>
+                <Item>A suite of developer tools.</Item>
+                <Item>A uniquely UI and data toolkit.</Item>
               </Col>
             </FadeInView>
 

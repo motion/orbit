@@ -210,7 +210,7 @@ const PeekHeader = memo((props: { isActive?: boolean }) => {
 
       // avoid small moves
       const diff = direction === 'down' ? next - top : top - next
-      if (diff < 150) {
+      if (diff < 100) {
         return
       }
 

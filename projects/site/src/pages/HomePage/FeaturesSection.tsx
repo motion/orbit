@@ -72,33 +72,25 @@ const sections = {
       title: 'Query Builder',
       icon: 'query',
       body: [
-        `Apps talk to each other with simple typed APIs. Orbit comes with many data apps.`,
-        `They can also sync data into a common format to display, share and export.`,
+        `Build and explore your data plugins, create queries and test them from the control panel.`,
       ],
     },
     {
       title: `GraphQL Explorer`,
       icon: `satellite`,
-      body: [
-        `The easiest collaboration story. No servers to setup or credentials to share.`,
-        `Press edit and in seconds deploy a rich app to everyone.`,
-      ],
+      body: [`Every app that exposes a GraphQL endpoint is explorable in the built-in explorer.`],
     },
     {
       title: `Manage/Sync Bits`,
-      icon: `shop`,
+      icon: `data`,
       body: [
-        `A new platform designed from the ground up to make common apps easy to build, using modern TypeScript and an incredible build system designed for developer friendliness.`,
-        `Publish in seconds on the app store.`,
+        `The Bit is the universal data format for Orbit, and you view, search and manage them here.`,
       ],
     },
     {
       title: `Clipboard`,
-      icon: `widget`,
-      body: [
-        `A desktop-class UI kit -- fast, intuitive, with views that work well together and adapt to your data structures.`,
-        `With layouts and templates for many use cases.`,
-      ],
+      icon: `clipboard`,
+      body: [`Make selections within tables or lists and easily move the data between apps.`],
     },
   ],
 }

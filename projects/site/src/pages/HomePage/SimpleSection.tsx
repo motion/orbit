@@ -29,10 +29,10 @@ export const SimpleSection = ({ delay = 100, index = undefined, title, children,
               WebkitBackgroundClip: 'text',
             }}
             {...titleFont}
-            size="sm"
+            size="xs"
             textAlign="left"
             flex={1}
-            fontWeight={400}
+            fontWeight={300}
           >
             {title}
           </TitleText>

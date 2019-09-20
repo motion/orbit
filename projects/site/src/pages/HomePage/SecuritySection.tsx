@@ -23,13 +23,8 @@ export default function SecuritySection() {
               <PillButton>Trust</PillButton>
             </FadeInView>
             <FadeInView delayIndex={1}>
-              <TitleText
-                textAlign="center"
-                size="xxl"
-                // TODO
-                // sm-size="lg"
-              >
-                Open & Secure
+              <TitleText textAlign="center" size="lg">
+                Open, secure, yours.
               </TitleText>
             </FadeInView>
             <FadeInView delayIndex={2} {...fadeAnimations.up}>

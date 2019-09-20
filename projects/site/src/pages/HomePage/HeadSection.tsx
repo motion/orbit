@@ -65,26 +65,11 @@ export function HeadSection() {
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
       />
 
-      {/* <Page.ParallaxView
-        className="floating-cube"
-        width={120}
-        position="absolute"
-        offset={0.5}
-        zIndex={10000}
-        parallaxAnimate={geometry => ({
-          y: geometry.useParallax(),
-          x: geometry.useParallax().transform(x => -x * 0.5 + 340),
-        })}
-      >
-        <Image src={require('../../public/images/test.png')} width="100%" height="auto" />
-      </Page.ParallaxView> */}
-
       <Col opacity={fontsLoaded ? 1 : 0} margin={['auto', 0]} height="calc(100% - 120px)">
         <Space size="xxl" />
         <Col
-          flex={8}
           maxHeight="80vh"
-          minHeight={750}
+          minHeight={800}
           sm-minHeight="auto"
           nodeRef={Fade.ref}
           alignItems="center"
@@ -99,7 +84,7 @@ export function HeadSection() {
           position="relative"
           height={500}
           flex={7}
-          margin={['-15%', '-10%', 90]}
+          margin={['-15%', '-10%', 0]}
           userSelect="none"
           zIndex={-1}
         >
@@ -215,7 +200,6 @@ const HeadTextSection = memo(() => {
         justifyContent="center"
         zIndex={10}
         position="relative"
-        marginTop="5vh"
       >
         <View width="100%" alignItems="center">
           <TextFitTitle

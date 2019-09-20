@@ -6,6 +6,7 @@ import { requestIdleCallback } from '../etc/requestIdle'
 import { Header } from '../Header'
 import { Page } from '../views/Page'
 import { HeadSection } from './HomePage/HeadSection'
+import { IntroSection } from './HomePage/IntroSection'
 import { LoadingPage } from './LoadingPage'
 
 const Sections = {
@@ -29,6 +30,9 @@ export const HomePage = memo(() => {
       <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
         <Page pages="auto" zIndex={0}>
           <HeadSection />
+        </Page>
+        <Page pages="auto">
+          <IntroSection />
         </Page>
         <Page pages="auto">
           <Sections.AllInOnePitchDemoSection />

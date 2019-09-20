@@ -33,6 +33,7 @@ export const mediaQueries = {
   md: `@media screen and (max-width: ${widths.md}px)`,
   notmd: `@media screen and (min-width: ${widths.md + 1}px)`,
   lg: `@media screen and (min-width: ${widths.lg}px)`,
+  notlg: `@media screen and (min-width: ${widths.lg + 1}px)`,
 }
 
 export const IS_CHROME = navigator.userAgent.toLowerCase().indexOf('chrome') > -1

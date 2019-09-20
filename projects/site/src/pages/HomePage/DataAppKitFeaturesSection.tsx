@@ -30,7 +30,7 @@ export default memo(() => {
 
       <Page.BackgroundParallax
         speed={-0.075}
-        offset={0.3}
+        offset={0.2}
         opacity={0.5}
         zIndex={-2}
         scale={0.5}
@@ -58,7 +58,7 @@ export default memo(() => {
         maxHeight={100000}
         margin={0}
         // extra on top for the orbits
-        padding={['32vh', 0, '20vh']}
+        padding={['28vh', 0, '20vh']}
         xs-margin={0}
         header={
           <>

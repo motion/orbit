@@ -239,7 +239,7 @@ const HeadTextSection = memo(() => {
             <FadeInView delayIndex={4} minHeight="min-content" {...fadeAnimations.up}>
               <TitleParagraph {...para}>
                 {/* second line */}
-                With an all-in-one data&nbsp;&&nbsp;app studio for teams.
+                The all-in-one data & app studio for teams.
               </TitleParagraph>
             </FadeInView>
           </View>

@@ -20,6 +20,7 @@ export function ScrollableView(props: ScrollableViewProps) {
 
   // add padding inside scrollable so we get proper padding after end elements
   const content = wrapWithPaddedView(children, props)
+  const hasPadding = isPadded(props)
 
   return (
     <ScrollableParentContext.ProvideStore value={scrollableParent}>
@@ -33,6 +34,7 @@ export function ScrollableView(props: ScrollableViewProps) {
         nodeRef={composeRefs(props.nodeRef, ref)}
         className={`${hideScrollbars ? 'hide-scrollbars' : ''} ${props.className || ''}`}
         padding="disable-padding"
+        minHeight={hasPadding ? 'auto' : props.minHeight}
       >
         {content}
       </ScrollableChrome>

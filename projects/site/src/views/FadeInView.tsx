@@ -143,7 +143,6 @@ export const FadeInView = memo(
     display,
     ...rest
   }: FadeChildProps) => {
-    // const isTiny = useIsTiny()
     const fadeStore = FadeStoreContext.useStore()
     const shown = !disable && (fadeStore.shown !== null ? fadeStore.shown : false)
 
@@ -200,7 +199,7 @@ export type UseFadePageProps = FadeInProps & { off?: boolean }
 
 export const useFadePage = ({
   delay = 200,
-  threshold = 0.4,
+  threshold = 0.3,
   off,
   ...props
 }: UseFadePageProps = {}) => {

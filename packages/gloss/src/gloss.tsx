@@ -90,7 +90,7 @@ export interface GlossView<RawProps, ThemeProps = RawProps, Props = GlossProps<R
 
 const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
 export const tracker: StyleTracker = new Map()
-export const sheet = new StyleSheet(true)
+export const sheet = new StyleSheet(false)
 const gc = new GarbageCollector(sheet, tracker)
 const whiteSpaceRegex = /[\s]+/g
 
@@ -757,9 +757,9 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSp
     })
 
     if (namespace[0] === '@') {
-      sheet.insert(namespace, `${namespace} {\n${selector} {\n${style}\n}\n}`)
+      sheet.insert(namespace, `${namespace} {${selector} {${style}}}`)
     } else {
-      sheet.insert(className, `${selector} {\n${style}\n}`)
+      sheet.insert(className, `${selector} {${style}}`)
     }
   }
 

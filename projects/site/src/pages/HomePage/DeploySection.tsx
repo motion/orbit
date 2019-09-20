@@ -99,7 +99,14 @@ export default function DeploySection() {
             </FadeInView>
           </Col>
 
-          <Col space="xxl" flex={2} minWidth={300} maxWidth={340}>
+          <Col
+            space="xxl"
+            flex={2}
+            sm-width="100%"
+            minWidth={300}
+            maxWidth={340}
+            sm-maxWidth="100%"
+          >
             <FadeInView delayIndex={1}>
               <ParagraphIntro
                 // {...fontProps.TitleFont}

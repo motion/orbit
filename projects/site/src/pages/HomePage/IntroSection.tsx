@@ -41,7 +41,8 @@ export function IntroSection() {
 
       <SectionContent position="relative" padding={['5vh', 0, '10vh']} zIndex={10}>
         <HalfGrid>
-          <Col>
+          {/* marginbottom is safari fix */}
+          <Col marginBottom={50}>
             <Image
               display="block"
               src={require('../../public/images/screen1.jpeg')}

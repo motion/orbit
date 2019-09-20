@@ -177,7 +177,7 @@ export default memo(() => {
               <PillButton>Build</PillButton>
             </FadeInView>
             <FadeInView delayIndex={1}>
-              <TitleText textAlign="center" size="xxl">
+              <TitleText textAlign="center" size="xl">
                 Make apps, easy
               </TitleText>
             </FadeInView>
@@ -403,7 +403,7 @@ export default memo(() => {
             </Flex>
           </Row>
 
-          <FadeInView delayIndex={8} flexDirection="row" margin={[32, 'auto', 0]}>
+          <FadeInView delayIndex={8} flexFlow="row" margin={[32, 'auto', 0]}>
             {[0, 1, 2].map(x => (
               <Dot key={`dot-${x}`} active={x === index} onClick={() => goTo(x)} />
             ))}

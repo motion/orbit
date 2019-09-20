@@ -19,10 +19,26 @@ const selectedMinimal = {
   }),
 }
 
+const purple = fromStyles({
+  background: colors.purple,
+  color: '#fff',
+})
+
+const selected = {
+  ...purple,
+  // dont make selected things hover/active, they're active already
+  backgroundHover: purple.background,
+  backgroundActive: purple.background,
+}
+
 const light = {
   ...KitThemes.light,
+  backgroundHighlightActive: colors.purple.lighten(0.1),
+  backgroundHighlight: colors.purple,
   coats: {
     ...KitThemes.light.coats,
+    selected,
+    purple,
     selectedMinimal,
   },
   ...colorize({
@@ -34,6 +50,8 @@ const dark = {
   ...KitThemes.dark,
   coats: {
     ...KitThemes.dark.coats,
+    selected,
+    purple,
     selectedMinimal,
   },
   ...colorize({

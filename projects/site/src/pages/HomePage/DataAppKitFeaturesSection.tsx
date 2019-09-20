@@ -1,4 +1,4 @@
-import { FullScreen, Image, memoIsEqualDeep, Row, Space, View } from '@o/ui'
+import { BorderTop, Button, Col, FullScreen, Image, memoIsEqualDeep, Row, Space, useTheme, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import orbits from '../../public/images/orbits.svg'
@@ -30,12 +30,11 @@ export default memo(() => {
 
       <Page.BackgroundParallax
         speed={-0.075}
-        offset={0}
+        offset={0.3}
         opacity={0.5}
         zIndex={-2}
         scale={0.5}
         transformOrigin="bottom center"
-        top={-20}
         // keeps it from cropping on small screen
         left="-40%"
         right="-40%"
@@ -59,22 +58,22 @@ export default memo(() => {
         maxHeight={100000}
         margin={0}
         // extra on top for the orbits
-        padding={['22vh', 0, '20vh']}
+        padding={['32vh', 0, '20vh']}
         xs-margin={0}
         header={
           <>
-            <FadeInView>
+            <FadeInView delayIndex={0}>
               <PillButton>App Store</PillButton>
             </FadeInView>
-            <FadeInView delay={100}>
-              <TitleText textAlign="center" size="xl">
-                Plugins for everything
+            <FadeInView delayIndex={1}>
+              <TitleText textAlign="center" size="lg">
+                Apps that work together
               </TitleText>
             </FadeInView>
             <TitleTextSub>
-              <FadeInView delay={200}>
-                The app store means you can use data, GraphQL and TypeScript APIs, and
-                show&nbsp;content. It's&nbsp;everything you need to build upwards.
+              <FadeInView delayIndex={2}>
+                Apps can sync in data, provide GraphQL and TypeScript APIs, and render&nbsp;content.
+                The&nbsp;app&nbsp;store enables cooperative app-building.
               </FadeInView>
             </TitleTextSub>
             <Space size="xl" />
@@ -85,27 +84,26 @@ export default memo(() => {
           className="hide-scrollbars"
           height="auto"
           space="md"
-          padding={['lg', false]}
+          padding={['xxl', false]}
           spaceAround
           justifyContent="center"
           pointerEvents="none"
           transform={{
-            y: -160,
+            y: -120,
           }}
         >
           {apps.map((app, index) => {
             let pivot = Math.round(apps.length / 2) - 1
-            let offset = index * 40
+            let offset = index * 30
             if (index >= pivot) {
               let i = index - pivot
-              offset = pivot * 40 - i * 40
+              offset = pivot * 30 - i * 30
             }
             return (
               <Integration
                 key={app.title}
                 index={index}
-                icon={app.icon}
-                title={app.title}
+                {...app}
                 transform={{ y: `${offset}px` }}
               />
             )
@@ -114,7 +112,7 @@ export default memo(() => {
 
         <Space size="lg" />
 
-        <FadeInView delay={0}>
+        <FadeInView delayIndex={3} {...fadeAnimations.up}>
           <Row space margin={[0, 'auto']}>
             <BodyButton {...linkProps('/apps')} size="lg">
               Explore apps
@@ -126,32 +124,51 @@ export default memo(() => {
   )
 })
 
-const Integration = memoIsEqualDeep(({ icon, title, index, ...props }: any) => {
+const Integration = memoIsEqualDeep(({ icon, title, index, downloads, hearts, ...props }: any) => {
+  const theme = useTheme()
+  const borderColor = theme.borderColor.setAlpha(0.1)
   return (
     <FadeInView
       {...(index % 1 == 0 ? fadeAnimations.up : fadeAnimations.down)}
       delay={index * 100 + 250}
     >
       <View
-        userSelect="none"
-        height={150}
-        width={150}
-        alignItems="center"
-        justifyContent="center"
-        {...props}
+        animate={{
+          y: -10,
+        }}
+        transition={{ yoyo: Infinity, duration: 2, repeatDelay: index * 1 }}
       >
-        <Image
-          src={icon}
-          transition="all ease 200ms"
-          maxWidth={56}
-          width="50%"
-          height="auto"
-          hoverStyle={{ opacity: 1 }}
-        />
-        <Space />
-        <Paragraph selectable={false} size="sm">
-          {title}
-        </Paragraph>
+        <View
+          userSelect="none"
+          height={140}
+          width={130}
+          borderRadius={10}
+          border={[1, borderColor]}
+          {...props}
+        >
+          <Col padding space alignItems="center" justifyContent="center">
+            <Image
+              src={icon}
+              transition="all ease 200ms"
+              maxWidth={56}
+              width="50%"
+              height="auto"
+              hoverStyle={{ opacity: 1 }}
+            />
+            <Paragraph selectable={false} size="sm">
+              {title}
+            </Paragraph>
+          </Col>
+          <Row opacity={0.5} position="relative" alignItems="center" justifyContent="space-between">
+            <BorderTop borderColor={borderColor} />
+            <Button chromeless size={0.9} icon="download">
+              {downloads}
+            </Button>
+            <Button chromeless size={0.9} icon="heart" iconAfter>
+              {hearts}
+            </Button>
+          </Row>
+        </View>
       </View>
     </FadeInView>
   )

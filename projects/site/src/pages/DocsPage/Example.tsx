@@ -1,11 +1,12 @@
-import { Button, Card, Col, gloss, Icon, Loading, Row, SimpleText, Space, useIntersectionObserver, View } from '@o/ui'
+import { Button, Col, Divider, gloss, Icon, Loading, Row, SimpleText, Space, useIntersectionObserver, View } from '@o/ui'
 import { Box } from 'gloss'
 import { capitalize } from 'lodash'
 import React, { createElement, isValidElement, memo, Suspense, useRef, useState } from 'react'
 
-import { fontProps } from '../../constants'
+import { fontProps, mediaQueries } from '../../constants'
 import { linkProps } from '../../useLink'
 import { CodeBlock } from '../../views/CodeBlock'
+import { H5 } from '../../views/H1'
 
 export type ExampleProps = {
   source: string
@@ -60,9 +61,9 @@ export const Example = memo(
     })
 
     const contents = hasIntersected && (
-      <Col space {...props}>
+      <ExampleContainer {...props}>
         {!onlySource && (
-          <SubCard
+          <ExampleHalf
             minHeight={100}
             onMouseEnter={() => {
               tm.current = setTimeout(() => setHovered(true), 200)
@@ -86,58 +87,60 @@ export const Example = memo(
                 </View>
               </AccidentalScrollPrevent>
             )}
-          </SubCard>
+          </ExampleHalf>
         )}
 
         {showSource && (
-          <SubCard>
+          <ExampleHalf>
             <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
-          </SubCard>
+          </ExampleHalf>
         )}
-      </Col>
+      </ExampleContainer>
     )
 
     return (
-      <Col className="example" nodeRef={exampleRef}>
+      <Col className="orbit-example" nodeRef={exampleRef}>
         <Suspense fallback={<Loading />}>
           {chromeless ? (
             <>{contents}</>
           ) : (
             <>
-              <Space />
-              <Card
-                elevation={1}
-                padding
-                titlePadding="md"
-                background={theme => theme.backgroundStrong}
-                title={name || capitalize(id)}
-                afterTitle={
-                  <Row space alignItems="center">
-                    {parentId && (
-                      <Button
-                        chromeless
-                        size={0.5}
-                        sizePadding={0}
-                        iconSize={12}
-                        icon="share"
-                        color={[150, 150, 150, 0.5]}
-                        tooltip="Open in own window"
-                        {...linkProps(`/docs/${parentId}/isolate/${id}`, { isExternal: true })}
-                      />
-                    )}
-                    <Icon
-                      size={16}
-                      name="code"
-                      color={showSource ? '#B65138' : [150, 150, 150, 0.5]}
+              <Divider />
+              <Space size="sm" />
+              <Row>
+                <H5>{name || capitalize(id)}</H5>
+                <View flex={1} />
+                <Row space alignItems="center">
+                  {parentId && (
+                    <Button
+                      chromeless
+                      size={0.5}
+                      sizePadding={0}
+                      iconSize={12}
+                      icon="share"
+                      color={[150, 150, 150, 0.5]}
+                      tooltip="Open in own window"
+                      {...linkProps(`/docs/${parentId}/isolate/${id}`, { isExternal: true })}
                     />
-                  </Row>
-                }
-                onClickTitle={() => {
-                  setShowSource(!showSource)
-                }}
+                  )}
+                  <Icon
+                    size={16}
+                    name="code"
+                    color={showSource ? '#B65138' : [150, 150, 150, 0.5]}
+                    onClick={() => {
+                      setShowSource(!showSource)
+                    }}
+                  />
+                </Row>
+              </Row>
+              <Space />
+              <View
+                {...fontProps.SystemFont}
+                //  border={theme => [1, theme.borderColor]}
               >
-                <View {...fontProps.SystemFont}>{contents}</View>
-              </Card>
+                {contents}
+              </View>
+              <Divider />
               <Space size="xl" />
             </>
           )}
@@ -154,7 +157,6 @@ const AccidentalScrollPrevent = gloss<any>(Box, {
   right: 0,
   bottom: 0,
   // background: [150, 150, 150, 0.025],
-  borderRadius: 5,
   zIndex: 10,
 
   disabled: {
@@ -163,9 +165,21 @@ const AccidentalScrollPrevent = gloss<any>(Box, {
   },
 })
 
-const SubCard = gloss(View, {
-  borderRadius: 5,
+const ExampleContainer = gloss(Col, {
+  [mediaQueries.lg]: {
+    display: 'grid',
+    columnGap: 20,
+    gridTemplateColumns: '1fr 1fr',
+  },
+})
+
+const ExampleHalf = gloss(Box, {
   position: 'relative',
+  marginBottom: 20,
+
+  [mediaQueries.lg]: {
+    marginBottom: 0,
+  },
 })
 
 function parseSource(source: string, id: string) {

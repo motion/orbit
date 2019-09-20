@@ -49,7 +49,7 @@ const SectionChrome = gloss(Col, {
 })
 
 export const SectionP = gloss(
-  props => <Paragraph tagName="div" size={1.15} alpha={0.75} sizeLineHeight={1.25} {...props} />,
+  props => <Paragraph tagName="div" size={1.2} alpha={0.75} sizeLineHeight={1.25} {...props} />,
   {
     display: 'block',
     float: 'left',

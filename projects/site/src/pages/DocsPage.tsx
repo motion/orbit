@@ -243,7 +243,7 @@ const DocsPage = memo((props: { children?: any }) => {
         )}
 
         <main className="main-contents">
-          <SectionContent>
+          <SectionContent maxWidth={1400}>
             <Row id="main" className="main">
               {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
               <Col
@@ -279,7 +279,7 @@ const DocsPageSidebar = memo(({ children }: any) => {
   })
 
   return (
-    <Col id="sidebar" width={250} pointerEvents="auto" height="100vh">
+    <Col id="sidebar" width={230} pointerEvents="auto" height="100vh">
       <Col position="relative" className="sidebar__inner" flex={1}>
         <Col margin={[25, 0, 0]} flex={1} position="relative">
           {children}

@@ -1,7 +1,6 @@
-import { Col, Icon, Image, Row, SimpleText, Space, Tooltip, View } from '@o/ui'
+import { Col, Icon, Image, Parallax, Row, SimpleText, Space, Tooltip, View } from '@o/ui'
 import React from 'react'
 
-import { fontProps } from '../../constants'
 import appScreenshot from '../../public/images/app-screenshot.jpg'
 import arrow from '../../public/images/callout-arrow.svg'
 import codeScreenshot from '../../public/images/code-screenshot.jpg'
@@ -50,7 +49,7 @@ export default function DeploySection() {
       /> */}
 
       <SpacedPageContent
-        padding={['4vh', 0, '8vh']}
+        padding={['10vh', 0, '12vh']}
         nodeRef={Fade.ref}
         header={
           <>
@@ -58,8 +57,8 @@ export default function DeploySection() {
               <PillButton>Develop</PillButton>
             </FadeInView>
             <FadeInView delayIndex={0}>
-              <TitleText textAlign="center" size="xxl">
-                Next level{' '}
+              <TitleText textAlign="center" size="lg">
+                Completely rethought{' '}
                 <Tooltip label="Developer Experience">
                   <View display="inline" borderBottom={[1, 'dotted', [255, 255, 255, 0.5]]}>
                     DX
@@ -74,9 +73,7 @@ export default function DeploySection() {
         <Row space={60} sm-space={0} margin={[0, '-180%']} sm-margin="0">
           <Col sm-display="none" flex={2} alignItems="flex-end" justifyContent="center">
             <FadeInView {...fadeAnimations.left} delayIndex={2}>
-              <View
-                // speed={0.1}
-                // offset={0}
+              <Parallax.View
                 borderRadius={10}
                 elevation={3}
                 width={400}
@@ -86,6 +83,9 @@ export default function DeploySection() {
                 backgroundPosition="center center"
                 backgroundRepeat="no-repeat"
                 position="relative"
+                parallaxAnimate={geometry => ({
+                  x: geometry.useParallax().transform(x => (x > 0 ? -x : x) * 0.1),
+                })}
               >
                 <Image
                   position="absolute"
@@ -95,28 +95,29 @@ export default function DeploySection() {
                   src={arrow}
                   transform={{ scale: 0.6 }}
                 />
-              </View>
+              </Parallax.View>
             </FadeInView>
           </Col>
 
           <Col space="xxl" flex={2} minWidth={300} maxWidth={340}>
             <FadeInView delayIndex={1}>
               <ParagraphIntro
-                {...fontProps.TitleFont}
-                sizeLineHeight={1.1}
-                size={1.75}
-                fontWeight={200}
+                // {...fontProps.TitleFont}
+                size="lg"
+                alpha={0.8}
+                fontWeight={400}
               >
-                Orbit makes building apps as easy as a few lines of code.
+                Orbit makes building apps as easy as a few lines of code with an incredible dev
+                environment built-in.
               </ParagraphIntro>
             </FadeInView>
 
             <FadeInView delayIndex={2}>
               <Col space="sm">
-                <Item>No setup or configuration.</Item>
-                <Item>Instant feedback with easy to see errors.</Item>
-                <Item>Plug in data instantly.</Item>
-                <Item>A uniquely comprehensive UI kit.</Item>
+                <Item>No setup at all.</Item>
+                <Item>Per-app fast refresh with error recovery.</Item>
+                <Item>A suite of developer tools.</Item>
+                <Item>A uniquely UI and data toolkit.</Item>
               </Col>
             </FadeInView>
 
@@ -129,9 +130,7 @@ export default function DeploySection() {
 
           <Col sm-display="none" flex={2} alignItems="flex-start" justifyContent="center">
             <FadeInView {...fadeAnimations.right} delayIndex={3}>
-              <View
-                // speed={-0.1}
-                // offset={0.05}
+              <Parallax.View
                 borderRadius={10}
                 elevation={3}
                 width={400}
@@ -141,6 +140,9 @@ export default function DeploySection() {
                 backgroundPosition="center center"
                 backgroundRepeat="no-repeat"
                 overflow="hidden"
+                parallaxAnimate={geometry => ({
+                  x: geometry.useParallax().transform(x => -(x > 0 ? -x : x) * 0.1),
+                })}
               />
             </FadeInView>
           </Col>

@@ -25,19 +25,21 @@ export function BetaPage() {
         <Space size="xxl" />
 
         <View position="relative">
-          <FadeInView minHeight={800} delay={200}>
+          <FadeInView minHeight={500} delay={200}>
             <EarlyAccessContent theme={BetaPage.theme} />
           </FadeInView>
 
+          {/* offset for stripe at bottom */}
+          <View height="20vh" />
+
           <FadeInView delay={400} fullscreen style={{ pointerEvents: 'none' }}>
-            <LineSep opacity={0.2} noOverlay top="auto" bottom={-70} transform={{ scaleX: -1 }} />
+            <LineSep opacity={0.2} noOverlay top="auto" bottom={50} transform={{ scaleX: -1 }} />
           </FadeInView>
         </View>
 
         <FadeInView delay={600}>
-          <SectionContent minHeight={450} position="relative" padding={[100, 32]}>
+          <SectionContent>
             <Footer />
-            <Space size="xl" />
           </SectionContent>
         </FadeInView>
       </Theme>

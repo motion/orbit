@@ -5,13 +5,48 @@ import React, { memo } from 'react'
 import { fontProps } from '../../constants'
 import { useSiteStore } from '../../SiteStore'
 import { linkProps } from '../../useLink'
-import { fadeAnimations, FadeInView, transitions, useFadePage } from '../../views/FadeInView'
+import { fadeAnimations, FadeChildProps, FadeInView, transitions, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContentChrome } from '../../views/SectionContent'
 import { TitleText } from '../../views/TitleText'
 import { Join } from './Join'
 import { useScreenVal } from './SpacedPageContent'
+
+const allDelay = 2
+
+const animation: {
+  [key: string]: FadeChildProps
+} = {
+  title: {
+    delayIndex: allDelay + 0,
+  },
+  sub1: {
+    delayIndex: allDelay + 1,
+    ...fadeAnimations.up,
+  },
+  sub2: {
+    delayIndex: allDelay + 2,
+    ...fadeAnimations.up,
+  },
+  join: {
+    delayIndex: allDelay + 5,
+    ...fadeAnimations.up,
+  },
+  watch: {
+    delayIndex: allDelay + 6,
+    ...fadeAnimations.up,
+  },
+  screen: {
+    delayIndex: allDelay + 8,
+    ...fadeAnimations.up,
+    transition: transitions.slowBouncy,
+  },
+  blog: {
+    delayIndex: allDelay + 14,
+    transition: transitions.bouncy,
+  },
+}
 
 export function HeadSection() {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
@@ -48,7 +83,7 @@ export function HeadSection() {
         <Space size="xxl" />
         <Col
           flex={8}
-          maxHeight="70vh"
+          maxHeight="80vh"
           minHeight={750}
           sm-minHeight="auto"
           nodeRef={Fade.ref}
@@ -62,13 +97,13 @@ export function HeadSection() {
           offset={0}
           className="app-screenshot"
           position="relative"
-          height={300}
+          height={500}
           flex={7}
-          margin={[-100, '-10%', -30]}
+          margin={['-15%', '-10%', 90]}
           userSelect="none"
           zIndex={-1}
         >
-          <FadeInView {...fadeAnimations.up} transition={transitions.slow} delayIndex={7}>
+          <FadeInView {...animation.screen}>
             <View
               transform={{
                 perspective: 10000,
@@ -91,23 +126,17 @@ export function HeadSection() {
       </Col>
       <Page.ParallaxView
         speed={0.1}
-        offset={0.6}
+        offset={0.5}
         zIndex={100}
         position="absolute"
         left="50%"
-        top="2%"
+        top="15vh"
         marginLeft={`${-180 / 2}px`}
         width={180}
         alignItems="center"
         justifyContent="center"
       >
-        <FadeInView
-          delayIndex={6}
-          {...fadeAnimations.up}
-          flex={1}
-          alignItems="inherit"
-          justifyContent="inherit"
-        >
+        <FadeInView {...animation.watch} flex={1} alignItems="inherit" justifyContent="inherit">
           <View
             animate
             transformOrigin="center center"
@@ -186,6 +215,7 @@ const HeadTextSection = memo(() => {
         justifyContent="center"
         zIndex={10}
         position="relative"
+        marginTop="5vh"
       >
         <View width="100%" alignItems="center">
           <TextFitTitle
@@ -196,7 +226,7 @@ const HeadTextSection = memo(() => {
             whiteSpace="nowrap"
             maxHeight={160}
           >
-            <FadeInView delayIndex={10} disable={!measured} transition={transitions.bouncy}>
+            <FadeInView {...animation.blog} disable={!measured}>
               <Tag
                 size={0.85}
                 sizeHeight={1.01}
@@ -218,39 +248,33 @@ const HeadTextSection = memo(() => {
                 Orbit enters private beta!
               </Tag>
             </FadeInView>
-            <FadeInView
-              disable={!measured}
-              delayIndex={2}
-              {...fadeAnimations.up}
-              {...fontProps.TitleFont}
-            >
+            <FadeInView disable={!measured} {...animation.title} {...fontProps.TitleFont}>
               Amazing internal tools
             </FadeInView>
           </TextFitTitle>
           {br}
-          <FadeInView delayIndex={3} minHeight="min-content" {...fadeAnimations.up}>
+          <FadeInView {...animation.sub1} minHeight="min-content">
             <TitleParagraph {...para}>
               {/* first line */}Create internal tools you'd never have attempted before.
             </TitleParagraph>
           </FadeInView>
-          &nbsp;
+          <span style={{ userSelect: 'none' }}>&nbsp;</span>
           <View sm-display="none">
-            <FadeInView delayIndex={4} minHeight="min-content" {...fadeAnimations.up}>
+            <FadeInView {...animation.sub2} minHeight="min-content">
               <TitleParagraph {...para}>
                 {/* second line */}
-                With an all-in-one data&nbsp;&&nbsp;app studio for teams.
+                The all-in-one data & app studio for teams.
               </TitleParagraph>
             </FadeInView>
           </View>
           {br}
           <FadeInView
-            delayIndex={5}
+            {...animation.join}
             display="block"
             minHeight="min-content"
             sm-display="inline"
             marginTop={10}
             position="relative"
-            {...fadeAnimations.up}
           >
             <HeadJoin />
           </FadeInView>
@@ -266,7 +290,7 @@ const HeadJoin = memo(() => {
       <FadeInView {...fadeAnimations.up} delay={500}>
         <SurfacePassProps elevation={5} {...fontProps.TitleFont}>
           <Theme name="orbitOneDark">
-            <Scale size={useScreenVal(0.9, 1, 1.1)}>
+            <Scale size={useScreenVal(1, 1.1, 1.2)}>
               <Join
                 inputProps={{
                   minWidth: useScreenVal('auto', 300, 300),

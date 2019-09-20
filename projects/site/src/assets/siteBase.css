@@ -1,3 +1,43 @@
+/* Site theme stuff  */
+main a {
+  color: #8c60f8;
+  -webkit-text-underline-offset: 2px;
+  -webkit-text-decoration-thickness: 2px;
+  text-decoration-color: #8c60f833;
+}
+
+main a:hover {
+  color: #a07ff7;
+}
+
+.token-line {
+  display: block;
+}
+
+.theme-dark .body-text,
+.theme-home .body-text {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.theme-light .body-text {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.orbit-example-section > * {
+  max-width: 720px;
+}
+
+.orbit-example-section > .orbit-example {
+  max-width: 100%;
+}
+
+.orbit-example pre {
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+/* HTML */
+
 html {
   overflow-x: hidden;
 }
@@ -215,14 +255,14 @@ select:-webkit-autofill:focus {
 }
 
 ::selection {
-  background: rgba(230, 255, 255, 0.8);
-  color: #333;
+  background: #8c60f8;
+  color: #fff;
   text-shadow: none;
 }
 
 *::selection {
-  background: #f8ffcf;
-  color: #333;
+  background: ##8c60f8;
+  color: #fff;
   text-shadow: none;
 }
 
@@ -499,25 +539,4 @@ svg .animate-path {
 
 .hover-will-transform:hover {
   will-change: transform, opacity;
-}
-
-main a {
-  color: #fe5a59;
-}
-
-main a:hover {
-  color: #fe5a5999;
-}
-
-.token-line {
-  display: block;
-}
-
-.theme-dark .body-text,
-.theme-home .body-text {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.theme-light .body-text {
-  color: rgba(0, 0, 0, 0.9);
 }

@@ -279,7 +279,7 @@ const DocsPageSidebar = memo(({ children }: any) => {
   })
 
   return (
-    <Col id="sidebar" width={250} pointerEvents="auto" height="100vh">
+    <Col id="sidebar" width={230} pointerEvents="auto" height="100vh">
       <Col position="relative" className="sidebar__inner" flex={1}>
         <Col margin={[25, 0, 0]} flex={1} position="relative">
           {children}

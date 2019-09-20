@@ -117,7 +117,7 @@ const FadeStoreContext = createStoreContext(
   },
 )
 
-type FadeChildProps = ViewProps & {
+export type FadeChildProps = ViewProps & {
   // granular delay, 300, 400, etc
   delay?: number
   // easier delay, 1, 2, 3
@@ -163,7 +163,7 @@ export const FadeInView = memo(
         ? { duration: 0 }
         : {
             ...(transition as any),
-            delay: delayIndex ? delayIndex / 5.5 : (delay || 1) / 1000,
+            delay: delayIndex ? delayIndex / 4.5 : (delay || 1) / 1000,
           }
 
     return (

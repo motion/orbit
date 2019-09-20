@@ -1,4 +1,4 @@
-import { Button, Card, Col, gloss, Icon, Loading, Row, SimpleText, Space, useIntersectionObserver, View } from '@o/ui'
+import { Button, Col, gloss, Icon, Loading, Row, SimpleText, Space, useIntersectionObserver, View } from '@o/ui'
 import { Box } from 'gloss'
 import { capitalize } from 'lodash'
 import React, { createElement, isValidElement, memo, Suspense, useRef, useState } from 'react'
@@ -6,6 +6,7 @@ import React, { createElement, isValidElement, memo, Suspense, useRef, useState 
 import { fontProps } from '../../constants'
 import { linkProps } from '../../useLink'
 import { CodeBlock } from '../../views/CodeBlock'
+import { H5 } from '../../views/H1'
 
 export type ExampleProps = {
   source: string
@@ -104,40 +105,34 @@ export const Example = memo(
             <>{contents}</>
           ) : (
             <>
-              <Space />
-              <Card
-                elevation={1}
-                padding
-                titlePadding="md"
-                background={theme => theme.backgroundStrong}
-                title={name || capitalize(id)}
-                afterTitle={
-                  <Row space alignItems="center">
-                    {parentId && (
-                      <Button
-                        chromeless
-                        size={0.5}
-                        sizePadding={0}
-                        iconSize={12}
-                        icon="share"
-                        color={[150, 150, 150, 0.5]}
-                        tooltip="Open in own window"
-                        {...linkProps(`/docs/${parentId}/isolate/${id}`, { isExternal: true })}
-                      />
-                    )}
-                    <Icon
-                      size={16}
-                      name="code"
-                      color={showSource ? '#B65138' : [150, 150, 150, 0.5]}
+              <Row>
+                <H5>{name || capitalize(id)}</H5>
+                <View flex={1} />
+                <Row space alignItems="center">
+                  {parentId && (
+                    <Button
+                      chromeless
+                      size={0.5}
+                      sizePadding={0}
+                      iconSize={12}
+                      icon="share"
+                      color={[150, 150, 150, 0.5]}
+                      tooltip="Open in own window"
+                      {...linkProps(`/docs/${parentId}/isolate/${id}`, { isExternal: true })}
                     />
-                  </Row>
-                }
-                onClickTitle={() => {
-                  setShowSource(!showSource)
-                }}
-              >
-                <View {...fontProps.SystemFont}>{contents}</View>
-              </Card>
+                  )}
+                  <Icon
+                    size={16}
+                    name="code"
+                    color={showSource ? '#B65138' : [150, 150, 150, 0.5]}
+                    onClick={() => {
+                      setShowSource(!showSource)
+                    }}
+                  />
+                </Row>
+              </Row>
+              <Space />
+              <View {...fontProps.SystemFont}>{contents}</View>
               <Space size="xl" />
             </>
           )}

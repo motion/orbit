@@ -6,7 +6,7 @@ export const ContentSection = (props: ColProps) => {
   return (
     <View
       className="content-section"
-      padding={['md', '5%']}
+      padding={['md', '3%']}
       sm-padding={['md', 0]}
       width="100%"
       maxWidth={760}

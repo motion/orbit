@@ -15,7 +15,7 @@ export const CodeBlock = memo((props: { children: string; language?: string }) =
         {...defaultProps}
         code={`${props.children}`.trim()}
         language="jsx"
-        theme={theme.background.isDark() ? darkTheme : lightTheme}
+        theme={theme.background.isDark() ? lightTheme : darkTheme}
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className} style={style}>
@@ -34,8 +34,8 @@ export const CodeBlock = memo((props: { children: string; language?: string }) =
 })
 
 const CodeBlockChrome = gloss({
-  fontSize: 13,
-  lineHeight: 18,
+  fontSize: 14,
+  lineHeight: 20,
 
   '& span': {
     display: 'inline',

@@ -13,6 +13,7 @@ export function HeaderContain(props) {
       flexDirection="row"
       alignItems="center"
       justifyContent="space-around"
+      textAlign="center"
       {...props}
     />
   )

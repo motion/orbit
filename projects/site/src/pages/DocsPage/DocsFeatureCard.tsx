@@ -27,7 +27,7 @@ export function DocsFeatureCard({
   return (
     <FeatureCard subTitle={subTitle} title={title} {...rest}>
       <Col
-        minHeight={200}
+        minHeight={150}
         background={background}
         alignItems="center"
         justifyContent="center"

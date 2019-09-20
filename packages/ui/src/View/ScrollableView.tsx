@@ -51,14 +51,16 @@ export const ScrollableChrome = gloss<ScrollableViewProps>(View, {
   ...(!props.scrollable && wrappingSpaceTheme(props)),
 }))
 
+export const isPadded = (props: ScrollableViewProps) =>
+  Array.isArray(props.padding) ? props.padding.some(Boolean) : !!props.padding
+
 export function wrapWithPaddedView(
   element: React.ReactNode,
   props: ScrollableViewProps,
 ): JSX.Element {
-  const hasPadding = Array.isArray(props.padding) ? props.padding.some(Boolean) : !!props.padding
   // wrap inner with padding view only if necessary (this is a low level view)
   // this is necessary so CSS scrollable has proper "end margin"
-  if (hasPadding) {
+  if (isPadded(props)) {
     const isWrapped = props.flexWrap === 'wrap'
     element = (
       <PaddedView {...props} isWrapped={isWrapped}>

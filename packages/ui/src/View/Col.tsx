@@ -5,7 +5,7 @@ import React, { isValidElement, Suspense } from 'react'
 import { Breadcrumbs } from '../Breadcrumbs'
 import { CollapsableProps, createCollapsableChildren, splitCollapseProps } from '../Collapsable'
 import { createSpacedChildren, SpaceGroupProps } from '../SpaceGroup'
-import { ScrollableView, wrapWithPaddedView } from './ScrollableView'
+import { isPadded, ScrollableView, wrapWithPaddedView } from './ScrollableView'
 import { ScrollableViewProps } from './types'
 import { View } from './View'
 
@@ -77,9 +77,16 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
       )
     }
 
+    const hasPadding = isPadded(props)
+
     return (
       // minHeight and padding are handled by paddedView
-      <View {...defaultProps} {...props} padding="disable-padding" minHeight="auto">
+      <View
+        {...defaultProps}
+        {...props}
+        padding="disable-padding"
+        minHeight={hasPadding ? 'auto' : props.minHeight}
+      >
         {wrapWithPaddedView(wrapWithSuspense(element, suspense), props)}
       </View>
     )

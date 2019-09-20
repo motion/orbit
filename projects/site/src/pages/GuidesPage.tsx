@@ -3,16 +3,16 @@ import { compose, mount, route, withView } from 'navi'
 import React from 'react'
 import { View } from 'react-navi'
 
-import { colors } from '../colors'
 import { Header } from '../Header'
 import { linkProps } from '../useLink'
 import { ContentSection } from '../views/ContentSection'
 import { FadeInView, FadeParent } from '../views/FadeInView'
+import { H3 } from '../views/H1'
 import { MDX } from '../views/MDX'
 import { SectionContent } from '../views/SectionContent'
 import { TitleText } from '../views/TitleText'
 import { DocsFeatureCard } from './DocsPage/DocsFeatureCard'
-import { GuideEntry, guides } from './GuidesPage/guides'
+import { guideCategories, GuideEntry, guides } from './GuidesPage/guides'
 import { AboveFooter } from './HomePage/AboveFooter'
 import { Footer } from './HomePage/Footer'
 
@@ -87,18 +87,29 @@ export function GuidesPageIndex() {
     .sort((a, b) => (new Date(a.date).getTime() > new Date(b.date).getTime() ? -1 : 1))
   return (
     <>
-      <GuidesLayout space title="Guides">
-        {all.map((post, index) => (
-          <FadeInView key={post.date} delay={index * 150}>
-            <DocsFeatureCard
-              icon="ok"
-              background={colors.purple}
-              color="white"
-              title={post.title}
-              {...linkProps(`/guides/${all[index].id}`)}
-            />
-          </FadeInView>
-        ))}
+      <GuidesLayout title="Guides">
+        {Object.keys(guideCategories).map(key => {
+          return (
+            <Col key={key}>
+              <H3>{guideCategories[key]}</H3>
+              <Grid space itemMinWidth={170}>
+                {all
+                  .filter(x => x.categories.includes(key as any))
+                  .map((post, index) => (
+                    <FadeInView key={post.date} delay={index * 150}>
+                      <DocsFeatureCard
+                        icon={post.icon}
+                        background={post.color}
+                        color="white"
+                        title={post.title}
+                        {...linkProps(`/guides/${all[index].id}`)}
+                      />
+                    </FadeInView>
+                  ))}
+              </Grid>
+            </Col>
+          )
+        })}
       </GuidesLayout>
     </>
   )
@@ -108,11 +119,9 @@ export function GuidesLayout({ children, title, ...props }: ColProps & { title: 
   return (
     <>
       <SectionContent minHeight={500} padding="xxl">
-        <TitleRow size="xl" title={title} bordered padding />
+        <TitleRow size="lg" title={title} bordered padding />
         <Space size="xl" />
-        <Grid itemMaxWidth={200} itemMinWidth={150} {...props}>
-          {children}
-        </Grid>
+        <Col space="xl">{children}</Col>
       </SectionContent>
       <GuidesFooter />
     </>

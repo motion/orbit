@@ -23,6 +23,19 @@ main a:hover {
   color: rgba(0, 0, 0, 0.9);
 }
 
+.orbit-example-section > * {
+  max-width: 720px;
+}
+
+.orbit-example-section > .orbit-example {
+  max-width: 100%;
+}
+
+.orbit-example pre {
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
 /* HTML */
 
 html {

@@ -23,7 +23,7 @@ export const H3 = props => (
   <View>
     {contentSpaceSm}
     <TitleText tagName="h3" size="xxxs" {...props} />
-    {contentSpaceSm}
+    {contentSpace}
   </View>
 )
 

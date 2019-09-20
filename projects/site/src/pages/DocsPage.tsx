@@ -243,7 +243,7 @@ const DocsPage = memo((props: { children?: any }) => {
         )}
 
         <main className="main-contents">
-          <SectionContent>
+          <SectionContent maxWidth={1400}>
             <Row id="main" className="main">
               {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
               <Col

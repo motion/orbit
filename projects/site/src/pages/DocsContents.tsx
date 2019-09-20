@@ -1,6 +1,6 @@
 import GithubIcon from '!raw-loader!../public/logos/github.svg'
 import { themes } from '@o/kit'
-import { Button, gloss, Icon, Row, scrollTo, Section, Space, SurfacePassProps, Tag } from '@o/ui'
+import { Button, gloss, Icon, Row, scrollTo, Section, Space, SurfacePassProps, Tag, View } from '@o/ui'
 import { ThemeProvide } from 'gloss'
 import React, { memo } from 'react'
 
@@ -75,7 +75,6 @@ export const DocsContents = memo(
           }}
         >
           <Section
-            maxWidth={760}
             width="100%"
             margin={[0, 'auto']}
             padding={padding}
@@ -162,7 +161,7 @@ export const DocsContents = memo(
               </>
             }
           >
-            {children}
+            <View className="orbit-example-section">{children}</View>
 
             <Space size="xxl" />
 

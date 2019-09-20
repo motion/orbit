@@ -128,10 +128,13 @@ export default memo(() => {
         speed={0.3}
         zIndex={-1}
         opacity={0.45}
-        offset={1.5}
         x="-55%"
         scale={1.5}
         background="radial-gradient(circle closest-side, #8B1944, transparent)"
+        parallaxAnimate={geometry => ({
+          y: geometry.useParallax().transform(x => x + 500),
+          x: geometry.useParallax().transform(x => -x),
+        })}
       />
 
       <SpacedPageContent

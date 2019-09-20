@@ -107,17 +107,17 @@ export default function DeploySection() {
                 alpha={0.8}
                 fontWeight={400}
               >
-                Orbit makes building apps as easy as a few lines of code with an incredible dev
-                environment built-in.
+                Not just config-free, but a meticulously built environment designed for
+                productivity.
               </ParagraphIntro>
             </FadeInView>
 
             <FadeInView delayIndex={2}>
               <Col space="sm">
-                <Item>No setup at all.</Item>
+                <Item>No setup at all, amazingly easy to start.</Item>
                 <Item>Per-app fast refresh with error recovery.</Item>
                 <Item>A suite of developer tools.</Item>
-                <Item>A uniquely UI and data toolkit.</Item>
+                <Item>Every library you'd want.</Item>
               </Col>
             </FadeInView>
 

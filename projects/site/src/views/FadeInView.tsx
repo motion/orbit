@@ -154,6 +154,14 @@ export const FadeInView = memo(
       ...(fullscreen && fullscreenStyle),
     }
 
+    // disable animation
+    if (disable && animate) {
+      style = {
+        ...style,
+        ...(animate as any),
+      }
+    }
+
     if (reverse) {
       ;[style, animate] = [animate, style]
     }

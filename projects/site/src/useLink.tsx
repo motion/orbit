@@ -1,6 +1,7 @@
 import memoize from 'memoize-weak'
 import { useCurrentRoute } from 'react-navi'
 
+import { LinkState } from './LinkState'
 import { routeTable } from './routeTable'
 import { HeaderContext } from './views/HeaderContext'
 
@@ -48,25 +49,26 @@ export const createLink = memoize((href: string, header = null, isExternal = fal
   }
   clearTimeout(tm)
   e.preventDefault()
-  // transition out body on slow
-  let tm2 = setTimeout(() => {
-    document.body.classList.add('will-load')
-    document.body.classList.add('loading')
-  }, 200)
-  const finish = () => {
-    getNavigation()
-      .navigate(href)
-      .then(() => {
-        clearTimeout(tm2)
-        document.body.classList.remove('loading')
-        document.body.classList.remove('will-load')
-      })
-  }
-  if (header) {
-    header.setShown(false)
-    tm = setTimeout(finish, 105)
+  if (loadedRoutes[href] || !header) {
+    LinkState.didAnimateOut = false
+    getNavigation().navigate(href)
   } else {
-    finish()
+    LinkState.didAnimateOut = true
+    // transition out body on slow
+    let tm2 = setTimeout(() => {
+      document.body.classList.add('will-load')
+      document.body.classList.add('loading')
+    }, 200)
+    header.setShown(false)
+    tm = setTimeout(() => {
+      getNavigation()
+        .navigate(href)
+        .then(() => {
+          clearTimeout(tm2)
+          document.body.classList.remove('loading')
+          document.body.classList.remove('will-load')
+        })
+    }, 105)
   }
 })
 

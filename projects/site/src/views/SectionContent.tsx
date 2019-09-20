@@ -8,6 +8,7 @@ export type SectionContentProps = ViewProps & {
   outside?: React.ReactNode
   forwardRef?: any
   pages?: number | 'auto'
+  fullWidth?: boolean
 }
 
 export const SectionContent = ({
@@ -20,6 +21,7 @@ export const SectionContent = ({
   flex,
   minHeight,
   forwardRef,
+  fullWidth,
   ...props
 }: SectionContentProps) => {
   return (

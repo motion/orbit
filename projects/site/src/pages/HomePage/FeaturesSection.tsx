@@ -12,8 +12,10 @@ import { SpacedPageContent } from './SpacedPageContent'
 
 const dly = 200
 
+const sectionNames = ['Collaborate', 'App Kit', 'Publish']
+
 const sections = {
-  Apps: [
+  [sectionNames[0]]: [
     {
       title: 'Apps work together',
       icon: 'apps',
@@ -47,7 +49,7 @@ const sections = {
       ],
     },
   ],
-  Tech: [
+  [sectionNames[1]]: [
     {
       title: 'The latest React, Typescript & Webpack',
       icon: 'apps',
@@ -80,7 +82,7 @@ const sections = {
       ],
     },
   ],
-  Platform: [
+  [sectionNames[2]]: [
     {
       title: 'Query Builder',
       icon: 'apps',
@@ -118,7 +120,7 @@ const sections = {
 
 export default memo(() => {
   const Fade = useFadePage()
-  const [activeSection, setActiveSection] = useState('Apps')
+  const [activeSection, setActiveSection] = useState(sectionNames[0])
   const btnProps = (section: string) => {
     return {
       cursor: 'pointer',
@@ -158,13 +160,13 @@ export default memo(() => {
               <PillButton>Features</PillButton>
             </FadeInView>
             <FadeInView delayIndex={1}>
-              <TitleText textAlign="center" size="xxl">
+              <TitleText textAlign="center" size="xl">
                 Batteries Included
               </TitleText>
             </FadeInView>
             <FadeInView delayIndex={1} {...fadeAnimations.up}>
-              <Row justifyContent="center" space="lg" margin={[0, 'auto']}>
-                {['Apps', 'Tech', 'Platform'].map(section => (
+              <Row justifyContent="center" space="lg" margin={[15, 'auto', 0]}>
+                {sectionNames.map(section => (
                   <React.Fragment key={section}>
                     <PillButtonDark {...btnProps(section)}>{section}</PillButtonDark>
                   </React.Fragment>

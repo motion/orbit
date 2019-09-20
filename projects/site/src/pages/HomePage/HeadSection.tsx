@@ -102,7 +102,7 @@ export function HeadSection() {
         justifyContent="center"
       >
         <FadeInView
-          delayIndex={6}
+          delayIndex={8}
           {...fadeAnimations.up}
           flex={1}
           alignItems="inherit"
@@ -222,21 +222,21 @@ const HeadTextSection = memo(() => {
             <FadeInView
               disable={!measured}
               delayIndex={2}
-              {...fadeAnimations.up}
+              // {...fadeAnimations.up}
               {...fontProps.TitleFont}
             >
               Amazing internal tools
             </FadeInView>
           </TextFitTitle>
           {br}
-          <FadeInView delayIndex={3} minHeight="min-content" {...fadeAnimations.up}>
+          <FadeInView delayIndex={5} minHeight="min-content" {...fadeAnimations.up}>
             <TitleParagraph {...para}>
               {/* first line */}Create internal tools you'd never have attempted before.
             </TitleParagraph>
           </FadeInView>
           <span style={{ userSelect: 'none' }}>&nbsp;</span>
           <View sm-display="none">
-            <FadeInView delayIndex={4} minHeight="min-content" {...fadeAnimations.up}>
+            <FadeInView delayIndex={6} minHeight="min-content" {...fadeAnimations.up}>
               <TitleParagraph {...para}>
                 {/* second line */}
                 The all-in-one data & app studio for teams.
@@ -245,7 +245,7 @@ const HeadTextSection = memo(() => {
           </View>
           {br}
           <FadeInView
-            delayIndex={6}
+            delayIndex={8}
             display="block"
             minHeight="min-content"
             sm-display="inline"

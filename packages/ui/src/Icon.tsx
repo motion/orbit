@@ -33,7 +33,7 @@ export const findName = (name: string) => {
   if (cache[name]) return cache[name]
   if (IconSvgPaths16[name]) return name
   const result = searcher.search(name)
-  const match = result.length ? result[0].target : 'none'
+  const match = result.length ? result[0].name : 'none'
   cache[name] = match
   return match
 }

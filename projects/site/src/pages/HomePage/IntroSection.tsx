@@ -53,6 +53,14 @@ export function IntroSection() {
               lg-marginLeft="-30%"
               lg-width="130%"
               borderRadius={20}
+              boxShadow={[
+                {
+                  spread: 5,
+                  blur: 80,
+                  color: '#000',
+                  y: 20,
+                },
+              ]}
             />
           </Col>
           <Col space="xl">

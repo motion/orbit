@@ -11,8 +11,8 @@ export const TiltCard = ({ style, ...rest }: CardProps) => {
       animate={tilt}
       onMouseMove={({ clientX: x, clientY: y }) =>
         tilt.start({
-          // rotateY: (x - window.innerWidth / 2) / 20,
-          // rotateX: -(y - window.innerHeight / 2) / 20,
+          rotateY: (x - window.innerWidth / 2) / 40,
+          rotateX: -(y - window.innerHeight / 2) / 40,
           scale: 1.05,
           perspective: 10000,
         })

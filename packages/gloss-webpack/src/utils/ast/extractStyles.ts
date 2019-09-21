@@ -187,8 +187,6 @@ export function extractStyles(
           return true
         }
 
-        console.log('ok ok', specifier, specifier.local.name)
-
         if (specifier.local.name[0] !== specifier.local.name[0].toUpperCase()) {
           return true
         }
@@ -206,8 +204,6 @@ export function extractStyles(
 
     return true
   })
-
-  console.log('item', hasValidComponents)
 
   // jsxstyle isn't included anywhere, so let's bail
   if (jsxstyleSrc == null || !hasValidComponents) {

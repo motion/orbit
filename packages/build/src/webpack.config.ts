@@ -60,7 +60,8 @@ const flags = {
   target: getFlag('--target'),
   devtool: getFlag('--devtool'),
   executable: getFlag('--executable', true),
-  extractStatic: getFlag('--extract-static', true),
+  extractStaticStyles: getFlag('--extract-static-styles', true),
+  extractCSS: getFlag('--extract-css', true),
 }
 
 if (flags.prod) {
@@ -77,7 +78,7 @@ const NO_OPTIMIZE = process.env.NO_OPTIMIZE
 const IS_RUNNING = process.env.IS_RUNNING
 
 const target = flags.target || 'electron-renderer'
-const shouldExtractCSS = target !== 'node' && isProd && !IS_RUNNING
+const shouldExtractCSS = target !== 'node' && (isProd || flags.extractCSS) && !IS_RUNNING
 
 //   eval-source-map (causes errors to not show stack trace in react development...)
 //   cheap-source-map (no line numbers...)
@@ -283,7 +284,7 @@ async function makeConfig() {
               options: babelrcOptions,
             },
 
-            flags.extractStatic && {
+            flags.extractStaticStyles && {
               loader: GlossWebpackPlugin.loader,
             },
           ].filter(Boolean),
@@ -366,7 +367,7 @@ async function makeConfig() {
       mode === 'development' && hot && new webpack.HotModuleReplacementPlugin(),
       mode === 'development' && hot && new ReactRefreshPlugin(),
 
-      flags.extractStatic && new GlossWebpackPlugin(),
+      flags.extractStaticStyles && new GlossWebpackPlugin(),
 
       // didnt improve
       // mode === 'production' && new WebpackDeepScopeAnalysisPlugin(),

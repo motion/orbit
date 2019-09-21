@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "rootDir": "src",
+    "outDir": "_",
+    "noEmit": true,
+    "tsBuildInfoFile": "tsconfig.tsbuildinfo"
+  },
+  "include": ["index.tsx"],
+  "references": [{ "path": "../../packages/gloss" }, { "path": "../../packages/ui" }]
+}

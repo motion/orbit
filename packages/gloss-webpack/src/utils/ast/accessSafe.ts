@@ -1,4 +1,4 @@
-import t = require('@babel/types')
+import t from '@babel/types'
 
 // accessSafe wraps memberExpressions in object/null checks
 // TODO: inject this as a function? this gets pretty repetitive

@@ -1,5 +1,5 @@
-import t = require('@babel/types')
-import path = require('path')
+import t from '@babel/types'
+import path from 'path'
 
 import { evaluateAstNode } from './evaluateAstNode'
 import { getSourceModule } from './getSourceModule'

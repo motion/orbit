@@ -14,6 +14,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { BundleStatsWebpackPlugin } = require('bundle-stats')
 
 // const WebpackDeepScopeAnalysisPlugin = require('webpack-deep-scope-plugin').default
+const GlossWebpackPlugin = require('@o/gloss-webpack')
 const LodashWebpackPlugin = require('lodash-webpack-plugin')
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 // const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
@@ -59,6 +60,7 @@ const flags = {
   target: getFlag('--target'),
   devtool: getFlag('--devtool'),
   executable: getFlag('--executable', true),
+  extractStatic: getFlag('--extract-static', true),
 }
 
 if (flags.prod) {
@@ -122,6 +124,32 @@ const optimization = {
     usedExports: true,
     sideEffects: true,
     minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        sourceMap: true,
+        parallel: true,
+        cache: true,
+        terserOptions: {
+          parse: {
+            ecma: 8,
+          },
+          compress: {
+            ecma: 6,
+            warnings: false,
+          },
+          mangle: {
+            safari10: true,
+          },
+          keep_classnames: true,
+          output: {
+            ecma: 6,
+            comments: false,
+            beautify: false,
+            ascii_only: true,
+          },
+        },
+      }),
+    ],
     concatenateModules: true,
     ...(target === 'node'
       ? {
@@ -254,6 +282,10 @@ async function makeConfig() {
               loader: 'babel-loader',
               options: babelrcOptions,
             },
+
+            flags.extractStatic && {
+              loader: GlossWebpackPlugin.loader,
+            },
           ].filter(Boolean),
         },
         {
@@ -333,6 +365,8 @@ async function makeConfig() {
 
       mode === 'development' && hot && new webpack.HotModuleReplacementPlugin(),
       mode === 'development' && hot && new ReactRefreshPlugin(),
+
+      flags.extractStatic && new GlossWebpackPlugin(),
 
       // didnt improve
       // mode === 'production' && new WebpackDeepScopeAnalysisPlugin(),

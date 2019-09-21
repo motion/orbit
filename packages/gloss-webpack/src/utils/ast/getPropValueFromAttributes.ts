@@ -1,6 +1,6 @@
 import generate from '@babel/generator'
-import t = require('@babel/types')
-import invariant = require('invariant')
+import t from '@babel/types'
+import invariant from 'invariant'
 
 import { accessSafe } from './accessSafe'
 

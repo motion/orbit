@@ -1,4 +1,4 @@
-import t = require('@babel/types')
+import t from '@babel/types'
 
 export interface SourceModule {
   sourceModule?: string

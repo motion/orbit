@@ -3,7 +3,7 @@ import { IconNamesList } from '@o/icons'
 import { isDefined, mergeDefined } from '@o/utils'
 import FuzzySearch from 'fuzzy-search'
 import { useTheme } from 'gloss'
-import React, { memo, useContext } from 'react'
+import React, { memo, Suspense, useContext } from 'react'
 
 import { Config } from './helpers/configureUI'
 import { IconPropsContext } from './IconPropsContext'
@@ -24,16 +24,16 @@ export type IconProps = ViewProps & {
 const names = IconNamesList
 const searcher = new FuzzySearch(names.map(name => ({ name })), ['name'])
 
-const cache = {}
+const nameCache = {}
 export const findName = (name: string) => {
   if (!name || typeof name !== 'string') {
     console.warn(`Bad name provided`, name)
     name = ''
   }
-  if (cache[name]) return cache[name]
+  if (nameCache[name]) return nameCache[name]
   const result = searcher.search(name)
   const match = result.length ? result[0].name : 'none'
-  cache[name] = match
+  nameCache[name] = match
   return match
 }
 
@@ -42,7 +42,11 @@ export const Icon = memo((rawProps: IconProps) => {
   const extraProps = useContext(IconPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const ResolvedIcon = Config.useIcon || PlainIcon
-  return <ResolvedIcon subTheme="icon" {...props} />
+  return (
+    <Suspense fallback={null}>
+      <ResolvedIcon subTheme="icon" {...props} />
+    </Suspense>
+  )
 })
 
 // @ts-ignore
@@ -125,7 +129,8 @@ export const PlainIcon = ({
     const pixelGridSize = size >= SIZE_LARGE ? SIZE_LARGE : SIZE_STANDARD
     // render path elements, or nothing if icon name is unknown.
     const iconName = findName(name)
-    const paths = renderSvgPaths(pixelGridSize, iconName)
+    const paths = getIconSvgSuspense(pixelGridSize, iconName)
+    console.log('now its', paths)
     const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
 
     contents = (
@@ -142,6 +147,8 @@ export const PlainIcon = ({
       </View>
     )
   }
+
+  console.log('return', contents)
 
   // add tooltip only if defined
   if (tooltip || tooltipProps) {
@@ -165,13 +172,38 @@ PlainIcon.defaultProps = {
   size: 16,
 }
 
-function renderSvgPaths(pathsSize: number, iconName: string): JSX.Element[] | null {
-  let pathStrings: string[] = []
-  if (pathsSize === SIZE_STANDARD) {
-    pathStrings = require(`@o/icons/lib/esnext/generated/icons/16-${iconName}`).default
-  } else {
-    pathStrings = require(`@o/icons/lib/esnext/generated/icons/20-${iconName}`).default
+const iconCache = {}
+function getIconSvgSuspense(pathsSize: number, iconName: string): JSX.Element[] | null {
+  const key = `${pathsSize}${iconName}`
+  if (iconCache[key]) {
+    if (isDefined(iconCache[key].value)) {
+      return iconCache[key].value
+    }
+    throw iconCache[key].promise
   }
+  iconCache[key] = {
+    value: undefined,
+    promise: new Promise(async res => {
+      const next = await getSvgIcon(pathsSize, iconName)
+      iconCache[key].value = next
+      res(next)
+    }),
+  }
+  throw iconCache[key].promise
+}
+
+async function getSvgIcon(size: number, name: string): Promise<JSX.Element[] | null> {
+  let pathStrings: string[] = []
+  try {
+    if (size === SIZE_STANDARD) {
+      pathStrings = (await import(`@o/icons/icons/20/${name}.json`)).default
+    } else {
+      pathStrings = (await import(`@o/icons/icons/20/${name}.json`)).default
+    }
+  } catch (err) {
+    console.error('errror icon', err)
+  }
+  console.log('pathStrings', pathStrings)
   if (!pathStrings) {
     return null
   }

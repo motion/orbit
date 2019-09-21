@@ -83,7 +83,7 @@ export function HeadSection() {
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
       />
 
-      <Page.ParallaxView
+      {/* <Page.ParallaxView
         className="stars"
         speed={1}
         position="absolute"
@@ -122,7 +122,7 @@ export function HeadSection() {
         <Star top="50%" left="80%" />
         <Star top="0%" left="30%" />
         <Star top="0%" left="80%" />
-      </Page.ParallaxView>
+      </Page.ParallaxView> */}
 
       <Col opacity={fontsLoaded ? 1 : 0} margin={['auto', 0]} height="calc(100% - 120px)">
         <Space size="xxl" />

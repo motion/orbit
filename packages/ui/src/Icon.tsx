@@ -130,7 +130,6 @@ export const PlainIcon = ({
     // render path elements, or nothing if icon name is unknown.
     const iconName = findName(name)
     const paths = getIconSvgSuspense(pixelGridSize, iconName)
-    console.log('now its', paths)
     const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
 
     contents = (
@@ -203,7 +202,6 @@ async function getSvgIcon(size: number, name: string): Promise<JSX.Element[] | n
   } catch (err) {
     console.error('errror icon', err)
   }
-  console.log('pathStrings', pathStrings)
   if (!pathStrings) {
     return null
   }

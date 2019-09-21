@@ -9,6 +9,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "gloss": "*",
     "@babel/core": "^7.6.0",
     "@babel/generator": "^7.6.0",
     "@babel/parser": "^7.5.5",

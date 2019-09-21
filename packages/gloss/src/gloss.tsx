@@ -765,6 +765,7 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSp
 
   return moreSpecific ? `${SPECIFIC_PREFIX}${className}` : className
 }
+
 // has to return a .s-id and .id selector for use in parents passing down styles
 function getSelector(className: string, namespace: string) {
   if (namespace[0] === '@') {
@@ -791,4 +792,21 @@ if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
     gc,
     sheet,
   }
+}
+
+/**
+ * For use externally only (static style extract)
+ */
+export function getStylesClassName(namespace: string, styles: CSSPropertySet) {
+  const style = cssString(styles)
+  let className = styleToClassName(style + (isSubStyle(namespace) ? namespace : ''))
+  const selector = getSelector(className, namespace)
+  className = `${SPECIFIC_PREFIX}${className}`
+  let sheet
+  if (namespace[0] === '@') {
+    sheet = `${namespace} {${selector} {${style}}}`
+  } else {
+    sheet = `${selector} {${style}}`
+  }
+  return { sheet, className }
 }

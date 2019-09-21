@@ -1,3 +1,4 @@
+import { getStylesClassName } from 'gloss'
 import { CSSProperties, getStyleKeysForProps, stringHash } from 'jsxstyle-utils'
 
 import { CacheObject } from '../types'
@@ -5,7 +6,6 @@ import { CacheObject } from '../types'
 export function getClassNameFromCache(
   styleObject: CSSProperties,
   cacheObject: CacheObject,
-  classNameFormat?: 'hash',
 ): string | null {
   if (cacheObject == null) {
     throw new Error('getClassNameFromCache expects an object as its second parameter')
@@ -21,6 +21,12 @@ export function getClassNameFromCache(
   }
 
   const styleObjects = getStyleKeysForProps(styleObject)
+  console.log(
+    'styleObjects',
+    styleObjects,
+    styleObject,
+    getStylesClassName('.', styleObject as any),
+  )
   if (!styleObjects) {
     return null
   }
@@ -30,13 +36,8 @@ export function getClassNameFromCache(
   cacheObject[counterKey] = cacheObject[counterKey] || 0
 
   if (!cacheObject[classNameKey]) {
-    if (classNameFormat === 'hash') {
-      // content hash
-      cacheObject[classNameKey] = '_' + stringHash(classNameKey).toString(36)
-    } else {
-      // incrementing integer
-      cacheObject[classNameKey] = '_x' + (cacheObject[counterKey]++).toString(36)
-    }
+    // content hash
+    cacheObject[classNameKey] = '_' + stringHash(classNameKey).toString(36)
   }
 
   return cacheObject[classNameKey]

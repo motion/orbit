@@ -25,7 +25,6 @@ type ParserPlugin = import('@babel/parser').ParserPlugin
 const loaderSchema = require(path.join(__dirname, '../../../loaderSchema.json'))
 
 export interface ExtractStylesOptions {
-  classNameFormat?: 'hash'
   namedStyleGroups?: Record<string, Record<string, any>>
   parserPlugins?: ParserPlugin[]
   styleGroups?: Record<string, any>[]
@@ -123,7 +122,6 @@ export function extractStyles(
   }
 
   const {
-    classNameFormat,
     namedStyleGroups,
     parserPlugins: _parserPlugins,
     styleGroups,
@@ -217,7 +215,7 @@ export function extractStyles(
   }
 
   // class or className?
-  const classPropName = jsxstyleSrc === 'jsxstyle/preact' ? 'class' : 'className'
+  const classPropName = 'className'
 
   // Generate a UID that's unique in the program scope
   let boxComponentName: string | undefined
@@ -666,7 +664,6 @@ export function extractStyles(
           namedStyleGroups,
           staticAttributes,
           cacheObject,
-          classNameFormat,
         )
 
         const extractedStyleClassNames = Object.keys(stylesByClassName).join(' ')
@@ -683,7 +680,7 @@ export function extractStyles(
         }
 
         if (staticTernaries.length > 0) {
-          const ternaryObj = extractStaticTernaries(staticTernaries, cacheObject, classNameFormat)
+          const ternaryObj = extractStaticTernaries(staticTernaries, cacheObject)
 
           // ternaryObj is null if all of the extracted ternaries have falsey consequents and alternates
           if (ternaryObj !== null) {

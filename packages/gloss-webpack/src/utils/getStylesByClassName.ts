@@ -26,7 +26,6 @@ export function getStylesByClassName(
   namedStyleGroups: Record<string, CSSProperties> = {},
   staticAttributes: Record<string, any>,
   cacheObject: CacheObject,
-  classNameFormat?: 'hash',
 ): StylesByClassName {
   if (typeof staticAttributes !== 'undefined' && staticAttributes == null) {
     throw new Error('getStylesByClassName expects an object as its second parameter')
@@ -93,7 +92,7 @@ export function getStylesByClassName(
         }
       }
 
-      const className = getClassNameFromCache(styleObject, cacheObject, classNameFormat)
+      const className = getClassNameFromCache(styleObject, cacheObject)
       if (!className) {
         continue arrayLoop
       }
@@ -113,7 +112,7 @@ export function getStylesByClassName(
   }
 
   if (Object.keys(styleProps).length > 0) {
-    const className = getClassNameFromCache(styleProps, cacheObject, classNameFormat)
+    const className = getClassNameFromCache(styleProps, cacheObject)
     if (className) {
       stylesByClassName[className] = styleProps
       if (staticAttributes.mediaQueries) {

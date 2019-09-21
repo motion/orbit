@@ -48,10 +48,6 @@
         ]
       }
     },
-    "classNameFormat": {
-      "description": "format of generated class names. `hash` is deterministic, `base36` is not.",
-      "enum": ["hash", "base36"]
-    },
     "evaluateVars": {
       "description": "whether or not to evaluate style props that contain variables",
       "type": "boolean"

@@ -1,4 +1,4 @@
-import t from '@babel/types'
+import * as t from '@babel/types'
 import invariant from 'invariant'
 
 // TODO: open a PR upstream

@@ -32,7 +32,6 @@ export {
 } from 'gloss'
 export { arrayMove } from './helpers/arrayMove'
 export { GlobalHotKeys, HotKeys, KeySequence } from './helpers/reactHotkeys'
-export { IconName } from '@blueprintjs/icons'
 
 export { configureUI, ConfigureUIProps } from './helpers/configureUI'
 export { Direction, SelectableStore } from './lists/SelectableStore'

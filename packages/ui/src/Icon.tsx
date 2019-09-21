@@ -1,5 +1,5 @@
-import { IconName, IconSvgPaths16, IconSvgPaths20 } from '@blueprintjs/icons'
 import { toColor } from '@o/color'
+import { IconNamesList } from '@o/icons'
 import { isDefined, mergeDefined } from '@o/utils'
 import FuzzySearch from 'fuzzy-search'
 import { useTheme } from 'gloss'
@@ -21,7 +21,7 @@ export type IconProps = ViewProps & {
   ignoreColor?: boolean
 }
 
-const names = Object.keys(IconSvgPaths16)
+const names = IconNamesList
 const searcher = new FuzzySearch(names.map(name => ({ name })), ['name'])
 
 const cache = {}
@@ -31,7 +31,6 @@ export const findName = (name: string) => {
     name = ''
   }
   if (cache[name]) return cache[name]
-  if (IconSvgPaths16[name]) return name
   const result = searcher.search(name)
   const match = result.length ? result[0].name : 'none'
   cache[name] = match
@@ -166,10 +165,14 @@ PlainIcon.defaultProps = {
   size: 16,
 }
 
-function renderSvgPaths(pathsSize: number, iconName: IconName): JSX.Element[] | null {
-  const svgPathsRecord = pathsSize === SIZE_STANDARD ? IconSvgPaths16 : IconSvgPaths20
-  const pathStrings = svgPathsRecord[iconName]
-  if (pathStrings == null) {
+function renderSvgPaths(pathsSize: number, iconName: string): JSX.Element[] | null {
+  let pathStrings: string[] = []
+  if (pathsSize === SIZE_STANDARD) {
+    pathStrings = require(`@o/icons/lib/esnext/generated/icons/16-${iconName}`).default
+  } else {
+    pathStrings = require(`@o/icons/lib/esnext/generated/icons/20-${iconName}`).default
+  }
+  if (!pathStrings) {
     return null
   }
   return pathStrings.map((d, i) => <path key={i} d={d} fillRule="evenodd" fill="currentColor" />)

@@ -10,7 +10,7 @@
     "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {
-    "@blueprintjs/icons": "3.7.0",
+    "@o/icons": "3.10.1",
     "@o/color": "^2.6.0",
     "@o/css": "^2.6.0",
     "@o/fast-compare": "^2.6.0",

@@ -196,7 +196,7 @@ async function getSvgIcon(size: number, name: string): Promise<JSX.Element[] | n
   let pathStrings: string[] = []
   try {
     if (size === SIZE_STANDARD) {
-      pathStrings = (await import(`@o/icons/icons/20/${name}.json`)).default
+      pathStrings = (await import(`@o/icons/icons/16/${name}.json`)).default
     } else {
       pathStrings = (await import(`@o/icons/icons/20/${name}.json`)).default
     }

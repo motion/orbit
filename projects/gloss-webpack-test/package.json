@@ -2,8 +2,9 @@
   "name": "@o/gloss-webpack-test",
   "private": true,
   "version": "2.6.0",
+  "main": "src/index.tsx",
   "scripts": {
-    "builde": "NODE_ENV=development mcro-build --extract-static --build --entry ./index --port 5001 --target web"
+    "build": "NODE_ENV=development mcro-build --extract-static --build --entry ./src/index --port 5001 --target web"
   },
   "dependencies": {
     "@babel/core": "^7.6.0",

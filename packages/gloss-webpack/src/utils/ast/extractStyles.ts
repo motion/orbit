@@ -20,7 +20,7 @@ import { parse } from './parse'
 type ParserPlugin = import('@babel/parser').ParserPlugin
 
 // tslint:disable-next-line no-var-requires
-const loaderSchema = require('../../../schema/loader.json')
+const loaderSchema = require('../../../loaderSchema.json')
 
 export interface ExtractStylesOptions {
   classNameFormat?: 'hash'

@@ -1,7 +1,7 @@
-import fs = require('fs')
-import webpack = require('webpack')
-import MemoryFileSystem = require('webpack/lib/MemoryOutputFileSystem')
-import NodeWatchFileSystem = require('webpack/lib/node/NodeWatchFileSystem')
+import fs from 'fs'
+import webpack from 'webpack'
+import MemoryFileSystem from 'webpack/lib/MemoryOutputFileSystem'
+import NodeWatchFileSystem from 'webpack/lib/node/NodeWatchFileSystem'
 
 import { CacheObject, PluginContext } from './types'
 import { wrapFileSystem } from './utils/wrapFileSystem'

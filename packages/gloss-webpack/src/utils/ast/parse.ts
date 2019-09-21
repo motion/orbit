@@ -1,4 +1,4 @@
-import babelParser from '@babel/parser'
+import * as babelParser from '@babel/parser'
 
 export function parse(code: string | Buffer, plugins: babelParser.ParserPlugin[] = []): any {
   return babelParser.parse(code.toString(), {
@@ -11,6 +11,7 @@ export function parse(code: string | Buffer, plugins: babelParser.ParserPlugin[]
       'numericSeparator',
       'objectRestSpread',
       'optionalCatchBinding',
+      'decorators-legacy',
       ...plugins,
     ],
     sourceType: 'module',

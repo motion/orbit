@@ -20,7 +20,9 @@ import { parse } from './parse'
 type ParserPlugin = import('@babel/parser').ParserPlugin
 
 // tslint:disable-next-line no-var-requires
-const loaderSchema = require('../../../loaderSchema.json')
+// throw new Error(require.resolve('../../../loaderSchema.json'))
+// @ts-ignore
+const loaderSchema = require(path.join(__dirname, '../../../loaderSchema.json'))
 
 export interface ExtractStylesOptions {
   classNameFormat?: 'hash'
@@ -62,8 +64,7 @@ const ALL_SPECIAL_PROPS = Object.assign(
 )
 
 const JSXSTYLE_SOURCES = {
-  jsxstyle: true,
-  'jsxstyle/preact': true,
+  '@o/ui/test': true,
 }
 
 export function extractStyles(
@@ -158,87 +159,7 @@ export function extractStyles(
 
   // Find jsxstyle require in program root
   ast.program.body = ast.program.body.filter((item: t.Node) => {
-    if (t.isVariableDeclaration(item)) {
-      item.declarations = item.declarations.filter(
-        (dec): boolean => {
-          if (
-            // var ...
-            !t.isVariableDeclarator(dec) ||
-            // var {...}
-            !t.isObjectPattern(dec.id) ||
-            dec.init == null ||
-            // var {x} = require(...)
-            !t.isCallExpression(dec.init) ||
-            !t.isIdentifier(dec.init.callee) ||
-            dec.init.callee.name !== 'require' ||
-            // var {x} = require('one-thing')
-            dec.init.arguments.length !== 1
-          ) {
-            return true
-          }
-
-          const firstArg = dec.init.arguments[0]
-          if (!t.isStringLiteral(firstArg)) {
-            return true
-          }
-
-          // var {x} = require('jsxstyle')
-          if (!JSXSTYLE_SOURCES.hasOwnProperty(firstArg.value)) {
-            return true
-          }
-
-          if (jsxstyleSrc) {
-            invariant(
-              jsxstyleSrc === firstArg.value,
-              'Expected duplicate `require` to be from "%s", received "%s"',
-              jsxstyleSrc,
-              firstArg.value,
-            )
-          }
-
-          dec.id.properties = dec.id.properties.filter(
-            (prop): boolean => {
-              // if it's funky, keep it
-              if (
-                !t.isObjectProperty(prop) ||
-                !t.isIdentifier(prop.key) ||
-                !t.isIdentifier(prop.value)
-              ) {
-                return true
-              }
-
-              // only add uppercase identifiers to validComponents
-              if (
-                // !componentStyles.hasOwnProperty(prop.key.name) ||
-                prop.value.name[0] !== prop.value.name[0].toUpperCase()
-              ) {
-                return true
-              }
-
-              // map imported name to source component name
-              validComponents[prop.value.name] = prop.key.name
-              hasValidComponents = true
-
-              jsxstyleSrc = firstArg.value
-              return false
-            },
-          )
-
-          if (dec.id.properties.length > 0) {
-            return true
-          }
-
-          // if all props on the variable declaration have been handled, filter it out
-          return false
-        },
-      )
-
-      if (item.declarations.length === 0) {
-        return false
-      }
-    } else if (t.isImportDeclaration(item)) {
-      // omfg everyone please just use import syntax
-
+    if (t.isImportDeclaration(item)) {
       // not imported from jsxstyle? byeeee
       if (!JSXSTYLE_SOURCES.hasOwnProperty(item.source.value)) {
         return true
@@ -266,10 +187,9 @@ export function extractStyles(
           return true
         }
 
-        if (
-          // !componentStyles.hasOwnProperty(specifier.imported.name) ||
-          specifier.local.name[0] !== specifier.local.name[0].toUpperCase()
-        ) {
+        console.log('ok ok', specifier, specifier.local.name)
+
+        if (specifier.local.name[0] !== specifier.local.name[0].toUpperCase()) {
           return true
         }
 
@@ -286,6 +206,8 @@ export function extractStyles(
 
     return true
   })
+
+  console.log('item', hasValidComponents)
 
   // jsxstyle isn't included anywhere, so let's bail
   if (jsxstyleSrc == null || !hasValidComponents) {

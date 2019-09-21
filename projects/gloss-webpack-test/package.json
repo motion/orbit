@@ -4,7 +4,7 @@
   "version": "2.6.0",
   "main": "src/index.tsx",
   "scripts": {
-    "build": "NODE_ENV=development mcro-build --extract-static --build --entry ./src/index --port 5001 --target web"
+    "build": "IGNORE_HTML=1 NODE_ENV=development mcro-build --extract-static --build --entry ./src/index --port 5001 --target web --devtool source-map --disable-hmr"
   },
   "dependencies": {
     "@babel/core": "^7.6.0",

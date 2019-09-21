@@ -7,6 +7,6 @@
     "noEmit": true,
     "tsBuildInfoFile": "tsconfig.tsbuildinfo"
   },
-  "include": ["index.tsx"],
+  "include": ["src/index.tsx"],
   "references": [{ "path": "../../packages/gloss" }, { "path": "../../packages/ui" }]
 }

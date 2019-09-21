@@ -377,7 +377,8 @@ async function makeConfig() {
       //     useTypescriptIncrementalApi: true,
       //   }),
 
-      target !== 'node' &&
+      !process.env['IGNORE_HTML'] &&
+        target !== 'node' &&
         new HtmlWebpackPlugin({
           // chunksSortMode: 'manual',
           favicon: 'public/favicon.png',

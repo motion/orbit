@@ -1,5 +1,6 @@
-import { Col, Icon, Image, Scale, SimpleText, SimpleTextProps, Space, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
+import { Col, gloss, Icon, Image, Scale, SimpleText, SimpleTextProps, Space, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
+import { Base } from 'gloss'
 import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
@@ -48,6 +49,23 @@ const animation: {
   },
 }
 
+const Star = gloss(Base, {
+  borderRadius: 100,
+  width: 2,
+  height: 2,
+  background: 'rgba(255,255,255,0.8)',
+  position: 'absolute',
+  boxShadow: [
+    {
+      spread: 10,
+      blur: 10,
+      color: 'rgba(255,255,255,0.1)',
+      x: 0,
+      y: 0,
+    },
+  ],
+})
+
 export function HeadSection() {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const Fade = useFadePage({
@@ -64,6 +82,47 @@ export function HeadSection() {
         scale={1.5}
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
       />
+
+      <Page.ParallaxView
+        className="stars"
+        speed={1}
+        position="absolute"
+        width="50%"
+        height="50%"
+        top="0%"
+        right="-80%"
+        parallaxAnimate={geometry => ({
+          x: geometry.useParallax().transform(x => -x * 1.5),
+          y: geometry.useParallax().transform(x => x * 1.5),
+        })}
+      >
+        <Star top="0%" left="0%" />
+        <Star top="20%" left="20%" />
+        <Star top="50%" left="80%" />
+        <Star top="0%" left="30%" />
+        <Star top="0%" left="80%" />
+      </Page.ParallaxView>
+
+      <Page.ParallaxView
+        className="stars"
+        speed={1}
+        position="absolute"
+        width="50%"
+        height="50%"
+        top="0%"
+        right="-80%"
+        clamp
+        parallaxAnimate={geometry => ({
+          x: geometry.useParallax().transform(x => -x * 1.5 * 1.2),
+          y: geometry.useParallax().transform(x => x * 1.5 * 1.2),
+        })}
+      >
+        <Star top="0%" left="0%" />
+        <Star top="20%" left="20%" />
+        <Star top="50%" left="80%" />
+        <Star top="0%" left="30%" />
+        <Star top="0%" left="80%" />
+      </Page.ParallaxView>
 
       <Col opacity={fontsLoaded ? 1 : 0} margin={['auto', 0]} height="calc(100% - 120px)">
         <Space size="xxl" />

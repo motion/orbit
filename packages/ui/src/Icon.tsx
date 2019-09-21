@@ -31,8 +31,14 @@ export const findName = (name: string) => {
     name = ''
   }
   if (nameCache[name]) return nameCache[name]
-  const result = searcher.search(name)
-  const match = result.length ? result[0].name : 'none'
+  const index = names.indexOf(name)
+  let match = ''
+  if (index > -1) {
+    match = names[index]
+  } else {
+    const result = searcher.search(name)
+    match = result.length ? result[0].name : 'none'
+  }
   nameCache[name] = match
   return match
 }

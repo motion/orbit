@@ -43,12 +43,16 @@ const sections = {
     {
       title: 'Performant, Complete UI Kit',
       icon: 'interface',
-      body: [`All lists and tables virtualized. React Concurrent rendering. Flexible, consistent data display across all views.`],
+      body: [
+        `All lists and tables virtualized. React Concurrent rendering. Flexible, consistent data display across all views.`,
+      ],
     },
     {
       title: `Drag & Drop Data`,
       icon: `clopboard`,
-      body: [`First class data drag/drop. Move data into Orbit or out of it with a drag, or between apps with the Clipboard applet.`],
+      body: [
+        `First class data drag/drop. Move data into Orbit or out of it with a drag, or between apps with the Clipboard applet.`,
+      ],
     },
     {
       title: `Stunning, easy apps`,
@@ -140,7 +144,7 @@ export default memo(() => {
               </TitleText>
             </FadeInView>
             <FadeInView delayIndex={1} {...fadeAnimations.up}>
-              <Row space="lg" margin={[40, 'auto', 60, 0]}>
+              <Row space="lg" margin={['4%', 'auto', '8%', 0]}>
                 {sectionNames.map(section => (
                   <React.Fragment key={section}>
                     <PillButtonDark {...btnProps(section)}>{section}</PillButtonDark>
@@ -180,7 +184,7 @@ export default memo(() => {
           </FadeInView>
         </Col>
 
-        <View flex={0.2} />
+        <View flex={0.15} />
 
         <View
           sm-display="none"

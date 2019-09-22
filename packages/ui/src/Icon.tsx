@@ -25,7 +25,7 @@ const names = IconNamesList
 const searcher = new FuzzySearch(names.map(name => ({ name })), ['name'])
 
 const nameCache = {}
-export const findName = (name: string) => {
+export const findName = (name: string): string => {
   if (!name || typeof name !== 'string') {
     console.warn(`Bad name provided`, name)
     name = ''
@@ -37,7 +37,7 @@ export const findName = (name: string) => {
     match = names[index]
   } else {
     const result = searcher.search(name)
-    match = result.length ? result[0].name : 'none'
+    match = result.length ? result[0].name : 'dot'
   }
   nameCache[name] = match
   return match

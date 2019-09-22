@@ -388,14 +388,31 @@ function createGlossView<Props>(GlossView: any, config) {
 }
 
 // keeps priority of hover/active/focus as expected
-const psuedoScore = (x: string) => {
+let mediaQueriesImportance = {}
+let hasSetupMediaQueryKeys = false
+const styleKeyScore = (x: string) => {
   const hasFocus = x.indexOf('&:focus') > -1 ? 1 : 0
   const hasHover = x.indexOf('&:hover') > -1 ? 2 : 0
   const hasActive = x.indexOf('&:active') > -1 ? 3 : 0
-  return hasActive + hasHover + hasFocus
+  const psuedoScore = hasActive + hasHover + hasFocus
+  if (psuedoScore) return psuedoScore
+  // media query sort by the order they gave us in object
+  if (Config.mediaQueries) {
+    if (!hasSetupMediaQueryKeys) {
+      hasSetupMediaQueryKeys = true
+      for (const [index, key] of Object.keys(Config.mediaQueries).entries()) {
+        // most important to least important
+        mediaQueriesImportance[Config.mediaQueries[key]] = 10000 - index
+      }
+    }
+    if (x in mediaQueriesImportance) {
+      return mediaQueriesImportance[x]
+    }
+  }
+  return 0
 }
 
-const pseudoSort = (a: string, b: string) => (psuedoScore(a) > psuedoScore(b) ? 1 : -1)
+const styleKeysSort = (a: string, b: string) => (styleKeyScore(a) > styleKeyScore(b) ? 1 : -1)
 
 // takes a style object, adds it to stylesheet, returns classnames
 function addStyles(
@@ -406,7 +423,7 @@ function addStyles(
 ) {
   const keys = Object.keys(styles)
   if (keys.length > 1) {
-    keys.sort(pseudoSort)
+    keys.sort(styleKeysSort)
   }
   let classNames: string[] | null = null
   for (const key of keys) {
@@ -535,7 +552,6 @@ const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
 //  BUT its also used nested! See themeFn => mergePropStyles
 //  likely can be refactored, but just need to study it a bit before you do
 //
-let mediaQueries
 function mergeStyles(
   id: string,
   baseStyles: Object,
@@ -543,7 +559,6 @@ function mergeStyles(
   overwrite?: boolean,
 ): Object | undefined {
   // this is just for the conditional prop styles
-  mediaQueries = mediaQueries || Config.mediaQueries
   let propStyles
   for (const key in nextStyles) {
     // dont overwrite as we go down
@@ -562,12 +577,12 @@ function mergeStyles(
       }
     } else {
       let isMediaQuery = false
-      if (mediaQueries) {
+      if (Config.mediaQueries) {
         // media queries after subStyle, subStyle could have a - in it
         const index = key.indexOf('-')
         if (index > 0) {
           const mediaName = key.slice(0, index)
-          const mediaSelector = mediaQueries[mediaName]
+          const mediaSelector = Config.mediaQueries[mediaName]
           if (mediaSelector) {
             const styleKey = key.slice(index + 1)
             baseStyles[mediaSelector] = baseStyles[mediaSelector] || {}

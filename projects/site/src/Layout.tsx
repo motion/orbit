@@ -86,7 +86,9 @@ export const Layout = memo((props: any) => {
   const maxHeight = siteStore.showSidebar ? window.innerHeight : siteStore.maxHeight
 
   useLayoutEffect(() => {
-    document.body.style.background = themes[theme].background.toString()
+    const background = themes[theme].background.toString()
+    console.log('background', background)
+    document.body.style.background = background
   }, [theme])
 
   return (

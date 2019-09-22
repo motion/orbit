@@ -2,8 +2,8 @@ import generate from '@babel/generator'
 import traverse, { VisitNodeObject } from '@babel/traverse'
 import t = require('@babel/types')
 import Ajv = require('ajv')
+import { getStylesClassName } from 'gloss'
 import invariant = require('invariant')
-import { getStyleKeysForProps } from 'jsxstyle-utils'
 import path = require('path')
 import util = require('util')
 import vm = require('vm')
@@ -25,7 +25,6 @@ type ParserPlugin = import('@babel/parser').ParserPlugin
 const loaderSchema = require(path.join(__dirname, '../../../loaderSchema.json'))
 
 export interface ExtractStylesOptions {
-  namedStyleGroups?: Record<string, Record<string, any>>
   parserPlugins?: ParserPlugin[]
   styleGroups?: Record<string, any>[]
   whitelistedModules?: string[]
@@ -122,7 +121,6 @@ export function extractStyles(
   }
 
   const {
-    namedStyleGroups,
     parserPlugins: _parserPlugins,
     styleGroups,
     whitelistedModules,
@@ -659,12 +657,7 @@ export function extractStyles(
           traversePath.node.closingElement.name.name = node.name.name
         }
 
-        const stylesByClassName = getStylesByClassName(
-          styleGroups,
-          namedStyleGroups,
-          staticAttributes,
-          cacheObject,
-        )
+        const stylesByClassName = getStylesByClassName(styleGroups, staticAttributes, cacheObject)
 
         const extractedStyleClassNames = Object.keys(stylesByClassName).join(' ')
 
@@ -788,33 +781,10 @@ export function extractStyles(
               cssMap.set(className, val)
             }
           } else {
-            let css = ''
             const styleProps = stylesByClassName[className]
 
             // get object of style objects
-            const styleObjects = getStyleKeysForProps(styleProps, true)
-            if (styleObjects == null) {
-              continue
-            }
-            delete styleObjects.classNameKey
-            const styleObjectKeys = Object.keys(styleObjects).sort()
-
-            for (let idx = -1, len = styleObjectKeys.length; ++idx < len; ) {
-              const k = styleObjectKeys[idx]
-              const item = styleObjects[k]
-              let itemCSS =
-                (cssModules ? ':global ' : '') +
-                `.${className}` +
-                (item.pseudoclass ? ':' + item.pseudoclass : '') +
-                (item.pseudoelement ? '::' + item.pseudoelement : '') +
-                ` {${item.styles}}`
-
-              if (item.mediaQuery) {
-                itemCSS = `@media ${item.mediaQuery} { ${itemCSS} }`
-              }
-              css += itemCSS + '\n'
-            }
-
+            const { css } = getStylesClassName('.', styleProps as any)
             cssMap.set(className, { css, commentTexts: [comment] })
           }
         }

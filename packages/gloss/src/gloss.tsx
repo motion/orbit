@@ -802,11 +802,11 @@ export function getStylesClassName(namespace: string, styles: CSSPropertySet) {
   let className = styleToClassName(style + (isSubStyle(namespace) ? namespace : ''))
   const selector = getSelector(className, namespace)
   className = `${SPECIFIC_PREFIX}${className}`
-  let sheet
+  let css: string
   if (namespace[0] === '@') {
-    sheet = `${namespace} {${selector} {${style}}}`
+    css = `${namespace} {${selector} {${style}}}`
   } else {
-    sheet = `${selector} {${style}}`
+    css = `${selector} {${style}}`
   }
-  return { sheet, className }
+  return { css, className }
 }

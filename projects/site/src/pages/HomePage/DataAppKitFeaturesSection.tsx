@@ -22,19 +22,19 @@ export default memo(() => {
         offset={-0.3}
         speed={0.45}
         zIndex={-2}
-        opacity={0.3}
-        x="50%"
+        opacity={0.45}
+        x="10%"
         scale={2.5}
         background="radial-gradient(circle closest-side, #7523AD, transparent)"
       />
 
       <Page.BackgroundParallax
         speed={0.075}
-        offset={1}
+        offset={0.75}
         top={50}
         opacity={0.5}
         zIndex={-2}
-        scale={0.5}
+        scale={0.45}
         transformOrigin="bottom center"
         // keeps it from cropping on small screen
         left="-40%"

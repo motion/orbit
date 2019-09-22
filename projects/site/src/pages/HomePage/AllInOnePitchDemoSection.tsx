@@ -132,15 +132,15 @@ export default memo(() => {
   return (
     <Fade.FadeProvide>
       {/* pink left */}
-      <Page.BackgroundParallax
+      {/* <Page.BackgroundParallax
         speed={-0.5}
         offset={0.3}
         x="-65%"
         scale={1.8}
         className="glow-one"
-        opacity={0.23}
+        opacity={1}
         background="radial-gradient(circle closest-side, #D25CCD, transparent)"
-      />
+      /> */}
 
       {/* teal right */}
       <Page.BackgroundParallax
@@ -148,14 +148,13 @@ export default memo(() => {
         offset={0}
         top="-20%"
         bottom="-20%"
-        x="60%"
         scale={1.3}
         className="glow-two"
         opacity={0.4}
-        background="radial-gradient(circle closest-side, #12A1CC, transparent)"
+        background="radial-gradient(circle closest-side, #D25CCD, transparent)"
         parallaxAnimate={geometry => ({
           y: geometry.useParallax(),
-          x: geometry.useParallax().transform(x => -x * 1 + 240),
+          x: geometry.useParallax().transform(x => x * 1 - 240),
         })}
       />
 

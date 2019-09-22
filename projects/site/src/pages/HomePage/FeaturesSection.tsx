@@ -138,7 +138,7 @@ export default memo(() => {
         })}
       />
 
-      <Row nodeRef={Fade.ref} margin={[0, 'auto']} padding={['8vh', 0, '8vh']}>
+      <Row nodeRef={Fade.ref} margin={[0, 'auto']} padding={['8vh', 0, '8vh']} maxWidth="100vw">
         <Col padding="lg" flex={2}>
           <View flex={1}>
             <FadeInView delayIndex={1}>

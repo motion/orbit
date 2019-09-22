@@ -4,7 +4,8 @@
   "private": true,
   "main": "./src/index.tsx",
   "scripts": {
-    "start": "mcro-build --extract-static-styles --port 5000 --target web",
+    "start": "mcro-build --port 5000 --target web",
+    "start:extract-static": "mcro-build --extract-static-styles --port 5000 --target web",
     "next:start": "cross-env NODE_ENV=production node .next/production-server/server/index.js",
     "next:dev": "nodemon server.ts",
     "build": "OPTIMIZE_REACT=1 ANALYZE_BUNDLE=1 mcro-build --prod --build --target web",

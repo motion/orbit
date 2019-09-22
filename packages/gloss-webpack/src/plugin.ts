@@ -52,6 +52,7 @@ class JsxstyleWebpackPlugin implements webpack.Plugin {
   private donePlugin = (): void => {
     if (this.ctx.cacheFile) {
       // write contents of cache object as a newline-separated list of CSS strings
+      console.log('this.ctx.cacheObject', this.ctx.cacheObject)
       const cacheString = Object.keys(this.ctx.cacheObject).join('\n') + '\n'
       fs.writeFileSync(this.ctx.cacheFile, cacheString, 'utf8')
     }

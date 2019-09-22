@@ -1,8 +1,7 @@
 import generate from '@babel/generator'
 import traverse, { VisitNodeObject } from '@babel/traverse'
 import t = require('@babel/types')
-import Ajv = require('ajv')
-import { getStylesClassName } from 'gloss'
+import { getStylesClassName, GlossView } from 'gloss'
 import invariant = require('invariant')
 import path = require('path')
 import util = require('util')
@@ -15,19 +14,10 @@ import { Ternary } from './extractStaticTernaries'
 import { getStaticBindingsForScope } from './getStaticBindingsForScope'
 import { parse } from './parse'
 
-type ParserPlugin = import('@babel/parser').ParserPlugin
-
-// tslint:disable-next-line no-var-requires
-// throw new Error(require.resolve('../../../loaderSchema.json'))
-// @ts-ignore
-const loaderSchema = require(path.join(__dirname, '../../../loaderSchema.json'))
-
 export interface ExtractStylesOptions {
-  parserPlugins?: ParserPlugin[]
-  styleGroups?: Record<string, any>[]
-  whitelistedModules?: string[]
-  cssModules?: boolean
-  evaluateVars?: boolean
+  views: {
+    [key: string]: GlossView<any>
+  }
 }
 
 export interface Options {
@@ -50,15 +40,6 @@ const UNTOUCHED_PROPS = {
   style: true,
 }
 
-// props that cannot appear in the props prop (so meta)
-const ALL_SPECIAL_PROPS = Object.assign(
-  {
-    className: true,
-    component: true,
-  },
-  UNTOUCHED_PROPS,
-)
-
 const JSXSTYLE_SOURCES = {
   '@o/ui': true,
   '@o/ui/test': true,
@@ -69,9 +50,8 @@ const JSX_VALID_NAMES = ['View', 'Col', 'Row', 'Grid']
 export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
-  /** non-user-configurable options */
   { cacheObject, warnCallback, errorCallback }: Options,
-  options: ExtractStylesOptions = {},
+  options: ExtractStylesOptions,
 ): {
   js: string | Buffer
   css: string
@@ -105,30 +85,12 @@ export function extractStyles(
     logError = errorCallback
   }
 
-  const ajv = new Ajv({
-    allErrors: true,
-    errorDataPath: 'property',
-    useDefaults: true,
-  })
-
-  if (!ajv.validate(loaderSchema, options)) {
-    const msg =
-      'jsxstyle-webpack-plugin is incorrectly configured:\n' +
-      (ajv.errors || [])
-        .map(err => util.format(' - options%s %s', err.dataPath, err.message))
-        .join('\n')
-    logError(msg)
-    throw new Error(msg)
-  }
-
-  const { parserPlugins, styleGroups, whitelistedModules, evaluateVars = true } = options
-
   const sourceDir = path.dirname(sourceFileName)
 
   // Using a map for (officially supported) guaranteed insertion order
   const cssMap = new Map<string, { css: string; commentTexts: string[] }>()
 
-  const ast = parse(src, parserPlugins)
+  const ast = parse(src)
 
   let jsxstyleSrc: string | null = null
   const validComponents = {}
@@ -223,13 +185,13 @@ export function extractStyles(
         // Remember the source component
         const originalNodeName = node.name.name
 
-        const attemptEval = !evaluateVars
+        // evaluateVars = false
+        const attemptEval = !false
           ? evaluateAstNode
           : (() => {
               // Generate scope object at this level
               const staticNamespace = getStaticBindingsForScope(
                 traversePath.scope,
-                whitelistedModules,
                 sourceFileName,
                 bindingCache,
               )
@@ -304,7 +266,6 @@ export function extractStyles(
         let inlinePropCount = 0
         const staticTernaries: Ternary[] = []
 
-        console.log('node.attributes', node.attributes)
         node.attributes = node.attributes.filter((attribute, idx) => {
           if (
             t.isJSXSpreadAttribute(attribute) ||
@@ -442,7 +403,7 @@ export function extractStyles(
           }
         }
 
-        const stylesByClassName = getStylesByClassName(styleGroups, staticAttributes, cacheObject)
+        const stylesByClassName = getStylesByClassName(staticAttributes, cacheObject)
         const extractedStyleClassNames = Object.keys(stylesByClassName).join(' ')
         const classNameObjects: (t.StringLiteral | t.Expression)[] = []
 

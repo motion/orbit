@@ -15,7 +15,6 @@
     "@babel/parser": "^7.6.0",
     "@babel/traverse": "^7.6.0",
     "@babel/types": "^7.6.1",
-    "ajv": "^6.5.3",
     "invariant": "^2.2.1",
     "loader-utils": "^1.1.0",
     "jsxstyle-utils": "^2.1.5"

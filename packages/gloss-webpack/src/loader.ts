@@ -16,7 +16,6 @@ const jsxstyleLoader: webpack.loader.Loader = function(this: any, content) {
   }
 
   const pluginContext: PluginContext = this[Symbol.for('jsxstyle-webpack-plugin')]
-
   invariant(
     pluginContext,
     'jsxstyle-webpack-plugin must be added to the plugins array in your webpack config',

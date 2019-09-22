@@ -28,6 +28,9 @@ const TerserPlugin = require('terser-webpack-plugin')
 // const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 // const CircularDependencyPlugin = require('circular-dependency-plugin')
 
+// for importing ui kit properly
+process.env.RENDER_TARGET = 'node'
+
 const cwd = process.cwd()
 // TODO: this doesn't seem to be the correct way to get the monorepo root.
 const repoRoot = Path.join(cwd, '..', '..')
@@ -292,6 +295,10 @@ async function makeConfig() {
 
             flags.extractStaticStyles && {
               loader: GlossWebpackPlugin.loader,
+              options: {
+                views: require('@o/ui'),
+                cssAttributes: require('@o/css').validCSSAttr,
+              },
             },
           ].filter(Boolean),
         },

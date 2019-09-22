@@ -802,7 +802,7 @@ function getSelector(className: string, namespace: string) {
 }
 
 if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
-  window['gloss'] = {
+  window['gloss'] = window['gloss'] || {
     tracker,
     gc,
     sheet,

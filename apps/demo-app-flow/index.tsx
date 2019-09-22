@@ -16,6 +16,7 @@ export default createApp({
 function DemoAppFlow() {
   return (
     <Flow
+      id="demo-app-flow"
       data={{
         selected: [],
       }}

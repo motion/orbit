@@ -2,18 +2,18 @@ import { Col, gloss, Image } from '@o/ui'
 import React from 'react'
 
 import { mediaQueries } from '../../constants'
-import { useFadePage } from '../../views/FadeInView'
+import { FadeInView, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContent } from '../../views/SectionContent'
 
-const allDelay = 2
-
-const IntroPara = props => (
-  <Paragraph alpha={0.85} size="lg" fontWeight={200} sizeLineHeight={1.5} {...props} />
+const IntroPara = ({ delayIndex, ...props }) => (
+  <FadeInView delayIndex={delayIndex}>
+    <Paragraph alpha={0.85} size="lg" fontWeight={200} sizeLineHeight={1.45} {...props} />
+  </FadeInView>
 )
 
-export function IntroSection() {
+export default function IntroSection() {
   const Fade = useFadePage({
     threshold: 0,
   })
@@ -39,43 +39,49 @@ export function IntroSection() {
         background="radial-gradient(circle closest-side, #FFF358, #FFF358 80%, transparent 85%, transparent)"
       />
 
-      <SectionContent position="relative" padding={['5vh', 0, '8vh']} zIndex={10}>
+      <SectionContent
+        nodeRef={Fade.ref}
+        position="relative"
+        padding={['5vh', 0, '8vh']}
+        zIndex={10}
+      >
         <HalfGrid>
           {/* marginbottom is safari fix */}
-          <Col marginBottom={50}>
-            <Image
-              display="block"
-              src={require('../../public/images/screen1.jpeg')}
-              width="100%"
-              height="auto"
-              maxWidth={1200}
-              margin="auto"
-              lg-marginLeft="-30%"
-              lg-width="130%"
-              borderRadius={20}
-              boxShadow={[
-                {
-                  spread: 5,
-                  blur: 80,
-                  color: '#000',
-                  y: 20,
-                },
-              ]}
-            />
+          <Col sm-marginBottom={50}>
+            <FadeInView>
+              <Image
+                display="block"
+                src={require('../../public/images/screen1.jpeg')}
+                width="100%"
+                height="auto"
+                maxWidth={1200}
+                margin="auto"
+                lg-marginLeft="-30%"
+                lg-width="130%"
+                borderRadius={20}
+                boxShadow={[
+                  {
+                    spread: 5,
+                    blur: 80,
+                    color: '#000',
+                    y: 20,
+                  },
+                ]}
+              />
+            </FadeInView>
           </Col>
-          <Col space="xl">
-            <IntroPara size="xl">
-              <strong style={{ color: '#fff' }}>We're rethinking how operating systems work</strong>
-              , starting by building a magical workspace where your unified data is explorable and
-              moldable.
+          <Col space="xl" justifyContent="center">
+            <IntroPara delayIndex={1} size="xl">
+              <strong style={{ color: '#fff' }}>We're rethinking how computing works for us</strong>
+              , with a creative workspace where unified data is explorable and moldable.
             </IntroPara>
-            <IntroPara>
-              Import, search, and use data within apps easily. Create new apps in minutes and then
-              share your work with a press of a button.
+            <IntroPara delayIndex={2}>
+              It's your team's heads up display. Create apps in minutes and then share your work
+              with a press of a button.
             </IntroPara>
-            <IntroPara>
-              It's a new type of thing: an app platform that runs personally on your device, but is
-              powerful enough to power incredibly rich tools.
+            <IntroPara delayIndex={3}>
+              It's a new type of thing: an app platform that's powerful enough to run your business,
+              but easier to use than bootstrap.
             </IntroPara>
           </Col>
         </HalfGrid>

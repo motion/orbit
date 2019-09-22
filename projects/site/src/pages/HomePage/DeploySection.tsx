@@ -49,7 +49,7 @@ export default function DeploySection() {
       /> */}
 
       <SpacedPageContent
-        padding={['8vh', 0, '10vh']}
+        padding={['10vh', 0, '10vh']}
         nodeRef={Fade.ref}
         header={
           <>
@@ -57,8 +57,8 @@ export default function DeploySection() {
               <PillButton>Develop</PillButton>
             </FadeInView>
             <FadeInView delayIndex={0}>
-              <TitleText textAlign="center" size="lg">
-                Completely rethought{' '}
+              <TitleText textAlign="center" size="xxl">
+                Next-level{' '}
                 <Tooltip label="Developer Experience">
                   <View display="inline" borderBottom={[1, 'dotted', [255, 255, 255, 0.5]]}>
                     DX
@@ -101,10 +101,10 @@ export default function DeploySection() {
 
           <Col
             space="xxl"
-            flex={2}
+            flex={3}
             sm-width="100%"
             minWidth={300}
-            maxWidth={340}
+            maxWidth={380}
             sm-maxWidth="100%"
           >
             <FadeInView delayIndex={1}>
@@ -121,7 +121,7 @@ export default function DeploySection() {
 
             <FadeInView delayIndex={2}>
               <Col space="sm">
-                <Item>No setup at all, amazingly easy to start.</Item>
+                <Item>A 0-setup visual app workspace.</Item>
                 <Item>Per-app fast refresh with error recovery.</Item>
                 <Item>A suite of developer tools.</Item>
                 <Item>Every library you'd want.</Item>

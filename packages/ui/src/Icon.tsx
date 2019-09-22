@@ -31,8 +31,8 @@ export const findName = (name: string) => {
     name = ''
   }
   if (nameCache[name]) return nameCache[name]
-  const index = names.indexOf(name)
   let match = ''
+  const index = names.indexOf(name)
   if (index > -1) {
     match = names[index]
   } else {
@@ -152,8 +152,6 @@ export const PlainIcon = ({
       </View>
     )
   }
-
-  console.log('return', contents)
 
   // add tooltip only if defined
   if (tooltip || tooltipProps) {

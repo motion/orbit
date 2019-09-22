@@ -4,6 +4,7 @@ import React from 'react'
 import people from '../../assets/illustrations/undraw_server_down_s4lk.svg'
 import { mediaStyles } from '../../constants'
 import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
+import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
@@ -13,9 +14,23 @@ export default function SecuritySection() {
   const Fade = useFadePage()
   return (
     <Fade.FadeProvide>
+      <Page.BackgroundParallax
+        speed={0.3}
+        zIndex={-2}
+        opacity={0.235}
+        top="20%"
+        x="-55%"
+        scale={1.6}
+        background="radial-gradient(circle closest-side, #681635, transparent)"
+        parallaxAnimate={geometry => ({
+          y: geometry.useParallax().transform(x => x + 300),
+          x: geometry.useParallax().transform(x => -x),
+        })}
+      />
+
       <SpacedPageContent
         nodeRef={Fade.ref}
-        padding={['18vh', '5%']}
+        padding={['10vh', '5%', '10vh']}
         margin="auto"
         header={
           <>
@@ -23,8 +38,8 @@ export default function SecuritySection() {
               <PillButton>Trust</PillButton>
             </FadeInView>
             <FadeInView delayIndex={1}>
-              <TitleText textAlign="center" size="lg">
-                Open, secure, yours.
+              <TitleText textAlign="center" size="xl">
+                Open & secure
               </TitleText>
             </FadeInView>
             <FadeInView delayIndex={2} {...fadeAnimations.up}>
@@ -38,17 +53,12 @@ export default function SecuritySection() {
           <Row flex={1} space="xxxl">
             <Col flex={3} space="xl">
               <Pitch alpha={1} size="lg">
-                The desktop app platform that brings power back to the user.
+                You're in control.
               </Pitch>
 
-              <Pitch alpha={0.75} size="sm">
-                <strong>How?</strong> Orbit runs privately on your device, never sending a single
-                bit of data outside your firewall. And it's completely open source. No cloud, no
-                servers, no telemetry, no worry.
-              </Pitch>
-              <Pitch alpha={0.75} size="sm">
-                And with a single command you can deploy your intranet to an internal server or our
-                private cloud with peace of mind.
+              <Pitch alpha={0.75} size="md">
+                Orbit runs privately on your device, never sending a single bit of data outside your
+                firewall. It's completely open source. No cloud, no servers, no telemetry, no worry.
               </Pitch>
             </Col>
 

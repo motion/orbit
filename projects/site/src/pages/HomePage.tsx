@@ -6,7 +6,6 @@ import { requestIdleCallback } from '../etc/requestIdle'
 import { Header } from '../Header'
 import { Page } from '../views/Page'
 import { HeadSection } from './HomePage/HeadSection'
-import { IntroSection } from './HomePage/IntroSection'
 import { LoadingPage } from './LoadingPage'
 
 const Sections = {
@@ -20,6 +19,7 @@ const Sections = {
   FeaturesSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/FeaturesSection')))),
   SecuritySection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/SecuritySection')))),
   FooterSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/FooterSection')))),
+  IntroSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/IntroSection')))),
 }
 
 export const HomePage = memo(() => {
@@ -32,19 +32,19 @@ export const HomePage = memo(() => {
           <HeadSection />
         </Page>
         <Page pages="auto">
-          <IntroSection />
+          <Sections.IntroSection />
         </Page>
         <Page pages="auto">
           <Sections.AllInOnePitchDemoSection />
+        </Page>
+        <Page pages="auto">
+          <Sections.FeaturesSection />
         </Page>
         <Page pages="auto">
           <Sections.DeploySection />
         </Page>
         <Page pages="auto">
           <Sections.DataAppKitFeaturesSection />
-        </Page>
-        <Page pages="auto">
-          <Sections.FeaturesSection />
         </Page>
         <Page pages="auto">
           <Sections.SecuritySection />
@@ -70,13 +70,13 @@ const onIdle = () => new Promise(res => requestIdleCallback(res))
 
 const startLoading = once(async () => {
   // let them all add
-  await new Promise(res => setTimeout(res, 1000))
+  await new Promise(res => setTimeout(res, 3000))
   // load rest of page
   while (allUpcoming.length) {
     await onIdle()
-    await new Promise(res => setTimeout(res, 100))
+    await new Promise(res => setTimeout(res, 400))
     const next = allUpcoming.reduce((a, b) => (b.top < a.top ? b : a), { top: Infinity })
-    // console.log('loading', next)
+    console.log('loading', next)
     next.load()
     allUpcoming.splice(allUpcoming.findIndex(x => x.load === next.load), 1)
   }

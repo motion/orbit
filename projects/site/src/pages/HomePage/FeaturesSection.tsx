@@ -1,14 +1,11 @@
-import { Grid, Row, Space, View } from '@o/ui'
+import { Col, Grid, Image, Row, Space, View } from '@o/ui'
 import { flatMap } from 'lodash'
 import React, { memo, useState } from 'react'
 
 import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
-import { Page } from '../../views/Page'
-import { PillButton } from '../../views/PillButton'
 import { PillButtonDark } from '../../views/PillButtonDark'
 import { TitleText } from '../../views/TitleText'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
-import { SpacedPageContent } from './SpacedPageContent'
 
 const dly = 200
 
@@ -19,29 +16,27 @@ const sections = {
     {
       title: 'Apps work together',
       icon: 'apps',
-      body: [`Apps talk with simple typed APIs or GraphQL and Orbit has many data apps.`],
+      body: [`Apps with typed APIs and GraphQL.`],
     },
     {
       title: `A space to collaborate`,
       icon: `satellite`,
-      body: [`The easiest collaboration story. No servers to setup or credentials to share.`],
+      body: [`The easiest collaboration story: no servers, no credentials.`],
     },
     {
       title: `Stunning, easy apps`,
       icon: `shop`,
-      body: [`A UI Kit with everything - designed to look good with few lines of code.`],
+      body: [`A UI Kit with everything you need.`],
     },
     {
       title: `An interface for data`,
       icon: `widget`,
-      body: [
-        `A desktop-class UI kit with views that work well together and adapt to your data structures.`,
-      ],
+      body: [`Everything optimized for speed and ease of use.`],
     },
   ],
   [sectionNames[1]]: [
     {
-      title: 'The latest React, Typescript & Webpack',
+      title: 'Modern & standard',
       icon: 'tech',
       body: [
         `React Refresh hot reloading, with React Concurrent rendering out of the box. Plus, support for Suspense data-loading built into every library and view.`,
@@ -116,36 +111,18 @@ export default memo(() => {
   }
   return (
     <Fade.FadeProvide>
-      <Page.BackgroundParallax
-        speed={0.3}
-        zIndex={-1}
-        opacity={0.45}
-        x="-55%"
-        scale={1.5}
-        background="radial-gradient(circle closest-side, #8B1944, transparent)"
-        parallaxAnimate={geometry => ({
-          y: geometry.useParallax().transform(x => x + 500),
-          x: geometry.useParallax().transform(x => -x),
-        })}
-      />
-
-      <SpacedPageContent
-        nodeRef={Fade.ref}
-        height="auto"
-        flex={1}
-        margin="auto"
-        header={
-          <>
-            <FadeInView delayIndex={0}>
-              <PillButton>Features</PillButton>
-            </FadeInView>
+      <Row nodeRef={Fade.ref} margin={[0, 'auto']} padding={['8vh', 0, '8vh']}>
+        <Col padding="lg" flex={2}>
+          <View flex={1}>
             <FadeInView delayIndex={1}>
-              <TitleText textAlign="center" size="xl">
-                Batteries Included
+              <TitleText alignItems="flex-start" justifyContent="flex-start" size="xxl">
+                The all-in-one
+                <br />
+                platform
               </TitleText>
             </FadeInView>
             <FadeInView delayIndex={1} {...fadeAnimations.up}>
-              <Row justifyContent="center" space="lg" margin={[15, 'auto', 0]}>
+              <Row space="lg" margin={[40, 'auto', 60, 0]}>
                 {sectionNames.map(section => (
                   <React.Fragment key={section}>
                     <PillButtonDark {...btnProps(section)}>{section}</PillButtonDark>
@@ -153,41 +130,64 @@ export default memo(() => {
                 ))}
               </Row>
             </FadeInView>
-          </>
-        }
-      />
+          </View>
+          <FadeInView delayIndex={2} {...fadeAnimations.up}>
+            <Grid space={80} alignItems="start" itemMinWidth={280}>
+              {sections[activeSection].map(({ title, icon, body }, index) => (
+                <SimpleSection
+                  key={`${activeSection}${index}`}
+                  delay={dly * (index + 1)}
+                  title={title}
+                >
+                  <SectionP>
+                    <SectionIcon name={icon} />
+                    {flatMap(body, (x, i) => {
+                      return (
+                        <React.Fragment key={`${activeSection}${i}`}>
+                          {+i === body.length - 1 ? (
+                            x
+                          ) : (
+                            <>
+                              {x}
+                              <Space />
+                            </>
+                          )}
+                        </React.Fragment>
+                      )
+                    })}
+                  </SectionP>
+                </SimpleSection>
+              ))}
+            </Grid>
+          </FadeInView>
+        </Col>
 
-      <View flex={1} minHeight={80} />
+        <View flex={0.2} />
 
-      <FadeInView delayIndex={2} {...fadeAnimations.up}>
-        <Grid space={80} alignItems="start" itemMinWidth={280} maxWidth={800} margin={[0, 'auto']}>
-          {sections[activeSection].map(({ title, icon, body }, index) => (
-            <SimpleSection key={`${activeSection}${index}`} delay={dly * (index + 1)} title={title}>
-              <SectionP>
-                <SectionIcon name={icon} />
-                {flatMap(body, (x, i) => {
-                  return (
-                    <React.Fragment key={`${activeSection}${i}`}>
-                      {+i === body.length - 1 ? (
-                        x
-                      ) : (
-                        <>
-                          {x}
-                          <Space />
-                        </>
-                      )}
-                    </React.Fragment>
-                  )
-                })}
-              </SectionP>
-            </SimpleSection>
-          ))}
-        </Grid>
-      </FadeInView>
-
-      <View flex={1} sm-flex={0} lg-flex={2} />
-
-      <Space size="xl" />
+        <View
+          sm-display="none"
+          position="relative"
+          flex={1}
+          // alignItems="center"
+          justifyContent="center"
+        >
+          <Image
+            width="100%"
+            height="auto"
+            minWidth={1000}
+            marginRight={-1000}
+            src={require('../../public/images/screen-graphql.jpg')}
+            borderRadius={15}
+            overflow="hidden"
+            boxShadow={[
+              {
+                blur: 100,
+                color: '#000',
+              },
+            ]}
+          />
+        </View>
+      </Row>
     </Fade.FadeProvide>
   )
 })

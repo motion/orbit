@@ -175,15 +175,15 @@ export default memo(() => {
 
       <SpacedPageContent
         nodeRef={Fade.ref}
-        padding={['12vh', '0%']}
+        padding={['10vh', '0%']}
         header={
           <>
             <FadeInView delayIndex={0}>
               <PillButton>Build</PillButton>
             </FadeInView>
             <FadeInView delayIndex={1}>
-              <TitleText textAlign="center" size="xl">
-                Make apps, easy
+              <TitleText textAlign="center" size="xxl">
+                A visual app studio
               </TitleText>
             </FadeInView>
             <TitleTextSub margin="auto" minWidth={320}>
@@ -194,7 +194,7 @@ export default memo(() => {
           </>
         }
       >
-        <Col maxWidth="100%" margin={[30, 'auto', 0]} sm-margin={0}>
+        <Col maxWidth="100%" margin={[0, 'auto', 0]} sm-margin={0}>
           <Row space {...mediaStyles.visibleWhen.notsm}>
             <SubSection maxWidth="33%">
               <FadeInView {...fadeAnimations.left} delayIndex={4}>
@@ -211,8 +211,7 @@ export default memo(() => {
                 <PillButtonDark>Display</PillButtonDark>
                 <Space />
                 <CenterText maxWidth={400} margin={[0, 'auto']}>
-                  A fully integrated workspace with rich, powerful views: virtualized, customizable,
-                  designed for large data.
+                  Rich, powerful views to display data & tasks easily.
                 </CenterText>
               </FadeInView>
             </SubSection>

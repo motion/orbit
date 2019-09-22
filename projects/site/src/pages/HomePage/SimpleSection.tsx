@@ -49,7 +49,16 @@ const SectionChrome = gloss(Col, {
 })
 
 export const SectionP = gloss(
-  props => <Paragraph tagName="div" size={1.2} alpha={0.75} sizeLineHeight={1.25} {...props} />,
+  props => (
+    <Paragraph
+      tagName="div"
+      size={1.2}
+      alpha={0.65}
+      fontWeight={400}
+      sizeLineHeight={1.25}
+      {...props}
+    />
+  ),
   {
     display: 'block',
     float: 'left',
@@ -60,7 +69,7 @@ const SectionBody = gloss({
   display: 'block',
 })
 
-export const SectionIcon = gloss(props => <Icon size={42} {...props} />, {
+export const SectionIcon = gloss(props => <Icon size={32} {...props} />, {
   float: 'right',
   margin: [18, 0, 40, 40],
   // opacity: 0.2,

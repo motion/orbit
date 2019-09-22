@@ -149,6 +149,7 @@ export function makeWebpackConfig(
   ]
 
   let config: webpack.Configuration = {
+    cache: { type: 'filesystem' },
     name,
     watch,
     watchOptions: {

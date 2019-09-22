@@ -1,6 +1,6 @@
-import { Col, Grid, Image, Row, Space, View } from '@o/ui'
+import { Col, Grid, Image, Row, Space, useNodeSize, View } from '@o/ui'
 import { flatMap } from 'lodash'
-import React, { memo, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 
 import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
@@ -41,8 +41,8 @@ const sections = {
   ],
   [sectionNames[1]]: [
     {
-      title: 'Performant, Complete UI Kit',
-      icon: 'interface',
+      title: 'Complete UI Kit',
+      icon: 'button',
       body: [
         `All lists and tables virtualized. React Concurrent rendering. Flexible, consistent data display across all views.`,
       ],
@@ -75,7 +75,7 @@ const sections = {
       title: `Next-gen Hot Reload`,
       icon: `refresh`,
       body: [
-        `A custom per-app Webpack with instant React Refresh hot reloading. Toggle between development and production in realtime.`,
+        `Per-app Webpack for instant React Refresh hot reloading. Toggle between development and production in realtime.`,
       ],
     },
     {
@@ -98,6 +98,12 @@ const sections = {
 export default memo(() => {
   const Fade = useFadePage()
   const [activeSection, setActiveSection] = useState(sectionNames[0])
+  const gridContainer = useRef(null)
+  const gridSize = useNodeSize({
+    ref: gridContainer,
+    throttle: 350,
+  })
+
   const btnProps = (section: string) => {
     return {
       cursor: 'pointer',
@@ -114,6 +120,8 @@ export default memo(() => {
       }),
     } as const
   }
+  const cur = Object.keys(sections).indexOf(activeSection)
+  console.log('cur', cur)
   return (
     <Fade.FadeProvide>
       {/* teal right */}
@@ -153,34 +161,63 @@ export default memo(() => {
               </Row>
             </FadeInView>
           </View>
-          <FadeInView delayIndex={2} {...fadeAnimations.up}>
-            <Grid space={80} alignItems="start" itemMinWidth={280}>
-              {sections[activeSection].map(({ title, icon, body }, index) => (
-                <SimpleSection
-                  key={`${activeSection}${index}`}
-                  delay={dly * (index + 1)}
-                  title={title}
-                >
-                  <SectionP>
-                    <SectionIcon name={icon} />
-                    {flatMap(body, (x, i) => {
-                      return (
-                        <React.Fragment key={`${activeSection}${i}`}>
-                          {+i === body.length - 1 ? (
-                            x
-                          ) : (
-                            <>
-                              {x}
-                              <Space />
-                            </>
-                          )}
-                        </React.Fragment>
-                      )
-                    })}
-                  </SectionP>
-                </SimpleSection>
-              ))}
-            </Grid>
+          <FadeInView nodeRef={gridContainer} delayIndex={2} {...fadeAnimations.up}>
+            <Row flexWrap="nowrap">
+              {Object.keys(sections).map((section, index) => {
+                console.log(`${100 * (cur - index)}%`)
+                return (
+                  <Grid
+                    animate={{
+                      opacity: cur === index ? 1 : 0,
+                      x:
+                        cur === index
+                          ? '0%'
+                          : cur > index
+                          ? `-${(cur - index) * 20}%`
+                          : `${(index - cur) * 20}%`,
+                    }}
+                    pointerEvents={cur === index ? 'auto' : 'none'}
+                    transition={{
+                      type: 'spring',
+                      damping: 20,
+                      stiffness: 200,
+                    }}
+                    key={section}
+                    space={20}
+                    alignItems="start"
+                    itemMinWidth={280}
+                    className="feature-grid"
+                    marginRight="-100%"
+                  >
+                    {sections[section].map(({ title, icon, body }, index) => (
+                      <SimpleSection
+                        key={`${section}${index}`}
+                        delay={dly * (index + 1)}
+                        title={title}
+                      >
+                        <SectionP>
+                          <SectionIcon name={icon} />
+                          {flatMap(body, (x, i) => {
+                            return (
+                              <React.Fragment key={`${section}${i}`}>
+                                {+i === body.length - 1 ? (
+                                  x
+                                ) : (
+                                  <>
+                                    {x}
+                                    <Space />
+                                  </>
+                                )}
+                              </React.Fragment>
+                            )
+                          })}
+                        </SectionP>
+                      </SimpleSection>
+                    ))}
+                  </Grid>
+                )
+              })}
+            </Row>
           </FadeInView>
         </Col>
 

@@ -16,7 +16,7 @@ const titleFont = {
 export const SimpleSection = ({ delay = 100, index = undefined, title, children, ...rest }) => {
   const isLeft = isDefined(index) && index % 2 === 0
   return (
-    <SectionChrome space {...rest}>
+    <SectionChrome space notsm-marginBottom={15} {...rest}>
       <FadeInView {...(isLeft ? fadeAnimations.right : fadeAnimations.left)} delay={delay}>
         <SectionTitle>
           {isDefined(index) && (
@@ -48,30 +48,25 @@ const SectionChrome = gloss(Col, {
   position: 'relative',
 })
 
-export const SectionP = gloss(
-  props => (
-    <Paragraph
-      tagName="div"
-      size={1.2}
-      alpha={0.65}
-      fontWeight={400}
-      sizeLineHeight={1.25}
-      {...props}
-    />
-  ),
-  {
-    display: 'block',
-    float: 'left',
-  },
-)
+export const SectionP = gloss(props => (
+  <Paragraph
+    tagName="div"
+    display="flex"
+    flexFlow="row"
+    size={1.2}
+    alpha={0.65}
+    fontWeight={400}
+    sizeLineHeight={1.2}
+    {...props}
+  />
+))
 
-const SectionBody = gloss({
-  display: 'block',
+const SectionBody = gloss(Box, {
+  // flexFlow: 'row',
 })
 
 export const SectionIcon = gloss(props => <Icon size={32} {...props} />, {
-  float: 'right',
-  margin: [18, 0, 40, 40],
+  margin: [12, 20, 20, 0],
   // opacity: 0.2,
 })
 

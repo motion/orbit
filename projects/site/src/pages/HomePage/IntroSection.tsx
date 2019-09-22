@@ -76,12 +76,11 @@ export default function IntroSection() {
               &nbsp;with a fun, creative workspace where unified data is explorable and moldable.
             </IntroPara>
             <IntroPara delayIndex={2}>
-              It's a new heads up display for your desktop. Create new apps in minutes, share your
-              work with a press of a button.
+              It's a smart, fast heads up display that's always there. Create new apps in minutes,
+              share them with a press of a button.
             </IntroPara>
             <IntroPara delayIndex={3}>
-              It's a new type of thing: an app platform you contro, powerful enough to run your
-              business, but easier to use than bootstrap.
+              Powerful enough to run your business, easier to use than bootstrap.
             </IntroPara>
           </Col>
         </HalfGrid>

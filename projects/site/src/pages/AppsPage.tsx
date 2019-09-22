@@ -169,7 +169,7 @@ export function AppsPage() {
   )
 }
 
-AppsPage.theme = 'home'
+AppsPage.theme = 'dark'
 
 const dim = 180
 

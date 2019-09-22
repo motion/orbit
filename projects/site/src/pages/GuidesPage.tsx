@@ -60,7 +60,7 @@ export function GuidesPage(props: { title?: string; children?: any }) {
   )
 }
 
-GuidesPage.theme = 'light'
+GuidesPage.theme = 'dark'
 
 function PostPage(props: { post: GuideEntry; children?: any }) {
   return (

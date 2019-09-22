@@ -47,4 +47,4 @@ export function BetaPage() {
   )
 }
 
-BetaPage.theme = 'light'
+BetaPage.theme = 'dark'

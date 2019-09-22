@@ -159,20 +159,6 @@ export default memo(() => {
         })}
       />
 
-      {/* <Page.ParallaxView
-        className="floating-cube"
-        width={120}
-        position="absolute"
-        offset={0.25}
-        zIndex={-1}
-        parallaxAnimate={geometry => ({
-          y: geometry.useParallax(),
-          x: geometry.useParallax().transform(x => -x * 0.5 + 40),
-        })}
-      >
-        <Image src={require('../../public/images/test.png')} width="100%" height="auto" />
-      </Page.ParallaxView> */}
-
       <SpacedPageContent
         nodeRef={Fade.ref}
         padding={['10vh', '0%']}

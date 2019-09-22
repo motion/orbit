@@ -50,19 +50,17 @@ const sections = {
     {
       title: `Drag & Drop Data`,
       icon: `clopboard`,
-      body: [
-        `First class data drag/drop. Move data into Orbit or out of it with a drag, or between apps with the Clipboard applet.`,
-      ],
+      body: [`First class data drag & drop to move data in or out easily, or between apps.`],
     },
     {
-      title: `Stunning, easy apps`,
+      title: `Every hook you need`,
       icon: `shop`,
-      body: [`A UI Kit with everything you need.`],
+      body: [`Extensive libraries for displaying data, all built on the latest React.`],
     },
     {
       title: `Clipboard`,
       icon: `clipboard`,
-      body: [`Make selections within tables or lists and easily move the data between apps.`],
+      body: [`A persistent, incredibly easy way to enable cross-app data sharing.`],
     },
   ],
   [sectionNames[2]]: [
@@ -121,7 +119,6 @@ export default memo(() => {
     } as const
   }
   const cur = Object.keys(sections).indexOf(activeSection)
-  console.log('cur', cur)
   return (
     <Fade.FadeProvide>
       {/* teal right */}

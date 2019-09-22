@@ -183,7 +183,7 @@ export default memo(() => {
         <Col maxWidth="100%" margin={[0, 'auto', 0]} sm-margin={0}>
           <Row space {...mediaStyles.visibleWhen.notsm}>
             <SubSection maxWidth="33%">
-              <FadeInView {...fadeAnimations.left} delayIndex={4}>
+              <FadeInView {...fadeAnimations.left} delayIndex={3}>
                 <PillButtonDark>Import</PillButtonDark>
                 <Space />
                 <CenterText>
@@ -193,7 +193,7 @@ export default memo(() => {
               </FadeInView>
             </SubSection>
             <SubSection flex={2} padding={[true, 'xxl']}>
-              <FadeInView delayIndex={5} {...fadeAnimations.up}>
+              <FadeInView delayIndex={4} {...fadeAnimations.up}>
                 <PillButtonDark>Display</PillButtonDark>
                 <Space />
                 <CenterText maxWidth={400} margin={[0, 'auto']}>
@@ -202,7 +202,7 @@ export default memo(() => {
               </FadeInView>
             </SubSection>
             <SubSection maxWidth="33%">
-              <FadeInView {...fadeAnimations.right} delayIndex={4}>
+              <FadeInView {...fadeAnimations.right} delayIndex={3}>
                 <PillButtonDark>Export</PillButtonDark>
                 <Space />
                 <CenterText>
@@ -217,7 +217,7 @@ export default memo(() => {
 
           <Row space>
             <Flex alignItems="center" sm-display="none">
-              <FadeInView {...fadeAnimations.left} delayIndex={5}>
+              <FadeInView {...fadeAnimations.left} delayIndex={4}>
                 <Image
                   userSelect="none"
                   alignSelf="center"
@@ -230,7 +230,7 @@ export default memo(() => {
               <FadeInView
                 key={`arrowBefore-${page}`}
                 {...fadeAnimations.left}
-                delayIndex={6}
+                delayIndex={5}
                 alignSelf="flex-end"
               >
                 <Image
@@ -250,7 +250,7 @@ export default memo(() => {
               margin={0}
               sm-margin={[0, '-5%']}
             >
-              <FadeInView width="100%" delayIndex={7} {...fadeAnimations.up}>
+              <FadeInView width="100%" delayIndex={6} {...fadeAnimations.up}>
                 <Button
                   coat="flat"
                   cursor="pointer"
@@ -279,7 +279,7 @@ export default memo(() => {
                 />
               </FadeInView>
 
-              <FadeInView {...fadeAnimations.up} delayIndex={6} marginBottom={-200} zIndex={10}>
+              <FadeInView {...fadeAnimations.up} delayIndex={5} marginBottom={-200} zIndex={10}>
                 <TiltSquircle
                   {...linkProps(elements[index].link)}
                   tagName="div"
@@ -314,7 +314,7 @@ export default memo(() => {
               <FadeInView
                 transition={transitions.slowNotBouncy}
                 {...fadeAnimations.up}
-                delayIndex={7}
+                delayIndex={6}
                 width="100%"
                 height={300}
                 position="relative"
@@ -363,7 +363,7 @@ export default memo(() => {
             </Flex>
 
             <Flex alignItems="center" sm-display="none">
-              <FadeInView {...fadeAnimations.right} delayIndex={5}>
+              <FadeInView {...fadeAnimations.right} delayIndex={4}>
                 <Image
                   userSelect="none"
                   alignSelf="center"
@@ -376,7 +376,7 @@ export default memo(() => {
                 />
               </FadeInView>
               <Space size="xxl" />
-              <FadeInView delayIndex={6} alignSelf="flex-start">
+              <FadeInView delayIndex={5} alignSelf="flex-start">
                 <Image
                   key={`arrowAfter-${page}`}
                   custom={direction}

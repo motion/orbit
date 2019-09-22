@@ -9,7 +9,7 @@ import { SectionContent } from '../../views/SectionContent'
 
 const IntroPara = ({ delayIndex, ...props }) => (
   <FadeInView delayIndex={delayIndex}>
-    <Paragraph alpha={0.85} size="lg" fontWeight={200} sizeLineHeight={1.45} {...props} />
+    <Paragraph alpha={0.85} size={1.5} fontWeight={200} sizeLineHeight={1.4} {...props} />
   </FadeInView>
 )
 
@@ -42,7 +42,7 @@ export default function IntroSection() {
       <SectionContent
         nodeRef={Fade.ref}
         position="relative"
-        padding={['5vh', 0, '8vh']}
+        padding={['10vh', 0, '10vh']}
         zIndex={10}
       >
         <HalfGrid>
@@ -71,17 +71,17 @@ export default function IntroSection() {
             </FadeInView>
           </Col>
           <Col space="xl" justifyContent="center">
-            <IntroPara delayIndex={1} size="xl">
-              <strong style={{ color: '#fff' }}>We're rethinking how computing works for us</strong>
-              , with a creative workspace where unified data is explorable and moldable.
+            <IntroPara delayIndex={1} size={1.8}>
+              <strong style={{ color: '#fff' }}>We're rethinking how we build apps for work</strong>
+              &nbsp;with a fun, creative workspace where unified data is explorable and moldable.
             </IntroPara>
             <IntroPara delayIndex={2}>
-              It's your team's heads up display. Create apps in minutes and then share your work
-              with a press of a button.
+              It's a new heads up display for your desktop. Create new apps in minutes, share your
+              work with a press of a button.
             </IntroPara>
             <IntroPara delayIndex={3}>
-              It's a new type of thing: an app platform that's powerful enough to run your business,
-              but easier to use than bootstrap.
+              It's a new type of thing: an app platform you contro, powerful enough to run your
+              business, but easier to use than bootstrap.
             </IntroPara>
           </Col>
         </HalfGrid>

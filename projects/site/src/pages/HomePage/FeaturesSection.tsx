@@ -10,60 +10,15 @@ import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
 
 const dly = 200
 
-const sectionNames = ['Collaborate', 'App Kit', 'Publish']
+const sectionNames = ['Integrate', 'Display', 'Build']
 
 const sections = {
   [sectionNames[0]]: [
     {
-      title: 'Apps work together',
-      icon: 'apps',
-      body: [`Apps with typed APIs and GraphQL.`],
+      title: `One-click data sources`,
+      icon: `data`,
+      body: [`Every app can provide data APIs, installs with a simple search + click.`],
     },
-    {
-      title: `A space to collaborate`,
-      icon: `satellite`,
-      body: [`The easiest collaboration story: no servers, no credentials.`],
-    },
-    {
-      title: `Stunning, easy apps`,
-      icon: `shop`,
-      body: [`A UI Kit with everything you need.`],
-    },
-    {
-      title: `An interface for data`,
-      icon: `widget`,
-      body: [`Everything optimized for speed and ease of use.`],
-    },
-  ],
-  [sectionNames[1]]: [
-    {
-      title: 'Modern & standard',
-      icon: 'tech',
-      body: [
-        `React Refresh hot reloading, with React Concurrent rendering out of the box. Plus, support for Suspense data-loading built into every library and view.`,
-      ],
-    },
-    {
-      title: `Next-gen Hot Reload`,
-      icon: `refresh`,
-      body: [
-        `We've pushed Webpack to it's limit with a per-app instant-HMR that toggles between development and production in realtime.`,
-      ],
-    },
-    {
-      title: `Multi-process`,
-      icon: `go`,
-      body: [`Go off-thread with just a few lines of code, so you can keep your app fast.`],
-    },
-    {
-      title: `Incredible Dev Tooling`,
-      icon: `pen`,
-      body: [
-        `From logging to data management, state inspection, error recovery and more - Orbit comes with great DX.`,
-      ],
-    },
-  ],
-  [sectionNames[2]]: [
     {
       title: 'Query Builder',
       icon: 'query',
@@ -83,10 +38,55 @@ const sections = {
         `The Bit is the universal data format for Orbit, and you view, search and manage them here.`,
       ],
     },
+  ],
+  [sectionNames[1]]: [
+    {
+      title: 'Performant, Complete UI Kit',
+      icon: 'interface',
+      body: [`All lists and tables virtualized. React Concurrent rendering. Flexible, consistent data display across all views.`],
+    },
+    {
+      title: `Drag & Drop Data`,
+      icon: `clopboard`,
+      body: [`First class data drag/drop. Move data into Orbit or out of it with a drag, or between apps with the Clipboard applet.`],
+    },
+    {
+      title: `Stunning, easy apps`,
+      icon: `shop`,
+      body: [`A UI Kit with everything you need.`],
+    },
     {
       title: `Clipboard`,
       icon: `clipboard`,
       body: [`Make selections within tables or lists and easily move the data between apps.`],
+    },
+  ],
+  [sectionNames[2]]: [
+    {
+      title: `A space to collaborate`,
+      icon: `satellite`,
+      body: [`The easiest collaboration story: no servers, no credentials.`],
+    },
+    {
+      title: `Next-gen Hot Reload`,
+      icon: `refresh`,
+      body: [
+        `A custom per-app Webpack with instant React Refresh hot reloading. Toggle between development and production in realtime.`,
+      ],
+    },
+    {
+      title: `Amazing technology`,
+      icon: `go`,
+      body: [
+        `Add a node process with a few lines of code. React Concurrent and Suspense first-class support.`,
+      ],
+    },
+    {
+      title: `Incredible Dev Tooling`,
+      icon: `pen`,
+      body: [
+        `From logging to data management, state inspection, error recovery and more - Orbit comes with great DX.`,
+      ],
     },
   ],
 }
@@ -136,7 +136,7 @@ export default memo(() => {
               <TitleText alignItems="flex-start" justifyContent="flex-start" size="xxl">
                 The all-in-one
                 <br />
-                platform
+                data studio
               </TitleText>
             </FadeInView>
             <FadeInView delayIndex={1} {...fadeAnimations.up}>

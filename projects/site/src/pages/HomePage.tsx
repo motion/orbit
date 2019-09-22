@@ -35,10 +35,10 @@ export const HomePage = memo(() => {
           <Sections.FeaturesSection />
         </Page>
         <Page pages="auto">
-          <Sections.IntroSection />
+          <Sections.AllInOnePitchDemoSection />
         </Page>
         <Page pages="auto">
-          <Sections.AllInOnePitchDemoSection />
+          <Sections.IntroSection />
         </Page>
         <Page pages="auto">
           <Sections.DeploySection />

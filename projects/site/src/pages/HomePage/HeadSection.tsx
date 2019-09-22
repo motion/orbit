@@ -76,9 +76,9 @@ export function HeadSection() {
     <Fade.FadeProvide>
       <Page.BackgroundParallax
         speed={-0.35}
-        offset={-0.9}
+        offset={-1}
         zIndex={-1}
-        opacity={0.4}
+        opacity={0.5}
         scale={1.5}
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
       />

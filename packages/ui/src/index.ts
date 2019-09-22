@@ -16,6 +16,7 @@ export { pluralize } from './helpers/pluralize'
 
 export {
   Absolute,
+  Box,
   AbsoluteProps,
   Block,
   BlockProps,

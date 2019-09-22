@@ -62,6 +62,7 @@ const flags = {
   executable: getFlag('--executable', true),
   extractStaticStyles: getFlag('--extract-static-styles', true),
   extractCSS: getFlag('--extract-css', true),
+  splitChunks: getFlag('--split-chunks', true),
 }
 
 if (flags.prod) {
@@ -168,6 +169,11 @@ const optimization = {
     removeAvailableModules: false,
     namedModules: true,
     usedExports: true,
+    ...(flags.splitChunks && {
+      splitChunks: {
+        chunks: 'all',
+      },
+    }),
   },
 }
 

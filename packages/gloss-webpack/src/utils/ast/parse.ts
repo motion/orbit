@@ -12,6 +12,7 @@ export function parse(code: string | Buffer, plugins: babelParser.ParserPlugin[]
       'objectRestSpread',
       'optionalCatchBinding',
       'decorators-legacy',
+      'typescript',
       ...plugins,
     ],
     sourceType: 'module',

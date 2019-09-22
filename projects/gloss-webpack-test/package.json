@@ -4,7 +4,8 @@
   "version": "2.6.0",
   "main": "src/index.tsx",
   "scripts": {
-    "build": "NODE_ENV=development mcro-build --extract-static-styles --extract-css --build --entry ./src/index --port 5001 --target web --devtool source-map --disable-hmr"
+    "build": "NODE_ENV=development mcro-build --extract-static-styles --extract-css --build --entry ./src/index --port 5001 --target web --devtool source-map --disable-hmr",
+    "start": "NODE_ENV=development mcro-build --port 5003 --extract-static-styles --extract-css --entry ./src/index --target web --devtool source-map"
   },
   "dependencies": {
     "@babel/core": "^7.6.0",

@@ -1,5 +1,5 @@
 import generate from '@babel/generator'
-import t from '@babel/types'
+import * as t from '@babel/types'
 import invariant from 'invariant'
 
 import { CacheObject } from '../../types'

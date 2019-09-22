@@ -59,6 +59,8 @@ export function extractStyles(
   ast: t.File
   map: any // RawSourceMap from 'source-map'
 } {
+  console.log('TODO make options work: views, cssAttributes', options)
+
   if (typeof src !== 'string') {
     throw new Error('`src` must be a string of javascript')
   }

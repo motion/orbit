@@ -239,7 +239,7 @@ const para = {
   'sm-lineHeight': `${2.8 * scale}rem`,
   'sm-display': 'inline',
   fontWeight: 400,
-  'notmd-fontWeight': 300,
+  'abovemd-fontWeight': 300,
 } as const
 
 const HeadTextSection = memo(() => {
@@ -344,7 +344,6 @@ const HeadJoin = memo(() => {
                 flexDirection="row"
                 group
                 space={false}
-                margin={[0, '-2%']}
               />
             </Scale>
           </Theme>

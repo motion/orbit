@@ -71,7 +71,7 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
     if (isDefined(scrollable)) {
       // scrollable wraps in padded already so no need to continue
       return (
-        <ScrollableView {...defaultProps} scrollable={scrollable} parentSpacing={space} {...props}>
+        <ScrollableView scrollable={scrollable} parentSpacing={space} {...props}>
           {wrapWithSuspense(element, suspense)}
         </ScrollableView>
       )
@@ -81,12 +81,7 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
 
     return (
       // minHeight and padding are handled by paddedView
-      <View
-        {...defaultProps}
-        {...props}
-        padding={false}
-        minHeight={hasPadding ? 'auto' : props.minHeight}
-      >
+      <View {...props} padding={false} minHeight={hasPadding ? 'auto' : props.minHeight}>
         {wrapWithPaddedView(wrapWithSuspense(element, suspense), props)}
       </View>
     )
@@ -95,9 +90,12 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
   // for gloss parents
   BaseView.ignoreAttrs = Base.ignoreAttrs
   BaseView.acceptsSpacing = true
+  BaseView.defaultProps = defaultProps
 
   // static config
   BaseView.staticStyleConfig = {
+    deoptProps: ['animate', 'drag', 'layoutTransition'],
+    avoidProps: ['padding', 'minHeight'],
     cssAttributes: {
       ...validCSSAttr,
       // anything we do special with in render(), we ignore for static extraction:

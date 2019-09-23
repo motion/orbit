@@ -297,10 +297,17 @@ async function makeConfig() {
               loader: GlossWebpackPlugin.loader,
               options: {
                 views: require('@o/ui'),
-                mediaQueryKeys: ['xs', 'sm', 'notsm', 'md', 'notmd', 'lg', 'notlg'],
+                mediaQueryKeys: [
+                  'xs',
+                  'sm',
+                  'abovesm',
+                  'md',
+                  'abovemd',
+                  'lg',
+                  'belowlg',
+                  'abovelg',
+                ],
                 internalViewsPath: Path.join(require.resolve('@o/ui'), '..', '..'),
-                // todo this should go in each view in views as a sub-config
-                deoptKeys: ['animate', 'drag', 'layoutTransition'],
               },
             },
           ].filter(Boolean),

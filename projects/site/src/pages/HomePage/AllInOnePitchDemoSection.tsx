@@ -180,7 +180,7 @@ export default memo(() => {
         }
       >
         <Col maxWidth="100%" margin={[0, 'auto', 0]} sm-margin={0}>
-          <Row space {...mediaStyles.visibleWhen.notsm}>
+          <Row space {...mediaStyles.visibleWhen.abovesm}>
             <SubSection maxWidth="33%">
               <FadeInView {...fadeAnimations.left} delayIndex={3}>
                 <PillButtonDark>Import</PillButtonDark>

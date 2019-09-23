@@ -54,7 +54,6 @@ export type GlossViewOpts<Props> = {
 }
 
 type GlossInternalConfig = {
-  id: string
   displayName: string
   targetElement: any
   styles: any
@@ -91,7 +90,9 @@ export interface GlossView<RawProps, ThemeProps = RawProps, Props = GlossProps<R
   withConfig: (config: GlossViewOpts<Props>) => GlossView<RawProps>
   internal: GlossInternals<Props>
   staticStyleConfig?: {
-    cssAttributes: Object
+    cssAttributes?: Object
+    deoptProps?: string[]
+    avoidProps?: string[]
   }
 }
 
@@ -139,9 +140,6 @@ function createGlossIsEqual() {
   }
 }
 
-let idCounter = 1
-const viewId = () => idCounter++ % Number.MAX_SAFE_INTEGER
-
 export function gloss<Props = any, ThemeProps = Props>(
   a?: CSSPropertySet | GlossView<Props, ThemeProps> | ((props: Props) => any) | string,
   b?: CSSPropertySet,
@@ -178,8 +176,7 @@ export function gloss<Props = any, ThemeProps = Props>(
   }
 
   const targetElement = !!targetConfig ? targetConfig.targetElement : target
-  const id = `${viewId()}`
-  const staticStyles = getAllStyles(id, targetConfig, rawStyles || null)
+  const staticStyles = getAllStyles(targetConfig, rawStyles || null)
   const conditionalStyles = staticStyles.conditionalStyles
 
   let themeFn: ThemeFn | null = null
@@ -257,7 +254,6 @@ export function gloss<Props = any, ThemeProps = Props>(
     }
 
     const dynClassNames = addDynamicStyles(
-      id,
       ThemedView.displayName,
       conditionalStyles,
       dynClasses.current,
@@ -329,13 +325,13 @@ export function gloss<Props = any, ThemeProps = Props>(
     return createElement(element, finalProps, props.children)
   }
 
+  const parent = hasGlossyParent ? target : null
   const internal: GlossInternals<Props> = {
     staticStyles,
     themeFns: null,
-    parent: hasGlossyParent ? target : null,
+    parent,
     getConfig: () => ({
       config: ogConfig,
-      id,
       displayName: ThemedView.displayName || '',
       targetElement,
       styles: staticStyles.styles,
@@ -381,6 +377,7 @@ export function gloss<Props = any, ThemeProps = Props>(
   // add the default prop config
   ThemedView.staticStyleConfig = {
     cssAttributes: validCSSAttr,
+    ...(parent ? parent.staticStyleConfig : null),
   }
 
   // TODO this any type is a regression from adding ThemeProps
@@ -459,13 +456,12 @@ function addStyles(
   return classNames
 }
 
-function mergePropStyles(baseId: string, styles: Object, propStyles: Object, props: Object) {
+function mergePropStyles(styles: Object, propStyles: Object, props: Object) {
   for (const key in propStyles) {
     if (props[key] !== true) continue
-    for (const sKey in propStyles[key]) {
-      const ns = sKey === 'base' ? baseId : sKey
+    for (const ns in propStyles[key]) {
       styles[ns] = styles[ns] || {}
-      mergeStyles(ns, styles, propStyles[key][sKey], true)
+      mergeStyles(ns, styles, propStyles[key][ns], true)
     }
   }
 }
@@ -477,10 +473,7 @@ function deregisterClassName(name: string) {
   gc.deregisterClassUse(nonSpecificClassName)
 }
 
-const isNumericString = (x: string | number) => +x == x
-
 function addDynamicStyles(
-  id: string,
   displayName: string = 'g',
   conditionalStyles: Object | undefined,
   prevClassNames: Set<string> | null,
@@ -511,9 +504,9 @@ function addDynamicStyles(
       if (info) {
         // curId is looking if info.namespace was &:hover (sub-select) or "123" (base) and then applying
         // otherwise it would apply hover styles to the base styles here
-        const curId = isNumericString(info.namespace) ? id : info.namespace
-        dynStyles[curId] = dynStyles[curId] || {}
-        mergeStyles(curId, dynStyles, info.rules)
+        const ns = info.namespace
+        dynStyles[ns] = dynStyles[ns] || {}
+        mergeStyles(ns, dynStyles, info.rules)
       } else if (className) {
         classNames.add(className)
       }
@@ -521,16 +514,16 @@ function addDynamicStyles(
   }
 
   if (conditionalStyles) {
-    mergePropStyles(id, dynStyles, conditionalStyles, props)
+    mergePropStyles(dynStyles, conditionalStyles, props)
   }
 
   if (theme && themeFn) {
     const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
-    dynStyles[id] = dynStyles[id] || {}
+    dynStyles['.'] = dynStyles['.'] || {}
     const themeStyles = themeFn(props, next)
-    const themePropStyles = mergeStyles(id, dynStyles, themeStyles, true)
+    const themePropStyles = mergeStyles('.', dynStyles, themeStyles, true)
     if (themePropStyles) {
-      mergePropStyles(id, dynStyles, themePropStyles, props)
+      mergePropStyles(dynStyles, themePropStyles, props)
     }
   }
 
@@ -633,8 +626,8 @@ function mergeStyles(
             propStyles[key][sKey] = subStyles[sKey]
           } else {
             // we put base styles here, see 'base' check above
-            propStyles[key].base = propStyles[key].base || {}
-            propStyles[key].base[sKey] = subStyles[sKey]
+            propStyles[key]['.'] = propStyles[key]['.'] || {}
+            propStyles[key]['.'][sKey] = subStyles[sKey]
           }
         }
       }
@@ -646,15 +639,11 @@ function mergeStyles(
 
 // happens once at initial gloss() call, so not as perf intense
 // get all parent styles and merge them into a big object
-function getAllStyles(
-  baseId: string,
-  config: GlossInternalConfig | null,
-  rawStyles: CSSPropertySet | null,
-) {
+function getAllStyles(config: GlossInternalConfig | null, rawStyles: CSSPropertySet | null) {
   const styles = {
-    [baseId]: {},
+    '.': {},
   }
-  let conditionalStyles = mergeStyles(baseId, styles, rawStyles)
+  let conditionalStyles = mergeStyles('.', styles, rawStyles)
   // merge parent styles
   if (config) {
     const parentPropStyles = config.conditionalStyles
@@ -669,10 +658,6 @@ function getAllStyles(
       }
     }
     const parentStyles = config.styles
-    const parentId = config.id
-    const moveToMyId = parentStyles[parentId]
-    delete parentStyles[parentId]
-    parentStyles[baseId] = moveToMyId
     for (const key in parentStyles) {
       styles[key] = {
         ...parentStyles[key],

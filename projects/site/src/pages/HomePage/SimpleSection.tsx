@@ -16,7 +16,7 @@ const titleFont = {
 export const SimpleSection = ({ delay = 100, index = undefined, title, children, ...rest }) => {
   const isLeft = isDefined(index) && index % 2 === 0
   return (
-    <SectionChrome space notsm-margin={[0, 15, 15, 0]} {...rest}>
+    <SectionChrome space abovesm-margin={[0, 15, 15, 0]} {...rest}>
       <FadeInView {...(isLeft ? fadeAnimations.right : fadeAnimations.left)} delay={delay}>
         <SectionTitle>
           {isDefined(index) && (

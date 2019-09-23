@@ -1,4 +1,4 @@
-import { Absolute, Row, Theme, useTheme } from 'gloss'
+import { Absolute, Theme, useTheme } from 'gloss'
 import React, { memo } from 'react'
 
 import { Button } from '../buttons/Button'
@@ -18,7 +18,7 @@ export const MediaModal = memo(
       <Scale size={getSize(size)}>
         <Theme name="dark">
           <Modal chromeless background={modalBackground} open={open}>
-            <Row padding={[10, 0]} alignItems="center">
+            <View flexDirection="row" padding={[10, 0]} alignItems="center">
               <View alignItems="center">
                 <Text fontWeight={600}>{title}</Text>
                 {!!subTitle && (
@@ -42,7 +42,7 @@ export const MediaModal = memo(
                   )}
                 </Absolute>
               )}
-            </Row>
+            </View>
 
             <Col
               flex={1}

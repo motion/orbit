@@ -98,7 +98,7 @@ export const Layout = memo((props: any) => {
       {/* small */}
       <Button
         className="sidebar-open-button"
-        notmd-display="none"
+        abovemd-display="none"
         pointerEvents="auto"
         position="fixed"
         top={-3}

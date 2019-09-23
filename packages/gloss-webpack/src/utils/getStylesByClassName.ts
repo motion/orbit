@@ -23,7 +23,6 @@ export function getStylesByClassName(
   if (typeof staticAttributes !== 'undefined' && staticAttributes == null) {
     throw new Error('getStylesByClassName expects an object as its second parameter')
   }
-
   if (cacheObject == null) {
     throw new Error('getStylesByClassName expects an object as its third parameter')
   }
@@ -48,9 +47,9 @@ export function getStylesByClassName(
     const className = getClassNameFromCache(styleProps, cacheObject)
     if (className) {
       stylesByClassName[className] = styleProps
-      if (staticAttributes.mediaQueries) {
-        stylesByClassName[className].mediaQueries = staticAttributes.mediaQueries
-      }
+      // if (staticAttributes.mediaQueries) {
+      //   stylesByClassName[className].mediaQueries = staticAttributes.mediaQueries
+      // }
     }
   }
 

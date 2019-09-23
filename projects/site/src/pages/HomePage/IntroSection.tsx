@@ -1,4 +1,4 @@
-import { Col, gloss, Image } from '@o/ui'
+import { Col, gloss, Image, View } from '@o/ui'
 import React from 'react'
 
 import { mediaQueries } from '../../constants'
@@ -47,17 +47,19 @@ export default function IntroSection() {
       >
         <HalfGrid>
           {/* marginbottom is safari fix */}
-          <Col sm-marginBottom={50}>
+          <View belowmd-marginBottom={50}>
             <FadeInView>
               <Image
                 display="block"
                 src={require('../../public/images/screen1.jpeg')}
                 width="100%"
+                abovemd-marginLeft="-20%"
+                abovemd-width="120%"
+                abovesm-marginLeft="-50%"
+                abovesm-width="150%"
                 height="auto"
                 maxWidth={1200}
                 margin="auto"
-                lg-marginLeft="-30%"
-                lg-width="130%"
                 borderRadius={20}
                 boxShadow={[
                   {
@@ -69,7 +71,7 @@ export default function IntroSection() {
                 ]}
               />
             </FadeInView>
-          </Col>
+          </View>
           <Col space="xl" justifyContent="center">
             <IntroPara delayIndex={1} size={1.8}>
               <strong style={{ color: '#fff' }}>We're rethinking how we build apps for work</strong>
@@ -93,7 +95,7 @@ const HalfGrid = gloss(Col, {
   display: 'grid',
   columnGap: 50,
 
-  [mediaQueries.notlg]: {
+  [mediaQueries.abovemd]: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
   },

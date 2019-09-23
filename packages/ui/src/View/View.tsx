@@ -105,7 +105,7 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
             const key = name[0] === 's' ? name.slice(1) : name
             if (tracker.has(key)) {
               const styles = tracker.get(key)
-              if (+styles.namespace == +styles.namespace) {
+              if (styles.namespace == '.') {
                 if (!styles.styleObject) {
                   styles.styleObject = css(styles.rules, { snakeCase: false })
                 }
@@ -155,6 +155,11 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
         : props.tagName || 'div'
     },
   })
+
+View.staticStyleConfig = {
+  ...View.staticStyleConfig,
+  deoptProps: ['animate', 'drag', 'layoutTransition'],
+}
 
 export type MarginProps = {
   margin?: Sizes | SizesObject | GlossPropertySet['margin']

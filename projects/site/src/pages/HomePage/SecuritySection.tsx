@@ -62,7 +62,7 @@ export default function SecuritySection() {
               </Pitch>
             </Col>
 
-            <Col flex={4} padding={0} {...mediaStyles.visibleWhen.notsm}>
+            <Col flex={4} padding={0} {...mediaStyles.visibleWhen.abovesm}>
               <Image userSelect="none" width="100%" maxWidth={300} margin="auto" src={people} />
             </Col>
           </Row>

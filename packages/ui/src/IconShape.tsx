@@ -1,7 +1,7 @@
 import { toColor } from '@o/color'
-import SVG from '@svgdotjs/svg.js'
+import { SVG } from '@svgdotjs/svg.js'
 import { useTheme } from 'gloss'
-import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 
 import { whenIdle } from './helpers/whenIdle'
 import { findIconName, getSvgIcon, IconProps } from './Icon'
@@ -38,7 +38,6 @@ export const IconShape = memo(
   }: IconShapeProps) => {
     const id = useRef(`icon-${Math.round(Math.random() * 100000)}`).current
     const gradientId = `gradient-${id}`
-
     const [svgPathRaw, setSVGPath] = useState('')
     const svgPath = svgPathRaw || cache[name]
 
@@ -53,16 +52,14 @@ export const IconShape = memo(
         getSvgIcon(20, realName).then(paths => {
           if (cancelled) return
           const iconPath = paths.join(' ')
-          const draw = SVG(id).size(diameter, diameter)
-          const icon = draw.path(iconPath)
-          const out = icon
+          const draw = SVG().size(diameter, diameter)
+          const out = draw
+            .path(iconPath)
             // TODO if its not a perfect square we need to adjust here
-            .size(16, 16)
-            .move(6, 6)
+            .size(20, 20)
+            .move(8, 8)
             .array()
             .toString()
-
-          console.log('we got something', iconPath, out)
 
           cache[name] = `${shapes[shape]} ${out}`
           setSVGPath(cache[name])
@@ -86,7 +83,6 @@ export const IconShape = memo(
 
     return (
       <View width={size} height={size} position="relative" data-icon={name} {...props}>
-        <div style={{ display: 'none' }} id={id} />
         {props.active && (
           <View
             position="absolute"

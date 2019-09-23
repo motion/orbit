@@ -1,2 +1,2 @@
 export const ResizeObserver =
-  typeof window !== 'undefined' ? (window['ResizeObserver'] as ResizeObserver) : null
+  typeof window !== 'undefined' ? (window['ResizeObserver'] as any) : null

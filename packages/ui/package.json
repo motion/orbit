@@ -10,7 +10,7 @@
     "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {
-    "@o/icons": "3.10.3",
+    "@o/icons": "3.10.4",
     "@o/color": "^2.6.0",
     "@o/css": "^2.6.0",
     "@o/fast-compare": "^2.6.0",

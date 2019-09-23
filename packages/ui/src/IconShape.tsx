@@ -1,5 +1,5 @@
-import { IconSvgPaths20 } from '@blueprintjs/icons'
 import { toColor } from '@o/color'
+import { IconSvgPaths20 } from '@o/icons'
 import { useTheme } from 'gloss'
 import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import SVG from 'svg.js'

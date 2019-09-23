@@ -10,6 +10,7 @@ function makeStyleTag(): HTMLStyleElement | null {
     return null
   }
   const tag = document.createElement('style')
+  tag.className = 'gloss-styles'
   tag.type = 'text/css'
   tag.appendChild(document.createTextNode(''))
   if (!document.head) throw 'expected head'

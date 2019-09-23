@@ -984,14 +984,6 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@blueprintjs/icons@3.7.0":
-  version "3.7.0"
-  resolved "https://registry.npmjs.org/@blueprintjs/icons/-/icons-3.7.0.tgz#2a1907a41913773792c828a6c3ef082a1f1ebb77"
-  integrity sha512-608lQx1okOo85LNp7LyvsXWlgJjoQAiu29wULcktGuAuMmVXgueaGbMEDpuEMbu+uRlg9yqDhmk1eWm7W7R5ag==
-  dependencies:
-    classnames "^2.2"
-    tslib "^1.9.0"
-
 "@bundle-stats/html-templates@^1.6.0":
   version "1.8.1"
   resolved "https://registry.npmjs.org/@bundle-stats/html-templates/-/html-templates-1.8.1.tgz#d9ce0fc3bb8074db624e74ae37276ac44558b323"
@@ -2436,6 +2428,14 @@
     codemirror "^5.46.0"
     codemirror-graphql "^0.8.3"
     markdown-it "^8.4.2"
+
+"@o/icons@3.10.3":
+  version "3.10.3"
+  resolved "https://registry.npmjs.org/@o/icons/-/icons-3.10.3.tgz#ce4adc985de7f8f54501e59d62c499538a347f15"
+  integrity sha512-JJNh0BPrMmK+rhBXf5Z7ZJNsBWXLX0MNfilHxDa8/3Y2hWzTTAOZz+oZEbuaXFSKo/dlcEOhHWB/NmNUJuf0ug==
+  dependencies:
+    classnames "^2.2"
+    tslib "~1.9.0"
 
 "@o/react-sortable-hoc@1.10.4":
   version "1.10.4"
@@ -13549,6 +13549,13 @@ jsx-ast-utils@^2.0.1:
     array-includes "^3.0.3"
     object.assign "^4.1.0"
 
+jsxstyle-utils@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.npmjs.org/jsxstyle-utils/-/jsxstyle-utils-2.1.5.tgz#c49990af96ad70e6940e611e64101219051319ef"
+  integrity sha512-a6Is5V/GXTwjns2T8+ZByk0LF4FR3SDOicKPpXXK3d36ivs/Y4hPnDJTnVpoIOm3ZWJnasCTpTeq9BlpfmAGig==
+  dependencies:
+    csstype "^2.5.7"
+
 jwa@^1.4.1:
   version "1.4.1"
   resolved "https://registry.npmjs.org/jwa/-/jwa-1.4.1.tgz#743c32985cb9e98655530d53641b66c8645b039a"
@@ -21873,6 +21880,11 @@ tslib@1.10.0, tslib@^1.10.0, tslib@^1.5.0, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.
   version "1.10.0"
   resolved "https://registry.npmjs.org/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
   integrity sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==
+
+tslib@~1.9.0:
+  version "1.9.3"
+  resolved "https://registry.npmjs.org/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
+  integrity sha512-4krF8scpejhaOgqzBEcGM7yDIEfi0/8+8zDRZhNZZ2kjmHJ4hv3zCbQWxoJGz1iw5U0Jl0nma13xzHXcncMavQ==
 
 tslint@5.15.0:
   version "5.15.0"

@@ -1,6 +1,5 @@
 import { command, getAppDefinition, loadMany, loadOne, observeMany, save, sortApps } from '@o/kit'
 import { AppBit, AppModel, RemoveAllAppDataCommand, Space } from '@o/models'
-import { Lock } from '@o/utils'
 import { Action, AsyncAction, Derive } from 'overmind'
 
 import { orbitStaticApps } from '../apps/orbitApps'
@@ -117,6 +116,22 @@ export const actions = {
   setApps,
   setActiveSpace,
   resetAllApps,
+}
+
+class Lock {
+  queue: Function[] = []
+  async acquireAsync() {
+    return new Promise(res => {
+      if (!this.queue.length) res()
+      else this.queue.push(res)
+    })
+  }
+  release() {
+    this.queue = this.queue.slice(1)
+    if (this.queue.length) {
+      this.queue[0]()
+    }
+  }
 }
 
 const lock = new Lock()

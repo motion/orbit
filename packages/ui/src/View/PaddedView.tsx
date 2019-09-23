@@ -37,6 +37,7 @@ export const PaddedView = gloss<
 }).theme(
   props => ({
     flex: props.flex,
+    minHeight: props.minHeight,
     ...(!props.scrollable && { maxWidth: '100%' }),
     ...(props.scrollable === 'x' && { maxHeight: '100%' }),
     ...(props.scrollable === 'y' && { maxWidth: '100%' }),
@@ -76,7 +77,7 @@ type PaddingSpecificProps = PaddingProps & {
 export function usePadding(props: PaddingSpecificProps) {
   const scale = useScale()
 
-  if (props.padding === 'disable-padding') {
+  if (props.padding === false) {
     return null
   }
 
@@ -92,22 +93,25 @@ export function usePadding(props: PaddingSpecificProps) {
   }
 
   // media query padding
-  // warning: this is probably too expensive for now... we should iterate over props instead
   if (hasMediaQueries) {
     let basePaddings = null
-    for (const key in mediaQueryKeysPadding) {
-      if (isDefined(props[key])) {
+    let sidePaddings = []
+    for (const key in props) {
+      if (!isDefined(props[key])) continue
+      if (key in mediaQueryKeysPadding) {
         basePaddings = basePaddings || {}
         basePaddings[key.replace('-padding', '')] = getPaddingBaseValue(props[key], scale)
       }
+      if (key in mediaQueryKeysPaddingSides) {
+        sidePaddings.push(key)
+      }
     }
-
-    for (const mediaKey in mediaQueryKeysPaddingSides) {
-      const sides = mediaQueryKeysPaddingSides[mediaKey]
+    for (const key of sidePaddings) {
+      const sides = mediaQueryKeysPaddingSides[key]
       for (const paddingSide of sides) {
         if (isDefined(props[paddingSide])) {
           res[paddingSide] = getPaddingSideValue(
-            basePaddings ? basePaddings[mediaKey] : undefined,
+            basePaddings ? basePaddings[key.slice(key.indexOf('-'))] : undefined,
             props,
             sides,
             paddingSide,

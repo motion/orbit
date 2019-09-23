@@ -10,12 +10,15 @@
 		"watch": "tsc -b --watch --preserveWatchOutput"
 	},
 	"dependencies": {
+		"@o/babel-preset-motion": "^2.6.0",
+		"@o/gloss-webpack": "*",
+		"@o/webpack-react-refresh": "*",
+		"@o/ui": "*",
+		"gloss": "*",
 		"@babel/core": "^7.6.0",
 		"@hot-loader/react-dom": "16.8.6",
 		"@lerna/project": "^3.15.0",
 		"@mdx-js/loader": "^1.4.5",
-		"@o/babel-preset-motion": "^2.6.0",
-		"@o/webpack-react-refresh": "*",
 		"babel-loader": "8.0.6",
 		"bundle-stats": "1.6.0",
 		"circular-dependency-plugin": "5.2.0",

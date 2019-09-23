@@ -1,5 +1,5 @@
 import words from '!raw-loader!../public/images/logomark-solid.svg'
-import { Space, SVG, View, ViewProps } from '@o/ui'
+import { scrollTo, Space, SVG, View, ViewProps } from '@o/ui'
 import { gloss, useTheme } from 'gloss'
 import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'
@@ -24,7 +24,7 @@ export const LogoVertical = memo(
         onClick={async e => {
           e.preventDefault()
           if ((await nav.getRoute()).url.pathname === '/') {
-            alert('scroll to top')
+            scrollTo(0)
           } else {
             nav.navigate('/')
           }

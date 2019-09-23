@@ -1,7 +1,0 @@
-"webpack": "5.0.0-alpha.23",
-"html-webpack-plugin": "PutziSan/html-webpack-plugin#db1e0cb7aa89d23212cd87a8958566420002c24d",
-"webpack-dev-middleware": "webpack/webpack-dev-middleware#8597b4c470c6ba6a2389f8459c1600b7043812c1",
-
-
-// in root package.json add resolution
-"webpack-dev-middleware": "webpack/webpack-dev-middleware#8597b4c470c6ba6a2389f8459c1600b7043812c1",

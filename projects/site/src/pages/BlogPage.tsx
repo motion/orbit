@@ -67,7 +67,7 @@ function PostPage(props: { post: PostEntry; children?: any }) {
     <>
       <BlogTitle />
       <Space size="xxxl" />
-      <SectionContent>
+      <SectionContent readablePage>
         <ContentSection>
           <TitleText size="lg" fontWeight={400}>
             {props.post.title}

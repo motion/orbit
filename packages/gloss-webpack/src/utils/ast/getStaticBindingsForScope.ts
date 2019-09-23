@@ -1,5 +1,5 @@
-import t = require('@babel/types')
-import path = require('path')
+import * as t from '@babel/types'
+import path from 'path'
 
 import { evaluateAstNode } from './evaluateAstNode'
 import { getSourceModule } from './getSourceModule'
@@ -29,7 +29,6 @@ interface Binding {
 
 export function getStaticBindingsForScope(
   scope: any,
-  whitelist: string[] = [],
   sourceFileName: string,
   bindingCache: BindingCache,
 ): Record<string, any> {
@@ -62,22 +61,22 @@ export function getStaticBindingsForScope(
         moduleName = path.resolve(sourceDir, moduleName)
       }
 
-      if (whitelist.indexOf(moduleName) > -1) {
-        const src = require(moduleName)
-        if (sourceModule.destructured) {
-          if (sourceModule.imported) {
-            ret[k] = src[sourceModule.imported]
-          }
-        } else {
-          // crude esmodule check
-          // TODO: make sure this actually works
-          if (src && src.__esModule) {
-            ret[k] = src.default
-          } else {
-            ret[k] = src
-          }
-        }
-      }
+      // if (whitelist.indexOf(moduleName) > -1) {
+      //   const src = require(moduleName)
+      //   if (sourceModule.destructured) {
+      //     if (sourceModule.imported) {
+      //       ret[k] = src[sourceModule.imported]
+      //     }
+      //   } else {
+      //     // crude esmodule check
+      //     // TODO: make sure this actually works
+      //     if (src && src.__esModule) {
+      //       ret[k] = src.default
+      //     } else {
+      //       ret[k] = src
+      //     }
+      //   }
+      // }
       continue
     }
 

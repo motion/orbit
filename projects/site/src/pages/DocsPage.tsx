@@ -291,7 +291,7 @@ const DocsPageSidebar = memo(({ children }: any) => {
 })
 
 // @ts-ignore
-DocsPage.theme = 'home'
+DocsPage.theme = 'dark'
 
 const FixedLayout = gloss({
   position: 'fixed',

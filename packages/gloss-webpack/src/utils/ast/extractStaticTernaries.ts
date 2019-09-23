@@ -1,6 +1,6 @@
 import generate from '@babel/generator'
-import t = require('@babel/types')
-import invariant = require('invariant')
+import * as t from '@babel/types'
+import invariant from 'invariant'
 
 import { CacheObject } from '../../types'
 import { getClassNameFromCache } from '../getClassNameFromCache'
@@ -16,7 +16,6 @@ export interface Ternary {
 export function extractStaticTernaries(
   ternaries: Ternary[],
   cacheObject: CacheObject,
-  classNameFormat?: 'hash',
 ): {
   /** styles to be extracted */
   stylesByClassName: StylesByClassName
@@ -84,10 +83,8 @@ export function extractStaticTernaries(
   const ternaryExpression = Object.keys(ternariesByKey)
     .map((key, idx) => {
       const { test, consequentStyles, alternateStyles } = ternariesByKey[key]
-      const consequentClassName =
-        getClassNameFromCache(consequentStyles, cacheObject, classNameFormat) || ''
-      const alternateClassName =
-        getClassNameFromCache(alternateStyles, cacheObject, classNameFormat) || ''
+      const consequentClassName = getClassNameFromCache(consequentStyles, cacheObject) || ''
+      const alternateClassName = getClassNameFromCache(alternateStyles, cacheObject) || ''
 
       if (!consequentClassName && !alternateClassName) {
         return null

@@ -16,6 +16,7 @@ export { pluralize } from './helpers/pluralize'
 
 export {
   Absolute,
+  Box,
   AbsoluteProps,
   Block,
   BlockProps,
@@ -32,7 +33,6 @@ export {
 } from 'gloss'
 export { arrayMove } from './helpers/arrayMove'
 export { GlobalHotKeys, HotKeys, KeySequence } from './helpers/reactHotkeys'
-export { IconName } from '@blueprintjs/icons'
 
 export { configureUI, ConfigureUIProps } from './helpers/configureUI'
 export { Direction, SelectableStore } from './lists/SelectableStore'
@@ -252,3 +252,4 @@ export { getSize, getTextSize, getSizeRelative } from './Sizes'
 export * from './helpers/createUpdateableSpring'
 export * from './helpers/elementOffset'
 export * from './helpers/scrollTo'
+export * from './forms/types'

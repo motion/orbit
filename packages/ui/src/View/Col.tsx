@@ -1,11 +1,11 @@
 import { isDefined } from '@o/utils'
-import { Base } from 'gloss'
+import { Base, validCSSAttr } from 'gloss'
 import React, { isValidElement, Suspense } from 'react'
 
 import { Breadcrumbs } from '../Breadcrumbs'
 import { CollapsableProps, createCollapsableChildren, splitCollapseProps } from '../Collapsable'
 import { createSpacedChildren, SpaceGroupProps } from '../SpaceGroup'
-import { ScrollableView, wrapWithPaddedView } from './ScrollableView'
+import { isPadded, ScrollableView, wrapWithPaddedView } from './ScrollableView'
 import { ScrollableViewProps } from './types'
 import { View } from './View'
 
@@ -71,15 +71,17 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
     if (isDefined(scrollable)) {
       // scrollable wraps in padded already so no need to continue
       return (
-        <ScrollableView {...defaultProps} scrollable={scrollable} parentSpacing={space} {...props}>
+        <ScrollableView scrollable={scrollable} parentSpacing={space} {...props}>
           {wrapWithSuspense(element, suspense)}
         </ScrollableView>
       )
     }
 
+    const hasPadding = isPadded(props)
+
     return (
       // minHeight and padding are handled by paddedView
-      <View {...defaultProps} {...props} padding="disable-padding" minHeight="auto">
+      <View {...props} padding={false} minHeight={hasPadding ? 'auto' : props.minHeight}>
         {wrapWithPaddedView(wrapWithSuspense(element, suspense), props)}
       </View>
     )
@@ -88,6 +90,19 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
   // for gloss parents
   BaseView.ignoreAttrs = Base.ignoreAttrs
   BaseView.acceptsSpacing = true
+  BaseView.defaultProps = defaultProps
+
+  // static config
+  BaseView.staticStyleConfig = {
+    deoptProps: ['animate', 'drag', 'layoutTransition'],
+    avoidProps: ['padding', 'minHeight'],
+    cssAttributes: {
+      ...validCSSAttr,
+      // anything we do special with in render(), we ignore for static extraction:
+      padding: false,
+      minHeight: false,
+    },
+  }
 
   return BaseView
 }

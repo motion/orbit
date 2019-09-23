@@ -1,4 +1,3 @@
-
 Sep 12:
 
 - fix some app stuff:
@@ -25,7 +24,6 @@ The plan from jun for Sep:
 
 - Improved demo flow x2 (apps, bugs, etc)
 - Build to production
-- Website improved with better docs / home text
 
 ---
 
@@ -54,10 +52,8 @@ Detailed September Plan:
   - [ ] + get build to prod with full flow of app editing working
 
 - [ ] Last Features to tie it all together?
-  - [ ] Should I do anything more????
-  1. Floating "selection" may be it.
-  2. "Move Data" modal, see block below
-  3. See DataDog, could pull some auto-dashboard example apps
+  1. "Move Data" modal, see block below
+  2. See DataDog, could pull some auto-dashboard example apps
 
 - [ ] Demo apps that would be compelling:
   - [ ] StackOverflow Clone
@@ -91,26 +87,7 @@ Either select items or define query
 
 GO TO PROD / DEV TASKS
 
-- [ ] Webpack 5 will be instrumental in more easily going to production, check if its ready for integration as its picked up some steam.
 - [ ] React Window is being re-written again by bvaughn, there are bugs in it currently, an afternoon to revisit and see if we can upgrade to that version
-
-
-----------
-
-
-NEW SITE SECTIONS:
-
-1. Augment your OS (show interaction with home)
-2. Best DX, ever (hover to define DX) (SHOW MORE)
-3. IN as easy as OUT (show OCR/pinning + syncing/graph)
-
-(if anything, just show footer here and have a FEATURES page)
-
-1. Easy deploy (move the deploy stuff down to here)
-...
-
-Features page could show each individual app in more depth basically,
-very simple layout with some brighter colors and screenshots.
 
 ---
 

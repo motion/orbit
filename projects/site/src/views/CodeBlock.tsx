@@ -6,8 +6,6 @@ import Highlight, { defaultProps } from 'prism-react-renderer'
 import darkTheme from 'prism-react-renderer/themes/nightOwl'
 import React, { memo } from 'react'
 
-import lightTheme from './lightOwlTheme'
-
 export const CodeBlock = memo((props: { children: string; language?: string }) => {
   const theme = useTheme()
   return (
@@ -16,7 +14,8 @@ export const CodeBlock = memo((props: { children: string; language?: string }) =
         {...defaultProps}
         code={`${props.children}`.trim()}
         language="jsx"
-        theme={theme.background.isDark() ? lightTheme : darkTheme}
+        // theme={theme.background.isDark() ? lightTheme : darkTheme}
+        theme={darkTheme}
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className} style={{ borderRadius: 8, ...style }}>

@@ -1,9 +1,9 @@
-import { IconName, IconSvgPaths16, IconSvgPaths20 } from '@blueprintjs/icons'
 import { toColor } from '@o/color'
+import { IconNamesList } from '@o/icons'
 import { isDefined, mergeDefined } from '@o/utils'
 import FuzzySearch from 'fuzzy-search'
 import { useTheme } from 'gloss'
-import React, { memo, useContext } from 'react'
+import React, { memo, Suspense, useContext } from 'react'
 
 import { Config } from './helpers/configureUI'
 import { IconPropsContext } from './IconPropsContext'
@@ -21,20 +21,25 @@ export type IconProps = ViewProps & {
   ignoreColor?: boolean
 }
 
-const names = Object.keys(IconSvgPaths16)
+const names = IconNamesList
 const searcher = new FuzzySearch(names.map(name => ({ name })), ['name'])
 
-const cache = {}
-export const findName = (name: string) => {
+const nameCache = {}
+export const findName = (name: string): string => {
   if (!name || typeof name !== 'string') {
     console.warn(`Bad name provided`, name)
     name = ''
   }
-  if (cache[name]) return cache[name]
-  if (IconSvgPaths16[name]) return name
-  const result = searcher.search(name)
-  const match = result.length ? result[0].target : 'none'
-  cache[name] = match
+  if (nameCache[name]) return nameCache[name]
+  let match = ''
+  const index = names.indexOf(name)
+  if (index > -1) {
+    match = names[index]
+  } else {
+    const result = searcher.search(name)
+    match = result.length ? result[0].name : 'dot'
+  }
+  nameCache[name] = match
   return match
 }
 
@@ -43,7 +48,11 @@ export const Icon = memo((rawProps: IconProps) => {
   const extraProps = useContext(IconPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const ResolvedIcon = Config.useIcon || PlainIcon
-  return <ResolvedIcon subTheme="icon" {...props} />
+  return (
+    <Suspense fallback={null}>
+      <ResolvedIcon subTheme="icon" {...props} />
+    </Suspense>
+  )
 })
 
 // @ts-ignore
@@ -126,7 +135,7 @@ export const PlainIcon = ({
     const pixelGridSize = size >= SIZE_LARGE ? SIZE_LARGE : SIZE_STANDARD
     // render path elements, or nothing if icon name is unknown.
     const iconName = findName(name)
-    const paths = renderSvgPaths(pixelGridSize, iconName)
+    const paths = getIconSvgSuspense(pixelGridSize, iconName)
     const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
 
     contents = (
@@ -166,10 +175,38 @@ PlainIcon.defaultProps = {
   size: 16,
 }
 
-function renderSvgPaths(pathsSize: number, iconName: IconName): JSX.Element[] | null {
-  const svgPathsRecord = pathsSize === SIZE_STANDARD ? IconSvgPaths16 : IconSvgPaths20
-  const pathStrings = svgPathsRecord[iconName]
-  if (pathStrings == null) {
+const iconCache = {}
+function getIconSvgSuspense(pathsSize: number, iconName: string): JSX.Element[] | null {
+  const key = `${pathsSize}${iconName}`
+  if (iconCache[key]) {
+    if (isDefined(iconCache[key].value)) {
+      return iconCache[key].value
+    }
+    throw iconCache[key].promise
+  }
+  iconCache[key] = {
+    value: undefined,
+    promise: new Promise(async res => {
+      const next = await getSvgIcon(pathsSize, iconName)
+      iconCache[key].value = next
+      res(next)
+    }),
+  }
+  throw iconCache[key].promise
+}
+
+async function getSvgIcon(size: number, name: string): Promise<JSX.Element[] | null> {
+  let pathStrings: string[] = []
+  try {
+    if (size === SIZE_STANDARD) {
+      pathStrings = (await import(`@o/icons/icons/16/${name}.json`)).default
+    } else {
+      pathStrings = (await import(`@o/icons/icons/20/${name}.json`)).default
+    }
+  } catch (err) {
+    console.error('errror icon', err)
+  }
+  if (!pathStrings) {
     return null
   }
   return pathStrings.map((d, i) => <path key={i} d={d} fillRule="evenodd" fill="currentColor" />)

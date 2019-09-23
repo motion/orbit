@@ -1,6 +1,6 @@
-import babelParser = require('@babel/parser')
+import * as babelParser from '@babel/parser'
 
-export function parse(code: string | Buffer, plugins: babelParser.ParserPlugin[] = []): any {
+export function parse(code: string | Buffer): any {
   return babelParser.parse(code.toString(), {
     plugins: [
       'asyncGenerators',
@@ -11,7 +11,8 @@ export function parse(code: string | Buffer, plugins: babelParser.ParserPlugin[]
       'numericSeparator',
       'objectRestSpread',
       'optionalCatchBinding',
-      ...plugins,
+      'decorators-legacy',
+      'typescript',
     ],
     sourceType: 'module',
   })

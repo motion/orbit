@@ -19,28 +19,37 @@ const Sections = {
   FeaturesSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/FeaturesSection')))),
   SecuritySection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/SecuritySection')))),
   FooterSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/FooterSection')))),
+  IntroSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/IntroSection')))),
 }
 
 export const HomePage = memo(() => {
   return (
     <>
       <LoadingPage />
+      {/* if you want swanky top thing */}
+      {/* <View background="#000" borderBottom={[1, [255, 255, 255, 0.12]]} height={5} width="100%" /> */}
       <Header />
-      <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
+      <main
+        className="main-contents"
+        style={{ position: 'relative', zIndex: 0, overflow: 'hidden' }}
+      >
         <Page pages="auto" zIndex={0}>
           <HeadSection />
         </Page>
         <Page pages="auto">
+          <Sections.FeaturesSection />
+        </Page>
+        <Page pages="auto">
           <Sections.AllInOnePitchDemoSection />
+        </Page>
+        <Page pages="auto">
+          <Sections.IntroSection />
         </Page>
         <Page pages="auto">
           <Sections.DeploySection />
         </Page>
         <Page pages="auto">
           <Sections.DataAppKitFeaturesSection />
-        </Page>
-        <Page pages="auto">
-          <Sections.FeaturesSection />
         </Page>
         <Page pages="auto">
           <Sections.SecuritySection />
@@ -66,13 +75,13 @@ const onIdle = () => new Promise(res => requestIdleCallback(res))
 
 const startLoading = once(async () => {
   // let them all add
-  await new Promise(res => setTimeout(res, 1000))
+  await new Promise(res => setTimeout(res, 3000))
   // load rest of page
   while (allUpcoming.length) {
     await onIdle()
-    await new Promise(res => setTimeout(res, 100))
+    await new Promise(res => setTimeout(res, 400))
     const next = allUpcoming.reduce((a, b) => (b.top < a.top ? b : a), { top: Infinity })
-    // console.log('loading', next)
+    console.log('loading', next)
     next.load()
     allUpcoming.splice(allUpcoming.findIndex(x => x.load === next.load), 1)
   }

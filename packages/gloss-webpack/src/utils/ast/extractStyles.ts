@@ -1,35 +1,25 @@
 import generate from '@babel/generator'
 import traverse, { VisitNodeObject } from '@babel/traverse'
 import t = require('@babel/types')
-import Ajv = require('ajv')
+import { getStylesClassName, GlossView, validCSSAttr } from 'gloss'
 import invariant = require('invariant')
-import { getStyleKeysForProps } from 'jsxstyle-utils'
 import path = require('path')
 import util = require('util')
-import vm = require('vm')
 
 import { CacheObject } from '../../types'
 import { getStylesByClassName } from '../getStylesByClassName'
 import { evaluateAstNode } from './evaluateAstNode'
 import { extractStaticTernaries, Ternary } from './extractStaticTernaries'
-import { generateUid } from './generatedUid'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
-import { getStaticBindingsForScope } from './getStaticBindingsForScope'
 import { parse } from './parse'
 
-type ParserPlugin = import('@babel/parser').ParserPlugin
-
-// tslint:disable-next-line no-var-requires
-const loaderSchema = require('../../../schema/loader.json')
-
 export interface ExtractStylesOptions {
-  classNameFormat?: 'hash'
-  namedStyleGroups?: Record<string, Record<string, any>>
-  parserPlugins?: ParserPlugin[]
-  styleGroups?: Record<string, any>[]
-  whitelistedModules?: string[]
-  cssModules?: boolean
-  evaluateVars?: boolean
+  views: {
+    [key: string]: GlossView<any>
+  }
+  mediaQueryKeys?: string[]
+  internalViewsPath?: string
+  deoptKeys?: string[]
 }
 
 export interface Options {
@@ -50,28 +40,19 @@ interface TraversePath<TNode = any> {
 const UNTOUCHED_PROPS = {
   key: true,
   style: true,
+  className: true,
 }
 
-// props that cannot appear in the props prop (so meta)
-const ALL_SPECIAL_PROPS = Object.assign(
-  {
-    className: true,
-    component: true,
-  },
-  UNTOUCHED_PROPS,
-)
-
 const JSXSTYLE_SOURCES = {
-  jsxstyle: true,
-  'jsxstyle/preact': true,
+  '@o/ui': true,
+  '@o/ui/test': true,
 }
 
 export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
-  /** non-user-configurable options */
   { cacheObject, warnCallback, errorCallback }: Options,
-  options: ExtractStylesOptions = {},
+  options: ExtractStylesOptions,
 ): {
   js: string | Buffer
   css: string
@@ -79,6 +60,10 @@ export function extractStyles(
   ast: t.File
   map: any // RawSourceMap from 'source-map'
 } {
+  const JSX_VALID_NAMES = Object.keys(options.views).filter(x => {
+    return options.views[x] && !!options.views[x].staticStyleConfig
+  })
+
   if (typeof src !== 'string') {
     throw new Error('`src` must be a string of javascript')
   }
@@ -87,7 +72,6 @@ export function extractStyles(
     typeof sourceFileName === 'string' && path.isAbsolute(sourceFileName),
     '`sourceFileName` must be an absolute path to a .js file',
   )
-
   invariant(
     typeof cacheObject === 'object' && cacheObject !== null,
     '`cacheObject` must be an object',
@@ -105,155 +89,34 @@ export function extractStyles(
     logError = errorCallback
   }
 
-  const ajv = new Ajv({
-    allErrors: true,
-    errorDataPath: 'property',
-    useDefaults: true,
-  })
-
-  if (!ajv.validate(loaderSchema, options)) {
-    const msg =
-      'jsxstyle-webpack-plugin is incorrectly configured:\n' +
-      (ajv.errors || [])
-        .map(err => util.format(' - options%s %s', err.dataPath, err.message))
-        .join('\n')
-    logError(msg)
-    throw new Error(msg)
-  }
-
-  const {
-    classNameFormat,
-    namedStyleGroups,
-    parserPlugins: _parserPlugins,
-    styleGroups,
-    whitelistedModules,
-    cssModules,
-    evaluateVars = true,
-  } = options
-
   const sourceDir = path.dirname(sourceFileName)
 
   // Using a map for (officially supported) guaranteed insertion order
   const cssMap = new Map<string, { css: string; commentTexts: string[] }>()
 
-  const parserPlugins = _parserPlugins ? [..._parserPlugins] : []
-  // modify parserPlugins only if the user hasn't specified any plugins
-  if (!_parserPlugins) {
-    if (/\.tsx?$/.test(sourceFileName)) {
-      parserPlugins.push('typescript')
-    } else {
-      // TODO: is this a bad idea
-      parserPlugins.push('flow')
-    }
-  }
+  const ast = parse(src)
 
-  const ast = parse(src, parserPlugins)
-
-  let jsxstyleSrc: string | null = null
+  let jsxstyleSrc = false
   const validComponents = {}
   // default to using require syntax
   let useImportSyntax = false
   let hasValidComponents = false
-  let needsRuntimeJsxstyle = false
+
+  const views: { [key: string]: GlossView<any> } = {}
+
+  // we allow things within the ui kit to avoid the more tedious config
+  const isInternal =
+    options.internalViewsPath && sourceFileName.indexOf(options.internalViewsPath) === 0
 
   // Find jsxstyle require in program root
   ast.program.body = ast.program.body.filter((item: t.Node) => {
-    if (t.isVariableDeclaration(item)) {
-      item.declarations = item.declarations.filter(
-        (dec): boolean => {
-          if (
-            // var ...
-            !t.isVariableDeclarator(dec) ||
-            // var {...}
-            !t.isObjectPattern(dec.id) ||
-            dec.init == null ||
-            // var {x} = require(...)
-            !t.isCallExpression(dec.init) ||
-            !t.isIdentifier(dec.init.callee) ||
-            dec.init.callee.name !== 'require' ||
-            // var {x} = require('one-thing')
-            dec.init.arguments.length !== 1
-          ) {
-            return true
-          }
-
-          const firstArg = dec.init.arguments[0]
-          if (!t.isStringLiteral(firstArg)) {
-            return true
-          }
-
-          // var {x} = require('jsxstyle')
-          if (!JSXSTYLE_SOURCES.hasOwnProperty(firstArg.value)) {
-            return true
-          }
-
-          if (jsxstyleSrc) {
-            invariant(
-              jsxstyleSrc === firstArg.value,
-              'Expected duplicate `require` to be from "%s", received "%s"',
-              jsxstyleSrc,
-              firstArg.value,
-            )
-          }
-
-          dec.id.properties = dec.id.properties.filter(
-            (prop): boolean => {
-              // if it's funky, keep it
-              if (
-                !t.isObjectProperty(prop) ||
-                !t.isIdentifier(prop.key) ||
-                !t.isIdentifier(prop.value)
-              ) {
-                return true
-              }
-
-              // only add uppercase identifiers to validComponents
-              if (
-                // !componentStyles.hasOwnProperty(prop.key.name) ||
-                prop.value.name[0] !== prop.value.name[0].toUpperCase()
-              ) {
-                return true
-              }
-
-              // map imported name to source component name
-              validComponents[prop.value.name] = prop.key.name
-              hasValidComponents = true
-
-              jsxstyleSrc = firstArg.value
-              return false
-            },
-          )
-
-          if (dec.id.properties.length > 0) {
-            return true
-          }
-
-          // if all props on the variable declaration have been handled, filter it out
-          return false
-        },
-      )
-
-      if (item.declarations.length === 0) {
-        return false
-      }
-    } else if (t.isImportDeclaration(item)) {
-      // omfg everyone please just use import syntax
-
+    if (t.isImportDeclaration(item)) {
       // not imported from jsxstyle? byeeee
-      if (!JSXSTYLE_SOURCES.hasOwnProperty(item.source.value)) {
+      if (!isInternal && !JSXSTYLE_SOURCES.hasOwnProperty(item.source.value)) {
         return true
       }
 
-      if (jsxstyleSrc) {
-        invariant(
-          jsxstyleSrc === item.source.value,
-          'Expected duplicate `import` to be from "%s", received "%s"',
-          jsxstyleSrc,
-          item.source.value,
-        )
-      }
-
-      jsxstyleSrc = item.source.value
+      jsxstyleSrc = true
       useImportSyntax = true
 
       item.specifiers = item.specifiers.filter(specifier => {
@@ -266,29 +129,27 @@ export function extractStyles(
           return true
         }
 
-        if (
-          // !componentStyles.hasOwnProperty(specifier.imported.name) ||
-          specifier.local.name[0] !== specifier.local.name[0].toUpperCase()
-        ) {
+        if (specifier.local.name[0] !== specifier.local.name[0].toUpperCase()) {
           return true
         }
 
+        if (!JSX_VALID_NAMES.includes(specifier.local.name)) {
+          return true
+        }
+
+        views[specifier.local.name] = options.views[specifier.local.name]
         validComponents[specifier.local.name] = specifier.imported.name
         hasValidComponents = true
-        return false
+        // dont remove the import
+        return true
       })
-
-      // remove import
-      if (item.specifiers.length === 0) {
-        return false
-      }
     }
 
     return true
   })
 
   // jsxstyle isn't included anywhere, so let's bail
-  if (jsxstyleSrc == null || !hasValidComponents) {
+  if (!jsxstyleSrc || !hasValidComponents) {
     return {
       ast,
       css: '',
@@ -298,19 +159,8 @@ export function extractStyles(
     }
   }
 
-  // class or className?
-  const classPropName = jsxstyleSrc === 'jsxstyle/preact' ? 'class' : 'className'
-
-  // Generate a UID that's unique in the program scope
-  let boxComponentName: string | undefined
-  traverse(ast, {
-    Program(traversePath: TraversePath) {
-      boxComponentName = generateUid(traversePath.scope, 'Box')
-    },
-  })
-
   // per-file cache of evaluated bindings
-  const bindingCache = {}
+  // const bindingCache = {}
 
   const traverseOptions: { JSXElement: VisitNodeObject<t.JSXElement, any> } = {
     JSXElement: {
@@ -328,43 +178,46 @@ export function extractStyles(
 
         // Remember the source component
         const originalNodeName = node.name.name
+        const view = views[originalNodeName]
+        invariant(!!view, `Must have a view passed to config ${originalNodeName}`)
+        const { staticStyleConfig } = view
+        invariant(
+          !!staticStyleConfig,
+          `Must have a view with staticStyleConfig for ${originalNodeName}`,
+        )
 
-        node.name.name = boxComponentName!
+        // Get valid css props
+        const cssAttributes = staticStyleConfig.cssAttributes || validCSSAttr
 
-        // prepend initial styles
-        const initialStyles = []
-        if (initialStyles) {
-          node.attributes = [...initialStyles, ...node.attributes]
-        }
+        // evaluateVars = false
+        const attemptEval = evaluateAstNode
+        // evaluateVars
+        //   ? evaluateAstNode
+        //   : (() => {
+        //       // Generate scope object at this level
+        //       const staticNamespace = getStaticBindingsForScope(
+        //         traversePath.scope,
+        //         sourceFileName,
+        //         bindingCache,
+        //       )
 
-        const attemptEval = !evaluateVars
-          ? evaluateAstNode
-          : (() => {
-              // Generate scope object at this level
-              const staticNamespace = getStaticBindingsForScope(
-                traversePath.scope,
-                whitelistedModules,
-                sourceFileName,
-                bindingCache,
-              )
+        //       const evalContext = vm.createContext(staticNamespace)
 
-              const evalContext = vm.createContext(staticNamespace)
+        //       // called when evaluateAstNode encounters a dynamic-looking prop
+        //       const evalFn = (n: t.Node) => {
+        //         // variable
+        //         if (t.isIdentifier(n)) {
+        //           invariant(
+        //             staticNamespace.hasOwnProperty(n.name),
+        //             'identifier not in staticNamespace',
+        //           )
+        //           return staticNamespace[n.name]
+        //         }
+        //         return vm.runInContext(`(${generate(n).code})`, evalContext)
+        //       }
 
-              // called when evaluateAstNode encounters a dynamic-looking prop
-              const evalFn = (n: t.Node) => {
-                // variable
-                if (t.isIdentifier(n)) {
-                  invariant(
-                    staticNamespace.hasOwnProperty(n.name),
-                    'identifier not in staticNamespace',
-                  )
-                  return staticNamespace[n.name]
-                }
-                return vm.runInContext(`(${generate(n).code})`, evalContext)
-              }
-
-              return (n: t.Node) => evaluateAstNode(n, evalFn)
-            })()
+        //       return (n: t.Node) => evaluateAstNode(n, evalFn)
+        //     })()
 
         let lastSpreadIndex: number = -1
         const flattenedAttributes: (t.JSXAttribute | t.JSXSpreadAttribute)[] = []
@@ -413,11 +266,12 @@ export function extractStyles(
 
         node.attributes = flattenedAttributes
 
-        let propsAttributes: (t.JSXSpreadAttribute | t.JSXAttribute)[] = []
+        // let propsAttributes: (t.JSXSpreadAttribute | t.JSXAttribute)[] = []
         const staticAttributes: Record<string, any> = {}
         let inlinePropCount = 0
-
         const staticTernaries: Ternary[] = []
+
+        let shouldDeopt = false
 
         node.attributes = node.attributes.filter((attribute, idx) => {
           if (
@@ -434,6 +288,22 @@ export function extractStyles(
           }
 
           const name = attribute.name.name
+
+          // for fully deoptimizing certain keys
+          if (staticStyleConfig.deoptProps && staticStyleConfig.deoptProps.includes(name)) {
+            shouldDeopt = true
+            return true
+          }
+          if (shouldDeopt) {
+            return true
+          }
+
+          // for avoiding processing certain keys
+          if (staticStyleConfig.avoidProps && staticStyleConfig.avoidProps.includes(name)) {
+            inlinePropCount++
+            return true
+          }
+
           const value =
             attribute.value && t.isJSXExpressionContainer(attribute.value)
               ? attribute.value.expression
@@ -456,133 +326,14 @@ export function extractStyles(
             return true
           }
 
-          // className prop will be handled below
-          if (name === classPropName) {
-            return true
-          }
-
-          // component prop will be handled below
-          if (name === 'component') {
-            return true
-          }
-
           if (name === 'ref') {
-            logWarning(
-              'The `ref` prop cannot be extracted from a jsxstyle component. ' +
-                'If you want to attach a ref to the underlying component ' +
-                'or element, specify a `ref` property in the `props` object.',
-            )
             inlinePropCount++
             return true
           }
 
-          // pass key and style props through untouched
-          if (UNTOUCHED_PROPS.hasOwnProperty(name)) {
-            return true
-          }
-
-          if (name === 'props') {
-            if (t.isObjectExpression(value)) {
-              let errorCount = 0
-              const attributes: (t.JSXAttribute | t.JSXSpreadAttribute)[] = []
-
-              for (const k in value.properties) {
-                const propObj = value.properties[k]
-
-                if (t.isObjectProperty(propObj)) {
-                  let key: string | null = null
-
-                  if (t.isIdentifier(propObj.key)) {
-                    key = propObj.key.name
-                  } else if (t.isStringLiteral(propObj.key)) {
-                    // starts with a-z or _ followed by a-z, -, or _
-                    if (/^\w[\w-]+$/.test(propObj.key.value)) {
-                      key = propObj.key.value
-                    } else {
-                      logWarning('`props` prop contains an invalid key: `%s`', propObj.key.value)
-                      errorCount++
-                      continue
-                    }
-                  } else {
-                    logWarning('unhandled object property key type: `%s`', propObj.type)
-                    errorCount++
-                  }
-
-                  if (!key) {
-                    continue
-                  }
-
-                  if (ALL_SPECIAL_PROPS.hasOwnProperty(key)) {
-                    logWarning(
-                      '`props` prop cannot contain `%s` as it is used by jsxstyle and will be overwritten.',
-                      key,
-                    )
-                    errorCount++
-                    continue
-                  }
-
-                  if (t.isStringLiteral(propObj.value)) {
-                    // convert literal value back to literal to ensure it has double quotes (siiiigh)
-                    attributes.push(
-                      t.jsxAttribute(t.jsxIdentifier(key), t.stringLiteral(propObj.value.value)),
-                    )
-                  } else if (
-                    t.isExpression(propObj.value) &&
-                    !t.isArrayPattern(propObj.value) &&
-                    !t.isAssignmentPattern(propObj.value) &&
-                    !t.isObjectPattern(propObj.value) &&
-                    !t.isRestElement(propObj.value)
-                  ) {
-                    // wrap everything else in a JSXExpressionContainer
-                    attributes.push(
-                      t.jsxAttribute(t.jsxIdentifier(key), t.jsxExpressionContainer(propObj.value)),
-                    )
-                  }
-                } else if (t.isSpreadElement(propObj)) {
-                  attributes.push(t.jsxSpreadAttribute(propObj.argument))
-                } else {
-                  logWarning('unhandled object property value type: `%s`', propObj.type)
-                  errorCount++
-                }
-              }
-
-              if (errorCount > 0) {
-                inlinePropCount++
-              } else {
-                propsAttributes = attributes
-              }
-
-              return true
-            }
-
-            if (
-              // if it's not an object, spread it
-              // props={wow()}
-              t.isCallExpression(value) ||
-              // props={wow.cool}
-              t.isMemberExpression(value) ||
-              // props={wow}
-              t.isIdentifier(value)
-            ) {
-              propsAttributes = [t.jsxSpreadAttribute(value)]
-              return true
-            }
-
-            // if props prop is weird-looking, leave it and warn
-            logWarning('props prop is an unhandled type: `%s`', value.type)
+          if (!cssAttributes[name]) {
             inlinePropCount++
             return true
-          }
-
-          if (name === 'mediaQueries') {
-            try {
-              staticAttributes[name] = attemptEval(value)
-              return false
-            } catch (e) {
-              logWarning('cannot evaluate media query prop: `%s`', generate(value).code)
-              inlinePropCount++
-              return true
-            }
           }
 
           // if value can be evaluated, extract it and filter it out
@@ -635,94 +386,44 @@ export function extractStyles(
           return true
         })
 
+        if (shouldDeopt) {
+          return
+        }
+
         let classNamePropValue: t.Expression | null = null
+
         const classNamePropIndex = node.attributes.findIndex(
-          attr => !t.isJSXSpreadAttribute(attr) && attr.name && attr.name.name === classPropName,
+          attr => !t.isJSXSpreadAttribute(attr) && attr.name && attr.name.name === 'className',
         )
         if (classNamePropIndex > -1 && Object.keys(staticAttributes).length > 0) {
-          classNamePropValue = getPropValueFromAttributes(classPropName, node.attributes)
+          classNamePropValue = getPropValueFromAttributes('className', node.attributes)
           node.attributes.splice(classNamePropIndex, 1)
         }
+
+        const stylesByClassName = getStylesByClassName(staticAttributes, cacheObject, view)
 
         // if all style props have been extracted, jsxstyle component can be
         // converted to a div or the specified component
         if (inlinePropCount === 0) {
-          const propsPropIndex = node.attributes.findIndex(
-            attr => !t.isJSXSpreadAttribute(attr) && attr.name && attr.name.name === 'props',
-          )
-          // deal with props prop
-          if (propsPropIndex > -1) {
-            if (propsAttributes.length > 0) {
-              propsAttributes.forEach(a => node.attributes.push(a))
+          // TODO we can do this but we'd need a slightly different strategy:
+          //  Config needs to know how to parse the components.... so we'd need like a way to
+          //  take View and run it, get the classnames, and return the div here
+          //  because View may add more styles on top
+          // add static styles base
+          if (view.internal) {
+            // weird we have to compile twice, need to redo a bit
+            const styles = {
+              ...view.internal.staticStyles.styles['.'],
+              // we may have set some default props
+              ...view.defaultProps,
             }
-            // delete props prop
-            node.attributes.splice(propsPropIndex, 1)
-          }
-
-          let componentPropIndex: number = -1
-          let componentAttr: t.JSXAttribute | null = null
-          for (let idx = -1, len = node.attributes.length; ++idx < len; ) {
-            const attr = node.attributes[idx]
-            if (!t.isJSXSpreadAttribute(attr) && attr.name && attr.name.name === 'component') {
-              componentAttr = attr
-              componentPropIndex = idx
-            }
-          }
-
-          if (componentAttr && componentAttr.value && componentPropIndex > -1) {
-            const componentPropValue = t.isJSXExpressionContainer(componentAttr.value)
-              ? componentAttr.value.expression
-              : componentAttr.value
-
-            let isComplex = true
-
-            if (
-              t.isStringLiteral(componentPropValue) &&
-              typeof componentPropValue.value === 'string'
-            ) {
-              const char1 = componentPropValue.value[0]
-              // component="article"
-              if (char1 === char1.toLowerCase()) {
-                isComplex = false
-                node.name.name = componentPropValue.value
-              }
-            } else if (t.isIdentifier(componentPropValue)) {
-              const char1 = componentPropValue.name[0]
-              // component={Avatar}
-              if (char1 === char1.toUpperCase()) {
-                isComplex = false
-                node.name.name = componentPropValue.name
-              }
-            } else if (t.isMemberExpression(componentPropValue)) {
-              // component={variable.prop}
-              // TODO: user jsxMemberExpression
-              node.name.name = generate(componentPropValue).code
-              isComplex = false
-            }
-
-            if (isComplex) {
-              // still going to warn since the user should really do this themselves
-              logWarning(
-                'Complex `component` prop value (`%s`) will be extracted out as a separate variable declaration.',
-                generate(componentPropValue).code,
-              )
-              node.name.name = generateUid(traversePath.scope, 'Component')
-              if (t.isJSXEmptyExpression(componentPropValue)) {
-                logError('Encountered JSXEmptyExpression: %s', generate(componentPropValue).code)
-              }
-              traversePath._complexComponentProp = t.variableDeclarator(
-                t.identifier(node.name.name),
-                t.isJSXEmptyExpression(componentPropValue) ? t.nullLiteral() : componentPropValue,
-              )
-            }
-
-            // remove component prop from attributes
-            node.attributes.splice(componentPropIndex, 1)
-          } else {
-            node.name.name = 'div'
+            const info = getStylesClassName('.', styles)
+            const className = info.className[0] === 's' ? info.className.slice(1) : info.className
+            stylesByClassName[className] = styles
+            console.log('view.internal', className, styles)
+            node.name.name = (view.defaultProps && view.defaultProps.tagName) || 'div'
           }
         } else {
-          needsRuntimeJsxstyle = true
           if (lastSpreadIndex > -1) {
             // if only some style props were extracted AND additional props are spread onto the component,
             // add the props back with null values to prevent spread props from incorrectly overwriting the extracted prop value
@@ -736,23 +437,11 @@ export function extractStyles(
 
         if (traversePath.node.closingElement) {
           // this seems strange
-          if (t.isJSXMemberExpression(traversePath.node.closingElement.name)) {
-            logWarning('Closing element is a member expression')
-            return
-          }
+          if (t.isJSXMemberExpression(traversePath.node.closingElement.name)) return
           traversePath.node.closingElement.name.name = node.name.name
         }
 
-        const stylesByClassName = getStylesByClassName(
-          styleGroups,
-          namedStyleGroups,
-          staticAttributes,
-          cacheObject,
-          classNameFormat,
-        )
-
         const extractedStyleClassNames = Object.keys(stylesByClassName).join(' ')
-
         const classNameObjects: (t.StringLiteral | t.Expression)[] = []
 
         if (classNamePropValue) {
@@ -765,8 +454,7 @@ export function extractStyles(
         }
 
         if (staticTernaries.length > 0) {
-          const ternaryObj = extractStaticTernaries(staticTernaries, cacheObject, classNameFormat)
-
+          const ternaryObj = extractStaticTernaries(staticTernaries, cacheObject)
           // ternaryObj is null if all of the extracted ternaries have falsey consequents and alternates
           if (ternaryObj !== null) {
             // add extracted styles by className to existing object
@@ -839,14 +527,14 @@ export function extractStyles(
           if (t.isStringLiteral(classNamePropValueForReals)) {
             node.attributes.push(
               t.jsxAttribute(
-                t.jsxIdentifier(classPropName),
+                t.jsxIdentifier('className'),
                 t.stringLiteral(classNamePropValueForReals.value),
               ),
             )
           } else {
             node.attributes.push(
               t.jsxAttribute(
-                t.jsxIdentifier(classPropName),
+                t.jsxIdentifier('className'),
                 t.jsxExpressionContainer(classNamePropValueForReals),
               ),
             )
@@ -873,33 +561,9 @@ export function extractStyles(
               cssMap.set(className, val)
             }
           } else {
-            let css = ''
             const styleProps = stylesByClassName[className]
-
             // get object of style objects
-            const styleObjects = getStyleKeysForProps(styleProps, true)
-            if (styleObjects == null) {
-              continue
-            }
-            delete styleObjects.classNameKey
-            const styleObjectKeys = Object.keys(styleObjects).sort()
-
-            for (let idx = -1, len = styleObjectKeys.length; ++idx < len; ) {
-              const k = styleObjectKeys[idx]
-              const item = styleObjects[k]
-              let itemCSS =
-                (cssModules ? ':global ' : '') +
-                `.${className}` +
-                (item.pseudoclass ? ':' + item.pseudoclass : '') +
-                (item.pseudoelement ? '::' + item.pseudoelement : '') +
-                ` {${item.styles}}`
-
-              if (item.mediaQuery) {
-                itemCSS = `@media ${item.mediaQuery} { ${itemCSS} }`
-              }
-              css += itemCSS + '\n'
-            }
-
+            const { css } = getStylesClassName('.', styleProps as any)
             cssMap.set(className, { css, commentTexts: [comment] })
           }
         }
@@ -930,6 +594,7 @@ export function extractStyles(
       },
     },
   }
+
   traverse(ast, traverseOptions)
 
   const resultCSS = Array.from(cssMap.values())
@@ -940,30 +605,6 @@ export function extractStyles(
   const baseName = path.basename(sourceFileName, extName)
   const cssRelativeFileName = `./${baseName}__jsxstyle.css`
   const cssFileName = path.join(sourceDir, cssRelativeFileName)
-
-  // Conditionally add Box import/require to the top of the document
-  if (needsRuntimeJsxstyle) {
-    if (useImportSyntax) {
-      ast.program.body.unshift(
-        t.importDeclaration(
-          [t.importSpecifier(t.identifier(boxComponentName!), t.identifier('Box'))],
-          t.stringLiteral(jsxstyleSrc),
-        ),
-      )
-    } else {
-      ast.program.body.unshift(
-        t.variableDeclaration('var', [
-          t.variableDeclarator(
-            t.identifier(boxComponentName!),
-            t.memberExpression(
-              t.callExpression(t.identifier('require'), [t.stringLiteral(jsxstyleSrc)]),
-              t.identifier('Box'),
-            ),
-          ),
-        ]),
-      )
-    }
-  }
 
   // append require/import statement to the document
   if (resultCSS !== '') {
@@ -991,6 +632,8 @@ export function extractStyles(
     },
     src,
   )
+
+  console.log('result', result.code)
 
   return {
     ast,

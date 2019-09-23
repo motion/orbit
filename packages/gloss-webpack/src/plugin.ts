@@ -1,7 +1,7 @@
-import fs = require('fs')
-import webpack = require('webpack')
-import MemoryFileSystem = require('webpack/lib/MemoryOutputFileSystem')
-import NodeWatchFileSystem = require('webpack/lib/node/NodeWatchFileSystem')
+import fs from 'fs'
+import webpack from 'webpack'
+import MemoryFileSystem from 'webpack/lib/MemoryOutputFileSystem'
+import NodeWatchFileSystem from 'webpack/lib/node/NodeWatchFileSystem'
 
 import { CacheObject, PluginContext } from './types'
 import { wrapFileSystem } from './utils/wrapFileSystem'
@@ -52,6 +52,7 @@ class JsxstyleWebpackPlugin implements webpack.Plugin {
   private donePlugin = (): void => {
     if (this.ctx.cacheFile) {
       // write contents of cache object as a newline-separated list of CSS strings
+      console.log('this.ctx.cacheObject', this.ctx.cacheObject)
       const cacheString = Object.keys(this.ctx.cacheObject).join('\n') + '\n'
       fs.writeFileSync(this.ctx.cacheFile, cacheString, 'utf8')
     }

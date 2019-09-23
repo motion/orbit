@@ -1,5 +1,6 @@
-import { Col, Icon, Image, Scale, SimpleText, SimpleTextProps, Space, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
+import { Col, gloss, Icon, Image, Scale, SimpleText, SimpleTextProps, Space, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
+import { Base } from 'gloss'
 import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
@@ -30,23 +31,40 @@ const animation: {
     ...fadeAnimations.up,
   },
   join: {
-    delayIndex: allDelay + 5,
+    delayIndex: allDelay + 3,
     ...fadeAnimations.up,
   },
   watch: {
-    delayIndex: allDelay + 6,
+    delayIndex: allDelay + 4,
     ...fadeAnimations.up,
   },
   screen: {
-    delayIndex: allDelay + 8,
+    delayIndex: allDelay + 5,
     ...fadeAnimations.up,
     transition: transitions.slowBouncy,
   },
   blog: {
-    delayIndex: allDelay + 14,
+    delayIndex: allDelay + 16,
     transition: transitions.bouncy,
   },
 }
+
+const Star = gloss(Base, {
+  borderRadius: 100,
+  width: 2,
+  height: 2,
+  background: 'rgba(255,255,255,0.8)',
+  position: 'absolute',
+  boxShadow: [
+    {
+      spread: 10,
+      blur: 10,
+      color: 'rgba(255,255,255,0.1)',
+      x: 0,
+      y: 0,
+    },
+  ],
+})
 
 export function HeadSection() {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
@@ -58,33 +76,59 @@ export function HeadSection() {
     <Fade.FadeProvide>
       <Page.BackgroundParallax
         speed={-0.35}
-        offset={-0.9}
+        offset={-1}
         zIndex={-1}
-        opacity={0.4}
+        opacity={0.5}
         scale={1.5}
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
       />
 
       {/* <Page.ParallaxView
-        className="floating-cube"
-        width={120}
+        className="stars"
+        speed={1}
         position="absolute"
-        offset={0.5}
-        zIndex={10000}
+        width="50%"
+        height="50%"
+        top="0%"
+        right="-80%"
         parallaxAnimate={geometry => ({
-          y: geometry.useParallax(),
-          x: geometry.useParallax().transform(x => -x * 0.5 + 340),
+          x: geometry.useParallax().transform(x => -x * 1.5),
+          y: geometry.useParallax().transform(x => x * 1.5),
         })}
       >
-        <Image src={require('../../public/images/test.png')} width="100%" height="auto" />
+        <Star top="0%" left="0%" />
+        <Star top="20%" left="20%" />
+        <Star top="50%" left="80%" />
+        <Star top="0%" left="30%" />
+        <Star top="0%" left="80%" />
+      </Page.ParallaxView>
+
+      <Page.ParallaxView
+        className="stars"
+        speed={1}
+        position="absolute"
+        width="50%"
+        height="50%"
+        top="0%"
+        right="-80%"
+        clamp
+        parallaxAnimate={geometry => ({
+          x: geometry.useParallax().transform(x => -x * 1.5 * 1.2),
+          y: geometry.useParallax().transform(x => x * 1.5 * 1.2),
+        })}
+      >
+        <Star top="0%" left="0%" />
+        <Star top="20%" left="20%" />
+        <Star top="50%" left="80%" />
+        <Star top="0%" left="30%" />
+        <Star top="0%" left="80%" />
       </Page.ParallaxView> */}
 
       <Col opacity={fontsLoaded ? 1 : 0} margin={['auto', 0]} height="calc(100% - 120px)">
         <Space size="xxl" />
         <Col
-          flex={8}
           maxHeight="80vh"
-          minHeight={750}
+          minHeight={800}
           sm-minHeight="auto"
           nodeRef={Fade.ref}
           alignItems="center"
@@ -99,7 +143,7 @@ export function HeadSection() {
           position="relative"
           height={500}
           flex={7}
-          margin={['-15%', '-10%', 90]}
+          margin={['-15%', '-10%', 0]}
           userSelect="none"
           zIndex={-1}
         >
@@ -195,7 +239,7 @@ const para = {
   'sm-lineHeight': `${2.8 * scale}rem`,
   'sm-display': 'inline',
   fontWeight: 400,
-  'notmd-fontWeight': 300,
+  'abovemd-fontWeight': 300,
 } as const
 
 const HeadTextSection = memo(() => {
@@ -215,7 +259,6 @@ const HeadTextSection = memo(() => {
         justifyContent="center"
         zIndex={10}
         position="relative"
-        marginTop="5vh"
       >
         <View width="100%" alignItems="center">
           <TextFitTitle
@@ -301,7 +344,6 @@ const HeadJoin = memo(() => {
                 flexDirection="row"
                 group
                 space={false}
-                margin={[0, '-2%']}
               />
             </Scale>
           </Theme>

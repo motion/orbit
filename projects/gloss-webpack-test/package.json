@@ -1,0 +1,19 @@
+{
+  "name": "@o/gloss-webpack-test",
+  "private": true,
+  "version": "2.6.0",
+  "main": "src/index.tsx",
+  "scripts": {
+    "build": "NODE_ENV=development mcro-build --extract-static-styles --split-chunks --extract-css --build --entry ./src/index --port 5001 --target web --devtool source-map --disable-hmr",
+    "start": "NODE_ENV=development mcro-build --port 5003 --extract-static-styles --split-chunks --extract-css --entry ./src/index --target web --devtool source-map"
+  },
+  "dependencies": {
+    "@babel/core": "^7.6.0",
+    "@babel/runtime": "^7.4.5",
+    "@o/babel-preset-motion": "^2.6.0",
+    "@o/ui": "^2.6.0",
+    "gloss": "^2.6.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  }
+}

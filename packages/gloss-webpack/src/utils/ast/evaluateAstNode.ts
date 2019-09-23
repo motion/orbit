@@ -22,6 +22,7 @@ export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any
       } else if (t.isIdentifier(value.key)) {
         key = value.key.name
       } else if (t.isLiteral(value.key)) {
+        // @ts-ignore
         key = value.key.value
       } else {
         throw new Error('Unsupported key type: ' + value.key.type)

@@ -34,7 +34,7 @@ export const transitions: { [key: string]: MotionProps['transition'] } = {
   normal: {
     type: 'spring',
     damping: 12,
-    stiffness: 60,
+    stiffness: 70,
   },
   fast: {
     type: 'spring',
@@ -143,7 +143,6 @@ export const FadeInView = memo(
     display,
     ...rest
   }: FadeChildProps) => {
-    // const isTiny = useIsTiny()
     const fadeStore = FadeStoreContext.useStore()
     const shown = !disable && (fadeStore.shown !== null ? fadeStore.shown : false)
 
@@ -152,6 +151,14 @@ export const FadeInView = memo(
       flexDirection: 'column',
       ...style,
       ...(fullscreen && fullscreenStyle),
+    }
+
+    // disable animation
+    if (disable && animate) {
+      style = {
+        ...style,
+        ...(animate as any),
+      }
     }
 
     if (reverse) {
@@ -192,7 +199,7 @@ export type UseFadePageProps = FadeInProps & { off?: boolean }
 
 export const useFadePage = ({
   delay = 200,
-  threshold = 0.4,
+  threshold = 0.3,
   off,
   ...props
 }: UseFadePageProps = {}) => {

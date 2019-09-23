@@ -14,6 +14,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { BundleStatsWebpackPlugin } = require('bundle-stats')
 
 // const WebpackDeepScopeAnalysisPlugin = require('webpack-deep-scope-plugin').default
+const GlossWebpackPlugin = require('@o/gloss-webpack')
 const LodashWebpackPlugin = require('lodash-webpack-plugin')
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 // const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
@@ -26,6 +27,9 @@ const TerserPlugin = require('terser-webpack-plugin')
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 // const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 // const CircularDependencyPlugin = require('circular-dependency-plugin')
+
+// for importing ui kit properly
+process.env.RENDER_TARGET = 'node'
 
 const cwd = process.cwd()
 // TODO: this doesn't seem to be the correct way to get the monorepo root.
@@ -59,6 +63,9 @@ const flags = {
   target: getFlag('--target'),
   devtool: getFlag('--devtool'),
   executable: getFlag('--executable', true),
+  extractStaticStyles: getFlag('--extract-static-styles', true),
+  extractCSS: getFlag('--extract-css', true),
+  splitChunks: getFlag('--split-chunks', true),
 }
 
 if (flags.prod) {
@@ -75,7 +82,7 @@ const NO_OPTIMIZE = process.env.NO_OPTIMIZE
 const IS_RUNNING = process.env.IS_RUNNING
 
 const target = flags.target || 'electron-renderer'
-const shouldExtractCSS = target !== 'node' && isProd && !IS_RUNNING
+const shouldExtractCSS = target !== 'node' && (isProd || flags.extractCSS) && !IS_RUNNING
 
 //   eval-source-map (causes errors to not show stack trace in react development...)
 //   cheap-source-map (no line numbers...)
@@ -122,6 +129,32 @@ const optimization = {
     usedExports: true,
     sideEffects: true,
     minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        sourceMap: true,
+        parallel: true,
+        cache: true,
+        terserOptions: {
+          parse: {
+            ecma: 8,
+          },
+          compress: {
+            ecma: 6,
+            warnings: false,
+          },
+          mangle: {
+            safari10: true,
+          },
+          keep_classnames: true,
+          output: {
+            ecma: 6,
+            comments: false,
+            beautify: false,
+            ascii_only: true,
+          },
+        },
+      }),
+    ],
     concatenateModules: true,
     ...(target === 'node'
       ? {
@@ -139,6 +172,11 @@ const optimization = {
     removeAvailableModules: false,
     namedModules: true,
     usedExports: true,
+    ...(flags.splitChunks && {
+      splitChunks: {
+        chunks: 'all',
+      },
+    }),
   },
 }
 
@@ -254,6 +292,24 @@ async function makeConfig() {
               loader: 'babel-loader',
               options: babelrcOptions,
             },
+
+            flags.extractStaticStyles && {
+              loader: GlossWebpackPlugin.loader,
+              options: {
+                views: require('@o/ui'),
+                mediaQueryKeys: [
+                  'xs',
+                  'sm',
+                  'abovesm',
+                  'md',
+                  'abovemd',
+                  'lg',
+                  'belowlg',
+                  'abovelg',
+                ],
+                internalViewsPath: Path.join(require.resolve('@o/ui'), '..', '..'),
+              },
+            },
           ].filter(Boolean),
         },
         {
@@ -334,6 +390,8 @@ async function makeConfig() {
       mode === 'development' && hot && new webpack.HotModuleReplacementPlugin(),
       mode === 'development' && hot && new ReactRefreshPlugin(),
 
+      flags.extractStaticStyles && new GlossWebpackPlugin(),
+
       // didnt improve
       // mode === 'production' && new WebpackDeepScopeAnalysisPlugin(),
 
@@ -343,7 +401,8 @@ async function makeConfig() {
       //     useTypescriptIncrementalApi: true,
       //   }),
 
-      target !== 'node' &&
+      !process.env['IGNORE_HTML'] &&
+        target !== 'node' &&
         new HtmlWebpackPlugin({
           // chunksSortMode: 'manual',
           favicon: 'public/favicon.png',

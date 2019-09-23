@@ -9,8 +9,8 @@ export const SignupForm = memo((props: ViewProps) => {
       sm-width="100%"
       md-width="80%"
       width="50%"
-      notmd-maxWidth={600}
-      notmd-minWidth={340}
+      abovemd-maxWidth={600}
+      abovemd-minWidth={340}
       margin="auto"
       borderRadius={14}
       overflow="hidden"

@@ -22,18 +22,19 @@ export default memo(() => {
         offset={-0.3}
         speed={0.45}
         zIndex={-2}
-        opacity={0.3}
-        x="50%"
+        opacity={0.45}
+        x="10%"
         scale={2.5}
         background="radial-gradient(circle closest-side, #7523AD, transparent)"
       />
 
       <Page.BackgroundParallax
-        speed={-0.075}
-        offset={0.3}
+        speed={0.075}
+        offset={0.75}
+        top={50}
         opacity={0.5}
         zIndex={-2}
-        scale={0.5}
+        scale={0.45}
         transformOrigin="bottom center"
         // keeps it from cropping on small screen
         left="-40%"
@@ -58,7 +59,7 @@ export default memo(() => {
         maxHeight={100000}
         margin={0}
         // extra on top for the orbits
-        padding={['32vh', 0, '20vh']}
+        padding={['28vh', 0, '8vh']}
         xs-margin={0}
         header={
           <>
@@ -66,14 +67,14 @@ export default memo(() => {
               <PillButton>App Store</PillButton>
             </FadeInView>
             <FadeInView delayIndex={1}>
-              <TitleText textAlign="center" size="lg">
-                Apps that work together
+              <TitleText textAlign="center" size="xl">
+                Apps that play along
               </TitleText>
             </FadeInView>
             <TitleTextSub>
               <FadeInView delayIndex={2}>
-                Apps can sync in data, provide GraphQL and TypeScript APIs, and render&nbsp;content.
-                The&nbsp;app&nbsp;store enables cooperative app-building.
+                Sync data, expose GraphQL and TypeScript APIs, and render&nbsp;content.
+                The&nbsp;app&nbsp;store&nbsp;enables cooperative app-building.
               </FadeInView>
             </TitleTextSub>
             <Space size="xl" />

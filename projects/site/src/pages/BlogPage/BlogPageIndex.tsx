@@ -1,4 +1,4 @@
-import { Avatar, gloss, Row, Space, View } from '@o/ui'
+import { Avatar, Row, Space, View } from '@o/ui'
 import React from 'react'
 
 import { linkProps } from '../../useLink'
@@ -21,7 +21,7 @@ export function BlogPageIndex() {
     <BlogLayout space="md">
       {all.map((post, index) => (
         <FadeInView key={post.date} delay={index * 150}>
-          <Post
+          <View
             padding="md"
             {...linkProps(`/blog/${all[index].id}`)}
             hoverStyle={{
@@ -39,7 +39,7 @@ export function BlogPageIndex() {
             </TitleText>
             <Space size="md" />
             <PostMeta post={post} />
-          </Post>
+          </View>
         </FadeInView>
       ))}
     </BlogLayout>
@@ -49,7 +49,7 @@ export function BlogPageIndex() {
 export const PostMeta = ({ post }) => {
   return (
     <Row alignItems="center" fontSize={16} alpha={0.65}>
-      <Avatar size={16} src={post.authorImage} />
+      <Avatar size={32} src={post.authorImage} />
       &nbsp; &nbsp;
       {post.author}
       &nbsp;&nbsp;&middot;&nbsp;&nbsp;
@@ -64,5 +64,3 @@ export const PostMeta = ({ post }) => {
     </Row>
   )
 }
-
-const Post = gloss(View)

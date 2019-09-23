@@ -1,126 +1,122 @@
-import { Grid, Row, Space, View } from '@o/ui'
+import { Col, Grid, Image, Row, Space, useNodeSize, View } from '@o/ui'
 import { flatMap } from 'lodash'
-import React, { memo, useState } from 'react'
+import React, { memo, useRef, useState } from 'react'
 
 import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
-import { PillButton } from '../../views/PillButton'
 import { PillButtonDark } from '../../views/PillButtonDark'
 import { TitleText } from '../../views/TitleText'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
-import { SpacedPageContent } from './SpacedPageContent'
 
 const dly = 200
 
-const sectionNames = ['Collaborate', 'App Kit', 'Publish']
+const sectionNames = ['Integrate', 'Display', 'Build']
 
 const sections = {
-  [sectionNames[0]]: [
-    {
-      title: 'Apps work together',
-      icon: 'apps',
-      body: [
-        `Apps talk with simple typed APIs. Orbit comes with many data apps.`,
-        `They can also sync data into a common format to display, share and export.`,
-      ],
-    },
-    {
-      title: `Spaces to collaborate`,
-      icon: `satellite`,
-      body: [
-        `The easiest collaboration story. No servers to setup or credentials to share.`,
-        `Press edit and in seconds deploy a rich app to everyone.`,
-      ],
-    },
-    {
-      title: `Stunning, easy apps`,
-      icon: `shop`,
-      body: [
-        `A new platform designed from the ground up to make common apps easy to build, using modern TypeScript and an incredible build system designed for developer friendliness.`,
-        `Publish in seconds on the app store.`,
-      ],
-    },
-    {
-      title: `Next-gen interface`,
-      icon: `widget`,
-      body: [
-        `A desktop-class UI kit -- fast, intuitive, with views that work well together and adapt to your data structures.`,
-        `With layouts and templates for many use cases.`,
-      ],
-    },
-  ],
-  [sectionNames[1]]: [
-    {
-      title: 'The latest React, Typescript & Webpack',
-      icon: 'apps',
-      body: [
-        `React Refresh hot reloading, with React Concurrent rendering out of the box. Plus, support for Suspense data-loading built into every library and view.`,
-      ],
-    },
-    {
-      title: `Worlds Best Hot Reloading`,
-      icon: `satellite`,
-      body: [
-        `The easiest collaboration story. No servers to setup or credentials to share.`,
-        `Press edit and in seconds deploy a rich app to everyone.`,
-      ],
-    },
-    {
-      title: `Mulitprocess`,
-      icon: `shop`,
-      body: [
-        `A new platform designed from the ground up to make common apps easy to build, using modern TypeScript and an incredible build system designed for developer friendliness.`,
-        `Publish in seconds on the app store.`,
-      ],
-    },
-    {
-      title: `Incredible Dev Tooling`,
-      icon: `widget`,
-      body: [
-        `A desktop-class UI kit -- fast, intuitive, with views that work well together and adapt to your data structures.`,
-        `With layouts and templates for many use cases.`,
-      ],
-    },
-  ],
-  [sectionNames[2]]: [
-    {
-      title: 'Query Builder',
-      icon: 'apps',
-      body: [
-        `Apps talk to each other with simple typed APIs. Orbit comes with many data apps.`,
-        `They can also sync data into a common format to display, share and export.`,
-      ],
-    },
-    {
-      title: `GraphQL Explorer`,
-      icon: `satellite`,
-      body: [
-        `The easiest collaboration story. No servers to setup or credentials to share.`,
-        `Press edit and in seconds deploy a rich app to everyone.`,
-      ],
-    },
-    {
-      title: `Manage/Sync Bits`,
-      icon: `shop`,
-      body: [
-        `A new platform designed from the ground up to make common apps easy to build, using modern TypeScript and an incredible build system designed for developer friendliness.`,
-        `Publish in seconds on the app store.`,
-      ],
-    },
-    {
-      title: `Clipboard`,
-      icon: `widget`,
-      body: [
-        `A desktop-class UI kit -- fast, intuitive, with views that work well together and adapt to your data structures.`,
-        `With layouts and templates for many use cases.`,
-      ],
-    },
-  ],
+  [sectionNames[0]]: {
+    image: require('../../public/images/screen-graphql.jpg'),
+    items: [
+      {
+        title: `One-click data sources`,
+        icon: `data`,
+        body: [`Every app can provide data APIs, installs with a simple search + click.`],
+      },
+      {
+        title: 'Query Builder',
+        icon: 'query',
+        body: [
+          `Build and explore your data plugins, create queries and test them from the control panel.`,
+        ],
+      },
+      {
+        title: `GraphQL Explorer`,
+        icon: `satellite`,
+        body: [`Every app that exposes a GraphQL endpoint is explorable in the built-in explorer.`],
+      },
+      {
+        title: `Manage/Sync Bits`,
+        icon: `data`,
+        body: [
+          `The Bit is the universal data format for Orbit, and you view, search and manage them here.`,
+        ],
+      },
+    ],
+  },
+  [sectionNames[1]]: {
+    image: require('../../public/images/screen-people.jpg'),
+    items: [
+      {
+        title: 'Complete UI Kit',
+        icon: 'button',
+        body: [
+          `All lists and tables virtualized. React Concurrent rendering. Flexible, consistent data display across all views.`,
+        ],
+      },
+      {
+        title: `Drag & Drop Data`,
+        icon: `clopboard`,
+        body: [`First class data drag & drop to move data in or out easily, or between apps.`],
+      },
+      {
+        title: `Every hook you need`,
+        icon: `shop`,
+        body: [`Extensive libraries for displaying data, all built on the latest React.`],
+      },
+      {
+        title: `Clipboard`,
+        icon: `clipboard`,
+        body: [`A persistent, incredibly easy way to enable cross-app data sharing.`],
+      },
+    ],
+  },
+  [sectionNames[2]]: {
+    image: require('../../public/images/screen-graphql.jpg'),
+    items: [
+      {
+        title: `A space to collaborate`,
+        icon: `satellite`,
+        body: [`The easiest collaboration story: no servers, no credentials.`],
+      },
+      {
+        title: `Next-gen Hot Reload`,
+        icon: `refresh`,
+        body: [
+          `Per-app Webpack for instant React Refresh hot reloading. Toggle between development and production in realtime.`,
+        ],
+      },
+      {
+        title: `Amazing technology`,
+        icon: `go`,
+        body: [
+          `Add a node process with a few lines of code. React Concurrent and Suspense first-class support.`,
+        ],
+      },
+      {
+        title: `Incredible Dev Tooling`,
+        icon: `pen`,
+        body: [
+          `From logging to data management, state inspection, error recovery and more - Orbit comes with great DX.`,
+        ],
+      },
+    ],
+  },
+}
+
+const transition = {
+  type: 'spring',
+  damping: 20,
+  stiffness: 200,
 }
 
 export default memo(() => {
   const Fade = useFadePage()
   const [activeSection, setActiveSection] = useState(sectionNames[0])
+  const gridContainer = useRef(null)
+  const gridSize = useNodeSize({
+    ref: gridContainer,
+    throttle: 350,
+  })
+
   const btnProps = (section: string) => {
     return {
       cursor: 'pointer',
@@ -137,35 +133,44 @@ export default memo(() => {
       }),
     } as const
   }
+  const cur = Object.keys(sections).indexOf(activeSection)
   return (
     <Fade.FadeProvide>
+      {/* teal right */}
       <Page.BackgroundParallax
         speed={0.3}
-        zIndex={-1}
-        opacity={0.45}
-        offset={1.5}
-        x="-55%"
-        scale={1.5}
-        background="radial-gradient(circle closest-side, #8B1944, transparent)"
+        offset={0}
+        top="-20%"
+        bottom="-20%"
+        x="60%"
+        scale={1.3}
+        className="glow-two"
+        opacity={0.4}
+        background="radial-gradient(circle closest-side, #12A1CC, transparent)"
+        parallaxAnimate={geometry => ({
+          y: geometry.useParallax(),
+          x: geometry.useParallax().transform(x => -x * 1 + 240),
+        })}
       />
 
-      <SpacedPageContent
+      <Row
+        alignItems="center"
         nodeRef={Fade.ref}
-        height="auto"
-        flex={1}
-        margin="auto"
-        header={
-          <>
-            <FadeInView delayIndex={0}>
-              <PillButton>Features</PillButton>
-            </FadeInView>
+        margin={[0, 'auto']}
+        padding={['8vh', 0, '8vh']}
+        maxWidth="100vw"
+      >
+        <Col padding="lg" flex={2}>
+          <View flex={1}>
             <FadeInView delayIndex={1}>
-              <TitleText textAlign="center" size="xl">
-                Batteries Included
+              <TitleText alignItems="flex-start" justifyContent="flex-start" size="xxl">
+                The all-in-one
+                <br />
+                data studio
               </TitleText>
             </FadeInView>
             <FadeInView delayIndex={1} {...fadeAnimations.up}>
-              <Row justifyContent="center" space="lg" margin={[15, 'auto', 0]}>
+              <Row space="lg" margin={['4%', 'auto', '8%', 0]}>
                 {sectionNames.map(section => (
                   <React.Fragment key={section}>
                     <PillButtonDark {...btnProps(section)}>{section}</PillButtonDark>
@@ -173,41 +178,105 @@ export default memo(() => {
                 ))}
               </Row>
             </FadeInView>
-          </>
-        }
-      />
+          </View>
+          <FadeInView nodeRef={gridContainer} delayIndex={2} {...fadeAnimations.up}>
+            <Row flexWrap="nowrap">
+              {Object.keys(sections).map((section, index) => {
+                return (
+                  <Grid
+                    animate={{
+                      opacity: cur === index ? 1 : 0,
+                      x:
+                        cur === index
+                          ? '0%'
+                          : cur > index
+                          ? `-${(cur - index) * 20}%`
+                          : `${(index - cur) * 20}%`,
+                    }}
+                    pointerEvents={cur === index ? 'auto' : 'none'}
+                    transition={transition}
+                    key={section}
+                    space={20}
+                    alignItems="start"
+                    itemMinWidth={280}
+                    className="feature-grid"
+                    marginRight="-100%"
+                  >
+                    {sections[section].items.map(({ title, icon, body }, index) => (
+                      <SimpleSection
+                        key={`${section}${index}`}
+                        delay={dly * (index + 1)}
+                        title={title}
+                      >
+                        <SectionP>
+                          <SectionIcon name={icon} />
+                          {flatMap(body, (x, i) => {
+                            return (
+                              <React.Fragment key={`${section}${i}`}>
+                                {+i === body.length - 1 ? (
+                                  x
+                                ) : (
+                                  <>
+                                    {x}
+                                    <Space />
+                                  </>
+                                )}
+                              </React.Fragment>
+                            )
+                          })}
+                        </SectionP>
+                      </SimpleSection>
+                    ))}
+                  </Grid>
+                )
+              })}
+            </Row>
+          </FadeInView>
+        </Col>
 
-      <View flex={1} minHeight={80} />
+        <View flex={0.15} />
 
-      <FadeInView delayIndex={2} {...fadeAnimations.up}>
-        <Grid space={80} alignItems="start" itemMinWidth={280} maxWidth={800} margin={[0, 'auto']}>
-          {sections[activeSection].map(({ title, icon, body }, index) => (
-            <SimpleSection key={`${activeSection}${index}`} delay={dly * (index + 1)} title={title}>
-              <SectionP>
-                <SectionIcon name={icon} />
-                {flatMap(body, (x, i) => {
-                  return (
-                    <React.Fragment key={`${activeSection}${i}`}>
-                      {+i === body.length - 1 ? (
-                        x
-                      ) : (
-                        <>
-                          {x}
-                          <Space />
-                        </>
-                      )}
-                    </React.Fragment>
-                  )
-                })}
-              </SectionP>
-            </SimpleSection>
+        <View
+          sm-display="none"
+          position="relative"
+          flex={1}
+          // alignItems="center"
+          // justifyContent="center"
+          height={500}
+        >
+          {Object.keys(sections).map((key, index) => (
+            <Image
+              key={key}
+              transition={transition}
+              animate={{
+                opacity: cur === index ? 1 : 0,
+                y:
+                  cur === index
+                    ? '0%'
+                    : cur > index
+                    ? `-${(cur - index) * 20}%`
+                    : `${(index - cur) * 20}%`,
+              }}
+              width="100%"
+              position="absolute"
+              top={0}
+              left={0}
+              height="auto"
+              minWidth={1000}
+              marginRight={-1000}
+              src={sections[key].image}
+              borderRadius={15}
+              overflow="hidden"
+              boxShadow={[
+                {
+                  blur: 100,
+                  color: '#000',
+                },
+              ]}
+            />
           ))}
-        </Grid>
-      </FadeInView>
-
-      <View flex={1} sm-flex={0} lg-flex={2} />
-
-      <Space size="xl" />
+        </View>
+      </Row>
     </Fade.FadeProvide>
   )
 })

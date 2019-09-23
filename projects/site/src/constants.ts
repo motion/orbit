@@ -19,7 +19,7 @@ export const fontProps = {
 export const widths = {
   xs: 420,
   sm: 700,
-  md: 860,
+  md: 820,
   lg: 1150,
 }
 
@@ -29,10 +29,13 @@ export const sidePad = 24
 export const mediaQueries = {
   xs: `@media screen and (max-width: ${widths.xs - 1}px)`,
   sm: `@media screen and (max-width: ${widths.sm}px)`,
-  notsm: `@media screen and (min-width: ${widths.sm + 1}px)`,
+  abovesm: `@media screen and (min-width: ${widths.sm + 1}px)`,
   md: `@media screen and (max-width: ${widths.md}px)`,
-  notmd: `@media screen and (min-width: ${widths.md + 1}px)`,
+  belowmd: `@media screen and (max-width: ${widths.md}px)`,
+  abovemd: `@media screen and (min-width: ${widths.md + 1}px)`,
   lg: `@media screen and (min-width: ${widths.lg}px)`,
+  belowlg: `@media screen and (max-width: ${widths.lg}px)`,
+  abovelg: `@media screen and (min-width: ${widths.lg + 1}px)`,
 }
 
 export const IS_CHROME = navigator.userAgent.toLowerCase().indexOf('chrome') > -1

@@ -1,4 +1,4 @@
-import { AnimatePresence, animation, Button, Col, gloss, Image, Row, Space, useIntersectionObserver, View } from '@o/ui'
+import { AnimatePresence, animation, Button, Col, gloss, Image, Row, Space, View } from '@o/ui'
 import { Box, Inline } from 'gloss'
 import React, { memo, useEffect, useRef, useState } from 'react'
 
@@ -17,19 +17,6 @@ import { SpacedPageContent } from './SpacedPageContent'
 import { TitleTextSub } from './TitleTextSub'
 
 const SubSection = props => <Flex minWidth={200} alignItems="center" padding {...props} />
-
-const useIntersectedOnce = () => {
-  const ref = useRef(null)
-  const [val, setVal] = useState(false)
-  const entries = useIntersectionObserver({ ref })
-  const isIntersecting = entries && entries[0].isIntersecting
-  useEffect(() => {
-    if (isIntersecting && !val) {
-      setVal(true)
-    }
-  }, [val, isIntersecting])
-  return [ref, val] as const
-}
 
 const Dot = gloss(Box, {
   borderRadius: 100,
@@ -73,7 +60,7 @@ const elements = [
   {
     iconBefore: require('../../public/logos/slack.svg'),
     title: 'Table',
-    body: `The table that has it all. Virtualized, resizable, sortable, filterable, multi-selectable, and more. With easy sharing to forms, lists, or other apps in your Orbit.`,
+    body: `The table that has it all. Virtualized, resizable, sortable, filterable, multi-selectable, and more. With easy sharing to forms, lists, or other apps in Orbit.`,
     image: tableScreen,
     iconAfter: require('../../public/logos/gmail.svg'),
     afterName: 'Gmail',
@@ -83,7 +70,7 @@ const elements = [
   {
     iconBefore: require('../../public/logos/postgres.svg'),
     title: 'List',
-    body: `Every list in Orbit accepts the same props as tables. They are incredibly powerful, virtualized by default, and can group, filter, search, and share with a prop.`,
+    body: `Every list in Orbit accepts the same props as tables. They are incredibly powerful, virtualized, and can group, filter, search, and share with a prop.`,
     image: listScreen,
     iconAfter: require('../../public/logos/jira.svg'),
     afterName: 'Jira',
@@ -93,7 +80,7 @@ const elements = [
   {
     iconBefore: require('../../public/logos/medium.svg'),
     title: 'Grid',
-    body: `Orbit Grids automatically persist their state. They can be easily arranged and resized, and plugging in app data inside them is as easy as nesting an <AppCard />.`,
+    body: `Orbit Grids automatically persist their state. They can be easily arranged and resized and plugging in data is as easy as nesting an <AppCard />.`,
     image: listScreen,
     iconAfter: require('../../public/logos/sheets.svg'),
     afterName: 'GSheets',
@@ -145,40 +132,43 @@ export default memo(() => {
   return (
     <Fade.FadeProvide>
       {/* pink left */}
-      <Page.BackgroundParallax
+      {/* <Page.BackgroundParallax
         speed={-0.5}
         offset={0.3}
         x="-65%"
         scale={1.8}
         className="glow-one"
-        opacity={0.23}
+        opacity={1}
         background="radial-gradient(circle closest-side, #D25CCD, transparent)"
-      />
+      /> */}
 
       {/* teal right */}
       <Page.BackgroundParallax
         speed={0.3}
-        offset={0.2}
-        top="20%"
+        offset={0}
+        top="-20%"
         bottom="-20%"
-        x="60%"
         scale={1.3}
         className="glow-two"
         opacity={0.4}
-        background="radial-gradient(circle closest-side, #12A1CC, transparent)"
+        background="radial-gradient(circle closest-side, #D25CCD, transparent)"
+        parallaxAnimate={geometry => ({
+          y: geometry.useParallax(),
+          x: geometry.useParallax().transform(x => x * 1 - 240),
+        })}
       />
 
       <SpacedPageContent
         nodeRef={Fade.ref}
-        padding={['12vh', '0%']}
+        padding={['10vh', '0%']}
         header={
           <>
             <FadeInView delayIndex={0}>
               <PillButton>Build</PillButton>
             </FadeInView>
             <FadeInView delayIndex={1}>
-              <TitleText textAlign="center" size="xl">
-                Make apps, easy
+              <TitleText textAlign="center" size="xxl">
+                A visual app studio
               </TitleText>
             </FadeInView>
             <TitleTextSub margin="auto" minWidth={320}>
@@ -189,10 +179,10 @@ export default memo(() => {
           </>
         }
       >
-        <Col maxWidth="100%" margin={[30, 'auto', 0]} sm-margin={0}>
-          <Row space {...mediaStyles.visibleWhen.notsm}>
+        <Col maxWidth="100%" margin={[0, 'auto', 0]} sm-margin={0}>
+          <Row space {...mediaStyles.visibleWhen.abovesm}>
             <SubSection maxWidth="33%">
-              <FadeInView {...fadeAnimations.left} delayIndex={4}>
+              <FadeInView {...fadeAnimations.left} delayIndex={3}>
                 <PillButtonDark>Import</PillButtonDark>
                 <Space />
                 <CenterText>
@@ -202,17 +192,16 @@ export default memo(() => {
               </FadeInView>
             </SubSection>
             <SubSection flex={2} padding={[true, 'xxl']}>
-              <FadeInView delayIndex={5} {...fadeAnimations.up}>
+              <FadeInView delayIndex={4} {...fadeAnimations.up}>
                 <PillButtonDark>Display</PillButtonDark>
                 <Space />
                 <CenterText maxWidth={400} margin={[0, 'auto']}>
-                  A fully integrated workspace with rich, powerful views: virtualized, customizable,
-                  designed for large data.
+                  Rich, powerful views to display data & tasks easily.
                 </CenterText>
               </FadeInView>
             </SubSection>
             <SubSection maxWidth="33%">
-              <FadeInView {...fadeAnimations.right} delayIndex={4}>
+              <FadeInView {...fadeAnimations.right} delayIndex={3}>
                 <PillButtonDark>Export</PillButtonDark>
                 <Space />
                 <CenterText>
@@ -227,7 +216,7 @@ export default memo(() => {
 
           <Row space>
             <Flex alignItems="center" sm-display="none">
-              <FadeInView {...fadeAnimations.left} delayIndex={5}>
+              <FadeInView {...fadeAnimations.left} delayIndex={4}>
                 <Image
                   userSelect="none"
                   alignSelf="center"
@@ -240,7 +229,7 @@ export default memo(() => {
               <FadeInView
                 key={`arrowBefore-${page}`}
                 {...fadeAnimations.left}
-                delayIndex={6}
+                delayIndex={5}
                 alignSelf="flex-end"
               >
                 <Image
@@ -248,7 +237,7 @@ export default memo(() => {
                   opacity={0.5}
                   src={require('../../public/images/curve-arrow.svg')}
                   transform={{
-                    scale: 0.8,
+                    scale: 0.5,
                   }}
                 />
               </FadeInView>
@@ -260,11 +249,11 @@ export default memo(() => {
               margin={0}
               sm-margin={[0, '-5%']}
             >
-              <FadeInView width="100%" delayIndex={7} {...fadeAnimations.up}>
+              <FadeInView width="100%" delayIndex={6} {...fadeAnimations.up}>
                 <Button
                   coat="flat"
                   cursor="pointer"
-                  size={1.8}
+                  size={1.5}
                   iconSize={20}
                   circular
                   zIndex={100}
@@ -277,7 +266,7 @@ export default memo(() => {
                 <Button
                   coat="flat"
                   cursor="pointer"
-                  size={1.8}
+                  size={1.5}
                   iconSize={20}
                   circular
                   zIndex={100}
@@ -289,7 +278,7 @@ export default memo(() => {
                 />
               </FadeInView>
 
-              <FadeInView {...fadeAnimations.up} delayIndex={6} marginBottom={-200} zIndex={10}>
+              <FadeInView {...fadeAnimations.up} delayIndex={5} marginBottom={-200} zIndex={10}>
                 <TiltSquircle
                   {...linkProps(elements[index].link)}
                   tagName="div"
@@ -324,7 +313,7 @@ export default memo(() => {
               <FadeInView
                 transition={transitions.slowNotBouncy}
                 {...fadeAnimations.up}
-                delayIndex={7}
+                delayIndex={6}
                 width="100%"
                 height={300}
                 position="relative"
@@ -373,7 +362,7 @@ export default memo(() => {
             </Flex>
 
             <Flex alignItems="center" sm-display="none">
-              <FadeInView {...fadeAnimations.right} delayIndex={5}>
+              <FadeInView {...fadeAnimations.right} delayIndex={4}>
                 <Image
                   userSelect="none"
                   alignSelf="center"
@@ -386,7 +375,7 @@ export default memo(() => {
                 />
               </FadeInView>
               <Space size="xxl" />
-              <FadeInView delayIndex={6} alignSelf="flex-start">
+              <FadeInView delayIndex={5} alignSelf="flex-start">
                 <Image
                   key={`arrowAfter-${page}`}
                   custom={direction}
@@ -395,7 +384,7 @@ export default memo(() => {
                   opacity={0.5}
                   transform={{
                     rotate: '275deg',
-                    scale: 0.8,
+                    scale: 0.5,
                   }}
                   src={require('../../public/images/curve-arrow.svg')}
                 />

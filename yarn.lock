@@ -2429,10 +2429,10 @@
     codemirror-graphql "^0.8.3"
     markdown-it "^8.4.2"
 
-"@o/icons@3.10.4":
-  version "3.10.4"
-  resolved "https://registry.npmjs.org/@o/icons/-/icons-3.10.4.tgz#0b76f02bb1194ec13c8d8b4a1ac2b6daacf4065d"
-  integrity sha512-+WFF8VChgQPx0a3UYH95eGKgHlZ8ipQ/66blG79sOM4K92NRGnfdFjrY6rAn4i2/yCE8gxg+60yBT16gYanCHw==
+"@o/icons@3.10.5":
+  version "3.10.5"
+  resolved "https://registry.npmjs.org/@o/icons/-/icons-3.10.5.tgz#4692a6abf9c2748bbcc4a08d1d786f90fe5fbf3b"
+  integrity sha512-kl9lidjXNVL6oQ4MpcvVTfQuovuUfAW9oKDxLm8yFOtHll2ER5S99PVzMKZUxMAdcuF9j07pWTweHxc3cu4hKA==
   dependencies:
     classnames "^2.2"
     tslib "~1.9.0"

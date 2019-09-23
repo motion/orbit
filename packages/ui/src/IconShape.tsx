@@ -7,6 +7,8 @@ import { whenIdle } from './helpers/whenIdle'
 import { findIconName, getSvgIcon, IconProps } from './Icon'
 import { View } from './View/View'
 
+window['SVG1'] = SVG
+
 export type IconShapeProps = Omit<IconProps, 'width' | 'height'> & {
   active?: boolean
   shape?: 'circle' | 'squircle'
@@ -49,15 +51,15 @@ export const IconShape = memo(
 
       whenIdle().then(() => {
         if (cancelled) return
-        getSvgIcon(20, realName).then(paths => {
+        getSvgIcon(16, realName).then(paths => {
           if (cancelled) return
           const iconPath = paths.join(' ')
           const draw = SVG().size(diameter, diameter)
           const out = draw
             .path(iconPath)
             // TODO if its not a perfect square we need to adjust here
-            .size(20, 20)
-            .move(8, 8)
+            .size(17, 17)
+            .move(6, 6)
             .array()
             .toString()
 

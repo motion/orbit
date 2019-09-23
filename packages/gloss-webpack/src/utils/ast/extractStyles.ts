@@ -17,6 +17,8 @@ export interface ExtractStylesOptions {
   views: {
     [key: string]: GlossView<any>
   }
+  mediaQueryKeys?: string[]
+  internalViewsPath?: string
 }
 
 export interface Options {
@@ -68,7 +70,6 @@ export function extractStyles(
     typeof sourceFileName === 'string' && path.isAbsolute(sourceFileName),
     '`sourceFileName` must be an absolute path to a .js file',
   )
-
   invariant(
     typeof cacheObject === 'object' && cacheObject !== null,
     '`cacheObject` must be an object',
@@ -87,13 +88,14 @@ export function extractStyles(
   }
 
   const sourceDir = path.dirname(sourceFileName)
+  console.log('sourceFileName', sourceFileName)
 
   // Using a map for (officially supported) guaranteed insertion order
   const cssMap = new Map<string, { css: string; commentTexts: string[] }>()
 
   const ast = parse(src)
 
-  let jsxstyleSrc: string | null = null
+  let jsxstyleSrc = false
   const validComponents = {}
   // default to using require syntax
   let useImportSyntax = false
@@ -101,24 +103,19 @@ export function extractStyles(
 
   let view: GlossView<any>
 
+  // we allow things within the ui kit to avoid the more tedious config
+  const isInternal =
+    options.internalViewsPath && sourceFileName.indexOf(options.internalViewsPath) === 0
+
   // Find jsxstyle require in program root
   ast.program.body = ast.program.body.filter((item: t.Node) => {
     if (t.isImportDeclaration(item)) {
       // not imported from jsxstyle? byeeee
-      if (!JSXSTYLE_SOURCES.hasOwnProperty(item.source.value)) {
+      if (!isInternal && !JSXSTYLE_SOURCES.hasOwnProperty(item.source.value)) {
         return true
       }
 
-      if (jsxstyleSrc) {
-        invariant(
-          jsxstyleSrc === item.source.value,
-          'Expected duplicate `import` to be from "%s", received "%s"',
-          jsxstyleSrc,
-          item.source.value,
-        )
-      }
-
-      jsxstyleSrc = item.source.value
+      jsxstyleSrc = true
       useImportSyntax = true
 
       item.specifiers = item.specifiers.filter(specifier => {
@@ -152,7 +149,7 @@ export function extractStyles(
   })
 
   // jsxstyle isn't included anywhere, so let's bail
-  if (jsxstyleSrc == null || !hasValidComponents) {
+  if (!jsxstyleSrc || !hasValidComponents) {
     return {
       ast,
       css: '',
@@ -163,7 +160,7 @@ export function extractStyles(
   }
 
   // per-file cache of evaluated bindings
-  const bindingCache = {}
+  // const bindingCache = {}
 
   const traverseOptions: { JSXElement: VisitNodeObject<t.JSXElement, any> } = {
     JSXElement: {

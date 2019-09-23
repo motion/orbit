@@ -1,9 +1,9 @@
-import fs = require('fs')
-import invariant = require('invariant')
-import loaderUtils = require('loader-utils')
-import path = require('path')
-import util = require('util')
-import webpack = require('webpack')
+import fs from 'fs'
+import invariant from 'invariant'
+import loaderUtils from 'loader-utils'
+import path from 'path'
+import util from 'util'
+import webpack from 'webpack'
 
 import { CacheObject, LoaderOptions, PluginContext } from './types'
 import { extractStyles } from './utils/ast/extractStyles'
@@ -26,10 +26,8 @@ const jsxstyleLoader: webpack.loader.Loader = function(this: any, content) {
   if (options.cacheFile && pluginContext.cacheFile !== options.cacheFile) {
     try {
       const newCacheObject: CacheObject = {}
-
       if (fs.existsSync(options.cacheFile)) {
         const cacheFileContents = fs.readFileSync(options.cacheFile, 'utf8')
-
         // create mapping of unique CSS strings to class names
         const lines = new Set<string>(cacheFileContents.trim().split('\n'))
         let lineCount = 0
@@ -37,11 +35,9 @@ const jsxstyleLoader: webpack.loader.Loader = function(this: any, content) {
           const className = '_x' + (lineCount++).toString(36)
           newCacheObject[line] = className
         })
-
         // set counter
         newCacheObject[counter] = lineCount
       }
-
       pluginContext.cacheObject = newCacheObject
     } catch (err) {
       if (err.code === 'EISDIR') {
@@ -81,4 +77,4 @@ const jsxstyleLoader: webpack.loader.Loader = function(this: any, content) {
   return
 }
 
-export = jsxstyleLoader
+export default jsxstyleLoader

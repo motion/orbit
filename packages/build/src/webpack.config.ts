@@ -298,6 +298,7 @@ async function makeConfig() {
               options: {
                 views: require('@o/ui'),
                 mediaQueryKeys: ['xs', 'sm', 'notsm', 'md', 'notmd', 'lg', 'notlg'],
+                internalViewsPath: Path.join(require.resolve('@o/ui'), '..', '..'),
               },
             },
           ].filter(Boolean),

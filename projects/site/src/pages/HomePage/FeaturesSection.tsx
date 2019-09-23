@@ -23,7 +23,7 @@ const sections = {
       },
       {
         title: 'Query Builder',
-        icon: 'query',
+        icon: 'code-block',
         body: [
           `Build and explore your data plugins, create queries and test them from the control panel.`,
         ],
@@ -54,7 +54,7 @@ const sections = {
       },
       {
         title: `Drag & Drop Data`,
-        icon: `clopboard`,
+        icon: `exchange`,
         body: [`First class data drag & drop to move data in or out easily, or between apps.`],
       },
       {
@@ -85,15 +85,15 @@ const sections = {
         ],
       },
       {
-        title: `Amazing technology`,
-        icon: `go`,
+        title: `Modern view system`,
+        icon: `grid-view`,
         body: [
-          `Add a node process with a few lines of code. React Concurrent and Suspense first-class support.`,
+          `React Concurrent, Suspense, Framer Motion and more integrated by default, in every view.`,
         ],
       },
       {
         title: `Incredible Dev Tooling`,
-        icon: `pen`,
+        icon: `draw`,
         body: [
           `From logging to data management, state inspection, error recovery and more - Orbit comes with great DX.`,
         ],

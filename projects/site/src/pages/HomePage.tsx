@@ -1,4 +1,4 @@
-import { ErrorBoundary, Loading, Theme, useIntersectionObserver } from '@o/ui'
+import { ErrorBoundary, Loading, Theme, useIntersectionObserver, View } from '@o/ui'
 import { once } from 'lodash'
 import React, { lazy, memo, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
@@ -26,8 +26,12 @@ export const HomePage = memo(() => {
   return (
     <>
       <LoadingPage />
+      <View background="#000" borderBottom={[1, [255, 255, 255, 0.12]]} height={8} width="100%" />
       <Header />
-      <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
+      <main
+        className="main-contents"
+        style={{ position: 'relative', zIndex: 0, overflow: 'hidden' }}
+      >
         <Page pages="auto" zIndex={0}>
           <HeadSection />
         </Page>

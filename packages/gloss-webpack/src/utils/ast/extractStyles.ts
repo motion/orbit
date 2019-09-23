@@ -527,7 +527,7 @@ export function extractStyles(
 
             // get object of style objects
             const { css } = getStylesClassName('.', styleProps as any)
-            console.log('css', css, styleProps)
+            // console.log('css', css, styleProps)
             cssMap.set(className, { css, commentTexts: [comment] })
           }
         }

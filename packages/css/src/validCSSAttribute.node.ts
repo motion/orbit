@@ -1,3 +1,5 @@
+import { validCSSAttributeExtra } from './validCSSAttributeExtra'
+
 export default {
   alignContent: true,
   alignItems: true,
@@ -526,4 +528,5 @@ export default {
   borderRightRadius: true,
   borderBottomRadius: true,
   borderTopRadius: true,
+  ...validCSSAttributeExtra,
 }

@@ -1,5 +1,5 @@
-import { isDefined, selectDefined } from '@o/utils'
-import { ReactRefreshPlugin } from '@o/webpack-react-refresh'
+import { selectDefined } from '@o/utils'
+import ReactRefreshPlugin from '@o/webpack-fast-refresh'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
 import IgnoreNotFoundExportPlugin from 'ignore-not-found-export-webpack-plugin'
 import * as Path from 'path'
@@ -136,7 +136,7 @@ export function makeWebpackConfig(
   }
 
   const hotEntry = `webpack-hot-middleware/client?name=${name}&path=/__webpack_hmr_${name}`
-  const main = hot && !isDefined(injectHot) ? [hotEntry, ...entry] : entry
+  const main = hot && !injectHot ? [hotEntry, ...entry] : entry
 
   const babelPresetMotion = [
     require.resolve('@o/babel-preset-motion'),
@@ -411,9 +411,14 @@ require('@o/kit').OrbitHot.fileLeave();
         )) ||
         []),
 
-      target === 'web' && new ReactRefreshPlugin(),
+      target === 'web' &&
+        !!(hot || injectHot) &&
+        (() => {
+          // console.log('apply react refresh', entry)
+          return new ReactRefreshPlugin()
+        })(),
 
-      hot &&
+      !!(hot || injectHot) &&
         new webpack.HotModuleReplacementPlugin({
           // multiStep is faster for app HMR but slower when developing the big bundles
           // multiStep: mode !== 'production',

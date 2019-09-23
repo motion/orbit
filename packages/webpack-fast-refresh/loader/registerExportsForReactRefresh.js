@@ -5,7 +5,7 @@ function registerExportsForReactRefresh(module) {
   const moduleId = module.id
 
   if (runtime.isLikelyComponentType(moduleExports)) {
-    Refresh.register(moduleExports, `${moduleId} %exports%`)
+    runtime.register(moduleExports, `${moduleId} %exports%`)
   }
   if (moduleExports === null || typeof moduleExports !== 'object') {
     return

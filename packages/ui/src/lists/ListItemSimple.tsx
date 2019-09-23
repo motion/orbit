@@ -40,7 +40,6 @@ export function ListItemSimple({
   )
 }
 
-// TODO re-check if this memo is worth perf
 const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
   const {
     date,
@@ -96,7 +95,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
 
   const iconElement = showIcon && getIcon(props)
   const listItemAdjustedPadding = usePadding({ padding: selectDefined(padding, 12) })
-  const space = listItemAdjustedPadding.paddingTop
+  const space = listItemAdjustedPadding ? listItemAdjustedPadding.paddingTop : undefined
 
   const hasChildren = showChildren && !!children
   const childrenElement = hasChildren && (
@@ -181,7 +180,9 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && handleClick) || undefined}
         {...listItemAdjustedPadding}
-        paddingLeft={(indent || 1) * listItemAdjustedPadding.paddingLeft}
+        paddingLeft={
+          (indent || 1) * (listItemAdjustedPadding ? listItemAdjustedPadding.paddingLeft : 0)
+        }
         width="100%"
         before={
           <>

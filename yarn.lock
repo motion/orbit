@@ -2429,10 +2429,10 @@
     codemirror-graphql "^0.8.3"
     markdown-it "^8.4.2"
 
-"@o/icons@3.10.3":
-  version "3.10.3"
-  resolved "https://registry.npmjs.org/@o/icons/-/icons-3.10.3.tgz#ce4adc985de7f8f54501e59d62c499538a347f15"
-  integrity sha512-JJNh0BPrMmK+rhBXf5Z7ZJNsBWXLX0MNfilHxDa8/3Y2hWzTTAOZz+oZEbuaXFSKo/dlcEOhHWB/NmNUJuf0ug==
+"@o/icons@3.10.5":
+  version "3.10.5"
+  resolved "https://registry.npmjs.org/@o/icons/-/icons-3.10.5.tgz#4692a6abf9c2748bbcc4a08d1d786f90fe5fbf3b"
+  integrity sha512-kl9lidjXNVL6oQ4MpcvVTfQuovuUfAW9oKDxLm8yFOtHll2ER5S99PVzMKZUxMAdcuF9j07pWTweHxc3cu4hKA==
   dependencies:
     classnames "^2.2"
     tslib "~1.9.0"
@@ -2715,6 +2715,11 @@
   version "0.7.0"
   resolved "https://registry.npmjs.org/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
   integrity sha512-ONhaKPIufzzrlNbqtWFFd+jlnemX6lJAgq9ZeiZtS7I1PIf/la7CW4m83rTXRnVnsMbW2k56pGYu7AUFJD9Pow==
+
+"@svgdotjs/svg.js@3.0.13":
+  version "3.0.13"
+  resolved "https://registry.npmjs.org/@svgdotjs/svg.js/-/svg.js-3.0.13.tgz#0afb2213fe98c0d951e0f0a9f6053e1f32056843"
+  integrity sha512-Ix3dobG2DvdK5f2SHtZdiiLwi+G0RDuDfwA4tZ1eqTGoiopia8JIfeWGeA0h2frFHcLDXnYvNiVGtW4y6cSDig==
 
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
@@ -3626,7 +3631,7 @@ ajv@^5.1.0:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
 
-ajv@^6.1.0, ajv@^6.10.2, ajv@^6.5.3, ajv@^6.5.5, ajv@^6.9.1:
+ajv@^6.1.0, ajv@^6.10.2, ajv@^6.5.5, ajv@^6.9.1:
   version "6.10.2"
   resolved "https://registry.npmjs.org/ajv/-/ajv-6.10.2.tgz#d3cea04d6b017b2894ad69040fec8b623eb4bd52"
   integrity sha512-TXtUUEYHuaTEbLZWIKUr5pmBuhDLy+8KYtPYdcV8qC+pOZL+NKqYwvWSRrVXHn+ZmRRAu8vJTAznH7Oag6RVRw==
@@ -21177,11 +21182,6 @@ svg-inline-loader@0.8.0, svg-inline-loader@^0.8.0:
     object-assign "^4.0.1"
     simple-html-tokenizer "^0.1.1"
 
-svg.js@^2.7.1:
-  version "2.7.1"
-  resolved "https://registry.npmjs.org/svg.js/-/svg.js-2.7.1.tgz#eb977ed4737001eab859949b4a398ee1bb79948d"
-  integrity sha512-ycbxpizEQktk3FYvn/8BH+6/EuWXg7ZpQREJvgacqn46gIddG24tNNe4Son6omdXCnSOaApnpZw6MPCBA1dODA==
-
 svgo@^1.0.0, svgo@^1.0.5, svgo@^1.3.0:
   version "1.3.0"
   resolved "https://registry.npmjs.org/svgo/-/svgo-1.3.0.tgz#bae51ba95ded9a33a36b7c46ce9c359ae9154313"
@@ -21441,7 +21441,7 @@ thread-loader@^1.2.0:
     loader-runner "^2.3.0"
     loader-utils "^1.1.0"
 
-thread-loader@^2.1.2:
+thread-loader@^2.1.3:
   version "2.1.3"
   resolved "https://registry.npmjs.org/thread-loader/-/thread-loader-2.1.3.tgz#cbd2c139fc2b2de6e9d28f62286ab770c1acbdda"
   integrity sha512-wNrVKH2Lcf8ZrWxDF/khdlLlsTMczdcwPA9VEK4c2exlEPynYWxi9op3nPTo5lAnDIkE0rQEB3VBP+4Zncc9Hg==

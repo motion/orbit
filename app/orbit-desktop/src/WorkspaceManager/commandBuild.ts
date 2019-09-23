@@ -180,9 +180,13 @@ async function writeBuildInfo(appDir: string) {
 
 async function readBuildInfo(appDir: string) {
   const file = join(appDir, 'dist', 'buildInfo.json')
+  if (!(await pathExists(file))) {
+    return null
+  }
   try {
     return await readJSON(file)
-  } catch {
+  } catch (err) {
+    log.error(`readBuildInfo ${err.message}`)
     return null
   }
 }

@@ -15,7 +15,6 @@ export function ManageApps() {
     app,
     definition: getAppDefinition(app.identifier!),
   }))
-  console.log('activeApps', activeApps)
   const viewAppDefs = useUserVisualAppDefinitions()
   const handleSortEnd = useAppSortHandler()
   const [dataApps, viewApps] = partition(activeApps, x => isDataDefinition(x.definition))

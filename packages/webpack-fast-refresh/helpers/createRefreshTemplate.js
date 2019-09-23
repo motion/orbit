@@ -25,8 +25,15 @@ function hasReactRefreshEntry(renderContext) {
   } else {
     const chunk = renderContext
 
-    if (chunk.entryModule && EntryTest.test(chunk.entryModule._identifier)) {
-      return true
+    if (chunk.entryModule._identifier) {
+      if (chunk.entryModule && EntryTest.test(chunk.entryModule._identifier)) {
+        return true
+      }
+    } else if (chunk.entryModule.dependencies) {
+      // DLL support
+      if (chunk.entryModule.dependencies.some(x => EntryTest.test(x.request))) {
+        return true
+      }
     }
   }
 

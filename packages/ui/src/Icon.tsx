@@ -25,7 +25,7 @@ const names = IconNamesList
 const searcher = new FuzzySearch(names.map(name => ({ name })), ['name'])
 
 const nameCache = {}
-export const findName = (name: string): string => {
+export const findIconName = (name: string): string => {
   if (!name || typeof name !== 'string') {
     console.warn(`Bad name provided`, name)
     name = ''
@@ -134,7 +134,7 @@ export const PlainIcon = ({
     // choose which pixel grid is most appropriate for given icon size
     const pixelGridSize = size >= SIZE_LARGE ? SIZE_LARGE : SIZE_STANDARD
     // render path elements, or nothing if icon name is unknown.
-    const iconName = findName(name)
+    const iconName = findIconName(name)
     const paths = getIconSvgSuspense(pixelGridSize, iconName)
     const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
 
@@ -165,12 +165,10 @@ export const PlainIcon = ({
   return contents
 }
 
-// @ts-ignore
 PlainIcon.acceptsProps = {
   hover: true,
   icon: true,
 }
-// @ts-ignore
 PlainIcon.defaultProps = {
   size: 16,
 }
@@ -187,7 +185,9 @@ function getIconSvgSuspense(pathsSize: number, iconName: string): JSX.Element[] 
   iconCache[key] = {
     value: undefined,
     promise: new Promise(async res => {
-      const next = await getSvgIcon(pathsSize, iconName)
+      const next = ((await getSvgIcon(pathsSize, iconName)) || []).map((d, i) => (
+        <path key={i} d={d} fillRule="evenodd" fill="currentColor" />
+      ))
       iconCache[key].value = next
       res(next)
     }),
@@ -195,7 +195,7 @@ function getIconSvgSuspense(pathsSize: number, iconName: string): JSX.Element[] 
   throw iconCache[key].promise
 }
 
-async function getSvgIcon(size: number, name: string): Promise<JSX.Element[] | null> {
+export async function getSvgIcon(size: number, name: string): Promise<string[] | null> {
   let pathStrings: string[] = []
   try {
     if (size === SIZE_STANDARD) {
@@ -209,7 +209,7 @@ async function getSvgIcon(size: number, name: string): Promise<JSX.Element[] | n
   if (!pathStrings) {
     return null
   }
-  return pathStrings.map((d, i) => <path key={i} d={d} fillRule="evenodd" fill="currentColor" />)
+  return pathStrings
 }
 
 function snapToSizes(size: number) {

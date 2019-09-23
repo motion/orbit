@@ -1,4 +1,4 @@
-if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
   const runtime = require('react-refresh/runtime')
   // Inject runtime into global
   runtime.injectIntoGlobalHook(window)

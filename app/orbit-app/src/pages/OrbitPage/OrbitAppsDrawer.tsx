@@ -74,10 +74,8 @@ export const OrbitAppsDrawer = memo(() => {
         height="100%"
         onUpdate={() => {
           clearTimeout(tm)
-          console.log('update now')
           appsDrawerStore.isAnimating = true
           tm = setTimeout(() => {
-            console.log('done')
             appsDrawerStore.isAnimating = false
           }, 60)
         }}

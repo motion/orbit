@@ -411,7 +411,12 @@ require('@o/kit').OrbitHot.fileLeave();
         )) ||
         []),
 
-      target === 'web' && !!(hot || injectHot) && new ReactRefreshPlugin(),
+      target === 'web' &&
+        !!(hot || injectHot) &&
+        (() => {
+          // console.log('apply react refresh', entry)
+          return new ReactRefreshPlugin()
+        })(),
 
       !!(hot || injectHot) &&
         new webpack.HotModuleReplacementPlugin({

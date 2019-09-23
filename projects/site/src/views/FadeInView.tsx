@@ -34,7 +34,7 @@ export const transitions: { [key: string]: MotionProps['transition'] } = {
   normal: {
     type: 'spring',
     damping: 12,
-    stiffness: 60,
+    stiffness: 70,
   },
   fast: {
     type: 'spring',

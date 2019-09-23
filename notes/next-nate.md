@@ -87,26 +87,7 @@ Either select items or define query
 
 GO TO PROD / DEV TASKS
 
-- [ ] Webpack 5 will be instrumental in more easily going to production, check if its ready for integration as its picked up some steam.
 - [ ] React Window is being re-written again by bvaughn, there are bugs in it currently, an afternoon to revisit and see if we can upgrade to that version
-
-
-----------
-
-
-NEW SITE SECTIONS:
-
-1. Augment your OS (show interaction with home)
-2. Best DX, ever (hover to define DX) (SHOW MORE)
-3. IN as easy as OUT (show OCR/pinning + syncing/graph)
-
-(if anything, just show footer here and have a FEATURES page)
-
-1. Easy deploy (move the deploy stuff down to here)
-...
-
-Features page could show each individual app in more depth basically,
-very simple layout with some brighter colors and screenshots.
 
 ---
 

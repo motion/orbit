@@ -402,7 +402,6 @@ export function extractStyles(
         }
 
         const stylesByClassName = getStylesByClassName(staticAttributes, cacheObject, view)
-        console.log('getStylesByClassName', staticAttributes, stylesByClassName)
         const extractedStyleClassNames = Object.keys(stylesByClassName).join(' ')
         const classNameObjects: (t.StringLiteral | t.Expression)[] = []
 

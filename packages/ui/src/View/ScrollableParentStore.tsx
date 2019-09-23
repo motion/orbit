@@ -121,7 +121,8 @@ export function ScrollableIntersection({
           const nodeWidth = childrenWidths[index].width
           const total = childrenWidths.length
           const width = 1 / total
-          const offset = nodeLeft / (parentWidth - nodeWidth)
+          const restWidth = parentWidth - nodeWidth
+          const offset = restWidth === 0 ? 0 : nodeLeft / (parentWidth - nodeWidth)
           scrollableParent.scrollIntersectionState.measurements.set(index, {
             offset,
             width,

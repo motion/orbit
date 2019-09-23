@@ -17,7 +17,7 @@ export function createApp<T extends any>(app: AppDefinition<T>): AppDefinition<T
   apps.push(appWrapped)
   notifyAppsUpdated()
   // @ts-ignore
-  appWrapped._ignoreHMRCheck = true
+  appWrapped.__react_refresh_keep = true
   return appWrapped
 }
 

@@ -43,13 +43,13 @@ class ReactRefreshPlugin {
 
       if (version === 4) {
         // TODO: Support this in webpack@5 as well
-        compilation.hooks.normalModuleLoader.tap(this.constructor.name, context => {
-          if (!context.hot) {
-            throw Error(
-              'Hot Module Replacement (HMR) is not enabled! React-Refresh requires HMR to function properly.',
-            )
-          }
-        })
+        // compilation.hooks.normalModuleLoader.tap(this.constructor.name, context => {
+        //   if (!context.hot) {
+        //     throw Error(
+        //       'Hot Module Replacement (HMR) is not enabled! React-Refresh requires HMR to function properly.'
+        //     );
+        //   }
+        // });
       }
     })
   }

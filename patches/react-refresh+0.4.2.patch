@@ -1,3 +1,18 @@
+diff --git a/node_modules/react-refresh/cjs/react-refresh-runtime.development.js b/node_modules/react-refresh/cjs/react-refresh-runtime.development.js
+index 3e017a2..c4b6689 100644
+--- a/node_modules/react-refresh/cjs/react-refresh-runtime.development.js
++++ b/node_modules/react-refresh/cjs/react-refresh-runtime.development.js
+@@ -521,6 +521,10 @@ function isLikelyComponentType(type) {
+       case 'object':
+         {
+           if (type != null) {
++            if (type['__react_refresh_keep']) {
++              return true
++            }
++
+             switch (type.$$typeof) {
+               case REACT_FORWARD_REF_TYPE:
+               case REACT_MEMO_TYPE:
 diff --git a/node_modules/react-refresh/runtime.js b/node_modules/react-refresh/runtime.js
 index 28e3b0c..5bbd389 100644
 --- a/node_modules/react-refresh/runtime.js

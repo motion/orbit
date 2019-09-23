@@ -174,7 +174,8 @@ export class GeometryStore<A = any> {
           }
           const index = scrollIntersectionState.elements.indexOf(this.nodeRef.current)
           const state = scrollIntersectionState.measurements.get(index)
-          return state ? (state.offset - scroll) * state.total : 0
+          const res = state ? (state.offset - scroll) * state.total : 0
+          return res
         })
       })
     })

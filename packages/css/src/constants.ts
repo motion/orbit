@@ -30,6 +30,14 @@ export const validCSSAttr: Partial<ValidCSSPropertyMap> = {
   // this is tied into the logic in gloss.tsx#glossify/render
   // where we dont pass down the css props. if we did, we dont want this
   src: false,
+  // for some reason sometimes sometimes it doesn't include shorthands:
+  background: true,
+  margin: true,
+  padding: true,
+  transform: true,
+  overflow: true,
+  flex: true,
+  border: true,
 }
 
 for (const key in CAMEL_TO_SNAKE) {

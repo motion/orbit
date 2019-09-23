@@ -11,6 +11,7 @@ import { CacheObject } from '../../types'
 import { getStylesByClassName } from '../getStylesByClassName'
 import { evaluateAstNode } from './evaluateAstNode'
 import { Ternary } from './extractStaticTernaries'
+import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { getStaticBindingsForScope } from './getStaticBindingsForScope'
 import { parse } from './parse'
 
@@ -45,8 +46,6 @@ const JSXSTYLE_SOURCES = {
   '@o/ui/test': true,
 }
 
-const JSX_VALID_NAMES = ['View', 'Col', 'Row', 'Grid']
-
 export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
@@ -59,7 +58,9 @@ export function extractStyles(
   ast: t.File
   map: any // RawSourceMap from 'source-map'
 } {
-  console.log('TODO make options work: views, cssAttributes', options)
+  const JSX_VALID_NAMES = Object.keys(options.views).filter(x => {
+    return options.views[x] && !!options.views[x].staticStyleConfig
+  })
 
   if (typeof src !== 'string') {
     throw new Error('`src` must be a string of javascript')
@@ -100,6 +101,8 @@ export function extractStyles(
   let useImportSyntax = false
   let hasValidComponents = false
 
+  let view: GlossView<any>
+
   // Find jsxstyle require in program root
   ast.program.body = ast.program.body.filter((item: t.Node) => {
     if (t.isImportDeclaration(item)) {
@@ -138,6 +141,8 @@ export function extractStyles(
           return true
         }
 
+        view = options.views[specifier.local.name]
+
         validComponents[specifier.local.name] = specifier.imported.name
         hasValidComponents = true
         // dont remove the import
@@ -163,9 +168,6 @@ export function extractStyles(
       map: null,
     }
   }
-
-  // class or className?
-  const classPropName = 'className'
 
   // per-file cache of evaluated bindings
   const bindingCache = {}
@@ -306,7 +308,7 @@ export function extractStyles(
           }
 
           // className prop will be handled below
-          if (name === classPropName) {
+          if (name === 'className') {
             return true
           }
 
@@ -377,13 +379,13 @@ export function extractStyles(
 
         let classNamePropValue: t.Expression | null = null
 
-        // const classNamePropIndex = node.attributes.findIndex(
-        //   attr => !t.isJSXSpreadAttribute(attr) && attr.name && attr.name.name === classPropName,
-        // )
-        // if (classNamePropIndex > -1 && Object.keys(staticAttributes).length > 0) {
-        //   classNamePropValue = getPropValueFromAttributes(classPropName, node.attributes)
-        //   node.attributes.splice(classNamePropIndex, 1)
-        // }
+        const classNamePropIndex = node.attributes.findIndex(
+          attr => !t.isJSXSpreadAttribute(attr) && attr.name && attr.name.name === 'className',
+        )
+        if (classNamePropIndex > -1 && Object.keys(staticAttributes).length > 0) {
+          classNamePropValue = getPropValueFromAttributes('className', node.attributes)
+          node.attributes.splice(classNamePropIndex, 1)
+        }
 
         // if all style props have been extracted, jsxstyle component can be
         // converted to a div or the specified component
@@ -405,7 +407,7 @@ export function extractStyles(
           }
         }
 
-        const stylesByClassName = getStylesByClassName(staticAttributes, cacheObject)
+        const stylesByClassName = getStylesByClassName(staticAttributes, cacheObject, view)
         const extractedStyleClassNames = Object.keys(stylesByClassName).join(' ')
         const classNameObjects: (t.StringLiteral | t.Expression)[] = []
 
@@ -493,14 +495,14 @@ export function extractStyles(
           if (t.isStringLiteral(classNamePropValueForReals)) {
             node.attributes.push(
               t.jsxAttribute(
-                t.jsxIdentifier(classPropName),
+                t.jsxIdentifier('className'),
                 t.stringLiteral(classNamePropValueForReals.value),
               ),
             )
           } else {
             node.attributes.push(
               t.jsxAttribute(
-                t.jsxIdentifier(classPropName),
+                t.jsxIdentifier('className'),
                 t.jsxExpressionContainer(classNamePropValueForReals),
               ),
             )

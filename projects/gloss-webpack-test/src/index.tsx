@@ -6,7 +6,9 @@ function Main() {
   return (
     <>
       <div>hi</div>
-      <View background="yellow">some children</View>
+      <View className="test" background="yellow">
+        some children
+      </View>
     </>
   )
 }

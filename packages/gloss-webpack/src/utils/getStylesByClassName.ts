@@ -1,16 +1,10 @@
+import { GlossView } from 'gloss'
+
 import { CacheObject } from '../types'
 import { getClassNameFromCache } from './getClassNameFromCache'
 
 // TODO from gloss
 type CSSProperties = any
-
-const nonStyleProps = {
-  children: true,
-  className: true,
-  component: true,
-  props: true,
-  style: true,
-}
 
 interface JsxstyleProps extends CSSProperties {
   mediaQueries?: Record<string, string>
@@ -24,6 +18,7 @@ export interface StylesByClassName {
 export function getStylesByClassName(
   staticAttributes: Record<string, any>,
   cacheObject: CacheObject,
+  view: GlossView<any>,
 ): StylesByClassName {
   if (typeof staticAttributes !== 'undefined' && staticAttributes == null) {
     throw new Error('getStylesByClassName expects an object as its second parameter')
@@ -36,11 +31,10 @@ export function getStylesByClassName(
   let hasItems = false
   const styleProps = {}
   for (const item in staticAttributes) {
-    if (nonStyleProps.hasOwnProperty(item) || !staticAttributes.hasOwnProperty(item)) {
-      continue
+    if (view.staticStyleConfig.cssAttributes[item]) {
+      hasItems = true
+      styleProps[item] = staticAttributes[item]
     }
-    hasItems = true
-    styleProps[item] = staticAttributes[item]
   }
 
   if (!hasItems) {

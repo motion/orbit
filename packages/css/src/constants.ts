@@ -1,4 +1,3 @@
-import { CAMEL_TO_SNAKE } from './cssNameMap'
 import { CSSPropertySet } from './cssPropertySet'
 
 /*
@@ -8,41 +7,10 @@ import { CSSPropertySet } from './cssPropertySet'
 type CSSPropertyKey = keyof CSSPropertySet
 type ValidCSSPropertyMap = { [key in CSSPropertyKey]: boolean }
 
-const allCSSAttr = {}
-// add standard ones
-if (typeof document !== 'undefined') {
-  for (const key in document.body.style) {
-    allCSSAttr[key] = true
-  }
-}
-
-const cssSpecialAttr = {
-  borderLeftRadius: true,
-  borderRightRadius: true,
-  borderBottomRadius: true,
-  borderTopRadius: true,
-}
-
-export const validCSSAttr: Partial<ValidCSSPropertyMap> = {
-  ...allCSSAttr,
-  ...cssSpecialAttr,
-  // lets ignore the obviously-html props
-  // this is tied into the logic in gloss.tsx#glossify/render
-  // where we dont pass down the css props. if we did, we dont want this
-  src: false,
-  // for some reason sometimes sometimes it doesn't include shorthands:
-  background: true,
-  margin: true,
-  padding: true,
-  transform: true,
-  overflow: true,
-  flex: true,
-  border: true,
-}
-
-for (const key in CAMEL_TO_SNAKE) {
-  validCSSAttr[key] = true
-}
+export const validCSSAttr: Partial<ValidCSSPropertyMap> =
+  process.env.RENDER_TARGET === 'node'
+    ? require('./validCSSAttribute.node').default
+    : require('./validCSSAttribute.dom').default
 
 // various helpful constants
 

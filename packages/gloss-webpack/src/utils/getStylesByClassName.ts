@@ -30,11 +30,11 @@ export function getStylesByClassName(
 
   let hasItems = false
   const styleProps = {}
+  const attrs = view.staticStyleConfig.cssAttributes
   for (const item in staticAttributes) {
-    if (view.staticStyleConfig.cssAttributes[item]) {
-      hasItems = true
-      styleProps[item] = staticAttributes[item]
-    }
+    if (attrs[item]) {
+    hasItems = true
+    styleProps[item] = staticAttributes[item]
   }
 
   if (!hasItems) {

@@ -1,4 +1,3 @@
-
 Sep 12:
 
 - fix some app stuff:
@@ -25,7 +24,6 @@ The plan from jun for Sep:
 
 - Improved demo flow x2 (apps, bugs, etc)
 - Build to production
-- Website improved with better docs / home text
 
 ---
 
@@ -54,10 +52,8 @@ Detailed September Plan:
   - [ ] + get build to prod with full flow of app editing working
 
 - [ ] Last Features to tie it all together?
-  - [ ] Should I do anything more????
-  1. Floating "selection" may be it.
-  2. "Move Data" modal, see block below
-  3. See DataDog, could pull some auto-dashboard example apps
+  1. "Move Data" modal, see block below
+  2. See DataDog, could pull some auto-dashboard example apps
 
 - [ ] Demo apps that would be compelling:
   - [ ] StackOverflow Clone

@@ -1,11 +1,10 @@
 import { toColor } from '@o/color'
-import { IconSvgPaths20 } from '@o/icons'
+import SVG from '@svgdotjs/svg.js'
 import { useTheme } from 'gloss'
 import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import SVG from 'svg.js'
 
 import { whenIdle } from './helpers/whenIdle'
-import { findName, IconProps } from './Icon'
+import { findIconName, getSvgIcon, IconProps } from './Icon'
 import { View } from './View/View'
 
 export type IconShapeProps = Omit<IconProps, 'width' | 'height'> & {
@@ -34,49 +33,46 @@ export const IconShape = memo(
     cutout,
     background,
     shapeColor,
+    name,
     ...props
   }: IconShapeProps) => {
-    let iconPath = ''
     const id = useRef(`icon-${Math.round(Math.random() * 100000)}`).current
     const gradientId = `gradient-${id}`
 
-    if (props.name) {
-      const name = findName(props.name)
-      if (IconSvgPaths20[name]) {
-        iconPath = (IconSvgPaths20[name] || IconSvgPaths20.dot).join(' ')
-      }
-    }
-
     const [svgPathRaw, setSVGPath] = useState('')
-    const svgPath = svgPathRaw || cache[iconPath]
+    const svgPath = svgPathRaw || cache[name]
 
     useEffect(() => {
-      if (!iconPath) return
-      if (cache[iconPath]) {
-        return
-      }
-
+      if (cache[name]) return
       // TODO move this off thread - this interrupts carousel animation
       let cancelled = false
+      const realName = findIconName(name)
+
       whenIdle().then(() => {
         if (cancelled) return
-        const draw = SVG(id).size(diameter, diameter)
-        const icon = draw.path(iconPath)
-        const out = icon
-          // TODO if its not a perfect square we need to adjust here
-          .size(16, 16)
-          .move(6, 6)
-          .array()
-          .toString()
+        getSvgIcon(20, realName).then(paths => {
+          if (cancelled) return
+          const iconPath = paths.join(' ')
+          const draw = SVG(id).size(diameter, diameter)
+          const icon = draw.path(iconPath)
+          const out = icon
+            // TODO if its not a perfect square we need to adjust here
+            .size(16, 16)
+            .move(6, 6)
+            .array()
+            .toString()
 
-        cache[iconPath] = `${shapes[shape]} ${out}`
-        setSVGPath(cache[iconPath])
+          console.log('we got something', iconPath, out)
+
+          cache[name] = `${shapes[shape]} ${out}`
+          setSVGPath(cache[name])
+        })
       })
 
       return () => {
         cancelled = true
       }
-    }, [id, iconPath])
+    }, [id, name])
 
     const scale = size / 28
     const theme = useTheme({
@@ -89,7 +85,7 @@ export const IconShape = memo(
     let color = !!gradient ? `url(#${gradientId})` : `${themeColor.toString()}`
 
     return (
-      <View width={size} height={size} position="relative" {...props}>
+      <View width={size} height={size} position="relative" data-icon={name} {...props}>
         <div style={{ display: 'none' }} id={id} />
         {props.active && (
           <View
@@ -115,34 +111,36 @@ export const IconShape = memo(
             background={shapeColor || (colorLightness > 40 ? '#000' : '#fff')}
           />
         )}
-        <svg
-          width={28}
-          height={28}
-          style={{
-            transformOrigin: 'top left',
-            transform: `scale(${scale}) translateZ(0)`,
-            overflow: 'visible',
-            position: 'relative',
-            zIndex: 1,
-          }}
-        >
-          {!!gradient && (
-            <defs>
-              <linearGradient id={gradientId} gradientTransform="rotate(90)">
-                {gradient.map((color, index) => (
-                  <stop
-                    key={`${color}${index}`}
-                    offset={`${index / (gradient.length - 1)}`}
-                    stopColor={`${color}`}
-                  />
-                ))}
-              </linearGradient>
-            </defs>
-          )}
-          <g>
-            <path d={`${svgPath}`} fill={color} />
-          </g>
-        </svg>
+        {!!svgPath && (
+          <svg
+            width={28}
+            height={28}
+            style={{
+              transformOrigin: 'top left',
+              transform: `scale(${scale}) translateZ(0)`,
+              overflow: 'visible',
+              position: 'relative',
+              zIndex: 1,
+            }}
+          >
+            {!!gradient && (
+              <defs>
+                <linearGradient id={gradientId} gradientTransform="rotate(90)">
+                  {gradient.map((color, index) => (
+                    <stop
+                      key={`${color}${index}`}
+                      offset={`${index / (gradient.length - 1)}`}
+                      stopColor={`${color}`}
+                    />
+                  ))}
+                </linearGradient>
+              </defs>
+            )}
+            <g>
+              <path d={`${svgPath}`} fill={color} />
+            </g>
+          </svg>
+        )}
       </View>
     )
   },

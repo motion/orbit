@@ -1,7 +1,7 @@
 import generate from '@babel/generator'
 import traverse, { VisitNodeObject } from '@babel/traverse'
 import t = require('@babel/types')
-import { getStylesClassName, GlossView } from 'gloss'
+import { getStylesClassName, GlossView, validCSSAttr } from 'gloss'
 import invariant = require('invariant')
 import path = require('path')
 import util = require('util')
@@ -9,7 +9,7 @@ import util = require('util')
 import { CacheObject } from '../../types'
 import { getStylesByClassName } from '../getStylesByClassName'
 import { evaluateAstNode } from './evaluateAstNode'
-import { Ternary } from './extractStaticTernaries'
+import { extractStaticTernaries, Ternary } from './extractStaticTernaries'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { parse } from './parse'
 
@@ -19,6 +19,7 @@ export interface ExtractStylesOptions {
   }
   mediaQueryKeys?: string[]
   internalViewsPath?: string
+  deoptKeys?: string[]
 }
 
 export interface Options {
@@ -39,6 +40,7 @@ interface TraversePath<TNode = any> {
 const UNTOUCHED_PROPS = {
   key: true,
   style: true,
+  className: true,
 }
 
 const JSXSTYLE_SOURCES = {
@@ -88,7 +90,6 @@ export function extractStyles(
   }
 
   const sourceDir = path.dirname(sourceFileName)
-  console.log('sourceFileName', sourceFileName)
 
   // Using a map for (officially supported) guaranteed insertion order
   const cssMap = new Map<string, { css: string; commentTexts: string[] }>()
@@ -179,6 +180,11 @@ export function extractStyles(
         // Remember the source component
         const originalNodeName = node.name.name
 
+        // Get valid css props
+        const { staticStyleConfig } = options.views[originalNodeName]
+        invariant(!!staticStyleConfig, `no staticStyleConfig for name "${originalNodeName}"`)
+        const cssAttributes = staticStyleConfig.cssAttributes || validCSSAttr
+
         // evaluateVars = false
         const attemptEval = evaluateAstNode
         // evaluateVars
@@ -256,10 +262,12 @@ export function extractStyles(
 
         node.attributes = flattenedAttributes
 
-        let propsAttributes: (t.JSXSpreadAttribute | t.JSXAttribute)[] = []
+        // let propsAttributes: (t.JSXSpreadAttribute | t.JSXAttribute)[] = []
         const staticAttributes: Record<string, any> = {}
         let inlinePropCount = 0
         const staticTernaries: Ternary[] = []
+
+        let shouldDeopt = false
 
         node.attributes = node.attributes.filter((attribute, idx) => {
           if (
@@ -276,6 +284,15 @@ export function extractStyles(
           }
 
           const name = attribute.name.name
+
+          if (options.deoptKeys && options.deoptKeys.includes(name)) {
+            shouldDeopt = true
+            return true
+          }
+          if (shouldDeopt) {
+            return true
+          }
+
           const value =
             attribute.value && t.isJSXExpressionContainer(attribute.value)
               ? attribute.value.expression
@@ -298,23 +315,13 @@ export function extractStyles(
             return true
           }
 
-          // className prop will be handled below
-          if (name === 'className') {
-            return true
-          }
-
           if (name === 'ref') {
-            logWarning(
-              'The `ref` prop cannot be extracted from a jsxstyle component. ' +
-                'If you want to attach a ref to the underlying component ' +
-                'or element, specify a `ref` property in the `props` object.',
-            )
             inlinePropCount++
             return true
           }
 
-          // pass key and style props through untouched
-          if (UNTOUCHED_PROPS.hasOwnProperty(name)) {
+          if (!cssAttributes[name]) {
+            inlinePropCount++
             return true
           }
 
@@ -368,6 +375,10 @@ export function extractStyles(
           return true
         })
 
+        if (shouldDeopt) {
+          return
+        }
+
         let classNamePropValue: t.Expression | null = null
 
         const classNamePropIndex = node.attributes.findIndex(
@@ -411,16 +422,15 @@ export function extractStyles(
           }
         }
 
-        // if (staticTernaries.length > 0) {
-        //   const ternaryObj = extractStaticTernaries(staticTernaries, cacheObject)
-
-        //   // ternaryObj is null if all of the extracted ternaries have falsey consequents and alternates
-        //   if (ternaryObj !== null) {
-        //     // add extracted styles by className to existing object
-        //     Object.assign(stylesByClassName, ternaryObj.stylesByClassName)
-        //     classNameObjects.push(ternaryObj.ternaryExpression)
-        //   }
-        // }
+        if (staticTernaries.length > 0) {
+          const ternaryObj = extractStaticTernaries(staticTernaries, cacheObject)
+          // ternaryObj is null if all of the extracted ternaries have falsey consequents and alternates
+          if (ternaryObj !== null) {
+            // add extracted styles by className to existing object
+            Object.assign(stylesByClassName, ternaryObj.stylesByClassName)
+            classNameObjects.push(ternaryObj.ternaryExpression)
+          }
+        }
 
         if (extractedStyleClassNames) {
           classNameObjects.push(t.stringLiteral(extractedStyleClassNames))
@@ -524,7 +534,6 @@ export function extractStyles(
 
             // get object of style objects
             const { css } = getStylesClassName('.', styleProps as any)
-            // console.log('css', css, styleProps)
             cssMap.set(className, { css, commentTexts: [comment] })
           }
         }

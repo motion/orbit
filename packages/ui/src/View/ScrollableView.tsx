@@ -33,7 +33,7 @@ export function ScrollableView(props: ScrollableViewProps) {
         {...rest}
         nodeRef={composeRefs(props.nodeRef, ref)}
         className={`${hideScrollbars ? 'hide-scrollbars' : ''} ${props.className || ''}`}
-        padding="disable-padding"
+        padding={false}
         minHeight={hasPadding ? 'auto' : props.minHeight}
       >
         {content}
@@ -65,7 +65,13 @@ export function wrapWithPaddedView(
   if (isPadded(props)) {
     const isWrapped = props.flexWrap === 'wrap'
     element = (
-      <PaddedView {...props} isWrapped={isWrapped}>
+      <PaddedView
+        {...props}
+        flex={undefined}
+        className={undefined}
+        style={undefined}
+        isWrapped={isWrapped}
+      >
         {element}
       </PaddedView>
     )

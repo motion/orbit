@@ -1,6 +1,7 @@
 import { css, GlossPropertySet } from '@o/css'
 import { motion } from 'framer-motion'
 import { Base, gloss } from 'gloss'
+import { partition } from 'lodash'
 
 import { AnimationStore } from '../Geometry'
 import { Sizes } from '../Space'
@@ -91,10 +92,16 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
         let style = {}
 
         let finalClassName = inProps.className
+
         // parse style back from classname to style tag for motion
         if (outProps.className) {
           finalClassName = ''
-          for (const name of outProps.className.split(' ')) {
+          const [specific, nonSpecific] = partition(
+            outProps.className.split(' '),
+            x => x[0] === 's',
+          )
+          // order them so specific gets most importance
+          for (const name of [...nonSpecific, ...specific]) {
             const key = name[0] === 's' ? name.slice(1) : name
             if (tracker.has(key)) {
               const styles = tracker.get(key)

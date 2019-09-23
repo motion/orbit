@@ -1,4 +1,4 @@
-import { View } from '@o/ui/test'
+import { Row, View } from '@o/ui/test'
 import * as React from 'react'
 import { render } from 'react-dom'
 
@@ -9,24 +9,27 @@ function Main() {
   return (
     <>
       <div>hi</div>
-      <View
-        nodeRef={ref}
-        pointerEvents="auto"
-        position="fixed"
-        top={0}
-        right={0}
-        height="100vh"
-        background={bg}
-        style={{
-          width: sidebarWidth,
-          transform: `translateX(${sidebarWidth}px)`,
-        }}
-        className="test"
-        color={theme => theme.red}
-        onClick={() => {}}
-      >
-        some children
-      </View>
+      <Row space="lg">
+        <View
+          nodeRef={ref}
+          pointerEvents="auto"
+          position="fixed"
+          top={0}
+          right={0}
+          height="100vh"
+          background={bg}
+          opacity={bg ? 1 : 0}
+          style={{
+            width: sidebarWidth,
+            transform: `translateX(${sidebarWidth}px)`,
+          }}
+          className="test"
+          color={theme => theme.red}
+          onClick={() => {}}
+        >
+          some children
+        </View>
+      </Row>
     </>
   )
 }

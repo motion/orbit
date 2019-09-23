@@ -21,10 +21,7 @@ export const Grid = (props: GridProps) => (
 )
 
 // for gloss parents
-// @ts-ignore
 Grid.ignoreAttrs = Base.ignoreAttrs
-
-// @ts-ignore
 Grid.acceptsSpacing = true
 
 // Transforms gap sizing props to numbers

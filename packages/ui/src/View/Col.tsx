@@ -84,7 +84,7 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
       <View
         {...defaultProps}
         {...props}
-        padding="disable-padding"
+        padding={false}
         minHeight={hasPadding ? 'auto' : props.minHeight}
       >
         {wrapWithPaddedView(wrapWithSuspense(element, suspense), props)}
@@ -97,11 +97,13 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
   BaseView.acceptsSpacing = true
 
   // static config
-  const cssAttributes = { ...validCSSAttr }
-  // delete padding because we do special things with it
-  delete cssAttributes.padding
   BaseView.staticStyleConfig = {
-    cssAttributes,
+    cssAttributes: {
+      ...validCSSAttr,
+      // anything we do special with in render(), we ignore for static extraction:
+      padding: false,
+      minHeight: false,
+    },
   }
 
   return BaseView

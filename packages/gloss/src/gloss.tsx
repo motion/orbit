@@ -58,13 +58,17 @@ type GlossInternalConfig = {
   displayName: string
   targetElement: any
   styles: any
-  conditionalStyles: Object
+  conditionalStyles: Object | undefined
   config: GlossViewOpts<any> | null
 }
 
 type GlossInternals<Props> = {
   parent: any
   themeFns: ThemeFn<Props>[] | null
+  staticStyles: {
+    styles: Object
+    conditionalStyles: Object | undefined
+  }
   getConfig: () => GlossInternalConfig
 }
 
@@ -175,8 +179,8 @@ export function gloss<Props = any, ThemeProps = Props>(
 
   const targetElement = !!targetConfig ? targetConfig.targetElement : target
   const id = `${viewId()}`
-  const Styles = getAllStyles(id, targetConfig, rawStyles || null)
-  const conditionalStyles = Styles.conditionalStyles
+  const staticStyles = getAllStyles(id, targetConfig, rawStyles || null)
+  const conditionalStyles = staticStyles.conditionalStyles
 
   let themeFn: ThemeFn | null = null
   let staticClasses: string[] | null = null
@@ -201,7 +205,7 @@ export function gloss<Props = any, ThemeProps = Props>(
     if (!hasCompiled) {
       hasCompiled = true
       themeFn = compileTheme(ThemedView)
-      staticClasses = addStyles(Styles.styles, ThemedView.displayName)
+      staticClasses = addStyles(staticStyles.styles, ThemedView.displayName)
       config = getCompiledConfig(ThemedView, ogConfig)
       getEl = config.getElement
       shouldUpdateMap = GlossView['shouldUpdateMap']
@@ -326,6 +330,7 @@ export function gloss<Props = any, ThemeProps = Props>(
   }
 
   const internal: GlossInternals<Props> = {
+    staticStyles,
     themeFns: null,
     parent: hasGlossyParent ? target : null,
     getConfig: () => ({
@@ -333,8 +338,8 @@ export function gloss<Props = any, ThemeProps = Props>(
       id,
       displayName: ThemedView.displayName || '',
       targetElement,
-      styles: { ...Styles.styles },
-      conditionalStyles: { ...Styles.conditionalStyles },
+      styles: staticStyles.styles,
+      conditionalStyles: staticStyles.conditionalStyles,
     }),
   }
 

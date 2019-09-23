@@ -1,6 +1,6 @@
 import { Col, Grid, Image, Row, Space, useNodeSize, View } from '@o/ui'
 import { flatMap } from 'lodash'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useRef, useState } from 'react'
 
 import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
@@ -13,84 +13,99 @@ const dly = 200
 const sectionNames = ['Integrate', 'Display', 'Build']
 
 const sections = {
-  [sectionNames[0]]: [
-    {
-      title: `One-click data sources`,
-      icon: `data`,
-      body: [`Every app can provide data APIs, installs with a simple search + click.`],
-    },
-    {
-      title: 'Query Builder',
-      icon: 'query',
-      body: [
-        `Build and explore your data plugins, create queries and test them from the control panel.`,
-      ],
-    },
-    {
-      title: `GraphQL Explorer`,
-      icon: `satellite`,
-      body: [`Every app that exposes a GraphQL endpoint is explorable in the built-in explorer.`],
-    },
-    {
-      title: `Manage/Sync Bits`,
-      icon: `data`,
-      body: [
-        `The Bit is the universal data format for Orbit, and you view, search and manage them here.`,
-      ],
-    },
-  ],
-  [sectionNames[1]]: [
-    {
-      title: 'Complete UI Kit',
-      icon: 'button',
-      body: [
-        `All lists and tables virtualized. React Concurrent rendering. Flexible, consistent data display across all views.`,
-      ],
-    },
-    {
-      title: `Drag & Drop Data`,
-      icon: `clopboard`,
-      body: [`First class data drag & drop to move data in or out easily, or between apps.`],
-    },
-    {
-      title: `Every hook you need`,
-      icon: `shop`,
-      body: [`Extensive libraries for displaying data, all built on the latest React.`],
-    },
-    {
-      title: `Clipboard`,
-      icon: `clipboard`,
-      body: [`A persistent, incredibly easy way to enable cross-app data sharing.`],
-    },
-  ],
-  [sectionNames[2]]: [
-    {
-      title: `A space to collaborate`,
-      icon: `satellite`,
-      body: [`The easiest collaboration story: no servers, no credentials.`],
-    },
-    {
-      title: `Next-gen Hot Reload`,
-      icon: `refresh`,
-      body: [
-        `Per-app Webpack for instant React Refresh hot reloading. Toggle between development and production in realtime.`,
-      ],
-    },
-    {
-      title: `Amazing technology`,
-      icon: `go`,
-      body: [
-        `Add a node process with a few lines of code. React Concurrent and Suspense first-class support.`,
-      ],
-    },
-    {
-      title: `Incredible Dev Tooling`,
-      icon: `pen`,
-      body: [
-        `From logging to data management, state inspection, error recovery and more - Orbit comes with great DX.`,
-      ],
-    },
-  ],
+  [sectionNames[0]]: {
+    image: require('../../public/images/screen-graphql.jpg'),
+    items: [
+      {
+        title: `One-click data sources`,
+        icon: `data`,
+        body: [`Every app can provide data APIs, installs with a simple search + click.`],
+      },
+      {
+        title: 'Query Builder',
+        icon: 'query',
+        body: [
+          `Build and explore your data plugins, create queries and test them from the control panel.`,
+        ],
+      },
+      {
+        title: `GraphQL Explorer`,
+        icon: `satellite`,
+        body: [`Every app that exposes a GraphQL endpoint is explorable in the built-in explorer.`],
+      },
+      {
+        title: `Manage/Sync Bits`,
+        icon: `data`,
+        body: [
+          `The Bit is the universal data format for Orbit, and you view, search and manage them here.`,
+        ],
+      },
+    ],
+  },
+  [sectionNames[1]]: {
+    image: require('../../public/images/screen-people.jpg'),
+    items: [
+      {
+        title: 'Complete UI Kit',
+        icon: 'button',
+        body: [
+          `All lists and tables virtualized. React Concurrent rendering. Flexible, consistent data display across all views.`,
+        ],
+      },
+      {
+        title: `Drag & Drop Data`,
+        icon: `clopboard`,
+        body: [`First class data drag & drop to move data in or out easily, or between apps.`],
+      },
+      {
+        title: `Every hook you need`,
+        icon: `shop`,
+        body: [`Extensive libraries for displaying data, all built on the latest React.`],
+      },
+      {
+        title: `Clipboard`,
+        icon: `clipboard`,
+        body: [`A persistent, incredibly easy way to enable cross-app data sharing.`],
+      },
+    ],
+  },
+  [sectionNames[2]]: {
+    image: require('../../public/images/screen-graphql.jpg'),
+    items: [
+      {
+        title: `A space to collaborate`,
+        icon: `satellite`,
+        body: [`The easiest collaboration story: no servers, no credentials.`],
+      },
+      {
+        title: `Next-gen Hot Reload`,
+        icon: `refresh`,
+        body: [
+          `Per-app Webpack for instant React Refresh hot reloading. Toggle between development and production in realtime.`,
+        ],
+      },
+      {
+        title: `Amazing technology`,
+        icon: `go`,
+        body: [
+          `Add a node process with a few lines of code. React Concurrent and Suspense first-class support.`,
+        ],
+      },
+      {
+        title: `Incredible Dev Tooling`,
+        icon: `pen`,
+        body: [
+          `From logging to data management, state inspection, error recovery and more - Orbit comes with great DX.`,
+        ],
+      },
+    ],
+  },
+}
+
+const transition = {
+  type: 'spring',
+  damping: 20,
+  stiffness: 200,
 }
 
 export default memo(() => {
@@ -138,7 +153,13 @@ export default memo(() => {
         })}
       />
 
-      <Row nodeRef={Fade.ref} margin={[0, 'auto']} padding={['8vh', 0, '8vh']} maxWidth="100vw">
+      <Row
+        alignItems="center"
+        nodeRef={Fade.ref}
+        margin={[0, 'auto']}
+        padding={['8vh', 0, '8vh']}
+        maxWidth="100vw"
+      >
         <Col padding="lg" flex={2}>
           <View flex={1}>
             <FadeInView delayIndex={1}>
@@ -161,7 +182,6 @@ export default memo(() => {
           <FadeInView nodeRef={gridContainer} delayIndex={2} {...fadeAnimations.up}>
             <Row flexWrap="nowrap">
               {Object.keys(sections).map((section, index) => {
-                console.log(`${100 * (cur - index)}%`)
                 return (
                   <Grid
                     animate={{
@@ -174,11 +194,7 @@ export default memo(() => {
                           : `${(index - cur) * 20}%`,
                     }}
                     pointerEvents={cur === index ? 'auto' : 'none'}
-                    transition={{
-                      type: 'spring',
-                      damping: 20,
-                      stiffness: 200,
-                    }}
+                    transition={transition}
                     key={section}
                     space={20}
                     alignItems="start"
@@ -186,7 +202,7 @@ export default memo(() => {
                     className="feature-grid"
                     marginRight="-100%"
                   >
-                    {sections[section].map(({ title, icon, body }, index) => (
+                    {sections[section].items.map(({ title, icon, body }, index) => (
                       <SimpleSection
                         key={`${section}${index}`}
                         delay={dly * (index + 1)}
@@ -225,23 +241,40 @@ export default memo(() => {
           position="relative"
           flex={1}
           // alignItems="center"
-          justifyContent="center"
+          // justifyContent="center"
+          height={500}
         >
-          <Image
-            width="100%"
-            height="auto"
-            minWidth={1000}
-            marginRight={-1000}
-            src={require('../../public/images/screen-graphql.jpg')}
-            borderRadius={15}
-            overflow="hidden"
-            boxShadow={[
-              {
-                blur: 100,
-                color: '#000',
-              },
-            ]}
-          />
+          {Object.keys(sections).map((key, index) => (
+            <Image
+              key={key}
+              transition={transition}
+              animate={{
+                opacity: cur === index ? 1 : 0,
+                y:
+                  cur === index
+                    ? '0%'
+                    : cur > index
+                    ? `-${(cur - index) * 20}%`
+                    : `${(index - cur) * 20}%`,
+              }}
+              width="100%"
+              position="absolute"
+              top={0}
+              left={0}
+              height="auto"
+              minWidth={1000}
+              marginRight={-1000}
+              src={sections[key].image}
+              borderRadius={15}
+              overflow="hidden"
+              boxShadow={[
+                {
+                  blur: 100,
+                  color: '#000',
+                },
+              ]}
+            />
+          ))}
         </View>
       </Row>
     </Fade.FadeProvide>

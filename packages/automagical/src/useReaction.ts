@@ -2,7 +2,7 @@ import { CompositeDisposable } from 'event-kit'
 import * as React from 'react'
 import { MutableRefObject, RefObject, useCallback, useEffect, useRef, useState } from 'react'
 
-import { automagicConfig } from './AutomagicalConfiguration'
+import { automagicConfig } from './configureAutomagical'
 import { createReaction } from './createReaction'
 import { ReactionFn, ReactVal, UnwrapObservable } from './react'
 import { ReactionOptions } from './types'

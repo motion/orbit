@@ -1,6 +1,6 @@
 import * as Mobx from 'mobx'
 
-import { automagicConfig } from './AutomagicalConfiguration'
+import { automagicConfig } from './configureAutomagical'
 import { ReactionRejectionError, ReactionTimeoutError } from './constants'
 import { getReactionOptions, log, logGroup } from './helpers'
 import { SHARED_REJECTION_ERROR } from './SHARED_REJECTION_ERROR'

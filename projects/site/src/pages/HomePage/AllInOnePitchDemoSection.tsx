@@ -168,7 +168,7 @@ export default memo(() => {
             </FadeInView>
             <FadeInView delayIndex={1}>
               <TitleText textAlign="center" size="xxl">
-                A visual app studio
+                Import, view, export
               </TitleText>
             </FadeInView>
             <TitleTextSub margin="auto" minWidth={320}>

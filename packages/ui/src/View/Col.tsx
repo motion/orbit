@@ -1,5 +1,5 @@
 import { isDefined } from '@o/utils'
-import { Base } from 'gloss'
+import { Base, validCSSAttr } from 'gloss'
 import React, { isValidElement, Suspense } from 'react'
 
 import { Breadcrumbs } from '../Breadcrumbs'
@@ -95,6 +95,14 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
   // for gloss parents
   BaseView.ignoreAttrs = Base.ignoreAttrs
   BaseView.acceptsSpacing = true
+
+  // static config
+  const cssAttributes = { ...validCSSAttr }
+  // delete padding because we do special things with it
+  delete cssAttributes.padding
+  BaseView.staticStyleConfig = {
+    cssAttributes,
+  }
 
   return BaseView
 }

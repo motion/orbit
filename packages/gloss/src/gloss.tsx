@@ -86,6 +86,9 @@ export interface GlossView<RawProps, ThemeProps = RawProps, Props = GlossProps<R
   theme: (...themeFns: ThemeFn<ThemeProps>[]) => GlossView<RawProps>
   withConfig: (config: GlossViewOpts<Props>) => GlossView<RawProps>
   internal: GlossInternals<Props>
+  staticStyleConfig?: {
+    cssAttributes: Object
+  }
 }
 
 const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
@@ -368,6 +371,11 @@ export function gloss<Props = any, ThemeProps = Props>(
     }
 
     return ThemedView
+  }
+
+  // add the default prop config
+  ThemedView.staticStyleConfig = {
+    cssAttributes: validCSSAttr,
   }
 
   // TODO this any type is a regression from adding ThemeProps

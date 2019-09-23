@@ -297,7 +297,7 @@ async function makeConfig() {
               loader: GlossWebpackPlugin.loader,
               options: {
                 views: require('@o/ui'),
-                cssAttributes: require('@o/css').validCSSAttr,
+                mediaQueryKeys: ['xs', 'sm', 'notsm', 'md', 'notmd', 'lg', 'notlg'],
               },
             },
           ].filter(Boolean),

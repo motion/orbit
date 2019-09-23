@@ -7,6 +7,10 @@ import { whenIdle } from './helpers/whenIdle'
 import { findIconName, getSvgIcon, IconProps } from './Icon'
 import { View } from './View/View'
 
+if (typeof window !== 'undefined') {
+  window['SVG'] = SVG
+}
+
 export type IconShapeProps = Omit<IconProps, 'width' | 'height'> & {
   active?: boolean
   shape?: 'circle' | 'squircle'

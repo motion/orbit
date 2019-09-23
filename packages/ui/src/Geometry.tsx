@@ -137,12 +137,13 @@ export class GeometryStore<A = any> {
   /**
    * Returns a 0 to 1 value (for any child) representing the current scroll position of the parent scrollable
    */
-  scrollProgress() {
+  scrollProgress(direction: 'x' | 'y') {
     return this.setupStore(store => {
       store.animationHooks.addHook(() => {
         const scrollableParent = useScrollableParent()
         return useScrollProgress({
           ref: scrollableParent.props.ref,
+          direction,
         })
       })
     })

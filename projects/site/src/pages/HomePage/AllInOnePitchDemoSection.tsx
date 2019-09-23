@@ -205,7 +205,7 @@ export default memo(() => {
                 <PillButtonDark>Export</PillButtonDark>
                 <Space />
                 <CenterText>
-                  Install <Inline color="#F14336">{elements[index].afterName}</Inline>, use it's
+                  Install <Inline color="#F14336">{elements[index].afterName}</Inline>, use its
                   simple API to send your results out.
                 </CenterText>
               </FadeInView>

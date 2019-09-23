@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 /**
  * Demo app: Grid + API. Some notes:
  *
- *   1. You'll need to install the app `slack` via the app store so this can use it's API.
+ *   1. You'll need to install the app `slack` via the app store so this can use its API.
  *     - You can also install it with `orbit install slack`
  *
  */

@@ -229,50 +229,22 @@ export function TestUIParallax() {
         width={100}
         height={100}
         parallaxAnimate={geometry => {
-          const centerPoints = [0.2, 0.8]
+          const centerPoints = [0, 0.2, 0.8, 1]
           return {
             y: geometry
-              .useParallaxIntersection({ speed: 1, offset: 0 })
-              .transform([0, ...centerPoints, 1], [-0.5, 0.2, 0.8, 1.4])
-              .transform(x => {
-                if (index === 0 && x < 1) return 1
-                return x
-              })
+              .useParallaxIntersection({ speed: 1, offset: 0.5 })
+              // .transform([0, 1], [0, 3])
+              .transform([-2, 0, 0.2, 0.8, 1, 2], [-2, 0.1, 0.2, 0.8, 1, 3])
               .transform(geometry.scrollTransform)
               .spring(index === 2 ? { stiffness: 70, damping: 10 } : false),
             opacity: geometry
               .useParallaxIntersection({ speed: 1, offset: 0, clamp: true })
-              .transform([0, ...centerPoints, 1], [0, 1, 1, 0])
+              .transform(centerPoints, [0, 1, 1, 0])
               .transform(x => {
                 return 1
                 if (index === 0 && x < 1) return 1
                 return x
               }),
-          }
-        }}
-      >
-        {index}
-      </Parallax.View>
-      <Parallax.View
-        x={200}
-        position="absolute"
-        background="white"
-        borderRadius={100}
-        top={0}
-        left={20}
-        width={100}
-        height={100}
-        parallaxAnimate={geometry => {
-          const centerPoints = [0.2, 0.8]
-          return {
-            y: geometry
-              .useParallaxIntersection({ speed: 1, offset: 0 })
-              .transform([0, ...centerPoints, 1], [-1, 0.2, 0.8, 2])
-              .transform(geometry.scrollTransform)
-              .spring(index === 2 ? { stiffness: 70, damping: 10 } : false),
-            opacity: geometry
-              .useParallaxIntersection({ speed: 1, offset: 0, clamp: true })
-              .transform([0, ...centerPoints, 1], [0, 1, 1, 0]),
           }
         }}
       >

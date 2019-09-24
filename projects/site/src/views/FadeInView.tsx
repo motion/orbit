@@ -2,8 +2,6 @@ import { createStoreContext } from '@o/kit'
 import { MotionProps, useIntersectionObserver, useParallaxContainer, View, ViewProps } from '@o/ui'
 import React, { memo, useCallback, useRef, useState } from 'react'
 
-import { Page } from './Page'
-
 export type FadeInProps = ViewProps & {
   delay?: number
   intersection?: IntersectionObserverInit['rootMargin']
@@ -186,53 +184,15 @@ export const FadeInView = memo(
     }
 
     return (
-      <Page.ParallaxView
+      <View
         data-is="FadeChild"
-        // style={style}
-        // animate={shown ? animate : undefined}
-        // transition={finalTransition}
-
-        parallaxAnimate={geometry => {
-          const centerPoints = [0.2, 0.8]
-          return {
-            y: geometry
-              .useParallaxIntersection({ speed: 1, offset: 0, align: 'start' })
-              .transform([0, ...centerPoints, 1], [-0.5, 0.2, 0.8, 1.4])
-              .transform(geometry.scrollTransform),
-            opacity: geometry
-              .useParallaxIntersection({
-                speed: 1,
-                offset: 0,
-                clamp: true,
-                align: 'start',
-              })
-              .transform([0, ...centerPoints, 1], [0, 1, 1, 0])
-              .transform(x => {
-                if (min && x < min) return min
-                if (max && x > max) return max
-                return x
-              }),
-          }
-        }}
-        // parallaxAnimate={geometry => ({
-        //   y: geometry
-        //       .useParallaxIntersection({ speed: 1, offset: 0, align: 'start' })
-        //       .transform([0, ...centerPoints, 1], [-0.5, 0.5, 0.6, 1.4])
-        //       .transform(geometry.scrollTransform),
-        //     opacity: geometry
-        //       .useParallaxIntersection({ speed: 1, offset: 0, clamp: true, align: 'start' })
-        //       .transform([0, ...centerPoints, 1], [0, 1, 1, 0]),
-
-        //   y: geometry
-        //     .useParallaxIntersection({ speed: 1, offset: 0, clamp: true })
-        //     .transform(geometry.scrollTransform),
-        //   opacity: geometry.useParallaxIntersection({ speed: 1, offset: 0, min, max, clamp: true }),
-        //   // .transform([-1, 0.5, 0.5, 1], [0, 1, 1, -1]),
-        // })}
+        style={style}
+        animate={shown ? animate : undefined}
+        transition={finalTransition}
         {...rest}
       >
         {children}
-      </Page.ParallaxView>
+      </View>
     )
   },
 )

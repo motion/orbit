@@ -1,4 +1,4 @@
-import { Editor } from '@o/kit'
+import { Editor } from '@o/editor'
 import { Col } from '@o/ui'
 import React from 'react'
 

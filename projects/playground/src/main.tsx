@@ -1,7 +1,8 @@
 import '../public/testBase.css'
 
-import { configureUseStore, themes } from '@o/kit'
+import { themes } from '@o/kit'
 import { ProvideUI } from '@o/ui'
+import { configureUseStore } from '@o/use-store'
 import ReactDOM from 'react-dom'
 
 const React = require('react')

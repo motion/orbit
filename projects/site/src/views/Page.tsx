@@ -39,7 +39,7 @@ Page.ParallaxView = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) =
       {...mediaStyles.hiddenWhen.xs}
       speed={0.2}
       style={{
-        pointerEvents: 'none',
+        // pointerEvents: 'none',
         zIndex: +parallax.zIndex + (+zIndex || 0) + 1,
         overflow: selectDefined(overflow, parallax.overflow),
         ...style,

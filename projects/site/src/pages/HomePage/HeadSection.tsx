@@ -137,9 +137,7 @@ export function HeadSection() {
         >
           <HeadTextSection />
         </Col>
-        <Page.ParallaxView
-          speed={-0.05}
-          offset={0}
+        <View
           className="app-screenshot"
           position="relative"
           height={500}
@@ -167,7 +165,7 @@ export function HeadSection() {
               />
             </View>
           </FadeInView>
-        </Page.ParallaxView>
+        </View>
       </Col>
       <View
         zIndex={100}

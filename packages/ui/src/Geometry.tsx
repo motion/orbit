@@ -1,10 +1,9 @@
-import { decorate, useForceUpdate, useStore } from '@o/use-store'
+import { decorate, useStore } from '@o/use-store'
 import { MotionValue, useSpring, useTransform, useViewportScroll } from 'framer-motion'
 import { SpringProps } from 'popmotion'
 import React from 'react'
 import { RefObject, useCallback, useContext, useEffect, useRef } from 'react'
 
-import { useOnHotReload } from './hooks/useOnHotReload'
 import { useRelative } from './hooks/useRelative'
 import { useScrollProgress } from './hooks/useScrollProgress'
 import { useScrollableParent } from './View/ScrollableParentStore'
@@ -200,13 +199,6 @@ export function useGeometry<A extends GeometryStore>(
 ) {
   const ref = useRef()
   const geometry = useStore(GeometryConstructor, { ref, ...geometryProps }, { react: false })
-  const update = useForceUpdate()
-
-  useOnHotReload(() => {
-    console.log('hmr')
-    geometry.clear()
-    update()
-  })
 
   geometry.beforeRenderChildren()
   const children = getChildren(geometry, ref)

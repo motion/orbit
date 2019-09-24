@@ -1,5 +1,4 @@
-import { Button, CardSimple, Col, Geometry, Parallax, Row, View } from '@o/ui'
-import { motion, useAnimation, useMotionValue, useSpring } from 'framer-motion'
+import { Button, CardSimple, Col, Parallax, Title, View } from '@o/ui'
 import _ from 'lodash'
 import * as React from 'react'
 
@@ -17,159 +16,13 @@ export function TestUI() {
   )
 }
 
-function TestMediaQueries() {
+export function TestMediaQueries() {
   return <View sm-background="red" background="green" width={100} height={100} />
 }
 
-const variants = {
-  visible: i => ({
-    scale: i * 1,
-    rotateY: i * 10,
-  }),
-}
-
-export function TestUIAnimation() {
-  const animation = useAnimation()
-
-  React.useEffect(() => {
-    setTimeout(() => {
-      animation.set({
-        opacity: 1,
-      })
-    }, 500)
-  }, [])
-
-  return [1, 2, 3].map(x => (
-    <motion.div
-      key={x}
-      custom={x}
-      animate={animation}
-      variants={variants}
-      style={{
-        width: 100,
-        height: 100,
-        margin: 10,
-        background: 'green',
-      }}
-    />
-  ))
-}
-
-export function TestUIMotion() {
-  const rowRef = React.useRef(null)
-  const val = useMotionValue(0)
-  const spring = useSpring(val, { damping: 50, stiffness: 250 })
-  const state = React.useRef({
-    controlled: false,
-    wheelTm: null,
-    dragStart: 0,
-  })
-
-  const set = React.useCallback((next: number) => {
-    rowRef.current.style.scrollSnapType = 'initial'
-    state.current.controlled = true
-    val.set(next)
-  }, [])
-
-  const setUncontrolled = React.useCallback(() => {
-    state.current.controlled = false
-    spring.stop()
-    rowRef.current.style.scrollSnapType = 'x mandatory'
-  }, [])
-
-  const pctSquish = 0.6
-
-  React.useEffect(() => {
-    spring.onChange(val => {
-      if (state.current.controlled) {
-        rowRef.current.scrollLeft = val * (1 - pctSquish) * window.innerWidth
-      }
-    })
-  }, [])
-
-  return (
-    <Col>
-      <Row group>
-        <Button onClick={() => set(1)}>1</Button>
-        <Button onClick={() => set(2)}>2</Button>
-        <Button onClick={() => set(3)}>3</Button>
-        <Button onClick={() => set(4)}>4</Button>
-        <Button onClick={() => set(5)}>5</Button>
-      </Row>
-      {/* floating drag handler */}
-      <View
-        position="absolute"
-        top={0}
-        left={0}
-        right={0}
-        bottom={0}
-        zIndex={-2}
-        drag="x"
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={1}
-        onWheel={e => {
-          clearTimeout(state.current.wheelTm)
-          const xDelta = e.deltaX
-          const index =
-            rowRef.current.scrollLeft / window.innerWidth + (xDelta / window.innerWidth) * 12
-          set(index)
-          state.current.wheelTm = setTimeout(() => {
-            setUncontrolled()
-          }, 50)
-        }}
-        onDrag={(_, pan) => {
-          const xAmt = pan.offset.x
-          const indexDiff = -xAmt / window.innerWidth
-          const extraSpeed = indexDiff * 1.05
-          const index = state.current.dragStart + indexDiff + extraSpeed
-          set(index)
-        }}
-        onDragStart={() => {
-          state.current.dragStart = rowRef.current.scrollLeft / window.innerWidth
-        }}
-        onAnimationComplete={() => {
-          console.warn('done')
-          setUncontrolled()
-        }}
-      />
-      <Row
-        flex={1}
-        position="relative"
-        zIndex={1}
-        perspective="1200px"
-        scrollable="x"
-        scrollSnapType="x mandatory"
-        scrollSnapPointsX="repeat(100%)"
-        nodeRef={rowRef}
-        onWheel={setUncontrolled}
-      >
-        {[0, 1, 2, 3, 4, 5, 6].map(index => (
-          <Geometry key={index}>
-            {(geometry, ref) => (
-              <View nodeRef={ref} scrollSnapAlign="center" marginRight={`${-pctSquish * 100}%`}>
-                <View
-                  width="100vw"
-                  height="92vh"
-                  background="green"
-                  boxShadow="0 0 10px rgba(0,0,0,0.5)"
-                  zIndex={geometry.scrollIntersection().transform(x => 1 - Math.abs(x))}
-                  rotateY={geometry
-                    .scrollIntersection()
-                    .transform([-1, 1], [50, -50])
-                    .spring({ stiffness: 500, damping: 10 })}
-                  opacity={geometry.scrollIntersection().transform([-1, 1], [0, 2])}
-                  transformOrigin="center center"
-                  animate={{
-                    scale: 0.7,
-                  }}
-                />
-              </View>
-            )}
-          </Geometry>
-        ))}
-      </Row>
-    </Col>
-  )
+const logPass = x => {
+  console.log(x)
+  return x
 }
 
 export function TestUIParallax() {
@@ -178,37 +31,10 @@ export function TestUIParallax() {
   const views = index => (
     <>
       <Parallax.View
-        offset={0.3}
-        speed={0.3}
-        x={100}
-        position="absolute"
-        background="yellow"
-        top={0}
-        left={20}
-        width={80}
-        height={80}
-        clamp
-      >
-        offset 0.3 speed 0.3 index {index}
-      </Parallax.View>
-      <Parallax.View
-        offset={0.25}
-        speed={1}
-        x={180}
-        position="absolute"
-        background="yellow"
-        top={0}
-        left={20}
-        width={80}
-        height={80}
-        clamp
-      >
-        offset 0.25 speed 1 index {index}
-      </Parallax.View>
-      <Parallax.View
         offset={0}
         speed={1}
-        x={260}
+        align="center"
+        x={100}
         position="absolute"
         background="yellow"
         top={0}
@@ -220,72 +46,66 @@ export function TestUIParallax() {
         offset 0 speed 1 index {index}
       </Parallax.View>
       <Parallax.View
-        x={200}
+        offset={0.75}
+        speed={0.25}
+        x={180}
         position="absolute"
-        background="white"
-        borderRadius={100}
+        background="yellow"
         top={0}
         left={20}
-        width={100}
-        height={100}
-        parallaxAnimate={geometry => {
-          const centerPoints = [0, 0.2, 0.8, 1]
-          return {
-            y: geometry
-              .useParallaxIntersection({ speed: 1, offset: 0.5 })
-              // .transform([0, 1], [0, 3])
-              .transform([-2, 0, 0.2, 0.8, 1, 2], [-2, 0.1, 0.2, 0.8, 1, 3])
-              .transform(geometry.scrollTransform)
-              .spring(index === 2 ? { stiffness: 70, damping: 10 } : false),
-            opacity: geometry
-              .useParallaxIntersection({ speed: 1, offset: 0, clamp: true })
-              .transform(centerPoints, [0, 1, 1, 0])
-              .transform(x => {
-                return 1
-                if (index === 0 && x < 1) return 1
-                return x
-              }),
-          }
-        }}
+        width={80}
+        height={80}
+        clamp
       >
-        {index}
+        offset 0.75 speed 0.25 index {index}
+      </Parallax.View>
+      <Parallax.View
+        offset={0}
+        speed={0.25}
+        // swing={2}
+        // clamp={[-2, 2]}
+        x={260}
+        position="absolute"
+        background="yellow"
+        top={0}
+        left={20}
+        width={80}
+        height={80}
+      >
+        offset 0 speed 0.25 index {index}
       </Parallax.View>
       <Parallax.View
         x={200}
         position="absolute"
-        background="grey"
-        borderRadius={100}
-        top={0}
-        left={0}
-        width={20}
-        height={20}
+        top="50%"
+        left={20}
+        key={4}
         parallaxAnimate={geometry => {
           return {
             y: geometry
-              .useParallaxIntersection({ speed: 1, offset: 0, align: 'start' })
-              .transform(geometry.scrollTransform),
-            opacity: geometry.useParallaxIntersection({
-              speed: 1,
-              offset: 0,
-              clamp: true,
-              align: 'start',
-            }),
+              .useParallaxIntersection({ speed: 3, offset: 0.5, clamp: [-1, 1.5] })
+              .transform([-1, -0.4, 0, 1, 1.4, 1.5], [-1, -0.1, 0, 0.1, 0.2, 0.8])
+              .transform(geometry.transforms.scrollParent),
+
+            opacity: geometry
+              .useParallaxIntersection({ speed: 3, offset: 0.5, clamp: [-1, 1.5] })
+              .transform([-1, -0.4, 0, 1, 1.4, 1.5], [-1, 1, 1, 1, 1, 0.8]),
           }
         }}
       >
-        {index}
+        <Title>Hello {index}</Title>
       </Parallax.View>
       <Parallax.View
         offset={0.5}
         speed={2}
         x={0}
         position="absolute"
-        background="purple"
+        background="darkred"
         top={0}
         left={0}
-        width={100}
-        height={100}
-        clamp
+        width={80}
+        height={40}
+        clamp={[-0.5, 1.5]}
       >
         offset 0.5 speed 2
       </Parallax.View>
@@ -319,7 +139,7 @@ export function TestUIParallax() {
           opacity: geometry.useParallaxIntersection(),
         })}
       >
-        offset 0.5 speed 2
+        opacity
       </Parallax.View>
 
       <Parallax.View
@@ -342,23 +162,75 @@ export function TestUIParallax() {
 
   return (
     <>
-      <Parallax.Container height="100vh" overflow="hidden" background="orange">
-        {views(0)}
+      <Parallax.Container overflow="hidden" height="100vh" background="lightgreen">
+        {/* {views(0)} */}
       </Parallax.Container>
-      <Parallax.Container height="100vh" overflow="hidden" background="red">
+      <Parallax.Container overflow="hidden" height="50vh" background="indigo">
         {views(1)}
       </Parallax.Container>
-      <Parallax.Container height="100vh" overflow="hidden" background="lightgreen">
-        {views(2)}
+      {/* <Parallax.Container height="80vh" background="orange" position="relative" zIndex={100}>
+        <Col margin="auto" space="xl">
+          <Parallax.View
+            parallaxAnimate={geometry => {
+              return {
+                y: geometry
+                  .useParallaxIntersection({
+                    speed: 0.25,
+                    relativeTo: 'node',
+                    clamp: true,
+                  })
+                  .transform(logPass)
+                  .transform([0, 0.2, 0.21, 0.79, 0.8, 1], [-2, 0.2, 0.21, 0.79, 0.8, 3])
+                  .transform(x => x * 50),
+                opacity: geometry
+                  .useParallaxIntersection({
+                    speed: 0.25,
+                    relativeTo: 'node',
+                    clamp: true,
+                  })
+                  .transform([0, 0.2, 0.21, 0.79, 0.8, 1], [0, 0.5, 1, 1, 0.5, 0]),
+              }
+            }}
+          >
+            <Title color="yellow">Hello World</Title>
+          </Parallax.View>
+          <Parallax.View
+            height={400}
+            width={400}
+            background="black"
+            parallaxAnimate={geometry => {
+              return {
+                y: geometry
+                  .useParallaxIntersection({
+                    speed: 0.25,
+                    relativeTo: 'node',
+                    clamp: [-2, 1],
+                  })
+                  .transform([0, 0.2, 0.21, 0.79, 0.8, 1], [-2, 0.2, 0.21, 0.79, 0.8, 3])
+                  .transform(x => x * 20),
+                opacity: geometry
+                  .useParallaxIntersection({
+                    speed: 0.25,
+                    relativeTo: 'node',
+                    clamp: true,
+                  })
+                  .transform([0, 0.2, 0.21, 0.79, 0.8, 1], [0, 0.5, 1, 1, 0.5, 0]),
+              }
+            }}
+          />
+        </Col>
+      </Parallax.Container> */}
+      <Parallax.Container overflow="hidden" height="50vh" background="lightgreen">
+        {/* {views(2)} */}
       </Parallax.Container>
-      <Parallax.Container height="100vh" overflow="hidden" background="lightpink">
-        {views(3)}
+      <Parallax.Container overflow="hidden" height="60vh" background="lightpink">
+        {/* {views(3)} */}
       </Parallax.Container>
-      <Parallax.Container height="100vh" overflow="hidden" background="lightblue">
-        {views(4)}
+      <Parallax.Container overflow="hidden" height="60vh" background="lightblue">
+        {/* {views(4)} */}
       </Parallax.Container>
-      <Parallax.Container height="100vh" overflow="hidden" background="lightgrey">
-        {views(5)}
+      <Parallax.Container overflow="hidden" height="60vh" background="lightgrey">
+        {/* {views(5)} */}
       </Parallax.Container>
     </>
   )

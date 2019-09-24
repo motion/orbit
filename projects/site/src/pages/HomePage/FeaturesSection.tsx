@@ -2,8 +2,9 @@ import { Col, Grid, Image, Row, Space, useNodeSize, View } from '@o/ui'
 import { flatMap } from 'lodash'
 import React, { memo, useRef, useState } from 'react'
 
-import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
+import { useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
+import { ParallaxStageItem } from '../../views/ParallaxStage'
 import { PillButtonDark } from '../../views/PillButtonDark'
 import { TitleText } from '../../views/TitleText'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
@@ -162,14 +163,14 @@ export default memo(() => {
       >
         <Col padding="lg" flex={2}>
           <View flex={1}>
-            <FadeInView delayIndex={1}>
+            <ParallaxStageItem>
               <TitleText alignItems="flex-start" justifyContent="flex-start" size="xxl">
                 The all-in-one
                 <br />
                 data studio
               </TitleText>
-            </FadeInView>
-            <FadeInView delayIndex={1} {...fadeAnimations.up}>
+            </ParallaxStageItem>
+            <ParallaxStageItem>
               <Row space="lg" margin={['4%', 'auto', '8%', 0]}>
                 {sectionNames.map(section => (
                   <React.Fragment key={section}>
@@ -177,9 +178,9 @@ export default memo(() => {
                   </React.Fragment>
                 ))}
               </Row>
-            </FadeInView>
+            </ParallaxStageItem>
           </View>
-          <FadeInView nodeRef={gridContainer} delayIndex={2} {...fadeAnimations.up}>
+          <ParallaxStageItem nodeRef={gridContainer}>
             <Row flexWrap="nowrap">
               {Object.keys(sections).map((section, index) => {
                 return (
@@ -231,7 +232,7 @@ export default memo(() => {
                 )
               })}
             </Row>
-          </FadeInView>
+          </ParallaxStageItem>
         </Col>
 
         <View flex={0.15} />

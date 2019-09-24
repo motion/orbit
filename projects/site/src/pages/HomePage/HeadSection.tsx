@@ -174,7 +174,7 @@ export function HeadSection() {
         zIndex={100}
         position="absolute"
         left="50%"
-        top="15vh"
+        top="60vh"
         marginLeft={`${-180 / 2}px`}
         width={180}
         alignItems="center"

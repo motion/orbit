@@ -1,5 +1,5 @@
 import { createStoreContext, useReaction } from '@o/use-store'
-import { idFn } from '@o/utils'
+import { idFn, isDefined } from '@o/utils'
 import { MotionValue, useMotionValue } from 'framer-motion'
 import { RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import React from 'react'
@@ -60,12 +60,17 @@ type ParallaxMeasurements = {
   nodeSize: number
   parentSize: number
   parentEndPct: number
+  parentStartPct: number
+  parentCenterPct: number
 }
 
 type ParallaxItemProps = {
   offset?: number
   speed?: number
   clamp?: boolean | 'end' | 'start'
+  min?: number
+  max?: number
+  align?: 'end' | 'start' | 'center'
 }
 
 type ParallaxProps = ParallaxItemProps & {
@@ -81,7 +86,7 @@ type ParallaxGeometryProps = ParallaxProps & {
 
 class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
   useParallaxIntersection(props?: ParallaxItemProps) {
-    const { direction, speed, offset, clamp, version, measurements } = {
+    const { direction, speed, offset, clamp, min, max, version, align, measurements } = {
       ...this.props,
       ...props,
     }
@@ -89,32 +94,32 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
       // just use version to triger update
       [version],
       pagePct => {
-        const { nodeSize, parentSize, parentEndPct } = measurements.current
-        const parentPct = pagePct / parentEndPct
-        const nodePctParent = nodeSize / parentSize
-        let intersection = parentPct + nodePctParent * parentPct
-        if (speed) {
-          intersection *= speed
-        }
-        if (offset) {
-          intersection += offset
-        }
+        if (speed === 0) return 0
+        const { parentEndPct, parentCenterPct, parentStartPct } = measurements.current
+        const divisor = parentEndPct
+        // align === 'end' ? parentEndPct : align === 'center' ? parentCenterPct : parentStartPct
+        let intersection = pagePct / divisor
+        intersection += offset
+        intersection *= speed
         if (clamp) {
-          // console.table({ intersection, parentPct })
-          return Math.max(0, Math.min(intersection, 1))
+          intersection = Math.max(0, Math.min(intersection, 1))
         }
+        if (isDefined(min)) intersection = Math.max(min, intersection)
+        if (isDefined(max)) intersection = Math.max(max, intersection)
         return intersection
       },
     )
   }
 
-  useParallax(props?: ParallaxItemProps) {
+  scrollTransform = (x: number) => {
     const { measurements } = this.props
-    return this.useParallaxIntersection(props).transform(x => {
-      const nodeSize = measurements.current.nodeSize
-      const parentSize = measurements.current.parentSize
-      return x + x * (parentSize - nodeSize)
-    })
+    const nodeSize = measurements.current.nodeSize
+    const parentSize = measurements.current.parentSize
+    return x + x * (parentSize - nodeSize)
+  }
+
+  useParallax(props?: ParallaxItemProps) {
+    return this.useParallaxIntersection(props).transform(this.scrollTransform)
   }
 }
 
@@ -136,6 +141,9 @@ export function ParallaxView(props: ParallaxViewProps) {
     speed = -1,
     direction = 'y',
     clamp = false,
+    min,
+    max,
+    align,
     parallaxAnimate,
     ...viewProps
   } = props
@@ -149,15 +157,22 @@ export function ParallaxView(props: ParallaxViewProps) {
     nodeSize: 0,
     parentSize: 0,
     parentEndPct: 0,
+    parentStartPct: 0,
+    parentCenterPct: 0,
   })
 
   const update = () => {
     const bodySize = document.body[direction === 'y' ? 'clientHeight' : 'clientWidth']
     const windowSize = window[direction === 'y' ? 'innerHeight' : 'innerWidth']
-    state.current.nodeSize = Math.max(1, state.current.nodeMeasurements[sizeKey])
-    state.current.parentSize = Math.max(1, parent[sizeKey])
-    // aim for center
-    state.current.parentEndPct = (parent[offsetKey] + parent[sizeKey]) / (bodySize - windowSize)
+    const measurements = state.current
+    measurements.nodeSize = Math.max(1, measurements.nodeMeasurements[sizeKey])
+    measurements.parentSize = Math.max(1, parent[sizeKey])
+    const bodyPx = bodySize - windowSize
+    const parentBottom = parent[offsetKey] + parent[sizeKey]
+    measurements.parentEndPct = parentBottom / bodyPx
+    measurements.parentStartPct = parent[sizeKey] / bodyPx
+    const parentCenterPx = (parentBottom - parent[offsetKey]) / 2
+    measurements.parentCenterPct = parentCenterPx / bodyPx
     version.set(Math.random())
   }
 
@@ -193,6 +208,9 @@ export function ParallaxView(props: ParallaxViewProps) {
         sizeKey,
         parent,
         measurements: state,
+        min,
+        max,
+        align,
       }}
     >
       {(geometry, gref) => {

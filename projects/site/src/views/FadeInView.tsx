@@ -127,6 +127,8 @@ export type FadeChildProps = ViewProps & {
   disable?: boolean
   fullscreen?: boolean
   reverse?: boolean
+  min?: number
+  max?: number
 }
 
 const initialScreenWidth = window.innerWidth
@@ -142,6 +144,8 @@ export const FadeInView = memo(
     disable,
     fullscreen,
     reverse,
+    min,
+    max,
     display,
     ...rest
   }: FadeChildProps) => {
@@ -187,12 +191,40 @@ export const FadeInView = memo(
         // style={style}
         // animate={shown ? animate : undefined}
         // transition={finalTransition}
-        parallaxAnimate={geometry => ({
-          // y: geometry.useParallax({ offset: 0, speed: 0.5, clamp: true }),
-          opacity: geometry
-            .useParallaxIntersection({ speed: 2, offset: 0 })
-            .transform([-2, -1, 1, 2], [0, 1, 1, -1]),
-        })}
+
+        parallaxAnimate={geometry => {
+          const centerPoints = [0.2, 0.8]
+          return {
+            y: geometry
+              .useParallaxIntersection({ speed: 1, offset: 0, align: 'start' })
+              .transform([0, ...centerPoints, 1], [-0.5, 0.2, 0.8, 1.4])
+              .transform(geometry.scrollTransform),
+            opacity: geometry
+              .useParallaxIntersection({
+                speed: 1,
+                offset: 0,
+                clamp: true,
+                align: 'start',
+              })
+              .transform([0, ...centerPoints, 1], [0, 1, 1, 0])
+              .transform([0, 1], [min || 0, max || 1]),
+          }
+        }}
+        // parallaxAnimate={geometry => ({
+        //   y: geometry
+        //       .useParallaxIntersection({ speed: 1, offset: 0, align: 'start' })
+        //       .transform([0, ...centerPoints, 1], [-0.5, 0.5, 0.6, 1.4])
+        //       .transform(geometry.scrollTransform),
+        //     opacity: geometry
+        //       .useParallaxIntersection({ speed: 1, offset: 0, clamp: true, align: 'start' })
+        //       .transform([0, ...centerPoints, 1], [0, 1, 1, 0]),
+
+        //   y: geometry
+        //     .useParallaxIntersection({ speed: 1, offset: 0, clamp: true })
+        //     .transform(geometry.scrollTransform),
+        //   opacity: geometry.useParallaxIntersection({ speed: 1, offset: 0, min, max, clamp: true }),
+        //   // .transform([-1, 0.5, 0.5, 1], [0, 1, 1, -1]),
+        // })}
         {...rest}
       >
         {children}

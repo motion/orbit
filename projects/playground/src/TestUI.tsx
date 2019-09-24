@@ -174,138 +174,126 @@ export function TestUIMotion() {
 
 export function TestUIParallax() {
   console.log('render me')
+
+  const views = (
+    <>
+      <Parallax.View
+        offset={0.5}
+        speed={0.5}
+        x={100}
+        position="absolute"
+        background="yellow"
+        top={0}
+        left={20}
+        width={100}
+        height={100}
+        clamp
+      >
+        offset 0.5 speed 0.5
+      </Parallax.View>
+      <Parallax.View
+        x={200}
+        position="absolute"
+        background="white"
+        borderRadius={100}
+        top={0}
+        left={20}
+        width={100}
+        height={100}
+        parallaxAnimate={geometry => {
+          const centerPoints = [0.2, 0.8]
+          return {
+            y: geometry
+              .useParallaxIntersection({ speed: 1, offset: 0, align: 'start' })
+              .transform([0, ...centerPoints, 1], [-0.5, 0.2, 0.8, 1.4])
+              .transform(geometry.scrollTransform),
+            opacity: geometry
+              .useParallaxIntersection({ speed: 1, offset: 0, clamp: true, align: 'start' })
+              .transform([0, ...centerPoints, 1], [0, 1, 1, 0]),
+          }
+        }}
+      >
+        offset 0 speed 1
+      </Parallax.View>
+      <Parallax.View
+        offset={0.5}
+        speed={2}
+        x={0}
+        position="absolute"
+        background="purple"
+        top={0}
+        left={0}
+        width={100}
+        height={100}
+        clamp
+      >
+        offset 0.5 speed 2
+      </Parallax.View>
+
+      <Parallax.View
+        position="absolute"
+        background="red"
+        top="calc(100% - 100px)"
+        left={220}
+        width={100}
+        height={100}
+        parallaxAnimate={geometry => ({
+          opacity: geometry
+            .useParallaxIntersection({ speed: 1, offset: 0 })
+            .transform([-1, 0.5, 0.5, 1], [0, 1, 1, -1]),
+        })}
+      >
+        opacity in/out
+      </Parallax.View>
+
+      <Parallax.View
+        speed={2}
+        offset={0.5}
+        position="absolute"
+        background="blue"
+        top="calc(100% - 100px)"
+        left={320}
+        width={100}
+        height={100}
+        parallaxAnimate={geometry => ({
+          opacity: geometry.useParallaxIntersection(),
+        })}
+      >
+        offset 0.5 speed 2
+      </Parallax.View>
+
+      <Parallax.View
+        speed={1}
+        offset={0}
+        position="absolute"
+        background="blue"
+        top="calc(100% - 100px)"
+        left={420}
+        width={100}
+        height={100}
+        parallaxAnimate={geometry => ({
+          opacity: geometry.useParallaxIntersection(),
+        })}
+      >
+        offset 0 speed 1
+      </Parallax.View>
+    </>
+  )
+
   return (
     <>
       <Parallax.Container height="50vh" background="orange">
-        <Parallax.View
-          offset={0.5}
-          speed={0.5}
-          x={100}
-          position="absolute"
-          background="yellow"
-          top={0}
-          left={20}
-          width={100}
-          height={100}
-        >
-          offset 0.5 speed 0.5
-        </Parallax.View>
-        <Parallax.View
-          offset={0}
-          speed={1}
-          x={200}
-          position="absolute"
-          background="yellow"
-          top={0}
-          left={20}
-          width={100}
-          height={100}
-        >
-          offset 0 speed 1
-        </Parallax.View>
-        <Parallax.View
-          offset={0.5}
-          speed={2}
-          x={200}
-          position="absolute"
-          background="yellow"
-          top={0}
-          left={120}
-          width={100}
-          height={100}
-          clamp
-        >
-          offset 0.5 speed 2
-        </Parallax.View>
-
-        <Parallax.View
-          position="absolute"
-          background="red"
-          top="calc(100% - 100px)"
-          left={220}
-          width={100}
-          height={100}
-          parallaxAnimate={geometry => ({
-            opacity: geometry
-              .useParallaxIntersection({ speed: 2, offset: 0 })
-              .transform([0, 1, 2], [0, 1, 0]),
-          })}
-        >
-          offset 0.5 speed 0.5
-        </Parallax.View>
-
-        <Parallax.View
-          speed={2}
-          offset={0.5}
-          position="absolute"
-          background="blue"
-          top="calc(100% - 100px)"
-          left={320}
-          width={100}
-          height={100}
-          parallaxAnimate={geometry => ({
-            opacity: geometry.useParallaxIntersection(),
-          })}
-        >
-          offset 0.5 speed 2
-        </Parallax.View>
-
-        <Parallax.View
-          speed={1}
-          offset={0}
-          position="absolute"
-          background="blue"
-          top="calc(100% - 100px)"
-          left={420}
-          width={100}
-          height={100}
-          parallaxAnimate={geometry => ({
-            opacity: geometry.useParallaxIntersection(),
-          })}
-        >
-          offset 0 speed 1
-        </Parallax.View>
+        {views}
       </Parallax.Container>
       <Parallax.Container height="50vh" background="red">
-        <Parallax.View
-          position="absolute"
-          background="pink"
-          speed={1}
-          offset={-1}
-          top={0}
-          left={20}
-          width={100}
-          height={100}
-        />
-
-        <Parallax.View
-          speed={1}
-          position="absolute"
-          background="orange"
-          top={0}
-          left={120}
-          width={100}
-          height={100}
-          parallaxAnimate={geometry => ({
-            opacity: geometry.useParallaxIntersection(),
-          })}
-        />
-
-        <Parallax.View
-          position="absolute"
-          background="green"
-          top="50%"
-          left={100}
-          width={100}
-          height={100}
-          parallaxAnimate={geometry => ({
-            opacity: geometry
-              .useParallaxIntersection({ speed: 2, offset: 0 })
-              .transform([0, 1, 2], [0, 1, 0]),
-          })}
-        />
+        {views}
       </Parallax.Container>
-      <Parallax.Container height="100vh" background="lightgreen" />
+      <Parallax.Container height="100vh" background="lightgreen">
+        {views}
+      </Parallax.Container>
+      <Parallax.Container height="100vh" background="lightpink">
+        {views}
+      </Parallax.Container>
     </>
   )
 }

@@ -189,6 +189,8 @@ export type GeometryRenderer<A extends GeometryStore> = (
   ref: RefObject<HTMLElement>,
 ) => React.ReactNode
 
+// 123
+
 export function useGeometry<A extends GeometryStore>(
   getChildren: GeometryRenderer<A>,
   GeometryConstructor: { new (...args: any): A },
@@ -196,12 +198,10 @@ export function useGeometry<A extends GeometryStore>(
 ) {
   const ref = useRef()
   const geometry = useStore(GeometryConstructor, { ref, ...geometryProps }, { react: false })
-  if (geometryProps.clamp) {
-    console.warn('hi', geometry, geometryProps)
-  }
   const update = useForceUpdate()
 
   useOnHotReload(() => {
+    console.log('hmr')
     geometry.clear()
     update()
   })

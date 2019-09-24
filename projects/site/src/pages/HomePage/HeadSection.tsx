@@ -77,6 +77,7 @@ export function HeadSection() {
       <Page.BackgroundParallax
         speed={-0.35}
         offset={-1}
+        min={1}
         zIndex={-1}
         opacity={0.5}
         scale={1.5}
@@ -147,7 +148,7 @@ export function HeadSection() {
           userSelect="none"
           zIndex={-1}
         >
-          <FadeInView {...animation.screen}>
+          <FadeInView min={1} {...animation.screen}>
             <View
               transform={{
                 perspective: 10000,
@@ -168,9 +169,7 @@ export function HeadSection() {
           </FadeInView>
         </Page.ParallaxView>
       </Col>
-      <Page.ParallaxView
-        speed={0.1}
-        offset={0.5}
+      <View
         zIndex={100}
         position="absolute"
         left="50%"
@@ -180,7 +179,13 @@ export function HeadSection() {
         alignItems="center"
         justifyContent="center"
       >
-        <FadeInView {...animation.watch} flex={1} alignItems="inherit" justifyContent="inherit">
+        <FadeInView
+          min={1}
+          {...animation.watch}
+          flex={1}
+          alignItems="inherit"
+          justifyContent="inherit"
+        >
           <View
             animate
             transformOrigin="center center"
@@ -223,7 +228,7 @@ export function HeadSection() {
             <SimpleText>Watch the demo</SimpleText>
           </View>
         </FadeInView>
-      </Page.ParallaxView>
+      </View>
     </Fade.FadeProvide>
   )
 }
@@ -269,7 +274,7 @@ const HeadTextSection = memo(() => {
             whiteSpace="nowrap"
             maxHeight={160}
           >
-            <FadeInView {...animation.blog} disable={!measured}>
+            <FadeInView min={1} {...animation.blog} disable={!measured}>
               <Tag
                 size={0.85}
                 sizeHeight={1.01}
@@ -291,19 +296,19 @@ const HeadTextSection = memo(() => {
                 Orbit enters private beta!
               </Tag>
             </FadeInView>
-            <FadeInView disable={!measured} {...animation.title} {...fontProps.TitleFont}>
+            <FadeInView min={1} disable={!measured} {...animation.title} {...fontProps.TitleFont}>
               Amazing internal tools
             </FadeInView>
           </TextFitTitle>
           {br}
-          <FadeInView {...animation.sub1} minHeight="min-content">
+          <FadeInView min={1} {...animation.sub1} minHeight="min-content">
             <TitleParagraph {...para}>
               {/* first line */}Create internal tools you'd never have attempted before.
             </TitleParagraph>
           </FadeInView>
           <span style={{ userSelect: 'none' }}>&nbsp;</span>
           <View sm-display="none">
-            <FadeInView {...animation.sub2} minHeight="min-content">
+            <FadeInView min={1} {...animation.sub2} minHeight="min-content">
               <TitleParagraph {...para}>
                 {/* second line */}
                 The all-in-one data & app studio for teams.
@@ -329,7 +334,7 @@ const HeadTextSection = memo(() => {
 const HeadJoin = memo(() => {
   return (
     <View flex={1} width="100%" alignItems="center">
-      <FadeInView {...fadeAnimations.up} delay={500}>
+      <FadeInView min={1} {...fadeAnimations.up} delay={500}>
         <SurfacePassProps elevation={5} {...fontProps.TitleFont}>
           <Theme name="orbitOneDark">
             <Scale size={useScreenVal(1, 1.1, 1.2)}>

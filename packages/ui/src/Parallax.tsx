@@ -59,6 +59,7 @@ type ParallaxMeasurements = {
   nodeMeasurements: { width: number; height: number }
   nodeSize: number
   parentSize: number
+  parentEndPct: number
 }
 
 type ParallaxItemProps = {
@@ -73,22 +74,24 @@ type ParallaxProps = ParallaxItemProps & {
 
 type ParallaxGeometryProps = ParallaxProps & {
   sizeKey: string
-  parentEndPct: MotionValue<number>
+  version: MotionValue<number>
   parent: ParallaxContainerStore
   measurements: RefObject<ParallaxMeasurements>
 }
 
 class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
   useParallaxIntersection(props?: ParallaxItemProps) {
-    const { direction, speed, offset, clamp, parentEndPct, measurements } = {
+    const { direction, speed, offset, clamp, version, measurements } = {
       ...this.props,
       ...props,
     }
     return this.useViewportScroll(direction === 'x' ? 'xProgress' : 'yProgress').mergeTransform(
-      [parentEndPct],
-      (pagePct, parentEndPctVal) => {
-        const parentPct = pagePct / parentEndPctVal
-        const nodePctParent = measurements.current.nodeSize / measurements.current.parentSize
+      // just use version to triger update
+      [version],
+      pagePct => {
+        const { nodeSize, parentSize, parentEndPct } = measurements.current
+        const parentPct = pagePct / parentEndPct
+        const nodePctParent = nodeSize / parentSize
         let intersection = parentPct + nodePctParent * parentPct
         if (speed) {
           intersection *= speed
@@ -97,7 +100,7 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
           intersection += offset
         }
         if (clamp) {
-          console.table({ intersection, parentPct })
+          // console.table({ intersection, parentPct })
           return Math.max(0, Math.min(intersection, 1))
         }
         return intersection
@@ -140,21 +143,22 @@ export function ParallaxView(props: ParallaxViewProps) {
   const parent = useParallaxContainer({ react: false })
   const offsetKey = direction === 'y' ? 'top' : 'left'
   const sizeKey = direction === 'y' ? 'height' : 'width'
-  const parentEndPct = useMotionValue(0)
+  const version = useMotionValue(0)
   const state = useRef<ParallaxMeasurements>({
     nodeMeasurements: { width: 0, height: 0 },
     nodeSize: 0,
     parentSize: 0,
+    parentEndPct: 0,
   })
 
   const update = () => {
-    state.current.nodeSize = Math.max(1, state.current.nodeMeasurements[sizeKey])
-    state.current.parentSize = Math.max(1, parent[sizeKey])
     const bodySize = document.body[direction === 'y' ? 'clientHeight' : 'clientWidth']
     const windowSize = window[direction === 'y' ? 'innerHeight' : 'innerWidth']
-    // aim for center like scrollProgress
-    const parentOffset = (parent[offsetKey] + parent[sizeKey]) / (bodySize - windowSize)
-    parentEndPct.set(parentOffset)
+    state.current.nodeSize = Math.max(1, state.current.nodeMeasurements[sizeKey])
+    state.current.parentSize = Math.max(1, parent[sizeKey])
+    // aim for center
+    state.current.parentEndPct = (parent[offsetKey] + parent[sizeKey]) / (bodySize - windowSize)
+    version.set(Math.random())
   }
 
   useReaction(
@@ -170,6 +174,9 @@ export function ParallaxView(props: ParallaxViewProps) {
     ref,
     throttle: 150,
     onChange({ width, height }) {
+      if (clamp) {
+        console.log('ok?', width, height)
+      }
       state.current.nodeMeasurements = { width, height }
       update()
     },
@@ -182,7 +189,7 @@ export function ParallaxView(props: ParallaxViewProps) {
         speed,
         offset,
         clamp,
-        parentEndPct,
+        version,
         sizeKey,
         parent,
         measurements: state,

@@ -213,6 +213,7 @@ export function TestUIParallax() {
           left={120}
           width={100}
           height={100}
+          clamp
         >
           offset 0.5 speed 2
         </Parallax.View>
@@ -268,7 +269,9 @@ export function TestUIParallax() {
       <Parallax.Container height="50vh" background="red">
         <Parallax.View
           position="absolute"
-          background="yellow"
+          background="pink"
+          speed={1}
+          offset={-1}
           top={0}
           left={20}
           width={100}

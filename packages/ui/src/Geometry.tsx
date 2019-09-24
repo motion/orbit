@@ -9,6 +9,7 @@ import { useRelative } from './hooks/useRelative'
 import { useScrollProgress } from './hooks/useScrollProgress'
 import { useScrollableParent } from './View/ScrollableParentStore'
 
+//1
 // @ts-ignore
 @decorate
 class HooksStore<T> {
@@ -44,7 +45,8 @@ export class AnimationStore {
     return this
   }
 
-  spring(props: SpringProps) {
+  spring(props: SpringProps | false) {
+    if (!props) return this
     if (this.frozen) return this
     this.animationHooks.addHook(hooksValues => {
       const lastHookVal = hooksValues[hooksValues.length - 1]

@@ -61,7 +61,6 @@ type ParallaxMeasurements = {
   parentSize: number
   parentEndPct: number
   parentStartPct: number
-  parentCenterPct: number
 }
 
 type ParallaxItemProps = {
@@ -95,17 +94,16 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
       [version],
       pagePct => {
         if (speed === 0) return 0
-        const { parentEndPct, parentCenterPct, parentStartPct } = measurements.current
-        const divisor = parentEndPct
-        // align === 'end' ? parentEndPct : align === 'center' ? parentCenterPct : parentStartPct
-        let intersection = pagePct / divisor
+        const { parentEndPct, parentStartPct } = measurements.current
+        let intersection = pagePct / parentStartPct
         intersection += offset
-        intersection *= speed
+        intersection += speed * intersection
         if (clamp) {
           intersection = Math.max(0, Math.min(intersection, 1))
         }
         if (isDefined(min)) intersection = Math.max(min, intersection)
         if (isDefined(max)) intersection = Math.max(max, intersection)
+        console.log({ intersection, parentStartPct })
         return intersection
       },
     )
@@ -158,7 +156,6 @@ export function ParallaxView(props: ParallaxViewProps) {
     parentSize: 0,
     parentEndPct: 0,
     parentStartPct: 0,
-    parentCenterPct: 0,
   })
 
   const update = () => {
@@ -167,12 +164,11 @@ export function ParallaxView(props: ParallaxViewProps) {
     const measurements = state.current
     measurements.nodeSize = Math.max(1, measurements.nodeMeasurements[sizeKey])
     measurements.parentSize = Math.max(1, parent[sizeKey])
-    const bodyPx = bodySize - windowSize
+    const bodyScrollable = bodySize - windowSize
     const parentBottom = parent[offsetKey] + parent[sizeKey]
-    measurements.parentEndPct = parentBottom / bodyPx
-    measurements.parentStartPct = parent[sizeKey] / bodyPx
-    const parentCenterPx = (parentBottom - parent[offsetKey]) / 2
-    measurements.parentCenterPct = parentCenterPx / bodyPx
+    measurements.parentEndPct = parentBottom / bodyScrollable
+    measurements.parentStartPct = parent[offsetKey] / bodyScrollable
+    console.log(parent[offsetKey], bodySize, windowSize)
     version.set(Math.random())
   }
 

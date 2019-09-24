@@ -18,7 +18,10 @@ export function Page(props: SectionContentProps) {
       <Parallax.Container>
         <SectionContent
           className="page"
-          height={props.pages === 'auto' ? 'auto' : siteStore.sectionHeight * (props.pages || 1)}
+          // height={props.pages === 'auto' ? 'auto' : siteStore.sectionHeight * (props.pages || 1)}
+          height="100vh"
+          alignItems="center"
+          justifyContent="center"
           {...props}
           flex="none"
           xs-height="auto"

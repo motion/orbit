@@ -207,7 +207,11 @@ export const FadeInView = memo(
                 align: 'start',
               })
               .transform([0, ...centerPoints, 1], [0, 1, 1, 0])
-              .transform([0, 1], [min || 0, max || 1]),
+              .transform(x => {
+                if (min && x < min) return min
+                if (max && x > max) return max
+                return x
+              }),
           }
         }}
         // parallaxAnimate={geometry => ({

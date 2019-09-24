@@ -311,8 +311,7 @@ const HeadTextSection = memo(() => {
             </FadeInView>
           </View>
           {br}
-          <FadeInView
-            {...animation.join}
+          <View
             display="block"
             minHeight="min-content"
             sm-display="inline"
@@ -320,7 +319,7 @@ const HeadTextSection = memo(() => {
             position="relative"
           >
             <HeadJoin />
-          </FadeInView>
+          </View>
         </View>
       </View>
     </SectionContentChrome>

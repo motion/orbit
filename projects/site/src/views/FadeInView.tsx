@@ -187,9 +187,11 @@ export const FadeInView = memo(
         // style={style}
         // animate={shown ? animate : undefined}
         // transition={finalTransition}
-        clamp="end"
         parallaxAnimate={geometry => ({
-          y: geometry.useParallax(),
+          // y: geometry.useParallax({ offset: 0, speed: 0.5, clamp: true }),
+          opacity: geometry
+            .useParallaxIntersection({ speed: 2, offset: 0 })
+            .transform([-2, -1, 1, 2], [0, 1, 1, -1]),
         })}
         {...rest}
       >

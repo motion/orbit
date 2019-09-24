@@ -1,7 +1,7 @@
-import { createStoreContext } from '@o/use-store'
+import { createStoreContext, useReaction } from '@o/use-store'
 import { idFn } from '@o/utils'
 import { MotionValue, useMotionValue } from 'framer-motion'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import React from 'react'
 
 import { AnimationStore, GeometryRenderer, GeometryStore, useGeometry } from './Geometry'
@@ -32,6 +32,7 @@ class ParallaxContainerStore {
 }
 
 const ParallaxContainerStoreContext = createStoreContext(ParallaxContainerStore)
+export const useParallaxContainer = ParallaxContainerStoreContext.useStore
 
 export type ParallaxContainerProps = ViewProps
 
@@ -54,47 +55,71 @@ export function ParallaxContainer(props: ParallaxContainerProps) {
   )
 }
 
+type ParallaxMeasurements = {
+  nodeMeasurements: { width: number; height: number }
+  nodeSize: number
+  parentSize: number
+}
+
 type ParallaxProps = {
   offset?: number
   speed?: number
   direction?: 'x' | 'y'
-  clamp?: boolean
+  clamp?: boolean | 'end' | 'start'
 }
 
 type ParallaxGeometryProps = ParallaxProps & {
-  dirVal: number
   sizeKey: string
-  offsetPct: MotionValue<any>
+  nodeMove: MotionValue<number>
+  parentEndPct: MotionValue<number>
   parent: ParallaxContainerStore
-  nodeSize: Object
+  measurements: RefObject<ParallaxMeasurements>
 }
 
 class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
   useParallax() {
-    const {
-      direction,
-      speed,
-      offset,
-      clamp,
-      dirVal,
-      sizeKey,
-      offsetPct,
-      parent,
-      nodeSize,
-    } = this.props
-    return this.useViewportScroll(direction)
-      .transform([dirVal, dirVal + 1], [0, -1], { clamp: false })
-      .transform([0, -1], [0, speed], { clamp: false })
-      .mergeTransform([offsetPct], (pos, offsetPctVal) => {
-        const offsetVal = offset * offsetPctVal * parent[sizeKey]
-        const position = pos + offsetVal
-        if (clamp) {
-          const min = 0
-          const max = parent[sizeKey] - nodeSize[sizeKey]
-          return Math.max(min, Math.min(max, position))
+    const { direction, speed, offset, clamp, parentEndPct, nodeMove, measurements } = this.props
+    return this.useViewportScroll(direction === 'x' ? 'xProgress' : 'yProgress').mergeTransform(
+      [nodeMove, parentEndPct],
+      (pagePct, nodeMoveVal, parentEndPctVal) => {
+        const parentPct = pagePct / parentEndPctVal
+
+        const nodeSize = measurements.current.nodeSize
+        let nodeOffsetVal = parentPct * nodeMoveVal
+
+        if (offset) {
+          const parentSize = measurements.current.parentSize
+          nodeOffsetVal += parentSize * offset + nodeSize * offset
         }
-        return position
-      })
+
+        if (speed) {
+          nodeOffsetVal *= speed
+        }
+
+        if (clamp) {
+          console.table({
+            nodeOffsetVal,
+            nodeSize,
+            pagePct,
+            parentPct,
+            nodeMoveVal,
+            parentEndPctVal,
+          })
+        }
+
+        return nodeOffsetVal
+      },
+    )
+    // .transform([0, parentEndPct], [0, 1], { clamp: false })
+    // .transform([0, -1], [0, speed], { clamp: false })
+    // .mergeTransform([offsetPct], (pos, offsetPctVal) => {
+    //   const offsetVal = offset * offsetPctVal * parent[sizeKey]
+    //   const position = pos + offsetVal
+    //   if (clamp) {
+    //     console.log('pos', pos, offsetPctVal)
+    //   }
+    //   return position
+    // })
   }
 }
 
@@ -110,27 +135,38 @@ export type ParallaxViewProps = Omit<ViewProps, 'direction'> &
     parallaxAnimate?: (geometry: ParallaxGeometryStore) => { [key: string]: AnimationStore }
   }
 
-export function ParallaxView({
-  offset = 0,
-  speed = -1,
-  direction = 'y',
-  clamp = false,
-  parallaxAnimate,
-  ...viewProps
-}: ParallaxViewProps) {
+export function ParallaxView(props: ParallaxViewProps) {
+  const {
+    offset = 0,
+    speed = -1,
+    direction = 'y',
+    clamp = false,
+    parallaxAnimate,
+    ...viewProps
+  } = props
   const ref = useRef(null)
-  const parent = ParallaxContainerStoreContext.useStore()
+  const parent = useParallaxContainer({ react: false })
   const offsetKey = direction === 'y' ? 'top' : 'left'
   const sizeKey = direction === 'y' ? 'height' : 'width'
-  const dirVal = Math.max(0, parent[offsetKey])
-  const offsetPct = useMotionValue(1)
-  const state = useRef({
-    nodeSize: { width: 0, height: 0 },
+  const nodeMove = useMotionValue(1)
+  const parentEndPct = useMotionValue(0)
+  const state = useRef<ParallaxMeasurements>({
+    nodeMeasurements: { width: 0, height: 0 },
+    nodeSize: 0,
+    parentSize: 0,
   })
 
   const update = () => {
-    const nodeSize = Math.max(1, state.current.nodeSize[sizeKey])
-    const parentSize = Math.max(1, parent[sizeKey])
+    const nodeSize = (state.current.nodeSize = Math.max(1, state.current.nodeMeasurements[sizeKey]))
+    const parentSize = (state.current.parentSize = Math.max(1, parent[sizeKey]))
+
+    // offsetPct
+    const bodySize = document.body[direction === 'y' ? 'clientHeight' : 'clientWidth']
+    const windowSize = window[direction === 'y' ? 'innerHeight' : 'innerWidth']
+    // aim for center like scrollProgress
+    const parentOffset = (parent[offsetKey] + parent[sizeKey]) / (bodySize - windowSize)
+    parentEndPct.set(parentOffset)
+
     let next = offset >= 0 ? (parentSize - nodeSize) / parentSize : nodeSize / parentSize
     if (next >= 1) {
       next = 0.99
@@ -138,33 +174,39 @@ export function ParallaxView({
       // we went negative, child bigger than container
       next = 0.99
     }
-    offsetPct.set(next)
+    nodeMove.set(next * parentSize)
   }
+
+  useReaction(
+    () => [parent[sizeKey], parent[offsetKey]],
+    update,
+    {
+      avoidRender: true,
+    },
+    [sizeKey, offsetKey],
+  )
 
   useNodeSize({
     ref,
     throttle: 250,
     onChange({ width, height }) {
-      state.current.nodeSize = { width, height }
+      state.current.nodeMeasurements = { width, height }
       update()
     },
   })
 
-  const nodeSize = state.current.nodeSize
-
   return (
     <ParallaxGeometry
-      key={dirVal}
       {...{
         direction,
         speed,
         offset,
         clamp,
-        dirVal,
+        parentEndPct,
         sizeKey,
-        offsetPct,
+        nodeMove,
         parent,
-        nodeSize,
+        measurements: state,
       }}
     >
       {(geometry, gref) => {

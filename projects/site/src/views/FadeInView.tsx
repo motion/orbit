@@ -1,6 +1,8 @@
 import { createStoreContext } from '@o/kit'
-import { MotionProps, useIntersectionObserver, View, ViewProps } from '@o/ui'
+import { MotionProps, useIntersectionObserver, useParallaxContainer, View, ViewProps } from '@o/ui'
 import React, { memo, useCallback, useRef, useState } from 'react'
+
+import { Page } from './Page'
 
 export type FadeInProps = ViewProps & {
   delay?: number
@@ -34,7 +36,7 @@ export const transitions: { [key: string]: MotionProps['transition'] } = {
   normal: {
     type: 'spring',
     damping: 12,
-    stiffness: 70,
+    stiffness: 75,
   },
   fast: {
     type: 'spring',
@@ -146,6 +148,8 @@ export const FadeInView = memo(
     const fadeStore = FadeStoreContext.useStore()
     const shown = !disable && (fadeStore.shown !== null ? fadeStore.shown : false)
 
+    const parent = useParallaxContainer()
+
     style = {
       display: display || 'flex',
       flexDirection: 'column',
@@ -170,19 +174,27 @@ export const FadeInView = memo(
         ? { duration: 0 }
         : {
             ...(transition as any),
-            delay: delayIndex ? delayIndex / 4.5 : (delay || 1) / 1000,
+            delay: delayIndex ? delayIndex / 6 : (delay || 1) / 1000,
           }
 
+    if (!parent) {
+      return <View {...rest}>{children}</View>
+    }
+
     return (
-      <View
+      <Page.ParallaxView
         data-is="FadeChild"
-        style={style}
-        animate={shown ? animate : undefined}
-        transition={finalTransition}
+        // style={style}
+        // animate={shown ? animate : undefined}
+        // transition={finalTransition}
+        clamp="end"
+        parallaxAnimate={geometry => ({
+          y: geometry.useParallax(),
+        })}
         {...rest}
       >
         {children}
-      </View>
+      </Page.ParallaxView>
     )
   },
 )

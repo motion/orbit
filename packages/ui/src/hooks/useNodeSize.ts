@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { RefObject, useEffect, useMemo, useRef, useState } from 'react'
+import { RefObject, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { useGetVisibility } from '../Visibility'
 import { useResizeObserver } from './useResizeObserver'
@@ -21,13 +21,15 @@ type SizeState = {
 export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = []) {
   const getVisible = useGetVisibility()
   const [state, setState] = useState<SizeState>({ width: 0, height: 0 })
+  const cur = useRef(null)
   const updateFn = (val: SizeState) => {
     // avoid updates when not visible, it can return width: 0, height: 0
-    if (!getVisible()) {
-      return
-    }
+    if (!getVisible()) return
     const cb = props.onChange || setState
-    cb(val)
+    if (!isEqual(val, cur.current)) {
+      cur.current = val
+      cb(val)
+    }
   }
   const updateFnThrottled = useThrottledFn(updateFn, {
     amount: props.throttle || 0,
@@ -38,7 +40,6 @@ export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = [])
   const propRef = props.ref
   const ref = propRef || innerRef
   const disable = props.disable
-  const cur = useRef(null)
 
   useResizeObserver(
     {
@@ -47,11 +48,7 @@ export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = [])
       onChange: entries => {
         const { width, height } = entries[0].contentRect
         const next = { width, height }
-        if (!isEqual(next, cur.current)) {
-          cur.current = next
-          if (props['debug']) console.log(next)
-          update(next)
-        }
+        update(next)
       },
     },
     [mountArgs],
@@ -60,32 +57,15 @@ export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = [])
   const updateSize = () => {
     if (disable) return
     if (ref.current) {
-      const next = {
+      update({
         width: ref.current.clientWidth,
         height: ref.current.clientHeight,
-      }
-      if (!isEqual(next, state)) {
-        setState(next)
-      }
+      })
     }
   }
 
-  // useMutationObserve(
-  //   {
-  //     ref,
-  //     disable,
-  //     options: {
-  //       attributes: true,
-  //       childList: true,
-  //       subtree: true,
-  //     },
-  //     onChange: updateSize,
-  //   },
-  //   [mountArgs],
-  // )
-
   // useLayout?
-  useEffect(updateSize, [disable, ref, ...mountArgs])
+  useLayoutEffect(updateSize, [disable, ref, ...mountArgs])
 
   return useMemo(
     () => ({

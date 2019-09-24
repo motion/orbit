@@ -1,10 +1,9 @@
-import { decorate, useForceUpdate } from '@o/use-store'
+import { decorate, useForceUpdate, useStore } from '@o/use-store'
 import { MotionValue, useSpring, useTransform, useViewportScroll } from 'framer-motion'
 import { SpringProps } from 'popmotion'
 import React from 'react'
 import { RefObject, useCallback, useContext, useEffect, useRef } from 'react'
 
-import { useLazyRef } from './hooks/useLazyRef'
 import { useOnHotReload } from './hooks/useOnHotReload'
 import { useRelative } from './hooks/useRelative'
 import { useScrollProgress } from './hooks/useScrollProgress'
@@ -69,7 +68,9 @@ export class GeometryStore<A = any> {
   curCall = 0
   frozen = false
 
-  constructor(private nodeRef: RefObject<HTMLElement>, public props: A) {}
+  props: A & {
+    ref: RefObject<HTMLElement>
+  }
 
   beforeRenderChildren() {
     this.curCall = 0
@@ -173,7 +174,7 @@ export class GeometryStore<A = any> {
           if (!scrollIntersectionState.ready) {
             return 0
           }
-          const index = scrollIntersectionState.elements.indexOf(this.nodeRef.current)
+          const index = scrollIntersectionState.elements.indexOf(this.props.ref.current)
           const state = scrollIntersectionState.measurements.get(index)
           const res = state ? (state.offset - scroll) * state.total : 0
           return res
@@ -194,7 +195,10 @@ export function useGeometry<A extends GeometryStore>(
   geometryProps?: any,
 ) {
   const ref = useRef()
-  const geometry = useLazyRef(() => new GeometryConstructor(ref, geometryProps)).current
+  const geometry = useStore(GeometryConstructor, { ref, ...geometryProps }, { react: false })
+  if (geometryProps.clamp) {
+    console.warn('hi', geometry, geometryProps)
+  }
   const update = useForceUpdate()
 
   useOnHotReload(() => {

@@ -173,9 +173,10 @@ export function TestUIMotion() {
 }
 
 export function TestUIParallax() {
+  console.log('render me')
   return (
     <>
-      <Parallax.Container height="80vh" background="orange">
+      <Parallax.Container height="50vh" background="orange">
         <Parallax.View
           offset={0.5}
           speed={0.5}
@@ -199,12 +200,26 @@ export function TestUIParallax() {
           left={20}
           width={100}
           height={100}
-          clamp
+          // clamp="start"
         >
           offset 0 speed 1
         </Parallax.View>
+        <Parallax.View
+          offset={0.5}
+          speed={2}
+          x={200}
+          position="absolute"
+          background="yellow"
+          top={0}
+          left={20}
+          width={100}
+          height={100}
+          clamp
+        >
+          offset 0.5 speed 2
+        </Parallax.View>
       </Parallax.Container>
-      <Parallax.Container height="80vh" background="red">
+      <Parallax.Container height="50vh" background="red">
         <Parallax.View
           position="absolute"
           background="yellow"

@@ -72,6 +72,10 @@ if (flags.prod) {
   process.env.NODE_ENV = 'production'
 }
 
+if (flags.disableHMR) {
+  process.env.DISABLE_BABEL_PLUGIN = 'react-refresh/babel'
+}
+
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
 const entry = {

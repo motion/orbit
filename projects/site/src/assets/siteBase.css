@@ -38,7 +38,7 @@ main a:hover {
 
 /* HTML */
 
-html {
+#app {
   overflow-x: hidden;
 }
 

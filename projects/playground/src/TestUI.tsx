@@ -178,18 +178,46 @@ export function TestUIParallax() {
   const views = index => (
     <>
       <Parallax.View
-        offset={0.5}
-        speed={0.5}
+        offset={0.3}
+        speed={0.3}
         x={100}
         position="absolute"
         background="yellow"
         top={0}
         left={20}
-        width={100}
-        height={100}
+        width={80}
+        height={80}
         clamp
       >
-        offset 0.5 speed 0.5 index {index}
+        offset 0.3 speed 0.3 index {index}
+      </Parallax.View>
+      <Parallax.View
+        offset={0.25}
+        speed={1}
+        x={180}
+        position="absolute"
+        background="yellow"
+        top={0}
+        left={20}
+        width={80}
+        height={80}
+        clamp
+      >
+        offset 0.25 speed 1 index {index}
+      </Parallax.View>
+      <Parallax.View
+        offset={0}
+        speed={1}
+        x={260}
+        position="absolute"
+        background="yellow"
+        top={0}
+        left={20}
+        width={80}
+        height={80}
+        clamp
+      >
+        offset 0 speed 1 index {index}
       </Parallax.View>
       <Parallax.View
         x={200}
@@ -253,12 +281,12 @@ export function TestUIParallax() {
       <Parallax.View
         x={200}
         position="absolute"
-        background="black"
+        background="grey"
         borderRadius={100}
         top={0}
         left={0}
-        width={10}
-        height={10}
+        width={20}
+        height={20}
         parallaxAnimate={geometry => {
           return {
             y: geometry

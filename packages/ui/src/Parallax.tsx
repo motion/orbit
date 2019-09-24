@@ -95,15 +95,17 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
       pagePct => {
         if (speed === 0) return 0
         const { parentEndPct, parentStartPct } = measurements.current
-        let intersection = pagePct / parentStartPct
+        let intersection = pagePct - parentStartPct
+        const nodeSize = measurements.current.nodeSize
+        const parentSize = measurements.current.parentSize
+        const pctParent = parentSize / nodeSize
+        intersection += speed * pctParent * intersection // * (parentSize / nodeSize)
         intersection += offset
-        intersection += speed * intersection
         if (clamp) {
           intersection = Math.max(0, Math.min(intersection, 1))
         }
         if (isDefined(min)) intersection = Math.max(min, intersection)
         if (isDefined(max)) intersection = Math.max(max, intersection)
-        console.log({ intersection, parentStartPct })
         return intersection
       },
     )

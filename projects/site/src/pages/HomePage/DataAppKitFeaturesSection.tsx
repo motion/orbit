@@ -72,12 +72,12 @@ export default memo(() => {
                 Apps that play along
               </TitleText>
             </FadeInView>
-            <TitleTextSub>
-              <FadeInView parallax delayIndex={2}>
+            <FadeInView parallax delayIndex={2}>
+              <TitleTextSub>
                 Sync data, expose GraphQL and TypeScript APIs, and render&nbsp;content.
                 The&nbsp;app&nbsp;store&nbsp;enables cooperative app-building.
-              </FadeInView>
-            </TitleTextSub>
+              </TitleTextSub>
+            </FadeInView>
             <Space size="xl" />
           </>
         }

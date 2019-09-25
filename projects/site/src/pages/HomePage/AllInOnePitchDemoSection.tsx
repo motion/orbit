@@ -228,7 +228,7 @@ export default memo(() => {
                 />
               </FadeInView>
               <Space size="xxl" />
-              <FadeInView {...fadeAnimations.left} delayIndex={5} alignSelf="flex-end">
+              <FadeInView parallax {...fadeAnimations.left} delayIndex={5} alignSelf="flex-end">
                 <Image
                   userSelect="none"
                   opacity={0.5}
@@ -255,7 +255,7 @@ export default memo(() => {
                   circular
                   zIndex={100}
                   position="absolute"
-                  top={-4}
+                  top={-10}
                   left={5}
                   icon="chevron-left"
                   onClick={() => paginate(-1)}
@@ -268,7 +268,7 @@ export default memo(() => {
                   circular
                   zIndex={100}
                   position="absolute"
-                  top={-4}
+                  top={-10}
                   right={5}
                   icon="chevron-right"
                   onClick={() => paginate(1)}
@@ -279,7 +279,7 @@ export default memo(() => {
                 parallax
                 {...fadeAnimations.up}
                 delayIndex={5}
-                marginBottom={-200}
+                marginBottom={-250}
                 zIndex={10}
               >
                 <TiltSquircle
@@ -396,7 +396,7 @@ export default memo(() => {
             </Flex>
           </Row>
 
-          <FadeInView parallax delayIndex={8} flexFlow="row" margin={[32, 'auto', 0]}>
+          <FadeInView parallax delayIndex={8} flexFlow="row" margin={[42, 'auto', 0]}>
             {[0, 1, 2].map(x => (
               <Dot key={`dot-${x}`} active={x === index} onClick={() => goTo(x)} />
             ))}

@@ -2,7 +2,7 @@ import { createStoreContext } from '@o/kit'
 import { MotionProps, useIntersectionObserver, useParallaxContainer, View, ViewProps } from '@o/ui'
 import React, { memo, useCallback, useRef, useState } from 'react'
 
-import { ParallaxStageItem } from './ParallaxStage'
+import { ParallaxProp, ParallaxStageItem } from './ParallaxStage'
 
 export type FadeInProps = ViewProps & {
   delay?: number
@@ -129,7 +129,7 @@ export type FadeChildProps = ViewProps & {
   reverse?: boolean
   min?: number
   max?: number
-  parallax?: boolean
+  parallax?: ParallaxProp
 }
 
 const initialScreenWidth = window.innerWidth
@@ -189,7 +189,7 @@ export const FadeInView = memo(
 
     if (parallax) {
       return (
-        <ParallaxStageItem stagger={delayIndex} {...rest}>
+        <ParallaxStageItem parallax={parallax} stagger={delayIndex} {...rest}>
           <View
             data-is="FadeChild"
             style={style}

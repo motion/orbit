@@ -56,7 +56,7 @@ export default function DeploySection() {
             <FadeInView parallax delayIndex={0}>
               <PillButton>Develop</PillButton>
             </FadeInView>
-            <FadeInView parallax delayIndex={0}>
+            <FadeInView parallax delayIndex={1}>
               <TitleText textAlign="center" size="xxl">
                 Next-level{' '}
                 <Tooltip label="Developer Experience">

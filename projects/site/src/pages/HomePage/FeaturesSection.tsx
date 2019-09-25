@@ -140,11 +140,12 @@ export default memo(() => {
       {/* teal right */}
       <Page.BackgroundParallax
         speed={0.3}
-        offset={0}
+        offset={0.5}
         x="60%"
+        top="20%"
         scale={1.3}
         className="glow-two"
-        opacity={0.4}
+        opacity={0.34}
         background="radial-gradient(circle closest-side, #12A1CC, transparent)"
         parallax={geometry => ({
           y: geometry.useParallax(),
@@ -235,14 +236,7 @@ export default memo(() => {
 
         <View flex={0.15} />
 
-        <View
-          sm-display="none"
-          position="relative"
-          flex={1}
-          // alignItems="center"
-          // justifyContent="center"
-          height={500}
-        >
+        <View sm-display="none" position="relative" flex={1} height={500}>
           <ParallaxStageItem stagger={2}>
             {Object.keys(sections).map((key, index) => (
               <Image

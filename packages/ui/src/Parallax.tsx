@@ -147,34 +147,19 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
         } else {
           let subtractor =
             align === 'start' ? parentStartPct : align === 'center' ? parentCenter : parentEndPct
-          if (stagger) {
-            subtractor -= 0.1 * stagger * nodeSizePct
-          }
           intersection = 1 + (pagePct - subtractor) / divisor
         }
-
-        if (speed === 0.555) {
-          table({
-            intersection,
-            nodeSizePct,
-            divisor,
-            frameSizePct,
-            parentSizePct,
-            clamp,
-            min,
-            max,
-          })
-        }
-
         intersection *= speed
         intersection += offset
+        if (stagger) {
+          intersection += 0.3 * stagger * nodeStartPct
+        }
         if (isDefined(min)) intersection = Math.max(min, intersection)
         if (isDefined(max)) intersection = Math.max(max, intersection)
         if (clamp) {
           const [min, max] = clamp === true ? [0, 1] : clamp
           intersection = Math.max(min, Math.min(intersection, max))
         }
-
         return intersection
       })
 
@@ -186,10 +171,6 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
       const mx = this.props.measurements.current
       const nodeSize = mx.nodeSize
       const parentSize = mx.parentSize
-      if (this.props.speed === 0.555) {
-        table({ x, parentSize, nodeSize })
-      }
-
       return x + x * (parentSize - nodeSize)
     },
     scrollParentSize: (x: number) => {

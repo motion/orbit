@@ -163,14 +163,14 @@ export default memo(() => {
       >
         <Col padding="lg" flex={2}>
           <View flex={1}>
-            <ParallaxStageItem>
+            <ParallaxStageItem stagger={0}>
               <TitleText alignItems="flex-start" justifyContent="flex-start" size="xxl">
                 The all-in-one
                 <br />
                 data studio
               </TitleText>
             </ParallaxStageItem>
-            <ParallaxStageItem>
+            <ParallaxStageItem stagger={1}>
               <Row space="lg" margin={['4%', 'auto', '8%', 0]}>
                 {sectionNames.map(section => (
                   <React.Fragment key={section}>
@@ -180,7 +180,7 @@ export default memo(() => {
               </Row>
             </ParallaxStageItem>
           </View>
-          <ParallaxStageItem nodeRef={gridContainer}>
+          <ParallaxStageItem stagger={2} nodeRef={gridContainer}>
             <Row flexWrap="nowrap">
               {Object.keys(sections).map((section, index) => {
                 return (
@@ -245,7 +245,7 @@ export default memo(() => {
           // justifyContent="center"
           height={500}
         >
-          <ParallaxStageItem>
+          <ParallaxStageItem stagger={2}>
             {Object.keys(sections).map((key, index) => (
               <Image
                 key={key}

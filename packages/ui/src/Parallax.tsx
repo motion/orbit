@@ -83,7 +83,7 @@ type ParallaxItemProps = {
   max?: number
   align?: 'end' | 'start' | 'center'
   relativeTo?: 'node' | 'parent' | 'frame'
-  stagger?: (x: ParallaxMeasurements) => number
+  stagger?: number
 }
 
 type ParallaxProps = ParallaxItemProps & {
@@ -145,17 +145,12 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
         if (relativeTo === 'node') {
           intersection = 1 + (scrollCenter - nodeStartPct) / nodeSizePct
         } else {
-          if (align === 'start') {
-            intersection = 1 + (pagePct - parentStartPct) / divisor
-          } else if (align === 'center') {
-            intersection = 1 + (pagePct - parentCenter) / divisor
-          } else {
-            intersection = 1 + (pagePct - parentEndPct) / divisor
+          let subtractor =
+            align === 'start' ? parentStartPct : align === 'center' ? parentCenter : parentEndPct
+          if (stagger) {
+            subtractor -= 0.2 * stagger * nodeSizePct
           }
-        }
-
-        if (stagger) {
-          intersection -= stagger(measurements.current)
+          intersection = 1 + (pagePct - subtractor) / divisor
         }
 
         intersection *= speed

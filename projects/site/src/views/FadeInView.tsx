@@ -189,7 +189,7 @@ export const FadeInView = memo(
 
     if (parallax) {
       return (
-        <ParallaxStageItem {...rest}>
+        <ParallaxStageItem stagger={delayIndex} {...rest}>
           <View
             data-is="FadeChild"
             style={style}

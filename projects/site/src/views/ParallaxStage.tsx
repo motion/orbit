@@ -10,19 +10,23 @@ export function ParallaxStageItem(props: ParallaxViewProps) {
         return {
           y: geometry
             .useParallaxIntersection({
-              speed: 0.25,
-              relativeTo: 'node',
-              clamp: true,
+              speed: 1,
+              relativeTo: 'frame',
+              stagger: x => -x.nodeStartPct,
             })
-            .transform([0, 0.2, 0.21, 0.79, 0.8, 1], [-2, 0.2, 0.21, 0.79, 0.8, 3])
-            .transform(geometry.transforms.scrollNodeSize),
+            .transform([-1, -0.2, 0, 0.1, 1], [-2, -0.05, 0, 0.05, 3])
+            .transform(x => x * 500)
+            // clamp
+            .transform(x => Math.max(-300, Math.min(x, 300))),
           opacity: geometry
             .useParallaxIntersection({
-              speed: 0.25,
-              relativeTo: 'node',
-              clamp: true,
+              speed: 1,
+              relativeTo: 'frame',
+              stagger: x => -x.nodeStartPct,
             })
-            .transform([0, 0.2, 0.21, 0.79, 0.8, 1], [0, 0.5, 1, 1, 0.5, 0]),
+            .transform([-1, -0.2, 0, 0.1, 1], [-5, 1, 1, 1, -10])
+            // clamp
+            .transform(x => Math.max(0, Math.min(x, 1))),
         }
       }}
       {...props}

@@ -65,8 +65,10 @@ type ParallaxMeasurements = {
   frameSizePct: number
   parentEndPct: number
   parentStartPct: number
+  parentSizePct: number
   nodeEndPct: number
   nodeStartPct: number
+  nodeSizePct: number
 }
 
 type ParallaxItemProps = {
@@ -77,8 +79,7 @@ type ParallaxItemProps = {
   max?: number
   align?: 'end' | 'start' | 'center'
   relativeTo?: 'node' | 'parent' | 'frame'
-  maxStagger?: number
-  stagger?: 'nodeSize'
+  stagger?: (x: ParallaxMeasurements) => number
 }
 
 type ParallaxProps = ParallaxItemProps & {
@@ -111,10 +112,9 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
       max,
       version,
       align,
-      stagger,
-      maxStagger,
       measurements,
       relativeTo,
+      stagger,
     } = {
       ...this.props,
       ...props,
@@ -127,23 +127,19 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
           frameSizePct,
           parentEndPct,
           parentStartPct,
-          nodeEndPct,
           nodeStartPct,
+          nodeSizePct,
+          parentSizePct,
         } = measurements.current
 
         let intersection = 0
-        const parentHeight = parentEndPct - parentStartPct
-        const parentCenter = parentEndPct - parentHeight / 2
+        const parentCenter = parentEndPct - parentSizePct / 2
         const scrollCenter = pagePct + frameSizePct / 2
 
-        const divisor = relativeTo === 'frame' ? frameSizePct : parentHeight
+        const divisor = relativeTo === 'frame' ? frameSizePct : parentSizePct
 
         if (relativeTo === 'node') {
-          // const halfPct =
-          //   pagePct < 0.5 ? (frameSizePct / 2) * (1 - pagePct) : (frameSizePct / 2) * pagePct
-          // const scrollCenter = pagePct + (pagePct > 0.5 ? -halfPct : halfPct)
-          const heightPct = nodeEndPct - nodeStartPct
-          intersection = 1 + (scrollCenter - nodeStartPct) / heightPct
+          intersection = 1 + (scrollCenter - nodeStartPct) / nodeSizePct
         } else {
           if (align === 'start') {
             intersection = 1 + (pagePct - parentStartPct) / divisor
@@ -152,6 +148,10 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
           } else {
             intersection = 1 + (pagePct - parentEndPct) / divisor
           }
+        }
+
+        if (stagger) {
+          intersection -= stagger(measurements.current)
         }
 
         intersection *= speed
@@ -169,7 +169,7 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
   }
 
   transforms = {
-    scrollRelativeToParent: (x: number) => {
+    scrollParentRelative: (x: number) => {
       const { measurements } = this.props
       const nodeSize = measurements.current.nodeSize
       const parentSize = measurements.current.parentSize
@@ -186,7 +186,7 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
   }
 
   useParallax(props?: ParallaxItemProps) {
-    return this.useParallaxIntersection(props).transform(this.transforms.scrollRelativeToParent)
+    return this.useParallaxIntersection(props).transform(this.transforms.scrollParentRelative)
   }
 }
 
@@ -212,6 +212,7 @@ export function ParallaxView(props: ParallaxViewProps) {
     max,
     align,
     parallaxAnimate,
+    stagger,
     ...viewProps
   } = props
   const ref = useRef(null)
@@ -219,32 +220,26 @@ export function ParallaxView(props: ParallaxViewProps) {
   const offsetKey = direction === 'y' ? 'top' : 'left'
   const sizeKey = direction === 'y' ? 'height' : 'width'
   const version = useMotionValue(0)
-  const state = useRef<ParallaxMeasurements>({
-    nodeMeasurements: { width: 0, height: 0, top: 0, left: 0 },
-    nodeSize: 0,
-    parentSize: 0,
-    parentEndPct: 0,
-    parentStartPct: 0,
-    nodeStartPct: 0,
-    nodeEndPct: 0,
-    frameSizePct: 0,
-  })
+  const state = useRef<ParallaxMeasurements>({} as any)
 
   const update = () => {
     const bodySize = document.body[direction === 'y' ? 'clientHeight' : 'clientWidth']
     const windowSize = window[direction === 'y' ? 'innerHeight' : 'innerWidth']
-    const measurements = state.current
-    const nodeMeasurements = measurements.nodeMeasurements
-    measurements.nodeSize = Math.max(1, nodeMeasurements[sizeKey])
-    measurements.parentSize = Math.max(1, parent[sizeKey])
+    const mx = state.current
+    const nodeMeasurements = mx.nodeMeasurements
+    if (!nodeMeasurements) return
+    mx.nodeSize = Math.max(1, nodeMeasurements[sizeKey])
+    mx.parentSize = Math.max(1, parent[sizeKey])
     const bodyScrollable = bodySize - windowSize
     const parentBottom = parent[offsetKey] + parent[sizeKey]
-    measurements.parentEndPct = parentBottom / bodyScrollable
-    measurements.parentStartPct = parent[offsetKey] / bodyScrollable
+    mx.parentEndPct = parentBottom / bodyScrollable
+    mx.parentStartPct = parent[offsetKey] / bodyScrollable
+    mx.parentSizePct = mx.parentEndPct - mx.parentStartPct
     const nodeBottom = nodeMeasurements[offsetKey] + nodeMeasurements[sizeKey]
-    measurements.nodeEndPct = nodeBottom / bodyScrollable
-    measurements.nodeStartPct = nodeMeasurements[offsetKey] / bodyScrollable
-    measurements.frameSizePct = windowSize / bodyScrollable
+    mx.nodeEndPct = nodeBottom / bodyScrollable
+    mx.nodeStartPct = nodeMeasurements[offsetKey] / bodyScrollable
+    mx.nodeSizePct = mx.nodeEndPct - mx.nodeStartPct
+    mx.frameSizePct = windowSize / bodyScrollable
     version.set(Math.random())
   }
 
@@ -281,13 +276,14 @@ export function ParallaxView(props: ParallaxViewProps) {
         min,
         max,
         align,
+        stagger,
       }}
     >
       {(geometry, gref) => {
         return (
           <View
-            nodeRef={composeRefs(gref, ref)}
             {...viewProps}
+            nodeRef={composeRefs(gref, ref, viewProps.nodeRef)}
             animate
             transformOrigin="top center"
             {...(parallaxAnimate

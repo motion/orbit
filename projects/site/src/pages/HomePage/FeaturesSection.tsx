@@ -180,7 +180,7 @@ export default memo(() => {
               </Row>
             </ParallaxStageItem>
           </View>
-          <ParallaxStageItem nodeRef={gridContainer}>
+          <ParallaxStageItem className="grid-ref" nodeRef={gridContainer}>
             <Row flexWrap="nowrap">
               {Object.keys(sections).map((section, index) => {
                 return (
@@ -245,37 +245,39 @@ export default memo(() => {
           // justifyContent="center"
           height={500}
         >
-          {Object.keys(sections).map((key, index) => (
-            <Image
-              key={key}
-              transition={transition}
-              animate={{
-                opacity: cur === index ? 1 : 0,
-                y:
-                  cur === index
-                    ? '0%'
-                    : cur > index
-                    ? `-${(cur - index) * 20}%`
-                    : `${(index - cur) * 20}%`,
-              }}
-              width="100%"
-              position="absolute"
-              top={0}
-              left={0}
-              height="auto"
-              minWidth={1000}
-              marginRight={-1000}
-              src={sections[key].image}
-              borderRadius={15}
-              overflow="hidden"
-              boxShadow={[
-                {
-                  blur: 100,
-                  color: '#000',
-                },
-              ]}
-            />
-          ))}
+          <ParallaxStageItem>
+            {Object.keys(sections).map((key, index) => (
+              <Image
+                key={key}
+                transition={transition}
+                animate={{
+                  opacity: cur === index ? 1 : 0,
+                  y:
+                    cur === index
+                      ? '0%'
+                      : cur > index
+                      ? `-${(cur - index) * 20}%`
+                      : `${(index - cur) * 20}%`,
+                }}
+                width="100%"
+                position="absolute"
+                top={0}
+                left={0}
+                height="auto"
+                minWidth={1000}
+                marginRight={-1000}
+                src={sections[key].image}
+                borderRadius={15}
+                overflow="hidden"
+                boxShadow={[
+                  {
+                    blur: 100,
+                    color: '#000',
+                  },
+                ]}
+              />
+            ))}
+          </ParallaxStageItem>
         </View>
       </Row>
     </Fade.FadeProvide>

@@ -165,8 +165,64 @@ export function TestUIParallax() {
       <Parallax.Container overflow="hidden" height="100vh" background="lightgreen">
         {/* {views(0)} */}
       </Parallax.Container>
-      <Parallax.Container overflow="hidden" height="50vh" background="indigo">
-        {views(1)}
+      <Parallax.Container overflow="hidden" height="100vh" background="indigo">
+        <Col margin="auto" space="xl">
+          <Parallax.View
+            parallaxAnimate={geometry => {
+              return {
+                y: geometry
+                  .useParallaxIntersection({
+                    speed: 1,
+                    relativeTo: 'frame',
+                    // clamp: true,
+                    // stagger: x => -x.nodeStartPct - x.parentStartPct,
+                    // stagger: x => -0.2,
+                  })
+                  .transform([-1, -0.2, 0, 0.2, 1], [-3, -0.05, 0, 0.05, 3])
+                  // if its 1.0 of frame:
+                  // -1 all the way below
+                  // 0 = centered
+                  // 1 = all the way above
+                  // if its 0.8 of frame:
+                  // -0.8 all the way below frame (parent pct of frame)
+                  // 0 => bottom at bottom of frame
+                  // 0.2 top at top of frame (frame pct - parent pct)
+                  // 1 => bottom at top of frame
+                  .transform([-1, -0.2, 0, 0.2, 1], [-3, -0.05, 0, 0.05, 3])
+                  // .transform(logPass)
+                  // .transform([0, 0.2, 0.21, 0.79, 0.8, 1], [-2, 0.2, 0.21, 0.79, 0.8, 3])
+                  .transform(x => x * 500),
+              }
+            }}
+          >
+            <Title color="yellow">Hello World</Title>
+          </Parallax.View>
+          <Parallax.View
+            height={400}
+            width={400}
+            background="black"
+            parallaxAnimate={geometry => {
+              return {
+                y: geometry
+                  .useParallaxIntersection({
+                    speed: 0.25,
+                    relativeTo: 'node',
+                    clamp: [-2, 1],
+                  })
+                  .transform([0, 0.2, 0.21, 0.79, 0.8, 1], [-2, 0.2, 0.21, 0.79, 0.8, 3])
+                  .transform(x => x * 20),
+                opacity: geometry
+                  .useParallaxIntersection({
+                    speed: 0.25,
+                    relativeTo: 'node',
+                    clamp: true,
+                  })
+                  .transform([0, 0.2, 0.21, 0.79, 0.8, 1], [0, 0.5, 1, 1, 0.5, 0]),
+              }
+            }}
+          />
+        </Col>
+        {/* {views(1)} */}
       </Parallax.Container>
       {/* <Parallax.Container height="80vh" background="orange" position="relative" zIndex={100}>
         <Col margin="auto" space="xl">

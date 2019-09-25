@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import { Page } from './Page'
 
-const startClamp = [-1, -0.4, 0, 0.4, 1.5]
+const startClamp = [-1, -0.3, 0, 0.4, 1.5]
 
 export function ParallaxStageItem(props: ParallaxViewProps) {
   return (
@@ -26,7 +26,7 @@ export function ParallaxStageItem(props: ParallaxViewProps) {
               relativeTo: 'frame',
               // stagger: x => -x.nodeEndPct,
             })
-            .transform(startClamp, [-3, 1, 1, 1, -3])
+            .transform(startClamp, [-3, 1, 1, 1, -2])
             // clamp
             .transform(x => Math.max(0, Math.min(x, 1))),
         }

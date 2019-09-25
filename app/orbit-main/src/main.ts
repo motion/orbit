@@ -48,6 +48,26 @@ const envInfo = {
 export async function main() {
   log.info(`starting ${PROCESS_NAME || 'orbit-main'} ${SUB_PROCESS}`, envInfo, ORBIT_CONFIG)
 
+  // show loading window
+  if (!SUB_PROCESS) {
+    const electron = require('electron')
+    electron.app.once('ready', () => {
+      const loadingWindow = new electron.BrowserWindow({
+        width: 300,
+        height: 200,
+        frame: false,
+        vibrancy: 'light',
+        titleBarStyle: 'customButtonsOnHover',
+        backgroundColor: '#00000000',
+        show: false,
+      })
+      loadingWindow.loadFile(join(__dirname, '..', 'loading.html'))
+      loadingWindow.once('ready-to-show', () => {
+        loadingWindow.show()
+      })
+    })
+  }
+
   // setup config
   if (SUB_PROCESS) {
     setGlobalConfig(JSON.parse(ORBIT_CONFIG))

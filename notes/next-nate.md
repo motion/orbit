@@ -1,3 +1,29 @@
+The plan from jun for Sep:
+
+"Have everything ready for beta"
+
+- Improved demo flow x2 (apps, bugs, etc)
+- Build to production
+
+they have conflicting sub-contraints in cases, resolved to (in order of importance):
+
+- [beta/demo] runthrough + bugfix over and over
+- [demo] plug in simple ocr/import menu command
+- [beta] startup time fixes and clean workspace fixes
+  - startup needs to be a "chunk" to focus on:
+    1. make it load without webpack running (static serve to start)
+    2. show an electron loading window pre-launch instantly then transition to app
+       - can plugin 3d loading animation via danny later
+    3. (~tech-blocker) webpack 5 for faster from-cache resuming
+- [beta] search UI fixes
+- [beta] HMR/dev fixes and upgrades
+- [beta] search backend (nlp + scan more fixes)
+- [beta] settings upgrades: fix sort, remove, improve flows
+- [demo] ~potentially do a demo of option hold to see context menu
+- [site] cleanup sub-pages
+- [site] run over docs for a few days
+- [beta] query builder finish
+
 Sep 12:
 
 - fix some app stuff:
@@ -17,13 +43,6 @@ Sep 12:
 - handle deleting apps, adding apps better
 - get clean workspace build better
 
-
-The plan from jun for Sep:
-
-"Have everything ready for beta"
-
-- Improved demo flow x2 (apps, bugs, etc)
-- Build to production
 
 ---
 
@@ -46,21 +65,20 @@ Detailed September Plan:
   - [ ] Especially things like:
     - [ ] During sync I think its saving bits often and causing lots of updates
 
-- [ ] Build to production
-  - [ ] !!! we can't do this right now for electron 8 though without some trouble, so no rounded windows..?
-  - [ ] Get build to prod working
-  - [ ] + get build to prod with full flow of app editing working
-
 - [ ] Last Features to tie it all together?
   1. "Move Data" modal, see block below
   2. See DataDog, could pull some auto-dashboard example apps
 
 - [ ] Demo apps that would be compelling:
-  - [ ] StackOverflow Clone
   - [ ] Some sort of easy drag/drop in/out type thing
   - [ ] Some sort of data browsing/plugin app:
     - [ ] Database browser could be useful
     - [ ] GraphQL usage would be helpful
+
+- [ ] Build to production
+  - [ ] !!! we can't do this right now for electron 8 though without some trouble, so no rounded windows..?
+  - [ ] Get build to prod working
+  - [ ] + get build to prod with full flow of app editing working
 
 
 ----------
@@ -106,7 +124,6 @@ notes from onboarding andrew:
 - searchResults app shouldn't insert by default
 - make workers wait for app to finish startup before starting
 - node rebuilding slowly
-
 - need to refresh searchResults sometimes when youve added bits, dont do too smart just check for saves
 - SelectableStore should export themselves into a global, based on if they are visibile, and then esc can clear selection before doing anything else
 
@@ -124,52 +141,21 @@ this lets it be configurable easily, see <Flow />.
 
 <Flow persistStep="user" persistData="app" />
 
----
-
-Lists:
-
-- All wysiwig
-- Wysiwig can have a content chooser that shows it in modal
-
----
-
 -- High level
 
 First: working, non-buggy demos of everything. Visually impressive.
 
-- Move search out of drawer and make "/" just work on OrbitSearchResults
 - Drag/Drop with OrbitSearchResults
 - Get interaction with search + show AppShowBit proper
 - Fixing bugs with carousel/drawer/drop
 
-Fix query builder postgres loop with drag/drop
-make a generic app for search + display data that you can drag a query into
+- make a generic app for search + display data that you can drag a query into
 make user manager app use grid layout probably
 make slack app search something large and put it into layout demo app or similar
 
 ---
 
-# PART TWO
-
-not sure...
-
-wants:
-
-"Easily interacting with APIs"
-"Local data you can manage / share with team"
-
-concretely:
-
-querybuilder for postgres or some other
-card app + apis (slack grab some data)
-move that data into a list
-table with a variety of filters easily defined
-
----
-
 next
-
----
 
 Oct
 
@@ -193,12 +179,11 @@ Dec
 
 ---
 
-First, need to talk to a few startup people to get some feedback:
+need to talk to a few startup people to get some feedback:
 
 - Webflow CEO
 - Framer cofounders
 - Zeit/Expo cofounders
-- Retool?
 - ... add a few more
 
 Questions:
@@ -213,3 +198,22 @@ small:
 - https://github.com/humandx/slate-automerge
 
 - monobase for the individual docs sites...
+
+ideas:
+
+- mdx mode:
+  - support a "simple" mode where you can code in just mdx
+    - benefits:
+      - ✅ no import, no export default, no return this/that
+      - ✅ ui + kit available as global
+      - ✅ can still import whatever you need from regular ts files
+      - ❌ no autocomplete in editor likely
+      - ❌ another syntax to learn/maintain
+      - ❌ how do you do stuff like hooks?
+
+- devtools mini-app:
+  - ✅ a lot like xcode's new spotlight/search devtool mode, desirable/easy/fast
+  - ✅ can show a lot of tools: react devtools, mobx, overmind, repl, custom state inspector
+  - ✅ easier cost to useful/attractive ratio than some features
+  - ✅ helps build orbit faster
+  - ❌ not insignificant amount of work

@@ -64,7 +64,7 @@ const updateStatus: AsyncAction<{
     return
   }
 
-  const current = om.state.develop.buildStatus
+  const current = JSON.parse(JSON.stringify(om.state.develop.buildStatus))
   const next = status
 
   // persist the last buildStatus immediately
@@ -84,8 +84,8 @@ const updateStatus: AsyncAction<{
 type UpdateBuildStatusDesc = { current: BuildStatus[]; next: BuildStatus[] }
 
 const loadNewAppDLLs: AsyncAction<UpdateBuildStatusDesc> = async (om, { current, next }) => {
-  const currentIds = getIdentifiers(current)
-  const nextIds = getIdentifiers(next)
+  const currentIds = getIdentifiers(current.filter(x => x.mode === 'development'))
+  const nextIds = getIdentifiers(next.filter(x => x.mode === 'development'))
   const toAdd = difference(nextIds, currentIds).filter(isAppIdentifier)
   if (!toAdd.length) return
   // loop and load new app dlls
@@ -191,6 +191,7 @@ export const loadApps: AsyncAction = async om => {
   om.state.develop.appModules = await Promise.all(
     nameRegistry.map(async ({ buildName, entryPathRelative }) => {
       const appModule = await loadSystemModule(buildName, window)
+      console.log('loading', appModule, entryPathRelative)
       return appModule(entryPathRelative)
     }),
   )

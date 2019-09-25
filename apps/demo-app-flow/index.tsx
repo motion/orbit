@@ -22,7 +22,7 @@ function DemoAppFlow() {
       }}
     >
       <FlowStep
-        title="Select Something"
+        title="Select App"
         subTitle="Select your thing"
         validateFinished={data =>
           data.rows && data.rows.length > 0

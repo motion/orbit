@@ -34,7 +34,6 @@
     "@o/stores": "^2.6.0",
     "@o/use-store": "^2.6.0",
     "@o/utils": "^2.6.0",
-    "@o/webpack-react-refresh": "^2.6.0",
     "@o/oracle": "*",
     "ignore-not-found-export-webpack-plugin": "^1.0.1",
     "add-source-loader": "^2.6.0",

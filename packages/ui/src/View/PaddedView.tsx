@@ -33,7 +33,8 @@ export const PaddedView = gloss<
   // testing! this fixed <AppCard /> in api-grid demo where scrollable stops working
   // if you show messages in a room that has a lot, it wont scroll. my hope is this fixes it
   // without needing to do stupid things like add a prop to control PaddedView inside
-  maxHeight: '-webkit-fill-available',
+  // but it broke the website big time, in a very odd bug during parallax
+  // maxHeight: '-webkit-fill-available',
 }).theme(
   props => ({
     flex: props.flex,

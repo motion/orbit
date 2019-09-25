@@ -38,12 +38,15 @@ export const useScrollableParent = () => {
  */
 
 export function ScrollableIntersection({
+  direction,
   scrollableParent,
 }: {
   scrollableParent: ScrollableParentStore
+  direction: 'x' | 'y'
 }) {
   const scrollProgress = scrollableParent.scrollIntersectionState.scrollProgress
   useScrollProgress({
+    direction,
     ref: scrollableParent.props.ref,
     motionValue: scrollProgress,
   })
@@ -83,8 +86,8 @@ export function ScrollableIntersection({
     function finishUpdate() {
       clearTimeout(updateTm)
       updateTm = setTimeout(() => {
-        const parentOuterWidth = ref.current.clientWidth
-        const childrenWidths: { width: number; height: number }[] = []
+        const parentOuterWidth = ref.current[direction === 'x' ? 'clientWidth' : 'clientHeight']
+        const childrenSizes: { width: number; height: number }[] = []
 
         for (const [_, { contentRect, node }] of children.entries()) {
           const final = {
@@ -107,22 +110,24 @@ export function ScrollableIntersection({
             }
           }
 
-          childrenWidths.push(final)
+          childrenSizes.push(final)
         }
 
         // calculate real parent width
-        const parentWidth = childrenWidths.reduce((a, b) => a + b.width, 0)
+        const parentSize = childrenSizes.reduce((a, b) => a + b.width, 0)
 
         // and now update children states
+        const offsetKey = direction === 'x' ? 'offsetLeft' : 'offsetTop'
+        const sizeKey = direction === 'x' ? 'width' : 'height'
         for (const [index, { node }] of children.entries()) {
           // now we have the real width, do scroll intersection measurements
           // assume all have same widths for now
-          const nodeLeft = node.offsetLeft
-          const nodeWidth = childrenWidths[index].width
-          const total = childrenWidths.length
+          const nodeLeft = node[offsetKey]
+          const nodeSize = childrenSizes[index][sizeKey]
+          const total = childrenSizes.length
           const width = 1 / total
-          const restWidth = parentWidth - nodeWidth
-          const offset = restWidth === 0 ? 0 : nodeLeft / (parentWidth - nodeWidth)
+          const restWidth = parentSize - nodeSize
+          const offset = restWidth === 0 ? 0 : nodeLeft / (parentSize - nodeSize)
           scrollableParent.scrollIntersectionState.measurements.set(index, {
             offset,
             width,

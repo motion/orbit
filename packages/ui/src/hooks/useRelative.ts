@@ -12,7 +12,10 @@ export function useRelative<T>(callback: (...values: T[]) => T, ...values: (Moti
   // Compute the motion values's value by running
   // current values of its related values through
   // the callback function
-  const getComputedValue = useCallback(() => callback(...values.map(toValue)), [callback, values])
+  const getComputedValue = useCallback(() => callback(...values.map(toValue)), [
+    callback,
+    ...values,
+  ])
 
   // Create new motion value
   const value = useMotionValue(getComputedValue())

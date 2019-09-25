@@ -3,7 +3,6 @@ import { selectDefined } from '@o/utils'
 import React, { memo, useEffect, useState } from 'react'
 
 import { mediaStyles } from '../constants'
-import { useSiteStore } from '../SiteStore'
 import { SectionContent, SectionContentProps } from './SectionContent'
 
 const { PassProps, useProps } = createContextualProps<SectionContentProps>({
@@ -12,13 +11,16 @@ const { PassProps, useProps } = createContextualProps<SectionContentProps>({
 })
 
 export function Page(props: SectionContentProps) {
-  const siteStore = useSiteStore()
   return (
     <PassProps overflow="visible" zIndex={0} {...props}>
       <Parallax.Container>
         <SectionContent
           className="page"
-          height={props.pages === 'auto' ? 'auto' : siteStore.sectionHeight * (props.pages || 1)}
+          height="85vh"
+          minHeight="max-content"
+          maxHeight={1300}
+          alignItems="center"
+          justifyContent="center"
           {...props}
           flex="none"
           xs-height="auto"
@@ -36,7 +38,6 @@ Page.ParallaxView = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) =
       {...mediaStyles.hiddenWhen.xs}
       speed={0.2}
       style={{
-        pointerEvents: 'none',
         zIndex: +parallax.zIndex + (+zIndex || 0) + 1,
         overflow: selectDefined(overflow, parallax.overflow),
         ...style,
@@ -46,7 +47,7 @@ Page.ParallaxView = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) =
   )
 }
 
-Page.BackgroundParallax = memo((props: ParallaxViewProps) => {
+Page.BackgroundParallax = memo(({ speed, ...props }: ParallaxViewProps) => {
   const { zIndex } = useProps()
   const [shown, setShown] = useState()
   useEffect(() => {
@@ -58,11 +59,13 @@ Page.BackgroundParallax = memo((props: ParallaxViewProps) => {
       className="page-background"
       transition="opacity ease 1500ms"
       position="absolute"
+      pointerEvents="none"
       left="5%"
-      right="5%"
       top="2%"
-      bottom="2%"
+      width="90%"
+      height="94%"
       {...props}
+      speed={speed * 20}
       opacity={shown ? props.opacity || 1 : 0}
     />
   )

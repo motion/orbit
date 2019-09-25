@@ -2,8 +2,9 @@ import { Col, Grid, Image, Row, Space, useNodeSize, View } from '@o/ui'
 import { flatMap } from 'lodash'
 import React, { memo, useRef, useState } from 'react'
 
-import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
+import { useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
+import { ParallaxStageItem } from '../../views/ParallaxStage'
 import { PillButtonDark } from '../../views/PillButtonDark'
 import { TitleText } from '../../views/TitleText'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
@@ -23,7 +24,7 @@ const sections = {
       },
       {
         title: 'Query Builder',
-        icon: 'query',
+        icon: 'code-block',
         body: [
           `Build and explore your data plugins, create queries and test them from the control panel.`,
         ],
@@ -54,7 +55,7 @@ const sections = {
       },
       {
         title: `Drag & Drop Data`,
-        icon: `clopboard`,
+        icon: `exchange`,
         body: [`First class data drag & drop to move data in or out easily, or between apps.`],
       },
       {
@@ -85,15 +86,15 @@ const sections = {
         ],
       },
       {
-        title: `Amazing technology`,
-        icon: `go`,
+        title: `Modern view system`,
+        icon: `grid-view`,
         body: [
-          `Add a node process with a few lines of code. React Concurrent and Suspense first-class support.`,
+          `React Concurrent, Suspense, Framer Motion and more integrated by default, in every view.`,
         ],
       },
       {
         title: `Incredible Dev Tooling`,
-        icon: `pen`,
+        icon: `draw`,
         body: [
           `From logging to data management, state inspection, error recovery and more - Orbit comes with great DX.`,
         ],
@@ -139,15 +140,14 @@ export default memo(() => {
       {/* teal right */}
       <Page.BackgroundParallax
         speed={0.3}
-        offset={0}
-        top="-20%"
-        bottom="-20%"
+        offset={0.5}
         x="60%"
+        top="20%"
         scale={1.3}
         className="glow-two"
-        opacity={0.4}
+        opacity={0.34}
         background="radial-gradient(circle closest-side, #12A1CC, transparent)"
-        parallaxAnimate={geometry => ({
+        parallax={geometry => ({
           y: geometry.useParallax(),
           x: geometry.useParallax().transform(x => -x * 1 + 240),
         })}
@@ -162,14 +162,14 @@ export default memo(() => {
       >
         <Col padding="lg" flex={2}>
           <View flex={1}>
-            <FadeInView delayIndex={1}>
+            <ParallaxStageItem stagger={0}>
               <TitleText alignItems="flex-start" justifyContent="flex-start" size="xxl">
                 The all-in-one
                 <br />
                 data studio
               </TitleText>
-            </FadeInView>
-            <FadeInView delayIndex={1} {...fadeAnimations.up}>
+            </ParallaxStageItem>
+            <ParallaxStageItem stagger={1}>
               <Row space="lg" margin={['4%', 'auto', '8%', 0]}>
                 {sectionNames.map(section => (
                   <React.Fragment key={section}>
@@ -177,9 +177,9 @@ export default memo(() => {
                   </React.Fragment>
                 ))}
               </Row>
-            </FadeInView>
+            </ParallaxStageItem>
           </View>
-          <FadeInView nodeRef={gridContainer} delayIndex={2} {...fadeAnimations.up}>
+          <ParallaxStageItem stagger={2} nodeRef={gridContainer}>
             <Row flexWrap="nowrap">
               {Object.keys(sections).map((section, index) => {
                 return (
@@ -231,50 +231,45 @@ export default memo(() => {
                 )
               })}
             </Row>
-          </FadeInView>
+          </ParallaxStageItem>
         </Col>
 
         <View flex={0.15} />
 
-        <View
-          sm-display="none"
-          position="relative"
-          flex={1}
-          // alignItems="center"
-          // justifyContent="center"
-          height={500}
-        >
-          {Object.keys(sections).map((key, index) => (
-            <Image
-              key={key}
-              transition={transition}
-              animate={{
-                opacity: cur === index ? 1 : 0,
-                y:
-                  cur === index
-                    ? '0%'
-                    : cur > index
-                    ? `-${(cur - index) * 20}%`
-                    : `${(index - cur) * 20}%`,
-              }}
-              width="100%"
-              position="absolute"
-              top={0}
-              left={0}
-              height="auto"
-              minWidth={1000}
-              marginRight={-1000}
-              src={sections[key].image}
-              borderRadius={15}
-              overflow="hidden"
-              boxShadow={[
-                {
-                  blur: 100,
-                  color: '#000',
-                },
-              ]}
-            />
-          ))}
+        <View sm-display="none" position="relative" flex={1} height={500}>
+          <ParallaxStageItem stagger={2}>
+            {Object.keys(sections).map((key, index) => (
+              <Image
+                key={key}
+                transition={transition}
+                animate={{
+                  opacity: cur === index ? 1 : 0,
+                  y:
+                    cur === index
+                      ? '0%'
+                      : cur > index
+                      ? `-${(cur - index) * 20}%`
+                      : `${(index - cur) * 20}%`,
+                }}
+                width="100%"
+                position="absolute"
+                top={0}
+                left={0}
+                height="auto"
+                minWidth={1000}
+                marginRight={-1000}
+                src={sections[key].image}
+                borderRadius={15}
+                overflow="hidden"
+                boxShadow={[
+                  {
+                    blur: 100,
+                    color: '#000',
+                  },
+                ]}
+              />
+            ))}
+          </ParallaxStageItem>
         </View>
       </Row>
     </Fade.FadeProvide>

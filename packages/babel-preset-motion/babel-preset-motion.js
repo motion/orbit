@@ -11,6 +11,9 @@ module.exports = function(_, givenOpts) {
     if (disable.find(x => x === name)) {
       return null
     }
+    if (process.env.DISABLE_BABEL_PLUGIN === name) {
+      return null
+    }
     // disable if not in preferred mode (unless enabled)
     if (opts && opts.usually !== mode && !enable.some(x => x === name)) {
       return null

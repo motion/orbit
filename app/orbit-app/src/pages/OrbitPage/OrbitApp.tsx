@@ -206,7 +206,7 @@ export const OrbitAppRenderOfDefinition = ({
           {/* </ReactShadow.div> */}
         </FadeIn>
       ),
-    [shouldRenderApp, activeItem, id, identifier],
+    [AppDefinitionAppView, shouldRenderApp, activeItem, id, identifier],
   )
 
   const viewsContext = useMemo(

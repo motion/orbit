@@ -24,8 +24,11 @@ export function ScrollableView(props: ScrollableViewProps) {
 
   return (
     <ScrollableParentContext.ProvideStore value={scrollableParent}>
-      {scrollableParent.shouldScrollIntersect && (
-        <ScrollableIntersection scrollableParent={scrollableParent} />
+      {scrollable && scrollableParent.shouldScrollIntersect && (
+        <ScrollableIntersection
+          direction={scrollable === true ? 'y' : scrollable}
+          scrollableParent={scrollableParent}
+        />
       )}
       <ScrollableChrome
         scrollable={scrollable}

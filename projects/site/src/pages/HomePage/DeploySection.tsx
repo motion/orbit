@@ -53,10 +53,10 @@ export default function DeploySection() {
         nodeRef={Fade.ref}
         header={
           <>
-            <FadeInView delayIndex={0}>
+            <FadeInView parallax delayIndex={0}>
               <PillButton>Develop</PillButton>
             </FadeInView>
-            <FadeInView delayIndex={0}>
+            <FadeInView parallax delayIndex={1}>
               <TitleText textAlign="center" size="xxl">
                 Next-level{' '}
                 <Tooltip label="Developer Experience">
@@ -72,7 +72,7 @@ export default function DeploySection() {
         <Space size={60} />
         <Row space={60} sm-space={0} margin={[0, '-180%']} sm-margin="0">
           <Col sm-display="none" flex={2} alignItems="flex-end" justifyContent="center">
-            <FadeInView {...fadeAnimations.left} delayIndex={2}>
+            <FadeInView parallax {...fadeAnimations.left} delayIndex={2}>
               <Parallax.View
                 borderRadius={10}
                 elevation={3}
@@ -83,7 +83,7 @@ export default function DeploySection() {
                 backgroundPosition="center center"
                 backgroundRepeat="no-repeat"
                 position="relative"
-                parallaxAnimate={geometry => ({
+                parallax={geometry => ({
                   x: geometry.useParallax().transform(x => (x > 0 ? -x : x) * 0.1),
                 })}
               >
@@ -107,7 +107,7 @@ export default function DeploySection() {
             maxWidth={380}
             sm-maxWidth="100%"
           >
-            <FadeInView delayIndex={1}>
+            <FadeInView parallax delayIndex={1}>
               <ParagraphIntro
                 // {...fontProps.TitleFont}
                 size="lg"
@@ -119,7 +119,7 @@ export default function DeploySection() {
               </ParagraphIntro>
             </FadeInView>
 
-            <FadeInView delayIndex={2}>
+            <FadeInView parallax delayIndex={2}>
               <Col space="sm">
                 <Item>A 0-setup visual app workspace.</Item>
                 <Item>Per-app fast refresh with error recovery.</Item>
@@ -128,7 +128,7 @@ export default function DeploySection() {
               </Col>
             </FadeInView>
 
-            <FadeInView delayIndex={3}>
+            <FadeInView parallax delayIndex={3}>
               <Link fontWeight={600} size="lg" href="/start">
                 Get started with Orbit ›
               </Link>
@@ -136,7 +136,7 @@ export default function DeploySection() {
           </Col>
 
           <Col sm-display="none" flex={2} alignItems="flex-start" justifyContent="center">
-            <FadeInView {...fadeAnimations.right} delayIndex={3}>
+            <FadeInView parallax {...fadeAnimations.right} delayIndex={3}>
               <Parallax.View
                 borderRadius={10}
                 elevation={3}
@@ -147,7 +147,7 @@ export default function DeploySection() {
                 backgroundPosition="center center"
                 backgroundRepeat="no-repeat"
                 overflow="hidden"
-                parallaxAnimate={geometry => ({
+                parallax={geometry => ({
                   x: geometry.useParallax().transform(x => -(x > 0 ? -x : x) * 0.1),
                 })}
               />

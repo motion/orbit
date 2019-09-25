@@ -12,7 +12,6 @@
 	"dependencies": {
 		"@o/babel-preset-motion": "^2.6.0",
 		"@o/gloss-webpack": "*",
-		"@o/webpack-react-refresh": "*",
 		"@o/ui": "*",
 		"gloss": "*",
 		"@babel/core": "^7.6.0",

@@ -27,6 +27,5 @@
     { "path": "../../packages/electron-sudo" },
     { "path": "../../packages/devcert" },
     { "path": "../../packages/orbit-fork-process" }
-    { "path": "../../packages/webpack-react-refresh" }
   ]
 }

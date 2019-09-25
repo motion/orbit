@@ -1,43 +1,51 @@
-import { createStoreContext } from '@o/use-store'
-import { idFn } from '@o/utils'
+import { createStoreContext, useReaction } from '@o/use-store'
+import { isDefined } from '@o/utils'
 import { MotionValue, useMotionValue } from 'framer-motion'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import React from 'react'
 
 import { AnimationStore, GeometryRenderer, GeometryStore, useGeometry } from './Geometry'
 import { composeRefs } from './helpers/composeRefs'
+import { elementOffset } from './helpers/elementOffset'
+import { useDebounce } from './hooks/useDebounce'
 import { useNodeSize } from './hooks/useNodeSize'
 import { Rect, usePosition } from './hooks/usePosition'
+import { useResizeObserver } from './hooks/useResizeObserver'
 import { ViewProps } from './View/types'
 import { View } from './View/View'
 
-class ParallaxContainerStore {
-  key = 0
-  top = 0
-  left = 0
-  height = 10
-  width = 10
-  update(pos: Rect) {
-    this.top = pos.top
-    this.left = pos.left
-    this.height = pos.height
-    this.width = pos.width
-    this.key = Math.random()
-    this.refresh()
+const rnd = x => (typeof x === 'number' ? Math.round(x * 100) / 100 : x)
+
+class ParallaxStore {
+  bounds: Rect = {
+    top: 0,
+    left: 0,
+    height: 10,
+    width: 10,
   }
-  refresh = idFn as any
-  setRefresh(cb: Function) {
-    this.refresh = cb
+  update(next: Partial<Rect>) {
+    this.bounds = {
+      ...this.bounds,
+      ...next,
+    }
   }
 }
 
-const ParallaxContainerStoreContext = createStoreContext(ParallaxContainerStore)
+const ParallaxStoreContext = createStoreContext(ParallaxStore)
+export const useParallaxContainer = ParallaxStoreContext.useStore
 
 export type ParallaxContainerProps = ViewProps
 
 export function ParallaxContainer(props: ParallaxContainerProps) {
   const ref = React.useRef(null)
-  const store = ParallaxContainerStoreContext.useCreateStore()
+  const store = ParallaxStoreContext.useCreateStore()
+
+  useNodeSize({
+    ref,
+    onChange(size) {
+      store.update(size)
+    },
+  })
 
   usePosition({
     ref,
@@ -48,53 +56,135 @@ export function ParallaxContainer(props: ParallaxContainerProps) {
   })
 
   return (
-    <ParallaxContainerStoreContext.ProvideStore value={store}>
+    <ParallaxStoreContext.ProvideStore value={store}>
       <View position="relative" {...props} nodeRef={ref} />
-    </ParallaxContainerStoreContext.ProvideStore>
+    </ParallaxStoreContext.ProvideStore>
   )
 }
 
-type ParallaxProps = {
+type ParallaxMeasurements = {
+  nodeMeasurements: { width: number; height: number; top: number; left: number }
+  nodeSize: number
+  parentSize: number
+  frameSizePct: number
+  parentEndPct: number
+  parentStartPct: number
+  parentSizePct: number
+  nodeEndPct: number
+  nodeStartPct: number
+  nodeSizePct: number
+}
+
+type ParallaxItemProps = {
   offset?: number
   speed?: number
+  clamp?: boolean | [number, number]
+  min?: number
+  max?: number
+  align?: 'end' | 'start' | 'center'
+  relativeTo?: 'node' | 'parent' | 'frame'
+  stagger?: number
+}
+
+type ParallaxProps = ParallaxItemProps & {
   direction?: 'x' | 'y'
-  clamp?: boolean
 }
 
 type ParallaxGeometryProps = ParallaxProps & {
-  dirVal: number
   sizeKey: string
-  offsetPct: MotionValue<any>
-  parent: ParallaxContainerStore
-  nodeSize: Object
+  version: MotionValue<number>
+  parent: ParallaxStore
+  measurements: RefObject<ParallaxMeasurements>
 }
 
+const table = x =>
+  console.table(
+    Object.keys(x).reduce((acc, k) => {
+      acc[k] = rnd(x[k])
+      return acc
+    }, {}),
+  )
+
 class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
-  useParallax() {
+  useParallaxIntersection(props?: ParallaxItemProps) {
     const {
       direction,
       speed,
       offset,
       clamp,
-      dirVal,
-      sizeKey,
-      offsetPct,
-      parent,
-      nodeSize,
-    } = this.props
-    return this.useViewportScroll(direction)
-      .transform([dirVal, dirVal + 1], [0, -1], { clamp: false })
-      .transform([0, -1], [0, speed], { clamp: false })
-      .mergeTransform([offsetPct], (pos, offsetPctVal) => {
-        const offsetVal = offset * offsetPctVal * parent[sizeKey]
-        const position = pos + offsetVal
-        if (clamp) {
-          const min = 0
-          const max = parent[sizeKey] - nodeSize[sizeKey]
-          return Math.max(min, Math.min(max, position))
+      min,
+      max,
+      version,
+      align,
+      measurements,
+      relativeTo,
+      stagger,
+    } = {
+      ...this.props,
+      ...props,
+    }
+    let chain = this.useViewportScroll(direction === 'x' ? 'xProgress' : 'yProgress')
+      // just use version to triger update
+      .mergeTransform([version], pagePct => {
+        if (speed === 0) return 0
+        const {
+          frameSizePct,
+          parentEndPct,
+          parentStartPct,
+          nodeStartPct,
+          nodeSizePct,
+          parentSizePct,
+        } = measurements.current
+
+        let intersection = 0
+        const parentCenter = parentEndPct - parentSizePct / 2
+        const scrollCenter = pagePct + frameSizePct / 2
+
+        const divisor = relativeTo === 'frame' ? frameSizePct : parentSizePct
+
+        if (relativeTo === 'node') {
+          intersection = 1 + (scrollCenter - nodeStartPct) / nodeSizePct
+        } else {
+          let subtractor =
+            align === 'start' ? parentStartPct : align === 'center' ? parentCenter : parentEndPct
+          intersection = 1 + (pagePct - subtractor) / divisor
         }
-        return position
+        intersection *= speed
+        intersection += offset
+        if (stagger) {
+          intersection += 0.3 * stagger * nodeStartPct
+        }
+        if (isDefined(min)) intersection = Math.max(min, intersection)
+        if (isDefined(max)) intersection = Math.max(max, intersection)
+        if (clamp) {
+          const [min, max] = clamp === true ? [0, 1] : clamp
+          intersection = Math.max(min, Math.min(intersection, max))
+        }
+        return intersection
       })
+
+    return chain
+  }
+
+  transforms = {
+    scrollParentRelative: (x: number) => {
+      const mx = this.props.measurements.current
+      const nodeSize = mx.nodeSize
+      const parentSize = mx.parentSize
+      return x + x * (parentSize - nodeSize)
+    },
+    scrollParentSize: (x: number) => {
+      const { measurements } = this.props
+      return x + measurements.current.parentSize
+    },
+    scrollNodeSize: (x: number) => {
+      const { measurements } = this.props
+      return x * measurements.current.nodeSize
+    },
+  }
+
+  useParallax(props?: ParallaxItemProps) {
+    return this.useParallaxIntersection(props).transform(this.transforms.scrollParentRelative)
   }
 }
 
@@ -107,75 +197,111 @@ export function ParallaxGeometry({
 
 export type ParallaxViewProps = Omit<ViewProps, 'direction'> &
   ParallaxProps & {
-    parallaxAnimate?: (geometry: ParallaxGeometryStore) => { [key: string]: AnimationStore }
+    parallax?: (geometry: ParallaxGeometryStore) => { [key: string]: AnimationStore }
   }
 
-export function ParallaxView({
-  offset = 0,
-  speed = -1,
-  direction = 'y',
-  clamp = false,
-  parallaxAnimate,
-  ...viewProps
-}: ParallaxViewProps) {
+export function ParallaxView(props: ParallaxViewProps) {
+  const {
+    offset = 0,
+    speed = -1,
+    direction = 'y',
+    clamp = false,
+    min,
+    max,
+    align,
+    parallax,
+    stagger,
+    ...viewProps
+  } = props
   const ref = useRef(null)
-  const parent = ParallaxContainerStoreContext.useStore()
+  const parent = useParallaxContainer({ react: false })
   const offsetKey = direction === 'y' ? 'top' : 'left'
   const sizeKey = direction === 'y' ? 'height' : 'width'
-  const dirVal = Math.max(0, parent[offsetKey])
-  const offsetPct = useMotionValue(1)
-  const state = useRef({
-    nodeSize: { width: 0, height: 0 },
-  })
+  const version = useMotionValue(0)
+  const state = useRef<ParallaxMeasurements>({} as any)
+  const documentRef = useRef(document.body)
 
   const update = () => {
-    const nodeSize = Math.max(1, state.current.nodeSize[sizeKey])
-    const parentSize = Math.max(1, parent[sizeKey])
-    let next = offset >= 0 ? (parentSize - nodeSize) / parentSize : nodeSize / parentSize
-    if (next >= 1) {
-      next = 0.99
-    } else if (next < 0) {
-      // we went negative, child bigger than container
-      next = 0.99
-    }
-    offsetPct.set(next)
+    const bodySize = document.body[direction === 'y' ? 'clientHeight' : 'clientWidth']
+    const windowSize = window[direction === 'y' ? 'innerHeight' : 'innerWidth']
+    const parentBounds = parent.bounds
+    const mx = state.current
+    const nodeMeasurements = mx.nodeMeasurements
+    if (!nodeMeasurements) return
+    mx.nodeSize = Math.max(1, nodeMeasurements[sizeKey])
+    mx.parentSize = Math.max(1, parentBounds[sizeKey])
+    const bodyScrollable = bodySize - windowSize
+    const parentBottom = parentBounds[offsetKey] + parentBounds[sizeKey]
+    mx.parentEndPct = parentBottom / bodyScrollable
+    mx.parentStartPct = parentBounds[offsetKey] / bodyScrollable
+    mx.parentSizePct = mx.parentEndPct - mx.parentStartPct
+    const nodeBottom = nodeMeasurements[offsetKey] + nodeMeasurements[sizeKey]
+    mx.nodeEndPct = nodeBottom / bodyScrollable
+    mx.nodeStartPct = nodeMeasurements[offsetKey] / bodyScrollable
+    mx.nodeSizePct = mx.nodeEndPct - mx.nodeStartPct
+    mx.frameSizePct = windowSize / bodyScrollable
+    version.set(Math.random())
   }
+
+  const updateDb = useDebounce(update, 40)
+
+  useEffect(() => {
+    window.addEventListener('resize', updateDb)
+    return () => {
+      window.removeEventListener('resize', updateDb)
+    }
+  }, [])
+
+  useResizeObserver({
+    ref: documentRef,
+    onChange: updateDb,
+  })
+
+  useReaction(
+    () => parent.bounds,
+    updateDb,
+    {
+      avoidRender: true,
+    },
+    [sizeKey, offsetKey],
+  )
 
   useNodeSize({
     ref,
-    throttle: 250,
+    throttle: 150,
     onChange({ width, height }) {
-      state.current.nodeSize = { width, height }
-      update()
+      const { top, left } = elementOffset(ref.current)
+      state.current.nodeMeasurements = { width, height, top, left }
+      updateDb()
     },
   })
 
-  const nodeSize = state.current.nodeSize
-
   return (
     <ParallaxGeometry
-      key={dirVal}
       {...{
         direction,
         speed,
         offset,
         clamp,
-        dirVal,
+        version,
         sizeKey,
-        offsetPct,
         parent,
-        nodeSize,
+        measurements: state,
+        min,
+        max,
+        align,
+        stagger,
       }}
     >
       {(geometry, gref) => {
         return (
           <View
-            nodeRef={composeRefs(gref, ref)}
             {...viewProps}
+            nodeRef={composeRefs(gref, ref, viewProps.nodeRef)}
             animate
             transformOrigin="top center"
-            {...(parallaxAnimate
-              ? parallaxAnimate(geometry)
+            {...(parallax
+              ? parallax(geometry)
               : {
                   [direction]: geometry.useParallax(),
                 })}

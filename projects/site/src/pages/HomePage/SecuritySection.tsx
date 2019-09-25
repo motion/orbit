@@ -22,7 +22,7 @@ export default function SecuritySection() {
         x="-55%"
         scale={1.6}
         background="radial-gradient(circle closest-side, #681635, transparent)"
-        parallaxAnimate={geometry => ({
+        parallax={geometry => ({
           y: geometry.useParallax().transform(x => x + 300),
           x: geometry.useParallax().transform(x => -x),
         })}
@@ -34,22 +34,22 @@ export default function SecuritySection() {
         margin="auto"
         header={
           <>
-            <FadeInView delayIndex={0}>
+            <FadeInView parallax delayIndex={0}>
               <PillButton>Trust</PillButton>
             </FadeInView>
-            <FadeInView delayIndex={1}>
+            <FadeInView parallax delayIndex={1}>
               <TitleText textAlign="center" size="xl">
                 Open & secure
               </TitleText>
             </FadeInView>
-            <FadeInView delayIndex={2} {...fadeAnimations.up}>
+            <FadeInView parallax delayIndex={2} {...fadeAnimations.up}>
               <TitleTextSub>Completely on-device, open source &&nbsp;customizable.</TitleTextSub>
             </FadeInView>
           </>
         }
       >
         <Space size="xxxl" />
-        <FadeInView delayIndex={3} {...fadeAnimations.up}>
+        <FadeInView parallax delayIndex={3} {...fadeAnimations.up}>
           <Row flex={1} space="xxxl">
             <Col flex={3} space="xl">
               <Pitch alpha={1} size="lg">

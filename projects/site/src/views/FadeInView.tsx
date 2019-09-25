@@ -1,6 +1,8 @@
 import { createStoreContext } from '@o/kit'
-import { MotionProps, useIntersectionObserver, View, ViewProps } from '@o/ui'
+import { MotionProps, useIntersectionObserver, useParallaxContainer, View, ViewProps } from '@o/ui'
 import React, { memo, useCallback, useRef, useState } from 'react'
+
+import { ParallaxProp, ParallaxStageItem } from './ParallaxStage'
 
 export type FadeInProps = ViewProps & {
   delay?: number
@@ -34,7 +36,7 @@ export const transitions: { [key: string]: MotionProps['transition'] } = {
   normal: {
     type: 'spring',
     damping: 12,
-    stiffness: 70,
+    stiffness: 75,
   },
   fast: {
     type: 'spring',
@@ -125,6 +127,9 @@ export type FadeChildProps = ViewProps & {
   disable?: boolean
   fullscreen?: boolean
   reverse?: boolean
+  min?: number
+  max?: number
+  parallax?: ParallaxProp
 }
 
 const initialScreenWidth = window.innerWidth
@@ -140,11 +145,16 @@ export const FadeInView = memo(
     disable,
     fullscreen,
     reverse,
+    min,
+    max,
     display,
+    parallax,
     ...rest
   }: FadeChildProps) => {
     const fadeStore = FadeStoreContext.useStore()
     const shown = !disable && (fadeStore.shown !== null ? fadeStore.shown : false)
+
+    const parent = useParallaxContainer()
 
     style = {
       display: display || 'flex',
@@ -170,8 +180,32 @@ export const FadeInView = memo(
         ? { duration: 0 }
         : {
             ...(transition as any),
-            delay: delayIndex ? delayIndex / 4.5 : (delay || 1) / 1000,
+            delay: delayIndex ? delayIndex / 6 : (delay || 1) / 1000,
           }
+
+    if (!parent) {
+      return <View {...rest}>{children}</View>
+    }
+
+    if (parallax) {
+      return (
+        <ParallaxStageItem parallax={parallax} stagger={delayIndex} {...rest}>
+          <View
+            data-is="FadeChild"
+            style={style}
+            animate={shown ? animate : undefined}
+            transition={finalTransition}
+            alignItems="inherit"
+            justifyContent="inherit"
+            flexDirection="inherit"
+            flexFlow="inherit"
+            alignSelf="inherit"
+          >
+            {children}
+          </View>
+        </ParallaxStageItem>
+      )
+    }
 
     return (
       <View

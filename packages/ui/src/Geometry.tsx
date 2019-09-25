@@ -1,15 +1,14 @@
-import { decorate, useForceUpdate } from '@o/use-store'
+import { decorate, useStore } from '@o/use-store'
 import { MotionValue, useSpring, useTransform, useViewportScroll } from 'framer-motion'
 import { SpringProps } from 'popmotion'
 import React from 'react'
 import { RefObject, useCallback, useContext, useEffect, useRef } from 'react'
 
-import { useLazyRef } from './hooks/useLazyRef'
-import { useOnHotReload } from './hooks/useOnHotReload'
 import { useRelative } from './hooks/useRelative'
 import { useScrollProgress } from './hooks/useScrollProgress'
 import { useScrollableParent } from './View/ScrollableParentStore'
 
+//1
 // @ts-ignore
 @decorate
 class HooksStore<T> {
@@ -45,7 +44,8 @@ export class AnimationStore {
     return this
   }
 
-  spring(props: SpringProps) {
+  spring(props: SpringProps | false) {
+    if (!props) return this
     if (this.frozen) return this
     this.animationHooks.addHook(hooksValues => {
       const lastHookVal = hooksValues[hooksValues.length - 1]
@@ -69,7 +69,9 @@ export class GeometryStore<A = any> {
   curCall = 0
   frozen = false
 
-  constructor(private nodeRef: RefObject<HTMLElement>, public props: A) {}
+  props: A & {
+    ref: RefObject<HTMLElement>
+  }
 
   beforeRenderChildren() {
     this.curCall = 0
@@ -137,12 +139,13 @@ export class GeometryStore<A = any> {
   /**
    * Returns a 0 to 1 value (for any child) representing the current scroll position of the parent scrollable
    */
-  scrollProgress() {
+  scrollProgress(direction: 'x' | 'y') {
     return this.setupStore(store => {
       store.animationHooks.addHook(() => {
         const scrollableParent = useScrollableParent()
         return useScrollProgress({
           ref: scrollableParent.props.ref,
+          direction,
         })
       })
     })
@@ -172,7 +175,7 @@ export class GeometryStore<A = any> {
           if (!scrollIntersectionState.ready) {
             return 0
           }
-          const index = scrollIntersectionState.elements.indexOf(this.nodeRef.current)
+          const index = scrollIntersectionState.elements.indexOf(this.props.ref.current)
           const state = scrollIntersectionState.measurements.get(index)
           const res = state ? (state.offset - scroll) * state.total : 0
           return res
@@ -187,19 +190,15 @@ export type GeometryRenderer<A extends GeometryStore> = (
   ref: RefObject<HTMLElement>,
 ) => React.ReactNode
 
+// 123
+
 export function useGeometry<A extends GeometryStore>(
   getChildren: GeometryRenderer<A>,
   GeometryConstructor: { new (...args: any): A },
   geometryProps?: any,
 ) {
   const ref = useRef()
-  const geometry = useLazyRef(() => new GeometryConstructor(ref, geometryProps)).current
-  const update = useForceUpdate()
-
-  useOnHotReload(() => {
-    geometry.clear()
-    update()
-  })
+  const geometry = useStore(GeometryConstructor, { ref, ...geometryProps }, { react: false })
 
   geometry.beforeRenderChildren()
   const children = getChildren(geometry, ref)

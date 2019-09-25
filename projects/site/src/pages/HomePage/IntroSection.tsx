@@ -7,8 +7,8 @@ import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContent } from '../../views/SectionContent'
 
-const IntroPara = ({ delayIndex, ...props }) => (
-  <FadeInView delayIndex={delayIndex}>
+const IntroPara = ({ delayIndex, stagger, ...props }) => (
+  <FadeInView parallax delayIndex={delayIndex} stagger={stagger}>
     <Paragraph alpha={0.85} size={1.5} fontWeight={200} sizeLineHeight={1.4} {...props} />
   </FadeInView>
 )
@@ -48,7 +48,7 @@ export default function IntroSection() {
         <HalfGrid>
           {/* marginbottom is safari fix */}
           <View belowmd-marginBottom={50}>
-            <FadeInView>
+            <FadeInView parallax>
               <Image
                 display="block"
                 src={require('../../public/images/screen1.jpeg')}
@@ -73,15 +73,15 @@ export default function IntroSection() {
             </FadeInView>
           </View>
           <Col space="xl" justifyContent="center">
-            <IntroPara delayIndex={1} size={1.8}>
+            <IntroPara delayIndex={1} stagger={0} size={1.8}>
               <strong style={{ color: '#fff' }}>We're rethinking how we build apps for work</strong>
               &nbsp;with a fun, creative workspace where unified data is explorable and moldable.
             </IntroPara>
-            <IntroPara delayIndex={2}>
+            <IntroPara delayIndex={2} stagger={-0.5}>
               It's a smart, fast heads up display that's always there. Create new apps in minutes,
               share them with a press of a button.
             </IntroPara>
-            <IntroPara delayIndex={3}>
+            <IntroPara delayIndex={3} stagger={-1}>
               Powerful enough to run your business, easier to use than bootstrap.
             </IntroPara>
           </Col>

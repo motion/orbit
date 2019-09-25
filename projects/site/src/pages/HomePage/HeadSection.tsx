@@ -78,8 +78,9 @@ export function HeadSection() {
         speed={-0.35}
         offset={-1}
         zIndex={-1}
-        opacity={0.5}
+        opacity={0.35}
         scale={1.5}
+        top="-70%"
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
       />
 
@@ -91,9 +92,9 @@ export function HeadSection() {
         height="50%"
         top="0%"
         right="-80%"
-        parallaxAnimate={geometry => ({
-          x: geometry.useParallax().transform(x => -x * 1.5),
-          y: geometry.useParallax().transform(x => x * 1.5),
+        parallax={geometry => ({
+          x: geometry.useParallax().transform(x => -x * 3),
+          y: geometry.useParallax().transform(x => x * 3),
         })}
       >
         <Star top="0%" left="0%" />
@@ -111,10 +112,9 @@ export function HeadSection() {
         height="50%"
         top="0%"
         right="-80%"
-        clamp
-        parallaxAnimate={geometry => ({
-          x: geometry.useParallax().transform(x => -x * 1.5 * 1.2),
-          y: geometry.useParallax().transform(x => x * 1.5 * 1.2),
+        parallax={geometry => ({
+          x: geometry.useParallax().transform(x => -x * 3 * 1.2),
+          y: geometry.useParallax().transform(x => x * 3 * 1.2),
         })}
       >
         <Star top="0%" left="0%" />
@@ -128,7 +128,7 @@ export function HeadSection() {
         <Space size="xxl" />
         <Col
           maxHeight="80vh"
-          minHeight={800}
+          minHeight={600}
           sm-minHeight="auto"
           nodeRef={Fade.ref}
           alignItems="center"
@@ -136,18 +136,16 @@ export function HeadSection() {
         >
           <HeadTextSection />
         </Col>
-        <Page.ParallaxView
-          speed={-0.05}
-          offset={0}
+        <View
           className="app-screenshot"
           position="relative"
           height={500}
           flex={7}
-          margin={['-15%', '-10%', 0]}
+          margin={['-20%', '-10%', -100]}
           userSelect="none"
           zIndex={-1}
         >
-          <FadeInView {...animation.screen}>
+          <FadeInView parallax speed={0.2} {...animation.screen}>
             <View
               transform={{
                 perspective: 10000,
@@ -166,21 +164,27 @@ export function HeadSection() {
               />
             </View>
           </FadeInView>
-        </Page.ParallaxView>
+        </View>
       </Col>
-      <Page.ParallaxView
-        speed={0.1}
-        offset={0.5}
+      <View
         zIndex={100}
         position="absolute"
         left="50%"
-        top="15vh"
+        top="50%"
+        marginTop={180}
         marginLeft={`${-180 / 2}px`}
         width={180}
         alignItems="center"
         justifyContent="center"
       >
-        <FadeInView {...animation.watch} flex={1} alignItems="inherit" justifyContent="inherit">
+        <FadeInView
+          parallax
+          speed={-0.1}
+          {...animation.watch}
+          flex={1}
+          alignItems="inherit"
+          justifyContent="inherit"
+        >
           <View
             animate
             transformOrigin="center center"
@@ -223,7 +227,7 @@ export function HeadSection() {
             <SimpleText>Watch the demo</SimpleText>
           </View>
         </FadeInView>
-      </Page.ParallaxView>
+      </View>
     </Fade.FadeProvide>
   )
 }
@@ -269,7 +273,7 @@ const HeadTextSection = memo(() => {
             whiteSpace="nowrap"
             maxHeight={160}
           >
-            <FadeInView {...animation.blog} disable={!measured}>
+            <FadeInView parallax {...animation.blog} disable={!measured}>
               <Tag
                 size={0.85}
                 sizeHeight={1.01}
@@ -291,19 +295,19 @@ const HeadTextSection = memo(() => {
                 Orbit enters private beta!
               </Tag>
             </FadeInView>
-            <FadeInView disable={!measured} {...animation.title} {...fontProps.TitleFont}>
+            <FadeInView parallax disable={!measured} {...animation.title} {...fontProps.TitleFont}>
               Amazing internal tools
             </FadeInView>
           </TextFitTitle>
           {br}
-          <FadeInView {...animation.sub1} minHeight="min-content">
+          <FadeInView parallax {...animation.sub1} minHeight="min-content">
             <TitleParagraph {...para}>
               {/* first line */}Create internal tools you'd never have attempted before.
             </TitleParagraph>
           </FadeInView>
           <span style={{ userSelect: 'none' }}>&nbsp;</span>
           <View sm-display="none">
-            <FadeInView {...animation.sub2} minHeight="min-content">
+            <FadeInView parallax {...animation.sub2} minHeight="min-content">
               <TitleParagraph {...para}>
                 {/* second line */}
                 The all-in-one data & app studio for teams.
@@ -311,8 +315,7 @@ const HeadTextSection = memo(() => {
             </FadeInView>
           </View>
           {br}
-          <FadeInView
-            {...animation.join}
+          <View
             display="block"
             minHeight="min-content"
             sm-display="inline"
@@ -320,7 +323,7 @@ const HeadTextSection = memo(() => {
             position="relative"
           >
             <HeadJoin />
-          </FadeInView>
+          </View>
         </View>
       </View>
     </SectionContentChrome>
@@ -330,7 +333,7 @@ const HeadTextSection = memo(() => {
 const HeadJoin = memo(() => {
   return (
     <View flex={1} width="100%" alignItems="center">
-      <FadeInView {...fadeAnimations.up} delay={500}>
+      <FadeInView parallax {...fadeAnimations.up} delay={500}>
         <SurfacePassProps elevation={5} {...fontProps.TitleFont}>
           <Theme name="orbitOneDark">
             <Scale size={useScreenVal(1, 1.1, 1.2)}>

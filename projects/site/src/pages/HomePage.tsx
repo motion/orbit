@@ -33,28 +33,28 @@ export const HomePage = memo(() => {
         className="main-contents"
         style={{ position: 'relative', zIndex: 0, overflow: 'hidden' }}
       >
-        <Page pages="auto" zIndex={0}>
+        <Page height="auto" zIndex={0}>
           <HeadSection />
         </Page>
-        <Page pages="auto">
+        <Page>
           <Sections.FeaturesSection />
         </Page>
-        <Page pages="auto">
+        <Page>
           <Sections.AllInOnePitchDemoSection />
         </Page>
-        <Page pages="auto">
+        <Page>
           <Sections.IntroSection />
         </Page>
-        <Page pages="auto">
+        <Page>
           <Sections.DeploySection />
         </Page>
-        <Page pages="auto">
+        <Page>
           <Sections.DataAppKitFeaturesSection />
         </Page>
-        <Page pages="auto">
+        <Page>
           <Sections.SecuritySection />
         </Page>
-        <Page pages="auto">
+        <Page>
           <Theme name="home">
             <Sections.FooterSection hideJoin />
           </Theme>
@@ -75,11 +75,10 @@ const onIdle = () => new Promise(res => requestIdleCallback(res))
 
 const startLoading = once(async () => {
   // let them all add
-  await new Promise(res => setTimeout(res, 3000))
+  await new Promise(res => setTimeout(res, 2000))
   // load rest of page
   while (allUpcoming.length) {
     await onIdle()
-    await new Promise(res => setTimeout(res, 400))
     const next = allUpcoming.reduce((a, b) => (b.top < a.top ? b : a), { top: Infinity })
     console.log('loading', next)
     next.load()

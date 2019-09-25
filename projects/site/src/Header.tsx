@@ -100,7 +100,7 @@ export const Header = memo(({ slim, noBorder, before, logoProps, ...rest }: Head
             opacity={slim ? 1 : siteStore.showSidebar ? 0 : 1}
             {...rest}
           >
-            <HeaderContain height={50}>
+            <HeaderContain height={42}>
               {linksLeft}
               <FadeInView
                 disable={!LinkState.didAnimateOut}

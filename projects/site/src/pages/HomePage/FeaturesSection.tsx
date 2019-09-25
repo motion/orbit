@@ -172,14 +172,28 @@ export default memo(() => {
             <ParallaxStageItem stagger={1}>
               <Row space="lg" margin={['4%', 'auto', '8%', 0]}>
                 {sectionNames.map(section => (
-                  <React.Fragment key={section}>
-                    <PillButtonDark {...btnProps(section)}>{section}</PillButtonDark>
-                  </React.Fragment>
+                  <PillButtonDark key={section} {...btnProps(section)}>
+                    {section}
+                  </PillButtonDark>
                 ))}
               </Row>
             </ParallaxStageItem>
           </View>
-          <ParallaxStageItem stagger={2} nodeRef={gridContainer}>
+          <ParallaxStageItem
+            parallax={{
+              x: {
+                transition: 'ease-in-out',
+                move: 200,
+                clamp: [-200, 200],
+              },
+              opacity: {
+                transition: 'ease-in',
+                clamp: [0, 1],
+              },
+            }}
+            stagger={2}
+            nodeRef={gridContainer}
+          >
             <Row flexWrap="nowrap">
               {Object.keys(sections).map((section, index) => {
                 return (
@@ -237,7 +251,20 @@ export default memo(() => {
         <View flex={0.15} />
 
         <View sm-display="none" position="relative" flex={1} height={500}>
-          <ParallaxStageItem stagger={2}>
+          <ParallaxStageItem
+            stagger={2}
+            parallax={{
+              x: {
+                transition: 'ease-in-out',
+                move: -200,
+                clamp: [-200, 200],
+              },
+              opacity: {
+                transition: 'ease-in',
+                clamp: [0, 1],
+              },
+            }}
+          >
             {Object.keys(sections).map((key, index) => (
               <Image
                 key={key}

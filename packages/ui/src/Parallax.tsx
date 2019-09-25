@@ -75,7 +75,7 @@ type ParallaxMeasurements = {
   nodeSizePct: number
 }
 
-type ParallaxItemProps = {
+export type ParallaxItemProps = {
   offset?: number
   speed?: number
   clamp?: boolean | [number, number]

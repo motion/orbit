@@ -30,7 +30,7 @@ export default memo(() => {
 
       <Page.BackgroundParallax
         speed={0.075}
-        offset={0.75}
+        offset={0.5}
         top={50}
         opacity={0.5}
         zIndex={-2}
@@ -39,6 +39,7 @@ export default memo(() => {
         // keeps it from cropping on small screen
         left="-40%"
         right="-40%"
+        width="auto"
       >
         <FadeInView parallax delay={800} height="90%" width="100%">
           <FullScreen

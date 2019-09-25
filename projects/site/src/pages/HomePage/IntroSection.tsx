@@ -48,7 +48,7 @@ export default function IntroSection() {
         <HalfGrid>
           {/* marginbottom is safari fix */}
           <View belowmd-marginBottom={50}>
-            <FadeInView parallax={['y']}>
+            <FadeInView parallax>
               <Image
                 display="block"
                 src={require('../../public/images/screen1.jpeg')}

@@ -32,7 +32,7 @@ function getParallax(props: ParallaxStageItemProps) {
         .transform(startClamp, [-2, -0.025, 0, 0.025, 0])
         .transform(x => x * 250)
         // clamp
-        .transform(x => Math.max(-500, Math.min(x, 500))),
+        .transform(x => Math.max(-300, Math.min(x, 300))),
     ),
     ...useIf(props.parallax, 'opacity', () =>
       geometry

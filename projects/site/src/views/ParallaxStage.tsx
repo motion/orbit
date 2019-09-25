@@ -5,8 +5,10 @@ import * as React from 'react'
 import { Page } from './Page'
 
 const transitionTransforms = {
-  'ease-in-out': [[-1, -0.175, 0, 0.3, 1.5], [-2, -0.05, 0, 0.05, 0]],
-  'ease-in': [[-1, -0.15, 0, 0.3, 1.5], [-3, 1, 1, 1, 1]],
+  'ease-in-out': [[-1, -0.2, -0.1, 0, 1], [-2, -0.1, 0, 0.1, 1]],
+  'ease-in-out-quad': [[-1, -0.2, -0.1, 0, 1], [-2, -0.1, 0, 0.1, 2]],
+  'ease-in': [[-1, -0.15, 0, 0.3, 1], [-3, 1, 1, 1, 1]],
+  'ease-in-quad': [[-1, -0.2, -0.1, 0, 1], [-2, -0.1, 0, 0, 0]],
   'ease-out': [[-1, -0.15, 0, 0.3, 1.5], [1, 1, 1, 1, -3]],
 } as const
 
@@ -29,7 +31,7 @@ type ParallaxStageItemProps = Omit<ParallaxViewProps, 'parallax'> & {
 const defaultParallax: ParallaxProp = {
   y: {
     move: 250,
-    transition: 'ease-in-out',
+    transition: 'ease-in-quad',
     clamp: [-300, 300],
   },
   opacity: {

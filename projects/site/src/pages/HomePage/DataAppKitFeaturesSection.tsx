@@ -40,7 +40,7 @@ export default memo(() => {
         left="-40%"
         right="-40%"
       >
-        <FadeInView delay={800} height="90%" width="100%">
+        <FadeInView parallax delay={800} height="90%" width="100%">
           <FullScreen
             left={-120}
             right={-120}
@@ -63,16 +63,16 @@ export default memo(() => {
         xs-margin={0}
         header={
           <>
-            <FadeInView delayIndex={0}>
+            <FadeInView parallax delayIndex={0}>
               <PillButton>App Store</PillButton>
             </FadeInView>
-            <FadeInView delayIndex={1}>
+            <FadeInView parallax delayIndex={1}>
               <TitleText textAlign="center" size="xl">
                 Apps that play along
               </TitleText>
             </FadeInView>
             <TitleTextSub>
-              <FadeInView delayIndex={2}>
+              <FadeInView parallax delayIndex={2}>
                 Sync data, expose GraphQL and TypeScript APIs, and render&nbsp;content.
                 The&nbsp;app&nbsp;store&nbsp;enables cooperative app-building.
               </FadeInView>
@@ -113,7 +113,7 @@ export default memo(() => {
 
         <Space size="lg" />
 
-        <FadeInView delayIndex={3} {...fadeAnimations.up}>
+        <FadeInView parallax delayIndex={3} {...fadeAnimations.up}>
           <Row space margin={[0, 'auto']}>
             <BodyButton {...linkProps('/apps')} size="lg">
               Explore apps
@@ -130,6 +130,7 @@ const Integration = memoIsEqualDeep(({ icon, title, index, downloads, hearts, ..
   const borderColor = theme.borderColor.setAlpha(0.1)
   return (
     <FadeInView
+      parallax
       {...(index % 1 == 0 ? fadeAnimations.up : fadeAnimations.down)}
       delay={index * 100 + 250}
     >

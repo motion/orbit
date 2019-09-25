@@ -65,7 +65,7 @@ export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = [])
   }
 
   // useLayout?
-  useLayoutEffect(updateSize, [disable, ref, ...mountArgs])
+  useEffect(updateSize, [disable, ref, ...mountArgs])
 
   return useMemo(
     () => ({

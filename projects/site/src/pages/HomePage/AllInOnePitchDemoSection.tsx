@@ -163,16 +163,16 @@ export default memo(() => {
         padding={['10vh', '0%']}
         header={
           <>
-            <FadeInView delayIndex={0}>
+            <FadeInView parallax delayIndex={0}>
               <PillButton>Build</PillButton>
             </FadeInView>
-            <FadeInView delayIndex={1}>
+            <FadeInView parallax delayIndex={1}>
               <TitleText textAlign="center" size="xxl">
                 Import, view, export
               </TitleText>
             </FadeInView>
             <TitleTextSub margin="auto" minWidth={320}>
-              <FadeInView sm-display="inline" delayIndex={2}>
+              <FadeInView parallax sm-display="inline" delayIndex={2}>
                 Create an app, plug in data, deploy. Easier than ever.
               </FadeInView>
             </TitleTextSub>
@@ -182,7 +182,7 @@ export default memo(() => {
         <Col maxWidth="100%" margin={[0, 'auto', 0]} sm-margin={0}>
           <Row space {...mediaStyles.visibleWhen.abovesm}>
             <SubSection maxWidth="33%">
-              <FadeInView {...fadeAnimations.left} delayIndex={3}>
+              <FadeInView parallax {...fadeAnimations.left} delayIndex={3}>
                 <PillButtonDark>Import</PillButtonDark>
                 <Space />
                 <CenterText>
@@ -192,7 +192,7 @@ export default memo(() => {
               </FadeInView>
             </SubSection>
             <SubSection flex={2} padding={[true, 'xxl']}>
-              <FadeInView delayIndex={4} {...fadeAnimations.up}>
+              <FadeInView parallax delayIndex={4} {...fadeAnimations.up}>
                 <PillButtonDark>Display</PillButtonDark>
                 <Space />
                 <CenterText maxWidth={400} margin={[0, 'auto']}>
@@ -201,7 +201,7 @@ export default memo(() => {
               </FadeInView>
             </SubSection>
             <SubSection maxWidth="33%">
-              <FadeInView {...fadeAnimations.right} delayIndex={3}>
+              <FadeInView parallax {...fadeAnimations.right} delayIndex={3}>
                 <PillButtonDark>Export</PillButtonDark>
                 <Space />
                 <CenterText>
@@ -216,7 +216,7 @@ export default memo(() => {
 
           <Row space>
             <Flex alignItems="center" sm-display="none">
-              <FadeInView {...fadeAnimations.left} delayIndex={4}>
+              <FadeInView parallax {...fadeAnimations.left} delayIndex={4}>
                 <Image
                   userSelect="none"
                   alignSelf="center"
@@ -249,7 +249,7 @@ export default memo(() => {
               margin={0}
               sm-margin={[0, '-5%']}
             >
-              <FadeInView width="100%" delayIndex={6} {...fadeAnimations.up}>
+              <FadeInView parallax width="100%" delayIndex={6} {...fadeAnimations.up}>
                 <Button
                   coat="flat"
                   cursor="pointer"
@@ -278,7 +278,13 @@ export default memo(() => {
                 />
               </FadeInView>
 
-              <FadeInView {...fadeAnimations.up} delayIndex={5} marginBottom={-200} zIndex={10}>
+              <FadeInView
+                parallax
+                {...fadeAnimations.up}
+                delayIndex={5}
+                marginBottom={-200}
+                zIndex={10}
+              >
                 <TiltSquircle
                   {...linkProps(elements[index].link)}
                   tagName="div"
@@ -362,7 +368,7 @@ export default memo(() => {
             </Flex>
 
             <Flex alignItems="center" sm-display="none">
-              <FadeInView {...fadeAnimations.right} delayIndex={4}>
+              <FadeInView parallax {...fadeAnimations.right} delayIndex={4}>
                 <Image
                   userSelect="none"
                   alignSelf="center"
@@ -375,7 +381,7 @@ export default memo(() => {
                 />
               </FadeInView>
               <Space size="xxl" />
-              <FadeInView delayIndex={5} alignSelf="flex-start">
+              <FadeInView parallax delayIndex={5} alignSelf="flex-start">
                 <Image
                   key={`arrowAfter-${page}`}
                   custom={direction}
@@ -392,7 +398,7 @@ export default memo(() => {
             </Flex>
           </Row>
 
-          <FadeInView delayIndex={8} flexFlow="row" margin={[32, 'auto', 0]}>
+          <FadeInView parallax delayIndex={8} flexFlow="row" margin={[32, 'auto', 0]}>
             {[0, 1, 2].map(x => (
               <Dot key={`dot-${x}`} active={x === index} onClick={() => goTo(x)} />
             ))}

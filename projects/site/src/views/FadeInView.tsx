@@ -2,6 +2,8 @@ import { createStoreContext } from '@o/kit'
 import { MotionProps, useIntersectionObserver, useParallaxContainer, View, ViewProps } from '@o/ui'
 import React, { memo, useCallback, useRef, useState } from 'react'
 
+import { ParallaxStageItem } from './ParallaxStage'
+
 export type FadeInProps = ViewProps & {
   delay?: number
   intersection?: IntersectionObserverInit['rootMargin']
@@ -127,6 +129,7 @@ export type FadeChildProps = ViewProps & {
   reverse?: boolean
   min?: number
   max?: number
+  parallax?: boolean
 }
 
 const initialScreenWidth = window.innerWidth
@@ -145,6 +148,7 @@ export const FadeInView = memo(
     min,
     max,
     display,
+    parallax,
     ...rest
   }: FadeChildProps) => {
     const fadeStore = FadeStoreContext.useStore()
@@ -181,6 +185,26 @@ export const FadeInView = memo(
 
     if (!parent) {
       return <View {...rest}>{children}</View>
+    }
+
+    if (parallax) {
+      return (
+        <ParallaxStageItem {...rest}>
+          <View
+            data-is="FadeChild"
+            style={style}
+            animate={shown ? animate : undefined}
+            transition={finalTransition}
+            alignItems="inherit"
+            justifyContent="inherit"
+            flexDirection="inherit"
+            flexFlow="inherit"
+            alignSelf="inherit"
+          >
+            {children}
+          </View>
+        </ParallaxStageItem>
+      )
     }
 
     return (

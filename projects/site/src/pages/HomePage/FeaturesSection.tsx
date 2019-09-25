@@ -180,7 +180,7 @@ export default memo(() => {
               </Row>
             </ParallaxStageItem>
           </View>
-          <ParallaxStageItem className="grid-ref" nodeRef={gridContainer}>
+          <ParallaxStageItem nodeRef={gridContainer}>
             <Row flexWrap="nowrap">
               {Object.keys(sections).map((section, index) => {
                 return (

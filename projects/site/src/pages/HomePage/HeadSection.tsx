@@ -79,8 +79,9 @@ export function HeadSection() {
         offset={-1}
         min={1}
         zIndex={-1}
-        opacity={0.5}
+        opacity={0.35}
         scale={1.5}
+        top="-70%"
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
       />
 
@@ -172,6 +173,7 @@ export function HeadSection() {
         position="absolute"
         left="50%"
         top="60vh"
+        marginTop={180}
         marginLeft={`${-180 / 2}px`}
         width={180}
         alignItems="center"

@@ -8,7 +8,7 @@ import { Paragraph } from '../../views/Paragraph'
 import { SectionContent } from '../../views/SectionContent'
 
 const IntroPara = ({ delayIndex, ...props }) => (
-  <FadeInView delayIndex={delayIndex}>
+  <FadeInView parallax delayIndex={delayIndex}>
     <Paragraph alpha={0.85} size={1.5} fontWeight={200} sizeLineHeight={1.4} {...props} />
   </FadeInView>
 )
@@ -48,7 +48,7 @@ export default function IntroSection() {
         <HalfGrid>
           {/* marginbottom is safari fix */}
           <View belowmd-marginBottom={50}>
-            <FadeInView>
+            <FadeInView parallax>
               <Image
                 display="block"
                 src={require('../../public/images/screen1.jpeg')}

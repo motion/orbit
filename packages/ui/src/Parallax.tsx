@@ -14,7 +14,7 @@ import { useResizeObserver } from './hooks/useResizeObserver'
 import { ViewProps } from './View/types'
 import { View } from './View/View'
 
-const rnd = x => Math.round(x * 100) / 100
+const rnd = x => (typeof x === 'number' ? Math.round(x * 100) / 100 : x)
 
 class ParallaxStore {
   bounds: Rect = {
@@ -148,9 +148,22 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
           let subtractor =
             align === 'start' ? parentStartPct : align === 'center' ? parentCenter : parentEndPct
           if (stagger) {
-            subtractor -= 0.2 * stagger * nodeSizePct
+            subtractor -= 0.1 * stagger * nodeSizePct
           }
           intersection = 1 + (pagePct - subtractor) / divisor
+        }
+
+        if (speed === 0.555) {
+          table({
+            intersection,
+            nodeSizePct,
+            divisor,
+            frameSizePct,
+            parentSizePct,
+            clamp,
+            min,
+            max,
+          })
         }
 
         intersection *= speed
@@ -170,9 +183,13 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
 
   transforms = {
     scrollParentRelative: (x: number) => {
-      const { measurements } = this.props
-      const nodeSize = measurements.current.nodeSize
-      const parentSize = measurements.current.parentSize
+      const mx = this.props.measurements.current
+      const nodeSize = mx.nodeSize
+      const parentSize = mx.parentSize
+      if (this.props.speed === 0.555) {
+        table({ x, parentSize, nodeSize })
+      }
+
       return x + x * (parentSize - nodeSize)
     },
     scrollParentSize: (x: number) => {
@@ -199,7 +216,7 @@ export function ParallaxGeometry({
 
 export type ParallaxViewProps = Omit<ViewProps, 'direction'> &
   ParallaxProps & {
-    parallaxAnimate?: (geometry: ParallaxGeometryStore) => { [key: string]: AnimationStore }
+    parallax?: (geometry: ParallaxGeometryStore) => { [key: string]: AnimationStore }
   }
 
 export function ParallaxView(props: ParallaxViewProps) {
@@ -211,7 +228,7 @@ export function ParallaxView(props: ParallaxViewProps) {
     min,
     max,
     align,
-    parallaxAnimate,
+    parallax,
     stagger,
     ...viewProps
   } = props
@@ -302,8 +319,8 @@ export function ParallaxView(props: ParallaxViewProps) {
             nodeRef={composeRefs(gref, ref, viewProps.nodeRef)}
             animate
             transformOrigin="top center"
-            {...(parallaxAnimate
-              ? parallaxAnimate(geometry)
+            {...(parallax
+              ? parallax(geometry)
               : {
                   [direction]: geometry.useParallax(),
                 })}

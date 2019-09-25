@@ -22,7 +22,7 @@ export default function SecuritySection() {
         x="-55%"
         scale={1.6}
         background="radial-gradient(circle closest-side, #681635, transparent)"
-        parallaxAnimate={geometry => ({
+        parallax={geometry => ({
           y: geometry.useParallax().transform(x => x + 300),
           x: geometry.useParallax().transform(x => -x),
         })}

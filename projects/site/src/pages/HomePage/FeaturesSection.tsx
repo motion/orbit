@@ -141,14 +141,12 @@ export default memo(() => {
       <Page.BackgroundParallax
         speed={0.3}
         offset={0}
-        top="-20%"
-        bottom="-20%"
         x="60%"
         scale={1.3}
         className="glow-two"
         opacity={0.4}
         background="radial-gradient(circle closest-side, #12A1CC, transparent)"
-        parallaxAnimate={geometry => ({
+        parallax={geometry => ({
           y: geometry.useParallax(),
           x: geometry.useParallax().transform(x => -x * 1 + 240),
         })}

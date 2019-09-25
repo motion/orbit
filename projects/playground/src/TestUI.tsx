@@ -31,18 +31,21 @@ export function TestUIParallax() {
   const views = index => (
     <>
       <Parallax.View
-        offset={-1}
+        offset={0}
         speed={1}
         align="center"
         x={100}
         position="absolute"
-        background="pink"
+        background="linear-gradient(pink, black, red,pink, black, red,pink, black, red)"
         top={0}
         left={20}
-        width={80}
-        clamp
+        scale={1.5}
+        width="50%"
+        height="80%"
+        alignItems="center"
+        justifyContent="center"
       >
-        {index}
+        <Title>helloooooo {index}</Title>
       </Parallax.View>
       <Parallax.View
         offset={0.75}
@@ -79,7 +82,7 @@ export function TestUIParallax() {
         top="50%"
         left={20}
         key={4}
-        parallaxAnimate={geometry => {
+        parallax={geometry => {
           return {
             y: geometry
               .useParallaxIntersection({ speed: 3, offset: 0.5, clamp: [-1, 1.5] })
@@ -116,7 +119,7 @@ export function TestUIParallax() {
         left={220}
         width={100}
         height={100}
-        parallaxAnimate={geometry => ({
+        parallax={geometry => ({
           opacity: geometry
             .useParallaxIntersection({ speed: 1, offset: 0 })
             .transform([-1, 0.5, 0.5, 1], [0, 1, 1, -1]),
@@ -134,7 +137,7 @@ export function TestUIParallax() {
         left={320}
         width={100}
         height={100}
-        parallaxAnimate={geometry => ({
+        parallax={geometry => ({
           opacity: geometry.useParallaxIntersection(),
         })}
       >
@@ -150,7 +153,7 @@ export function TestUIParallax() {
         left={420}
         width={100}
         height={100}
-        parallaxAnimate={geometry => ({
+        parallax={geometry => ({
           opacity: geometry.useParallaxIntersection(),
         })}
       >
@@ -159,7 +162,7 @@ export function TestUIParallax() {
       <Parallax.View
         position="absolute"
         bottom="0%"
-        parallaxAnimate={geometry => {
+        parallax={geometry => {
           return {
             y: geometry
               .useParallaxIntersection({
@@ -185,7 +188,7 @@ export function TestUIParallax() {
       <Parallax.Container overflow="hidden" height="100vh" background="indigo">
         <Col margin="auto" space="xl">
           <Parallax.View
-            parallaxAnimate={geometry => {
+            parallax={geometry => {
               return {
                 y: geometry
                   .useParallaxIntersection({
@@ -204,7 +207,7 @@ export function TestUIParallax() {
             height={400}
             width={400}
             background="black"
-            parallaxAnimate={geometry => {
+            parallax={geometry => {
               return {
                 y: geometry
                   .useParallaxIntersection({

@@ -93,9 +93,9 @@ export function HeadSection() {
         height="50%"
         top="0%"
         right="-80%"
-        parallaxAnimate={geometry => ({
-          x: geometry.useParallax().transform(x => -x * 1.5),
-          y: geometry.useParallax().transform(x => x * 1.5),
+        parallax={geometry => ({
+          x: geometry.useParallax().transform(x => -x * 3),
+          y: geometry.useParallax().transform(x => x * 3),
         })}
       >
         <Star top="0%" left="0%" />
@@ -113,10 +113,9 @@ export function HeadSection() {
         height="50%"
         top="0%"
         right="-80%"
-        clamp
-        parallaxAnimate={geometry => ({
-          x: geometry.useParallax().transform(x => -x * 1.5 * 1.2),
-          y: geometry.useParallax().transform(x => x * 1.5 * 1.2),
+        parallax={geometry => ({
+          x: geometry.useParallax().transform(x => -x * 3 * 1.2),
+          y: geometry.useParallax().transform(x => x * 3 * 1.2),
         })}
       >
         <Star top="0%" left="0%" />

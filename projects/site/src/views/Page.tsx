@@ -47,7 +47,7 @@ Page.ParallaxView = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) =
   )
 }
 
-Page.BackgroundParallax = memo((props: ParallaxViewProps) => {
+Page.BackgroundParallax = memo(({ speed, ...props }: ParallaxViewProps) => {
   const { zIndex } = useProps()
   const [shown, setShown] = useState()
   useEffect(() => {
@@ -65,6 +65,7 @@ Page.BackgroundParallax = memo((props: ParallaxViewProps) => {
       width="90%"
       height="94%"
       {...props}
+      speed={speed * 20}
       opacity={shown ? props.opacity || 1 : 0}
     />
   )

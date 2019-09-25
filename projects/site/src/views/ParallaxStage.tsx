@@ -8,7 +8,7 @@ const startClamp = [-1, -0.3, 0, 0.4, 1.5]
 export function ParallaxStageItem(props: ParallaxViewProps) {
   return (
     <Page.ParallaxView
-      parallaxAnimate={geometry => {
+      parallax={geometry => {
         return {
           y: geometry
             .useParallaxIntersection({

@@ -16,7 +16,9 @@ import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
 import { TitleTextSub } from './TitleTextSub'
 
-const SubSection = props => <Flex minWidth={200} alignItems="center" padding {...props} />
+const SubSection = props => (
+  <Flex minWidth={200} alignItems="center" padding={['sm', true]} {...props} />
+)
 
 const Dot = gloss(Box, {
   borderRadius: 100,
@@ -152,7 +154,7 @@ export default memo(() => {
         className="glow-two"
         opacity={0.4}
         background="radial-gradient(circle closest-side, #D25CCD, transparent)"
-        parallaxAnimate={geometry => ({
+        parallax={geometry => ({
           y: geometry.useParallax(),
           x: geometry.useParallax().transform(x => x * 1 - 240),
         })}
@@ -205,8 +207,8 @@ export default memo(() => {
                 <PillButtonDark>Export</PillButtonDark>
                 <Space />
                 <CenterText>
-                  Install <Inline color="#F14336">{elements[index].afterName}</Inline>, use its
-                  simple API to send your results out.
+                  One click <Inline color="#F14336">{elements[index].afterName}</Inline> API to send
+                  your results out.
                 </CenterText>
               </FadeInView>
             </SubSection>
@@ -226,12 +228,7 @@ export default memo(() => {
                 />
               </FadeInView>
               <Space size="xxl" />
-              <FadeInView
-                key={`arrowBefore-${page}`}
-                {...fadeAnimations.left}
-                delayIndex={5}
-                alignSelf="flex-end"
-              >
+              <FadeInView {...fadeAnimations.left} delayIndex={5} alignSelf="flex-end">
                 <Image
                   userSelect="none"
                   opacity={0.5}
@@ -317,6 +314,7 @@ export default memo(() => {
               </FadeInView>
 
               <FadeInView
+                parallax
                 transition={transitions.slowNotBouncy}
                 {...fadeAnimations.up}
                 delayIndex={6}

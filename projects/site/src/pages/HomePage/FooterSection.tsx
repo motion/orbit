@@ -26,15 +26,14 @@ export default memo(function FeetSection(props: { hideJoin?: boolean }) {
       </View>
 
       <Page.BackgroundParallax
-        speed={0.2}
+        speed={0.01}
         zIndex={-10}
         offset={-0.2}
         backgroundSize="cover"
         left="-40%"
-        right="-40%"
         width="180%"
+        height="280%"
         top="-120%"
-        bottom="-190%"
         backgroundPosition="top center"
         opacity={1}
         backgroundImage={blackWavePattern}

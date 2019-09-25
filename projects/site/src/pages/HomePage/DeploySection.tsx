@@ -83,7 +83,7 @@ export default function DeploySection() {
                 backgroundPosition="center center"
                 backgroundRepeat="no-repeat"
                 position="relative"
-                parallaxAnimate={geometry => ({
+                parallax={geometry => ({
                   x: geometry.useParallax().transform(x => (x > 0 ? -x : x) * 0.1),
                 })}
               >
@@ -147,7 +147,7 @@ export default function DeploySection() {
                 backgroundPosition="center center"
                 backgroundRepeat="no-repeat"
                 overflow="hidden"
-                parallaxAnimate={geometry => ({
+                parallax={geometry => ({
                   x: geometry.useParallax().transform(x => -(x > 0 ? -x : x) * 0.1),
                 })}
               />

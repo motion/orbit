@@ -173,7 +173,7 @@ async function getBuildInfo(appDir: string) {
   }
 }
 
-async function writeBuildInfo(appDir: string) {
+export async function writeBuildInfo(appDir: string) {
   const file = join(appDir, 'dist', 'buildInfo.json')
   return await writeJSON(file, await getBuildInfo(appDir))
 }

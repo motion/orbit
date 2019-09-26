@@ -7,7 +7,7 @@ import historyAPIFallback from 'connect-history-api-fallback'
 import { Handler } from 'express'
 import { Dictionary, Request } from 'express-serve-static-core'
 import { readFile } from 'fs-extra'
-import { chunk } from 'lodash'
+import { chunk, debounce } from 'lodash'
 import hashObject from 'node-object-hash'
 import { join, relative } from 'path'
 import { parse } from 'url'
@@ -16,7 +16,7 @@ import WebpackDevMiddleware from 'webpack-dev-middleware'
 import Observable from 'zen-observable'
 
 import { buildAppInfo } from './buildAppInfo'
-import { commandBuild, shouldRebuildApp } from './commandBuild'
+import { commandBuild, shouldRebuildApp, writeBuildInfo } from './commandBuild'
 import { AppBuildConfigs, getAppsConfig } from './getAppsConfig'
 import { webpackPromise } from './webpackPromise'
 import { AppBuildModeDict } from './WorkspaceManager'
@@ -501,6 +501,11 @@ export class AppsBuilder {
   }
 
   private createReporterForApp = (name: string, appMeta?: AppMeta) => {
+    const writeAppBuildInfo = debounce(() => {
+      log.debug(`writing app build info`)
+      writeBuildInfo(appMeta.directory)
+    }, 100)
+
     return (middlewareOptions, options) => {
       // run the usual webpack reporter, outputs to console
       // https://github.com/webpack/webpack-dev-middleware/blob/master/lib/reporter.js
@@ -511,6 +516,10 @@ export class AppsBuilder {
 
       // keep internal track of status of builds
       this.updateCompletedFirstBuild(name, status)
+
+      if (status === 'success') {
+        writeAppBuildInfo()
+      }
 
       // report to appStatus bus
       let identifier = name

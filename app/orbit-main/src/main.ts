@@ -19,6 +19,9 @@ require('abortcontroller-polyfill/dist/polyfill-patch-fetch')
 // temp fix: see gloss/config.js et all
 process.env.RENDER_TARGET = 'node'
 
+// never in dev mode on backend processes (think this is right)
+root['__DEV__'] = false
+
 // this is the entry for every process
 
 // @ts-ignore

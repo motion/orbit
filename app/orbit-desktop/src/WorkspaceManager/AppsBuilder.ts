@@ -38,7 +38,7 @@ const log = new Logger('AppsBuilder')
  *  2. That requires a bit better sepeartion of concerns, AppsBuilder would then:
  *     - Boot up an AppBuilder for each app
  *     - Aggregate the status of each apps build
- *     - Link the middleres together as it does now into a single resolver
+ *     - Link the middlewares together as it does now into a single resolver
  *     - Handle watching/updating the AppsBuilders
  *  3. Meanwhile each AppBuilder would take over building itself and communicating that upwards
  *  4. The final step of this refactor would be to use worker_threads to paralellize it:
@@ -100,7 +100,7 @@ export class AppsBuilder {
     log.info(`update()`)
     this.wsOptions = options
     if (this.isUpdating) {
-      console.warn('!!!!!!!!!!!!!!!!!!!!!!!! what TODO cancel current and re-run')
+      console.warn('!!!!!!!!!!!!!!!!!!!!!!!! TODO')
       return
     }
     this.isUpdating = true
@@ -175,9 +175,6 @@ export class AppsBuilder {
   /**
    * Runs every time you see a change in the apps and runs the webpack/middlewares for each.
    * Think of it like a React.render()
-   * Except a bit less nice, in that we manually do shouldUpdate checks within this render
-   * and if we see things that change we re-run. This could be improved by being a lot more
-   * react-like in the next refactor.
    */
   private async updateBuild({
     nodeConfigs,

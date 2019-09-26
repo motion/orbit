@@ -3,7 +3,7 @@ import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
 import { randomString } from '@o/utils'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
-const runMediator = process.env.RUN_MEDIATOR === 'true' || typeof window !== 'undefined'
+const runMediator = !!process.env.RUN_MEDIATOR || typeof window !== 'undefined'
 const Config = getGlobalConfig()
 
 export const Mediator =

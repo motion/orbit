@@ -2,19 +2,19 @@ import { unstable_batchedUpdates } from 'react-dom'
 
 const Updates = new Set<Function>()
 
-let tm = setImmediate(() => {})
+let tm = null
 
 export function queueUpdate(fn: Function) {
-  clearImmediate(tm)
+  clearTimeout(tm)
   Updates.add(fn)
-  tm = setImmediate(() => {
+  tm = setTimeout(() => {
     if (!Updates.size) return
     let next = [...Updates]
     Updates.clear()
     unstable_batchedUpdates(() => {
       next.forEach(cb => cb())
     })
-  })
+  }, 0)
 }
 
 export function removeUpdate(fn: Function) {

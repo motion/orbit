@@ -48,7 +48,7 @@ class LinkToolbarComponent extends React.Component<Props, State> {
     this.setState({ isEditing: !!this.originalValue })
 
     if (typeof window !== 'undefined') {
-      setImmediate(() => window.addEventListener('mousedown', this.handleOutsideMouseClick))
+      setTimeout(() => window.addEventListener('mousedown', this.handleOutsideMouseClick), 0)
     }
   }
 

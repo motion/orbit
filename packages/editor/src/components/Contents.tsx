@@ -23,7 +23,7 @@ export class Contents extends React.Component<Props, State> {
     if (typeof window !== 'undefined') {
       window.addEventListener('scroll', this.updateActiveHeading)
     }
-    setImmediate(this.updateActiveHeading)
+    setTimeout(this.updateActiveHeading, 0)
   }
 
   componentWillUnmount() {

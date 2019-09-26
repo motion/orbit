@@ -23,13 +23,13 @@ export class Store<Props extends any> implements ReactiveStore<Props> {
 
     // The problem comes here
     // we don't have access to the parent class properties set like Test { x = 0 }
-    // so we have to do something like this: setImmediate and then dos omething
+    // so we have to do something like this: setTimeout and then dos omething
     // but then we can't really decorate this as automagic.
     // what we could do is return a proxy, and have it listen for "set", and then
     // intercept that and return a reactive value instead
     // this would be pretty different from how its done now in automagical so
     // we should re-implement it here instead of trying to merge the two together
-    setImmediate(() => this.setupAutomagical())
+    setTimeout(() => this.setupAutomagical(), 0)
 
     return this
   }

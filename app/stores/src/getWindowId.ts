@@ -1,5 +1,5 @@
 export function getWindowId() {
-  if (process.env.WINDOW_ID) {
+  if (typeof process !== 'undefined' && process.env.WINDOW_ID) {
     return +process.env.WINDOW_ID
   }
   if (typeof window !== 'undefined' && window.location && window.location.search) {

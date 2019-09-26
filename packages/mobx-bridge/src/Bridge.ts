@@ -26,7 +26,7 @@ const isBrowser = typeof window !== 'undefined'
 const root = isBrowser ? window : require('global')
 
 // only debounce on browser for fluidity, desktop should be immediate
-const nextCycleCb = x => (isBrowser ? setImmediate(x) : x())
+const nextCycleCb = x => (isBrowser ? setTimeout(x, 0) : x())
 const nextCycle = () => new Promise(nextCycleCb)
 const bothObjects = (a, b) =>
   a &&
@@ -353,11 +353,11 @@ export class BridgeManager {
   queuedState = []
 
   private scheduleSendState() {
-    setImmediate(() => {
+    setTimeout(() => {
       const data = this.queuedState
       this.queuedState = []
       this.sendQueuedState(data)
-    })
+    }, 0)
   }
 
   sendQueuedState = queue => {

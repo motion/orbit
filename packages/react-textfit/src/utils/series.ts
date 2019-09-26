@@ -25,7 +25,7 @@ export default function series(tasks, cb) {
     function end() {
       if (cb) cb(err, results)
     }
-    if (isSync) setImmediate(end)
+    if (isSync) setTimeout(end, 0)
     else end()
   }
 

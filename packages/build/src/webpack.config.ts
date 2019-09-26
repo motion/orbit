@@ -1,5 +1,4 @@
 import * as LernaProject from '@lerna/project'
-import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 import * as Fs from 'fs'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import IgnoreNotFoundExportPlugin from 'ignore-not-found-export-webpack-plugin'
@@ -14,7 +13,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { BundleStatsWebpackPlugin } = require('bundle-stats')
 
 // const WebpackDeepScopeAnalysisPlugin = require('webpack-deep-scope-plugin').default
-const GlossWebpackPlugin = require('@o/gloss-webpack')
+// const GlossWebpackPlugin = require('@o/gloss-webpack')
 const LodashWebpackPlugin = require('lodash-webpack-plugin')
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 // const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
@@ -86,7 +85,8 @@ const NO_OPTIMIZE = process.env.NO_OPTIMIZE
 const IS_RUNNING = process.env.IS_RUNNING
 
 const target = flags.target || 'electron-renderer'
-const shouldExtractCSS = target !== 'node' && (isProd || flags.extractCSS) && !IS_RUNNING
+// mini-css is broken
+const shouldExtractCSS = false // (target !== 'node' && (isProd || flags.extractCSS) && !IS_RUNNING)
 
 //   eval-source-map (causes errors to not show stack trace in react development...)
 //   cheap-source-map (no line numbers...)
@@ -114,6 +114,7 @@ const defines = {
   'process.env.PROCESS_NAME': JSON.stringify(process.env.PROCESS_NAME || readPackage('name')),
   'process.env.DISABLE_WORKERS': JSON.stringify(process.env.DISABLE_WORKERS || false),
   'process.env.LOG_LEVEL': JSON.stringify(process.env.LOG_LEVEL || 'info'),
+  'process.env.RUN_MEDIATOR': 'true',
 }
 
 console.log(
@@ -129,7 +130,7 @@ console.log(
 const optimization = {
   prod: {
     nodeEnv: 'production',
-    namedChunks: true,
+    // namedChunks: true,
     usedExports: true,
     sideEffects: true,
     minimize: true,
@@ -174,7 +175,7 @@ const optimization = {
   dev: {
     noEmitOnErrors: true,
     removeAvailableModules: false,
-    namedModules: true,
+    // namedModules: true,
     usedExports: true,
     ...(flags.splitChunks && {
       splitChunks: {
@@ -194,6 +195,7 @@ const alias = {
   react: 'react',
   'react-dom': 'react-dom',
   'react-refresh': 'react-refresh',
+  path: 'path-browserify',
   // path: false,
 }
 
@@ -271,11 +273,11 @@ async function makeConfig() {
     },
     module: {
       rules: [
-        {
-          test: /[wW]orker\.[jt]sx?$/,
-          use: ['workerize-loader'],
-          // exclude: /node_modules/,
-        },
+        // {
+        //   test: /[wW]orker\.[jt]sx?$/,
+        //   use: ['workerize-loader'],
+        //   // exclude: /node_modules/,
+        // },
         // ignore .node.js modules
         {
           test: /\.node.[jt]sx?/,
@@ -297,23 +299,23 @@ async function makeConfig() {
               options: babelrcOptions,
             },
 
-            flags.extractStaticStyles && {
-              loader: GlossWebpackPlugin.loader,
-              options: {
-                views: require('@o/ui'),
-                mediaQueryKeys: [
-                  'xs',
-                  'sm',
-                  'abovesm',
-                  'md',
-                  'abovemd',
-                  'lg',
-                  'belowlg',
-                  'abovelg',
-                ],
-                internalViewsPath: Path.join(require.resolve('@o/ui'), '..', '..'),
-              },
-            },
+            // flags.extractStaticStyles && {
+            //   loader: GlossWebpackPlugin.loader,
+            //   options: {
+            //     views: require('@o/ui'),
+            //     mediaQueryKeys: [
+            //       'xs',
+            //       'sm',
+            //       'abovesm',
+            //       'md',
+            //       'abovemd',
+            //       'lg',
+            //       'belowlg',
+            //       'abovelg',
+            //     ],
+            //     internalViewsPath: Path.join(require.resolve('@o/ui'), '..', '..'),
+            //   },
+            // },
           ].filter(Boolean),
         },
         {
@@ -378,7 +380,7 @@ async function makeConfig() {
       ].filter(Boolean),
     },
     plugins: [
-      new LodashWebpackPlugin(),
+      // new LodashWebpackPlugin(),
 
       new IgnoreNotFoundExportPlugin(),
 
@@ -394,7 +396,7 @@ async function makeConfig() {
       mode === 'development' && hot && new webpack.HotModuleReplacementPlugin(),
       mode === 'development' && hot && new ReactRefreshPlugin(),
 
-      flags.extractStaticStyles && new GlossWebpackPlugin(),
+      // flags.extractStaticStyles && new GlossWebpackPlugin(),
 
       // didnt improve
       // mode === 'production' && new WebpackDeepScopeAnalysisPlugin(),
@@ -485,7 +487,7 @@ async function makeConfig() {
 
       // !isProd && new webpack.NamedModulesPlugin(),
 
-      new DuplicatePackageCheckerPlugin(),
+      // new DuplicatePackageCheckerPlugin(),
 
       !!process.env['SHAKE_COMMONJS'] && new ShakePlugin(),
 

@@ -50,7 +50,6 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
         changeFn(next)
       }
       const node = ref.current
-      if (!set) return
       if (!node) return
       if (props.onlyWhenIntersecting) {
         if (!state.current.intersected) return
@@ -65,9 +64,8 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
           const { width, height } = node.getBoundingClientRect()
           // we need offset from top of document not relative...
           const { top, left } = elementOffset(node)
+          console.log('set via getBounding')
           set({ top, left, width, height })
-        } else {
-          set(null)
         }
         return
       }
@@ -75,6 +73,7 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
         nodeRect instanceof HTMLElement
           ? node.getBoundingClientRect()
           : nodeRect || node.getBoundingClientRect()
+      console.log('set via', nodeRect)
       const rect = getRect(bounds)
       set(rect)
     },
@@ -95,6 +94,7 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
         if (rect.top === 0) rect.top = lastPos.top || 0
         if (rect.left === 0) rect.left = lastPos.top || 0
       }
+      console.log('via resizeObserver')
       measure(rect)
     },
     disable,
@@ -104,7 +104,10 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
     disable,
     ref,
     options: { attributes: true, childList: true },
-    onChange: measure,
+    onChange: () => {
+      console.log('via mutationObserver')
+      measure()
+    },
   })
 
   // this will return invalid top/left (relative to viewport not relative to document...)

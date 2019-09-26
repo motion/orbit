@@ -8,7 +8,6 @@ import { selectDefined } from '@o/utils'
 import { ThemeContext, ThemeObject } from 'gloss'
 import * as React from 'react'
 
-import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Interactive, InteractiveProps, ResizableSides } from './Interactive'
 
 export type SidebarProps = Omit<InteractiveProps, 'position'> & {
@@ -169,16 +168,10 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
       }
     }
 
-    const borderByPosition = {
-      left: <BorderRight hoverable={resizable} />,
-      right: <BorderLeft hoverable={resizable} />,
-      top: <BorderBottom hoverable={resizable} />,
-      bottom: <BorderTop hoverable={resizable} />,
-    }
-
     return (
       <Interactive
-        className={`ui-sidebar ${this.props.className || ''}`}
+        data-is="Sidebar"
+        className={`${this.props.className || ''}`}
         minWidth={minWidth}
         maxWidth={maxWidth}
         width={horizontal ? (onResize ? width : this.state.width) : '100%'}
@@ -198,10 +191,10 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
           position === 'top' || position === 'left',
           selectDefined(width, height),
         )}
+        bordered
         {...interactiveProps}
         {...positionProps}
       >
-        {!noBorder && borderByPosition[position]}
         {children}
       </Interactive>
     )

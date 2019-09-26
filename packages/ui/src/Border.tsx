@@ -8,7 +8,6 @@ const Border = gloss<
   }
 >(Absolute).theme((p, theme) => {
   const background = toColor(p.borderColor ? p.borderColor : (theme.borderColor as any))
-  debugger
   return {
     ...p,
     background,

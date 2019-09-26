@@ -6,16 +6,16 @@
  */
 import { isEqual } from '@o/fast-compare'
 import { on } from '@o/utils'
-import { Col, gloss } from 'gloss'
+import { gloss } from 'gloss'
 import invariant from 'invariant'
 import { pick } from 'lodash'
 import React, { createContext, createRef } from 'react'
 
+import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Rect } from './helpers/geometry'
 import { isRightClick } from './helpers/isRightClick'
 import LowPassFilter from './helpers/LowPassFilter'
 import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap'
-import { InteractiveChrome } from './InteractiveChrome'
 import { ViewProps } from './View/types'
 import { View } from './View/View'
 
@@ -95,6 +95,7 @@ export type InteractiveProps = Omit<
   className?: string
   children?: any
   flex?: number | string
+  bordered?: boolean
 }
 
 type InteractiveState = {
@@ -108,6 +109,13 @@ type InteractiveState = {
   resizing: boolean
   resizingInitialRect: Rect | void
   resizingInitialCursor: CursorState | void
+}
+
+const bordersByPosition = {
+  left: <BorderRight left="50%" />,
+  right: <BorderLeft left="50%" />,
+  top: <BorderBottom top="50%" />,
+  bottom: <BorderTop top="50%" />,
 }
 
 // controlled
@@ -608,7 +616,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       movable,
       top,
       width,
-      disableFloatingGrabbers = true,
+      disableFloatingGrabbers = false,
       disabled,
       minWidth,
       maxHeight,
@@ -618,6 +626,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       right,
       pointerEvents,
       flex,
+      bordered,
       ...props
     } = this.props
     const { resizingSides } = this.state
@@ -660,7 +669,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
 
     return (
       <InteractiveNesting.Provider value={nesting + 1}>
-        <Col
+        <View
           data-is="Interactive"
           className={this.props.className}
           cursor={cursor}
@@ -680,18 +689,43 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
             {...props}
           >
             {/* makes a better grabbable bar that appears above other elements and can prevent clickthrough */}
-            {useFloatingGrabbers && (
-              <InteractiveChrome
-                key={this.state.chromeKey}
-                parent={this.ref}
-                onMouseDown={listenerProps.onMouseDown}
-                resizingSides={resizingSides}
-                zIndex={zIndex + 1}
-              />
-            )}
+            {useFloatingGrabbers &&
+              Object.keys(resizable).map(side => (
+                <View
+                  key={side}
+                  position="absolute"
+                  zIndex={10000000}
+                  {...(side === 'top' || side === 'bottom') && {
+                    height: 10,
+                    width: '100%',
+                  }}
+                  {...(side === 'left' || side === 'right') && {
+                    width: 10,
+                    height: '100%',
+                  }}
+                  left={0}
+                  top={0}
+                  {...side === 'right' && {
+                    left: 'auto',
+                    right: -5,
+                  }}
+                  {...side === 'bottom' && {
+                    right: 'auto',
+                    left: -5,
+                  }}
+                  opacity={0.5}
+                  {...resizable && {
+                    hoverStyle: {
+                      opacity: 1,
+                    },
+                  }}
+                >
+                  {bordered && bordersByPosition[side]}
+                </View>
+              ))}
             {this.props.children}
           </InteractiveContainer>
-        </Col>
+        </View>
       </InteractiveNesting.Provider>
     )
   }

@@ -1,5 +1,4 @@
 import { isEqual } from '@o/fast-compare'
-import { Box } from 'gloss'
 import React, { HTMLAttributes, RefObject, useEffect, useMemo, useState } from 'react'
 
 import { Rect, usePosition } from '../hooks/usePosition'
@@ -25,7 +24,6 @@ export const FloatingChrome = (props: FloatingChromeProps) => {
       if (next) {
         setPos(cur => {
           if (!isEqual(cur, next)) {
-            console.warn('UPDATING', target, next)
             return next
           }
         })
@@ -36,26 +34,9 @@ export const FloatingChrome = (props: FloatingChromeProps) => {
 
   return (
     <Portal style={useMemo(() => ({ zIndex }), [zIndex])}>
-      <Box style={fullScreen}>
-        <View
-          style={{
-            position: 'absolute',
-            zIndex,
-            background: 'red',
-            ...pos,
-            ...style,
-          }}
-          {...rest}
-        />
-      </Box>
+      <View position="absolute" top={0} right={0} bottom={0} left={0}>
+        <View position="absolute" zIndex={zIndex} background="red" {...pos} {...style} {...rest} />
+      </View>
     </Portal>
   )
 }
-
-const fullScreen = {
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-} as const

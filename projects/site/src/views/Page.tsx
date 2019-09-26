@@ -14,6 +14,17 @@ export function Page(props: SectionContentProps) {
   return (
     <PassProps overflow="visible" zIndex={0} {...props}>
       <Parallax.Container>
+        {/* close to working but its not "centered" */}
+        {/* <ParallaxStageItem
+          parallax={{
+            y: {
+              relativeTo: 'frame',
+              transition: 'ease-in-out',
+              speed: 1,
+              move: 200,
+            },
+          }}
+        > */}
         <SectionContent
           className="page"
           height="85vh"
@@ -26,6 +37,7 @@ export function Page(props: SectionContentProps) {
           xs-height="auto"
           xs-minHeight="auto"
         />
+        {/* </ParallaxStageItem> */}
       </Parallax.Container>
     </PassProps>
   )

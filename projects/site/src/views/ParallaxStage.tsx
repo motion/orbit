@@ -5,11 +5,11 @@ import * as React from 'react'
 import { Page } from './Page'
 
 const transitionTransforms = {
-  'ease-in-out': [[-1, -0.2, -0.1, 0, 1], [-2, -0.1, 0, 0.1, 1]],
+  'ease-in-out': [[-1, -0.2, 0, 0.2, 1], [-1, -0.2, 0, 0.2, 1]],
   'ease-in-out-quad': [[-1, -0.2, -0.1, 0, 1], [-2, -0.1, 0, 0.1, 2]],
   'ease-in': [[-1, -0.15, 0, 0.3, 1], [-3, 1, 1, 1, 1]],
   'ease-in-quad': [[-1, -0.2, -0.1, 0, 1], [-2, -0.1, 0, 0, 0]],
-  'ease-out': [[-1, -0.15, 0, 0.3, 1.5], [1, 1, 1, 1, -3]],
+  'ease-out': [[-1, -0.15, 0, 0.3, 1.5], [1, 1, 1, 1, -1.5]],
 } as const
 
 export type ParallaxProp =
@@ -59,6 +59,9 @@ function getParallax(props: ParallaxStageItemProps): ParallaxViewProps['parallax
       }
       if (prop.move) {
         cur = cur.transform(x => x * prop.move)
+      }
+      if (prop.transform) {
+        cur = cur.transform(prop.transform)
       }
       if (clamp) {
         cur = cur.transform(x => Math.max(clamp[0], Math.min(x, clamp[1])))

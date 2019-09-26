@@ -6,6 +6,7 @@ import arrow from '../../public/images/callout-arrow.svg'
 import codeScreenshot from '../../public/images/code-screenshot.jpg'
 import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
 import { Link } from '../../views/Link'
+import { Page } from '../../views/Page'
 import { ParagraphIntro } from '../../views/ParagraphIntro'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
@@ -15,38 +16,21 @@ export default function DeploySection() {
   const Fade = useFadePage()
   return (
     <Fade.FadeProvide>
-      {/* blue above */}
-      {/* <Page.BackgroundParallax
-        speed={0.5}
-        offset={-0.2}
-        zIndex={-2}
+      {/* pink left */}
+      <Page.BackgroundParallax
+        speed={0.7}
+        offset={0}
+        top="-20%"
+        bottom="-20%"
+        scale={1.3}
+        className="glow-two"
         opacity={0.4}
-        x="-30%"
-        scale={1.5}
         background="radial-gradient(circle closest-side, #2F30C9, transparent)"
-      /> */}
-
-      {/* big purple bottom left */}
-      {/* <Page.BackgroundParallax
-        speed={-0.45}
-        zIndex={-1}
-        opacity={0.22}
-        offset={0.4}
-        x="-40%"
-        scale={2.7}
-        background="radial-gradient(circle closest-side, #1AAFFF, transparent)"
-      /> */}
-
-      {/* dark red bottom right */}
-      {/* <Page.BackgroundParallax
-        speed={0.4}
-        zIndex={-1}
-        opacity={0.45}
-        offset={1.1}
-        x="55%"
-        scale={2.2}
-        background="radial-gradient(circle closest-side, #8B2028, transparent)"
-      /> */}
+        parallax={geometry => ({
+          y: geometry.useParallax(),
+          x: geometry.useParallax().transform(x => x * 1 - 240),
+        })}
+      />
 
       <SpacedPageContent
         padding={['10vh', 0, '10vh']}

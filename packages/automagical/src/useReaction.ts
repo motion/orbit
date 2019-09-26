@@ -153,7 +153,7 @@ export function setupReact(
   const component = useCurrentComponent()
   const state = useRef(opts ? opts.defaultValue : undefined)
   const forceUpdate = useForceUpdate()
-  if (process.env.NODE_ENV === 'development') {
+  if (__DEV__) {
     if (!forceUpdate['__debug_update__']) {
       forceUpdate['__debug_update__'] = { name: component.name, opts, state }
     }

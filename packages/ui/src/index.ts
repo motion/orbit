@@ -1,7 +1,5 @@
 // until next hotkeys patches types
-if (process.env.NODE_ENV === 'development') {
-  module.hot && module.hot.accept()
-}
+module.hot && module.hot.accept()
 
 export * from './helpers/configureHotKeys'
 export { allIcons } from './icons'

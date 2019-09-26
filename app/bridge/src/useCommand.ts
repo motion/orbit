@@ -45,7 +45,7 @@ export function useCommand<Args, ReturnType>(
     throw cache[key].read
   }
 
-  if (process.env.NODE_ENV === 'development') {
+  if (__DEV__) {
     console.debug('useCommand', command, args)
   }
 

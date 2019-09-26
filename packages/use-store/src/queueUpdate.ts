@@ -17,7 +17,7 @@ export function queueUpdate(fn: Function) {
   tm = setImmediate(() => {
     if (!Updates.size) return
     let next = [...Updates]
-    if (process.env.NODE_ENV === 'development' && shouldDebug()) {
+    if (__DEV__ && shouldDebug()) {
       console.log('queueUpdate flush', next.map(x => x['__debug_update__']))
     }
     Updates.clear()

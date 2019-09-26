@@ -39,7 +39,7 @@ export function cssString(styles: Object, opts?: CSSConfig): string {
           toReturn += `${k}:${px(value)};`
         }
       } else {
-        if (process.env.NODE_ENV === 'development' && typeof value === 'number' && isNaN(value)) {
+        if (__DEV__ && typeof value === 'number' && isNaN(value)) {
           debugger
         }
         toReturn += `${(shouldSnake && CAMEL_TO_SNAKE[key]) || key}:${value};`
@@ -107,7 +107,7 @@ function cssValue(key: string, value: any, options?: CSSConfig) {
       return value.toCSS()
     }
     // not react element
-    if (process.env.NODE_ENV === 'development') {
+    if (__DEV__) {
       if (value['$$typeof'] === Symbol.for('react.element')) {
         throw new Error('You passed a react element to a style')
       }
@@ -116,7 +116,7 @@ function cssValue(key: string, value: any, options?: CSSConfig) {
   } else if (key === 'isolate') {
     return value
   }
-  if (process.env.NODE_ENV === 'development') {
+  if (__DEV__) {
     console.debug(`Invalid style value for ${key}`, value)
   }
 }

@@ -1,4 +1,4 @@
-import { AppsManager } from '@o/apps-manager'
+import { AppsManager, getAppInfo, getWorkspaceApps } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppMeta, BuildStatus, CommandWsOptions } from '@o/models'
 import { decorate } from '@o/use-store'
@@ -15,7 +15,8 @@ import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 import Observable from 'zen-observable'
 
-import { commandBuild } from './commandBuild'
+import { buildAppInfo } from './buildAppInfo'
+import { commandBuild, shouldRebuildApp } from './commandBuild'
 import { AppBuildConfigs, getAppsConfig } from './getAppsConfig'
 import { webpackPromise } from './webpackPromise'
 import { AppBuildModeDict } from './WorkspaceManager'
@@ -105,6 +106,9 @@ export class AppsBuilder {
     }
     this.isUpdating = true
 
+    // ensure all built out once
+    await this.buildWorkspaceAppsInfo(options.workspaceRoot, { watch: false })
+
     // ensure builds have run for each app
     try {
       const buildConfigs = await getAppsConfig(activeAppsMeta, buildMode, options)
@@ -170,6 +174,36 @@ export class AppsBuilder {
       log.info(`update() finish`)
       this.isUpdating = false
     }
+  }
+
+  private async buildWorkspaceAppsInfo(
+    workspaceRoot: string,
+    { watch = false }: { watch?: boolean } = {},
+  ) {
+    const appsMeta = await getWorkspaceApps(workspaceRoot)
+    log.info(`building app info ${appsMeta.length}`)
+    return await Promise.all(
+      appsMeta.map(async meta => {
+        async function getOrBuildAppInfo(path: string) {
+          const shouldRebuild = await shouldRebuildApp(path)
+          if (!shouldRebuild) {
+            return await getAppInfo(path)
+          }
+          return await buildAppInfo({
+            projectRoot: path,
+            watch,
+          })
+        }
+
+        const appInfo = await getOrBuildAppInfo(meta.directory)
+
+        console.log(
+          'should collect and store the app info result here so we can cache if we need to rebuild',
+        )
+
+        return appInfo
+      }),
+    )
   }
 
   /**
@@ -426,7 +460,7 @@ export class AppsBuilder {
       const running = this.state.find(x => x.name === name)
       if (running) {
         if (hash === running.hash) {
-          // log.verbose(`${name} config hasnt changed! dont re-run this one just return the old one`)
+          log.debug(`${name} config hasnt changed! dont re-run this one just return the old one`)
           return { hash, running, hasChanged: false }
         } else {
           log.verbose(`${name}config has changed!`)

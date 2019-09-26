@@ -16,7 +16,6 @@ import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 import { getActiveSpace } from '../helpers/getActiveSpace'
 import { AppsBuilder } from './AppsBuilder'
 import { buildAppInfo } from './buildAppInfo'
-import { buildWorkspaceAppsInfo } from './buildWorkspaceAppsInfo'
 import { resolveAppBuildCommand } from './commandBuild'
 import { resolveAppGenTypesCommand } from './commandGenTypes'
 import { resolveAppInstallCommand } from './commandInstall'
@@ -86,8 +85,8 @@ export class WorkspaceManager {
     // ensure Space model inserted and up to date
     await ensureWorkspaceModel(opts.workspaceRoot)
     if (!this.startOpts.singleUseMode) {
-      // ensure app info built out once
-      await buildWorkspaceAppsInfo(opts.workspaceRoot, { watch: false })
+      // ensure app info built out once before starting appsManager
+      await this.updateAppsBuilder()
       // start watching apps for updates on their AppMeta
       await this.appsManager.start({
         singleUseMode: this.startOpts.singleUseMode,
@@ -203,19 +202,15 @@ export class WorkspaceManager {
   async updateAppsBuilder() {
     this.updateBuildMode()
     const { options, activeAppsMeta, buildMode } = this
-
     if (options.action === 'new') {
       return
     }
-
     log.info(`Start building workspace`, options)
     log.verbose(`building ${activeAppsMeta.length} apps...`, activeAppsMeta)
-
     if (!activeAppsMeta.length) {
       log.error(`Must have more than one app, workspace didn't detect any.`)
       return
     }
-
     try {
       // this runs the build
       await this.appsBuilder.update({

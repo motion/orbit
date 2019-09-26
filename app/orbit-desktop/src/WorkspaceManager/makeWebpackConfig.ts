@@ -191,8 +191,11 @@ export function makeWebpackConfig(
           ? ['ts:main', 'module', 'browser', 'main']
           : ['ts:main', 'module', 'browser', 'main'],
       alias: {
-        react: '@o/react',
-        'react-dom': '@o/react-dom', //mode === 'production' ? '@hot-loader/react-dom' : '@hot-loader/react-dom',
+        // we insert a "dynamic" react to toggle at runtime between dev/prod
+        ...(!process.env['PLAIN_REACT'] && {
+          react: '@o/react',
+          'react-dom': '@o/react-dom',
+        }),
         'react-native': 'react-native-web',
       },
       modules,

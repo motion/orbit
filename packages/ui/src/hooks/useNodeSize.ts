@@ -1,7 +1,7 @@
 import { isEqual } from '@o/fast-compare'
 import { RefObject, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
-import { useGetVisibility } from '../Visibility'
+import { useVisibility } from '../Visibility'
 import { useResizeObserver } from './useResizeObserver'
 import { useThrottledFn } from './useThrottleFn'
 
@@ -19,12 +19,12 @@ type SizeState = {
 }
 
 export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = []) {
-  const getVisible = useGetVisibility()
+  const isVisible = useRef(true)
   const [state, setState] = useState<SizeState>({ width: 0, height: 0 })
   const cur = useRef(null)
   const updateFn = (val: SizeState) => {
     // avoid updates when not visible, it can return width: 0, height: 0
-    if (!getVisible()) return
+    if (!isVisible.current) return
     const cb = props.onChange || setState
     if (!isEqual(val, cur.current)) {
       cur.current = val
@@ -41,6 +41,23 @@ export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = [])
   const ref = propRef || innerRef
   const disable = props.disable
 
+  const updateSize = () => {
+    if (disable) return
+    if (ref.current) {
+      update({
+        width: ref.current.clientWidth,
+        height: ref.current.clientHeight,
+      })
+    }
+  }
+
+  useVisibility({
+    onChange(next) {
+      isVisible.current = next
+      next && updateSize()
+    },
+  })
+
   useResizeObserver(
     {
       ref,
@@ -53,16 +70,6 @@ export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = [])
     },
     [mountArgs],
   )
-
-  const updateSize = () => {
-    if (disable) return
-    if (ref.current) {
-      update({
-        width: ref.current.clientWidth,
-        height: ref.current.clientHeight,
-      })
-    }
-  }
 
   // useLayout?
   useEffect(updateSize, [disable, ref, ...mountArgs])

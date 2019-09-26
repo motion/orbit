@@ -234,6 +234,7 @@ export function gloss<Props = any, ThemeProps = Props>(
       return () => {
         const x = dynClasses.current
         if (x && x.size > 0) {
+          console.log('unmounting', props)
           x.forEach(deregisterClassName)
         }
       }
@@ -251,6 +252,10 @@ export function gloss<Props = any, ThemeProps = Props>(
       // because hooks can run in theme, be sure to run them
       theme && themeFn && themeFn(props, theme)
       return createElement(element, last.current.props, props.children)
+    }
+
+    if (props.className && props.className.includes('app-frame')) {
+      console.log('rendering', props)
     }
 
     const dynClassNames = addDynamicStyles(
@@ -449,6 +454,9 @@ function addStyles(
     classNames.push(className)
 
     // if this is the first mount render or we didn't previously have this class then add it as new
+    if (className === 'g1909893218') {
+      console.log('registering', prevClassNames, prevClassNames && prevClassNames.has(className))
+    }
     if (!prevClassNames || !prevClassNames.has(className)) {
       gc.registerClassUse(className)
     }
@@ -470,6 +478,10 @@ const SPECIFIC_PREFIX = 's'
 
 function deregisterClassName(name: string) {
   const nonSpecificClassName = name[0] === SPECIFIC_PREFIX ? name.slice(1) : name
+  if (nonSpecificClassName === 'g1909893218') {
+    console.log('unregistering')
+    debugger
+  }
   gc.deregisterClassUse(nonSpecificClassName)
 }
 

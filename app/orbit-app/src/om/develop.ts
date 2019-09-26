@@ -191,7 +191,6 @@ export const loadApps: AsyncAction = async om => {
   om.state.develop.appModules = await Promise.all(
     nameRegistry.map(async ({ buildName, entryPathRelative }) => {
       const appModule = await loadSystemModule(buildName, window)
-      console.log('loading', appModule, entryPathRelative)
       return appModule(entryPathRelative)
     }),
   )

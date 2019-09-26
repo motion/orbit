@@ -64,6 +64,24 @@ export async function main() {
       loadingWindow.loadFile(join(__dirname, '..', 'loading.html'))
       loadingWindow.once('ready-to-show', () => {
         loadingWindow.show()
+
+        setTimeout(() => {
+          const bounds = loadingWindow.getBounds()
+          const to = [800, 600]
+          const dw = to[0] - 300
+          const dh = to[1] - 200
+          const dx = -dw / 2
+          const dy = -dh / 2
+          loadingWindow.setBounds(
+            {
+              x: bounds.x + dx,
+              y: bounds.y + dy,
+              width: bounds.width + dw,
+              height: bounds.height + dh,
+            },
+            true,
+          )
+        })
       })
     })
   }

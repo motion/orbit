@@ -28,7 +28,6 @@ export const DynamicList = memo(
     const { ref, width, height } = useNodeSize({
       disable: disableMeasure,
     })
-
     return (
       <DynamicListChrome nodeRef={ref}>
         <DynamicSizeList ref={listRef} width={width} height={height} {...props} />

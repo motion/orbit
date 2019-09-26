@@ -227,7 +227,6 @@ export class AppsBuilder {
     // doing multi-config hmr, and this makes sure the 404 hot-update bug is fixed (google)
     const clientDescs: WebpackAppsDesc[] = []
     for (const name in rest) {
-      console.log('name', name)
       const config = rest[name]
       const devName = `${name}-client`
       const current = this.state.find(x => x.name === devName)
@@ -450,7 +449,8 @@ export class AppsBuilder {
       if (hasChanged === false) {
         return true
       }
-
+      // start in compiling mode
+      this.updateCompletedFirstBuild(name, 'compiling')
       const compiler = Webpack(config)
       const publicPath = config.output.publicPath
       const devMiddleware = WebpackDevMiddleware(compiler, {
@@ -467,9 +467,6 @@ export class AppsBuilder {
   }
 
   private createReporterForApp = (name: string, appMeta?: AppMeta) => {
-    // start in compiling mode
-    this.updateCompletedFirstBuild(name, 'compiling')
-
     return (middlewareOptions, options) => {
       // run the usual webpack reporter, outputs to console
       // https://github.com/webpack/webpack-dev-middleware/blob/master/lib/reporter.js

@@ -64,13 +64,14 @@ export async function main() {
         backgroundColor: '#00000000',
         show: false,
       })
+      loadingWindow.setMenu(null)
+      loadingWindow.setMenuBarVisibility(false)
       loadingWindow.loadFile(join(__dirname, '..', 'loading.html'))
       loadingWindow.once('ready-to-show', () => {
         loadingWindow.show()
-
         setTimeout(() => {
           const bounds = loadingWindow.getBounds()
-          const to = [800, 600]
+          const to = [400, 300]
           const dw = to[0] - 300
           const dh = to[1] - 200
           const dx = -dw / 2

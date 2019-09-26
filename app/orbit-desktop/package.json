@@ -91,7 +91,7 @@
     "time-fix-plugin": "^2.0.6",
     "ts-loader": "^6.0.1",
     "typeorm": "^0.3.0-alpha.23",
-    "typescript": "3.7.0-dev.20190918",
+    "typescript": "3.7.0-dev.20190926",
     "url-loader": "^2.1.0",
     "webpack": "4.40.2",
     "webpack-dev-middleware": "^3.7.1",

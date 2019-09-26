@@ -110,6 +110,7 @@ const hot = !flags.disableHMR && !isProd
 const defines = {
   'process.platform': JSON.stringify('darwin'),
   'process.env.NODE_ENV': JSON.stringify(mode),
+  __DEV__: JSON.stringify(mode === 'development'),
   'process.env.RENDER_TARGET': JSON.stringify(target),
   'process.env.PROCESS_NAME': JSON.stringify(process.env.PROCESS_NAME || readPackage('name')),
   'process.env.DISABLE_WORKERS': JSON.stringify(process.env.DISABLE_WORKERS || false),

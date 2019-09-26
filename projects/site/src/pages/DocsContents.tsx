@@ -97,17 +97,17 @@ export const DocsContents = memo(
                 sizeRadius={0}
                 sizePadding={0}
                 marginRight={30}
-                size="lg"
+                size="md"
                 alpha={0.65}
                 hoverStyle={{
                   color: colors.purple,
                 }}
               >
-                <Row margin={[0, -16, -8]}>
+                <Row margin={[0, 0, -8]}>
                   {!!types && (
                     <Button
                       iconSize={16}
-                      icon="t"
+                      icon="properties"
                       tooltip="Component Props"
                       onClick={e => {
                         e.stopPropagation()
@@ -127,7 +127,7 @@ export const DocsContents = memo(
                         scrollTo('#component-source')
                       }}
                     >
-                      Component
+                      Component Source
                     </Button>
                   )}
                   {!!source && (
@@ -140,7 +140,7 @@ export const DocsContents = memo(
                         scrollTo('#component-source')
                       }}
                     >
-                      Page
+                      Page Source
                     </Button>
                   )}
                 </Row>

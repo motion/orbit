@@ -94,16 +94,16 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
       const resizable: { [key: string]: boolean } = {}
       if (position === 'left') {
         resizable.right = true
-          ; ({ width, minWidth, maxWidth } = props)
+        ;({ width, minWidth, maxWidth } = props)
       } else if (position === 'top') {
         resizable.bottom = true
-          ; ({ height, minHeight, maxHeight } = props)
+        ;({ height, minHeight, maxHeight } = props)
       } else if (position === 'right') {
         resizable.left = true
-          ; ({ width, minWidth, maxWidth } = props)
+        ;({ width, minWidth, maxWidth } = props)
       } else if (position === 'bottom') {
         resizable.top = true
-          ; ({ height, minHeight, maxHeight } = props)
+        ;({ height, minHeight, maxHeight } = props)
       }
 
       const horizontal = position === 'left' || position === 'right'
@@ -169,6 +169,13 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
       }
     }
 
+    const borderByPosition = {
+      left: <BorderRight hoverable={resizable} />,
+      right: <BorderLeft hoverable={resizable} />,
+      top: <BorderBottom hoverable={resizable} />,
+      bottom: <BorderTop hoverable={resizable} />,
+    }
+
     return (
       <Interactive
         className={`ui-sidebar ${this.props.className || ''}`}
@@ -210,11 +217,4 @@ const getTransform = (hidden: boolean, horizontal: boolean, invert: boolean, siz
       ...(!horizontal && { y: size * dir }),
     },
   }
-}
-
-const borderByPosition = {
-  left: <BorderRight />,
-  right: <BorderLeft />,
-  top: <BorderBottom />,
-  bottom: <BorderTop />,
 }

@@ -157,7 +157,7 @@ const DocsPage = memo((props: { children?: any }) => {
 
   const sidebarChildren = (
     <React.Fragment key="content">
-      <FadeInView style={{ flex: 1, pointerEvents: 'auto' }}>
+      <FadeInView data-is="DocsPageSidebar" flex={1} pointerEvents="auto">
         <DocsList />
       </FadeInView>
     </React.Fragment>

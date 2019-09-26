@@ -112,7 +112,7 @@ function OrbitTabIcon(props: OrbitTabIconProps) {
   opacity += props.iconAdjustOpacity || 0
   return (
     <Icon
-      color={theme.color.inverseLighten(0.8)}
+      color={theme.color.relativeLighten(0.8)}
       opacity={opacity}
       className={`tab-icon-${props.isActive ? 'active' : 'inactive'}`}
       {...props}

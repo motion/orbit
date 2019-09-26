@@ -412,19 +412,21 @@ export class Color {
   }
 
   /**
-   * If light, darken, if dark, lighten, percent is 0-1
+   * Lighten based on existing brightness, if its really dark, darken relatively less
+   * If inverse is true, then if its really dark, lighten relatively less
    */
-  inverseLighten(percent: number) {
-    const lightness = this.getLuminance()
-    if (lightness === 0.5) {
-      return this
-    }
-    if (percent < 0) {
-      throw new Error('Percent should be a positive value')
-    }
-    const isLight = lightness > 0.5
-    const diff = Math.abs(lightness - 0.5) * percent
-    return this[isLight ? 'darken' : 'lighten'](lightness * diff)
+  relativeLighten(amount: number, inverse?: boolean) {
+    const b = this.getBrightness() // (black) 0 - 255 (white)
+    const mid = 255 * 0.5
+    // (1 - 25) where 1 = close to middle, 25 = at extreme (white/black)
+    let relative = Math.max(1, Math.abs(b - mid)) / 25
+    // now inverse + scale it to 0.004 - 1, because we want extremes to be close to 0, middle close to 1
+    relative = (26 - relative) / 25
+    // now apply the amount we asked for
+    relative = relative * amount
+    const isLight = b > mid
+    const direction = isLight ? (inverse ? 'darken' : 'lighten') : inverse ? 'lighten' : 'darken'
+    return this[direction](b * relative)
   }
 
   /**

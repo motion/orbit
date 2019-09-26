@@ -7,17 +7,17 @@ import historyAPIFallback from 'connect-history-api-fallback'
 import { Handler } from 'express'
 import { Dictionary, Request } from 'express-serve-static-core'
 import { readFile } from 'fs-extra'
-import { chunk, debounce } from 'lodash'
+import { chunk } from 'lodash'
 import hashObject from 'node-object-hash'
-import { join, relative } from 'path'
-import { parse } from 'url'
+import { join } from 'path'
 import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 import Observable from 'zen-observable'
 
 import { buildAppInfo } from './buildAppInfo'
-import { commandBuild, shouldRebuildApp, writeBuildInfo } from './commandBuild'
+import { commandBuild, shouldRebuildApp } from './commandBuild'
 import { AppBuildConfigs, getAppsConfig } from './getAppsConfig'
+import { getHotMiddleware } from './getHotMiddleware'
 import { webpackPromise } from './webpackPromise'
 import { AppBuildModeDict } from './WorkspaceManager'
 
@@ -76,6 +76,7 @@ export class AppsBuilder {
   wsOptions: CommandWsOptions
   private buildStatus = new Map<string, 'compiling' | 'error' | 'success'>()
   private buildMode: AppBuildModeDict = {}
+  private appBuilders: { [name: string]: AppBuilder } = {}
 
   // used for tracking if we're finished with building all apps once
   // prevent serving index.html for example until all done
@@ -266,35 +267,22 @@ export class AppsBuilder {
         const config = rest[name]
         const devName = `${name}-client`
         const current = this.state.find(x => x.name === devName)
-        const middleware = await this.getClientBuilder(
-          config,
-          name,
-          buildNameToAppMeta[name],
-          devName,
-        )
-        if (middleware) {
-          if (middleware === true) {
-            // use last one
-            clientDescs.push(current)
-          } else {
-            if (current && current.close) {
-              current.close()
-            }
-            const { hash, devMiddleware, compiler } = middleware
-            const appDesc = {
-              name: devName,
-              hash,
-              devMiddleware,
-              middleware: resolveIfExists(devMiddleware, [config.output.path]),
-              close: () => {
-                log.info(`closing middleware ${name}`)
-                devMiddleware.close()
-              },
-              compiler,
-              config,
-            }
-            clientDescs.push(appDesc)
-          }
+        const { hasChanged } = this.getRunningApp(devName, config)
+        if (!hasChanged) {
+          clientDescs.push(current)
+        } else {
+          const appBuilder = new AppBuilder({
+            config,
+            devName,
+            name,
+            appMeta: buildNameToAppMeta[name],
+            wsOptions: this.wsOptions,
+            onBuildStatus(status) {},
+            appsManager: this.appsManager,
+          })
+          this.appBuilders[name] = appBuilder
+          const info = await appBuilder.start()
+          clientDescs.push(info)
         }
       }),
     )
@@ -308,7 +296,7 @@ export class AppsBuilder {
     res.push({
       name: 'apps-hot',
       middleware: resolveIfExists(
-        this.getHotMiddleware(clientDescs.map(x => x.compiler), {
+        getHotMiddleware(clientDescs.map(x => x.compiler), {
           path: '/__webpack_hmr',
           log: console.log,
           heartBeat: 10 * 1000,
@@ -327,7 +315,7 @@ export class AppsBuilder {
           res = [...res, ...this.state.filter(x => x.name === name)]
         } else {
           const { hash, devMiddleware, compiler } = middleware
-          const mainHotMiddleware = this.getHotMiddleware([compiler], {
+          const mainHotMiddleware = getHotMiddleware([compiler], {
             path: '/__webpack_hmr_main',
             log: console.log,
             heartBeat: 10 * 1000,
@@ -507,77 +495,6 @@ export class AppsBuilder {
     }
   }
 
-  private createReporterForApp = async (name: string, appMeta?: AppMeta) => {
-    const writeAppBuildInfo = debounce(() => {
-      log.debug(`writing app build info`)
-      writeBuildInfo(appMeta.directory)
-    }, 100)
-
-    if (await shouldRebuildApp(appMeta.directory)) {
-      // start in compiling mode
-      this.updateCompletedFirstBuild(name, 'compiling')
-    } else {
-      // compile, but start status at success so we can serve from disk right away
-      this.updateCompletedFirstBuild(name, 'success')
-    }
-
-    return (middlewareOptions, options) => {
-      // run the usual webpack reporter, outputs to console
-      // https://github.com/webpack/webpack-dev-middleware/blob/master/lib/reporter.js
-      webpackDevReporter(middlewareOptions, options)
-
-      const { state, stats } = options
-      const status = !state ? 'compiling' : stats.hasErrors() ? 'error' : 'success'
-
-      // keep internal track of status of builds
-      this.updateCompletedFirstBuild(name, status)
-
-      if (status === 'success') {
-        writeAppBuildInfo()
-      }
-
-      // report to appStatus bus
-      let identifier = name
-      let entryPathRelative = ''
-      if (appMeta) {
-        identifier = this.appsManager.packageIdToIdentifier(appMeta.packageId) || ''
-        const entryPath = join(appMeta.directory, appMeta.packageJson.main)
-        entryPathRelative = relative(this.wsOptions.workspaceRoot, entryPath)
-        // bugfix: local workspace apps looked like `apps/abc/main.tsx` which broke webpack expectations of moduleId
-        if (entryPathRelative[0] !== '.') {
-          entryPathRelative = `./${entryPathRelative}`
-        }
-      }
-
-      const baseBuildStatus = {
-        mode: this.buildMode[appMeta ? appMeta.packageId : 'main'],
-        env: 'client',
-        scriptName: name,
-        entryPathRelative,
-        identifier,
-      } as const
-
-      if (!state) {
-        this.setBuildStatus({
-          ...baseBuildStatus,
-          status: 'building',
-        })
-      } else if (stats.hasErrors()) {
-        this.setBuildStatus({
-          ...baseBuildStatus,
-          status: 'error',
-          message: stats.toString(),
-        })
-      } else {
-        this.setBuildStatus({
-          ...baseBuildStatus,
-          status: 'complete',
-          message: 'Success',
-        })
-      }
-    }
-  }
-
   private async getIndex(req: Request<Dictionary<string>>) {
     log.info('getIndex', req.path)
 
@@ -614,72 +531,6 @@ export class AppsBuilder {
       )
     }
   }
-
-  /**
-   * This is a lightly modified webpack-hot-middleware for our sakes imported here,
-   * so it can be modified to support putting multiple compilers under one EventStream.
-   */
-  eventStreams = {}
-  getHotMiddleware(
-    compilers: Webpack.Compiler[],
-    opts: { path: string; log: Function; heartBeat: number },
-  ) {
-    opts.log = typeof opts.log == 'undefined' ? console.log.bind(console) : opts.log
-    opts.path = opts.path || '/__webpack_hmr'
-    // re-use existing event stream even if we re-run getHotMiddleware
-    this.eventStreams[opts.path] =
-      this.eventStreams[opts.path] || createEventStream(opts.heartBeat || 10 * 1000)
-    const eventStream = this.eventStreams[opts.path]
-
-    let latestStats = null
-    let closed = false
-
-    for (const compiler of compilers) {
-      if (compiler.hooks) {
-        compiler.hooks.invalid.tap('webpack-hot-middleware', onInvalid)
-        compiler.hooks.done.tap('webpack-hot-middleware', onDone)
-      } else {
-        compiler.plugin('invalid', onInvalid)
-        compiler.plugin('done', onDone)
-      }
-      function onInvalid() {
-        if (closed) return
-        latestStats = null
-        if (opts.log) opts.log('webpack building...')
-        eventStream.publish({ action: 'building' })
-      }
-      function onDone(statsResult) {
-        if (closed) return
-        // Keep hold of latest stats so they can be propagated to new clients
-        latestStats = statsResult
-        publishStats('built', latestStats, eventStream, opts.log)
-      }
-    }
-
-    function middleware(req, res, next) {
-      if (closed) return next()
-      if (!pathMatch(req.url, opts.path)) return next()
-      eventStream.handler(req, res)
-      if (latestStats) {
-        publishStats('sync', latestStats, eventStream, opts.log)
-      }
-    }
-
-    middleware.publish = payload => {
-      if (closed) return
-      eventStream.publish(payload)
-    }
-
-    middleware.close = () => {
-      if (closed) return
-      log.info(`Closing hot middleware... shouldnt happen`)
-      closed = true
-      eventStream.close()
-      delete this.eventStreams[opts.path]
-    }
-
-    return middleware
-  }
 }
 
 const existsInCache = (middleware, path: string) => {
@@ -706,149 +557,4 @@ const resolveIfExists = (middleware, basePaths: string[], exactPaths: string[] =
     }
   }
   return handler
-}
-
-const pathMatch = function(url, path) {
-  try {
-    return parse(url).pathname === path
-  } catch (e) {
-    return false
-  }
-}
-
-/**
- * Reporter that lets us hook into webpack status messages
- */
-function webpackDevReporter(middlewareOptions, options) {
-  const { log, state, stats } = options
-
-  if (state) {
-    const displayStats = middlewareOptions.stats !== false
-
-    if (displayStats) {
-      if (stats.hasErrors()) {
-        log.error(stats.toString(middlewareOptions.stats))
-      } else if (stats.hasWarnings()) {
-        log.warn(stats.toString(middlewareOptions.stats))
-      } else {
-        log.info(stats.toString(middlewareOptions.stats))
-      }
-    }
-
-    let message = 'App compiled successfully.'
-
-    if (stats.hasErrors()) {
-      message = 'Failed to compile.'
-    } else if (stats.hasWarnings()) {
-      message = 'App compiled with warnings.'
-    }
-    log.info(message)
-  } else {
-    log.info('App compiling...')
-  }
-}
-
-function createEventStream(heartbeat: number) {
-  var clientId = 0
-  var clients = {}
-  function everyClient(fn) {
-    Object.keys(clients).forEach(function(id) {
-      fn(clients[id])
-    })
-  }
-  let interval = setInterval(function heartbeatTick() {
-    everyClient(function(client) {
-      client.write('data: \uD83D\uDC93\n\n')
-    })
-  }, heartbeat)
-  // node only TODO fix ts types
-  interval['unref']()
-  return {
-    close: function() {
-      clearInterval(interval)
-      everyClient(function(client) {
-        if (!client.finished) client.end()
-      })
-      clients = {}
-    },
-    handler: function(req, res) {
-      var headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'text/event-stream;charset=utf-8',
-        'Cache-Control': 'no-cache, no-transform',
-        'X-Accel-Buffering': 'no',
-      }
-      var isHttp1 = !(parseInt(req.httpVersion) >= 2)
-      if (isHttp1) {
-        req.socket.setKeepAlive(true)
-        Object.assign(headers, {
-          Connection: 'keep-alive',
-        })
-      }
-      res.writeHead(200, headers)
-      res.write('\n')
-      var id = clientId++
-      clients[id] = res
-      req.on('close', function() {
-        if (!res.finished) res.end()
-        delete clients[id]
-      })
-    },
-    publish: function(payload) {
-      everyClient(function(client) {
-        client.write('data: ' + JSON.stringify(payload) + '\n\n')
-      })
-    },
-  }
-}
-
-function publishStats(action, statsResult, eventStream, log) {
-  var stats = statsResult.toJson({
-    all: false,
-    cached: true,
-    children: true,
-    modules: true,
-    timings: true,
-    hash: true,
-  })
-  // For multi-compiler, stats will be an object with a 'children' array of stats
-  var bundles = extractBundles(stats)
-  bundles.forEach(function(stats) {
-    var name = stats.name || ''
-
-    // Fallback to compilation name in case of 1 bundle (if it exists)
-    if (bundles.length === 1 && !name && statsResult.compilation) {
-      name = statsResult.compilation.name || ''
-    }
-
-    if (log) {
-      log('webpack built ' + (name ? name + ' ' : '') + stats.hash + ' in ' + stats.time + 'ms')
-    }
-    eventStream.publish({
-      name: name,
-      action: action,
-      time: stats.time,
-      hash: stats.hash,
-      warnings: stats.warnings || [],
-      errors: stats.errors || [],
-      modules: buildModuleMap(stats.modules),
-    })
-  })
-}
-
-function extractBundles(stats) {
-  // Stats has modules, single bundle
-  if (stats.modules) return [stats]
-  // Stats has children, multiple bundles
-  if (stats.children && stats.children.length) return stats.children
-  // Not sure, assume single
-  return [stats]
-}
-
-function buildModuleMap(modules) {
-  var map = {}
-  modules.forEach(function(module) {
-    map[module.id] = module.name
-  })
-  return map
 }

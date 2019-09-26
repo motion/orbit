@@ -48,7 +48,6 @@ export function makeWebpackConfig(
     ignore = [],
     watch = false,
     // why minify? we arent optimizing for size much and it dramatically raises cost of build
-    // + way harder to debug in general, lets leave it off until someone yells about it
     minify = false,
     dll,
     dllReferences,
@@ -163,7 +162,6 @@ export function makeWebpackConfig(
     optimization: optimization[mode],
     output: {
       path: outputDir,
-      pathinfo: true,
       filename: outputFile || '[name].js',
       ...output,
       publicPath,

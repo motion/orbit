@@ -260,36 +260,44 @@ export class AppsBuilder {
     // you have to do it this janky ass way because webpack just isnt really great at
     // doing multi-config hmr, and this makes sure the 404 hot-update bug is fixed (google)
     const clientDescs: WebpackAppsDesc[] = []
-    for (const name in rest) {
-      const config = rest[name]
-      const devName = `${name}-client`
-      const current = this.state.find(x => x.name === devName)
-      const middleware = this.getClientBuilder(config, name, buildNameToAppMeta[name], devName)
-      if (middleware) {
-        if (middleware === true) {
-          // use last one
-          clientDescs.push(current)
-        } else {
-          if (current && current.close) {
-            current.close()
+
+    await Promise.all(
+      Object.keys(rest).map(async name => {
+        const config = rest[name]
+        const devName = `${name}-client`
+        const current = this.state.find(x => x.name === devName)
+        const middleware = await this.getClientBuilder(
+          config,
+          name,
+          buildNameToAppMeta[name],
+          devName,
+        )
+        if (middleware) {
+          if (middleware === true) {
+            // use last one
+            clientDescs.push(current)
+          } else {
+            if (current && current.close) {
+              current.close()
+            }
+            const { hash, devMiddleware, compiler } = middleware
+            const appDesc = {
+              name: devName,
+              hash,
+              devMiddleware,
+              middleware: resolveIfExists(devMiddleware, [config.output.path]),
+              close: () => {
+                log.info(`closing middleware ${name}`)
+                devMiddleware.close()
+              },
+              compiler,
+              config,
+            }
+            clientDescs.push(appDesc)
           }
-          const { hash, devMiddleware, compiler } = middleware
-          const appDesc = {
-            name: devName,
-            hash,
-            devMiddleware,
-            middleware: resolveIfExists(devMiddleware, [config.output.path]),
-            close: () => {
-              log.info(`closing middleware ${name}`)
-              devMiddleware.close()
-            },
-            compiler,
-            config,
-          }
-          clientDescs.push(appDesc)
         }
-      }
-    }
+      }),
+    )
 
     // add cleint descs to output
     res = [...res, ...clientDescs]
@@ -313,7 +321,7 @@ export class AppsBuilder {
     // falls back to the main entry middleware
     if (main) {
       const name = 'main'
-      const middleware = this.getClientBuilder(main, name, undefined, name)
+      const middleware = await this.getClientBuilder(main, name, undefined, name)
       if (middleware) {
         if (middleware === true) {
           res = [...res, ...this.state.filter(x => x.name === name)]
@@ -471,7 +479,7 @@ export class AppsBuilder {
     return { hash, running: null, hasChanged: true }
   }
 
-  private getClientBuilder = (
+  private getClientBuilder = async (
     config: Webpack.Configuration,
     name: string,
     appMeta?: AppMeta,
@@ -483,13 +491,12 @@ export class AppsBuilder {
       if (hasChanged === false) {
         return true
       }
-      // start in compiling mode
-      this.updateCompletedFirstBuild(name, 'compiling')
       const compiler = Webpack(config)
       const publicPath = config.output.publicPath
       const devMiddleware = WebpackDevMiddleware(compiler, {
         publicPath,
-        reporter: this.createReporterForApp(name, appMeta),
+        reporter: await this.createReporterForApp(name, appMeta),
+        writeToDisk: true,
       })
       return { devMiddleware, compiler, name, hash }
     } catch (err) {
@@ -500,11 +507,19 @@ export class AppsBuilder {
     }
   }
 
-  private createReporterForApp = (name: string, appMeta?: AppMeta) => {
+  private createReporterForApp = async (name: string, appMeta?: AppMeta) => {
     const writeAppBuildInfo = debounce(() => {
       log.debug(`writing app build info`)
       writeBuildInfo(appMeta.directory)
     }, 100)
+
+    if (await shouldRebuildApp(appMeta.directory)) {
+      // start in compiling mode
+      this.updateCompletedFirstBuild(name, 'compiling')
+    } else {
+      // compile, but start status at success so we can serve from disk right away
+      this.updateCompletedFirstBuild(name, 'success')
+    }
 
     return (middlewareOptions, options) => {
       // run the usual webpack reporter, outputs to console
@@ -551,13 +566,13 @@ export class AppsBuilder {
         this.setBuildStatus({
           ...baseBuildStatus,
           status: 'error',
-          message: stats.toString(middlewareOptions.stats),
+          message: stats.toString(),
         })
       } else {
         this.setBuildStatus({
           ...baseBuildStatus,
           status: 'complete',
-          message: stats.toString(middlewareOptions.stats),
+          message: 'Success',
         })
       }
     }

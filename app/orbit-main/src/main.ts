@@ -68,7 +68,7 @@ export async function main() {
       loadingWindow.setMenuBarVisibility(false)
       loadingWindow.loadFile(join(__dirname, '..', 'loading.html'))
       loadingWindow.once('ready-to-show', () => {
-        loadingWindow.show()
+        loadingWindow.showInactive()
         setTimeout(() => {
           const bounds = loadingWindow.getBounds()
           const to = [400, 300]

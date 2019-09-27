@@ -244,7 +244,7 @@ export class AppsManager {
     let updated = false
     for (const appMeta of appsMeta) {
       const identifier = getIdentifierFromPackageId(appMeta.packageId)
-      log.verbose(`setting apps meta ${appMeta.packageId} => ${identifier}`)
+      log.debug(`setting apps meta ${appMeta.packageId} => ${identifier}`)
       if (identifier !== null) {
         this.appMeta[identifier] = appMeta
         updated = true

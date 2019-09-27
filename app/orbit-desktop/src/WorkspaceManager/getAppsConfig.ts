@@ -56,7 +56,7 @@ export async function getAppsConfig(
    * This inline function just ensures we build + reference them.
    */
   async function addDLL(params: WebpackParams): Promise<webpack.Configuration> {
-    log.info(`Adding dll: ${params.name}, first entry: ${params.entry[0]}`)
+    log.debug(`Adding dll: ${params.name}, first entry: ${params.entry[0]}`)
     // add to dlls
     dllReferences.unshift({
       manifest: params.dll,
@@ -158,7 +158,7 @@ export async function getAppsConfig(
   )
   const buildNameToAppMeta: { [name: string]: AppMeta } = {}
   const appInfos = await Promise.all(apps.map(x => getAppInfo(x.directory)))
-  console.log('appInfos', appInfos)
+
   for (const [index, params] of appParams.entries()) {
     const appMeta = apps[index]
     const appInfo = appInfos[index]

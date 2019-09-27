@@ -3,7 +3,7 @@ import { Logger } from '@o/logger'
 import { Window } from '@o/reactron'
 import { App, Electron } from '@o/stores'
 import { react, useStore } from '@o/use-store'
-import { BrowserWindowConstructorOptions } from 'electron'
+import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron'
 import { join } from 'path'
 import { stringify } from 'query-string'
 import * as React from 'react'
@@ -63,9 +63,13 @@ type AppWindowProps = BrowserWindowConstructorOptions & {
   onResize?: Function
   onMove?: Function
   onPosition?: Function
-  defaultPosition: number[]
-  defaultSize: number[]
+  defaultPosition?: number[]
+  defaultSize?: number[]
   locationQuery?: Object
+  window?: BrowserWindow
+  bounds?: any
+  defaultBounds?: any
+  animateBounds?: boolean
 }
 
 export function OrbitAppWindow({
@@ -92,21 +96,23 @@ export function OrbitAppWindow({
   return (
     <Window
       show={store.show}
+      ref={forwardRef}
+      file={url}
       webPreferences={{
         nodeIntegration: true,
         // webSecurity: false,
       }}
       titleBarStyle="hiddenInset"
-      ref={forwardRef}
-      file={url}
-      defaultPosition={store.position.slice()}
-      defaultSize={store.size.slice()}
+      {...!(windowProps.defaultBounds && !windowProps.bounds) && {
+        defaultPosition: store.position.slice(),
+        defaultSize: store.size.slice(),
+      }}
       onFocus={store.handleFocus}
-      showDevTools={store.showDevTools}
-      transparent
-      background="#00000000"
-      vibrancy={store.vibrancy}
-      hasShadow
+      // showDevTools={store.showDevTools}
+      // transparent
+      // background="#00000000"
+      // vibrancy={store.vibrancy}
+      // hasShadow
       icon={join(ROOT, 'resources', 'icons', 'appicon.png')}
       {...windowProps}
     />

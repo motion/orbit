@@ -33,8 +33,10 @@ function focusApp(shown: boolean) {
 class OrbitMainWindowStore {
   props: {
     enabled: boolean
+    window: boolean
   } = {
     enabled: false,
+    window: false,
   }
 
   alwaysOnTop = true
@@ -110,7 +112,7 @@ class OrbitMainWindowStore {
 
   get show() {
     if (Electron.isMainWindow) {
-      return this.isReady && Electron.state.showOrbitMain
+      return (this.props.window || this.isReady) && Electron.state.showOrbitMain
     }
     return true
   }
@@ -120,10 +122,11 @@ class OrbitMainWindowStore {
   }
 }
 
-export function OrbitMainWindow(props: { restartKey?: any }) {
+export function OrbitMainWindow(props: { restartKey?: any; window?: BrowserWindow }) {
   const { isMainWindow, windowId } = useStore(Electron)
   const store = useStore(OrbitMainWindowStore, {
     enabled: isMainWindow,
+    window: !!props.window,
   })
   global['OrbitMainWindowStore'] = OrbitMainWindowStore
 
@@ -143,6 +146,7 @@ export function OrbitMainWindow(props: { restartKey?: any }) {
   return (
     <OrbitAppWindow
       key={props.restartKey}
+      window={props.window}
       windowId={windowId}
       locationQuery={{
         ...(process.env.NODE_ENV !== 'development' && {
@@ -157,8 +161,13 @@ export function OrbitMainWindow(props: { restartKey?: any }) {
       focus={isMainWindow}
       // alwaysOnTop={store.isReady ? [store.alwaysOnTop, 'floating', 1] : false}
       forwardRef={store.handleRef}
-      defaultPosition={store.bounds.position}
-      defaultSize={store.bounds.size}
+      animateBounds
+      defaultBounds={{
+        x: store.bounds.position[0],
+        y: store.bounds.position[1],
+        width: store.bounds.size[0],
+        height: store.bounds.size[1],
+      }}
       onResize={store.setSize}
       onPosition={store.setPosition}
       onMove={store.setPosition}

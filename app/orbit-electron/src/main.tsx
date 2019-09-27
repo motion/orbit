@@ -7,6 +7,7 @@ import { NewFallbackServerPortCommand, SendClientDataCommand, ToggleOrbitMainCom
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'
 import { stringHash } from '@o/ui'
+import { BrowserWindow } from 'electron'
 import electronDebug from 'electron-debug'
 import { writeFileSync } from 'fs'
 import { join } from 'path'
@@ -24,7 +25,7 @@ import { TearAppResolver } from './resolver/TearAppResolver'
 
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 
-export async function main() {
+export async function main(loadingWindow?: BrowserWindow) {
   const desktopServerUrl = `http://localhost:${getGlobalConfig().ports.server}/hello`
 
   log.info(
@@ -119,6 +120,6 @@ export async function main() {
       return
     default:
       require('./helpers/updateChecker')
-      render(<OrbitRoot />)
+      render(<OrbitRoot loadingWindow={loadingWindow} />)
   }
 }

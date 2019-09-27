@@ -34,6 +34,7 @@ export class Window extends BaseComponent {
   propHandlers = null
   lastProps: any = {}
 
+  updateBounds = () => configureBounds.call(this, this.props)
   updateSize = () => configureSize.call(this, this.props)
   updatePosition = () => configurePosition.call(this, this.props)
 
@@ -64,9 +65,8 @@ export class Window extends BaseComponent {
         x: props.defaultPosition[0],
         y: props.defaultPosition[1],
       }),
+      ...props.defaultBounds,
     })
-
-    this.window = new BrowserWindow(this.options)
 
     this.propHandlers = {
       kiosk: this.handleSetProp('kiosk'),
@@ -87,6 +87,7 @@ export class Window extends BaseComponent {
         }
       },
       show: propVal => {
+        console.log('show', propVal)
         if (propVal) {
           // ensure it happens after positioning
           setTimeout(() => {
@@ -100,6 +101,9 @@ export class Window extends BaseComponent {
           this.window.hide()
         }
       },
+      bounds: this.updateBounds,
+      defaultBounds: this.updateBounds,
+      animateBounds: this.updateBounds,
       size: this.updateSize,
       onResize: this.updateSize,
       position: this.updatePosition,
@@ -118,6 +122,13 @@ export class Window extends BaseComponent {
         }
       },
     }
+
+    if (props.window) {
+      this.window = props.window
+      this.handleNewProps(Object.keys(this.props))
+    } else {
+      this.window = new BrowserWindow(this.options)
+    }
   }
 
   handleSetProp(key, handler = _ => _) {
@@ -130,6 +141,8 @@ export class Window extends BaseComponent {
         if (setterInst) {
           setterInst.call(this.window, ...newVal)
           this.options[key] = newVal
+        } else {
+          this.window[key] = newVal
         }
       }
     }
@@ -146,6 +159,7 @@ export class Window extends BaseComponent {
     try {
       for (const key of keys) {
         const val = this.props[key]
+        console.log('setting prop', key, val)
         if (EVENT_KEYS[key]) {
           this.handleEvent(this.window, EVENT_KEYS[key], val)
           continue
@@ -169,17 +183,13 @@ function configureFile(this: Window, { file }) {
   }
 }
 
-function configureSize(this: Window, { size: oSize, onResize, animateSize }) {
-  if (this.unmounted) {
-    return
-  }
-  console.log('configure size', oSize)
-  let size = oSize
-  if (Array.isArray(oSize)) {
+function configureSize(this: Window, { size, onResize, animateSize }) {
+  if (this.unmounted) return
+  if (Array.isArray(size)) {
     size = size.map(x => Math.round(x))
   }
   // window.setPosition(x, y[, animate])
-  if (typeof animateSize === 'boolean') {
+  if (size && typeof animateSize === 'boolean') {
     size[2] = animateSize
   }
   try {
@@ -187,17 +197,31 @@ function configureSize(this: Window, { size: oSize, onResize, animateSize }) {
       rawHandler(this.window.getSize())
     })
     if (!size) {
-      this.window.setResizable(true)
+      this.window.resizable = true
       return
     }
     if (size && onResize) {
       this.window.setSize(...size)
-      this.window.setResizable(true)
+      this.window.resizable = true
       return
     }
     if (size && !onResize) {
       this.window.setSize(...size)
-      this.window.setResizable(false)
+      this.window.resizable = false
+      return
+    }
+  } catch (e) {
+    log.info('error in configureSize', e)
+  }
+}
+
+function configureBounds(this: Window, { defaultBounds, bounds, animateBounds }) {
+  if (this.unmounted) return
+  const allBounds = bounds || defaultBounds
+  if (!allBounds) return
+  try {
+    if (allBounds) {
+      this.window.setBounds(allBounds, !!animateBounds)
       return
     }
   } catch (e) {
@@ -212,7 +236,6 @@ function configurePosition(
   if (this.unmounted) return
   if (!this.window) return
   try {
-    // window.setPosition(x, y[, animate])
     if (typeof animatePosition === 'boolean') {
       position[2] = animatePosition
     }
@@ -232,12 +255,12 @@ function configurePosition(
       if (!isEqual(this.lastProps.defaultPosition, defaultPosition)) {
         this.lastProps.defaultPosition = defaultPosition
         this.window.setPosition(...defaultPosition)
-        this.window.setMovable(true)
+        this.window.movable = true
       }
       return
     }
     if (!position && !defaultPosition) {
-      this.window.setMovable(true)
+      this.window.movable = true
       return
     }
     if (position) {
@@ -245,12 +268,12 @@ function configurePosition(
       if (typeof position[0] !== 'number' || typeof position[1] !== 'number') end('not number')
       if (onMove || onMoved) {
         this.window.setPosition(...position)
-        this.window.setMovable(true)
+        this.window.movable = true
         return
       }
       if (!onMove && !onMoved) {
         this.window.setPosition(...position)
-        this.window.setMovable(false)
+        this.window.movable = false
         return
       }
     }

@@ -360,11 +360,8 @@ export class AppsBuilder {
    * Resolves all requests if they are valid down the the proper app middleware
    */
   middleware: Handler = async (req, res, next) => {
-    console.log('req.path', req.path)
     const sendIndex = async () => {
-      console.log('sendIndex', req.path)
       await this.completedFirstBuild
-      console.log('sendIndex!!')
       res.send(await this.getIndex(req))
     }
     // hacky way to just serve our own index.html for now
@@ -434,7 +431,7 @@ export class AppsBuilder {
           log.debug(`${name} config hasnt changed! dont re-run this one just return the old one`)
           return { hash, running, hasChanged: false }
         } else {
-          log.verbose(`${name}config has changed!`)
+          log.verbose(`${name}config has changed! ${running.hash} vs ${hash}`)
           return { hash, running, hasChanged: true }
         }
       }
@@ -445,7 +442,6 @@ export class AppsBuilder {
   private async getIndex(req: Request<Dictionary<string>>) {
     log.info('getIndex', req.path)
 
-    // const isProd = Object.keys(this.buildMode).every(x => this.buildMode[x] === 'production')
     const desktopRoot = join(require.resolve('@o/orbit-desktop'), '..', '..')
     const index = await readFile(join(desktopRoot, 'index.html'), 'utf8')
     const scriptsPre = `
@@ -466,7 +462,6 @@ export class AppsBuilder {
       const identifier = req.path.split('/')[2]
       const packageId = this.appsManager.identifierToPackageId[identifier]
       const app = this.apps.find(x => x.packageId === packageId)
-      console.log('identifier', identifier)
       return index.replace(
         '<!-- orbit-scripts -->',
         `${scriptsPre}${getAppScriptDLL(app)}${scriptsPost}`,

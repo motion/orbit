@@ -2,6 +2,7 @@ import { Logger } from '@o/logger'
 import { App as ReactronApp } from '@o/reactron'
 import { Electron } from '@o/stores'
 import { useStore } from '@o/use-store'
+import { BrowserWindow } from 'electron'
 import React, { useState } from 'react'
 
 import { devTools } from './helpers/devTools'
@@ -10,7 +11,7 @@ import { OrbitMainWindow } from './OrbitMainWindow'
 
 const log = new Logger('OrbitRoot')
 
-export function OrbitRoot() {
+export function OrbitRoot(props: { loadingWindow: BrowserWindow }) {
   const { isMainWindow, appConf, windowId } = useStore(Electron)
   const [state, setState] = useState({
     restartKey: 0,
@@ -30,7 +31,7 @@ export function OrbitRoot() {
       <MenuItems
         restart={() => setState(state => ({ ...setState, restartKey: state.restartKey + 1 }))}
       />
-      <OrbitMainWindow restartKey={state.restartKey} />
+      <OrbitMainWindow window={props.loadingWindow} restartKey={state.restartKey} />
     </ReactronApp>
   )
 }

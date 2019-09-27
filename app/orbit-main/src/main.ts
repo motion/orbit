@@ -51,11 +51,12 @@ const envInfo = {
 export async function main() {
   log.info(`starting ${PROCESS_NAME || 'orbit-main'} ${SUB_PROCESS}`, envInfo, ORBIT_CONFIG)
 
+  let loadingWindow
   // show loading window
   if (!SUB_PROCESS) {
     const electron = require('electron')
     electron.app.once('ready', () => {
-      const loadingWindow = new electron.BrowserWindow({
+      loadingWindow = new electron.BrowserWindow({
         width: 300,
         height: 200,
         frame: false,
@@ -184,7 +185,7 @@ export async function main() {
     if (DISABLE_ELECTRON !== 'true') {
       log.info('Starting electron...')
       // start main electron process inside this thread (no forking)
-      require('./startElectron').startElectron({ mainProcess: true })
+      require('./startElectron').startElectron({ mainProcess: true, loadingWindow })
     }
 
     // workers

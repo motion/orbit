@@ -14,7 +14,7 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
   log.verbose(`Get config isProd ${isProd}`)
 
   // find a bunch of ports for us to use
-  const ports = await findContiguousPorts(10, 3001)
+  const ports = await findContiguousPorts(20, 3001)
 
   if (ports === false) {
     throw log.panic(`No ports found!`)

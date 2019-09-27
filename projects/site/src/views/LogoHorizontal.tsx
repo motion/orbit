@@ -7,9 +7,9 @@ import { useLink } from '../useLink'
 
 export const LogoHorizontal = memo((props: ViewProps & { slim?: boolean }) => {
   const theme = useTheme()
-  const scaleDown = 0.075 + (props.slim ? 0 : 0.075)
-  const w = 1441
-  const h = 372
+  const scaleDown = 0.5 + (props.slim ? 0 : 0.5)
+  const w = 272
+  const h = 71
 
   return (
     <View

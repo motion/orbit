@@ -33,10 +33,10 @@ function focusApp(shown: boolean) {
 class OrbitMainWindowStore {
   props: {
     enabled: boolean
-    window: boolean
+    window: BrowserWindow
   } = {
     enabled: false,
-    window: false,
+    window: null,
   }
 
   alwaysOnTop = true
@@ -126,7 +126,7 @@ export function OrbitMainWindow(props: { restartKey?: any; window?: BrowserWindo
   const { isMainWindow, windowId } = useStore(Electron)
   const store = useStore(OrbitMainWindowStore, {
     enabled: isMainWindow,
-    window: !!props.window,
+    window: props.window,
   })
   global['OrbitMainWindowStore'] = OrbitMainWindowStore
 

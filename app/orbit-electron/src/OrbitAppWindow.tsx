@@ -100,7 +100,6 @@ export function OrbitAppWindow({
       file={url}
       webPreferences={{
         nodeIntegration: true,
-        // webSecurity: false,
       }}
       titleBarStyle="hiddenInset"
       {...!(windowProps.defaultBounds && !windowProps.bounds) && {
@@ -108,11 +107,11 @@ export function OrbitAppWindow({
         defaultSize: store.size.slice(),
       }}
       onFocus={store.handleFocus}
-      // showDevTools={store.showDevTools}
-      // transparent
-      // background="#00000000"
-      // vibrancy={store.vibrancy}
-      // hasShadow
+      showDevTools={store.showDevTools}
+      transparent
+      background="#00000000"
+      vibrancy={store.vibrancy}
+      hasShadow
       icon={join(ROOT, 'resources', 'icons', 'appicon.png')}
       {...windowProps}
     />

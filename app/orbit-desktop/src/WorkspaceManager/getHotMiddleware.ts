@@ -14,7 +14,7 @@ const eventStreams = {}
  * so it can be modified to support putting multiple compilers under one EventStream.
  */
 export function getHotMiddleware(
-  compilers: webpack.Compiler[],
+  getCompilers: (() => webpack.Compiler | null)[],
   opts: { path: string; log: Function; heartBeat: number },
 ) {
   opts.log = typeof opts.log == 'undefined' ? console.log.bind(console) : opts.log
@@ -26,32 +26,40 @@ export function getHotMiddleware(
 
   let latestStats = null
   let closed = false
-
-  for (const compiler of compilers) {
-    if (compiler.hooks) {
-      compiler.hooks.invalid.tap('webpack-hot-middleware', onInvalid)
-      compiler.hooks.done.tap('webpack-hot-middleware', onDone)
-    } else {
-      compiler.plugin('invalid', onInvalid)
-      compiler.plugin('done', onDone)
-    }
-    function onInvalid() {
-      if (closed) return
-      latestStats = null
-      if (opts.log) opts.log('webpack building...')
-      eventStream.publish({ action: 'building' })
-    }
-    function onDone(statsResult) {
-      if (closed) return
-      // Keep hold of latest stats so they can be propagated to new clients
-      latestStats = statsResult
-      publishStats('built', latestStats, eventStream, opts.log)
-    }
-  }
+  let compilers: webpack.Compiler[] | null = null
 
   function middleware(req, res, next) {
     if (closed) return next()
     if (!pathMatch(req.url, opts.path)) return next()
+    if (!compilers) {
+      // setup once
+      if (getCompilers.every(x => !!x())) {
+        for (const getCompiler of getCompilers) {
+          const compiler = getCompiler()
+          if (compiler.hooks) {
+            compiler.hooks.invalid.tap('webpack-hot-middleware', onInvalid)
+            compiler.hooks.done.tap('webpack-hot-middleware', onDone)
+          } else {
+            compiler.plugin('invalid', onInvalid)
+            compiler.plugin('done', onDone)
+          }
+          function onInvalid() {
+            if (closed) return
+            latestStats = null
+            if (opts.log) opts.log('webpack building...')
+            eventStream.publish({ action: 'building' })
+          }
+          function onDone(statsResult) {
+            if (closed) return
+            // Keep hold of latest stats so they can be propagated to new clients
+            latestStats = statsResult
+            publishStats('built', latestStats, eventStream, opts.log)
+          }
+        }
+      } else {
+        return next()
+      }
+    }
     eventStream.handler(req, res)
     if (latestStats) {
       publishStats('sync', latestStats, eventStream, opts.log)

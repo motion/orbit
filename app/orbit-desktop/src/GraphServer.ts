@@ -14,8 +14,6 @@ import { introspectSchema, makeExecutableSchema, makeRemoteExecutableSchema, mer
 import { getActiveSpace } from './helpers/getActiveSpace'
 
 const log = new Logger('graphServer')
-const Config = getGlobalConfig()
-const port = Config.ports.graphServer
 
 export class GraphServer {
   server: express.Application
@@ -55,6 +53,8 @@ export class GraphServer {
     })
 
     return new Promise(async res => {
+      const Config = getGlobalConfig()
+      const port = Config.ports.graphServer
       log.info(`Starting on ${port}`)
       this.server.listen(port, () => {
         log.info('Server listening', port)

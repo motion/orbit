@@ -14,7 +14,7 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
   log.verbose(`Get config isProd ${isProd}`)
 
   // find a bunch of ports for us to use
-  const ports = await findContiguousPorts(20, 3001)
+  const ports = await findContiguousPorts(10, 3001)
 
   if (ports === false) {
     throw log.panic(`No ports found!`)
@@ -22,7 +22,7 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
 
   // for electron we use ports dynamically - each new app window consumes a port from this pool
   // todo: could allocate more or just add more as we need
-  const electronPorts = await findContiguousPorts(20, last(ports) + 1)
+  const electronPorts = await findContiguousPorts(15, last(ports) + 1)
   let config: GlobalConfig
 
   if (!ports || !electronPorts) {

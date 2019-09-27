@@ -262,8 +262,8 @@ export class AppsBuilder {
           if (!isMain) {
             clientDescs = [...clientDescs, { ...info, middleware: info.staticMiddleware }, info]
           } else {
-            const { config, hash, devMiddleware, staticMiddleware, compiler } = info
-            const mainHotMiddleware = getHotMiddleware([compiler], {
+            const { config, hash, devMiddleware, staticMiddleware, getCompiler } = info
+            const mainHotMiddleware = getHotMiddleware([getCompiler], {
               path: '/__webpack_hmr_main',
               log: console.log,
               heartBeat: 10 * 1000,
@@ -308,7 +308,7 @@ export class AppsBuilder {
       }),
     )
 
-    // add cleint descs to output
+    // add client descs to output
     res = [...res, ...clientDescs]
 
     // then add one HMR server for everything because EventStream's don't support >5 in Chrome
@@ -316,7 +316,7 @@ export class AppsBuilder {
     res.push({
       name: 'apps-hot',
       middleware: resolveIfExists(
-        getHotMiddleware(clientDevDescs.map(x => x.compiler), {
+        getHotMiddleware(clientDevDescs.map(x => x.getCompiler), {
           path: '/__webpack_hmr',
           log: console.log,
           heartBeat: 10 * 1000,
@@ -360,15 +360,17 @@ export class AppsBuilder {
    * Resolves all requests if they are valid down the the proper app middleware
    */
   middleware: Handler = async (req, res, next) => {
+    console.log('req.path', req.path)
     const sendIndex = async () => {
+      console.log('sendIndex', req.path)
       await this.completedFirstBuild
+      console.log('sendIndex!!')
       res.send(await this.getIndex(req))
     }
     // hacky way to just serve our own index.html for now
     if (req.path[1] !== '_' && req.path.indexOf('.') === -1) {
       return await sendIndex()
     }
-    console.log('req.path', req.path)
     let fin
     for (const { middleware } of this.state) {
       if (!middleware) {

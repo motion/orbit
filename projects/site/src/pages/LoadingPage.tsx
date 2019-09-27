@@ -8,13 +8,17 @@ const hideProps: ViewProps = {
   pointerEvents: 'none',
 }
 
+let hasLoadedOnce = false
+
 export function LoadingPage() {
-  let [loading, setLoading] = useState(true)
+  let [loading, setLoading] = useState(!hasLoadedOnce)
 
   useLayoutEffect(() => {
+    if (hasLoadedOnce) return
     onLoadAllImages().then(() => {
       window['requestIdleCallback'](() => {
         setLoading(false)
+        hasLoadedOnce = true
       })
     })
   }, [])

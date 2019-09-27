@@ -54,7 +54,7 @@ export function BlogPage(props: { title?: string; children?: any }) {
     <FadeParent>
       <MDX>
         <Theme name="home">
-          <Header background="transparent" slim noBorder />
+          <Header slim noBorder />
           <BlogTitle />
         </Theme>
         <main className="main-contents">{props.children}</main>

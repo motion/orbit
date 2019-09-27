@@ -2,9 +2,9 @@ import { Absolute, Col } from '@o/ui'
 import React from 'react'
 import { Link } from 'react-navi'
 
+import { colors } from '../colors'
 import { SectionContent } from '../views/SectionContent'
 import { TitleText } from '../views/TitleText'
-import { Wavy } from './HomePage/purpleWaveUrl'
 
 export const BlogTitle = (props: any) => (
   <Col position="relative" background={theme => theme.background}>
@@ -23,8 +23,6 @@ export const BlogTitle = (props: any) => (
         </Col>
       </Link>
     </SectionContent>
-    <Absolute bottom={0} left={0} right={0} top={0} zIndex={0}>
-      <Wavy position="absolute" top={-100} left={0} right={0} bottom={0} />
-    </Absolute>
+    <Absolute bottom={0} left={0} right={0} top={0} zIndex={0} background={colors.purple} />
   </Col>
 )

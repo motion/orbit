@@ -37,7 +37,7 @@ export function BlogPageIndex() {
             >
               {post.title}
             </TitleText>
-            <Space size="md" />
+            <Space size="sm" />
             <PostMeta post={post} />
           </View>
         </FadeInView>
@@ -48,7 +48,7 @@ export function BlogPageIndex() {
 
 export const PostMeta = ({ post }) => {
   return (
-    <Row alignItems="center" fontSize={16} alpha={0.65}>
+    <Row fontWeight={400} alignItems="center" fontSize={15} alpha={0.65}>
       <Avatar size={32} src={post.authorImage} />
       &nbsp; &nbsp;
       {post.author}

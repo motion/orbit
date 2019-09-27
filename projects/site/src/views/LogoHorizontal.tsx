@@ -7,9 +7,9 @@ import { useLink } from '../useLink'
 
 export const LogoHorizontal = memo((props: ViewProps & { slim?: boolean }) => {
   const theme = useTheme()
-  const scaleDown = 0.08 + (props.slim ? 0 : 0.075)
+  const scaleDown = 0.075 + (props.slim ? 0 : 0.075)
   const w = 1441
-  const h = 442
+  const h = 372
 
   return (
     <View
@@ -22,7 +22,7 @@ export const LogoHorizontal = memo((props: ViewProps & { slim?: boolean }) => {
       transform={{
         x: 6,
         y: -2,
-        scale: scaleDown,
+        // scale: scaleDown,
       }}
       width={w * scaleDown}
       height={h * scaleDown}
@@ -31,8 +31,8 @@ export const LogoHorizontal = memo((props: ViewProps & { slim?: boolean }) => {
       {...props}
     >
       <SVG
-        width={`${w}px`}
-        height={`${h}px`}
+        width={`${w * scaleDown}px`}
+        height={`${h * scaleDown}px`}
         svg={orbit.replace('fill="#000000"', 'fill="currentColor"')}
       />
     </View>

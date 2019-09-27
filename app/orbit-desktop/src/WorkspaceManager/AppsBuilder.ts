@@ -98,6 +98,8 @@ export class AppsBuilder {
         // todo handle errors
         return
       }
+      // refresh app meta
+      await this.appsManager.updateAppMeta()
       // then build apps
       const appsMeta = await getWorkspaceApps(options.workspaceRoot)
       const buildConfigs = await getAppsConfig(appsMeta, buildMode, options)
@@ -135,6 +137,7 @@ export class AppsBuilder {
   }
 
   private async ensureAppsBuiltOnce() {
+    log.verbose(`ensureAppsBuiltOnce`)
     // ensure builds have run for each app
     let builds = []
     const chunks = chunk(await getWorkspaceApps(this.wsOptions.workspaceRoot), 2)

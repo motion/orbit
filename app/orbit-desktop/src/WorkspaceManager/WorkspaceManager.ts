@@ -84,13 +84,13 @@ export class WorkspaceManager {
     await ensureWorkspaceModel(opts.workspaceRoot)
     this.updateBuildMode(await getWorkspaceApps(opts.workspaceRoot))
     if (!this.startOpts.singleUseMode) {
-      await this.appsBuilder.update({
-        buildMode: this.buildMode,
-        options: opts,
-      })
       // start watching apps for updates on their AppMeta
       await this.appsManager.start({
         singleUseMode: this.startOpts.singleUseMode,
+      })
+      await this.appsBuilder.update({
+        buildMode: this.buildMode,
+        options: opts,
       })
       await this.graphServer.start()
     }
@@ -141,6 +141,9 @@ export class WorkspaceManager {
     async () => {
       log.verbose(`Update desktop state via apps`)
       await this.updateDesktopState()
+    },
+    {
+      lazy: true,
     },
   )
 

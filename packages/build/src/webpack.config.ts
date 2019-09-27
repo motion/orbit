@@ -116,6 +116,7 @@ const defines = {
   'process.env.PROCESS_NAME': JSON.stringify(process.env.PROCESS_NAME || readPackage('name')),
   'process.env.DISABLE_WORKERS': JSON.stringify(process.env.DISABLE_WORKERS || false),
   'process.env.LOG_LEVEL': JSON.stringify(process.env.LOG_LEVEL || 'info'),
+  'process.env.SPLIT_CHUNKS': JSON.stringify(process.env.SPLIT_CHUNKS),
 }
 
 console.log(

@@ -33,10 +33,6 @@ export async function getAppsConfig(
   buildMode: AppBuildModeDict,
   options: CommandWsOptions,
 ): Promise<AppBuildConfigs | null> {
-  if (!apps.length) {
-    return null
-  }
-
   // the mode/watch used for non-apps packages
   const mode = buildMode.main
   const watch = options.dev && options.action === 'run'

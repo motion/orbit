@@ -78,6 +78,7 @@ export function makeWebpackConfig(
   const defines = {
     'process.platform': JSON.stringify('darwin'),
     'process.env.NODE_ENV': JSON.stringify(mode),
+    'process.env.SPLIT_CHUNKS': JSON.stringify(false),
   }
 
   const optimization: { [key: string]: webpack.Configuration['optimization'] } = {

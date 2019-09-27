@@ -20,6 +20,7 @@ type AppBuilderProps = {
   wsOptions: CommandWsOptions
   appsManager: AppsManager
   onBuildStatus: (status: BuildStatus) => any
+  buildMode?: 'development' | 'production'
 }
 
 @decorate
@@ -27,19 +28,51 @@ export class AppBuilder {
   constructor(private props: AppBuilderProps) {}
 
   async start() {
-    const { config, appMeta } = this.props
+    const { config } = this.props
     const compiler = webpack(config)
     const publicPath = config.output.publicPath
     const devMiddleware = WebpackDevMiddleware(compiler, {
       publicPath,
-      reporter: await this.createReporterForApp(name, appMeta),
+      reporter: await this.getReporter(),
       writeToDisk: true,
     })
     const hash = hashObject({ sort: false }).hash(config)
     return { devMiddleware, compiler, name, hash }
   }
 
-  private createReporterForApp = async (name: string, appMeta?: AppMeta) => {
+  private getBuildStatus({
+    status,
+    message,
+  }: {
+    status: BuildStatus['status']
+    message?: string
+  }): BuildStatus {
+    const { name, appMeta, buildMode, wsOptions, appsManager } = this.props
+    // report to appStatus bus
+    let identifier = name
+    let entryPathRelative = ''
+    if (appMeta) {
+      identifier = appsManager.packageIdToIdentifier(appMeta.packageId) || ''
+      const entryPath = join(appMeta.directory, appMeta.packageJson.main)
+      entryPathRelative = relative(wsOptions.workspaceRoot, entryPath)
+      // bugfix: local workspace apps looked like `apps/abc/main.tsx` which broke webpack expectations of moduleId
+      if (entryPathRelative[0] !== '.') {
+        entryPathRelative = `./${entryPathRelative}`
+      }
+    }
+    return {
+      status,
+      message: message || '',
+      mode: buildMode,
+      env: 'client',
+      scriptName: name,
+      entryPathRelative,
+      identifier,
+    }
+  }
+
+  private getReporter = async () => {
+    const { appMeta } = this.props
     const writeAppBuildInfo = debounce(() => {
       log.debug(`writing app build info`)
       writeBuildInfo(appMeta.directory)
@@ -47,10 +80,10 @@ export class AppBuilder {
 
     if (await shouldRebuildApp(appMeta.directory)) {
       // start in compiling mode
-      this.updateCompletedFirstBuild(name, 'compiling')
+      this.props.onBuildStatus(this.getBuildStatus({ status: 'building' }))
     } else {
       // compile, but start status at success so we can serve from disk right away
-      this.updateCompletedFirstBuild(name, 'success')
+      this.props.onBuildStatus(this.getBuildStatus({ status: 'complete' }))
     }
 
     return (middlewareOptions, options) => {
@@ -61,52 +94,28 @@ export class AppBuilder {
       const { state, stats } = options
       const status = !state ? 'compiling' : stats.hasErrors() ? 'error' : 'success'
 
-      // keep internal track of status of builds
-      this.updateCompletedFirstBuild(name, status)
-
+      // we did it
       if (status === 'success') {
         writeAppBuildInfo()
       }
 
-      // report to appStatus bus
-      let identifier = name
-      let entryPathRelative = ''
-      if (appMeta) {
-        identifier = this.appsManager.packageIdToIdentifier(appMeta.packageId) || ''
-        const entryPath = join(appMeta.directory, appMeta.packageJson.main)
-        entryPathRelative = relative(this.wsOptions.workspaceRoot, entryPath)
-        // bugfix: local workspace apps looked like `apps/abc/main.tsx` which broke webpack expectations of moduleId
-        if (entryPathRelative[0] !== '.') {
-          entryPathRelative = `./${entryPathRelative}`
-        }
-      }
-
-      const baseBuildStatus = {
-        mode: this.buildMode[appMeta ? appMeta.packageId : 'main'],
-        env: 'client',
-        scriptName: name,
-        entryPathRelative,
-        identifier,
-      } as const
-
-      if (!state) {
-        this.props.onBuildStatus({
-          ...baseBuildStatus,
-          status: 'building',
-        })
-      } else if (stats.hasErrors()) {
-        this.props.onBuildStatus({
-          ...baseBuildStatus,
-          status: 'error',
-          message: stats.toString(),
-        })
-      } else {
-        this.props.onBuildStatus({
-          ...baseBuildStatus,
-          status: 'complete',
-          message: 'Success',
-        })
-      }
+      this.props.onBuildStatus(
+        this.getBuildStatus(
+          !state
+            ? {
+                status: 'building',
+              }
+            : stats.hasErrors()
+            ? {
+                status: 'error',
+                message: stats.toString(),
+              }
+            : {
+                status: 'complete',
+                message: 'Success',
+              },
+        ),
+      )
     }
   }
 }

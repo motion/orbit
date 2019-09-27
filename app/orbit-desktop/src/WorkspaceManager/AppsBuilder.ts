@@ -14,6 +14,7 @@ import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 import Observable from 'zen-observable'
 
+import { AppBuilder } from './AppBuilder'
 import { buildAppInfo } from './buildAppInfo'
 import { commandBuild, shouldRebuildApp } from './commandBuild'
 import { AppBuildConfigs, getAppsConfig } from './getAppsConfig'
@@ -35,19 +36,11 @@ const log = new Logger('AppsBuilder')
  *
  * What we need to do next:
  *
- *  1. We need to split this into a parent "AppsBuilder" which has a set of "AppBuilder"s
- *  2. That requires a bit better sepeartion of concerns, AppsBuilder would then:
- *     - Boot up an AppBuilder for each app
- *     - Aggregate the status of each apps build
- *     - Link the middleres together as it does now into a single resolver
- *     - Handle watching/updating the AppsBuilders
- *  3. Meanwhile each AppBuilder would take over building itself and communicating that upwards
  *  4. The final step of this refactor would be to use worker_threads to paralellize it:
  *     - AppBuilder would need to be wrapped in a function createAppBuilder()
  *     - That function would type out all the ways it communicates (message passing statuses / taking events from parent)
  *     - Then we'd workerize it and get it working in parallel
  *
- * Just wanted to note this stuff for future work, and #4 there is important to keep in mind.
  */
 
 type WebpackAppsDesc = {
@@ -74,9 +67,11 @@ export class AppsBuilder {
   buildNameToAppMeta: { [name: string]: AppMeta } = {}
 
   wsOptions: CommandWsOptions
-  private buildStatus = new Map<string, 'compiling' | 'error' | 'success'>()
   private buildMode: AppBuildModeDict = {}
   private appBuilders: { [name: string]: AppBuilder } = {}
+
+  observables = new Set<{ update: (next: any) => void; observable: Observable<BuildStatus[]> }>()
+  buildStatuses: BuildStatus[] = []
 
   // used for tracking if we're finished with building all apps once
   // prevent serving index.html for example until all done
@@ -271,14 +266,31 @@ export class AppsBuilder {
         if (!hasChanged) {
           clientDescs.push(current)
         } else {
+          const appMeta = buildNameToAppMeta[name]
           const appBuilder = new AppBuilder({
             config,
             devName,
             name,
-            appMeta: buildNameToAppMeta[name],
+            buildMode: this.buildMode[appMeta.packageId],
+            appMeta,
             wsOptions: this.wsOptions,
-            onBuildStatus(status) {},
             appsManager: this.appsManager,
+            onBuildStatus: status => {
+              const existing = this.buildStatuses.findIndex(x => x.identifier === status.identifier)
+              if (existing > -1) {
+                this.buildStatuses = this.buildStatuses.map((x, i) => (i === existing ? status : x))
+              } else {
+                this.buildStatuses.push(status)
+              }
+              this.observables.forEach(({ update }) => {
+                update(this.buildStatuses)
+              })
+              // TODO
+              if (this.buildStatuses.every(status => status.status === 'complete')) {
+                log.verbose(`Completed initial build`)
+                this.completeFirstBuild()
+              }
+            },
           })
           this.appBuilders[name] = appBuilder
           const info = await appBuilder.start()
@@ -358,18 +370,6 @@ export class AppsBuilder {
     return res
   }
 
-  updateCompletedFirstBuild = async (name: string, status: 'compiling' | 'error' | 'success') => {
-    this.buildStatus.set(name, status)
-    if (this.buildStatus.size === 0) {
-      return
-    }
-    const statuses = [...this.buildStatus].map(x => x[1])
-    if (statuses.every(status => status === 'success')) {
-      log.verbose(`Completed initial build`)
-      this.completeFirstBuild()
-    }
-  }
-
   /**
    * Resolves all requests if they are valid down the the proper app middleware
    */
@@ -418,7 +418,6 @@ export class AppsBuilder {
   /**
    * Returns Observable for the current workspace information
    */
-  observables = new Set<{ update: (next: any) => void; observable: Observable<BuildStatus[]> }>()
   observeBuildStatus() {
     const observable = new Observable<BuildStatus[]>(observer => {
       this.observables.add({
@@ -431,19 +430,6 @@ export class AppsBuilder {
       observer.next(this.buildStatuses)
     })
     return observable
-  }
-
-  buildStatuses: BuildStatus[] = []
-  private setBuildStatus = async (status: BuildStatus) => {
-    const existing = this.buildStatuses.findIndex(x => x.identifier === status.identifier)
-    if (existing > -1) {
-      this.buildStatuses = this.buildStatuses.map((x, i) => (i === existing ? status : x))
-    } else {
-      this.buildStatuses.push(status)
-    }
-    this.observables.forEach(({ update }) => {
-      update(this.buildStatuses)
-    })
   }
 
   private getConfigHash(config: Webpack.Configuration) {

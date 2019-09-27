@@ -1,6 +1,5 @@
 import { VariableSizeList } from '@o/react-window'
 import * as ReactWindow from '@o/react-window'
-import { gloss } from 'gloss'
 import React, { forwardRef, memo, RefObject } from 'react'
 import { VariableSizeListProps } from 'react-window'
 
@@ -28,18 +27,12 @@ export const DynamicList = memo(
     const { ref, width, height } = useNodeSize({
       disable: disableMeasure,
     })
-
     return (
-      <DynamicListChrome nodeRef={ref}>
+      <View data-is="DynamicListChrome" overflow="hidden" flex={1} nodeRef={ref}>
         <DynamicSizeList ref={listRef} width={width} height={height} {...props} />
-      </DynamicListChrome>
+      </View>
     )
   }),
 )
-
-const DynamicListChrome = gloss(View, {
-  overflow: 'hidden',
-  flex: 1,
-})
 
 export type DynamicListControlled = VariableSizeList

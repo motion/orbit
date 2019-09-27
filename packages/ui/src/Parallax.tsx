@@ -75,7 +75,7 @@ type ParallaxMeasurements = {
   nodeSizePct: number
 }
 
-type ParallaxItemProps = {
+export type ParallaxItemProps = {
   offset?: number
   speed?: number
   clamp?: boolean | [number, number]
@@ -124,7 +124,7 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
       ...props,
     }
     let chain = this.useViewportScroll(direction === 'x' ? 'xProgress' : 'yProgress')
-      // just use version to triger update
+      // just use version to trigger update
       .mergeTransform([version], pagePct => {
         if (speed === 0) return 0
         const {

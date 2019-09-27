@@ -1,4 +1,4 @@
-import { AppsManager, getAppInfo, getAppMeta } from '@o/apps-manager'
+import { AppsManager, getAppInfo, getAppMeta, getWorkspaceApps } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveMany, resolveObserveOne } from '@o/mediator'
 import { AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppMeta, AppMetaCommand, AppWorkspaceCommand, BuildStatusModel, CallAppBitApiMethodCommand, CommandWsOptions, Space, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
@@ -16,7 +16,6 @@ import { findOrCreateWorkspace } from '../helpers/findOrCreateWorkspace'
 import { getActiveSpace } from '../helpers/getActiveSpace'
 import { AppsBuilder } from './AppsBuilder'
 import { buildAppInfo } from './buildAppInfo'
-import { buildWorkspaceAppsInfo } from './buildWorkspaceAppsInfo'
 import { resolveAppBuildCommand } from './commandBuild'
 import { resolveAppGenTypesCommand } from './commandGenTypes'
 import { resolveAppInstallCommand } from './commandInstall'
@@ -65,14 +64,12 @@ export class WorkspaceManager {
     this.mediatorServer // to prevent unused
   }
 
-  async start() {
-    this.updateBuildMode()
-  }
+  async start() {}
 
-  private updateBuildMode() {
+  private updateBuildMode(appsMeta = this.activeAppsMeta) {
     // update buildMode first
     this.buildMode.main = this.options.dev ? 'development' : 'production'
-    for (const app of this.activeAppsMeta) {
+    for (const app of appsMeta) {
       // apps always default to production mode
       this.buildMode[app.packageId] = process.env.DEV_ALL_APPS
         ? 'development'
@@ -85,12 +82,15 @@ export class WorkspaceManager {
     log.info(`updateWorkspace ${JSON.stringify(opts)}`)
     // ensure Space model inserted and up to date
     await ensureWorkspaceModel(opts.workspaceRoot)
+    this.updateBuildMode(await getWorkspaceApps(opts.workspaceRoot))
     if (!this.startOpts.singleUseMode) {
-      // ensure app info built out once
-      await buildWorkspaceAppsInfo(opts.workspaceRoot, { watch: false })
       // start watching apps for updates on their AppMeta
       await this.appsManager.start({
         singleUseMode: this.startOpts.singleUseMode,
+      })
+      await this.appsBuilder.update({
+        buildMode: this.buildMode,
+        options: opts,
       })
       await this.graphServer.start()
     }
@@ -141,6 +141,9 @@ export class WorkspaceManager {
     async () => {
       log.verbose(`Update desktop state via apps`)
       await this.updateDesktopState()
+    },
+    {
+      lazy: true,
     },
   )
 
@@ -200,29 +203,19 @@ export class WorkspaceManager {
    * a webpack configuration, and updating AppsMiddlware
    */
   lastBuildConfig = ''
-  async updateAppsBuilder() {
+  updateAppsBuilder = async () => {
     this.updateBuildMode()
-    const { options, activeAppsMeta, buildMode } = this
-
+    const { options, buildMode } = this
     if (options.action === 'new') {
       return
     }
-
     log.info(`Start building workspace`, options)
-    log.verbose(`building ${activeAppsMeta.length} apps...`, activeAppsMeta)
-
-    if (!activeAppsMeta.length) {
-      log.error(`Must have more than one app, workspace didn't detect any.`)
-      return
-    }
-
     try {
       // this runs the build
       await this.appsBuilder.update({
         options,
         // this update is weird
         buildMode,
-        activeAppsMeta,
       })
     } catch (err) {
       log.error(`Error running workspace: ${err.message}\n${err.stack}`)

@@ -66,7 +66,7 @@ export function createUseStores<A extends Object>(getStores: () => A): UseStores
             if (key.indexOf('isMobX') === 0 || key.indexOf('_') === 0) {
               return
             }
-            if (process.env.NODE_ENV === 'development') {
+            if (__DEV__) {
               console.debug(`Attempted to get store ${key} which is not in context`)
             }
           }

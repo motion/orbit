@@ -33,7 +33,7 @@ export async function main() {
     `IS_MAIN_ORBIT: ${IS_MAIN_ORBIT}`,
   )
 
-  await waitOn({ resources: [desktopServerUrl], interval: 40 })
+  await waitOn({ resources: [desktopServerUrl], interval: 30 })
 
   // start Electron state store
   await Electron.start({
@@ -62,7 +62,6 @@ export async function main() {
 
     // drag/drop test
     const { ipcMain, nativeImage } = require('electron')
-    console.log('WHAT THE FUCK')
     ipcMain.on('ondragstart', (event, data) => {
       const filename = `drop-${stringHash(data.slice(0, 100))}.json`
       const filepath = join(getGlobalConfig().paths.temp, filename)

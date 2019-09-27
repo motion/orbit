@@ -56,7 +56,6 @@ body {
   -webkit-text-size-adjust: 100%;
   pointer-events: none;
   min-height: 100vh;
-
   font-kerning: auto;
   font-feature-settings: 'liga', 'kern';
   text-rendering: optimizelegibility;

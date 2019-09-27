@@ -226,7 +226,7 @@ export const coats: ThemeSet = Object.freeze({
       borderWidth: 0,
     }),
   flat: parent => {
-    const background = parent.background.inverseLighten(0.05).setAlpha(0.5)
+    const background = parent.background.relativeLighten(0.05).setAlpha(0.5)
     return {
       ...parent,
       color: parent.color,
@@ -234,7 +234,7 @@ export const coats: ThemeSet = Object.freeze({
       background,
       backgroundHover: background,
       buttonBackground: background,
-      buttonBackgroundHover: background.inverseLighten(0.025),
+      buttonBackgroundHover: background.relativeLighten(0.025),
       backgroundFocus: background.darken(0.05),
       backgroundActive: background.darken(0.05),
       colorDisabled: parent.color.setAlpha(0.15),

@@ -144,16 +144,14 @@ export default memo(() => {
         background="radial-gradient(circle closest-side, #D25CCD, transparent)"
       /> */}
 
-      {/* teal right */}
+      {/* pink left */}
       <Page.BackgroundParallax
         speed={0.3}
         offset={0}
-        top="-20%"
-        bottom="-20%"
-        scale={1.3}
+        scale={2.2}
         className="glow-two"
         opacity={0.4}
-        background="radial-gradient(circle closest-side, #D25CCD, transparent)"
+        background="radial-gradient(circle closest-side, #2F30C9, transparent)"
         parallax={geometry => ({
           y: geometry.useParallax(),
           x: geometry.useParallax().transform(x => x * 1 - 240),

@@ -106,7 +106,7 @@ export type UseStoreOptions = {
 export function disposeStore(store: any, component?: CurrentComponent) {
   store.unmounted = true
   store.willUnmount && store.willUnmount()
-  if (process.env.NODE_ENV === 'development' && component) {
+  if (__DEV__ && component) {
     debugEmit({
       type: 'unmount',
       store,
@@ -162,7 +162,7 @@ function setupReactiveStore<A>(Store: new () => A, props?: any): ReactiveStoreDe
     config.onMount(store)
   }
 
-  if (process.env.NODE_ENV === 'development') {
+  if (__DEV__) {
     debugEmit({
       type: 'mount',
       store,
@@ -199,6 +199,9 @@ const initialStoreState: ReactiveStoreState = {
   hooks: null,
   hasProps: null,
 } as const
+
+const requestIdleCallback =
+  typeof window !== 'undefined' ? window['requestIdleCallback'] : x => setTimeout(x, 100)
 
 function useReactiveStore<A extends any>(
   Store: new () => A | false,
@@ -239,10 +242,8 @@ function useReactiveStore<A extends any>(
     if (next.hasHooks) {
       state.current.pendingHooks = true
     }
-    if (process.env.NODE_ENV === 'development') {
+    if (__DEV__) {
       // set initial state for hmr purposes
-      const requestIdleCallback =
-        typeof window !== 'undefined' ? window['requestIdleCallback'] : setTimeout
       requestIdleCallback(() => {
         state.current = {
           ...state.current,
@@ -340,7 +341,7 @@ export function useStore<A extends ReactiveStore<any> | any>(
     state.current.isInstantiated = false
   }
 
-  if (process.env.NODE_ENV === 'development') {
+  if (__DEV__) {
     if (state.current.shouldReact !== shouldReact) {
       console.warn(`You're changing { react: true }, this is not allowed.`)
     }

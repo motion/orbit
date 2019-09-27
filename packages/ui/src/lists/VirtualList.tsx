@@ -146,7 +146,7 @@ export const VirtualList = memo((virtualProps: VirtualListProps) => {
   const isForcingSortEnd = useRef(false)
 
   // key safety
-  if (process.env.NODE_ENV === 'development' && props.sortable) {
+  if (__DEV__ && props.sortable) {
     if (props.items.some((x, i) => Config.getItemKey(x, i) === i)) {
       throw new Error(
         `Must provide a key or id property to all items when you have a sortable list.`,

@@ -4,6 +4,7 @@ import { SpringProps } from 'popmotion'
 import React from 'react'
 import { RefObject, useCallback, useContext, useEffect, useRef } from 'react'
 
+import { useOnUnmount } from './hooks/useOnUnmount'
 import { useRelative } from './hooks/useRelative'
 import { useScrollProgress } from './hooks/useScrollProgress'
 import { useScrollableParent } from './View/ScrollableParentStore'
@@ -190,8 +191,6 @@ export type GeometryRenderer<A extends GeometryStore> = (
   ref: RefObject<HTMLElement>,
 ) => React.ReactNode
 
-// 123
-
 export function useGeometry<A extends GeometryStore>(
   getChildren: GeometryRenderer<A>,
   GeometryConstructor: { new (...args: any): A },
@@ -199,7 +198,6 @@ export function useGeometry<A extends GeometryStore>(
 ) {
   const ref = useRef()
   const geometry = useStore(GeometryConstructor, { ref, ...geometryProps }, { react: false })
-
   geometry.beforeRenderChildren()
   const children = getChildren(geometry, ref)
   geometry.afterRenderChildren()
@@ -207,5 +205,8 @@ export function useGeometry<A extends GeometryStore>(
 }
 
 export function Geometry(props: { children: GeometryRenderer<GeometryStore> }) {
+  useOnUnmount(() => {
+    console.warn('unmounting geometry')
+  })
   return useGeometry(props.children, GeometryStore)
 }

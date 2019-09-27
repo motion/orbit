@@ -8,7 +8,6 @@ import { selectDefined } from '@o/utils'
 import { ThemeContext, ThemeObject } from 'gloss'
 import * as React from 'react'
 
-import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Interactive, InteractiveProps, ResizableSides } from './Interactive'
 
 export type SidebarProps = Omit<InteractiveProps, 'position'> & {
@@ -94,16 +93,16 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
       const resizable: { [key: string]: boolean } = {}
       if (position === 'left') {
         resizable.right = true
-          ; ({ width, minWidth, maxWidth } = props)
+        ;({ width, minWidth, maxWidth } = props)
       } else if (position === 'top') {
         resizable.bottom = true
-          ; ({ height, minHeight, maxHeight } = props)
+        ;({ height, minHeight, maxHeight } = props)
       } else if (position === 'right') {
         resizable.left = true
-          ; ({ width, minWidth, maxWidth } = props)
+        ;({ width, minWidth, maxWidth } = props)
       } else if (position === 'bottom') {
         resizable.top = true
-          ; ({ height, minHeight, maxHeight } = props)
+        ;({ height, minHeight, maxHeight } = props)
       }
 
       const horizontal = position === 'left' || position === 'right'
@@ -171,7 +170,8 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
 
     return (
       <Interactive
-        className={`ui-sidebar ${this.props.className || ''}`}
+        data-is="Sidebar"
+        className={`${this.props.className || ''}`}
         minWidth={minWidth}
         maxWidth={maxWidth}
         width={horizontal ? (onResize ? width : this.state.width) : '100%'}
@@ -191,10 +191,10 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
           position === 'top' || position === 'left',
           selectDefined(width, height),
         )}
+        bordered
         {...interactiveProps}
         {...positionProps}
       >
-        {!noBorder && borderByPosition[position]}
         {children}
       </Interactive>
     )
@@ -210,11 +210,4 @@ const getTransform = (hidden: boolean, horizontal: boolean, invert: boolean, siz
       ...(!horizontal && { y: size * dir }),
     },
   }
-}
-
-const borderByPosition = {
-  left: <BorderRight />,
-  right: <BorderLeft />,
-  top: <BorderBottom />,
-  bottom: <BorderTop />,
 }

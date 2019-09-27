@@ -1,4 +1,4 @@
-import { Col, Grid, Image, Row, Space, useNodeSize, View } from '@o/ui'
+import { Col, Grid, Image, Row, Space, View } from '@o/ui'
 import { flatMap } from 'lodash'
 import React, { memo, useRef, useState } from 'react'
 
@@ -113,11 +113,6 @@ export default memo(() => {
   const Fade = useFadePage()
   const [activeSection, setActiveSection] = useState(sectionNames[0])
   const gridContainer = useRef(null)
-  const gridSize = useNodeSize({
-    ref: gridContainer,
-    throttle: 350,
-  })
-
   const btnProps = (section: string) => {
     return {
       cursor: 'pointer',
@@ -153,6 +148,22 @@ export default memo(() => {
         })}
       />
 
+      {/* teal left */}
+      <Page.BackgroundParallax
+        speed={0.3}
+        offset={0.5}
+        x="60%"
+        top="20%"
+        scale={1.3}
+        className="glow-two"
+        opacity={0.31}
+        background="radial-gradient(circle closest-side, #D25CCD, transparent)"
+        parallax={geometry => ({
+          y: geometry.useParallax(),
+          x: geometry.useParallax().transform(x => x * 1 - 240),
+        })}
+      />
+
       <Row
         alignItems="center"
         nodeRef={Fade.ref}
@@ -172,14 +183,28 @@ export default memo(() => {
             <ParallaxStageItem stagger={1}>
               <Row space="lg" margin={['4%', 'auto', '8%', 0]}>
                 {sectionNames.map(section => (
-                  <React.Fragment key={section}>
-                    <PillButtonDark {...btnProps(section)}>{section}</PillButtonDark>
-                  </React.Fragment>
+                  <PillButtonDark key={section} {...btnProps(section)}>
+                    {section}
+                  </PillButtonDark>
                 ))}
               </Row>
             </ParallaxStageItem>
           </View>
-          <ParallaxStageItem stagger={2} nodeRef={gridContainer}>
+          <ParallaxStageItem
+            parallax={{
+              x: {
+                transition: 'ease-in-quad',
+                move: 200,
+                clamp: [-200, 200],
+              },
+              opacity: {
+                transition: 'ease-in',
+                clamp: [0, 1],
+              },
+            }}
+            stagger={2}
+            nodeRef={gridContainer}
+          >
             <Row flexWrap="nowrap">
               {Object.keys(sections).map((section, index) => {
                 return (
@@ -237,7 +262,25 @@ export default memo(() => {
         <View flex={0.15} />
 
         <View sm-display="none" position="relative" flex={1} height={500}>
-          <ParallaxStageItem stagger={2}>
+          <ParallaxStageItem
+            stagger={2}
+            parallax={{
+              x: {
+                transition: 'ease-in-quad',
+                move: -300,
+                clamp: [-300, 300],
+              },
+              rotateY: {
+                transition: 'ease-in-quad',
+                move: -100,
+                clamp: [-200, 200],
+              },
+              opacity: {
+                transition: 'ease-in',
+                clamp: [0, 1],
+              },
+            }}
+          >
             {Object.keys(sections).map((key, index) => (
               <Image
                 key={key}

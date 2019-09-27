@@ -30,6 +30,7 @@ const TerserPlugin = require('terser-webpack-plugin')
 
 // for importing ui kit properly
 process.env.RENDER_TARGET = 'node'
+process.env.SPLIT_CHUNKS = 'true'
 
 const cwd = process.cwd()
 // TODO: this doesn't seem to be the correct way to get the monorepo root.
@@ -110,10 +111,12 @@ const hot = !flags.disableHMR && !isProd
 const defines = {
   'process.platform': JSON.stringify('darwin'),
   'process.env.NODE_ENV': JSON.stringify(mode),
+  __DEV__: JSON.stringify(mode === 'development'),
   'process.env.RENDER_TARGET': JSON.stringify(target),
   'process.env.PROCESS_NAME': JSON.stringify(process.env.PROCESS_NAME || readPackage('name')),
   'process.env.DISABLE_WORKERS': JSON.stringify(process.env.DISABLE_WORKERS || false),
   'process.env.LOG_LEVEL': JSON.stringify(process.env.LOG_LEVEL || 'info'),
+  'process.env.SPLIT_CHUNKS': JSON.stringify(process.env.SPLIT_CHUNKS),
 }
 
 console.log(

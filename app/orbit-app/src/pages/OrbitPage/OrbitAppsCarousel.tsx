@@ -1,6 +1,6 @@
 import { AppDefinition, AppIcon, ensure, react, Templates, UpdatePriority, useAppDefinition, useReaction, useStore } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, FullScreen, Geometry, Row, sleep, useDebounce, useDeepEqualState, useNodeSize, useOnMount, useScrollableParent, useScrollProgress, useTheme, View } from '@o/ui'
+import { Card, CardProps, FullScreen, Geometry, Row, sleep, useDebounce, useDeepEqualState, useNodeSize, useOnMount, useOnUnmount, useScrollableParent, useScrollProgress, useTheme, View } from '@o/ui'
 import { MotionValue, useMotionValue } from 'framer-motion'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -79,7 +79,7 @@ export const OrbitAppsCarousel = memo(() => {
   //   rowRef.current!.scrollLeft = scrollSpring.x.getValue()
   // }, [scrollable])
 
-  console.warn('OrbitAppsCarousel.render()')
+  console.warn('OrbitAppsCarousel.render()', apps.map(x => x.id))
 
   return (
     <OrbitAppsCarouselFrame>
@@ -408,6 +408,9 @@ type AppLoadingScreenProps = {
 }
 
 const AppLoadingScreen = memo((props: AppLoadingScreenProps) => {
+  useOnUnmount(() => {
+    console.warn('unmounting inner geometry')
+  })
   return (
     <Templates.Message
       pointerEvents="none"

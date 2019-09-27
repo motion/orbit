@@ -30,7 +30,7 @@ export function TestUIParallax() {
 
   const views = index => (
     <>
-      <Parallax.View
+      {/* <Parallax.View
         offset={0}
         speed={1}
         align="center"
@@ -46,7 +46,7 @@ export function TestUIParallax() {
         justifyContent="center"
       >
         <Title>helloooooo {index}</Title>
-      </Parallax.View>
+      </Parallax.View> */}
       <Parallax.View
         offset={0.75}
         speed={0.25}
@@ -175,58 +175,48 @@ export function TestUIParallax() {
           }
         }}
       >
-        <Title color="yellow">Hello World</Title>
+        <Title color="yellow">Hellow Orld</Title>
       </Parallax.View>
     </>
   )
 
+  function getParallax({ speed = 1 } = {}) {
+    const startClamp = [-1, -0.15, 0, 0.3, 1.5]
+    return geometry => ({
+      y: geometry
+        .useParallaxIntersection({
+          speed,
+          relativeTo: 'frame',
+        })
+        .transform(startClamp, [-2, -0.025, 0, 0.025, 0])
+        .transform(x => x * 250)
+        .transform(x => Math.max(-300, Math.min(x, 300))),
+      opacity: geometry
+        .useParallaxIntersection({
+          speed: 1,
+          relativeTo: 'frame',
+        })
+        .transform(startClamp, [-3, 1, 1, 1, 1])
+        .transform(x => Math.max(0, Math.min(x, 1))),
+    })
+  }
+
   return (
     <>
-      <Parallax.Container overflow="hidden" height="100vh" background="lightgreen">
+      <Parallax.Container overflow="hidden" height="50vh" background="lightgreen">
         {views(0)}
       </Parallax.Container>
-      <Parallax.Container overflow="hidden" height="100vh" background="indigo">
+      <Parallax.Container overflow="hidden" height="100vh" background="indigo" timeInFrame={2}>
         <Col margin="auto" space="xl">
-          <Parallax.View
-            parallax={geometry => {
-              return {
-                y: geometry
-                  .useParallaxIntersection({
-                    speed: 1,
-                    relativeTo: 'frame',
-                  })
-                  .transform([-1, -0.2, 0, 0.2, 1], [-3, -0.05, 0, 0.05, 3])
-                  .transform([-1, -0.2, 0, 0.2, 1], [-3, -0.05, 0, 0.05, 3])
-                  .transform(x => x * 500),
-              }
-            }}
-          >
+          <Parallax.View parallax={getParallax({ speed: 1 })}>
             <Title color="yellow">Hello World</Title>
           </Parallax.View>
-          <Parallax.View
-            height={400}
-            width={400}
-            background="black"
-            parallax={geometry => {
-              return {
-                y: geometry
-                  .useParallaxIntersection({
-                    speed: 0.25,
-                    relativeTo: 'node',
-                    clamp: [-2, 1],
-                  })
-                  .transform([0, 0.2, 0.21, 0.79, 0.8, 1], [-2, 0.2, 0.21, 0.79, 0.8, 3])
-                  .transform(x => x * 20),
-                opacity: geometry
-                  .useParallaxIntersection({
-                    speed: 0.25,
-                    relativeTo: 'node',
-                    clamp: true,
-                  })
-                  .transform([0, 0.2, 0.21, 0.79, 0.8, 1], [0, 0.5, 1, 1, 0.5, 0]),
-              }
-            }}
-          />
+          <Parallax.View parallax={getParallax({ speed: 1 })}>
+            <Title color="yellow">Hello World</Title>
+          </Parallax.View>
+          <Parallax.View parallax={getParallax({ speed: 1 })}>
+            <Title color="yellow">Hello World</Title>
+          </Parallax.View>
         </Col>
       </Parallax.Container>
       <Parallax.Container overflow="hidden" height="50vh" background="lightgreen">

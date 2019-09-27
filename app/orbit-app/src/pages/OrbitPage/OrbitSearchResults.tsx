@@ -48,6 +48,9 @@ export const OrbitSearchResults = memo(() => {
           listItemBackground: theme.background.isDark()
             ? linearGradient('to right', 'rgba(255,255,255,0.2)', 'transparent')
             : theme.backgroundHighlight,
+          listItemBackgroundHover: theme.background.isDark()
+            ? linearGradient('to right', 'rgba(255,255,255,0.2)', 'transparent')
+            : theme.backgroundHighlight,
         },
       },
     }

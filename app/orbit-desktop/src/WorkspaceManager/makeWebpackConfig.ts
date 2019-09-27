@@ -48,7 +48,6 @@ export function makeWebpackConfig(
     ignore = [],
     watch = false,
     // why minify? we arent optimizing for size much and it dramatically raises cost of build
-    // + way harder to debug in general, lets leave it off until someone yells about it
     minify = false,
     dll,
     dllReferences,
@@ -79,9 +78,10 @@ export function makeWebpackConfig(
   const defines = {
     'process.platform': JSON.stringify('darwin'),
     'process.env.NODE_ENV': JSON.stringify(mode),
+    'process.env.SPLIT_CHUNKS': JSON.stringify(false),
   }
 
-  const optimization = {
+  const optimization: { [key: string]: webpack.Configuration['optimization'] } = {
     production: {
       minimize: minify,
       namedModules: true,
@@ -104,8 +104,9 @@ export function makeWebpackConfig(
       removeAvailableModules: false,
       concatenateModules: false,
       namedModules: true,
-      namedChunks: true,
+      namedChunks: false,
       splitChunks: false,
+
       // node can't keep around a ton of cruft to parse, but in web dev mode need hmr speed
       // so optimize away side effects in node
       ...(target === 'node' && {
@@ -163,7 +164,6 @@ export function makeWebpackConfig(
     optimization: optimization[mode],
     output: {
       path: outputDir,
-      pathinfo: true,
       filename: outputFile || '[name].js',
       ...output,
       publicPath,
@@ -191,8 +191,11 @@ export function makeWebpackConfig(
           ? ['ts:main', 'module', 'browser', 'main']
           : ['ts:main', 'module', 'browser', 'main'],
       alias: {
-        react: '@o/react',
-        'react-dom': '@o/react-dom', //mode === 'production' ? '@hot-loader/react-dom' : '@hot-loader/react-dom',
+        // we insert a "dynamic" react to toggle at runtime between dev/prod
+        ...(!process.env['PLAIN_REACT'] && {
+          react: '@o/react',
+          'react-dom': '@o/react-dom',
+        }),
         'react-native': 'react-native-web',
       },
       modules,
@@ -338,6 +341,10 @@ require('@o/kit').OrbitHot.fileLeave();
     },
     plugins: [
       ...(plugins || []),
+
+      // new webpack.optimize.LimitChunkCountPlugin({
+      //   maxChunks: 1,
+      // }),
 
       new IgnoreNotFoundExportPlugin(),
 

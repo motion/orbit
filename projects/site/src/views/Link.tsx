@@ -10,13 +10,12 @@ export type LinkProps = SimpleTextProps & {
   external?: boolean
 }
 
-export function Link({ children, href, fontSize, width, margin, ...props }: LinkProps) {
+export function Link({ children, href, width, margin, ...props }: LinkProps) {
   const { isActive, ...linkProps } = useLink(href)
   return (
     <LinkText cursor="pointer" width={width} margin={margin}>
       <SimpleText
         tagName="a"
-        fontSize={fontSize}
         coat="simpleBlue"
         alpha={isActive ? 1 : 0.7}
         hoverStyle={{ alpha: 1 }}

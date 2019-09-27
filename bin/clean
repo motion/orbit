@@ -21,6 +21,7 @@ rm -r projects/*/package-lock.json || true
 rm -r services/*/package-lock.json || true
 
 if [[ "$FLAGS" =~ "--apps" ]]; then
+  rm -r example-workspace/dist || true
   rm -r apps/*/dist || true
 fi
 

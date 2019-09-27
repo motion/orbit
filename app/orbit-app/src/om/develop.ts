@@ -3,7 +3,6 @@ import { AppDefinition, BuildStatus, BuildStatusModel } from '@o/models'
 import { Desktop } from '@o/stores'
 import { stringToIdentifier } from '@o/ui'
 import { difference } from 'lodash'
-import { reaction } from 'mobx'
 import { Action, AsyncAction } from 'overmind'
 
 export type DevMode = 'development' | 'production'
@@ -31,21 +30,11 @@ const start: AsyncAction = async om => {
 
   // setup apps
   await om.actions.develop.loadApps()
-
-  // watch for development state
-  om.actions.develop.updateDevState()
-  reaction(
-    () => Desktop.state.workspaceState.options.dev,
-    () => om.actions.develop.updateDevState(),
-    {
-      fireImmediately: true,
-    },
-  )
 }
 
-const updateDevState: Action = () => {
-  // @ts-ignore
-  window.__DEV__ = Desktop.state.workspaceState.options.dev
+const updateDevState: Action = om => {
+  // window.__DEV__
+  window['__DEV__'] = om.state.develop.buildStatus.some(x => x.mode === 'development')
 }
 
 const getIdentifiers = (x: BuildStatus[]) => x.map(x => x.identifier)
@@ -60,6 +49,7 @@ const updateStatus: AsyncAction<{
   if (!om.state.develop.started) {
     om.state.develop.started = true
     om.state.develop.buildStatus = status
+    om.actions.develop.updateDevState()
     // avoid running update on inital load, we serve it in proper state already
     return
   }
@@ -73,6 +63,8 @@ const updateStatus: AsyncAction<{
   om.state.develop.buildStatus = status
     // filter out ones we can't use yet because they are building...
     .filter(x => isAppIdentifier(x.identifier))
+
+  om.actions.develop.updateDevState()
 
   // then, load new app js bundles if they were just added
   await om.actions.develop.loadNewAppDLLs({ current, next })
@@ -191,7 +183,6 @@ export const loadApps: AsyncAction = async om => {
   om.state.develop.appModules = await Promise.all(
     nameRegistry.map(async ({ buildName, entryPathRelative }) => {
       const appModule = await loadSystemModule(buildName, window)
-      console.log('loading', appModule, entryPathRelative)
       return appModule(entryPathRelative)
     }),
   )

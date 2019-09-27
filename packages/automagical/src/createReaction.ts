@@ -104,7 +104,7 @@ export function createReaction(
     let changed: any
 
     // dev mode logging helpers
-    if (process.env.NODE_ENV === 'development') {
+    if (__DEV__) {
       if (userOptions && userOptions.debug) {
         console.warn(`Update (previous)`, previousValue, `(next)`, nextValue)
       }
@@ -243,7 +243,7 @@ export function createReaction(
     } else {
       throw SHARED_REJECTION_ERROR
     }
-    if (process.env.NODE_ENV === 'development') {
+    if (__DEV__) {
       // async updates log with an indicator of their delay time and if they cancelled
       if (shouldLog()) {
         const timedLog = `..${Date.now() - start}ms`
@@ -299,7 +299,7 @@ export function createReaction(
         result
           .then(val => {
             if (curID !== reactionID) {
-              if (process.env.NODE_ENV !== 'production') {
+              if (__DEV__) {
                 if (shouldLog()) {
                   log.verbose(`${config.name} 🚫`)
                 }
@@ -327,7 +327,7 @@ export function createReaction(
 
       // only log after first run, we could have a way to log this still
       if (reactionID > 1) {
-        if (process.env.NODE_ENV !== 'production') {
+        if (__DEV__) {
           if (shouldLog()) {
             if (changed) {
               logGroup({

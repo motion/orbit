@@ -4,7 +4,7 @@ import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } f
 import { FloatingChrome } from './helpers/FloatingChrome'
 import { isRightClick } from './helpers/isRightClick'
 import { usePosition } from './hooks/usePosition'
-import { getResizeCursor, ResizableSides } from './Interactive'
+import { ResizableSides } from './Interactive'
 import { ViewProps } from './View/types'
 import { useVisibility } from './Visibility'
 
@@ -14,7 +14,12 @@ type InteractiveChromeProps = Omit<ViewProps, 'zIndex'> & {
   resizingSides: ResizableSides
 }
 
-export const InteractiveChrome = ({ resizingSides, parent, ...rest }: InteractiveChromeProps) => {
+export const InteractiveChrome = ({
+  resizingSides,
+  parent,
+  cursor,
+  ...rest
+}: InteractiveChromeProps) => {
   const parentRef = useRef<HTMLElement>(null)
   const [measureKey, setMeasureKey] = useState(0)
   const measure = useCallback(() => setMeasureKey(Math.random()), [])
@@ -31,6 +36,8 @@ export const InteractiveChrome = ({ resizingSides, parent, ...rest }: Interactiv
     isVisible &&
     !!resizingSides &&
     Object.keys(resizingSides).reduce((a, b) => a || resizingSides[b], false)
+
+  console.log('isHoveringResize', isHoveringResize)
 
   // re-measure when hovering over a side starts
   useEffect(measure, [isHoveringResize])
@@ -51,6 +58,7 @@ export const InteractiveChrome = ({ resizingSides, parent, ...rest }: Interactiv
         onClick={useCallback(e => e.stopPropagation(), [])}
         onMouseDown={useCallback(
           e => {
+            console.log('clicking')
             if (isRightClick(e)) return
             if (isHoveringResize) {
               e.preventDefault()
@@ -60,14 +68,12 @@ export const InteractiveChrome = ({ resizingSides, parent, ...rest }: Interactiv
           },
           [isHoveringResize, rest.onMouseDown],
         )}
-        style={useMemo(
-          () => ({
-            cursor: resizingSides ? getResizeCursor(resizingSides) : 'inherit',
-            pointerEvents: (isHoveringResize ? 'auto' : 'none') as any,
-            opacity: isHoveringResize ? 1 : 0.5,
-          }),
-          [isHoveringResize, resizingSides],
-        )}
+        cursor={cursor}
+        pointerEvents={isHoveringResize ? 'auto' : 'none'}
+        opacity={isHoveringResize ? 1 : 0.5}
+        hoverStyle={{
+          background: 'green',
+        }}
       />
     </FullScreen>
   )

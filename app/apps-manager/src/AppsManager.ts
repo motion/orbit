@@ -226,16 +226,20 @@ export class AppsManager {
   )
 
   updateAppMeta = async () => {
-    if (!this.activeSpace) return
-
+    if (!this.activeSpace) {
+      log.warning(`warn! called update with no activespace`)
+      return
+    }
     await Promise.all([
       this.updateNodeDefinitions(),
       // have cli update its cache of packageId => identifier for use installing
       updateWorkspacePackageIds(this.activeSpace.directory || ''),
     ])
-
     const appsMeta = await getWorkspaceApps(this.activeSpace.directory || '')
-    if (!appsMeta) return
+    if (!appsMeta) {
+      log.warning(`warn! no appsMeta`)
+      return
+    }
     log.verbose(`got apps ${appsMeta.map(x => x.packageId).join(',')}`)
     let updated = false
     for (const appMeta of appsMeta) {

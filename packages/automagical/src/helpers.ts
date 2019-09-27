@@ -13,22 +13,26 @@ export const getReactionName = (obj: MagicalObject) => {
 }
 
 const isEqualWarn = (a, b) => {
-  const x = Date.now()
-  try {
-    return isEqual(a, b)
-  } finally {
-    const time = Date.now() - x
-    if (time > 1) {
-      console.warn(
-        `Dev mode warning: were doing deep equality comparison, this took ${time}ms to compare. Want to change? Use "equals" option to change`,
-        a,
-        b,
-      )
+  if (__DEV__) {
+    const x = Date.now()
+    try {
+      return isEqual(a, b)
+    } finally {
+      const time = Date.now() - x
+      if (time > 1) {
+        console.warn(
+          `Dev mode warning: were doing deep equality comparison, this took ${time}ms to compare. Want to change? Use "equals" option to change`,
+          a,
+          b,
+        )
+      }
     }
+  } else {
+    return isEqual(a, b)
   }
 }
 
-const comparator = process.env.NODE_ENV === 'development' ? isEqualWarn : isEqual
+const comparator = isEqualWarn
 
 /**
  * Tries to do a deep equality, but will fail when bail to === when it sees "big" things

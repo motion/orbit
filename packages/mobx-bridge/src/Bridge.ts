@@ -319,14 +319,14 @@ export class BridgeManager {
       log.info('Warning! Bridge not started, can only call setState on the app that starts it.')
       return
     }
-    if (process.env.NODE_ENV === 'development') {
+    if (__DEV__) {
       if (!newState || typeof newState !== 'object') {
         throw new Error(`Bad state passed to ${this.source}.setState: ${newState}`)
       }
     }
     // update our own state immediately so its sync
     const changedState = this.updateStateWithDiff(this.state, newState)
-    if (process.env.NODE_ENV === 'development') {
+    if (__DEV__) {
       if (changedState) {
         log.verbose('setState', newState, 'changedState', changedState)
       }
@@ -386,7 +386,7 @@ export class BridgeManager {
   ) {
     let changed = null
     for (const key in newState) {
-      if (process.env.NODE_ENV === 'development') {
+      if (__DEV__) {
         if (!ignoreKeyCheck) {
           const isValidKey = onlyKeys
             ? onlyKeys.indexOf(key) > -1
@@ -430,7 +430,7 @@ export class BridgeManager {
       }
     }
     // dev mode tracking state mutations, hacky
-    if (process.env.NODE_ENV === 'development') {
+    if (__DEV__) {
       if (root.__trackStateChanges && root.__trackStateChanges.isActive) {
         root.__trackStateChanges.changed = changed
       }

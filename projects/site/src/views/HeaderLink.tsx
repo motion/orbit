@@ -16,6 +16,7 @@ export const HeaderLink = ({ delay, children, ...props }: any) => {
       width="33%"
       fontWeight={400}
       fontSize={theme === 'home' ? 18 : 16}
+      lineHeight="1.25rem"
       {...props}
     >
       <FadeInView

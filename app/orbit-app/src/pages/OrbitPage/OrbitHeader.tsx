@@ -28,7 +28,6 @@ export const OrbitHeader = memo(() => {
   const om = useOm()
   const containerRef = useRef()
   const { focusedApp, zoomedIn } = headerStore.useStore().paneState
-  console.warn('render OrbitHeader2', focusedApp)
   const orbitStore = useOrbitStore()
   const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()

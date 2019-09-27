@@ -57,7 +57,7 @@ export const ScrollableChrome = gloss<ScrollableViewProps>(View, {
 }))
 
 export const isPadded = (props: ScrollableViewProps) =>
-  Array.isArray(props.padding) ? props.padding.some(Boolean) : !!props.padding
+  Array.isArray(props.padding) ? props.padding.some(x => !!x) : !!props.padding
 
 export function wrapWithPaddedView(
   element: React.ReactNode,

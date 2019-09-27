@@ -33,10 +33,6 @@ export async function getAppsConfig(
   buildMode: AppBuildModeDict,
   options: CommandWsOptions,
 ): Promise<AppBuildConfigs | null> {
-  if (!apps.length) {
-    return null
-  }
-
   // the mode/watch used for non-apps packages
   const mode = buildMode.main
   const watch = options.dev && options.action === 'run'
@@ -162,6 +158,7 @@ export async function getAppsConfig(
   )
   const buildNameToAppMeta: { [name: string]: AppMeta } = {}
   const appInfos = await Promise.all(apps.map(x => getAppInfo(x.directory)))
+  console.log('appInfos', appInfos)
   for (const [index, params] of appParams.entries()) {
     const appMeta = apps[index]
     const appInfo = appInfos[index]
@@ -284,7 +281,7 @@ export function getAppParams(props: WebpackParams): WebpackParams {
 }
 
 async function getSharedDllParams(params: WebpackParams): Promise<WebpackParams> {
-  const basePackages = [
+  const sharedPackages = [
     '@o/kit',
     '@o/ui',
     '@o/utils',
@@ -307,8 +304,8 @@ async function getSharedDllParams(params: WebpackParams): Promise<WebpackParams>
   // gather all packages we want included in base dll
   // i had to add this at one point because webpack stopped providing
   // the sub-packages of @o/ui and @o/kit, not sure why that happened
-  let allPackages = [...basePackages]
-  for (const pkg of basePackages) {
+  let allPackages = [...sharedPackages]
+  for (const pkg of sharedPackages) {
     try {
       const path = require.resolve(`${pkg}/package.json`)
       const pkgJson = await readJSON(path)

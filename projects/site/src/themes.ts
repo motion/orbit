@@ -80,6 +80,11 @@ export const themes = {
   light,
   dark,
 
+  docsPageTheme: {
+    ...light,
+    bodyBackground: '#000',
+  },
+
   darkAlt: {
     ...dark,
     ...fromStyles({

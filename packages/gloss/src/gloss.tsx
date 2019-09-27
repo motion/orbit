@@ -479,8 +479,8 @@ const SPECIFIC_PREFIX = 's'
 function deregisterClassName(name: string) {
   const nonSpecificClassName = name[0] === SPECIFIC_PREFIX ? name.slice(1) : name
   if (nonSpecificClassName === 'g1909893218') {
-    console.log('unregistering')
-    debugger
+    console.warn('unregistering')
+    // debugger
   }
   gc.deregisterClassUse(nonSpecificClassName)
 }

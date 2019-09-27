@@ -1,4 +1,4 @@
-import { BorderRight, Button, Col, configureHotKeys, gloss, List, ListItemProps, Portal, ProvideBanner, Row, Sidebar, sleep, Space, useFilter, useOnMount, whenIdle } from '@o/ui'
+import { BorderRight, Button, Col, configureHotKeys, gloss, List, ListItemProps, Portal, ProvideBanner, Row, Sidebar, sleep, Space, Theme, useFilter, useOnMount, whenIdle } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -174,44 +174,48 @@ const DocsPage = memo((props: { children?: any }) => {
             zIndex: 10000000,
           }}
         >
-          <DocsPageHeader
-            {...{
-              isSmall,
-              inputRef,
-              setTheme: setThemeName,
-              theme: themeName,
-              setShowSidebar,
-              siteStore,
-              showSidebar,
-            }}
-          />
+          <Theme name="home">
+            <DocsPageHeader
+              {...{
+                isSmall,
+                inputRef,
+                setTheme: setThemeName,
+                theme: themeName,
+                setShowSidebar,
+                siteStore,
+                showSidebar,
+              }}
+            />
+          </Theme>
         </Portal>
 
         <Portal prepend>
-          <Header
-            slim
-            noBorder
-            before={
-              <>
-                {isSmall && (
-                  <Button
-                    position="fixed"
-                    pointerEvents="auto"
-                    icon={showSidebar ? 'arrowleft' : 'arrowright'}
-                    tooltip="Toggle menu"
-                    top={-3}
-                    left={10}
-                    zIndex={10000000}
-                    iconSize={16}
-                    size={2}
-                    fontSize={16}
-                    chromeless
-                    onClick={() => setShowSidebar(!showSidebar)}
-                  />
-                )}
-              </>
-            }
-          />
+          <Theme name="home">
+            <Header
+              slim
+              noBorder
+              before={
+                <>
+                  {isSmall && (
+                    <Button
+                      position="fixed"
+                      pointerEvents="auto"
+                      icon={showSidebar ? 'arrowleft' : 'arrowright'}
+                      tooltip="Toggle menu"
+                      top={-3}
+                      left={10}
+                      zIndex={10000000}
+                      iconSize={16}
+                      size={2}
+                      fontSize={16}
+                      chromeless
+                      onClick={() => setShowSidebar(!showSidebar)}
+                    />
+                  )}
+                </>
+              }
+            />
+          </Theme>
         </Portal>
 
         {isSmall && (
@@ -242,28 +246,30 @@ const DocsPage = memo((props: { children?: any }) => {
           </Portal>
         )}
 
-        <main className="main-contents">
-          <SectionContent maxWidth={1400}>
-            <Row id="main" className="main">
-              {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
-              <Col
-                nodeRef={Fade.ref}
-                flex={1}
-                overflow="hidden"
-                className="content"
-                padding={isSmall ? 0 : [0, 0, 0, 24]}
-              >
-                <ContentSection>
-                  <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
-                </ContentSection>
-              </Col>
-            </Row>
+        <Theme name={themeName}>
+          <main className="main-contents">
+            <SectionContent background={theme => theme.background} maxWidth={1400}>
+              <Row id="main" className="main">
+                {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
+                <Col
+                  nodeRef={Fade.ref}
+                  flex={1}
+                  overflow="hidden"
+                  className="content"
+                  padding={isSmall ? 0 : [0, 0, 0, 24]}
+                >
+                  <ContentSection>
+                    <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
+                  </ContentSection>
+                </Col>
+              </Row>
 
-            <Space size={250} />
+              <Space size={250} />
 
-            <BlogFooter />
-          </SectionContent>
-        </main>
+              <BlogFooter />
+            </SectionContent>
+          </main>
+        </Theme>
       </Fade.FadeProvide>
     </DocsStoreContext.Provider>
   )
@@ -291,7 +297,7 @@ const DocsPageSidebar = memo(({ children }: any) => {
 })
 
 // @ts-ignore
-DocsPage.theme = 'dark'
+DocsPage.theme = 'docsPageTheme'
 
 const FixedLayout = gloss({
   position: 'fixed',

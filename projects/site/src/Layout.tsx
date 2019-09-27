@@ -18,19 +18,17 @@ const transition = 'transform ease 300ms'
 let updateLayout = null
 
 export const usePageTheme = () => {
-  const [_, setNext] = useState()
+  const [setTheme, setNext] = useState()
   const route = useCurrentRoute()
   const curView = route.views.find(x => x && x.type && x.type.theme)
   const key = `theme-${route.url.pathname.split('/')[1] || ''}`
-  const theme =
-    localStorage.getItem(key) || (curView && curView.type && curView.type.theme) || 'home'
+  const theme = setTheme || (curView && curView.type && curView.type.theme) || 'home'
   return [
     theme,
     useCallback(
       next => {
         setNext(prev => {
           if (prev !== next) {
-            localStorage.setItem(key, next)
             updateLayout()
             return next
           }
@@ -86,8 +84,8 @@ export const Layout = memo((props: any) => {
   const maxHeight = siteStore.showSidebar ? window.innerHeight : siteStore.maxHeight
 
   useLayoutEffect(() => {
-    const background = themes[theme].background.toString()
-    console.log('background', background)
+    const background = (themes[theme].bodyBackground || themes[theme].background).toString()
+    console.log('background', themes, theme, background)
     document.body.style.background = background
   }, [theme])
 

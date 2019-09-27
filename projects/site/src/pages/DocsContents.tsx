@@ -199,6 +199,9 @@ export const DocsContents = memo(
   },
 )
 
+// @ts-ignore
+DocsContents.theme = 'docsPageTheme'
+
 const MetaSection = gloss({
   margin: 0,
 })

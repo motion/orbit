@@ -40,7 +40,6 @@ export async function getOrbitDesktop(
     })(),
     (async function preloadOrbit() {
       reporter.info('🌒 Starting Orbit.app (optimistic start)')
-      // run desktop and try again
       orbitProcess = runOrbitDesktop(props, isInMonoRepo)
     })(),
   ])

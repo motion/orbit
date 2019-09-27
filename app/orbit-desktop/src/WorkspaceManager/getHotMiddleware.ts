@@ -7,6 +7,8 @@ import { publishStats } from './publishStats'
 
 const log = new Logger('getHotMiddleware')
 
+const eventStreams = {}
+
 /**
  * This is a lightly modified webpack-hot-middleware for our sakes imported here,
  * so it can be modified to support putting multiple compilers under one EventStream.
@@ -18,9 +20,9 @@ export function getHotMiddleware(
   opts.log = typeof opts.log == 'undefined' ? console.log.bind(console) : opts.log
   opts.path = opts.path || '/__webpack_hmr'
   // re-use existing event stream even if we re-run getHotMiddleware
-  this.eventStreams[opts.path] =
-    this.eventStreams[opts.path] || createEventStream(opts.heartBeat || 10 * 1000)
-  const eventStream = this.eventStreams[opts.path]
+  eventStreams[opts.path] =
+    eventStreams[opts.path] || createEventStream(opts.heartBeat || 10 * 1000)
+  const eventStream = eventStreams[opts.path]
 
   let latestStats = null
   let closed = false
@@ -66,7 +68,7 @@ export function getHotMiddleware(
     log.info(`Closing hot middleware... shouldnt happen`)
     closed = true
     eventStream.close()
-    delete this.eventStreams[opts.path]
+    delete eventStreams[opts.path]
   }
 
   return middleware

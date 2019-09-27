@@ -11,10 +11,9 @@ import { chunk } from 'lodash'
 import hashObject from 'node-object-hash'
 import { join } from 'path'
 import Webpack from 'webpack'
-import WebpackDevMiddleware from 'webpack-dev-middleware'
 import Observable from 'zen-observable'
 
-import { AppBuilder } from './AppBuilder'
+import { AppBuilder, resolveIfExists, WebpackAppsDesc } from './AppBuilder'
 import { buildAppInfo } from './buildAppInfo'
 import { commandBuild, shouldRebuildApp } from './commandBuild'
 import { AppBuildConfigs, getAppsConfig } from './getAppsConfig'
@@ -43,17 +42,6 @@ const log = new Logger('AppsBuilder')
  *
  */
 
-type WebpackAppsDesc = {
-  name: string
-  hash?: string
-  middleware?: Handler
-  devMiddleware?: Handler
-  close?: Function
-  compiler?: Webpack.Compiler
-  watchingCompiler?: Webpack.MultiWatching
-  config?: Webpack.Configuration
-}
-
 type AppsBuilderUpdate = {
   options: CommandWsOptions
   buildMode: AppBuildModeDict
@@ -69,6 +57,7 @@ export class AppsBuilder {
   wsOptions: CommandWsOptions
   private buildMode: AppBuildModeDict = {}
   private appBuilders: { [name: string]: AppBuilder } = {}
+  private buildConfigs: AppBuildConfigs | null = null
 
   observables = new Set<{ update: (next: any) => void; observable: Observable<BuildStatus[]> }>()
   buildStatuses: BuildStatus[] = []
@@ -108,6 +97,7 @@ export class AppsBuilder {
     // ensure builds have run for each app
     try {
       const buildConfigs = await getAppsConfig(activeAppsMeta, buildMode, options)
+      this.buildConfigs = buildConfigs
       const { clientConfigs, nodeConfigs, buildNameToAppMeta } = buildConfigs
       log.verbose(`update() ${activeAppsMeta.length}`, buildConfigs)
       this.buildNameToAppMeta = buildNameToAppMeta
@@ -165,7 +155,7 @@ export class AppsBuilder {
         return
       }
     } catch (err) {
-      log.error(`Error running initial builds ${err.message}\n${err.stack}`)
+      log.error(`\n\ERROR running initial builds!\n\n${err.message}\n\n${err.stack}\n\n`)
     } finally {
       log.info(`update() finish`)
       this.isUpdating = false
@@ -216,7 +206,6 @@ export class AppsBuilder {
   }: AppBuildConfigs): Promise<WebpackAppsDesc[]> {
     log.verbose(`updateBuild() configs ${Object.keys(clientConfigs).join(', ')}`, clientConfigs)
 
-    const { main, ...rest } = clientConfigs
     let res: WebpackAppsDesc[] = []
 
     // manage node compilers
@@ -256,45 +245,80 @@ export class AppsBuilder {
     // you have to do it this janky ass way because webpack just isnt really great at
     // doing multi-config hmr, and this makes sure the 404 hot-update bug is fixed (google)
     const clientDescs: WebpackAppsDesc[] = []
+    let mainDescs: WebpackAppsDesc[] = []
 
     await Promise.all(
-      Object.keys(rest).map(async name => {
-        const config = rest[name]
-        const devName = `${name}-client`
+      Object.keys(clientConfigs).map(async name => {
+        const isMain = name === 'main'
+        const config = clientConfigs[name]
+        const devName = isMain ? undefined : `${name}-client`
         const current = this.state.find(x => x.name === devName)
         const { hasChanged } = this.getRunningApp(devName, config)
         if (!hasChanged) {
-          clientDescs.push(current)
+          if (isMain) {
+            res = [...res, ...this.state.filter(x => x.name === name)]
+          } else {
+            clientDescs.push(current)
+          }
         } else {
           const appMeta = buildNameToAppMeta[name]
           const appBuilder = new AppBuilder({
             config,
             devName,
             name,
-            buildMode: this.buildMode[appMeta.packageId],
+            buildMode: appMeta
+              ? this.buildMode[appMeta.packageId]
+              : this.wsOptions.dev
+              ? 'development'
+              : 'production',
             appMeta,
             wsOptions: this.wsOptions,
             appsManager: this.appsManager,
-            onBuildStatus: status => {
-              const existing = this.buildStatuses.findIndex(x => x.identifier === status.identifier)
-              if (existing > -1) {
-                this.buildStatuses = this.buildStatuses.map((x, i) => (i === existing ? status : x))
-              } else {
-                this.buildStatuses.push(status)
-              }
-              this.observables.forEach(({ update }) => {
-                update(this.buildStatuses)
-              })
-              // TODO
-              if (this.buildStatuses.every(status => status.status === 'complete')) {
-                log.verbose(`Completed initial build`)
-                this.completeFirstBuild()
-              }
-            },
+            onBuildStatus: this.onBuildStatus,
           })
           this.appBuilders[name] = appBuilder
           const info = await appBuilder.start()
-          clientDescs.push(info)
+
+          if (!isMain) {
+            clientDescs.push(info)
+          } else {
+            const { config, hash, devMiddleware, compiler } = info
+            const mainHotMiddleware = getHotMiddleware([compiler], {
+              path: '/__webpack_hmr_main',
+              log: console.log,
+              heartBeat: 10 * 1000,
+            })
+            mainDescs = [
+              {
+                name,
+                hash,
+                middleware: resolveIfExists(
+                  mainHotMiddleware,
+                  [config.output.path],
+                  ['/__webpack_hmr_main'],
+                ),
+              },
+              {
+                name,
+                hash,
+                devMiddleware,
+                middleware: devMiddleware,
+              },
+              // need to have another devMiddleware  after historyAPIFallback, see:
+              // https://github.com/webpack/webpack-dev-middleware/issues/88#issuecomment-252048006
+              {
+                name,
+                hash,
+                middleware: historyAPIFallback(),
+              },
+              {
+                name,
+                hash,
+                devMiddleware,
+                middleware: devMiddleware,
+              },
+            ]
+          }
         }
       }),
     )
@@ -302,9 +326,7 @@ export class AppsBuilder {
     // add cleint descs to output
     res = [...res, ...clientDescs]
 
-    /**
-     * One HMR server for everything because EventStream's don't support >5 in Chrome
-     */
+    // then add one HMR server for everything because EventStream's don't support >5 in Chrome
     res.push({
       name: 'apps-hot',
       middleware: resolveIfExists(
@@ -318,56 +340,33 @@ export class AppsBuilder {
       ),
     })
 
-    // falls back to the main entry middleware
-    if (main) {
-      const name = 'main'
-      const middleware = await this.getClientBuilder(main, name, undefined, name)
-      if (middleware) {
-        if (middleware === true) {
-          res = [...res, ...this.state.filter(x => x.name === name)]
-        } else {
-          const { hash, devMiddleware, compiler } = middleware
-          const mainHotMiddleware = getHotMiddleware([compiler], {
-            path: '/__webpack_hmr_main',
-            log: console.log,
-            heartBeat: 10 * 1000,
-          })
-          res = [
-            ...res,
-            {
-              name,
-              hash,
-              middleware: resolveIfExists(
-                mainHotMiddleware,
-                [main.output.path],
-                ['/__webpack_hmr_main'],
-              ),
-            },
-            {
-              name,
-              hash,
-              devMiddleware,
-              middleware: devMiddleware,
-            },
-            // need to have another devMiddleware  after historyAPIFallback, see:
-            // https://github.com/webpack/webpack-dev-middleware/issues/88#issuecomment-252048006
-            {
-              name,
-              hash,
-              middleware: historyAPIFallback(),
-            },
-            {
-              name,
-              hash,
-              devMiddleware,
-              middleware: devMiddleware,
-            },
-          ]
-        }
-      }
-    }
+    // then add main descs last
+    res = [...res, ...mainDescs]
 
     return res
+  }
+
+  onBuildStatus = (status: BuildStatus) => {
+    const existing = this.buildStatuses.findIndex(x => x.identifier === status.identifier)
+    if (existing > -1) {
+      this.buildStatuses = this.buildStatuses.map((x, i) => (i === existing ? status : x))
+    } else {
+      this.buildStatuses.push(status)
+    }
+    this.observables.forEach(({ update }) => {
+      update(this.buildStatuses)
+    })
+    // TODO
+    console.log('this.buildStatuses', this.buildStatuses)
+    if (!this.buildConfigs) return
+    const clientConfigs = Object.keys(this.buildConfigs.clientConfigs).map(
+      k => this.buildConfigs.clientConfigs[k].name,
+    )
+    console.log('clientConfigs', clientConfigs.length, this.buildStatuses, clientConfigs)
+    if (this.buildStatuses.every(status => status.status === 'complete')) {
+      log.verbose(`Completed initial build`)
+      this.completeFirstBuild()
+    }
   }
 
   /**
@@ -453,34 +452,6 @@ export class AppsBuilder {
     return { hash, running: null, hasChanged: true }
   }
 
-  private getClientBuilder = async (
-    config: Webpack.Configuration,
-    name: string,
-    appMeta?: AppMeta,
-    runningName?: string,
-  ) => {
-    try {
-      // cache if it hasn't changed to avoid rebuilds
-      const { hash, hasChanged } = this.getRunningApp(runningName, config)
-      if (hasChanged === false) {
-        return true
-      }
-      const compiler = Webpack(config)
-      const publicPath = config.output.publicPath
-      const devMiddleware = WebpackDevMiddleware(compiler, {
-        publicPath,
-        reporter: await this.createReporterForApp(name, appMeta),
-        writeToDisk: true,
-      })
-      return { devMiddleware, compiler, name, hash }
-    } catch (err) {
-      log.error(
-        `${err.message}\n${err.stack}\n\nWebpackConfig:\n${JSON.stringify(config, null, 2)}`,
-      )
-      return null
-    }
-  }
-
   private async getIndex(req: Request<Dictionary<string>>) {
     log.info('getIndex', req.path)
 
@@ -517,30 +488,4 @@ export class AppsBuilder {
       )
     }
   }
-}
-
-const existsInCache = (middleware, path: string) => {
-  try {
-    if (middleware.fileSystem && middleware.fileSystem.readFileSync(path)) {
-      return true
-    }
-  } catch (err) {
-    // not found in this middleware
-  }
-  return false
-}
-
-const resolveIfExists = (middleware, basePaths: string[], exactPaths: string[] = []) => {
-  const handler: Handler = (req, res, next) => {
-    const exists = basePaths.some(
-      path =>
-        existsInCache(middleware, path + req.url) || exactPaths.some(x => x.indexOf(req.url) === 0),
-    )
-    if (exists) {
-      middleware(req, res, next)
-    } else {
-      next()
-    }
-  }
-  return handler
 }

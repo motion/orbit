@@ -2,6 +2,7 @@ import { AppsManager } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppMeta, BuildStatus, CommandWsOptions } from '@o/models'
 import { decorate } from '@o/use-store'
+import { Handler } from 'express'
 import { debounce } from 'lodash'
 import hashObject from 'node-object-hash'
 import { join, relative } from 'path'
@@ -23,11 +24,26 @@ type AppBuilderProps = {
   buildMode?: 'development' | 'production'
 }
 
+export type WebpackAppsDesc = {
+  name: string
+  hash?: string
+  middleware?: Handler
+  devMiddleware?: Handler
+  close?: Function
+  compiler?: webpack.Compiler
+  watchingCompiler?: webpack.MultiWatching
+  config?: webpack.Configuration
+}
+
 @decorate
 export class AppBuilder {
-  constructor(private props: AppBuilderProps) {}
+  private serveStatic = false
 
-  async start() {
+  constructor(private props: AppBuilderProps) {
+    console.log('constrcute', props.name)
+  }
+
+  async start(): Promise<WebpackAppsDesc> {
     const { config } = this.props
     const compiler = webpack(config)
     const publicPath = config.output.publicPath
@@ -37,7 +53,26 @@ export class AppBuilder {
       writeToDisk: true,
     })
     const hash = hashObject({ sort: false }).hash(config)
-    return { devMiddleware, compiler, name, hash }
+    const middleware = resolveIfExists(devMiddleware, [config.output.path])
+    return {
+      config,
+      devMiddleware,
+      middleware: (req, res, next) => {
+        if (this.serveStatic) {
+          // todo
+          console.log('TODO')
+        } else {
+          return middleware(req, res, next)
+        }
+      },
+      close: () => {
+        log.info(`closing middleware ${name}`)
+        devMiddleware.close()
+      },
+      compiler,
+      name: this.props.devName,
+      hash,
+    }
   }
 
   private getBuildStatus({
@@ -73,17 +108,23 @@ export class AppBuilder {
 
   private getReporter = async () => {
     const { appMeta } = this.props
+
+    console.log('appMeta', appMeta)
+
     const writeAppBuildInfo = debounce(() => {
-      log.debug(`writing app build info`)
-      writeBuildInfo(appMeta.directory)
+      if (appMeta) {
+        log.debug(`writing app build info`)
+        writeBuildInfo(appMeta.directory)
+      }
     }, 100)
 
-    if (await shouldRebuildApp(appMeta.directory)) {
+    if (appMeta && (await shouldRebuildApp(appMeta.directory))) {
       // start in compiling mode
       this.props.onBuildStatus(this.getBuildStatus({ status: 'building' }))
     } else {
       // compile, but start status at success so we can serve from disk right away
       this.props.onBuildStatus(this.getBuildStatus({ status: 'complete' }))
+      this.serveStatic = true
     }
 
     return (middlewareOptions, options) => {
@@ -99,13 +140,21 @@ export class AppBuilder {
         writeAppBuildInfo()
       }
 
+      const hasErrors = stats.hasErrors()
+      const success = state && hasErrors
+
+      if (success) {
+        // no longer need to serve from static
+        this.serveStatic = false
+      }
+
       this.props.onBuildStatus(
         this.getBuildStatus(
           !state
             ? {
                 status: 'building',
               }
-            : stats.hasErrors()
+            : hasErrors
             ? {
                 status: 'error',
                 message: stats.toString(),
@@ -150,4 +199,30 @@ function webpackDevReporter(middlewareOptions, options) {
   } else {
     log.info('App compiling...')
   }
+}
+
+const existsInCache = (middleware, path: string) => {
+  try {
+    if (middleware.fileSystem && middleware.fileSystem.readFileSync(path)) {
+      return true
+    }
+  } catch (err) {
+    // not found in this middleware
+  }
+  return false
+}
+
+export const resolveIfExists = (middleware, basePaths: string[], exactPaths: string[] = []) => {
+  const handler: Handler = (req, res, next) => {
+    const exists = basePaths.some(
+      path =>
+        existsInCache(middleware, path + req.url) || exactPaths.some(x => x.indexOf(req.url) === 0),
+    )
+    if (exists) {
+      middleware(req, res, next)
+    } else {
+      next()
+    }
+  }
+  return handler
 }

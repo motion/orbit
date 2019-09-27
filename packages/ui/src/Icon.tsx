@@ -218,6 +218,7 @@ export async function getSvgIcon(size: number, name: string): Promise<string[] |
     }
     return pathStrings
   } else {
+    return getSvgIconRegular(size, name)
   }
 }
 

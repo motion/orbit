@@ -154,7 +154,7 @@ export class AppBuilder {
         writeAppBuildInfo()
       }
 
-      const hasErrors = stats.hasErrors()
+      const hasErrors = stats && stats.hasErrors()
       const success = state && hasErrors
 
       if (success) {

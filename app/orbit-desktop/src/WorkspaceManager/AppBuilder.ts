@@ -3,13 +3,15 @@ import { Logger } from '@o/logger'
 import { AppMeta, BuildStatus, CommandWsOptions } from '@o/models'
 import { decorate } from '@o/use-store'
 import { Handler } from 'express'
+import { pathExists } from 'fs-extra'
 import { debounce } from 'lodash'
 import hashObject from 'node-object-hash'
 import { join, relative } from 'path'
 import webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 
-import { shouldRebuildApp, writeBuildInfo } from './commandBuild'
+import { writeBuildInfo } from './commandBuild'
+import { shouldRebuildApp } from './shouldRebuildApp'
 
 const log = new Logger('AppBuilder')
 
@@ -60,8 +62,7 @@ export class AppBuilder {
           return
         }
         if (assetName === config.output.filename) {
-          const file = join(config.output.path, config.output.filename)
-          res.sendFile(file)
+          res.sendFile(this.outputBundlePath)
           return
         }
       }
@@ -80,6 +81,11 @@ export class AppBuilder {
       name: this.props.name,
       hash,
     }
+  }
+
+  get outputBundlePath() {
+    const { config } = this.props
+    return join(config.output.path, config.output.filename)
   }
 
   private getBuildStatus({
@@ -123,13 +129,16 @@ export class AppBuilder {
       }
     }, 100)
 
-    if (appMeta && (await shouldRebuildApp(appMeta.directory))) {
-      // start in compiling mode
-      this.props.onBuildStatus(this.getBuildStatus({ status: 'building' }))
-    } else {
-      // compile, but start status at success so we can serve from disk right away
-      this.props.onBuildStatus(this.getBuildStatus({ status: 'complete' }))
-      this.serveStatic = true
+    // start in compiling mode
+    this.props.onBuildStatus(this.getBuildStatus({ status: 'building' }))
+
+    // serve existing static bundle if exists
+    if (!appMeta || !(await shouldRebuildApp(appMeta.directory))) {
+      if (await pathExists(this.outputBundlePath)) {
+        // compile, but start status at success so we can serve from disk right away
+        this.props.onBuildStatus(this.getBuildStatus({ status: 'complete' }))
+        this.serveStatic = true
+      }
     }
 
     return (middlewareOptions, options) => {

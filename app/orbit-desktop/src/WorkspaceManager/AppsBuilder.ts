@@ -1,4 +1,4 @@
-import { AppsManager, getAppInfo, getWorkspaceApps } from '@o/apps-manager'
+import { AppsManager, getWorkspaceApps } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppMeta, BuildStatus, CommandWsOptions } from '@o/models'
 import { decorate } from '@o/use-store'
@@ -14,8 +14,7 @@ import Webpack from 'webpack'
 import Observable from 'zen-observable'
 
 import { AppBuilder, resolveIfExists, WebpackAppsDesc } from './AppBuilder'
-import { buildAppInfo } from './buildAppInfo'
-import { commandBuild, shouldRebuildApp } from './commandBuild'
+import { commandBuild } from './commandBuild'
 import { AppBuildConfigs, getAppsConfig } from './getAppsConfig'
 import { getHotMiddleware } from './getHotMiddleware'
 import { webpackPromise } from './webpackPromise'
@@ -45,7 +44,6 @@ const log = new Logger('AppsBuilder')
 type AppsBuilderUpdate = {
   options: CommandWsOptions
   buildMode: AppBuildModeDict
-  activeAppsMeta: AppMeta[]
 }
 
 @decorate
@@ -82,7 +80,7 @@ export class AppsBuilder {
   }
 
   isUpdating = false
-  async update({ buildMode, options, activeAppsMeta }: AppsBuilderUpdate) {
+  async update({ buildMode, options }: AppsBuilderUpdate) {
     log.info(`update()`)
     this.wsOptions = options
     if (this.isUpdating) {
@@ -91,15 +89,21 @@ export class AppsBuilder {
     }
     this.isUpdating = true
 
-    // ensure all built out once
-    await this.buildWorkspaceAppsInfo(options.workspaceRoot, { watch: false })
-
-    // ensure builds have run for each app
     try {
-      const buildConfigs = await getAppsConfig(activeAppsMeta, buildMode, options)
+      // first ensure base/main/shared dlls built etc
+      await getAppsConfig([], buildMode, options)
+      // then ensure apps built
+      const builtOnce = await this.ensureAppsBuiltOnce()
+      if (!builtOnce) {
+        // todo handle errors
+        return
+      }
+      // then build apps
+      const appsMeta = await getWorkspaceApps(options.workspaceRoot)
+      const buildConfigs = await getAppsConfig(appsMeta, buildMode, options)
       this.buildConfigs = buildConfigs
       const { clientConfigs, nodeConfigs, buildNameToAppMeta } = buildConfigs
-      log.verbose(`update() ${activeAppsMeta.length}`, buildConfigs)
+      log.verbose(`update() ${appsMeta.length}`, buildConfigs)
       this.buildNameToAppMeta = buildNameToAppMeta
       this.apps = Object.keys(buildNameToAppMeta).map(k => buildNameToAppMeta[k])
 
@@ -118,38 +122,6 @@ export class AppsBuilder {
         })
       }
 
-      let builds = []
-      const chunks = chunk(activeAppsMeta, 2)
-      for (const apps of chunks) {
-        log.verbose(
-          `Building apps. num chunks ${chunks.length}, cur chunk ${apps
-            .map(x => x.packageId)
-            .join(', ')}`,
-        )
-        builds = [
-          ...builds,
-          ...(await Promise.all(
-            apps.map(async app => {
-              return await commandBuild({
-                projectRoot: app.directory,
-                // dont force, were just ensureing its initially built once
-                force: false,
-              })
-            }),
-          )),
-        ]
-      }
-      if (builds.some(x => x.type === 'error')) {
-        log.error(
-          `Finished apps initial build, error running initial builds of apps:\n${builds
-            .filter(x => x.type === 'error')
-            .map(x => ` - ${x.message}`)
-            .join('\n')}`,
-        )
-      } else {
-        log.info(`Finished apps initial build, success`)
-      }
-
       if (options.action === 'run') {
         this.state = await this.updateBuild(buildConfigs)
         return
@@ -162,34 +134,41 @@ export class AppsBuilder {
     }
   }
 
-  private async buildWorkspaceAppsInfo(
-    workspaceRoot: string,
-    { watch = false }: { watch?: boolean } = {},
-  ) {
-    const appsMeta = await getWorkspaceApps(workspaceRoot)
-    log.info(`building app info ${appsMeta.length}`)
-    return await Promise.all(
-      appsMeta.map(async meta => {
-        async function getOrBuildAppInfo(path: string) {
-          const shouldRebuild = await shouldRebuildApp(path)
-          if (!shouldRebuild) {
-            return await getAppInfo(path)
-          }
-          return await buildAppInfo({
-            projectRoot: path,
-            watch,
-          })
-        }
-
-        const appInfo = await getOrBuildAppInfo(meta.directory)
-
-        console.log(
-          'should collect and store the app info result here so we can cache if we need to rebuild',
-        )
-
-        return appInfo
-      }),
-    )
+  private async ensureAppsBuiltOnce() {
+    // ensure builds have run for each app
+    let builds = []
+    const chunks = chunk(await getWorkspaceApps(this.wsOptions.workspaceRoot), 2)
+    for (const apps of chunks) {
+      log.verbose(
+        `Building apps. num chunks ${chunks.length}, cur chunk ${apps
+          .map(x => x.packageId)
+          .join(', ')}`,
+      )
+      builds = [
+        ...builds,
+        ...(await Promise.all(
+          apps.map(async app => {
+            return await commandBuild({
+              projectRoot: app.directory,
+              // dont force, were just ensureing its initially built once
+              force: false,
+            })
+          }),
+        )),
+      ]
+    }
+    if (builds.some(x => x.type === 'error')) {
+      log.error(
+        `Finished apps initial build, error running initial builds of apps:\n${builds
+          .filter(x => x.type === 'error')
+          .map(x => ` - ${x.message}`)
+          .join('\n')}`,
+      )
+      return false
+    } else {
+      log.info(`Finished apps initial build, success`)
+      return true
+    }
   }
 
   /**
@@ -386,6 +365,7 @@ export class AppsBuilder {
     if (req.path[1] !== '_' && req.path.indexOf('.') === -1) {
       return await sendIndex()
     }
+    console.log('req.path', req.path)
     let fin
     for (const { middleware } of this.state) {
       if (!middleware) {

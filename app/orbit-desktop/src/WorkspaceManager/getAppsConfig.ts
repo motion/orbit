@@ -162,6 +162,7 @@ export async function getAppsConfig(
   )
   const buildNameToAppMeta: { [name: string]: AppMeta } = {}
   const appInfos = await Promise.all(apps.map(x => getAppInfo(x.directory)))
+  console.log('appInfos', appInfos)
   for (const [index, params] of appParams.entries()) {
     const appMeta = apps[index]
     const appInfo = appInfos[index]

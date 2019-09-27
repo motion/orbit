@@ -1,4 +1,3 @@
-import { getAppInfo } from '@o/apps-manager'
 import { getGlobalConfig } from '@o/config'
 import { isOrbitApp, readPackageJson } from '@o/libs-node'
 import { Logger } from '@o/logger'
@@ -14,6 +13,7 @@ import { buildAppInfo } from './buildAppInfo'
 import { commandGenTypes } from './commandGenTypes'
 import { attachLogToCommand, statusReplyCommand } from './commandHelpers'
 import { getNodeAppConfig } from './getNodeAppConfig'
+import { shouldRebuildApp } from './shouldRebuildApp'
 import { webpackPromise } from './webpackPromise'
 
 export const log = new Logger('commandBuild')
@@ -148,7 +148,7 @@ async function getAppHash(appDir: string) {
   })
 }
 
-async function getBuildInfo(appDir: string) {
+export async function getBuildInfo(appDir: string) {
   const appHash = await getAppHash(appDir)
   const appPackage = await readJSON(join(appDir, 'package.json'))
   const globalConfig = await getGlobalConfig()
@@ -178,7 +178,7 @@ export async function writeBuildInfo(appDir: string) {
   return await writeJSON(file, await getBuildInfo(appDir))
 }
 
-async function readBuildInfo(appDir: string) {
+export async function readBuildInfo(appDir: string) {
   const file = join(appDir, 'dist', 'buildInfo.json')
   if (!(await pathExists(file))) {
     return null
@@ -191,62 +191,7 @@ async function readBuildInfo(appDir: string) {
   }
 }
 
-async function isValidJSONFile(path: string) {
-  try {
-    await readJSON(path)
-    return true
-  } catch (err) {
-    log.info(`Error reading json ${err.message}`)
-    return false
-  }
-}
-
-class ShouldRebuildMissingBuildInfo {}
-class ShouldRebuildMissingAppInfo {}
-class ShouldRebuildMissingApi {}
-class ShouldRebuildMissingNodeApp {}
-class ShouldRebuildNewBuildInfo {}
-
-export async function shouldRebuildApp(appRoot: string) {
-  try {
-    // do some basic sanity checks
-    // no buildInfo yet
-    if (!(await isValidJSONFile(join(appRoot, 'dist', 'buildInfo.json')))) {
-      throw new ShouldRebuildMissingBuildInfo()
-    }
-    // no appInfo yet
-    if (!(await isValidJSONFile(join(appRoot, 'dist', 'appInfo.json')))) {
-      throw new ShouldRebuildMissingAppInfo()
-    }
-    // do some appInfo => output comparison checks
-    const appInfo = await getAppInfo(appRoot)
-    // ensure api file built
-    if (appInfo.api && !(await isValidJSONFile(join(appRoot, 'dist', 'api.json')))) {
-      throw new ShouldRebuildMissingApi()
-    }
-    // ensure node bundle built
-    if (appInfo.workers || appInfo.graph) {
-      if (!(await pathExists(join(appRoot, 'dist', 'index.node.js')))) {
-        throw new ShouldRebuildMissingNodeApp()
-      }
-    }
-    // ensure buildInfo hash is equal
-    const current = await getBuildInfo(appRoot)
-    const existing = await readBuildInfo(appRoot)
-    if (JSON.stringify(current) !== JSON.stringify(existing)) {
-      log.info(
-        `changed,\n${JSON.stringify(current, null, 2)}\nvs\n${JSON.stringify(existing, null, 2)}`,
-      )
-      throw new ShouldRebuildNewBuildInfo()
-    }
-    return false
-  } catch (err) {
-    log.verbose(`shouldRebuild! ${err.constructor.name}`)
-    return true
-  }
-}
-
-const hasKey = (appInfo: AppDefinition, ...keys: string[]) =>
+export const hasKey = (appInfo: AppDefinition, ...keys: string[]) =>
   Object.keys(appInfo).some(x => keys.some(key => x === key))
 
 export async function getAppEntry(appRoot: string, packageJson?: any) {

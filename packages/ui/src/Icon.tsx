@@ -173,43 +173,62 @@ PlainIcon.defaultProps = {
   size: 16,
 }
 
+const pathsToElement = (paths: string[]) => {
+  return paths.map((d, i) => <path key={i} d={d} fillRule="evenodd" fill="currentColor" />)
+}
+
 const iconCache = {}
 function getIconSvgSuspense(pathsSize: number, iconName: string): JSX.Element[] | null {
-  const key = `${pathsSize}${iconName}`
-  if (iconCache[key]) {
-    if (isDefined(iconCache[key].value)) {
-      return iconCache[key].value
+  if (process.env.SPLIT_CHUNKS) {
+    const key = `${pathsSize}${iconName}`
+    if (iconCache[key]) {
+      if (isDefined(iconCache[key].value)) {
+        return iconCache[key].value
+      }
+      throw iconCache[key].promise
+    }
+    iconCache[key] = {
+      value: undefined,
+      promise: new Promise(async res => {
+        const next = pathsToElement((await getSvgIcon(pathsSize, iconName)) || [])
+        iconCache[key].value = next
+        res(next)
+      }),
     }
     throw iconCache[key].promise
+  } else {
+    return pathsToElement(getSvgIconRegular(pathsSize, iconName))
   }
-  iconCache[key] = {
-    value: undefined,
-    promise: new Promise(async res => {
-      const next = ((await getSvgIcon(pathsSize, iconName)) || []).map((d, i) => (
-        <path key={i} d={d} fillRule="evenodd" fill="currentColor" />
-      ))
-      iconCache[key].value = next
-      res(next)
-    }),
-  }
-  throw iconCache[key].promise
 }
 
 export async function getSvgIcon(size: number, name: string): Promise<string[] | null> {
-  let pathStrings: string[] = []
-  try {
-    if (size === SIZE_STANDARD) {
-      pathStrings = (await import(`@o/icons/icons/16/${name}.json`)).default
-    } else {
-      pathStrings = (await import(`@o/icons/icons/20/${name}.json`)).default
+  if (process.env.SPLIT_CHUNKS) {
+    let pathStrings: string[] = []
+    try {
+      if (size === SIZE_STANDARD) {
+        pathStrings = (await import(`@o/icons/icons/16/${name}.json`)).default
+      } else {
+        pathStrings = (await import(`@o/icons/icons/20/${name}.json`)).default
+      }
+    } catch (err) {
+      console.error('error icon', err)
     }
-  } catch (err) {
-    console.error('errror icon', err)
+    if (!pathStrings) {
+      return null
+    }
+    return pathStrings
+  } else {
   }
-  if (!pathStrings) {
-    return null
+}
+
+function getSvgIconRegular(_size: number, name: string): string[] | null {
+  if (!process.env.SPLIT_CHUNKS) {
+    // if (size === SIZE_STANDARD) {
+    return require('@o/icons').IconSvgPaths16[name]
+    // } else {
+    //   return require('@o/icons').IconSvgPaths20[name]
+    // }
   }
-  return pathStrings
 }
 
 function snapToSizes(size: number) {

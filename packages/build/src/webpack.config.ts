@@ -30,6 +30,7 @@ const TerserPlugin = require('terser-webpack-plugin')
 
 // for importing ui kit properly
 process.env.RENDER_TARGET = 'node'
+process.env.SPLIT_CHUNKS = 'true'
 
 const cwd = process.cwd()
 // TODO: this doesn't seem to be the correct way to get the monorepo root.

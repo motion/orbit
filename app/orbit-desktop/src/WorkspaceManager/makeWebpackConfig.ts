@@ -80,7 +80,7 @@ export function makeWebpackConfig(
     'process.env.NODE_ENV': JSON.stringify(mode),
   }
 
-  const optimization = {
+  const optimization: { [key: string]: webpack.Configuration['optimization'] } = {
     production: {
       minimize: minify,
       namedModules: true,
@@ -105,6 +105,7 @@ export function makeWebpackConfig(
       namedModules: true,
       namedChunks: false,
       splitChunks: false,
+
       // node can't keep around a ton of cruft to parse, but in web dev mode need hmr speed
       // so optimize away side effects in node
       ...(target === 'node' && {
@@ -340,9 +341,9 @@ require('@o/kit').OrbitHot.fileLeave();
     plugins: [
       ...(plugins || []),
 
-      new webpack.optimize.LimitChunkCountPlugin({
-        maxChunks: 1,
-      }),
+      // new webpack.optimize.LimitChunkCountPlugin({
+      //   maxChunks: 1,
+      // }),
 
       new IgnoreNotFoundExportPlugin(),
 

@@ -15,6 +15,9 @@ export async function getAppInfo(appRoot: string): Promise<AppDefinition | null>
     }
     return appDef
   } catch (err) {
+    if (err.message.includes(`no such file or directory`)) {
+      return null
+    }
     log.error(err.message, err)
     return null
   }

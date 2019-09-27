@@ -27,9 +27,8 @@ export function Page(props: SectionContentProps) {
         > */}
         <SectionContent
           className="page"
-          height="85vh"
-          minHeight="max-content"
-          maxHeight={1300}
+          // height="85vh"
+          // minHeight="max-content"
           alignItems="center"
           justifyContent="center"
           {...props}

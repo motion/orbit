@@ -340,6 +340,10 @@ require('@o/kit').OrbitHot.fileLeave();
     plugins: [
       ...(plugins || []),
 
+      new webpack.optimize.LimitChunkCountPlugin({
+        maxChunks: 1,
+      }),
+
       new IgnoreNotFoundExportPlugin(),
 
       // new HardSourceWebpackPlugin({

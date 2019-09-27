@@ -244,27 +244,25 @@ export class AppsBuilder {
 
     // you have to do it this janky ass way because webpack just isnt really great at
     // doing multi-config hmr, and this makes sure the 404 hot-update bug is fixed (google)
-    const clientDescs: WebpackAppsDesc[] = []
+    let clientDescs: WebpackAppsDesc[] = []
     let mainDescs: WebpackAppsDesc[] = []
 
     await Promise.all(
       Object.keys(clientConfigs).map(async name => {
         const isMain = name === 'main'
         const config = clientConfigs[name]
-        const devName = isMain ? undefined : `${name}-client`
-        const current = this.state.find(x => x.name === devName)
-        const { hasChanged } = this.getRunningApp(devName, config)
+        const { hasChanged } = this.getRunningApp(name, config)
         if (!hasChanged) {
+          const existing = this.state.filter(x => x.name === name)
           if (isMain) {
-            res = [...res, ...this.state.filter(x => x.name === name)]
+            mainDescs = existing
           } else {
-            clientDescs.push(current)
+            clientDescs = [...clientDescs, ...existing]
           }
         } else {
           const appMeta = buildNameToAppMeta[name]
           const appBuilder = new AppBuilder({
             config,
-            devName,
             name,
             buildMode: appMeta
               ? this.buildMode[appMeta.packageId]
@@ -280,15 +278,20 @@ export class AppsBuilder {
           const info = await appBuilder.start()
 
           if (!isMain) {
-            clientDescs.push(info)
+            clientDescs = [...clientDescs, { ...info, middleware: info.staticMiddleware }, info]
           } else {
-            const { config, hash, devMiddleware, compiler } = info
+            const { config, hash, devMiddleware, staticMiddleware, compiler } = info
             const mainHotMiddleware = getHotMiddleware([compiler], {
               path: '/__webpack_hmr_main',
               log: console.log,
               heartBeat: 10 * 1000,
             })
             mainDescs = [
+              {
+                name,
+                hash,
+                middleware: staticMiddleware,
+              },
               {
                 name,
                 hash,
@@ -327,15 +330,16 @@ export class AppsBuilder {
     res = [...res, ...clientDescs]
 
     // then add one HMR server for everything because EventStream's don't support >5 in Chrome
+    const clientDevDescs = clientDescs.filter(x => x.staticMiddleware !== x.middleware)
     res.push({
       name: 'apps-hot',
       middleware: resolveIfExists(
-        getHotMiddleware(clientDescs.map(x => x.compiler), {
+        getHotMiddleware(clientDevDescs.map(x => x.compiler), {
           path: '/__webpack_hmr',
           log: console.log,
           heartBeat: 10 * 1000,
         }),
-        clientDescs.map(x => x.config.output.path),
+        clientDevDescs.map(x => x.config.output.path),
         ['/__webpack_hmr'],
       ),
     })
@@ -356,14 +360,15 @@ export class AppsBuilder {
     this.observables.forEach(({ update }) => {
       update(this.buildStatuses)
     })
-    // TODO
-    console.log('this.buildStatuses', this.buildStatuses)
     if (!this.buildConfigs) return
     const clientConfigs = Object.keys(this.buildConfigs.clientConfigs).map(
       k => this.buildConfigs.clientConfigs[k].name,
     )
-    console.log('clientConfigs', clientConfigs.length, this.buildStatuses, clientConfigs)
-    if (this.buildStatuses.every(status => status.status === 'complete')) {
+    if (clientConfigs.length !== this.buildStatuses.length) {
+      // not setup yet
+      return
+    }
+    if (this.buildStatuses.every(x => x.status === 'complete')) {
       log.verbose(`Completed initial build`)
       this.completeFirstBuild()
     }

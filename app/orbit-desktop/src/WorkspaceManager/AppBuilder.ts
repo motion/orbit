@@ -16,7 +16,6 @@ const log = new Logger('AppBuilder')
 type AppBuilderProps = {
   config: webpack.Configuration
   name: string
-  devName: string
   appMeta: AppMeta
   wsOptions: CommandWsOptions
   appsManager: AppsManager
@@ -27,6 +26,7 @@ type AppBuilderProps = {
 export type WebpackAppsDesc = {
   name: string
   hash?: string
+  staticMiddleware?: Handler
   middleware?: Handler
   devMiddleware?: Handler
   close?: Function
@@ -39,12 +39,10 @@ export type WebpackAppsDesc = {
 export class AppBuilder {
   private serveStatic = false
 
-  constructor(private props: AppBuilderProps) {
-    console.log('constrcute', props.name)
-  }
+  constructor(private props: AppBuilderProps) {}
 
   async start(): Promise<WebpackAppsDesc> {
-    const { config } = this.props
+    const { name, config } = this.props
     const compiler = webpack(config)
     const publicPath = config.output.publicPath
     const devMiddleware = WebpackDevMiddleware(compiler, {
@@ -54,23 +52,32 @@ export class AppBuilder {
     })
     const hash = hashObject({ sort: false }).hash(config)
     const middleware = resolveIfExists(devMiddleware, [config.output.path])
+    const staticMiddleware = (req, res, next) => {
+      if (this.serveStatic) {
+        const assetName = req.path.slice(req.path.lastIndexOf('/') + 1)
+        if (name === 'main' && assetName.includes('.worker.js')) {
+          res.sendFile(join(config.output.path, assetName))
+          return
+        }
+        if (assetName === config.output.filename) {
+          const file = join(config.output.path, config.output.filename)
+          res.sendFile(file)
+          return
+        }
+      }
+      next()
+    }
     return {
       config,
       devMiddleware,
-      middleware: (req, res, next) => {
-        if (this.serveStatic) {
-          // todo
-          console.log('TODO')
-        } else {
-          return middleware(req, res, next)
-        }
-      },
+      staticMiddleware,
+      middleware,
       close: () => {
         log.info(`closing middleware ${name}`)
         devMiddleware.close()
       },
       compiler,
-      name: this.props.devName,
+      name: this.props.name,
       hash,
     }
   }
@@ -109,8 +116,6 @@ export class AppBuilder {
   private getReporter = async () => {
     const { appMeta } = this.props
 
-    console.log('appMeta', appMeta)
-
     const writeAppBuildInfo = debounce(() => {
       if (appMeta) {
         log.debug(`writing app build info`)
@@ -145,6 +150,7 @@ export class AppBuilder {
 
       if (success) {
         // no longer need to serve from static
+        console.log('succes turn off static', this.props)
         this.serveStatic = false
       }
 

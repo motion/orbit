@@ -301,7 +301,9 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       this.lastMeasure = Date.now()
       this.currentRect = entries[0].contentRect
     })
-    this.currentRect = node.getBoundingClientRect()
+    requestAnimationFrame(() => {
+      this.currentRect = node.getBoundingClientRect()
+    })
   }
 
   // @ts-ignore

@@ -105,7 +105,12 @@ export function makeWebpackConfig(
       concatenateModules: false,
       namedModules: true,
       namedChunks: false,
-      splitChunks: false,
+      splitChunks:
+        name === 'main' || name === 'shared'
+          ? {
+              chunks: 'all',
+            }
+          : false,
 
       // node can't keep around a ton of cruft to parse, but in web dev mode need hmr speed
       // so optimize away side effects in node
@@ -144,7 +149,7 @@ export function makeWebpackConfig(
     {
       // even in prod ensure react-refresh is there
       enable: target === 'web' ? ['react-refresh/babel'] : [],
-      disable: target !== 'web' ? ['react-refresh/babel'] : [],
+      disable: target !== 'web' ? ['react-refresh/babel'] : ['@babel/preset-env'],
       mode,
     },
   ]

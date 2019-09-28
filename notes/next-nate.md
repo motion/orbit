@@ -1,3 +1,29 @@
+ideas:
+
+- mdx mode:
+
+  - support a "simple" mode where you can code in just mdx
+    - benefits:
+      - ✅ no import, no export default, no return this/that
+      - ✅ ui + kit available as global
+      - ✅ can still import whatever you need from regular ts files
+      - ❌ no autocomplete in editor likely
+      - ❌ another syntax to learn/maintain
+      - ❌ how do you do stuff like hooks?
+
+- devtools mini-app:
+
+  - ✅ a lot like xcode's new spotlight/search devtool mode, desirable/easy/fast
+  - ✅ tools:
+    - react devtools, mobx, overmind, chromium repls, chrome dev tools, custom state inspector
+  - ✅ easier cost to useful/attractive ratio than some features
+  - ✅ helps build orbit faster
+  - ❌ not insignificant amount of work
+
+-
+
+---
+
 The plan from jun for Sep:
 
 "Have everything ready for beta"
@@ -186,23 +212,3 @@ small:
 - https://github.com/humandx/slate-automerge
 
 - monobase for the individual docs sites...
-
-ideas:
-
-- mdx mode:
-
-  - support a "simple" mode where you can code in just mdx
-    - benefits:
-      - ✅ no import, no export default, no return this/that
-      - ✅ ui + kit available as global
-      - ✅ can still import whatever you need from regular ts files
-      - ❌ no autocomplete in editor likely
-      - ❌ another syntax to learn/maintain
-      - ❌ how do you do stuff like hooks?
-
-- devtools mini-app:
-  - ✅ a lot like xcode's new spotlight/search devtool mode, desirable/easy/fast
-  - ✅ can show a lot of tools: react devtools, mobx, overmind, repl, custom state inspector
-  - ✅ easier cost to useful/attractive ratio than some features
-  - ✅ helps build orbit faster
-  - ❌ not insignificant amount of work

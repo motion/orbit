@@ -16,10 +16,12 @@ export class AppsDrawerStore {
   isAnimating = false
 
   activeDrawerId = react(
-    () => (paneManagerStore.activePane ? +paneManagerStore.activePane.id : -1),
-    activeId => {
-      ensure('is a drawer app', (this.props.apps || []).some(x => x.id === activeId))
-      return activeId
+    () => [this.props.apps, paneManagerStore.activePane ? +paneManagerStore.activePane.id : -1],
+    ([apps, activeId]) => {
+      if ((apps || []).some(x => x.id === activeId)) {
+        return activeId
+      }
+      return -1
     },
     {
       defaultValue: -1,

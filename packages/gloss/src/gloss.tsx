@@ -98,7 +98,7 @@ export interface GlossView<RawProps, ThemeProps = RawProps, Props = GlossProps<R
 
 const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
 export const tracker: StyleTracker = new Map()
-export const sheet = new StyleSheet(false)
+export const sheet = new StyleSheet(true)
 const gc = new GarbageCollector(sheet, tracker)
 const whiteSpaceRegex = /[\s]+/g
 
@@ -155,10 +155,17 @@ export function gloss<Props = any, ThemeProps = Props>(
   let target: any = a || 'div'
   let rawStyles = b
   const hasGlossyParent = !!target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
-  let ignoreAttrs: Object = (hasGlossyParent && target.ignoreAttrs) || baseIgnoreAttrs
   const targetConfig: GlossInternalConfig | null = hasGlossyParent
     ? target.internal.getConfig()
     : null
+
+  let ignoreAttrs: Object
+  setTimeout(() => {
+    if (!ignoreAttrs) {
+      ignoreAttrs =
+        ThemedView.ignoreAttrs || (hasGlossyParent && target.ignoreAttrs) || baseIgnoreAttrs
+    }
+  }, 0)
 
   // shorthand: gloss({ ... })
   if (
@@ -253,10 +260,6 @@ export function gloss<Props = any, ThemeProps = Props>(
       return createElement(element, last.current.props, props.children)
     }
 
-    if (props.className && props.className.includes('app-frame')) {
-      console.log('rendering', props)
-    }
-
     const dynClassNames = addDynamicStyles(
       ThemedView.displayName,
       conditionalStyles,
@@ -268,7 +271,7 @@ export function gloss<Props = any, ThemeProps = Props>(
 
     dynClasses.current = dynClassNames
 
-    const isDOMElement = typeof element === 'string' || config!.isDOMElement
+    const isDOMElement = typeof element === 'string' || (config ? config.isDOMElement : false)
 
     // set up final props with filtering for various attributes
     let finalProps: any = {}
@@ -303,7 +306,7 @@ export function gloss<Props = any, ThemeProps = Props>(
     finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
 
     // hook: setting your own props
-    const postProcessProps = config!.postProcessProps
+    const postProcessProps = config && config.postProcessProps
     if (postProcessProps) {
       postProcessProps(props, finalProps, tracker)
     }
@@ -338,8 +341,8 @@ export function gloss<Props = any, ThemeProps = Props>(
       config: ogConfig,
       displayName: ThemedView.displayName || '',
       targetElement,
-      styles: staticStyles.styles,
-      conditionalStyles: staticStyles.conditionalStyles,
+      styles: { ...staticStyles.styles },
+      conditionalStyles: { ...staticStyles.conditionalStyles },
     }),
   }
 
@@ -453,11 +456,8 @@ function addStyles(
     classNames.push(className)
 
     // if this is the first mount render or we didn't previously have this class then add it as new
-    if (className === 'g1909893218') {
-      console.log('registering', prevClassNames, prevClassNames && prevClassNames.has(className))
-    }
     if (!prevClassNames || !prevClassNames.has(className)) {
-      gc.registerClassUse(className)
+      gc.registerClassUse(className[0] === 's' ? className.slice(1) : className)
     }
   }
   return classNames
@@ -477,10 +477,6 @@ const SPECIFIC_PREFIX = 's'
 
 function deregisterClassName(name: string) {
   const nonSpecificClassName = name[0] === SPECIFIC_PREFIX ? name.slice(1) : name
-  if (nonSpecificClassName === 'g1909893218') {
-    console.warn('unregistering')
-    // debugger
-  }
   gc.deregisterClassUse(nonSpecificClassName)
 }
 

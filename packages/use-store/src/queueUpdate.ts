@@ -2,7 +2,7 @@ import { unstable_batchedUpdates } from 'react-dom'
 
 const Updates = new Set<Function>()
 
-let tm = setImmediate(() => {})
+let tm: any
 
 const shouldDebug = (level: number = 0) => {
   if (typeof window !== 'undefined' && window['enableLog'] > level) {
@@ -14,7 +14,7 @@ const shouldDebug = (level: number = 0) => {
 export function queueUpdate(fn: Function) {
   clearImmediate(tm)
   Updates.add(fn)
-  tm = setImmediate(() => {
+  tm = setTimeout(() => {
     if (!Updates.size) return
     let next = [...Updates]
     if (__DEV__ && shouldDebug()) {
@@ -26,7 +26,7 @@ export function queueUpdate(fn: Function) {
         cb()
       }
     })
-  })
+  }, 0)
 }
 
 export function removeUpdate(fn: Function) {

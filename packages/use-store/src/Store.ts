@@ -29,7 +29,7 @@ export class Store<Props extends any> implements ReactiveStore<Props> {
     // intercept that and return a reactive value instead
     // this would be pretty different from how its done now in automagical so
     // we should re-implement it here instead of trying to merge the two together
-    setImmediate(() => this.setupAutomagical())
+    setTimeout(() => this.setupAutomagical(), 0)
 
     return this
   }

@@ -197,8 +197,8 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
         {...surfaceProps}
         onMouseUp={handleMouseUp}
       >
-        <ListItemMainContent oneLine={oneLine}>
-          <Stack flex={1}>
+        <ListItemMainContent>
+          <View flex={1}>
             {showTitle && (
               <ListItemTitleBar direction="horizontal" space={space} alignItems={alignItems}>
                 {showIcon && !iconBefore && iconElement}
@@ -272,7 +272,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
               </>
             )}
             {childrenElement}
-          </Stack>
+          </View>
           {hasAfterTitle && (
             <>
               <Space size={space} />
@@ -347,7 +347,7 @@ const AfterHeader = gloss(Box, {
   marginBottom: -4,
 })
 
-const ListItemMainContent = gloss<{ oneLine?: boolean }>(Box, {
+const ListItemMainContent = gloss(Box, {
   flex: 1,
   margin: ['auto', 0],
   flexDirection: 'row',

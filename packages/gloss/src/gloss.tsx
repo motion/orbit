@@ -257,9 +257,6 @@ export function gloss<Props = any, ThemeProps = Props>(
 
     // Optimization: only update if non-elements changed
     if (shouldAvoidStyleUpdate) {
-      if (props['debug']) {
-        console.log('nah', props)
-      }
       // because hooks can run in theme, be sure to run them
       theme && themeFn && themeFn(props, theme)
       return createElement(element, last.current.props, props.children)
@@ -533,9 +530,6 @@ function addDynamicStyles(
     const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
     dynStyles['.'] = dynStyles['.'] || {}
     const themeStyles = themeFn(props, next)
-    if (props['debug']) {
-      console.log('themeStyles', themeStyles)
-    }
     const themePropStyles = mergeStyles('.', dynStyles, themeStyles, true)
     if (themePropStyles) {
       mergePropStyles(dynStyles, themePropStyles, props)

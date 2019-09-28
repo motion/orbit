@@ -44,7 +44,6 @@ export const OrbitAppsCarousel = memo(() => {
   /**
    * Use this to update state after animations finish
    */
-  console.log('hidden', hidden)
   const scrollable = useReaction(
     () => (appsCarouselStore.zoomedIn ? false : 'x'),
     async (next, { when, sleep }) => {

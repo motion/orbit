@@ -69,7 +69,7 @@ export function createStackView(defaultProps: any): (props: StackProps) => JSX.E
     }
 
     if (direction === 'horizontal') {
-      props.flexDirection = props.flexDirection || 'row'
+      props.flexDirection = 'row'
     }
 
     // scrollable

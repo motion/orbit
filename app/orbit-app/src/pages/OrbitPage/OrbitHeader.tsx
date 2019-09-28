@@ -77,7 +77,14 @@ export const OrbitHeader = memo(() => {
             {homeButtonElement}
           </HeaderSide>
         </HeaderButtonPassProps>
-        <HeaderContain space spaceAround isActive={false} isDeveloping={isDeveloping}>
+        <HeaderContain
+          direction="horizontal"
+          debug
+          space
+          spaceAround
+          isActive={false}
+          isDeveloping={isDeveloping}
+        >
           <OrbitHeaderInput fontSize={slim ? 15 : 20} />
 
           <Stack direction="horizontal" space transition="all ease 300ms">

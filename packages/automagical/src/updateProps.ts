@@ -7,7 +7,7 @@ export function updateProps(store: any, nextProps: Object) {
   if (store.__lastProps === nextProps) return
 
   const nextPropsKeys = Object.keys(nextProps)
-  const curPropKeys = Object.keys(store.props)
+  // const curPropKeys = Object.keys(store.props)
 
   // changes
   transaction(function updateProps() {

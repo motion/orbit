@@ -82,17 +82,18 @@ const handleKeyDown = async e => {
 export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { fontSize: number }) {
   // separate value here, lets us interface with queryStore/search, + will be useful for concurrent
   const [inputVal, setInputVal] = useState('')
-  const search = useSearch({ react: false })
+  const search = useSearch({ react: false })!
   const qs = useQueryStore()
   const orbitWindowStore = useOrbitWindowStore()
   const headerStore = useHeaderStore()
   const { activeTheme } = React.useContext(ThemeContext)
   const [activeSpace] = useActiveSpace()
   const focusedApp = headerStore.paneState.focusedApp
-  const placeholder =
-    (activeSpace &&
-      (focusedApp.identifier === 'sources' ? `Manage ${activeSpace.name}` : focusedApp.name)) ||
-    ''
+  const placeholder = !focusedApp
+    ? ''
+    : (activeSpace &&
+        (focusedApp.identifier === 'sources' ? `Manage ${activeSpace.name}` : focusedApp.name)) ||
+      ''
 
   /**
    * We're doing a really ugly three way sync here...
@@ -149,7 +150,7 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { f
           background="transparent"
           placeholder={placeholder}
           value={inputVal}
-          highlight={headerStore.highlightWords}
+          highlight={headerStore.highlightWords as any}
           color={activeTheme.color}
           onChange={onChangeQuery}
           onFocus={orbitWindowStore.onFocus}

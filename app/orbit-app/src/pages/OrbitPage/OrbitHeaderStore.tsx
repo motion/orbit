@@ -1,9 +1,11 @@
+import { AppBit } from '@o/kit/src'
 import { Electron } from '@o/stores'
 import { createUsableStore, ensure, react, UpdatePriority } from '@o/use-store'
 import { createRef } from 'react'
 
 import { sleep } from '../../helpers'
-import { queryStore } from '../../om/stores'
+import { om } from '../../om/om'
+import { paneManagerStore, queryStore } from '../../om/stores'
 import { whenIdle } from './OrbitApp'
 import { appsCarouselStore } from './OrbitAppsCarouselStore'
 
@@ -82,12 +84,15 @@ class HeaderStore {
   }
 
   paneState = react(
-    () => [appsCarouselStore.focusedApp, appsCarouselStore.zoomedIn],
-    async ([focusedApp, zoomedIn], { sleep }) => {
+    () => [paneManagerStore.activePane, appsCarouselStore.zoomedIn],
+    async ([pane, zoomedIn], { when }) => {
       await sleep(20)
       if (appsCarouselStore.isAnimating) {
-        await sleep(100)
-        await whenIdle()
+        await when(() => !appsCarouselStore.isAnimating)
+      }
+      const focusedApp: AppBit = om.state.apps.activeApps.find(x => x.id === +pane.id) || {
+        target: 'app',
+        id: -1,
       }
       return { focusedApp, zoomedIn }
     },

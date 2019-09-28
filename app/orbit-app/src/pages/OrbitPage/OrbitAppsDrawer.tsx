@@ -37,7 +37,8 @@ export const OrbitAppsDrawer = memo(() => {
 
   useEffect(() => {
     appsDrawerStore.setProps({
-      apps,
+      // @ts-ignore whats going on here
+      apps: [...apps],
       animation,
     })
   }, [animation, apps])
@@ -47,7 +48,6 @@ export const OrbitAppsDrawer = memo(() => {
   return (
     <FullScreen
       perspective="1200px"
-      pointerEvents={appsDrawer.isOpen ? 'auto' : 'none'}
       className="orbit-apps-drawer"
       // below DockBackground
       zIndex={4}
@@ -87,11 +87,14 @@ export const OrbitAppsDrawer = memo(() => {
           return (
             <FullScreen
               key={app.id}
+              className="app-inner-card"
               opacity={0}
               // this fixes a really weird bug where they had wrong absolute position
               visibility="hidden"
+              pointerEvents="none"
               {...shouldShow && {
                 visibility: 'visible',
+                pointerEvents: 'auto',
                 opacity: 1,
               }}
             >

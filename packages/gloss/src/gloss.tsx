@@ -140,8 +140,6 @@ function createGlossIsEqual() {
   }
 }
 
-let COUNT = 0
-
 export function gloss<Props = any, ThemeProps = Props>(
   a?: CSSPropertySet | GlossView<Props, ThemeProps> | ((props: Props) => any) | string,
   b?: CSSPropertySet,

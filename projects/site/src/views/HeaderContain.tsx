@@ -25,8 +25,8 @@ export const LinkSection = gloss<BoxProps & { alignRight?: boolean }>(View, {
   justifyContent: 'space-between',
   maxWidth: 380,
   alignItems: 'center',
-  padding: [0, '1%', 0, '1%'],
+  padding: [0, '0%', 0, '2%'],
   alignRight: {
-    padding: [0, '1%', 0, '1%'],
+    padding: [0, '2%', 0, '0%'],
   },
 })

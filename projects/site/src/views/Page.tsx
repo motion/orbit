@@ -26,7 +26,7 @@ export function Page(props: SectionContentProps) {
           }}
         > */}
         <SectionContent
-          className="page"
+          data-is="Site-Page"
           alignItems="center"
           justifyContent="center"
           {...props}

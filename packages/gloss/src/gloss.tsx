@@ -123,14 +123,16 @@ function createGlossIsEqual() {
         if (!isEqual(a[key], bVal)) {
           shouldUpdate = true
           shouldUpdateInner = true
+          break
         }
       }
       // ensure we didnt remove/add keys
-      if (!shouldUpdate) {
+      if (!shouldUpdate || !shouldUpdateInner) {
         for (const key in a) {
           if (!(key in b)) {
             shouldUpdate = true
             shouldUpdateInner = true
+            break
           }
         }
       }

@@ -53,7 +53,7 @@ export function BlogPage(props: { title?: string; children?: any }) {
   return (
     <FadeParent>
       <MDX>
-        <Theme name="home">
+        <Theme name="blogHeaderTheme">
           <Header slim noBorder />
           <BlogTitle />
         </Theme>

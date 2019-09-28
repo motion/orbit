@@ -82,7 +82,12 @@ export const themes = {
 
   docsPageTheme: {
     ...light,
-    bodyBackground: '#000',
+    bodyBackground: toColor('#000'),
+  },
+
+  blogHeaderTheme: {
+    ...dark,
+    background: colors.purple,
   },
 
   darkAlt: {

@@ -94,7 +94,7 @@ export const Header = memo(({ slim, noBorder, before, logoProps, ...rest }: Head
           <Row
             nodeRef={Fade.ref}
             pointerEvents="auto"
-            background={theme.background.lighten(0.05)}
+            background={theme.background}
             position="relative"
             zIndex={1000000}
             opacity={slim ? 1 : siteStore.showSidebar ? 0 : 1}

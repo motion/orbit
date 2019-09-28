@@ -6,8 +6,7 @@ import { SizesObject } from './types'
 export const getSizableValue = (
   value: Sizes | SizesObject | null | undefined,
 ): string | number | (number | string)[] => {
-  if (typeof value !== 'undefined') {
-    if (!value) return 0
+  if (value) {
     if (Array.isArray(value)) {
       return value.map(x => getSpaceSize(x))
     }

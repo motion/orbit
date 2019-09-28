@@ -243,9 +243,6 @@ export function gloss<Props = any, ThemeProps = Props>(
       return () => {
         const x = dynClasses.current
         if (x && x.size > 0) {
-          if (dynClasses.current && [...dynClasses.current].includes('g1909893218')) {
-            console.log('unmount', props, x)
-          }
           x.forEach(deregisterClassName)
         }
       }
@@ -276,7 +273,7 @@ export function gloss<Props = any, ThemeProps = Props>(
 
     dynClasses.current = dynClassNames
 
-    const isDOMElement = typeof element === 'string' || config!.isDOMElement
+    const isDOMElement = typeof element === 'string' || (config ? config.isDOMElement : false)
 
     // set up final props with filtering for various attributes
     let finalProps: any = {}
@@ -311,7 +308,7 @@ export function gloss<Props = any, ThemeProps = Props>(
     finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
 
     // hook: setting your own props
-    const postProcessProps = config!.postProcessProps
+    const postProcessProps = config && config.postProcessProps
     if (postProcessProps) {
       postProcessProps(props, finalProps, tracker)
     }
@@ -462,11 +459,7 @@ function addStyles(
 
     // if this is the first mount render or we didn't previously have this class then add it as new
     if (!prevClassNames || !prevClassNames.has(className)) {
-      if (className === 'g1909893218') {
-        x++
-        console.log('registering', x)
-      }
-      gc.registerClassUse(className)
+      gc.registerClassUse(className[0] === 's' ? className.slice(1) : className)
     }
   }
   return classNames
@@ -556,9 +549,6 @@ function addDynamicStyles(
     for (const className of prevClassNames) {
       // if this previous class isn't in the current classes then deregister it
       if (!classNames.has(className)) {
-        if (className === 'g1909893218') {
-          console.log(props)
-        }
         deregisterClassName(className)
       }
     }

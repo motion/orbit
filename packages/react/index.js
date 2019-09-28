@@ -2576,9 +2576,12 @@ var React = {
   Suspense: REACT_SUSPENSE_TYPE,
   unstable_SuspenseList: REACT_SUSPENSE_LIST_TYPE,
 
-  createElement: __DEV__ ? createElementWithValidation : createElement,
-  cloneElement: __DEV__ ? cloneElementWithValidation : cloneElement,
-  createFactory: __DEV__ ? createFactoryWithValidation : createFactory,
+  createElement: (...args) =>
+    __DEV__ ? createElementWithValidation(...args) : createElement(...args),
+  cloneElement: (...args) =>
+    __DEV__ ? cloneElementWithValidation(...args) : cloneElement(...args),
+  createFactory: (...args) =>
+    __DEV__ ? createFactoryWithValidation(...args) : createFactory(...args),
   isValidElement: isValidElement,
 
   version: ReactVersion,
@@ -2601,19 +2604,6 @@ if (enableFundamentalAPI) {
 // Make sure that stable builds for open source
 // don't modify the React object to avoid deopts.
 // Also let's not expose their names in stable builds.
-
-if (enableJSXTransformAPI) {
-  if (__DEV__) {
-    React.jsxDEV = jsxWithValidation
-    React.jsx = jsxWithValidationDynamic
-    React.jsxs = jsxWithValidationStatic
-  } else {
-    React.jsx = jsx
-    // we may want to special case jsxs internally to take advantage of static children.
-    // for now we can ship identical prod functions
-    React.jsxs = jsx
-  }
-}
 
 var React$2 = Object.freeze({
   default: React,

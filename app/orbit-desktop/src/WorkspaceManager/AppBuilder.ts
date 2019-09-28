@@ -213,15 +213,24 @@ function webpackDevReporter(middlewareOptions, options) {
   const { log, state, stats } = options
 
   if (state) {
-    const displayStats = +process.env.LOG_LEVEL > 1 && middlewareOptions.stats !== false
+    const displayStats = middlewareOptions.stats !== false
+    const logVerbose = +process.env.LOG_LEVEL > 1
 
     if (displayStats) {
       if (stats.hasErrors()) {
         log.error(stats.toString(middlewareOptions.stats))
       } else if (stats.hasWarnings()) {
-        log.warn(stats.toString(middlewareOptions.stats))
+        if (logVerbose) {
+          log.warn(stats.toString(middlewareOptions.stats))
+        } else {
+          log.info(`Build finished with warnings`)
+        }
       } else {
-        log.info(stats.toString(middlewareOptions.stats))
+        if (logVerbose) {
+          log.info(stats.toString(middlewareOptions.stats))
+        } else {
+          log.info(`Build finished`)
+        }
       }
     }
 

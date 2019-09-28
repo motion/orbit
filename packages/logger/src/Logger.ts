@@ -289,7 +289,7 @@ export class Logger {
         ...messages,
       )
     } else if (level === 'timer' || level === 'vtimer') {
-      const shouldLog = logLevel > 2 || (level === 'timer' && logLevel > 0)
+      const shouldLog = logLevel > 2 || (level === 'timer' && logLevel > 1)
       const type = level === 'timer' ? 'info' : ('debug' as const)
       const labelMessage = messages[0]
       const existTimer = this.timers.find(timer => timer.message === labelMessage)

@@ -31,7 +31,7 @@ export class WorkersManager {
 
   async updateAppDefinitions() {
     const { nodeAppDefinitions } = this.appsManager
-    log.info('i see nodeDefinitions, update workers', nodeAppDefinitions)
+    log.verbose('i see nodeDefinitions, update workers', nodeAppDefinitions)
 
     for (const definition of nodeAppDefinitions) {
       // In development mode we could restart all workers whenever we see one update

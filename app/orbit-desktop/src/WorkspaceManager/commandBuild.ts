@@ -91,7 +91,7 @@ export async function commandBuild(
 }
 
 export async function bundleApp(options: CommandBuildOptions): Promise<StatusReply> {
-  log.info(`Writing app info...`)
+  log.verbose(`Writing app info...`)
   const verbose = true // !
   const entry = await getAppEntry(options.projectRoot)
   const pkg = await readPackageJson(options.projectRoot)
@@ -119,13 +119,13 @@ export async function bundleApp(options: CommandBuildOptions): Promise<StatusRep
   // }
 
   if (hasKey(appInfo, 'graph', 'workers', 'api')) {
-    log.info(`Found node entry...`)
+    log.verbose(`Found node entry...`)
     nodeConf = await getNodeAppConfig(entry, pkg.name, options)
   }
 
   const configs = [webConf, nodeConf].filter(Boolean)
   if (configs.length) {
-    log.info(`Building app...`)
+    log.verbose(`Building app...`)
     await webpackPromise(configs, {
       loud: verbose,
     })

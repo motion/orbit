@@ -41,7 +41,7 @@ export async function getAppsConfig(
   const directory = options.workspaceRoot
   const outputDir = join(directory, 'dist', mode)
 
-  log.info(
+  log.verbose(
     `dev ${options.dev} mode ${mode} watch ${watch} ${directory}, apps ${
       apps.length
     } ${isInMonoRepo}`,
@@ -69,7 +69,7 @@ export async function getAppsConfig(
         hot: true,
         watch: false,
       }
-      log.info(`Ensuring config built once: ${params.name} at ${params.dll}`, buildOnceParams)
+      log.verbose(`Ensuring config built once: ${params.name} at ${params.dll}`, buildOnceParams)
       const buildOnceConfig = await makeWebpackConfig(buildOnceParams)
       await webpackPromise([buildOnceConfig], { loud: true })
     }
@@ -217,7 +217,7 @@ export async function getAppsConfig(
           },
           extraConfig[name],
         )
-        log.info(`extra entry: ${name}`)
+        log.verbose(`extra entry: ${name}`)
       }
     }
 
@@ -252,7 +252,7 @@ export async function getAppsConfig(
 
 export function getAppParams(props: WebpackParams): WebpackParams {
   if (!props.entry.length) {
-    log.info(`No entries for ${props.name}`)
+    log.verbose(`No entries for ${props.name}`)
     return null
   }
   return {

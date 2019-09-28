@@ -165,7 +165,6 @@ export class Window extends BaseComponent {
     try {
       for (const key of keys) {
         const val = this.props[key]
-        console.log('setting prop', key, val)
         if (EVENT_KEYS[key]) {
           this.handleEvent(this.window, EVENT_KEYS[key], val)
           continue

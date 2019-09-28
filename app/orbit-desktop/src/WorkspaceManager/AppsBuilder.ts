@@ -81,7 +81,7 @@ export class AppsBuilder {
 
   isUpdating = false
   async update({ buildMode, options }: AppsBuilderUpdate) {
-    log.info(`update()`)
+    log.verbose(`update()`)
     this.wsOptions = options
     if (this.isUpdating) {
       console.warn('!!!!!!!!!!!!!!!!!!!!!!!! what TODO cancel current and re-run')
@@ -117,10 +117,10 @@ export class AppsBuilder {
       // for build mode, ensure we re-run the dll builds first
       if (options.action === 'build') {
         const { base } = clientConfigs
-        log.info(`Building ${Object.keys(clientConfigs).join(', ')}...`)
+        log.verbose(`Building ${Object.keys(clientConfigs).join(', ')}...`)
         // build base dll first to ensure it feeds into rest
         await webpackPromise([base], {
-          loud: true,
+          loud: +process.env.LOG_LEVEL > 1,
         })
       }
 
@@ -131,7 +131,7 @@ export class AppsBuilder {
     } catch (err) {
       log.error(`\n\ERROR running initial builds!\n\n${err.message}\n\n${err.stack}\n\n`)
     } finally {
-      log.info(`update() finish`)
+      log.verbose(`update() finish`)
       this.isUpdating = false
     }
   }

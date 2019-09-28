@@ -299,6 +299,7 @@ const OrbitAppCard = memo(
                   // return Math.min(Math.max(0.5, 1 - intersect * -0.8), 0.6) //todo
                 })
                 // .transform([0.25, 0.6], [0.45, 0.6])
+                // spring here almost doubles pain time
                 // .spring({ damping: 50, stiffness: 500 })
               }
               x={geometry

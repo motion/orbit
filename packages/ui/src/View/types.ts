@@ -97,9 +97,10 @@ export type OrbitCSSPropertyAnimation = {
   [P in keyof OrbitCSSPropertySet]: OrbitCSSPropertySet[P] | AnimationStore
 }
 
-export type ViewProps = ViewBaseProps &
+export type ViewProps = Omit<ViewBaseProps, 'direction'> &
   // be sure to omit margin/padding
-  OrbitCSSPropertyAnimation & {
+  Omit<OrbitCSSPropertyAnimation, 'direction'> & {
+    direction?: 'horizontal' | 'vertical' | OrbitCSSPropertySet['direction']
     transition?: CSSPropertySetStrict['transition'] | Transition
   }
 

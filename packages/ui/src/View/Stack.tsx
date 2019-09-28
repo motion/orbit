@@ -1,6 +1,6 @@
 import { isDefined } from '@o/utils'
 import { Base, validCSSAttr } from 'gloss'
-import React, { isValidElement, Suspense } from 'react'
+import React, { Suspense } from 'react'
 
 import { Breadcrumbs } from '../Breadcrumbs'
 import { CollapsableProps, createCollapsableChildren, splitCollapseProps } from '../Collapsable'
@@ -18,13 +18,13 @@ export type StackProps = CollapsableProps &
   Omit<ScrollableViewProps, 'direction'> &
   SpaceGroupProps &
   GroupProps & {
-    suspense?: React.ReactNode | null
     direction?: 'horizontal' | 'vertical'
+    suspense?: React.ReactNode | null
   }
 
-export const Stack = createBaseView({ flexDirection: 'column', 'data-is': 'Stack' })
+export const Stack = createStackView({ flexDirection: 'column', 'data-is': 'Stack' })
 
-export function createBaseView(defaultProps: any): (props: StackProps) => JSX.Element {
+export function createStackView(defaultProps: any): (props: StackProps) => JSX.Element {
   function BaseView(colProps: StackProps) {
     const [
       collapseProps,

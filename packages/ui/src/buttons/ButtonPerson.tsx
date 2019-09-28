@@ -14,7 +14,7 @@ type PersonButtonProps = Omit<ButtonProps, 'children'> & {
 export function ButtonPerson({ photo, name, ...props }: PersonButtonProps) {
   return (
     <RoundButton size={0.95} sizeHeight={0.8} {...props}>
-      <View flexDirection="horizontal" alignItems="center">
+      <View flexDirection="row" alignItems="center">
         {!!photo && (
           <Image
             src={photo}

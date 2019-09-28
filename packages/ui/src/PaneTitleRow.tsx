@@ -5,7 +5,7 @@ import { BorderTop } from './Border'
 import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
 import { Scale } from './Scale'
 import { Text, TextProps } from './text/Text'
-import { Stack } from './View/Row'
+import { Stack } from './View/Stack'
 import { View } from './View/View'
 
 export type PaneTitleRowProps = CollapsableProps &
@@ -46,7 +46,7 @@ export function PaneTitleRow({ after, before, title, ...rest }: PaneTitleRowProp
 }
 
 const PanelHeader = gloss(Stack, {
-  direction: 'horizontal',
+  flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
   fontWeight: 500,

@@ -10,8 +10,7 @@ import { useScale } from './Scale'
 import { getSpaceSize, Size } from './Space'
 import { SubTitle } from './text/SubTitle'
 import { Title, TitleProps } from './text/Title'
-import { Stack } from './View/Stack'
-import { StackProps } from './View/Row'
+import { Stack, StackProps } from './View/Stack'
 
 export type TitleRowSpecificProps = ThemeableProps &
   Partial<CollapsableProps> & {

@@ -7,7 +7,7 @@ import { Arrow } from './Arrow'
 import { Button, ButtonProps } from './buttons/Button'
 import { DockButtonPropsContext, DockStore, DockStoreContext } from './DockStore'
 import { Tag, TagProps } from './Tag'
-import { Stack, StackProps } from './View/Row'
+import { Stack, StackProps } from './View/Stack'
 import { View } from './View/View'
 
 // Dock

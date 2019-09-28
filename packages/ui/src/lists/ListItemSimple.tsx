@@ -16,8 +16,8 @@ import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
 import { SimpleText } from '../text/SimpleText'
 import { Text } from '../text/Text'
-import { Stack } from '../View/Stack'
 import { usePadding } from '../View/PaddedView'
+import { Stack } from '../View/Stack'
 import { View } from '../View/View'
 import { ListItemSimpleProps } from './ListItemViewProps'
 import { useIsSelected } from './useIsSelected'
@@ -200,7 +200,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
         <ListItemMainContent oneLine={oneLine}>
           <Stack flex={1}>
             {showTitle && (
-              <ListItemTitleBar space={space} alignItems={alignItems}>
+              <ListItemTitleBar direction="horizontal" space={space} alignItems={alignItems}>
                 {showIcon && !iconBefore && iconElement}
                 {isValidElement(title) ? (
                   title
@@ -319,7 +319,6 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
 }, isEqual)
 
 const ListItemTitleBar = gloss(Stack, {
-  direction: 'horizontal',
   width: '100%',
   flex: 1,
   justifyContent: 'flex-start',

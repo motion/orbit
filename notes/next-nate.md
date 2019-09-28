@@ -24,6 +24,20 @@ ideas:
 
 ---
 
+gloss:
+
+1. Make it so the second param of gloss takes props:
+
+const X = gloss(Stack, { direction: 'horizontal' })
+
+gloss would have to split it out
+
+2. Make gloss extract the gloss() styles into css
+
+3. Add an `is={}` property, can be `is="Name"` or `is={Component}`, doesnt replace tagname its more for describing.
+
+---
+
 The plan from jun for Sep:
 
 "Have everything ready for beta"

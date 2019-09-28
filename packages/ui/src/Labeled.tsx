@@ -2,7 +2,6 @@ import React from 'react'
 
 import { Text, TextProps } from './text/Text'
 import { Stack, StackProps } from './View/Stack'
-import { StackProps } from './View/Row'
 
 export type LabeledProps = StackProps
 export type LabeledTextProps = TextProps

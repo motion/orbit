@@ -1,7 +1,7 @@
 import { gloss } from 'gloss'
 import * as React from 'react'
 
-import { Stack, StackProps } from './View/Row'
+import { Stack, StackProps } from './View/Stack'
 import { View } from './View/View'
 
 export const BarInner = gloss(View, {

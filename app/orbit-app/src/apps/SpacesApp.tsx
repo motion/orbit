@@ -1,7 +1,7 @@
 import { useModels } from '@o/bridge'
 import { App, AppViewProps, createApp, OrbitOrb, useActiveUser, useModel } from '@o/kit'
 import { Space, SpaceModel } from '@o/models'
-import { Button, CenteredText, InputField, List, Paragraph, Section, SimpleFormField, Stack, Stack, SubSection } from '@o/ui'
+import { Button, CenteredText, InputField, List, Paragraph, Section, SimpleFormField, Stack, SubSection } from '@o/ui'
 import randomColor from 'randomcolor'
 import React from 'react'
 import { useState } from 'react'

@@ -1,4 +1,4 @@
-import { BorderRight, Divider, Image, Inline, ListItemSimple, PassProps, scrollTo, Space, Stack, Stack, TextProps, Theme, Title, View } from '@o/ui'
+import { BorderRight, Divider, Image, Inline, ListItemSimple, PassProps, scrollTo, Space, Stack, TextProps, Theme, Title, View } from '@o/ui'
 import { mount, route } from 'navi'
 import React from 'react'
 

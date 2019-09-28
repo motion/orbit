@@ -1,4 +1,4 @@
-import { Col, FullScreen, fuzzyFilter, gloss, Grid, HotKeys, Image, SimpleText, SizedSurface, Space, SubTitle, Theme, Title, View } from '@o/ui'
+import { FullScreen, fuzzyFilter, gloss, Grid, HotKeys, Image, SimpleText, SizedSurface, Space, Stack, SubTitle, Theme, Title, View } from '@o/ui'
 import { createStoreContext } from '@o/use-store'
 import { Box } from 'gloss'
 import { mount, route } from 'navi'
@@ -74,12 +74,12 @@ export function AppsPage() {
         <Header noBorder position="absolute" left={0} right={0} background="transparent" slim />
         <main className="main-contents" style={{ minHeight: 1600 }}>
           <SectionContent flex={1} marginTop={54} paddingTop="5%" paddingBottom="5%">
-            <Col space="xxxl">
+            <Stack space="xxxl">
               <TitleText size="lg" textAlign="center" margin={[0, 'auto']}>
                 Discover apps
               </TitleText>
               <AppSearch />
-            </Col>
+            </Stack>
           </SectionContent>
 
           <AppDescription />
@@ -87,7 +87,7 @@ export function AppsPage() {
           <SectionContent id="faq" background="#050505">
             <Space size="xxxl" />
 
-            <Col
+            <Stack
               className="faq-section content"
               padding={[50, '15%']}
               sm-padding="0"
@@ -157,7 +157,7 @@ export function AppsPage() {
                   </>,
                 ]}
               />
-            </Col>
+            </Stack>
           </SectionContent>
 
           <View flex={1} />
@@ -190,14 +190,14 @@ const AppDescription = () => {
           hoverStyle={false}
           activeStyle={false}
         >
-          <Col flex={1} space="sm">
+          <Stack flex={1} space="sm">
             <SubTitle alpha={1} fontWeight={600} margin={[0, 'auto']} size="lg">
               {activeApp.title}
             </SubTitle>
             <Paragraph selectable size={1.25} alpha={0.6} fontWeight={300} sizeLineHeight={1.2}>
               {activeApp.description}
             </Paragraph>
-          </Col>
+          </Stack>
         </SizedSurface>
       </Theme>
     </SectionContent>
@@ -207,7 +207,7 @@ const AppDescription = () => {
 const FAQItem = ({ main, paragraphs, question }) => {
   return (
     <>
-      <Col space="lg">
+      <Stack space="lg">
         <Title selectable size="xxs" fontWeight={500}>
           {question}
         </Title>
@@ -229,7 +229,7 @@ const FAQItem = ({ main, paragraphs, question }) => {
             {p}
           </Title>
         ))}
-      </Col>
+      </Stack>
       <Space size="xxxl" />
     </>
   )
@@ -274,12 +274,12 @@ const AppSearch = memo(() => {
         <Space size="xxxl" />
       </View>
 
-      <Col padding>
+      <Stack padding>
         <Grid alignItems="flex-start" height={dim * 2 + 60} space="xl" itemMinWidth={dim}>
           {store.results}
         </Grid>
         <Space size="lg" />
-      </Col>
+      </Stack>
     </HotKeys>
   )
 })
@@ -314,7 +314,7 @@ const allApps = [
 ]
 
 const appElements = allApps.map(app => (
-  <Col
+  <Stack
     key={app.title}
     alignItems="center"
     justifyContent="center"
@@ -326,5 +326,5 @@ const appElements = allApps.map(app => (
     <Image width={dim * 0.55} height={dim * 0.55} src={app.icon} />
     <Space />
     <SimpleText size={0.9}>{app.title}</SimpleText>
-  </Col>
+  </Stack>
 ))

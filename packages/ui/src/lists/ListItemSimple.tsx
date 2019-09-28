@@ -16,9 +16,8 @@ import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
 import { SimpleText } from '../text/SimpleText'
 import { Text } from '../text/Text'
-import { Col } from '../View/Col'
+import { Stack } from '../View/Stack'
 import { usePadding } from '../View/PaddedView'
-import { Row } from '../View/Row'
 import { View } from '../View/View'
 import { ListItemSimpleProps } from './ListItemViewProps'
 import { useIsSelected } from './useIsSelected'
@@ -109,11 +108,11 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
   // TODO could let a prop control content
   const afterHeaderElement = showDate && (
     <AfterHeader>
-      <Row>
+      <Stack direction="horizontal">
         <Text alpha={0.6} size={0.9} fontWeight={400}>
           <DateFormat date={date} nice={differenceInCalendarDays(Date.now(), date) < 7} />
         </Text>
-      </Row>
+      </Stack>
     </AfterHeader>
   )
 
@@ -199,7 +198,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
         onMouseUp={handleMouseUp}
       >
         <ListItemMainContent oneLine={oneLine}>
-          <Col flex={1}>
+          <Stack flex={1}>
             {showTitle && (
               <ListItemTitleBar space={space} alignItems={alignItems}>
                 {showIcon && !iconBefore && iconElement}
@@ -273,14 +272,14 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
               </>
             )}
             {childrenElement}
-          </Col>
+          </Stack>
           {hasAfterTitle && (
             <>
               <Space size={space} />
-              <Col space={space}>
+              <Stack space={space}>
                 {props.afterTitle}
                 {afterHeaderElement}
-              </Col>
+              </Stack>
             </>
           )}
         </ListItemMainContent>
@@ -319,10 +318,10 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
   )
 }, isEqual)
 
-const ListItemTitleBar = gloss(Row, {
+const ListItemTitleBar = gloss(Stack, {
+  direction: 'horizontal',
   width: '100%',
   flex: 1,
-  flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   textAlign: 'left',

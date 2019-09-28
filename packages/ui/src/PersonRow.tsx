@@ -1,9 +1,11 @@
-import { Block, Row, ThemeContext } from 'gloss'
+import { Block, ThemeContext } from 'gloss'
 import { flow } from 'lodash'
 import * as React from 'react'
+
 import { preventDefault } from './helpers/preventDefault'
 import { Image } from './Image'
 import { Text } from './text/Text'
+import { Stack } from './View/Stack'
 
 const shortName = name => {
   const names = name.split(' ')
@@ -28,8 +30,8 @@ export function PersonRow({ people, onClickPerson = null }) {
   const half = total / 2
 
   return (
-    <Row alignItems="center" marginRight={20} maxWidth="calc(100% - 20px)">
-      <Row marginRight={14} alignItems="center">
+    <Stack direction="horizontal" alignItems="center" marginRight={20} maxWidth="calc(100% - 20px)">
+      <Stack direction="horizontal" marginRight={14} alignItems="center">
         {(people || []).slice(0, 3).map((person, i) => (
           <Image
             key={i}
@@ -45,8 +47,14 @@ export function PersonRow({ people, onClickPerson = null }) {
             src={person.photo}
           />
         ))}
-      </Row>
-      <Row alignItems="center" flex={1} overflow="hidden" whiteSpace="nowrap">
+      </Stack>
+      <Stack
+        direction="horizontal"
+        alignItems="center"
+        flex={1}
+        overflow="hidden"
+        whiteSpace="nowrap"
+      >
         <Text size={0.9} alpha={0.6} fontWeight={400}>
           {people.length <= 2 &&
             (people || []).map((person, i) => (
@@ -73,7 +81,7 @@ export function PersonRow({ people, onClickPerson = null }) {
             </>
           )}
         </Text>
-      </Row>
-    </Row>
+      </Stack>
+    </Stack>
   )
 }

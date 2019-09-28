@@ -1,4 +1,4 @@
-import { Avatar, Button, Col, DateFormat, List, Scale } from '@o/ui'
+import { Avatar, Button, DateFormat, List, Scale, Stack } from '@o/ui'
 import React from 'react'
 
 import { employees } from './fakeData'
@@ -13,9 +13,9 @@ const rows = employees.map(x => ({
   createdAt: x.dob,
   location: x.address.city,
   after: (
-    <Col userSelect="none">
+    <Stack userSelect="none">
       <DateFormat date={new Date(x.dob)} />
-    </Col>
+    </Stack>
   ),
   before: avatar,
 }))

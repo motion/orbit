@@ -9,17 +9,17 @@ import { useIsSelected } from './lists/useIsSelected'
 import { SizedSurface, SizedSurfaceSpecificProps } from './SizedSurface'
 import { getSize } from './Sizes'
 import { getSpaceSizeNum, Sizes } from './Space'
-import { Col, ColProps } from './View/Col'
+import { Stack, StackProps } from './View/Stack'
 
 export type CardProps = SizedSurfaceSpecificProps &
   ListItemSpecificProps &
   Partial<CollapsableProps> &
-  Omit<ColProps, 'size'> & {
+  Omit<StackProps, 'size'> & {
     collapseOnClick?: boolean
     onClickTitle?: Function
     headerProps?: ListItemProps
     titlePadding?: Sizes
-    innerColProps?: ColProps
+    innerColProps?: StackProps
   }
 
 export function Card(props: CardProps) {
@@ -120,7 +120,7 @@ export function Card(props: CardProps) {
         )}
         {/* reset inner contents to be original theme */}
         <Theme name={activeThemeName}>
-          <Col
+          <Stack
             className="ui-card-inner"
             scrollable={scrollable}
             flexDirection={flexDirection}
@@ -141,7 +141,7 @@ export function Card(props: CardProps) {
             {...innerColProps}
           >
             {showChildren && children}
-          </Col>
+          </Stack>
         </Theme>
       </SizedSurface>
     </Theme>

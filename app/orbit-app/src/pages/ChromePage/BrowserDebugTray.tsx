@@ -1,4 +1,4 @@
-import { Absolute, Row, View } from '@o/ui'
+import { Absolute, Stack, View } from '@o/ui'
 import * as React from 'react'
 
 import { IS_ELECTRON } from '../../constants'
@@ -11,7 +11,13 @@ export function BrowserDebugTray({ children }: any) {
 
   return (
     <Absolute top={0} left={0} right={0}>
-      <Row justifyContent="center" alignItems="center" width="100%" background="#eee">
+      <Stack
+        direction="horizontal"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+        background="#eee"
+      >
         <View
           onMouseLeave={() => {
             // App.sendMessage(App, App.messages.TRAY_EVENT, { type: 'trayHovered', value: 'Out' })
@@ -26,7 +32,7 @@ export function BrowserDebugTray({ children }: any) {
           <Target id={1} />
           <Target id={0} />
         </View>
-      </Row>
+      </Stack>
       <View position="relative" flex={1}>
         {children}
       </View>

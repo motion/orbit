@@ -1,5 +1,4 @@
-import { Col } from 'gloss'
-import { Tree } from '@o/ui'
+import { Tree, View } from '@o/ui'
 import produce from 'immer'
 import React, { useState } from 'react'
 
@@ -41,7 +40,7 @@ export let Simple = () => {
   const [selected, setSelected] = useState(0)
 
   return (
-    <Col height={100}>
+    <View height={100}>
       <Tree
         root={0}
         selected={selected}
@@ -57,6 +56,6 @@ export let Simple = () => {
         }}
         elements={treeState}
       />
-    </Col>
+    </View>
   )
 }

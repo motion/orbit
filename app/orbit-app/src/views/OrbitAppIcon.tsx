@@ -1,7 +1,7 @@
-import { AppBit, AppIcon, removeApp, useAppDefinition } from '@o/kit'
+import { AppBit, AppIcon, removeApp, Stack, useAppDefinition } from '@o/kit'
 import { getAppContextItems } from '@o/kit-internal'
 import { Button, IconLabeled, IconLabeledProps, SurfacePassProps, useBanner, useContextMenu } from '@o/ui'
-import { Box, gloss, Row, Theme } from 'gloss'
+import { Box, gloss, Theme } from 'gloss'
 import React, { memo } from 'react'
 
 export type OrbitAppIconProps = IconLabeledProps & {
@@ -20,7 +20,7 @@ export const OrbitAppIcon = memo(
       <Theme coat={isSelected ? 'selected' : undefined}>
         <AppIconContainer isSelected={isSelected} isDraggable={!isPermanent}>
           <SurfacePassProps chromeless iconSize={12} opacity={0.5}>
-            <Row position="absolute" top={10} right={10}>
+            <Stack direction="horizontal" position="absolute" top={10} right={10}>
               {isPermanent && <Button icon="lock" />}
               {app.tabDisplay === 'pinned' && (
                 <Button hoverStyle={{ opacity: 1 }} tooltip="Unpin" icon="pin" />
@@ -33,7 +33,7 @@ export const OrbitAppIcon = memo(
                   onClick={() => removeApp(app, banner)}
                 />
               )}
-            </Row>
+            </Stack>
           </SurfacePassProps>
           <IconLabeled
             {...contextMenuProps}

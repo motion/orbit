@@ -1,6 +1,6 @@
 import { App, AppIcon, command, createApp, getAppDefinition, useLocationLink, useSearchState } from '@o/kit'
 import { AppCreateNewCommand, AppDefinition } from '@o/models'
-import { Button, Col, Flow, FlowLayoutInline, FlowProvide, Form, IconLabeled, List, ListItemProps, Scale, SectionPassProps, SelectableGrid, SelectableSurface, Text, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
+import { Button, Flow, FlowLayoutInline, FlowProvide, Form, IconLabeled, List, ListItemProps, Scale, SectionPassProps, SelectableGrid, SelectableSurface, Stack, Text, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
 import { stringToIdentifier } from '@o/utils'
 import React, { memo, useCallback, useLayoutEffect, useMemo } from 'react'
 
@@ -91,19 +91,19 @@ function SetupAppCustom() {
 
   return (
     <>
-      <Col margin="auto" width="90%" flex={1} padding scrollable="y">
+      <Stack margin="auto" width="90%" flex={1} padding scrollable="y">
         <Flow useFlow={flow} Layout={FlowLayoutInline}>
           <Flow.Step title="Customize" subTitle="Pick a name and ID.">
-            <Col padding>
+            <Stack padding>
               <Scale size={1.2}>
                 <Form useForm={form} />
               </Scale>
-            </Col>
+            </Stack>
           </Flow.Step>
           <Flow.Step buttonTitle="Template" title="Template" subTitle="Choose starting template.">
             {({ setData }) => {
               return (
-                <Col padding>
+                <Stack padding>
                   <SelectableGrid
                     alwaysSelected
                     defaultSelected={0}
@@ -137,12 +137,12 @@ function SetupAppCustom() {
                       setData({ selectedTemplate: item.template })
                     }}
                   />
-                </Col>
+                </Stack>
               )
             }}
           </Flow.Step>
         </Flow>
-      </Col>
+      </Stack>
 
       <Scale size="lg">
         <Toolbar>
@@ -265,7 +265,7 @@ export const SetupAppHome = memo((props: SetupAppHomeProps) => {
   return (
     <FlowProvide value={flow}>
       <SectionPassProps elevation={10}>
-        <Col width="90%" maxHeight="80%" margin="auto" flex={1}>
+        <Stack width="90%" maxHeight="80%" margin="auto" flex={1}>
           <Flow
             useFlow={flow}
             afterTitle={
@@ -307,7 +307,7 @@ export const SetupAppHome = memo((props: SetupAppHomeProps) => {
               {FlowStepSetup}
             </Flow.Step>
           </Flow>
-        </Col>
+        </Stack>
       </SectionPassProps>
 
       <SetupAppHomeToolbar {...props} />
@@ -364,10 +364,10 @@ const FlowStepSetup = memo(() => {
   }, [flow.data.selectedAppIdentifier])
 
   return (
-    <Col padding flex={1} scrollable="y">
+    <Stack padding flex={1} scrollable="y">
       <Scale size={1.2}>
         <AppsMainNew key={identifier} customizeColor />
       </Scale>
-    </Col>
+    </Stack>
   )
 })

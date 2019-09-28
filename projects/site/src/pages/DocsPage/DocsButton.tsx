@@ -1,19 +1,19 @@
-import { Button, Col, MenuButton, RoundButton, Row, SubSection, SurfacePassProps } from '@o/ui'
+import { Button, MenuButton, RoundButton, Stack, SubSection, SurfacePassProps } from '@o/ui'
 import React, { useState } from 'react'
 
 export let Basic = () => {
   const [full, setFull] = useState(false)
   return (
-    <Col space>
-      <Row space flexWrap="wrap">
+    <Stack space>
+      <Stack direction="horizontal" space flexWrap="wrap">
         <Button>Hello World</Button>
         <Button icon="cog">Hello World</Button>
         <Button icon="cog" iconAfter>
           Hello World
         </Button>
-      </Row>
+      </Stack>
 
-      <Row>
+      <Stack direction="horizontal">
         <Button
           layoutTransition={{
             duration: 0.5,
@@ -23,51 +23,51 @@ export let Basic = () => {
         >
           {full ? 'Long title' : ''}
         </Button>
-      </Row>
-    </Col>
+      </Stack>
+    </Stack>
   )
 }
 
 export let Coats = (
-  <Col space>
-    <Row space flexWrap="wrap">
+  <Stack space>
+    <Stack direction="horizontal" space flexWrap="wrap">
       {['error', 'warn', 'confirm', 'bordered', 'selected', 'flat', 'clear'].map(coat => (
         <Button key={coat} coat={coat} icon="cog" iconAfter>
           Coat {coat}
         </Button>
       ))}
-    </Row>
-    <Row space flexWrap="wrap">
+    </Stack>
+    <Stack direction="horizontal" space flexWrap="wrap">
       {['error', 'warn', 'confirm'].map(coat => (
         <RoundButton key={coat} coat={coat} icon="cog" size="lg">
           Coat {coat}
         </RoundButton>
       ))}
-    </Row>
-    <Row space flexWrap="wrap">
+    </Stack>
+    <Stack direction="horizontal" space flexWrap="wrap">
       {['error', 'warn', 'confirm'].map(coat => (
         <Button key={coat} coat={coat} icon="cog" size="lg" sizePadding={1.2} sizeRadius={1.2}>
           Coat {coat}
         </Button>
       ))}
-    </Row>
-    <Row space flexWrap="wrap">
+    </Stack>
+    <Stack direction="horizontal" space flexWrap="wrap">
       {['error', 'warn', 'confirm'].map(coat => (
         <Button key={coat} coat={coat} icon="cog" size="xxxl">
           Coat {coat}
         </Button>
       ))}
-    </Row>
-    <Row space flexWrap="wrap">
+    </Stack>
+    <Stack direction="horizontal" space flexWrap="wrap">
       {['error', 'warn', 'confirm'].map(coat => (
         <Button key={coat} coat={coat} icon="cog" size="xxxl" circular />
       ))}
-    </Row>
-  </Col>
+    </Stack>
+  </Stack>
 )
 
 export let MenuButtonExample = (
-  <Row space flexWrap="wrap">
+  <Stack direction="horizontal" space flexWrap="wrap">
     <MenuButton
       coat="action"
       icon="cog"
@@ -96,30 +96,30 @@ export let MenuButtonExample = (
     >
       Larger menu
     </MenuButton>
-  </Row>
+  </Stack>
 )
 
 export let Sizing = (
-  <Col space>
-    <Row space flexWrap="wrap">
+  <Stack space>
+    <Stack direction="horizontal" space flexWrap="wrap">
       {['xs', 'sm', 'md', 'lg', 'xl', 'xxl'].map(size => (
         <Button key={size} size={size} icon="cog" iconAfter>
           Size {size}
         </Button>
       ))}
-    </Row>
-    <Row space flexWrap="wrap">
+    </Stack>
+    <Stack direction="horizontal" space flexWrap="wrap">
       {[1, 2, 3, 4].map(size => (
         <Button key={size} size={size} icon="cog" iconAfter>
           Size {size}
         </Button>
       ))}
-    </Row>
-  </Col>
+    </Stack>
+  </Stack>
 )
 
 export let Elevation = (
-  <Row space flexWrap="wrap">
+  <Stack direction="horizontal" space flexWrap="wrap">
     {[2, 3, 4, 5].map(i => (
       <SubSection title={`Elevation ${i}, Size ${i}`} key={i}>
         <Button key={i} size={i} elevation={i} icon="cog" iconAfter>
@@ -127,22 +127,22 @@ export let Elevation = (
         </Button>
       </SubSection>
     ))}
-  </Row>
+  </Stack>
 )
 
 export let Group = (
-  <Row group>
+  <Stack direction="horizontal" group>
     <Button>Hello</Button>
     <Button>World</Button>
-  </Row>
+  </Stack>
 )
 
 export let PassMultipleProps = (
   <SurfacePassProps icon="home" coat="action" size="lg">
-    <Row space>
+    <Stack direction="horizontal" space>
       <Button>Hello</Button>
       <Button>World</Button>
-    </Row>
+    </Stack>
   </SurfacePassProps>
 )
 

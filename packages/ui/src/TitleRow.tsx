@@ -10,8 +10,8 @@ import { useScale } from './Scale'
 import { getSpaceSize, Size } from './Space'
 import { SubTitle } from './text/SubTitle'
 import { Title, TitleProps } from './text/Title'
-import { Col } from './View/Col'
-import { Row, RowProps } from './View/Row'
+import { Stack } from './View/Stack'
+import { StackProps } from './View/Row'
 
 export type TitleRowSpecificProps = ThemeableProps &
   Partial<CollapsableProps> & {
@@ -61,7 +61,7 @@ export type TitleRowSpecificProps = ThemeableProps &
     selectable?: boolean
   }
 
-export type TitleRowProps = Omit<RowProps, 'size' | 'children'> & TitleRowSpecificProps
+export type TitleRowProps = Omit<StackProps, 'size' | 'children'> & TitleRowSpecificProps
 
 export const TitleRow = themeable(
   ({
@@ -105,7 +105,7 @@ export const TitleRow = themeable(
         {...rowProps}
       >
         {above}
-        <Row alignItems="center" space={size}>
+        <Stack direction="horizontal" alignItems="center" space={size}>
           {collapse.isCollapsable && <CollapseArrow useCollapse={collapse} />}
           {before}
           {typeof icon === 'string' ? (
@@ -115,7 +115,7 @@ export const TitleRow = themeable(
           ) : (
             icon || null
           )}
-          <Col space={spaceSize} flex={1} alignItems="flex-start">
+          <Stack space={spaceSize} flex={1} alignItems="flex-start">
             {titleElement}
             {!!subTitle && (
               <SubTitle selectable={selectable} ellipse marginBottom={0}>
@@ -123,11 +123,11 @@ export const TitleRow = themeable(
               </SubTitle>
             )}
             {children}
-          </Col>
-          <Row alignItems="center" space>
+          </Stack>
+          <Stack direction="horizontal" alignItems="center" space>
             {after}
-          </Row>
-        </Row>
+          </Stack>
+        </Stack>
         {below}
         {bordered && <BorderBottom height={borderSize} />}
       </TitleRowChrome>
@@ -137,7 +137,7 @@ export const TitleRow = themeable(
 
 const titleRowBg = theme => theme.backgroundStrong
 
-const TitleRowChrome = gloss(Col, {
+const TitleRowChrome = gloss(Stack, {
   position: 'relative',
   overflow: 'hidden',
 })

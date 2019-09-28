@@ -4,10 +4,10 @@ import React from 'react'
 import { SizedSurface, SizedSurfaceSpecificProps } from './SizedSurface'
 import { Tag, TagProps } from './Tag'
 import { SimpleText } from './text/SimpleText'
-import { Col, ColProps } from './View/Col'
+import { Stack, StackProps } from './View/Stack'
 
 export type CardSimpleProps = SizedSurfaceSpecificProps &
-  Omit<ColProps, 'size'> & {
+  Omit<StackProps, 'size'> & {
     title?: React.ReactNode
     titleProps?: TagProps
     onClickTitle?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
@@ -37,7 +37,7 @@ export const CardSimple = ({
       {...props}
       noInnerElement
     >
-      <Col padding={padding} space={space} group={group} scrollable={scrollable}>
+      <Stack padding={padding} space={space} group={group} scrollable={scrollable}>
         {!!title && (
           <Tag coat="lightGray" onClick={onClickTitle} {...titleProps}>
             {title}
@@ -46,7 +46,7 @@ export const CardSimple = ({
         <SimpleText size={0.85} alpha={0.85}>
           {children}
         </SimpleText>
-      </Col>
+      </Stack>
     </SizedSurface>
   )
 }

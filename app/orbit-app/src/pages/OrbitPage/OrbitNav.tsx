@@ -3,8 +3,8 @@ import { AppIcon, useActiveAppsSorted, useStore } from '@o/kit'
 import { AppBit, AppModel } from '@o/models'
 import { SortableContainer, SortableContainerProps, SortableElement } from '@o/react-sortable-hoc'
 import { App } from '@o/stores'
-import { isRightClick, Space, useMemoList } from '@o/ui'
-import { Box, gloss, Row, RowProps } from 'gloss'
+import { isRightClick, Space, Stack, StackProps, useMemoList } from '@o/ui'
+import { Box, gloss } from 'gloss'
 import React, { forwardRef, memo, useEffect, useMemo, useRef } from 'react'
 
 import { getAppContextItems } from '../../helpers/getAppContextItems'
@@ -107,7 +107,8 @@ export const OrbitNav = memo(
 
     return (
       <OrbitNavChrome nodeRef={ref}>
-        <Row
+        <Stack
+          direction="horizontal"
           transition="opacity ease 300ms"
           padding={5}
           margin={-5}
@@ -152,7 +153,7 @@ export const OrbitNav = memo(
             onClick={actions.router.toggleSetupAppPage}
             isActive={state.router.isOnSetupApp}
           />
-        </Row>
+        </Stack>
       </OrbitNavChrome>
     )
   }),
@@ -173,15 +174,15 @@ const SortableTab = SortableElement((props: TabProps) => {
   return <OrbitTab {...props} />
 })
 
-type SortableTabsProps = RowProps & { items: TabProps[] }
+type SortableTabsProps = StackProps & { items: TabProps[] }
 
 const SortableTabsContainer = SortableContainer(({ items, ...restProps }: SortableTabsProps) => {
   return (
-    <Row {...restProps}>
+    <Stack direction="horizontal" {...restProps}>
       {items.map((item, index) => (
         <SortableTab {...item} key={index} index={index} />
       ))}
-    </Row>
+    </Stack>
   )
 })
 

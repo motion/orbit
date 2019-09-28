@@ -1,38 +1,38 @@
-import { Row, SizedSurface, SubSection, SurfacePassProps } from '@o/ui'
+import { SizedSurface, Stack, SubSection, SurfacePassProps } from '@o/ui'
 import React from 'react'
 
 export let Basic = (
-  <Row space flexWrap="wrap">
+  <Stack direction="horizontal" space flexWrap="wrap">
     <SizedSurface>Hello World</SizedSurface>
     <SizedSurface icon="cog">Hello World</SizedSurface>
     <SizedSurface icon="cog" iconAfter>
       Hello World
     </SizedSurface>
-  </Row>
+  </Stack>
 )
 
 export let Coats = (
-  <Row space flexWrap="wrap">
+  <Stack direction="horizontal" space flexWrap="wrap">
     {['error', 'warn', 'confirm', 'bordered', 'selected'].map(coat => (
       <SizedSurface key={coat} coat={coat} icon="cog" iconAfter>
         Coat {coat}
       </SizedSurface>
     ))}
-  </Row>
+  </Stack>
 )
 
 export let Sizing = (
-  <Row space flexWrap="wrap">
+  <Stack direction="horizontal" space flexWrap="wrap">
     {['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 1, 2, 3].map(size => (
       <SizedSurface key={size} size={size} icon="cog" iconAfter>
         Size {size}
       </SizedSurface>
     ))}
-  </Row>
+  </Stack>
 )
 
 export let Elevation = (
-  <Row space flexWrap="wrap">
+  <Stack direction="horizontal" space flexWrap="wrap">
     {[2, 3, 4, 5].map(i => (
       <SubSection title={`Elevation ${i}, Size ${i}`} key={i}>
         <SizedSurface key={i} size={i} elevation={i} icon="cog" iconAfter>
@@ -40,22 +40,22 @@ export let Elevation = (
         </SizedSurface>
       </SubSection>
     ))}
-  </Row>
+  </Stack>
 )
 
 export let Group = (
-  <Row group>
+  <Stack direction="horizontal" group>
     <SizedSurface>Hello</SizedSurface>
     <SizedSurface>World</SizedSurface>
-  </Row>
+  </Stack>
 )
 
 export let PassMultipleProps = (
   <SurfacePassProps icon="home" coat="action" size="lg">
-    <Row space>
+    <Stack direction="horizontal" space>
       <SizedSurface>Hello</SizedSurface>
       <SizedSurface>World</SizedSurface>
-    </Row>
+    </Stack>
   </SurfacePassProps>
 )
 

@@ -21,7 +21,7 @@ import { SelectableProps, SelectableStore } from '../lists/SelectableStore'
 import { SectionProps } from '../Section'
 import { Text } from '../text/Text'
 import { DataColumns, DataType, GenericDataRow } from '../types'
-import { Col } from '../View/Col'
+import { Stack } from '../View/Stack'
 import { FilterableReceiverProps, filterRows } from './Filterable'
 import { getSortedRows } from './getSortedRows'
 import { TableHead } from './TableHead'
@@ -110,7 +110,7 @@ type ManagedTableState = {
   prevProps: Partial<ManagedTableProps>
 }
 
-const TableContainer = gloss(Col, {
+const TableContainer = gloss(Stack, {
   minHeight: 'min-content',
   overflow: 'hidden',
 })

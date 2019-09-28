@@ -5,7 +5,7 @@ import { throttle, pick } from 'lodash'
 import React, { memo, useEffect } from 'react'
 
 import { SubPaneStore } from '../stores/SubPaneStore'
-import { Col, ColProps, PaneProps, ProvideVisibility } from '@o/ui'
+import { Stack, StackProps, PaneProps, ProvideVisibility } from '@o/ui'
 
 export type SubPaneProps = PaneProps & {
   id: any
@@ -99,7 +99,7 @@ const SubPaneFrame = gloss<UI.FullScreenProps & { isActive?: boolean }>(UI.FullS
   },
 })
 
-const Pane = gloss<ColProps & { isActive?: boolean; isLeft?: boolean }>(Col, {
+const Pane = gloss<StackProps & { isActive?: boolean; isLeft?: boolean }>(Stack, {
   position: 'absolute',
   top: 0,
   right: 0,

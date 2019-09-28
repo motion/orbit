@@ -9,8 +9,7 @@ import { Section, SectionProps } from './Section'
 import { Slider } from './Slider'
 import { SliderPane } from './SliderPane'
 import { SubSection } from './SubSection'
-import { Col } from './View/Col'
-import { Row } from './View/Row'
+import { Stack } from './View/Stack'
 
 type FlowSectionProps = Pick<SectionProps, 'afterTitle'>
 
@@ -73,13 +72,13 @@ const DefaultFlowToolbar = (props: FlowLayoutProps) => {
   const isOnLastStep = props.index === props.total - 1
 
   return (
-    <Row space="sm">
+    <Stack direction="horizontal" space="sm">
       <Button disabled={isOnFirstStep} icon="chevron-left" onClick={props.stepProps.prev} />
       <Button disabled={isOnLastStep} iconAfter icon="chevron-right" onClick={props.stepProps.next}>
         Next
       </Button>
       {props.afterTitle}
-    </Row>
+    </Stack>
   )
 }
 
@@ -114,7 +113,7 @@ export const FlowLayoutSlider = (props: FlowLayoutProps) => {
       flex={1}
       titlePadding={['lg', true, false]}
       belowTitle={
-        <Row>
+        <Stack direction="horizontal">
           {steps.map((stp, stepIndex) => {
             const isActive = steps[index].key === stp.key
             return (
@@ -128,7 +127,7 @@ export const FlowLayoutSlider = (props: FlowLayoutProps) => {
               </Button>
             )
           })}
-        </Row>
+        </Stack>
       }
       afterTitle={Toolbar && <Toolbar {...props} />}
     >
@@ -153,7 +152,7 @@ export const FlowLayoutSlider = (props: FlowLayoutProps) => {
 export const FlowLayoutInline = (props: FlowLayoutProps) => {
   const { steps, stepProps } = props
   return (
-    <Col flex={1} scrollable="y">
+    <Stack flex={1} scrollable="y">
       {steps.map((child, idx) => {
         const ChildView = child.children as any
         const contents =
@@ -168,7 +167,7 @@ export const FlowLayoutInline = (props: FlowLayoutProps) => {
           </SubSection>
         )
       })}
-    </Col>
+    </Stack>
   )
 }
 

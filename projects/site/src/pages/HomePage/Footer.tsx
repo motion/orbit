@@ -1,4 +1,4 @@
-import { Col, Icon, Row, SimpleTextProps, Space } from '@o/ui'
+import { Icon, SimpleTextProps, Space, Stack } from '@o/ui'
 import React from 'react'
 
 import { Link, LinkProps } from '../../views/Link'
@@ -11,7 +11,8 @@ export const Footer = () => {
     minWidth: 150,
   }
   return (
-    <Row
+    <Stack
+      direction="horizontal"
       flexDirection="row"
       flexWrap="wrap"
       sm-flexDirection="column"
@@ -25,7 +26,7 @@ export const Footer = () => {
       alignItems="flex-end"
       scrollable="y"
     >
-      <Col {...sectionMinWidth} flex={1} space="md">
+      <Stack {...sectionMinWidth} flex={1} space="md">
         <SmallTitle coat="lightRed">Orbit</SmallTitle>
         <SmallLink href="/">Home</SmallLink>
         <SmallLink href="/beta">Download</SmallLink>
@@ -34,26 +35,26 @@ export const Footer = () => {
         <SmallLink href="/docs">Documentation</SmallLink>
         <SmallLink href="/about">Team</SmallLink>
         <SmallLink href="/beta">Beta</SmallLink>
-      </Col>
+      </Stack>
 
-      <Col {...sectionMinWidth} flex={1} space="md">
+      <Stack {...sectionMinWidth} flex={1} space="md">
         <SmallTitle>Support & Terms</SmallTitle>
         <SmallLink href="mailto:hi@tryorbit.com">Contact us</SmallLink>
         <SmallLink href="/privacy">Privacy Policy</SmallLink>
         <SmallLink href="/terms">Terms & Conditions</SmallLink>
         <SmallLink href="/faq">FAQ</SmallLink>
-      </Col>
+      </Stack>
 
-      <Col {...sectionMinWidth} flex={1} space="md">
+      <Stack {...sectionMinWidth} flex={1} space="md">
         <SmallTitle>Community</SmallTitle>
         <SmallLink href="/about">About</SmallLink>
         <SmallLink href="/blog">Blog</SmallLink>
         <SmallLink href="mailto:hi@tryorbit.com">Contact</SmallLink>
         <SmallLink href="https://twitter.com/tryorbit">Twitter</SmallLink>
         <SmallLink href="https://github.com/tryorbit">Github</SmallLink>
-      </Col>
+      </Stack>
 
-      <Col
+      <Stack
         {...sectionMinWidth}
         sm-order={-1}
         minWidth={200}
@@ -63,7 +64,7 @@ export const Footer = () => {
       >
         <SmallTitle alpha={0.6}>Stay in touch</SmallTitle>
         <Space size="xs" />
-        <Row space>
+        <Stack direction="horizontal" space>
           <BottomButton href="https://github.com/tryorbit">
             <GithubIcon />
           </BottomButton>
@@ -74,10 +75,10 @@ export const Footer = () => {
           <BottomButton>
             <Icon size={16} name="feed" />
           </BottomButton>
-        </Row>
+        </Stack>
         <Space size="lg" />
-      </Col>
-    </Row>
+      </Stack>
+    </Stack>
   )
 }
 

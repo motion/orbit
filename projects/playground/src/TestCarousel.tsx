@@ -1,4 +1,4 @@
-import { Button, Card, Geometry, Row, Title, View } from '@o/ui'
+import { Button, Card, Geometry, Stack, Title, View } from '@o/ui'
 import React, { useRef, useState } from 'react'
 
 export const TestCarousel = () => {
@@ -9,7 +9,7 @@ export const TestCarousel = () => {
     <View width="100%" height="100%">
       <Button onClick={() => setZoom(!zoom)}>zoom</Button>
       <Button onClick={() => (carousel.current.scrollLeft += 100)}>scroll 100px right</Button>
-      <Row ref={carousel} flex={1} scrollable="x" space={100}>
+      <Stack direction="horizontal" ref={carousel} flex={1} scrollable="x" space={100}>
         {apps.map((app, index) => (
           <Geometry key={index} frame={carousel}>
             {geometry => (
@@ -36,7 +36,7 @@ export const TestCarousel = () => {
             )}
           </Geometry>
         ))}
-      </Row>
+      </Stack>
     </View>
   )
 }

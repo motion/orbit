@@ -1,6 +1,6 @@
 import { AppDefinition, AppIcon, ensure, react, Templates, UpdatePriority, useAppDefinition, useReaction, useStore } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, FullScreen, Geometry, Row, sleep, useDebounce, useDeepEqualState, useNodeSize, useOnMount, useOnUnmount, useScrollableParent, useScrollProgress, useTheme, View } from '@o/ui'
+import { Card, CardProps, FullScreen, Geometry, sleep, Stack, useDebounce, useDeepEqualState, useNodeSize, useOnMount, useOnUnmount, useScrollableParent, useScrollProgress, useTheme, View } from '@o/ui'
 import { MotionValue, useMotionValue } from 'framer-motion'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -98,7 +98,8 @@ export const OrbitAppsCarousel = memo(() => {
           },
         }}
       >
-        <Row
+        <Stack
+          direction="horizontal"
           data-is="OrbitAppsCarousel-Row"
           flex={1}
           alignItems="center"
@@ -126,7 +127,7 @@ export const OrbitAppsCarousel = memo(() => {
               frameHeight={frameSize[1]}
             />
           ))}
-        </Row>
+        </Stack>
       </View>
     </OrbitAppsCarouselFrame>
   )

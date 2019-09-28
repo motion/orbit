@@ -1,4 +1,4 @@
-import { Col, gloss, Image, View } from '@o/ui'
+import { gloss, Image, Stack, View } from '@o/ui'
 import React from 'react'
 
 import { mediaQueries } from '../../constants'
@@ -72,7 +72,7 @@ export default function IntroSection() {
               />
             </FadeInView>
           </View>
-          <Col space="xl" justifyContent="center">
+          <Stack space="xl" justifyContent="center">
             <IntroPara delayIndex={1} stagger={0} size={1.8}>
               <strong style={{ color: '#fff' }}>We're rethinking how we build apps for work</strong>
               &nbsp;with a fun, creative workspace where unified data is explorable and moldable.
@@ -84,14 +84,14 @@ export default function IntroSection() {
             <IntroPara delayIndex={3} stagger={-1}>
               Powerful enough to run your business, easier to use than bootstrap.
             </IntroPara>
-          </Col>
+          </Stack>
         </HalfGrid>
       </SectionContent>
     </Fade.FadeProvide>
   )
 }
 
-const HalfGrid = gloss(Col, {
+const HalfGrid = gloss(Stack, {
   display: 'grid',
   columnGap: 50,
 

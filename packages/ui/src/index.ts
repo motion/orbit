@@ -27,6 +27,8 @@ export {
   Theme,
   ThemeContext,
   useTheme,
+  Inline,
+  InlineBlock,
   useThemeContext,
 } from 'gloss'
 export { arrayMove } from './helpers/arrayMove'
@@ -196,7 +198,6 @@ export * from './SortableGrid'
 export * from './Space'
 export * from './SpaceGroup'
 export * from './Spinner'
-export * from './Stack'
 export * from './StatusBar'
 export * from './SubSection'
 export * from './Surface'
@@ -230,9 +231,8 @@ export * from './Tooltip'
 export * from './Tree'
 export * from './TreeList'
 export * from './types'
-export * from './View/Col'
+export * from './View/Stack'
 export * from './View/Grid'
-export * from './View/Row'
 export * from './Visibility'
 export * from './forms/SimpleFormField'
 export * from './Parallax'
@@ -250,3 +250,4 @@ export * from './helpers/createUpdateableSpring'
 export * from './helpers/elementOffset'
 export * from './helpers/scrollTo'
 export * from './forms/types'
+export * from './forms/FormContext'

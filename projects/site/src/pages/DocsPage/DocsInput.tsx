@@ -1,8 +1,8 @@
-import { Button, Col, Input, PassProps, Row, SurfacePassProps } from '@o/ui'
+import { Button, Input, PassProps, Stack, SurfacePassProps } from '@o/ui'
 import React from 'react'
 
 export let Basic = (
-  <Col space>
+  <Stack space>
     <Input
       type="email"
       name="email"
@@ -10,7 +10,7 @@ export let Basic = (
       onChange={e => console.log(e.target.value)}
     />
     <Input icon="search" />
-  </Col>
+  </Stack>
 )
 
 export let Sized = (
@@ -27,26 +27,26 @@ export let Sized = (
 )
 
 export let Grouped = (
-  <Row group>
+  <Stack direction="horizontal" group>
     <Input placeholder="Hello world" onChange={e => console.log(e.target.value)} />
     <Button>Submit</Button>
-  </Row>
+  </Stack>
 )
 
 export let GroupedSized = (
-  <Col space>
-    <Row group>
+  <Stack space>
+    <Stack direction="horizontal" group>
       <PassProps size="xl">
         <Input placeholder="Hello world" />
         <Button>Submit</Button>
       </PassProps>
-    </Row>
+    </Stack>
     <SurfacePassProps size={1.5} sizeRadius={2}>
-      <Row group>
+      <Stack direction="horizontal" group>
         <Button background="transparent" icon="search" />
         <Input placeholder="Hello world" />
         <Button>Submit</Button>
-      </Row>
+      </Stack>
     </SurfacePassProps>
-  </Col>
+  </Stack>
 )

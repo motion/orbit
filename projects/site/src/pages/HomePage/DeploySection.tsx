@@ -1,4 +1,4 @@
-import { Col, Icon, Image, Parallax, Row, SimpleText, Space, Tooltip, View } from '@o/ui'
+import { Icon, Image, Parallax, SimpleText, Space, Stack, Tooltip, View } from '@o/ui'
 import React from 'react'
 
 import appScreenshot from '../../public/images/app-screenshot.jpg'
@@ -54,8 +54,8 @@ export default function DeploySection() {
         }
       >
         <Space size={60} />
-        <Row space={60} sm-space={0} margin={[0, '-180%']} sm-margin="0">
-          <Col sm-display="none" flex={2} alignItems="flex-end" justifyContent="center">
+        <Stack direction="horizontal" space={60} sm-space={0} margin={[0, '-180%']} sm-margin="0">
+          <Stack sm-display="none" flex={2} alignItems="flex-end" justifyContent="center">
             <FadeInView parallax {...fadeAnimations.left} delayIndex={2}>
               <Parallax.View
                 borderRadius={10}
@@ -81,9 +81,9 @@ export default function DeploySection() {
                 />
               </Parallax.View>
             </FadeInView>
-          </Col>
+          </Stack>
 
-          <Col
+          <Stack
             space="xxl"
             flex={3}
             sm-width="100%"
@@ -104,12 +104,12 @@ export default function DeploySection() {
             </FadeInView>
 
             <FadeInView parallax delayIndex={2}>
-              <Col space="sm">
+              <Stack space="sm">
                 <Item>A 0-setup visual app workspace.</Item>
                 <Item>Per-app fast refresh with error recovery.</Item>
                 <Item>A suite of developer tools.</Item>
                 <Item>Every library you'd want.</Item>
-              </Col>
+              </Stack>
             </FadeInView>
 
             <FadeInView parallax delayIndex={3}>
@@ -117,9 +117,9 @@ export default function DeploySection() {
                 Get started with Orbit ›
               </Link>
             </FadeInView>
-          </Col>
+          </Stack>
 
-          <Col sm-display="none" flex={2} alignItems="flex-start" justifyContent="center">
+          <Stack sm-display="none" flex={2} alignItems="flex-start" justifyContent="center">
             <FadeInView parallax {...fadeAnimations.right} delayIndex={3}>
               <Parallax.View
                 borderRadius={10}
@@ -136,8 +136,8 @@ export default function DeploySection() {
                 })}
               />
             </FadeInView>
-          </Col>
-        </Row>
+          </Stack>
+        </Stack>
         <View flex={10} />
       </SpacedPageContent>
     </Fade.FadeProvide>
@@ -145,8 +145,8 @@ export default function DeploySection() {
 }
 
 const Item = props => (
-  <Row space padding={['sm', 0]}>
+  <Stack direction="horizontal" space padding={['sm', 0]}>
     <Icon opacity={0.5} name="tick" />
     <SimpleText flex={1} size="md" alpha={0.75} {...props} />
-  </Row>
+  </Stack>
 )

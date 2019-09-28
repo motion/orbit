@@ -1,6 +1,7 @@
-import { gloss } from 'gloss'
 import * as UI from '@o/ui'
+import { gloss } from 'gloss'
 import * as React from 'react'
+
 import controlX from '../../public/images/control-x.png'
 import controlY from '../../public/images/control-y.png'
 import controlZ from '../../public/images/control-z.png'
@@ -25,7 +26,7 @@ const ControlButtonForgiveness = gloss().theme(({ size, forgiveness }) => ({
   },
 }))
 
-const ControlButtonChrome = gloss(UI.Col, {
+const ControlButtonChrome = gloss(UI.Stack, {
   width: 12,
   height: 12,
   padding: 2,

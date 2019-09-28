@@ -1,5 +1,6 @@
-import { Button, Col, ListItem, Popover, Text, View, ViewProps, Icon } from '@o/ui'
+import { Button, Icon, ListItem, Popover, Stack, Text, View, ViewProps } from '@o/ui'
 import React from 'react'
+
 import { useStores } from '../hooks/useStores'
 import { QueryFilterStore } from '../stores/QueryFilterStore'
 
@@ -17,7 +18,7 @@ export function AppFilterButton(props: ViewProps & { queryFilterStore?: QueryFil
       popoverTheme="tooltip"
       target={<Button tooltip="Filter by app" icon="filter" />}
     >
-      <Col {...props}>
+      <Stack {...props}>
         {!appFilters.length && (
           <View padding={20} alignItems="center" justifyContent="center">
             <Text>No data sources.</Text>
@@ -40,7 +41,7 @@ export function AppFilterButton(props: ViewProps & { queryFilterStore?: QueryFil
             />
           )
         })}
-      </Col>
+      </Stack>
     </Popover>
   )
 }

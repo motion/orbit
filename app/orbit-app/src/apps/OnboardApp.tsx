@@ -1,6 +1,6 @@
 import { command, createApp, createStoreContext, save, useActiveSpace } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, Space, SpaceModel } from '@o/models'
-import { Button, Card, Col, Flow, FlowProvide, gloss, Icon, Paragraph, Scale, Text, Toolbar, useCreateFlow, useFlow, View } from '@o/ui'
+import { Button, Card, Flow, FlowProvide, gloss, Icon, Paragraph, Scale, Stack, Text, Toolbar, useCreateFlow, useFlow, View } from '@o/ui'
 import React, { useEffect } from 'react'
 
 import { om } from '../om/om'
@@ -14,7 +14,7 @@ export default createApp({
   app: OnboardApp,
 })
 
-const Centered = gloss(Col, {
+const Centered = gloss(Stack, {
   margin: 'auto',
   alignItems: 'center',
   justifyContent: 'center',
@@ -78,7 +78,7 @@ export function OnboardApp() {
     <Onboard.ProvideStore value={onboardStore}>
       <FlowProvide value={flow}>
         <BlurryGuys />
-        <Col width="80%" maxWidth={600} margin="auto" height="80%">
+        <Stack width="80%" maxWidth={600} margin="auto" height="80%">
           <Flow useFlow={flow}>
             <Flow.Step
               title="Welcome to Orbit"
@@ -101,7 +101,7 @@ export function OnboardApp() {
               </Centered>
             </Flow.Step>
           </Flow>
-        </Col>
+        </Stack>
         <OnboardToolbar />
       </FlowProvide>
     </Onboard.ProvideStore>
@@ -180,9 +180,9 @@ const setupContent = {
     title: `Checking for existing...`,
     subTitle: `Orbit is checking if you've already set up.`,
     children: (
-      <Col flex={1} alignItems="center" justifyContent="center">
+      <Stack flex={1} alignItems="center" justifyContent="center">
         <Icon name="time" size={32} />
-      </Col>
+      </Stack>
     ),
   },
   error: {
@@ -202,9 +202,9 @@ const setupContent = {
     title: `Success, your permissions are valid`,
     subTitle: `You are all set up.`,
     children: (
-      <Col flex={1} alignItems="center" justifyContent="center">
+      <Stack flex={1} alignItems="center" justifyContent="center">
         <Icon name="tick" size={32} />
-      </Col>
+      </Stack>
     ),
   },
 }

@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { Config } from '../helpers/configureUI'
 import { HighlightText } from '../Highlight'
-import { Col } from '../View/Col'
+import { Stack } from '../View/Stack'
 import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
 import { ThreadMessage, ThreadMessageLike } from './ThreadMessage'
 
@@ -26,11 +26,11 @@ export function Thread(rawProps: ThreadProps) {
     return <HighlightText ellipse>{body.slice(0, 200)}</HighlightText>
   }
   return (
-    <Col space>
+    <Stack space>
       {messages.map((message, index) => {
         return <ThreadMessage key={index} {...message} />
       })}
-    </Col>
+    </Stack>
   )
 }
 

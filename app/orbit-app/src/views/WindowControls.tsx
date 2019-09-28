@@ -1,5 +1,6 @@
-import { Row, View } from '@o/ui'
+import { Stack, View } from '@o/ui'
 import React, { useState } from 'react'
+
 import { ControlButton } from './ControlButton'
 
 export const WindowCloseButton = props => <ControlButton icon="x" background="#FF6159" {...props} />
@@ -20,7 +21,8 @@ export const WindowControls = ({
   const [show, setShow] = useState(false)
 
   return (
-    <Row
+    <Stack
+      direction="horizontal"
       zIndex={show ? 1000000 : 0}
       padding={show ? 8 : 3}
       margin={show ? -8 : -3}
@@ -41,6 +43,6 @@ export const WindowControls = ({
           <WindowMaxButton onClick={onMin} {...itemProps} {...minProps} />
         </>
       )}
-    </Row>
+    </Stack>
   )
 }

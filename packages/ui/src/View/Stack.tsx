@@ -14,17 +14,18 @@ type GroupProps = {
   separator?: React.ReactNode
 }
 
-export type ColProps = CollapsableProps &
-  ScrollableViewProps &
+export type StackProps = CollapsableProps &
+  Omit<ScrollableViewProps, 'direction'> &
   SpaceGroupProps &
   GroupProps & {
     suspense?: React.ReactNode | null
+    direction?: 'horizontal' | 'vertical'
   }
 
-export const Col = createBaseView({ flexDirection: 'column', 'data-is': 'Col' })
+export const Stack = createBaseView({ flexDirection: 'column', 'data-is': 'Stack' })
 
-export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Element {
-  function BaseView(colProps: ColProps) {
+export function createBaseView(defaultProps: any): (props: StackProps) => JSX.Element {
+  function BaseView(colProps: StackProps) {
     const [
       collapseProps,
       {
@@ -101,6 +102,14 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
       // anything we do special with in render(), we ignore for static extraction:
       padding: false,
       minHeight: false,
+      // TODO check this works
+      direction: {
+        name: 'flexDirection',
+        value: {
+          horizontal: 'row',
+          vertical: 'column',
+        },
+      },
     },
   }
 

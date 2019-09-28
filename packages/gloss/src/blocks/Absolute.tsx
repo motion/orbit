@@ -1,8 +1,8 @@
 import { gloss } from '../gloss'
-import { Col, ColProps } from './Col'
+import { Flex, FlexProps } from './Flex'
 
-export type AbsoluteProps = ColProps
+export type AbsoluteProps = FlexProps
 
-export const Absolute = gloss(Col, {
+export const Absolute = gloss(Flex, {
   position: 'absolute',
 })

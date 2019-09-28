@@ -1,4 +1,4 @@
-import { Col, useTheme, useVisibility } from '@o/ui'
+import { Stack, useTheme, useVisibility } from '@o/ui'
 import * as React from 'react'
 import { Node, SchemaProperties, Value } from 'slate'
 import { Editor as SlateEditor } from 'slate-react'
@@ -262,7 +262,7 @@ class EditorComponent extends React.PureComponent<EditorProps, EditorState> {
     } = this.props
 
     return (
-      <Col
+      <Stack
         style={style}
         className={className}
         onDrop={this.handleDrop}
@@ -296,7 +296,7 @@ class EditorComponent extends React.PureComponent<EditorProps, EditorState> {
             {...rest}
           />
         </ThemeProvider>
-      </Col>
+      </Stack>
     )
   }
 }

@@ -1,6 +1,6 @@
 import { useLocationLink } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Button, ButtonProps, Icon, IconProps, MenuTemplate, Row, SimpleText, Tooltip, useContextMenu, View, ViewProps } from '@o/ui'
+import { Button, ButtonProps, Icon, IconProps, MenuTemplate, SimpleText, Stack, Tooltip, useContextMenu, View, ViewProps } from '@o/ui'
 import { gloss, useTheme } from 'gloss'
 import React, { memo } from 'react'
 
@@ -61,7 +61,7 @@ export const OrbitTab = memo((props: TabProps) => {
     >
       <NavButtonChromeInner isActive={isActive}>
         <Tooltip label={app ? app.name : undefined}>
-          <Row space="sm" alignItems="center">
+          <Stack direction="horizontal" space="sm" alignItems="center">
             {React.isValidElement(icon) ? (
               React.cloneElement(icon, { size: iconSize, ...iconProps } as any)
             ) : (
@@ -91,7 +91,7 @@ export const OrbitTab = memo((props: TabProps) => {
             )}
 
             {after}
-          </Row>
+          </Stack>
         </Tooltip>
       </NavButtonChromeInner>
     </NavButtonChrome>
@@ -137,7 +137,8 @@ export function OrbitTabButton(props: ButtonProps) {
 
 const tabTransition = 'all ease-out 350ms'
 
-const NavButtonChromeInner = gloss<any>(Row, {
+const NavButtonChromeInner = gloss<any>(Stack, {
+  flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
   flex: 1,

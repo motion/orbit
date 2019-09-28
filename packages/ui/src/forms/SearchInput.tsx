@@ -5,7 +5,7 @@ import React from 'react'
 import { Button, ButtonProps } from '../buttons/Button'
 import { FilterToken } from '../tables/FilterToken'
 import { TableFilter } from '../tables/types'
-import { Row } from '../View/Row'
+import { Stack } from '../View/Row'
 import { Input, InputProps } from './Input'
 
 export type SearchInputProps = InputProps & {
@@ -43,7 +43,7 @@ export function SearchInput({
       placeholder="Search..."
       flexWrap="wrap"
       betweenIconElement={
-        <Row space="xs">
+        <Stack direction="horizontal" space="xs">
           {filters.map((filter, i) => (
             <FilterToken
               key={`${filter.key}:${filter.type}${i}`}
@@ -53,7 +53,7 @@ export function SearchInput({
               {...filterProps}
             />
           ))}
-        </Row>
+        </Stack>
       }
       after={
         <>
@@ -89,7 +89,8 @@ export const ClearButton = gloss<ButtonProps & { invisible?: boolean }>(Button, 
   },
 })
 
-const Actions = gloss(Row, {
+const Actions = gloss(Stack, {
+  direction: 'horizontal',
   marginLeft: 8,
   flexShrink: 0,
 })

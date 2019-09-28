@@ -1,5 +1,5 @@
 import { AppBit } from '@o/models'
-import { Row, Space, Text } from '@o/ui'
+import { Space, Stack, Text } from '@o/ui'
 import * as React from 'react'
 
 import { WhiteList } from '../hooks/useWhiteList'
@@ -14,7 +14,7 @@ export function SettingManageRow(props: { app: AppBit; whitelist: WhiteList }) {
   }
 
   return (
-    <Row padding alignItems="center">
+    <Stack direction="horizontal" padding alignItems="center">
       {!!props.whitelist ? (
         <ManageSmartSync whitelist={props.whitelist} />
       ) : (
@@ -26,6 +26,6 @@ export function SettingManageRow(props: { app: AppBit; whitelist: WhiteList }) {
           <ManageSyncStatus app={props.app} />
         </React.Suspense>
       )}
-    </Row>
+    </Stack>
   )
 }

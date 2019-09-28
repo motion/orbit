@@ -1,4 +1,4 @@
-import { BorderBottom, Row, RowProps, ViewProps } from '@o/ui'
+import { BorderBottom, RowProps, Stack, ViewProps } from '@o/ui'
 import { Box, gloss, useTheme } from 'gloss'
 import React, { memo, useLayoutEffect, useRef, useState } from 'react'
 
@@ -60,7 +60,8 @@ export const Header = memo(({ slim, noBorder, before, logoProps, ...rest }: Head
       {/* large */}
       <Fade.FadeProvide>
         {!slim && (
-          <Row
+          <Stack
+            direction="horizontal"
             nodeRef={Fade.ref}
             position="absolute"
             top={0}
@@ -85,13 +86,14 @@ export const Header = memo(({ slim, noBorder, before, logoProps, ...rest }: Head
               </FadeInView>
               {linksRight}
             </HeaderContain>
-          </Row>
+          </Stack>
         )}
 
         {before}
 
         {slim && (
-          <Row
+          <Stack
+            direction="horizontal"
             nodeRef={Fade.ref}
             pointerEvents="auto"
             background={theme.background}
@@ -112,7 +114,7 @@ export const Header = memo(({ slim, noBorder, before, logoProps, ...rest }: Head
               {linksRight}
             </HeaderContain>
             {!noBorder && <BorderBottom opacity={0.5} />}
-          </Row>
+          </Stack>
         )}
       </Fade.FadeProvide>
     </HeaderContext.ProvideStore>

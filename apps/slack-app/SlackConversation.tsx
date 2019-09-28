@@ -1,4 +1,4 @@
-import { ChatMessage, Col } from '@o/ui'
+import { ChatMessage, Stack } from '@o/ui'
 import React from 'react'
 
 export function SlackConversation(props: { messages: Chat.MeMessage.Params; people?: any }) {
@@ -6,7 +6,7 @@ export function SlackConversation(props: { messages: Chat.MeMessage.Params; peop
     return null
   }
   return (
-    <Col space>
+    <Stack space>
       {props.messages.map((message, index) => {
         for (let person of props.people || []) {
           message.text = message.text.replace(
@@ -23,6 +23,6 @@ export function SlackConversation(props: { messages: Chat.MeMessage.Params; peop
           />
         )
       })}
-    </Col>
+    </Stack>
   )
 }

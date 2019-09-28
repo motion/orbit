@@ -1,22 +1,22 @@
-import { Col, ColProps, Row, RowProps, useTheme } from 'gloss'
+import { Stack, StackProps, useTheme } from 'gloss'
 import React from 'react'
 
 import { BorderRight, BorderTop } from './Border'
 
-export const SeparatorVertical = (props: ColProps) => {
+export const SeparatorVertical = (props: StackProps) => {
   const theme = useTheme()
   return (
-    <Col width={1} height="100%" position="relative" {...props}>
+    <Stack width={1} height="100%" position="relative" {...props}>
       <BorderRight borderColor={theme.backgroundStrongest} />
-    </Col>
+    </Stack>
   )
 }
 
-export const SeparatorHorizontal = (props: RowProps) => {
+export const SeparatorHorizontal = (props: StackProps) => {
   const theme = useTheme()
   return (
-    <Row height={1} width="100%" position="relative" {...props}>
+    <Stack direction="horizontal" height={1} width="100%" position="relative" {...props}>
       <BorderTop borderColor={theme.backgroundStrongest} />
-    </Row>
+    </Stack>
   )
 }

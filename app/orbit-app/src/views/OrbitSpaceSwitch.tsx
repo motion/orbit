@@ -2,7 +2,7 @@ import { useModels } from '@o/bridge'
 import { OrbitOrb, SpaceIcon, useActiveSpace, useActiveUser, useLocationLink } from '@o/kit'
 import { SpaceModel } from '@o/models'
 import { App } from '@o/stores'
-import { Avatar, Col, GlobalHotKeys, Icon, ListItem, ListSeparator, Popover, Toggle, View } from '@o/ui'
+import { Avatar, GlobalHotKeys, Icon, ListItem, ListSeparator, Popover, Stack, Toggle, View } from '@o/ui'
 import { ensure, react, useStore } from '@o/use-store'
 import React, { memo } from 'react'
 
@@ -100,7 +100,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
           </View>
         }
       >
-        <Col
+        <Stack
           scrollable="y"
           nodeRef={store.popoverContentRef}
           borderRadius={borderRadius}
@@ -172,7 +172,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
             iconBefore
             onClick={settingsLink}
           />
-        </Col>
+        </Stack>
       </Popover>
     </>
   )

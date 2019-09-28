@@ -1,4 +1,4 @@
-import { Row, View } from '@o/ui/test'
+import { Stack, View } from '@o/ui/test'
 import * as React from 'react'
 import { render } from 'react-dom'
 
@@ -10,7 +10,7 @@ function Main() {
     <>
       <div>hi</div>
       <View sm-marginBottom={20}>
-        <Row space="lg">
+        <Stack direction="horizontal" space="lg">
           <View
             nodeRef={ref}
             pointerEvents="auto"
@@ -30,7 +30,7 @@ function Main() {
           >
             some children
           </View>
-        </Row>
+        </Stack>
       </View>
     </>
   )

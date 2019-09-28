@@ -1,7 +1,7 @@
 import { useModels } from '@o/bridge'
 import { App, AppViewProps, createApp, OrbitOrb, useActiveUser, useModel } from '@o/kit'
 import { Space, SpaceModel } from '@o/models'
-import { Button, CenteredText, Col, InputField, List, Paragraph, Row, Section, SimpleFormField, SubSection } from '@o/ui'
+import { Button, CenteredText, InputField, List, Paragraph, Section, SimpleFormField, Stack, Stack, SubSection } from '@o/ui'
 import randomColor from 'randomcolor'
 import React from 'react'
 import { useState } from 'react'
@@ -112,16 +112,16 @@ export function SpaceEdit({ space }: { space: Space }) {
         />
 
         <SimpleFormField label="Theme">
-          <Row alignItems="center" space>
+          <Stack direction="horizontal" alignItems="center" space>
             <OrbitOrb size={48} colors={colors} />
-            <Col flex={1}>
+            <Stack flex={1}>
               <ColorPicker
                 count={50}
                 activeColor={colors[0]}
                 onChangeColor={x => setColors([x, colors[1]])}
               />
-            </Col>
-          </Row>
+            </Stack>
+          </Stack>
         </SimpleFormField>
       </SubSection>
 

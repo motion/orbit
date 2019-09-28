@@ -1,4 +1,4 @@
-import { Button, Row, usePosition } from '@o/ui'
+import { Button, Stack, usePosition } from '@o/ui'
 import { react, useStore } from '@o/use-store'
 import * as Mobx from 'mobx'
 import React, { useRef } from 'react'
@@ -57,12 +57,12 @@ export function TestStores() {
 
       <Button onClick={() => store.y++}>ok</Button>
 
-      <Row group>
+      <Stack direction="horizontal" group>
         <Button>hello</Button>
         {store.y % 2 === 0 ? <Button>hello2</Button> : null}
         <Button>hello3</Button>
         <Button>hello4</Button>
-      </Row>
+      </Stack>
     </div>
   )
 }

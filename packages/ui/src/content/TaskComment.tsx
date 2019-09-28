@@ -1,4 +1,4 @@
-import { gloss, Row } from 'gloss'
+import { gloss } from 'gloss'
 import * as React from 'react'
 
 import { BorderBottom } from '../Border'
@@ -7,6 +7,7 @@ import { Icon } from '../Icon'
 import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
 import { Text } from '../text/Text'
+import { Stack } from '../View/Stack'
 import { ViewProps } from '../View/types'
 import { View } from '../View/View'
 import { Markdown } from './Markdown'
@@ -32,7 +33,7 @@ export function TaskComment({ author, createdAt, body, onClickPerson }: TaskComm
   const { avatarUrl, login } = author
   return (
     <HighlightSection>
-      <Row alignItems="center">
+      <Stack direction="horizontal" alignItems="center">
         <img
           style={{ borderRadius: 100, width: 24, height: 24, marginRight: 10 }}
           src={avatarUrl}
@@ -46,7 +47,7 @@ export function TaskComment({ author, createdAt, body, onClickPerson }: TaskComm
             <DateFormat date={new Date(createdAt)} />
           </Text>
         )}
-      </Row>
+      </Stack>
       <Space />
       <Markdown source={body} />
     </HighlightSection>

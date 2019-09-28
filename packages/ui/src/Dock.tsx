@@ -7,18 +7,25 @@ import { Arrow } from './Arrow'
 import { Button, ButtonProps } from './buttons/Button'
 import { DockButtonPropsContext, DockStore, DockStoreContext } from './DockStore'
 import { Tag, TagProps } from './Tag'
-import { Row, RowProps } from './View/Row'
+import { Stack, StackProps } from './View/Row'
 import { View } from './View/View'
 
 // Dock
 
-export type DockProps = RowProps
+export type DockProps = StackProps
 
 export const Dock = (props: DockProps) => {
   const dockStore = useStore(DockStore)
   return (
     <DockStoreContext.ProvideStore value={dockStore}>
-      <Row position="absolute" bottom={20} right={20} zIndex={100000000} {...props} />
+      <Stack
+        direction="horizontal"
+        position="absolute"
+        bottom={20}
+        right={20}
+        zIndex={100000000}
+        {...props}
+      />
     </DockStoreContext.ProvideStore>
   )
 }
@@ -53,7 +60,8 @@ export const DockButton = (props: DockButtonProps) => {
   }, [visible])
 
   return (
-    <Row
+    <Stack
+      direction="horizontal"
       pointerEvents="none"
       // TODO do it based on attachment
       flexDirection="row-reverse"
@@ -101,7 +109,7 @@ export const DockButton = (props: DockButtonProps) => {
           </TagLabel>
         </Theme>
       )}
-    </Row>
+    </Stack>
   )
 }
 

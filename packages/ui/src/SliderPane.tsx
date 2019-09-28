@@ -4,10 +4,10 @@ import React, { memo, useLayoutEffect, useRef } from 'react'
 import { useDebounceValue } from './hooks/useDebounce'
 import { useNodeSize } from './hooks/useNodeSize'
 import { SliderProps } from './Slider'
-import { Col, ColProps } from './View/Col'
+import { Stack, StackProps } from './View/Stack'
 import { ProvideVisibility, useVisibility } from './Visibility'
 
-type SliderPaneProps = ColProps &
+type SliderPaneProps = StackProps &
   Partial<SliderProps> & {
     index?: number
     width?: number
@@ -74,7 +74,7 @@ export const SliderPane = memo(
   },
 )
 
-const SliderPaneChrome = gloss<ColProps & { isActive?: boolean }>(Col, {
+const SliderPaneChrome = gloss<StackProps & { isActive?: boolean }>(Stack, {
   position: 'absolute',
   top: 0,
   left: 0,

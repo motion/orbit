@@ -1,5 +1,5 @@
 import { FixedSizeList } from '@o/react-window'
-import { Col, gloss } from 'gloss'
+import { Flex, gloss } from 'gloss'
 import * as React from 'react'
 
 import { TreeItem, TreeItemID, TreeProps } from './Tree'
@@ -216,7 +216,7 @@ export class TreeItems extends React.PureComponent<
   }
 }
 
-const TreeItemsContainer = gloss(Col, {
+const TreeItemsContainer = gloss(Flex, {
   minHeight: '100%',
   minWidth: '100%',
   overflow: 'auto',

@@ -1,4 +1,4 @@
-import { gloss, Row } from 'gloss'
+import { gloss } from 'gloss'
 import React, { useContext } from 'react'
 
 import { ButtonPerson } from '../buttons/ButtonPerson'
@@ -62,7 +62,12 @@ export function ChatMessage(rawProps: ChatMessageProps) {
   return (
     <ChatMessageFrame {...itemProps.itemProps}>
       {!hideHeader && (
-        <Row alignItems="center" cursor="default" padding={[itemProps.oneLine ? 0 : 3, 0]}>
+        <View
+          flexDirection="row"
+          alignItems="center"
+          cursor="default"
+          padding={[itemProps.oneLine ? 0 : 3, 0]}
+        >
           {itemProps.beforeTitle || null}
           {!!person && <ButtonPerson coat="flat" photo={person.photo} name={person.title} />}
           {!itemProps.oneLine && (
@@ -75,7 +80,7 @@ export function ChatMessage(rawProps: ChatMessageProps) {
               )}
             </>
           )}
-        </Row>
+        </View>
       )}
       <SizedSurface
         background={theme => theme.backgroundStronger.setAlpha(0.33)}

@@ -1,7 +1,9 @@
-import { gloss, Row } from 'gloss'
+import { gloss } from 'gloss'
 import * as React from 'react'
+
 import { RoundButtonSmall } from './buttons/RoundButtonSmall'
 import { Text } from './text/Text'
+import { Stack } from './View/Stack'
 import { View } from './View/View'
 
 const statusBarProps = {
@@ -33,4 +35,6 @@ export const StatusBarButton = props => (
 
 export const StatusBarText = props => <Text {...statusBarProps} {...props} />
 
-export const StatusBarSection = props => <Row alignItems="center" {...props} />
+export const StatusBarSection = props => (
+  <Stack direction="horizontal" alignItems="center" {...props} />
+)

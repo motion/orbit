@@ -7,8 +7,7 @@ import { useUncontrolled } from './helpers/useUncontrolled'
 import { Orderable } from './Orderable'
 import { Loading } from './progress/Loading'
 import { Tab, TabItem } from './Tab'
-import { Col } from './View/Col'
-import { Row } from './View/Row'
+import { Stack } from './View/Stack'
 import { ViewProps } from './View/types'
 
 /**
@@ -202,7 +201,8 @@ function TabsControlled({
 
   return (
     <TabContainer>
-      <Row
+      <Stack
+       direction="horizontal"
         maxWidth="100%"
         margin={centered ? [0, 'auto'] : 'inherit'}
         justifyContent={centered ? 'center' : 'inherit'}
@@ -210,8 +210,9 @@ function TabsControlled({
         {...rest}
       >
         {before}
-        <Row
+        <Stack
           flex={1}
+          direction="horizontal"
           className="hide-scrollbars"
           overflowX={scrollable ? 'auto' : undefined}
           height={height}
@@ -219,9 +220,9 @@ function TabsControlled({
           {Children.map(tabList, (child, key) =>
             cloneElement(child, { key, flex: centered ? 'auto' : 1 }),
           )}
-        </Row>
+        </Stack>
         {after}
-      </Row>
+      </Stack>
       {tabContents}
       {tabSiblings}
     </TabContainer>
@@ -268,7 +269,7 @@ const OrderableContainer = gloss(Box, {
   display: 'inline-block',
 })
 
-const TabContent = gloss(Col, {
+const TabContent = gloss(Stack, {
   overflow: 'auto',
   width: '100%',
   flex: 1,

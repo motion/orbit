@@ -1,7 +1,7 @@
 import { command, openInEditor, useReaction, useStore } from '@o/kit'
 import { AppDevCloseCommand, AppDevOpenCommand } from '@o/models'
 import { App } from '@o/stores'
-import { Button, ListSeparator, MenuButton, Row, Toggle, useBanner, useDebounceValue } from '@o/ui'
+import { Button, ListSeparator, MenuButton, Stack, Toggle, useBanner, useDebounceValue } from '@o/ui'
 import React, { memo, useMemo } from 'react'
 
 import { om, useOm } from '../../om/om'
@@ -77,7 +77,7 @@ export const OrbitHeaderOpenAppMenu = memo(
                   })
                 },
                 after: (
-                  <Row space>
+                  <Stack direction="horizontal" space>
                     <Toggle checked={isDeveloping} />
                     <Button
                       chromeless
@@ -98,7 +98,7 @@ export const OrbitHeaderOpenAppMenu = memo(
                       tooltip="Open in VSCode"
                       margin={[-5, 0]}
                     />
-                  </Row>
+                  </Stack>
                 ),
               },
               {

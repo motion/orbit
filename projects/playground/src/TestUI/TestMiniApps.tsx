@@ -1,5 +1,5 @@
 import { shallow, Templates, useStore } from '@o/kit'
-import { Card, DefinitionList, FloatingCard, Flow, FlowStep, Form, GridItem, GridLayout, Layout, List, Loading, Pane, Row, SearchInput, Select, Table, Title, useFetch, useForm } from '@o/ui'
+import { Card, DefinitionList, FloatingCard, Flow, FlowStep, Form, GridItem, GridLayout, Layout, List, Loading, Pane, SearchInput, Select, Stack, Table, Title, useFetch, useForm } from '@o/ui'
 import React, { Suspense, useState } from 'react'
 
 class Store {
@@ -159,11 +159,11 @@ export function CustomApp1() {
         <Pane resizable flex={1.5}>
           <Layout type="column">
             <Pane resizable>
-              <Row spacing>
+              <Stack direction="horizontal" spacing>
                 <SearchInput name="search" />
                 <Select name="active" options={active} />
                 <Select name="type" isMulti options={type} />
-              </Row>
+              </Stack>
               <Table
                 selectable="multi"
                 onSelect={items => setHighlighted(items)}

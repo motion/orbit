@@ -1,4 +1,4 @@
-import { Col, gloss, Icon, Image, Parallax, Scale, SimpleText, SimpleTextProps, Space, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
+import { gloss, Icon, Image, Parallax, Scale, SimpleText, SimpleTextProps, Space, Stack, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import { Base } from 'gloss'
 import React, { memo } from 'react'
@@ -124,9 +124,9 @@ export function HeadSection() {
         <Star top="0%" left="80%" />
       </Page.ParallaxView> */}
 
-      <Col opacity={fontsLoaded ? 1 : 0} margin={['auto', 0]} height="calc(100% - 120px)">
+      <Stack opacity={fontsLoaded ? 1 : 0} margin={['auto', 0]} height="calc(100% - 120px)">
         <Space size="xxl" />
-        <Col
+        <Stack
           maxHeight="80vh"
           minHeight={600}
           sm-minHeight="auto"
@@ -135,7 +135,7 @@ export function HeadSection() {
           justifyContent="center"
         >
           <HeadTextSection />
-        </Col>
+        </Stack>
         <View
           className="app-screenshot"
           position="relative"
@@ -167,7 +167,7 @@ export function HeadSection() {
             </FadeInView>
           </Parallax.View>
         </View>
-      </Col>
+      </Stack>
       <View
         zIndex={100}
         position="absolute"

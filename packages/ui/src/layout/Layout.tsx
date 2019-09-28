@@ -1,13 +1,11 @@
-import { gloss } from 'gloss'
 import React, { Children, cloneElement, createContext, isValidElement, memo, ReactElement, useMemo } from 'react'
 
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
-import { Col, ColProps } from '../View/Col'
-import { Row } from '../View/Row'
+import { Stack, StackProps } from '../View/Stack'
 import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
 
-export type LayoutProps = ColProps & {
+export type LayoutProps = StackProps & {
   type?: 'column' | 'row'
   children?: React.ReactNode
 }
@@ -93,7 +91,10 @@ const FlexLayout = memo(({ children, type, ...colProps }: LayoutProps) => {
 
   if (type === 'row') {
     return (
-      <LayoutRow
+      <Stack
+        data-is="LayoutRow"
+        direction="horizontal"
+        flex={1}
         minHeight={size.height || 'auto'}
         maxHeight={size.height || '100%'}
         overflow="hidden"
@@ -101,12 +102,14 @@ const FlexLayout = memo(({ children, type, ...colProps }: LayoutProps) => {
         {...colProps}
       >
         {childElements}
-      </LayoutRow>
+      </Stack>
     )
   }
 
   return (
-    <LayoutCol
+    <Stack
+      data-is="LayoutCol"
+      flex={1}
       minHeight={size.height || 'auto'}
       maxHeight={size.height || '100%'}
       overflow="hidden"
@@ -114,14 +117,6 @@ const FlexLayout = memo(({ children, type, ...colProps }: LayoutProps) => {
       {...colProps}
     >
       {childElements}
-    </LayoutCol>
+    </Stack>
   )
-})
-
-const LayoutRow = gloss(Row, {
-  flex: 1,
-})
-
-const LayoutCol = gloss(Col, {
-  flex: 1,
 })

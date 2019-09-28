@@ -1,4 +1,4 @@
-import { Button, Col, Divider, Grid, Section, Space } from '@o/ui'
+import { Button, Divider, Grid, Section, Space, Stack } from '@o/ui'
 import React from 'react'
 
 import { themes } from '../../themes'
@@ -59,7 +59,7 @@ export const HelpfulLinks = () => {
       <Space size="lg" />
       <Divider />
       <Space size="lg" />
-      <Col space="xl">
+      <Stack space="xl">
         <Section title="User Interface" titleSize="xxs" space titleProps={{ fontWeight: 300 }}>
           <Grid space="xl" itemMinWidth={100}>
             {interfacelinks.map(link => (
@@ -96,7 +96,7 @@ export const HelpfulLinks = () => {
             ))}
           </Grid>
         </Section>
-      </Col>
+      </Stack>
     </>
   )
 }

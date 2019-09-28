@@ -1,4 +1,4 @@
-import { AnimatePresence, animation, Button, Col, gloss, Image, Row, Space, View } from '@o/ui'
+import { AnimatePresence, animation, Button, gloss, Image, Space, Stack, View } from '@o/ui'
 import { Box, Inline } from 'gloss'
 import React, { memo, useEffect, useRef, useState } from 'react'
 
@@ -179,8 +179,8 @@ export default memo(() => {
           </>
         }
       >
-        <Col maxWidth="100%" margin={[0, 'auto', 0]} sm-margin={0}>
-          <Row space {...mediaStyles.visibleWhen.abovesm}>
+        <Stack maxWidth="100%" margin={[0, 'auto', 0]} sm-margin={0}>
+          <Stack direction="horizontal" space {...mediaStyles.visibleWhen.abovesm}>
             <SubSection maxWidth="33%">
               <FadeInView parallax {...fadeAnimations.left} delayIndex={3}>
                 <PillButtonDark>Import</PillButtonDark>
@@ -210,11 +210,11 @@ export default memo(() => {
                 </CenterText>
               </FadeInView>
             </SubSection>
-          </Row>
+          </Stack>
 
           <Space />
 
-          <Row space>
+          <Stack direction="horizontal" space>
             <Flex alignItems="center" sm-display="none">
               <FadeInView parallax {...fadeAnimations.left} delayIndex={4}>
                 <Image
@@ -392,14 +392,14 @@ export default memo(() => {
                 />
               </FadeInView>
             </Flex>
-          </Row>
+          </Stack>
 
           <FadeInView parallax delayIndex={8} flexFlow="row" margin={[42, 'auto', 0]}>
             {[0, 1, 2].map(x => (
               <Dot key={`dot-${x}`} active={x === index} onClick={() => goTo(x)} />
             ))}
           </FadeInView>
-        </Col>
+        </Stack>
       </SpacedPageContent>
     </Fade.FadeProvide>
   )

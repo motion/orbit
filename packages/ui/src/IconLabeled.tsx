@@ -4,9 +4,9 @@ import { Icon, IconProps } from './Icon'
 import { Scale } from './Scale'
 import { getSize } from './Sizes'
 import { SimpleText, SimpleTextProps } from './text/SimpleText'
-import { Col, ColProps } from './View/Col'
+import { Stack, StackProps } from './View/Stack'
 
-export type IconLabeledProps = ColProps & {
+export type IconLabeledProps = StackProps & {
   icon?: React.ReactNode
   label?: string
   labelProps?: SimpleTextProps
@@ -29,15 +29,15 @@ export const IconLabeled = memo(
     const sizeNum = getSize(size)
     return (
       <Scale size={size}>
-        <Col flex={1} padding space alignItems="center" justifyContent="center" {...restProps}>
-          <Col marginTop="md" marginBottom="sm" alignItems="center" position="relative">
+        <Stack flex={1} padding space alignItems="center" justifyContent="center" {...restProps}>
+          <Stack marginTop="md" marginBottom="sm" alignItems="center" position="relative">
             {typeof icon === 'string' ? (
               <Icon name={icon} size={sizeNum * 48} {...iconProps} />
             ) : (
               icon
             )}
-          </Col>
-          <Col alignItems="center" justifyContent="center" space="xs">
+          </Stack>
+          <Stack alignItems="center" justifyContent="center" space="xs">
             {!!label && (
               <SimpleText ellipse fontWeight={500} size={0.9} {...labelProps}>
                 {label}
@@ -48,8 +48,8 @@ export const IconLabeled = memo(
                 {subTitle}
               </SimpleText>
             )}
-          </Col>
-        </Col>
+          </Stack>
+        </Stack>
       </Scale>
     )
   },

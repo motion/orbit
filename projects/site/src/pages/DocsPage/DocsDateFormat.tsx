@@ -1,8 +1,8 @@
-import { Col, DateFormat } from '@o/ui'
+import { DateFormat, Stack } from '@o/ui'
 import React from 'react'
 
 export let Basic = (
-  <Col space>
+  <Stack space>
     <DateFormat date={new Date()} />
     <DateFormat
       date={(() => {
@@ -25,5 +25,5 @@ export let Basic = (
         return d
       })()}
     />
-  </Col>
+  </Stack>
 )

@@ -1,7 +1,7 @@
-import { ColProps } from 'gloss'
+import { FlexProps } from 'gloss'
 
 export type CommonViewProps = Pick<
-  ColProps,
+  FlexProps,
   | 'hoverStyle'
   | 'activeStyle'
   | 'focusStyle'

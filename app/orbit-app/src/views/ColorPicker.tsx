@@ -1,4 +1,4 @@
-import { IconShape, Row, toColor, View, ViewProps } from '@o/ui'
+import { IconShape, Stack, toColor, View, ViewProps } from '@o/ui'
 import { gloss } from 'gloss'
 import { uniqBy } from 'lodash'
 import memoize from 'memoize-weak'
@@ -64,7 +64,7 @@ export const ColorPicker = memo(
     })
 
     return (
-      <Row padding="sm" space scrollable="x" hideScrollbars flex={1}>
+      <Stack direction="horizontal" padding="sm" space scrollable="x" hideScrollbars flex={1}>
         {combos.map((colors, i) => (
           <IconShape
             key={`${JSON.stringify(colors)}${i}`}
@@ -76,7 +76,7 @@ export const ColorPicker = memo(
             {...viewProps}
           />
         ))}
-      </Row>
+      </Stack>
     )
   },
 )

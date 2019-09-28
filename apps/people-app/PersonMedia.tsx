@@ -1,5 +1,5 @@
 import { AppViewProps, Bit, openItem, useBit, useBits, useNLPTopics, useStores } from '@o/kit'
-import { Avatar, gloss, ListItem, RoundButton, Row, Section, Space, SubSection, TitleRow } from '@o/ui'
+import { Avatar, gloss, ListItem, RoundButton, Section, Space, Stack, SubSection, TitleRow } from '@o/ui'
 import React from 'react'
 
 export function PersonMedia({ id }: AppViewProps) {
@@ -44,7 +44,7 @@ export function PersonMedia({ id }: AppViewProps) {
           title={person.title}
           subTitle={<Email href={`mailto:${person.email}`}>{person.email}</Email>}
           below={
-            <Row>
+            <Stack direction="horizontal">
               <SourceButton
                 icon="search"
                 onClick={() => queryStore.setQuery(`${person.title} documents`)}
@@ -58,19 +58,19 @@ export function PersonMedia({ id }: AppViewProps) {
               >
                 Tasks
               </SourceButton>
-            </Row>
+            </Stack>
           }
         />
       }
     >
       <SubSection title="Topics">
-        <Row flexDirection="row" flexWrap="wrap" space="sm">
+        <Stack direction="horizontal" flexDirection="row" flexWrap="wrap" space="sm">
           {topics.map((item, index) => (
             <RoundButton size={1.2} key={index}>
               {item}
             </RoundButton>
           ))}
-        </Row>
+        </Stack>
       </SubSection>
 
       <SubSection title="Recently">

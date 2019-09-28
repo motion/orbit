@@ -1,17 +1,17 @@
 import { useModels } from '@o/bridge'
 import { Bit, BitModel } from '@o/models'
-import { ChatMessages, Col, Section } from '@o/ui'
+import { ChatMessages, Section, Stack } from '@o/ui'
 import * as React from 'react'
 
 import { AppBitMainProps } from '../types/AppTypes'
 
 const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
   return (
-    <Col space>
+    <Stack space>
       {(bits || []).map(bit => {
         return <ChatMessages key={bit.id} messages={bit.data.messages} people={bit.people} />
       })}
-    </Col>
+    </Stack>
   )
 }
 

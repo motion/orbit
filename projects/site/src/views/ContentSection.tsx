@@ -1,10 +1,10 @@
-import { ColProps, useTheme, View } from '@o/ui'
+import { Stack, StackProps, useTheme } from '@o/ui'
 import React from 'react'
 
-export const ContentSection = (props: ColProps) => {
+export const ContentSection = (props: StackProps) => {
   const theme = useTheme()
   return (
-    <View
+    <Stack
       className="content-section"
       padding={['md', '3%']}
       sm-padding={['md', 0]}

@@ -1,7 +1,8 @@
 import { AppLoadContext } from '@o/kit'
 import { BorderTop } from '@o/ui'
-import { gloss, Row, RowProps } from 'gloss'
+import { gloss, Stack, StackProps } from 'gloss'
 import React, { useContext } from 'react'
+
 import { usePaneManagerStore } from '../../om/stores'
 
 const statusBarHeight = 26
@@ -20,7 +21,7 @@ export function OrbitStatusBar({ children }) {
   )
 }
 
-const StatusBarChrome = gloss<RowProps & { isActive?: boolean }>(Row, {
+const StatusBarChrome = gloss<StackProps & { isActive?: boolean }>(Stack, {
   height: statusBarHeight,
   position: 'absolute',
   overflow: 'hidden',

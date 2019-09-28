@@ -1,4 +1,4 @@
-import { Col, ColProps, Grid, Space, TitleRow } from '@o/ui'
+import { Grid, Space, Stack, StackProps, TitleRow } from '@o/ui'
 import { compose, mount, route, withView } from 'navi'
 import React from 'react'
 import { View } from 'react-navi'
@@ -90,7 +90,7 @@ export function GuidesPageIndex() {
       <GuidesLayout title="Guides">
         {Object.keys(guideCategories).map(key => {
           return (
-            <Col key={key}>
+            <Stack key={key}>
               <H3>{guideCategories[key]}</H3>
               <Grid space itemMinWidth={170}>
                 {all
@@ -107,7 +107,7 @@ export function GuidesPageIndex() {
                     </FadeInView>
                   ))}
               </Grid>
-            </Col>
+            </Stack>
           )
         })}
       </GuidesLayout>
@@ -115,13 +115,13 @@ export function GuidesPageIndex() {
   )
 }
 
-export function GuidesLayout({ children, title, ...props }: ColProps & { title: string }) {
+export function GuidesLayout({ children, title, ...props }: StackProps & { title: string }) {
   return (
     <>
       <SectionContent minHeight={500} padding="xxl">
         <TitleRow size="lg" title={title} bordered padding />
         <Space size="xl" />
-        <Col space="xl">{children}</Col>
+        <Stack space="xl">{children}</Stack>
       </SectionContent>
       <GuidesFooter />
     </>
@@ -134,9 +134,9 @@ export function GuidesFooter() {
       <Space size="xxl" />
       <Space size="xxl" />
       <Space size="xxl" />
-      <Col height={450} padding={[true, 0]}>
+      <Stack height={450} padding={[true, 0]}>
         <AboveFooter />
-      </Col>
+      </Stack>
       <Space size="xxl" />
       <SectionContent padding={[50, 0]}>
         <Footer />

@@ -194,8 +194,8 @@ export default memo(() => {
             parallax={{
               x: {
                 transition: 'ease-in-quad',
-                move: 200,
-                clamp: [-200, 200],
+                move: 100,
+                clamp: [-100, 100],
               },
               opacity: {
                 transition: 'ease-in',
@@ -267,14 +267,14 @@ export default memo(() => {
             parallax={{
               x: {
                 transition: 'ease-in-quad',
-                move: -300,
-                clamp: [-300, 300],
+                move: -150,
+                clamp: [-150, 150],
               },
-              rotateY: {
-                transition: 'ease-in-quad',
-                move: -100,
-                clamp: [-200, 200],
-              },
+              // rotateY: {
+              //   transition: 'ease-in-quad',
+              //   move: -100,
+              //   clamp: [-200, 200],
+              // },
               opacity: {
                 transition: 'ease-in',
                 clamp: [0, 1],

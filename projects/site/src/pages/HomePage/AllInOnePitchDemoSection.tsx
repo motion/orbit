@@ -150,7 +150,7 @@ export default memo(() => {
         offset={0}
         scale={2.2}
         className="glow-two"
-        opacity={0.34}
+        opacity={0.2}
         background="radial-gradient(circle closest-side, #2F30C9, transparent)"
         parallax={geometry => ({
           y: geometry.useParallax(),

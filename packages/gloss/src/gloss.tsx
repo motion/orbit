@@ -446,14 +446,14 @@ function addStyles(
   }
   let classNames: string[] | null = null
   for (const key of keys) {
-    const rules = styles[key]
+    const style = styles[key]
     // they may return falsy, conditional '&:hover': active ? hoverStyle : null
-    if (!rules) continue
+    if (!style) continue
 
     // add the stylesheets and classNames
     // TODO could do a simple "diff" so that fast-changing styles only change the "changing" props
     // it would likely help things like when you animate based on mousemove, may be slower in default case
-    const className = addRules(displayName, rules, key, moreSpecific)
+    const className = addRules(displayName, style, key, moreSpecific)
     classNames = classNames || []
     classNames.push(className)
 

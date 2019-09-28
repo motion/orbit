@@ -55,25 +55,29 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
         if (!state.current.intersected) return
       }
       if (status.disable) return
+
+      const measure = node =>
+        requestAnimationFrame(() => {
+          const { width, height } = node.getBoundingClientRect()
+          // we need offset from top of document not relative...
+          const { top, left } = elementOffset(node)
+          set({ top, left, width, height })
+        })
+
       if (!nodeRect) {
         if (node) {
           if (node.offsetWidth === 0 && node.offsetHeight === 0) {
             // not visible in dom yet
             return
           }
-          const { width, height } = node.getBoundingClientRect()
-          // we need offset from top of document not relative...
-          const { top, left } = elementOffset(node)
-          set({ top, left, width, height })
+          measure(node)
         }
         return
       }
-      const bounds =
-        nodeRect instanceof HTMLElement
-          ? node.getBoundingClientRect()
-          : nodeRect || node.getBoundingClientRect()
-      const rect = getRect(bounds)
-      set(rect)
+
+      if (nodeRect instanceof HTMLElement) measure(node)
+      if (!nodeRect) measure(node)
+      set(getRect(nodeRect))
     },
     [ref],
   )

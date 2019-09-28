@@ -82,7 +82,9 @@ export class GarbageCollector {
       return
     }
     this.garbageTimer = setTimeout(() => {
-      this.collectGarbage()
+      window['requestIdleCallback'](() => {
+        this.collectGarbage()
+      })
     }, 10000)
   }
 

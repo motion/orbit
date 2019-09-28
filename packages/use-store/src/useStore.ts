@@ -327,41 +327,54 @@ export function useStore<A extends ReactiveStore<any> | any>(
   rerender['component'] = component
   const shouldReact = !options || options.react !== false
   const isInstantiated = Store && Store['constructor'].name !== 'Function'
-  const state = useRef({
-    lastStore: Store,
-    shouldReact,
-    isInstantiated,
-    dispose: null as any,
-    id: options ? options.id : '',
-  })
+  const stateRef = useRef<{
+    lastStore: false | A | (new () => A)
+    shouldReact: boolean
+    isInstantiated: boolean
+    dispose: any
+    id: string | number | undefined
+  }>()
   let store: any = null
 
+  if (!stateRef.current) {
+    stateRef.current = {
+      lastStore: Store,
+      shouldReact,
+      isInstantiated,
+      dispose: null as any,
+      id: options ? options.id : '',
+    }
+  }
+
+  let state = stateRef.current!
+
   // reset when id changes
-  if (options && state.current.id !== options.id) {
-    state.current.isInstantiated = false
+  if (options && state.id !== options.id) {
+    state.isInstantiated = false
   }
 
   if (__DEV__) {
-    if (state.current.shouldReact !== shouldReact) {
+    if (state.shouldReact !== shouldReact) {
       console.warn(`You're changing { react: true }, this is not allowed.`)
     }
-    if (state.current.isInstantiated !== isInstantiated) {
+    if (state.isInstantiated !== isInstantiated) {
       console.warn(
         `You're changing the instantiation of a store passed to useStore, this is not allowed.`,
       )
     }
   }
 
-  if (state.current.isInstantiated) {
+  if (state.isInstantiated) {
     // [HMR] shouldUpdate handles if a new store comes down for the same hook, update it
-    const shouldUpdate = state.current.lastStore !== Store
-    if (shouldUpdate && state.current.lastStore) {
-      disposeStore(state.current.lastStore)
+    const shouldUpdate = state.lastStore !== Store
+    if (shouldUpdate && state.lastStore) {
+      disposeStore(state.lastStore)
     }
-    state.current.lastStore = Store
+    state.lastStore = Store
     store = Store
     if (shouldReact) {
-      store = useTrackableStore(store, rerender, { ...options, component, shouldUpdate }).store
+      store = useTrackableStore(component, store, rerender, { ...options, component, shouldUpdate })
+        .store
     }
     if (!!store && props) {
       updateProps(store, props as any)
@@ -369,11 +382,11 @@ export function useStore<A extends ReactiveStore<any> | any>(
   } else {
     const res = useReactiveStore(Store as any, props)
     if (res) {
-      state.current.dispose = res.dispose
+      state.dispose = res.dispose
       store = res.store
     }
     if (shouldReact) {
-      store = useTrackableStore(store, rerender, {
+      store = useTrackableStore(component, store, rerender, {
         ...options,
         component,
         shouldUpdate: res ? res.hasChangedSource : undefined,
@@ -384,10 +397,10 @@ export function useStore<A extends ReactiveStore<any> | any>(
   // dispose on unmount
   useEffect(() => {
     return () => {
-      if (state.current.dispose) {
-        state.current.dispose()
+      if (stateRef.current!.dispose) {
+        stateRef.current!.dispose()
       }
-      if (!state.current.isInstantiated) {
+      if (!stateRef.current!.isInstantiated) {
         store && disposeStore(store, component)
       }
     }

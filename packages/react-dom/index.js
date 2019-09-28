@@ -9,12 +9,6 @@
 
 'use strict';
 
-
-
-if (process.env.NODE_ENV !== "production") {
-  (function() {
-'use strict';
-
 var React = require('react');
 var _assign = require('object-assign');
 var checkPropTypes = require('prop-types/checkPropTypes');
@@ -10550,26 +10544,26 @@ var formatLabel = function (label, warning) {
 };
 
 var beginMark = function (markName) {
-  performance.mark(formatMarkName(markName));
+  // performance.mark(formatMarkName(markName));
 };
 
 var clearMark = function (markName) {
-  performance.clearMarks(formatMarkName(markName));
+  // performance.clearMarks(formatMarkName(markName));
 };
 
 var endMark = function (label, markName, warning) {
   var formattedMarkName = formatMarkName(markName);
   var formattedLabel = formatLabel(label, warning);
-  try {
-    performance.measure(formattedLabel, formattedMarkName);
-  } catch (err) {}
+  // try {
+  //   // performance.measure(formattedLabel, formattedMarkName);
+  // } catch (err) {}
   // If previous mark was missing for some reason, this will throw.
   // This could only happen if React crashed in an unexpected place earlier.
   // Don't pile on with more errors.
 
   // Clear marks immediately to avoid growing buffer.
-  performance.clearMarks(formattedMarkName);
-  performance.clearMeasures(formattedLabel);
+  // performance.clearMarks(formattedMarkName);
+  // performance.clearMeasures(formattedLabel);
 };
 
 var getFiberMarkName = function (label, debugID) {
@@ -25599,5 +25593,3 @@ var ReactDOM$3 = ( ReactDOM$2 && ReactDOM ) || ReactDOM$2;
 var reactDom = ReactDOM$3.default || ReactDOM$3;
 
 module.exports = reactDom;
-  })();
-}

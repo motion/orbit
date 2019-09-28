@@ -2,6 +2,7 @@ import { useTheme } from 'gloss'
 import React, { HTMLAttributes, memo } from 'react'
 
 import { useDefaultProps } from './hooks/useDefaultProps'
+import { useVisibility } from './Visibility'
 
 // https://github.com/chantastic/react-svg-spinner
 
@@ -14,6 +15,7 @@ export type SpinnerProps = HTMLAttributes<SVGElement> & {
 }
 
 export const Spinner = memo((directProps: SpinnerProps) => {
+  const visibility = useVisibility()
   const theme = useTheme()
   const { color, gap, thickness, size, speed, ...rest } = useDefaultProps(
     {
@@ -25,6 +27,9 @@ export const Spinner = memo((directProps: SpinnerProps) => {
     },
     directProps,
   )
+  if (!visibility) {
+    return null
+  }
   return (
     <svg
       height={size}

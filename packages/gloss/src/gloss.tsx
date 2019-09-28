@@ -127,7 +127,7 @@ function createGlossIsEqual() {
         }
       }
       // ensure we didnt remove/add keys
-      if (!shouldUpdate && !shouldUpdateInner) {
+      if (!shouldUpdate || !shouldUpdateInner) {
         for (const key in a) {
           if (!(key in b)) {
             shouldUpdate = true

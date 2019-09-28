@@ -1,6 +1,6 @@
-import { AppBit, AppIcon, removeApp, Stack, useAppDefinition } from '@o/kit'
+import { AppBit, AppIcon, removeApp, useAppDefinition } from '@o/kit'
 import { getAppContextItems } from '@o/kit-internal'
-import { Button, IconLabeled, IconLabeledProps, SurfacePassProps, useBanner, useContextMenu } from '@o/ui'
+import { Button, IconLabeled, IconLabeledProps, Stack, SurfacePassProps, useBanner, useContextMenu } from '@o/ui'
 import { Box, gloss, Theme } from 'gloss'
 import React, { memo } from 'react'
 

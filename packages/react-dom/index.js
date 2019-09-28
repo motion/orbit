@@ -23526,57 +23526,61 @@ function warnAboutUpdateOnUnmountedFiberInDEV(fiber) {
   }
 }
 
-var beginWork$$1 = void 0;
-if (__DEV__ && replayFailedUnitOfWorkWithInvokeGuardedCallback) {
-  var dummyFiber = null;
-  beginWork$$1 = function (current$$1, unitOfWork, expirationTime) {
-    // If a component throws an error, we replay it again in a synchronously
-    // dispatched event, so that the debugger will treat it as an uncaught
-    // error See ReactErrorUtils for more information.
+// @nate
 
-    // Before entering the begin phase, copy the work-in-progress onto a dummy
-    // fiber. If beginWork throws, we'll use this to reset the state.
-    var originalWorkInProgressCopy = assignFiberPropertiesInDEV(dummyFiber, unitOfWork);
-    try {
-      return beginWork$1(current$$1, unitOfWork, expirationTime);
-    } catch (originalError) {
-      if (originalError !== null && typeof originalError === 'object' && typeof originalError.then === 'function') {
-        // Don't replay promises. Treat everything else like an error.
-        throw originalError;
-      }
+var beginWork$$1 = function(a, b, c) {
+  if (__DEV__ && replayFailedUnitOfWorkWithInvokeGuardedCallback) {
+    return beginWorkDev(a, b, c)
+  } else {
+    return beginWork$1(a, b, c)
+  }
+};
+var dummyFiber = null;
+function beginWorkDev(current$$1, unitOfWork, expirationTime) {
+  // If a component throws an error, we replay it again in a synchronously
+  // dispatched event, so that the debugger will treat it as an uncaught
+  // error See ReactErrorUtils for more information.
 
-      // Keep this code in sync with renderRoot; any changes here must have
-      // corresponding changes there.
-      resetContextDependencies();
-      resetHooks();
-
-      // Unwind the failed stack frame
-      unwindInterruptedWork(unitOfWork);
-
-      // Restore the original properties of the fiber.
-      assignFiberPropertiesInDEV(unitOfWork, originalWorkInProgressCopy);
-
-      if (enableProfilerTimer && unitOfWork.mode & ProfileMode) {
-        // Reset the profiler timer.
-        startProfilerTimer(unitOfWork);
-      }
-
-      // Run beginWork again.
-      invokeGuardedCallback(null, beginWork$1, null, current$$1, unitOfWork, expirationTime);
-
-      if (hasCaughtError()) {
-        var replayError = clearCaughtError();
-        // `invokeGuardedCallback` sometimes sets an expando `_suppressLogging`.
-        // Rethrow this error instead of the original one.
-        throw replayError;
-      } else {
-        // This branch is reachable if the render phase is impure.
-        throw originalError;
-      }
+  // Before entering the begin phase, copy the work-in-progress onto a dummy
+  // fiber. If beginWork throws, we'll use this to reset the state.
+  var originalWorkInProgressCopy = assignFiberPropertiesInDEV(dummyFiber, unitOfWork);
+  try {
+    return beginWork$1(current$$1, unitOfWork, expirationTime);
+  } catch (originalError) {
+    if (originalError !== null && typeof originalError === 'object' && typeof originalError.then === 'function') {
+      // Don't replay promises. Treat everything else like an error.
+      throw originalError;
     }
-  };
-} else {
-  beginWork$$1 = beginWork$1;
+
+    // Keep this code in sync with renderRoot; any changes here must have
+    // corresponding changes there.
+    resetContextDependencies();
+    resetHooks();
+
+    // Unwind the failed stack frame
+    unwindInterruptedWork(unitOfWork);
+
+    // Restore the original properties of the fiber.
+    assignFiberPropertiesInDEV(unitOfWork, originalWorkInProgressCopy);
+
+    if (enableProfilerTimer && unitOfWork.mode & ProfileMode) {
+      // Reset the profiler timer.
+      startProfilerTimer(unitOfWork);
+    }
+
+    // Run beginWork again.
+    invokeGuardedCallback(null, beginWork$1, null, current$$1, unitOfWork, expirationTime);
+
+    if (hasCaughtError()) {
+      var replayError = clearCaughtError();
+      // `invokeGuardedCallback` sometimes sets an expando `_suppressLogging`.
+      // Rethrow this error instead of the original one.
+      throw replayError;
+    } else {
+      // This branch is reachable if the render phase is impure.
+      throw originalError;
+    }
+  }
 }
 
 var didWarnAboutUpdateInRender = false;

@@ -38,6 +38,7 @@ export function createStackView(defaultProps: any): (props: StackProps) => JSX.E
         separator,
         suspense,
         scrollable,
+        direction,
         ...props
       },
     ] = splitCollapseProps(colProps)
@@ -65,6 +66,10 @@ export function createStackView(defaultProps: any): (props: StackProps) => JSX.E
     // groupable
     if (group) {
       element = <Breadcrumbs separator={separator}>{element}</Breadcrumbs>
+    }
+
+    if (direction === 'horizontal') {
+      props.flexDirection = props.flexDirection || 'row'
     }
 
     // scrollable

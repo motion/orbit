@@ -76,11 +76,11 @@ export default function SpaceEditView(props: Props) {
 
   const { values } = store
   return (
-    <UI.Col tagName="form" onSubmit={handleSave} padding={20}>
+    <UI.View tagName="form" onSubmit={handleSave} padding={20}>
       <Message>Enter space name and choose the color.</Message>
       <UISpace />
-      <UI.Col margin="auto" width={370}>
-        <UI.Col padding={[0, 10]}>
+      <UI.View margin="auto" width={370}>
+        <UI.View padding={[0, 10]}>
           <Form>
             <InputField label="Name" value={values.name} onChange={handleChange('name') as any} />
           </Form>
@@ -94,8 +94,8 @@ export default function SpaceEditView(props: Props) {
             <UI.Button type="submit">Save</UI.Button>
           </UI.Theme>
           <UISpace />
-        </UI.Col>
-      </UI.Col>
-    </UI.Col>
+        </UI.View>
+      </UI.View>
+    </UI.View>
   )
 }

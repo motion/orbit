@@ -65,7 +65,7 @@ export const OrbitDock = memo(() => {
           right={dockRightSpace}
           space="sm"
           position="relative"
-          flexDirection="column"
+          direction="vertical"
           bottom="auto"
         >
           <DockThemeButton index={topDockApps.length + bottomDockApps.length} />

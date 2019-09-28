@@ -16442,6 +16442,13 @@ overmind-react@20.1.1:
   dependencies:
     overmind "19.1.1"
 
+overmind-react@^20.2.0:
+  version "20.2.0"
+  resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-20.2.0.tgz#c771d10263b6a55fa815733cec3b531116b43cb1"
+  integrity sha512-xdIJw0e/9n10MQMzpXqfw6DcY3aYRBQjR/krxtpPFnOu7Fe3UM/dGUtZMvawgnHQT7GQrurFpJeqJL3FUfqoAA==
+  dependencies:
+    overmind "19.2.0"
+
 overmind-themes@1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/overmind-themes/-/overmind-themes-1.0.2.tgz#80e46f0bb5e2ad34f18a087618195f9c84a5c111"
@@ -16455,6 +16462,15 @@ overmind@19.1.1:
   version "19.1.1"
   resolved "https://registry.npmjs.org/overmind/-/overmind-19.1.1.tgz#aab60547f611c1a05bc036c568b0557e8fd522d2"
   integrity sha512-XxDJGY6rZRdhurLuuuawrkTZw9uV+2sAL5ee/oL/P1LccoEfDznaWaY8Ky6+mXRi8MZrN9VVAnsIhHnZD0WNdQ==
+  dependencies:
+    betsy "1.0.2"
+    is-plain-obj "^1.1.0"
+    proxy-state-tree "4.4.3"
+
+overmind@19.2.0, overmind@^19.2.0:
+  version "19.2.0"
+  resolved "https://registry.npmjs.org/overmind/-/overmind-19.2.0.tgz#2f0d57e6da4f4669ed95dec3975e111091613327"
+  integrity sha512-wR8atU5RoE8iXvZS3MKrAKbn52fncKUktSQu17eIf1ihbrslAiO2InipwGdr4m8HGdvOgTiBPi5s/ygn6bMsyw==
   dependencies:
     betsy "1.0.2"
     is-plain-obj "^1.1.0"

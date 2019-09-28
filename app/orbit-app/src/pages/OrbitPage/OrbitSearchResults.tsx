@@ -114,6 +114,7 @@ export const OrbitSearchResults = memo(() => {
           data-is="OrbitSearchResults-Index"
           zIndex={200}
           width="36%"
+          height="100%"
           transition="all ease 300ms"
           background={`linear-gradient(to right, ${theme.orbitLauncherSideBackground ||
             'transparent'} 15%, transparent 90%)`}

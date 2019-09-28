@@ -71,7 +71,7 @@ function isColorLikeString(str: string) {
   if (str[0] === '#') {
     return true
   }
-  if (str.indexOf('rgb(') === 0 || str.indexOf('rgba(') === 0) {
+  if (str[0] === 'r' && str[1] === 'g' && str[3] === 'b' && (str[4] === 'a' || str[4] === '(')) {
     return true
   }
   if (names[str]) {
@@ -99,20 +99,15 @@ function isColorLikeObject(object: ColorObject) {
 }
 
 function isColorLikeLibrary(val: any): boolean {
-  return (
-    typeof val.toCSS === 'function' ||
-    typeof val.css === 'function' ||
-    typeof val.rgb === 'function' ||
-    typeof val.rgba === 'function'
-  )
+  return typeof val.toCSS === 'function' || typeof val.css === 'function'
 }
 
 // attempts to work with a variety of css libraries
 function getColorLikeLibraryValue(val: any) {
   let res = val
-  if (typeof val.css === 'function') {
+  if (val.css && typeof val.css === 'function') {
     res = val.css()
-  } else if (typeof val.toCSS === 'function') {
+  } else if (val.toCSS && typeof val.toCSS === 'function') {
     res = val.toCSS()
   }
   return res.toString ? res.toString() : res

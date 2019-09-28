@@ -1,8 +1,8 @@
 import { gloss } from '@o/gloss'
-import { Row, Text, View } from '@o/ui'
+import { Stack, Text, View } from '@o/ui'
 import * as React from 'react'
 
-const MenuItemFrame = gloss(Row, {
+const MenuItemFrame = gloss(Stack, {
   padding: [5, 8],
   alignItems: 'center',
   '&:hover': {

@@ -39,9 +39,8 @@ export const PaddedView = gloss<
   props => ({
     flex: props.flex,
     minHeight: props.minHeight,
-    ...(!props.scrollable && { maxWidth: '100%' }),
-    ...(props.scrollable === 'x' && { maxHeight: '100%' }),
-    ...(props.scrollable === 'y' && { maxWidth: '100%' }),
+    maxWidth: props.scrollable === 'y' || !props.scrollable ? '100%' : undefined,
+    maxHeight: props.scrollable === 'x' ? '100%' : undefined,
   }),
   usePadding,
   wrappingSpaceTheme,

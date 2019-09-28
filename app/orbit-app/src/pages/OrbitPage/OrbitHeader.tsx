@@ -288,6 +288,9 @@ const HeaderSide = gloss<StackProps & { slim?: boolean }>(Stack, {
     minWidth: 'auto',
   },
 })
+HeaderSide.defaultProps = {
+  flexDirection: 'row',
+}
 
 const getMedia = q => window.matchMedia(q.slice(q.indexOf('(') - 1))
 

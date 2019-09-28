@@ -44,9 +44,11 @@ export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = [])
   const updateSize = () => {
     if (disable) return
     if (ref.current) {
-      update({
-        width: ref.current.clientWidth,
-        height: ref.current.clientHeight,
+      requestAnimationFrame(() => {
+        update({
+          width: ref.current.clientWidth,
+          height: ref.current.clientHeight,
+        })
       })
     }
   }

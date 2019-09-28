@@ -29,7 +29,7 @@ export const GMailSyncer: SyncerRunner = async ({ app, log, utils }) => {
     // we use this history to id to load further newly added or removed messages
     if (!lastSync.lastCursorHistoryId) {
       lastSync.lastCursorHistoryId = thread.historyId
-      log.info('looks like its the first syncing thread, set history id', lastSync)
+      log.verbose('looks like its the first syncing thread, set history id', lastSync)
       await utils.updateAppData()
     }
 
@@ -38,7 +38,7 @@ export const GMailSyncer: SyncerRunner = async ({ app, log, utils }) => {
 
     // in the case if its the last thread we need to cleanup last cursor stuff and save last synced date
     if (isLast) {
-      log.info(
+      log.verbose(
         'looks like its the last thread in this sync, removing last cursor and source last sync date',
         lastSync,
       )
@@ -106,7 +106,7 @@ export const GMailSyncer: SyncerRunner = async ({ app, log, utils }) => {
     appIdentifiers: ['slack', 'github', 'drive', 'jira', 'confluence'],
   })
   const emails = people.map(person => person.email).filter(email => email.indexOf('@') !== -1)
-  log.info('emails from the person bits', emails)
+  log.verbose('emails from the person bits', emails)
 
   // next we find all gmail Apps to add those emails to their whitelists
   const Apps = await utils.loadApps({ identifier: 'gmail' })
@@ -126,11 +126,11 @@ export const GMailSyncer: SyncerRunner = async ({ app, log, utils }) => {
     values.whitelist = whitelist
     await utils.updateAppData()
   }
-  log.info('newly whitelisted emails', newWhiteListedEmails)
+  log.verbose('newly whitelisted emails', newWhiteListedEmails)
 
   // gmail sync
 
-  log.info('sync gmail based on settings', data.values)
+  log.verbose('sync gmail based on settings', data.values)
 
   // setup default source configuration values
   if (!data.values.lastSync) data.values.lastSync = {}
@@ -142,7 +142,7 @@ export const GMailSyncer: SyncerRunner = async ({ app, log, utils }) => {
   let lastSync = data.values.lastSync
 
   // update last sync configuration
-  log.info('updating sync sources')
+  log.verbose('updating sync sources')
   lastSync.usedQueryFilter = queryFilter
   lastSync.usedDaysLimit = data.values.daysLimit
   lastSync.usedMax = data.values.max
@@ -155,7 +155,7 @@ export const GMailSyncer: SyncerRunner = async ({ app, log, utils }) => {
     (lastSync.usedQueryFilter !== undefined && queryFilter !== lastSync.usedQueryFilter) ||
     (lastSync.usedDaysLimit !== undefined && data.values.daysLimit !== lastSync.usedDaysLimit)
   ) {
-    log.info(
+    log.verbose(
       'last syncronization configuration mismatch, dropping bits and start sync from scratch',
     )
     await utils.clearBits()
@@ -195,18 +195,18 @@ export const GMailSyncer: SyncerRunner = async ({ app, log, utils }) => {
 
       log.timer('found added or changed messages in history')
     } else {
-      log.info('no added or changed messages in history were found')
+      log.verbose('no added or changed messages in history were found')
     }
 
     // load bits for removed threads and remove them
     if (history.removedThreadIds.length) {
-      log.info('found actions in history for thread removals', history.removedThreadIds.length)
+      log.verbose('found actions in history for thread removals', history.removedThreadIds.length)
       const removedBits = await utils.loadBits({
         ids: history.removedThreadIds.map(threadId => utils.generateBitId(threadId)),
       })
       await utils.removeBits(removedBits)
     } else {
-      log.info('no removed messages in history were found')
+      log.verbose('no removed messages in history were found')
     }
 
     lastSync.historyId = history.historyId
@@ -227,7 +227,7 @@ export const GMailSyncer: SyncerRunner = async ({ app, log, utils }) => {
   // we don't make this operation on a first sync because we can miss newly added emails
   // this operation is relatively cheap, so for now we are okay with it
   if (data.values.whitelist) {
-    log.info('checking whitelist', data.values.whitelist)
+    log.verbose('checking whitelist', data.values.whitelist)
     const whitelistEmails = Object.keys(data.values.whitelist).filter(
       email => data.values.whitelist[email] === true,
     )
@@ -247,7 +247,7 @@ export const GMailSyncer: SyncerRunner = async ({ app, log, utils }) => {
       }
       log.timer('load threads from whitelisted people')
     } else {
-      log.info('no enabled people in whitelist were found')
+      log.verbose('no enabled people in whitelist were found')
     }
   }
 }

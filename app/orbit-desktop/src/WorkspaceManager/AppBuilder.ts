@@ -213,7 +213,7 @@ function webpackDevReporter(middlewareOptions, options) {
   const { log, state, stats } = options
 
   if (state) {
-    const displayStats = middlewareOptions.stats !== false
+    const displayStats = +process.env.LOG_LEVEL > 1 && middlewareOptions.stats !== false
 
     if (displayStats) {
       if (stats.hasErrors()) {

@@ -34,7 +34,7 @@ export class GraphServer {
     this.server.use('/graphql/:workspaceId', bodyParser.json(), (req, res, next) => {
       const workspaceId = req.params['workspaceId']
       const middleware = this.graphMiddleware[workspaceId]
-      log.info('got req', !!middleware, workspaceId)
+      log.verbose('got req', !!middleware, workspaceId)
 
       try {
         if (middleware) {
@@ -55,9 +55,9 @@ export class GraphServer {
     return new Promise(async res => {
       const Config = getGlobalConfig()
       const port = Config.ports.graphServer
-      log.info(`Starting on ${port}`)
+      log.verbose(`Starting on ${port}`)
       this.server.listen(port, () => {
-        log.info('Server listening', port)
+        log.verbose('Server listening', port)
         res()
       })
     })

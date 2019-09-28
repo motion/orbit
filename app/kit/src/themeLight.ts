@@ -61,7 +61,7 @@ export const light: ThemeObject = Object.freeze({
     tabBackgroundSelected: lightBackground,
     listItemBackground: [255, 255, 255, 0],
     listItemBorderColor: '#eee',
-    listItemBackgroundHover: [100, 100, 100, 0.024],
+    listItemBackgroundHover: [100, 100, 100, 0.045],
     listItemBackgroundActive: [100, 100, 100, 0.05],
     inputBackground: '#fff',
     inputBackgroundHover: '#fff',

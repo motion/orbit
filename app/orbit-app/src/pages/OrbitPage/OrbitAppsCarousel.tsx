@@ -28,7 +28,7 @@ export const OrbitAppsCarousel = memo(() => {
   const apps = om.state.apps.activeClientApps
 
   const zoomOut = useMotionValue(1)
-  const scrollIn = useScrollProgress({ ref: rowRef })
+  const scrollIn = useScrollProgress({ ref: rowRef, direction: 'x' })
 
   useOnMount(() => {
     appsCarouselStore.start()
@@ -134,7 +134,7 @@ export const OrbitAppsCarousel = memo(() => {
 })
 
 function GeometryScrollUpdater() {
-  const scrollableParentStore = useScrollableParent()
+  const scrollableParentStore = useScrollableParent()!
   window['scrollableParentStore'] = scrollableParentStore
 
   // bugfix: when we went uncontrolled we didnt finish the scroll progress...
@@ -199,8 +199,6 @@ class AppCardStore {
         await sleep(800)
       }
       return zoomedIn
-      // TODO once we have concurrent we can play with this
-      return true
     },
   )
 }

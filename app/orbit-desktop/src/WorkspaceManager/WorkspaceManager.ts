@@ -166,10 +166,10 @@ export class WorkspaceManager {
   async updateDesktopState() {
     const identifiers = this.appsManager.apps.map(x => x.identifier)
     if (!identifiers.length) {
-      log.info(`No apps to update...`)
+      log.verbose(`No apps to update...`)
       return
     }
-    log.info(`Updating desktop state: ${identifiers.join(', ')}`)
+    log.verbose(`Updating desktop state: ${identifiers.join(', ')}`)
     Desktop.setState({
       workspaceState: {
         options: this.options,

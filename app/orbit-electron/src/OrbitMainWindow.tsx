@@ -165,13 +165,14 @@ export function OrbitMainWindow(props: { restartKey?: any; window?: BrowserWindo
       // TODO i think i need to make this toggle on show for a few ms, then go back to normal
       // or maybe simpler imperative API, basically need to bring it to front and then not have it hog the front
       focus={isMainWindow}
-      titleBarStyle={isMainWindow ? 'customButtonsOnHover' : 'hiddenInset'}
-      // bugfix white border https://github.com/electron/electron/issues/15008#issuecomment-497498135
-      {...isMainWindow && {
-        minimizable: false,
-        maximizable: false,
-        closable: false,
-      }}
+      // want to fix top glint in dark mode?
+      // titleBarStyle={isMainWindow ? 'customButtonsOnHover' : 'hiddenInset'}
+      // // bugfix white border https://github.com/electron/electron/issues/15008#issuecomment-497498135
+      // {...isMainWindow && {
+      //   minimizable: false,
+      //   maximizable: false,
+      //   closable: false,
+      // }}
       // alwaysOnTop={store.isReady ? [store.alwaysOnTop, 'floating', 1] : false}
       forwardRef={store.handleRef}
       animateBounds

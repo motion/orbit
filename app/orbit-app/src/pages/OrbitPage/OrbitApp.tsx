@@ -143,7 +143,7 @@ export const OrbitApp = memo((props: OrbitAppProps) => {
 
 const OrbitAppRender = memo((props: OrbitAppProps) => {
   const appDef = props.appDef || getAppDefinition(props.identifier)
-  if (appDef.app == null) {
+  if (!appDef || appDef.app == null) {
     console.warn('no app', props)
     return null
   }

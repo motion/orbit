@@ -73,7 +73,7 @@ export class AppBuilder {
       else next()
     }
 
-    async function setup() {
+    const setup = async () => {
       compiler = webpack(config)
       const publicPath = config.output.publicPath
       finalDevMiddleware = WebpackDevMiddleware(compiler, {

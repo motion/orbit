@@ -86,7 +86,6 @@ export const OrbitAppsCarousel = memo(() => {
         <OrbitSearchResults />
       </FullScreen>
       <View
-        debug
         width="100%"
         height="100%"
         {...hidden && {

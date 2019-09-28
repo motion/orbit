@@ -70,6 +70,7 @@ type AppWindowProps = BrowserWindowConstructorOptions & {
   bounds?: any
   defaultBounds?: any
   animateBounds?: boolean
+  onClose?: Function
 }
 
 export function OrbitAppWindow({

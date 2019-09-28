@@ -48,6 +48,9 @@ export class Window extends BaseComponent {
       titleBarStyle: props.titleBarStyle,
       vibrancy: props.vibrancy,
       transparent: !!props.transparent,
+      closable: !!props.closable,
+      minimizable: !!props.minimizable,
+      maximizable: !!props.maximizable,
       webPreferences: props.webPreferences,
       blinkFeatures: props.blinkFeatures,
       hasShadow: typeof props.hasShadow === 'undefined' ? true : !!props.hasShadow,
@@ -70,6 +73,9 @@ export class Window extends BaseComponent {
 
     this.propHandlers = {
       kiosk: this.handleSetProp('kiosk'),
+      closable: this.handleSetProp('closable'),
+      minimizable: this.handleSetProp('minimizable'),
+      maximizable: this.handleSetProp('maximizable'),
       vibrancy: this.handleSetProp('vibrancy'),
       fullScreen: this.handleSetProp('fullScreen'),
       visibleOnAllWorkspaces: this.handleSetProp('visibleOnAllWorkspaces'),

@@ -85,6 +85,11 @@ class OrbitMainWindowStore {
     this.windowRef = ref
   }
 
+  onClose = () => {
+    console.log('setting closable')
+    this.windowRef && this.windowRef.setClosable(true)
+  }
+
   handleOrbitSpaceMove = react(
     () => Desktop.state.movedToNewSpace,
     async (moved, { sleep, when }) => {
@@ -156,9 +161,17 @@ export function OrbitMainWindow(props: { restartKey?: any; window?: BrowserWindo
       // titleBarStyle="customButtonsOnHover"
       show={store.show}
       onReadyToShow={store.setIsReady}
+      onClose={store.onClose}
       // TODO i think i need to make this toggle on show for a few ms, then go back to normal
       // or maybe simpler imperative API, basically need to bring it to front and then not have it hog the front
       focus={isMainWindow}
+      titleBarStyle={isMainWindow ? 'customButtonsOnHover' : 'hiddenInset'}
+      // bugfix white border https://github.com/electron/electron/issues/15008#issuecomment-497498135
+      {...isMainWindow && {
+        minimizable: false,
+        maximizable: false,
+        closable: false,
+      }}
       // alwaysOnTop={store.isReady ? [store.alwaysOnTop, 'floating', 1] : false}
       forwardRef={store.handleRef}
       animateBounds

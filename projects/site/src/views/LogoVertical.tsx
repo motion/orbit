@@ -4,6 +4,8 @@ import { gloss, useTheme } from 'gloss'
 import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'
 
+import { logo } from './LogoHorizontal'
+
 export const LogoVertical = memo(
   ({ size, ...rest }: ViewProps & { size?: 'small' | 'medium' | 'large' }) => {
     const theme = useTheme()
@@ -33,7 +35,7 @@ export const LogoVertical = memo(
       >
         <BrandMark id="orbit-mark" />
         <Space size={12} />
-        <BrandWords fill={theme.color} width={1441 * 0.08} height={372 * 0.08} />
+        <BrandWords fill={theme.color} width={logo.w * 0.47} height={logo.h * 0.47} />
       </View>
     )
   },

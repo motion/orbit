@@ -1,4 +1,4 @@
-import { Space } from '@o/ui'
+import { Space, Theme } from '@o/ui'
 import { compose, mount, route, withView } from 'navi'
 import React from 'react'
 import { View } from 'react-navi'
@@ -53,7 +53,10 @@ export function BlogPage(props: { title?: string; children?: any }) {
   return (
     <FadeParent>
       <MDX>
-        <Header slim noBorder />
+        <Theme name="blogHeaderTheme">
+          <Header slim noBorder />
+          <BlogTitle />
+        </Theme>
         <main className="main-contents">{props.children}</main>
       </MDX>
     </FadeParent>
@@ -65,7 +68,6 @@ BlogPage.theme = 'light'
 function PostPage(props: { post: PostEntry; children?: any }) {
   return (
     <>
-      <BlogTitle />
       <Space size="xxxl" />
       <SectionContent readablePage>
         <ContentSection>

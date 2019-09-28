@@ -22,39 +22,43 @@ const Sections = {
   IntroSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/IntroSection')))),
 }
 
+const props = {
+  maxHeight: 1400,
+  height: '85vh',
+  minHeight: 'max-content',
+}
+
 export const HomePage = memo(() => {
   return (
     <>
       <LoadingPage />
-      {/* if you want swanky top thing */}
-      {/* <View background="#000" borderBottom={[1, [255, 255, 255, 0.12]]} height={5} width="100%" /> */}
       <Header />
       <main
         className="main-contents"
         style={{ position: 'relative', zIndex: 0, overflow: 'hidden' }}
       >
-        <Page height="auto" zIndex={0}>
+        <Page {...props} height="auto" zIndex={0}>
           <HeadSection />
         </Page>
-        <Page>
+        <Page {...props}>
           <Sections.FeaturesSection />
         </Page>
-        <Page>
+        <Page {...props}>
           <Sections.AllInOnePitchDemoSection />
         </Page>
-        <Page>
+        <Page {...props}>
           <Sections.IntroSection />
         </Page>
-        <Page>
+        <Page {...props}>
           <Sections.DeploySection />
         </Page>
-        <Page>
+        <Page {...props}>
           <Sections.DataAppKitFeaturesSection />
         </Page>
-        <Page>
+        <Page {...props}>
           <Sections.SecuritySection />
         </Page>
-        <Page>
+        <Page {...props}>
           <Theme name="home">
             <Sections.FooterSection hideJoin />
           </Theme>

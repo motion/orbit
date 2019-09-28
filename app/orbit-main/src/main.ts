@@ -51,45 +51,6 @@ const envInfo = {
 export async function main() {
   log.info(`starting ${PROCESS_NAME || 'orbit-main'} ${SUB_PROCESS}`, envInfo, ORBIT_CONFIG)
 
-  // show loading window
-  if (!SUB_PROCESS) {
-    const electron = require('electron')
-    electron.app.once('ready', () => {
-      const loadingWindow = new electron.BrowserWindow({
-        width: 300,
-        height: 200,
-        frame: false,
-        vibrancy: 'light',
-        titleBarStyle: 'customButtonsOnHover',
-        backgroundColor: '#00000000',
-        show: false,
-      })
-      loadingWindow.setMenu(null)
-      loadingWindow.setMenuBarVisibility(false)
-      loadingWindow.loadFile(join(__dirname, '..', 'loading.html'))
-      loadingWindow.once('ready-to-show', () => {
-        loadingWindow.showInactive()
-        setTimeout(() => {
-          const bounds = loadingWindow.getBounds()
-          const to = [400, 300]
-          const dw = to[0] - 300
-          const dh = to[1] - 200
-          const dx = -dw / 2
-          const dy = -dh / 2
-          loadingWindow.setBounds(
-            {
-              x: bounds.x + dx,
-              y: bounds.y + dy,
-              width: bounds.width + dw,
-              height: bounds.height + dh,
-            },
-            true,
-          )
-        })
-      })
-    })
-  }
-
   // setup config
   if (SUB_PROCESS) {
     setGlobalConfig(JSON.parse(ORBIT_CONFIG))

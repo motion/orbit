@@ -124,7 +124,7 @@ export class SyncerUtils {
       completeBitsData?: (bits: Bit[]) => void | Promise<void>
     },
   ) {
-    this.log.info('syncing bits', { apiBits, dbBits, options })
+    this.log.verbose('syncing bits', { apiBits, dbBits, options })
 
     // make sure we don't have duplicated bits
     apiBits = uniqBy(apiBits, bit => bit.id)
@@ -158,7 +158,7 @@ export class SyncerUtils {
 
     // perform database operations on synced bits
     if (!insertedBits.length && !updatedBits.length && !removedBits.length) {
-      this.log.info('no changes were detected, no bits were synced')
+      this.log.verbose('no changes were detected, no bits were synced')
       return
     }
 
@@ -229,7 +229,7 @@ export class SyncerUtils {
         })
 
         if (newPeople.length || removedPeople.length) {
-          this.log.info('found people changes in a bit', bit, { newPeople, removedPeople })
+          this.log.verbose('found people changes in a bit', bit, { newPeople, removedPeople })
 
           await manager
             .createQueryBuilder(BitEntity, 'bit')

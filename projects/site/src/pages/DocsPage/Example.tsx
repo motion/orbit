@@ -105,7 +105,7 @@ export const Example = memo(
             <>{contents}</>
           ) : (
             <>
-              <Divider />
+              {/* <Divider /> */}
               <Space size="sm" />
               <Row>
                 <H5>{name || capitalize(id)}</H5>

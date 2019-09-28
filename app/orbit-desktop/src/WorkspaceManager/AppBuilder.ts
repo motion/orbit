@@ -2,6 +2,7 @@ import { AppsManager } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppMeta, BuildStatus, CommandWsOptions } from '@o/models'
 import { decorate } from '@o/use-store'
+import { sleep } from '@o/utils'
 import { Handler } from 'express'
 import { pathExists } from 'fs-extra'
 import { debounce } from 'lodash'
@@ -32,8 +33,7 @@ export type WebpackAppsDesc = {
   middleware?: Handler
   devMiddleware?: Handler
   close?: Function
-  compiler?: webpack.Compiler
-  watchingCompiler?: webpack.MultiWatching
+  getCompiler?: () => webpack.Compiler | null
   config?: webpack.Configuration
 }
 
@@ -44,40 +44,71 @@ export class AppBuilder {
   constructor(private props: AppBuilderProps) {}
 
   async start(): Promise<WebpackAppsDesc> {
-    const { name, config } = this.props
-    const compiler = webpack(config)
-    const publicPath = config.output.publicPath
-    const devMiddleware = WebpackDevMiddleware(compiler, {
-      publicPath,
-      reporter: await this.getReporter(),
-      writeToDisk: true,
-    })
-    const hash = hashObject({ sort: false }).hash(config)
-    const middleware = resolveIfExists(devMiddleware, [config.output.path])
-    const staticMiddleware = (req, res, next) => {
-      if (this.serveStatic) {
-        const assetName = req.path.slice(req.path.lastIndexOf('/') + 1)
-        if (name === 'main' && assetName.includes('.worker.js')) {
-          res.sendFile(join(config.output.path, assetName))
-          return
-        }
-        if (assetName === config.output.filename) {
-          res.sendFile(this.outputBundlePath)
-          return
-        }
+    const { name, config, appMeta } = this.props
+
+    // serve existing static bundle if exists
+    if (!appMeta || !(await shouldRebuildApp(appMeta.directory))) {
+      if (await pathExists(this.outputBundlePath)) {
+        // compile, but start status at success so we can serve from disk right away
+        this.props.onBuildStatus(this.getBuildStatus({ status: 'complete' }))
+        this.serveStatic = true
       }
-      next()
     }
+
+    /**
+     * Were doing a delayed webpack start on serveStatic so we proxy middlewares for a bit
+     */
+
+    const hash = hashObject({ sort: false }).hash(config)
+    let compiler: webpack.Compiler | null = null
+    let finalDevMiddleware = null
+    let finalMiddleware = null
+
+    function middleware(req, res, next) {
+      if (finalMiddleware) return finalMiddleware(req, res, next)
+      else next()
+    }
+    function devMiddleware(req, res, next) {
+      if (finalDevMiddleware) return finalDevMiddleware(req, res, next)
+      else next()
+    }
+
+    if (this.serveStatic) {
+      sleep(4000).then(async () => {
+        compiler = webpack(config)
+        const publicPath = config.output.publicPath
+        finalDevMiddleware = WebpackDevMiddleware(compiler, {
+          publicPath,
+          reporter: await this.getReporter(),
+          writeToDisk: true,
+        })
+        finalMiddleware = resolveIfExists(devMiddleware, [config.output.path])
+      })
+    }
+
     return {
       config,
       devMiddleware,
-      staticMiddleware,
+      staticMiddleware: (req, res, next) => {
+        if (this.serveStatic) {
+          const assetName = req.path.slice(req.path.lastIndexOf('/') + 1)
+          if (name === 'main' && assetName.includes('.worker.js')) {
+            res.sendFile(join(config.output.path, assetName))
+            return
+          }
+          if (assetName === config.output.filename) {
+            res.sendFile(this.outputBundlePath)
+            return
+          }
+        }
+        next()
+      },
       middleware,
       close: () => {
         log.info(`closing middleware ${name}`)
-        devMiddleware.close()
+        finalDevMiddleware && finalDevMiddleware.close()
       },
-      compiler,
+      getCompiler: () => compiler,
       name: this.props.name,
       hash,
     }
@@ -132,15 +163,6 @@ export class AppBuilder {
     // start in compiling mode
     this.props.onBuildStatus(this.getBuildStatus({ status: 'building' }))
 
-    // serve existing static bundle if exists
-    if (!appMeta || !(await shouldRebuildApp(appMeta.directory))) {
-      if (await pathExists(this.outputBundlePath)) {
-        // compile, but start status at success so we can serve from disk right away
-        this.props.onBuildStatus(this.getBuildStatus({ status: 'complete' }))
-        this.serveStatic = true
-      }
-    }
-
     return (middlewareOptions, options) => {
       // run the usual webpack reporter, outputs to console
       // https://github.com/webpack/webpack-dev-middleware/blob/master/lib/reporter.js
@@ -192,14 +214,23 @@ function webpackDevReporter(middlewareOptions, options) {
 
   if (state) {
     const displayStats = middlewareOptions.stats !== false
+    const logVerbose = +process.env.LOG_LEVEL > 1
 
     if (displayStats) {
       if (stats.hasErrors()) {
         log.error(stats.toString(middlewareOptions.stats))
       } else if (stats.hasWarnings()) {
-        log.warn(stats.toString(middlewareOptions.stats))
+        if (logVerbose) {
+          log.warn(stats.toString(middlewareOptions.stats))
+        } else {
+          log.info(`Build finished with warnings`)
+        }
       } else {
-        log.info(stats.toString(middlewareOptions.stats))
+        if (logVerbose) {
+          log.info(stats.toString(middlewareOptions.stats))
+        } else {
+          log.info(`Build finished`)
+        }
       }
     }
 

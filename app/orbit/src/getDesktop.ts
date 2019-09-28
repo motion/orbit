@@ -24,27 +24,47 @@ export async function getOrbitDesktop(
   didStartOrbit: boolean
   orbitProcess: ChildProcess | null
 }> {
-  let port = await findBonjourService('orbitDesktop', 180)
-  let didStartOrbit = false
-  let orbitProcess: ChildProcess | null = null
   const isInMonoRepo = await getIsInMonorepo()
+  let port = 0
+  let orbitProcess: ChildProcess | null = null
+  let didFindOrbit = false
+  let didStartOrbit = false
+
+  await Promise.all([
+    (async function findOrbit() {
+      const foundPort = await findBonjourService('orbitDesktop', 180)
+      if (foundPort) {
+        port = foundPort
+        didFindOrbit = true
+      }
+    })(),
+    (async function preloadOrbit() {
+      reporter.info('🌒 Starting Orbit.app (optimistic start)')
+      orbitProcess = runOrbitDesktop(props, isInMonoRepo)
+    })(),
+  ])
+
+  if (didFindOrbit) {
+    // cancel optimistic start, we found existing
+    if (orbitProcess) {
+      process.kill(-orbitProcess.pid)
+    }
+  } else {
+    if (orbitProcess) {
+      reporter.verbose(`Didn't find existing Orbit, using current`)
+      const found = await findBonjourService('orbitDesktop', 15000)
+      if (found) {
+        port = found
+        reporter.verbose(`Started orbit on port ${port}`)
+        didStartOrbit = true
+      }
+    }
+  }
 
   if (port) {
     reporter.info(`Found existing orbit process`)
   } else {
-    reporter.info('🌒 Starting Orbit.app')
-    // run desktop and try again
-    orbitProcess = runOrbitDesktop(props, isInMonoRepo)
-    if (orbitProcess) {
-      reporter.verbose(`Started orbit process, waiting for bonjour`)
-      port = await findBonjourService('orbitDesktop', 15000)
-      reporter.verbose(`Started orbit on port ${port}`)
-      didStartOrbit = true
-    }
-  }
-
-  if (!port) {
-    reporter.panic(`Couldn't get Orbit to run`)
+    reporter.panic(`Couldn't find or start Orbit!`)
   }
 
   reporter.verbose(`Connecting to orbit desktop on port ${port}`)

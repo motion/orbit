@@ -81,7 +81,7 @@ export class AppsBuilder {
 
   isUpdating = false
   async update({ buildMode, options }: AppsBuilderUpdate) {
-    log.info(`update()`)
+    log.verbose(`update()`)
     this.wsOptions = options
     if (this.isUpdating) {
       console.warn('!!!!!!!!!!!!!!!!!!!!!!!! what TODO cancel current and re-run')
@@ -117,10 +117,10 @@ export class AppsBuilder {
       // for build mode, ensure we re-run the dll builds first
       if (options.action === 'build') {
         const { base } = clientConfigs
-        log.info(`Building ${Object.keys(clientConfigs).join(', ')}...`)
+        log.verbose(`Building ${Object.keys(clientConfigs).join(', ')}...`)
         // build base dll first to ensure it feeds into rest
         await webpackPromise([base], {
-          loud: true,
+          loud: +process.env.LOG_LEVEL > 1,
         })
       }
 
@@ -131,7 +131,7 @@ export class AppsBuilder {
     } catch (err) {
       log.error(`\n\ERROR running initial builds!\n\n${err.message}\n\n${err.stack}\n\n`)
     } finally {
-      log.info(`update() finish`)
+      log.verbose(`update() finish`)
       this.isUpdating = false
     }
   }
@@ -262,8 +262,8 @@ export class AppsBuilder {
           if (!isMain) {
             clientDescs = [...clientDescs, { ...info, middleware: info.staticMiddleware }, info]
           } else {
-            const { config, hash, devMiddleware, staticMiddleware, compiler } = info
-            const mainHotMiddleware = getHotMiddleware([compiler], {
+            const { config, hash, devMiddleware, staticMiddleware, getCompiler } = info
+            const mainHotMiddleware = getHotMiddleware([getCompiler], {
               path: '/__webpack_hmr_main',
               log: console.log,
               heartBeat: 10 * 1000,
@@ -308,7 +308,7 @@ export class AppsBuilder {
       }),
     )
 
-    // add cleint descs to output
+    // add client descs to output
     res = [...res, ...clientDescs]
 
     // then add one HMR server for everything because EventStream's don't support >5 in Chrome
@@ -316,7 +316,7 @@ export class AppsBuilder {
     res.push({
       name: 'apps-hot',
       middleware: resolveIfExists(
-        getHotMiddleware(clientDevDescs.map(x => x.compiler), {
+        getHotMiddleware(clientDevDescs.map(x => x.getCompiler), {
           path: '/__webpack_hmr',
           log: console.log,
           heartBeat: 10 * 1000,
@@ -368,7 +368,6 @@ export class AppsBuilder {
     if (req.path[1] !== '_' && req.path.indexOf('.') === -1) {
       return await sendIndex()
     }
-    console.log('req.path', req.path)
     let fin
     for (const { middleware } of this.state) {
       if (!middleware) {
@@ -432,7 +431,7 @@ export class AppsBuilder {
           log.debug(`${name} config hasnt changed! dont re-run this one just return the old one`)
           return { hash, running, hasChanged: false }
         } else {
-          log.verbose(`${name}config has changed!`)
+          log.verbose(`${name}config has changed! ${running.hash} vs ${hash}`)
           return { hash, running, hasChanged: true }
         }
       }
@@ -443,7 +442,6 @@ export class AppsBuilder {
   private async getIndex(req: Request<Dictionary<string>>) {
     log.info('getIndex', req.path)
 
-    // const isProd = Object.keys(this.buildMode).every(x => this.buildMode[x] === 'production')
     const desktopRoot = join(require.resolve('@o/orbit-desktop'), '..', '..')
     const index = await readFile(join(desktopRoot, 'index.html'), 'utf8')
     const scriptsPre = `
@@ -464,7 +462,6 @@ export class AppsBuilder {
       const identifier = req.path.split('/')[2]
       const packageId = this.appsManager.identifierToPackageId[identifier]
       const app = this.apps.find(x => x.packageId === packageId)
-      console.log('identifier', identifier)
       return index.replace(
         '<!-- orbit-scripts -->',
         `${scriptsPre}${getAppScriptDLL(app)}${scriptsPost}`,

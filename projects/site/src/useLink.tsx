@@ -49,7 +49,9 @@ export const createLink = memoize((href: string, header = null, isExternal = fal
   }
   clearTimeout(tm)
   e.preventDefault()
-  if (loadedRoutes[href] || !header) {
+  // always animate from home
+  const shouldntPreload = window.location.pathname !== '/' && loadedRoutes[href]
+  if (shouldntPreload || !header) {
     LinkState.didAnimateOut = false
     getNavigation().navigate(href)
   } else {
@@ -59,6 +61,7 @@ export const createLink = memoize((href: string, header = null, isExternal = fal
       document.body.classList.add('will-load')
       document.body.classList.add('loading')
     }, 200)
+    console.log('animate')
     header.setShown(false)
     tm = setTimeout(() => {
       getNavigation()

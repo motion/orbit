@@ -130,6 +130,8 @@ export type FadeChildProps = ViewProps & {
   min?: number
   max?: number
   parallax?: ParallaxProp
+  speed?: number
+  offset?: number
 }
 
 const initialScreenWidth = window.innerWidth
@@ -183,11 +185,10 @@ export const FadeInView = memo(
             delay: delayIndex ? delayIndex / 6 : (delay || 1) / 1000,
           }
 
-    if (!parent) {
-      return <View {...rest}>{children}</View>
-    }
-
     if (parallax) {
+      if (!parent) {
+        return <View {...rest}>{children}</View>
+      }
       return (
         <ParallaxStageItem parallax={parallax} stagger={delayIndex} {...rest}>
           <View

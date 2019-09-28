@@ -33,8 +33,10 @@ function focusApp(shown: boolean) {
 class OrbitMainWindowStore {
   props: {
     enabled: boolean
+    window: BrowserWindow
   } = {
     enabled: false,
+    window: null,
   }
 
   alwaysOnTop = true
@@ -83,6 +85,11 @@ class OrbitMainWindowStore {
     this.windowRef = ref
   }
 
+  onClose = () => {
+    console.log('setting closable')
+    this.windowRef && this.windowRef.setClosable(true)
+  }
+
   handleOrbitSpaceMove = react(
     () => Desktop.state.movedToNewSpace,
     async (moved, { sleep, when }) => {
@@ -110,7 +117,7 @@ class OrbitMainWindowStore {
 
   get show() {
     if (Electron.isMainWindow) {
-      return this.isReady && Electron.state.showOrbitMain
+      return (this.props.window || this.isReady) && Electron.state.showOrbitMain
     }
     return true
   }
@@ -120,10 +127,11 @@ class OrbitMainWindowStore {
   }
 }
 
-export function OrbitMainWindow(props: { restartKey?: any }) {
+export function OrbitMainWindow(props: { restartKey?: any; window?: BrowserWindow }) {
   const { isMainWindow, windowId } = useStore(Electron)
   const store = useStore(OrbitMainWindowStore, {
     enabled: isMainWindow,
+    window: props.window,
   })
   global['OrbitMainWindowStore'] = OrbitMainWindowStore
 
@@ -143,6 +151,7 @@ export function OrbitMainWindow(props: { restartKey?: any }) {
   return (
     <OrbitAppWindow
       key={props.restartKey}
+      window={props.window}
       windowId={windowId}
       locationQuery={{
         ...(process.env.NODE_ENV !== 'development' && {
@@ -152,13 +161,27 @@ export function OrbitMainWindow(props: { restartKey?: any }) {
       // titleBarStyle="customButtonsOnHover"
       show={store.show}
       onReadyToShow={store.setIsReady}
+      onClose={store.onClose}
       // TODO i think i need to make this toggle on show for a few ms, then go back to normal
       // or maybe simpler imperative API, basically need to bring it to front and then not have it hog the front
       focus={isMainWindow}
+      // want to fix top glint in dark mode?
+      // titleBarStyle={isMainWindow ? 'customButtonsOnHover' : 'hiddenInset'}
+      // // bugfix white border https://github.com/electron/electron/issues/15008#issuecomment-497498135
+      // {...isMainWindow && {
+      //   minimizable: false,
+      //   maximizable: false,
+      //   closable: false,
+      // }}
       // alwaysOnTop={store.isReady ? [store.alwaysOnTop, 'floating', 1] : false}
       forwardRef={store.handleRef}
-      defaultPosition={store.bounds.position}
-      defaultSize={store.bounds.size}
+      animateBounds
+      defaultBounds={{
+        x: store.bounds.position[0],
+        y: store.bounds.position[1],
+        width: store.bounds.size[0],
+        height: store.bounds.size[1],
+      }}
       onResize={store.setSize}
       onPosition={store.setPosition}
       onMove={store.setPosition}

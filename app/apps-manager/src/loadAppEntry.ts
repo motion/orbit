@@ -20,7 +20,7 @@ export async function loadAppEntry(
     if (await pathExists(path)) {
       return require(path).default
     } else {
-      log.info(`No entry found: ${path}`)
+      log.verbose(`No entry found: ${path}`)
       return null
     }
   } catch (err) {

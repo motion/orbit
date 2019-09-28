@@ -150,7 +150,7 @@ export default memo(() => {
         offset={0}
         scale={2.2}
         className="glow-two"
-        opacity={0.4}
+        opacity={0.2}
         background="radial-gradient(circle closest-side, #2F30C9, transparent)"
         parallax={geometry => ({
           y: geometry.useParallax(),
@@ -191,7 +191,7 @@ export default memo(() => {
                 </CenterText>
               </FadeInView>
             </SubSection>
-            <SubSection flex={2} padding={[true, 'xxl']}>
+            <SubSection flex={2} padding={[false, 'xxl']}>
               <FadeInView parallax delayIndex={4} {...fadeAnimations.up}>
                 <PillButtonDark>Display</PillButtonDark>
                 <Space />

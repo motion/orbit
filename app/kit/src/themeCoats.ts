@@ -182,7 +182,7 @@ export const coats: ThemeSet = Object.freeze({
   }),
   bordered: {
     glintColor: transparent,
-    borderWidth: 2,
+    borderWidth: 1,
     ...colorThemes.transparent,
   },
   titlebar: fromStyles({

@@ -3,7 +3,7 @@ import { Logger } from '@o/logger'
 import { Window } from '@o/reactron'
 import { App, Electron } from '@o/stores'
 import { react, useStore } from '@o/use-store'
-import { BrowserWindowConstructorOptions } from 'electron'
+import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron'
 import { join } from 'path'
 import { stringify } from 'query-string'
 import * as React from 'react'
@@ -63,9 +63,14 @@ type AppWindowProps = BrowserWindowConstructorOptions & {
   onResize?: Function
   onMove?: Function
   onPosition?: Function
-  defaultPosition: number[]
-  defaultSize: number[]
+  defaultPosition?: number[]
+  defaultSize?: number[]
   locationQuery?: Object
+  window?: BrowserWindow
+  bounds?: any
+  defaultBounds?: any
+  animateBounds?: boolean
+  onClose?: Function
 }
 
 export function OrbitAppWindow({
@@ -92,15 +97,16 @@ export function OrbitAppWindow({
   return (
     <Window
       show={store.show}
-      webPreferences={{
-        nodeIntegration: true,
-        // webSecurity: false,
-      }}
-      titleBarStyle="hiddenInset"
       ref={forwardRef}
       file={url}
-      defaultPosition={store.position.slice()}
-      defaultSize={store.size.slice()}
+      webPreferences={{
+        nodeIntegration: true,
+      }}
+      titleBarStyle="hiddenInset"
+      {...!(windowProps.defaultBounds && !windowProps.bounds) && {
+        defaultPosition: store.position.slice(),
+        defaultSize: store.size.slice(),
+      }}
       onFocus={store.handleFocus}
       showDevTools={store.showDevTools}
       transparent

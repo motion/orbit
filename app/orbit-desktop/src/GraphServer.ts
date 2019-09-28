@@ -14,8 +14,6 @@ import { introspectSchema, makeExecutableSchema, makeRemoteExecutableSchema, mer
 import { getActiveSpace } from './helpers/getActiveSpace'
 
 const log = new Logger('graphServer')
-const Config = getGlobalConfig()
-const port = Config.ports.graphServer
 
 export class GraphServer {
   server: express.Application
@@ -36,7 +34,7 @@ export class GraphServer {
     this.server.use('/graphql/:workspaceId', bodyParser.json(), (req, res, next) => {
       const workspaceId = req.params['workspaceId']
       const middleware = this.graphMiddleware[workspaceId]
-      log.info('got req', !!middleware, workspaceId)
+      log.verbose('got req', !!middleware, workspaceId)
 
       try {
         if (middleware) {
@@ -55,9 +53,11 @@ export class GraphServer {
     })
 
     return new Promise(async res => {
-      log.info(`Starting on ${port}`)
+      const Config = getGlobalConfig()
+      const port = Config.ports.graphServer
+      log.verbose(`Starting on ${port}`)
       this.server.listen(port, () => {
-        log.info('Server listening', port)
+        log.verbose('Server listening', port)
         res()
       })
     })
@@ -84,15 +84,11 @@ export class GraphServer {
       const appDef = appDefs.find(def => def.id === app.identifier)
 
       if (app && !appDef) {
-        log.verbose(
+        log.debug(
           `GraphServer, ${
             app.identifier
           }: WARNING! found an app-bit but no app-def, DB maybe out of sync.`,
         )
-      } else {
-        // console.log(`
-        //   loading ${app.identifier}, graph? ${!!appDef.graph}
-        // `)
       }
 
       if (!appDef) continue

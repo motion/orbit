@@ -8,13 +8,16 @@ The plan from jun for Sep:
 they have conflicting sub-contraints in cases, resolved to (in order of importance):
 
 - [beta/demo] runthrough + bugfix over and over
+  - no rebuild all node apps
+  - show a window immediately on startup that shows status of builds
+  - fix sorting apps
+  - handle deleting apps, adding apps better
+  - test errors/error recovery
+  - improve "retry" button
+  - fix/improve open in vscode (go to app folder)
+  - show better dev status (building spinner in header)
 - [demo] plug in simple ocr/import menu command
-- [beta] startup time fixes and clean workspace fixes
-  - startup needs to be a "chunk" to focus on:
-    1. make it load without webpack running (static serve to start)
-    2. show an electron loading window pre-launch instantly then transition to app
-       - can plugin 3d loading animation via danny later
-    3. (~tech-blocker) webpack 5 for faster from-cache resuming
+- [beta] ~tech-blocker webpack 5 for faster from-cache resuming
 - [beta] search UI fixes
 - [beta] HMR/dev fixes and upgrades
 - [beta] search backend (nlp + scan more fixes)
@@ -24,64 +27,50 @@ they have conflicting sub-contraints in cases, resolved to (in order of importan
 - [site] run over docs for a few days
 - [beta] query builder finish
 
-Sep 12:
-
-- fix some app stuff:
-  - no rebuild all node apps
-  - improve startup build logic
-  - show a window immediately on startup that shows status of builds
-  - fix dev mode toggle regression
-  - no watch in prod mode plz
-  - fix sorting apps
-
-- dev mode runthrough
-  - test errors/error recovery
-  - improve "retry" button
-  - fix/improve open in vscode (go to app folder)
-  - show better dev status (building spinner in header)
-
-- handle deleting apps, adding apps better
-- get clean workspace build better
-
-
 ---
 
 Detailed September Plan:
 
-- [ ] Finish motion/carousel
-  - [ ] Carousel is definitely slower, need to test with more items too
-  - [ ] Performance opening drawer
-  - [ ] Fix a lot of correctness bugs (resize window, etc)
-  - [ ] Check into regressions on keyboard movement in main area/apps (is it moving inside apps when it shouldnt?)
+- finish motion/carousel
 
-- [ ] Get Concurrent working with priority on new react
-- [ ] Fix a ton of bugs:
-  - [ ] Search has some glitching when showing items
-  - [ ] QueryBuilder has so many, including performance
-  - [ ] Get the whole flow of install/delete/edit working again
+  - carousel is definitely slower, need to test with more items too
+  - performance opening drawer
+  - fix a lot of correctness bugs (resize window, etc)
+  - check into regressions on keyboard movement in main area/apps (is it moving inside apps when it
+    shouldnt?)
 
-- [ ] Lists app should have a lot of improvements
-- [ ] General performance run would help a ton
-  - [ ] Especially things like:
-    - [ ] During sync I think its saving bits often and causing lots of updates
+- get Concurrent working with priority on new react
+- fix a ton of bugs:
 
-- [ ] Last Features to tie it all together?
+  - search has some glitching when showing items
+  - queryBuilder has so many, including performance
+  - get the whole flow of install/delete/edit working again
+
+- lists app should have a lot of improvements
+- general performance run would help a ton
+
+  - especially things like:
+    - during sync I think its saving bits often and causing lots of updates
+
+- last Features to tie it all together?
+
   1. "Move Data" modal, see block below
   2. See DataDog, could pull some auto-dashboard example apps
 
-- [ ] Demo apps that would be compelling:
-  - [ ] Some sort of easy drag/drop in/out type thing
-  - [ ] Some sort of data browsing/plugin app:
-    - [ ] Database browser could be useful
-    - [ ] GraphQL usage would be helpful
+- demo apps that would be compelling:
 
-- [ ] Build to production
-  - [ ] !!! we can't do this right now for electron 8 though without some trouble, so no rounded windows..?
-  - [ ] Get build to prod working
-  - [ ] + get build to prod with full flow of app editing working
+  - some sort of easy drag/drop in/out type thing
+  - some sort of data browsing/plugin app:
+    - database browser could be useful
+    - graphQL usage would be helpful
 
+- build to production
+  - !!! we can't do this right now for electron 8 though without some trouble, so no rounded
+    windows..?
+  - get build to prod working
+  - - get build to prod with full flow of app editing working
 
-----------
+---
 
 MOVING DATA
 
@@ -92,20 +81,16 @@ I think a modal would work well, where in any context you could bring it up.
 Imagine an almost automator/shortcuts(ios) style multi-pane thing
 
 Either select items or define query
-  > preview those itmes
-  > add a transform
-    > tranform can select fields, apply code to them
-  > add an output
-    > output can send it to a data-app
-    > can select fields, apply code
 
+> preview those itmes add a transform tranform can select fields, apply code to them add an output
+> output can send it to a data-app can select fields, apply code
 
-------------
-
+---
 
 GO TO PROD / DEV TASKS
 
-- [ ] React Window is being re-written again by bvaughn, there are bugs in it currently, an afternoon to revisit and see if we can upgrade to that version
+- [ ] React Window is being re-written again by bvaughn, there are bugs in it currently, an
+      afternoon to revisit and see if we can upgrade to that version
 
 ---
 
@@ -124,8 +109,10 @@ notes from onboarding andrew:
 - searchResults app shouldn't insert by default
 - make workers wait for app to finish startup before starting
 - node rebuilding slowly
-- need to refresh searchResults sometimes when youve added bits, dont do too smart just check for saves
-- SelectableStore should export themselves into a global, based on if they are visibile, and then esc can clear selection before doing anything else
+- need to refresh searchResults sometimes when youve added bits, dont do too smart just check for
+  saves
+- SelectableStore should export themselves into a global, based on if they are visibile, and then
+  esc can clear selection before doing anything else
 
 ---
 
@@ -149,9 +136,9 @@ First: working, non-buggy demos of everything. Visually impressive.
 - Get interaction with search + show AppShowBit proper
 - Fixing bugs with carousel/drawer/drop
 
-- make a generic app for search + display data that you can drag a query into
-make user manager app use grid layout probably
-make slack app search something large and put it into layout demo app or similar
+- make a generic app for search + display data that you can drag a query into make user manager app
+  use grid layout probably make slack app search something large and put it into layout demo app or
+  similar
 
 ---
 
@@ -191,6 +178,7 @@ Questions:
 small:
 
 - gloss could probably memo pretty well, should make adjustments using the benchmarks
+
   - custom memo function:
     - if children set, dont memo at all
     - do a few smart props that we know are usually POJOs
@@ -202,6 +190,7 @@ small:
 ideas:
 
 - mdx mode:
+
   - support a "simple" mode where you can code in just mdx
     - benefits:
       - ✅ no import, no export default, no return this/that

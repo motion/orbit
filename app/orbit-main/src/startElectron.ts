@@ -6,7 +6,7 @@ import { handleExit } from './helpers/handleExit'
 
 const log = new Logger('startElectron')
 
-export function startElectron({ mainProcess }) {
+export function startElectron({ mainProcess, loadingWindow }) {
   if (mainProcess) {
     // this works in prod
     app.on('before-quit', () => {
@@ -15,21 +15,21 @@ export function startElectron({ mainProcess }) {
     })
 
     if (app.isReady) {
-      finishLaunchingElectron({ mainProcess })
+      finishLaunchingElectron({ mainProcess, loadingWindow })
     } else {
       app.on('ready', finishLaunchingElectron)
     }
   } else {
-    finishLaunchingElectron({ mainProcess })
+    finishLaunchingElectron({ mainProcess, loadingWindow })
   }
 }
 
-const finishLaunchingElectron = async ({ mainProcess }) => {
+const finishLaunchingElectron = async ({ mainProcess, loadingWindow }) => {
   const Config = getGlobalConfig()
 
   // start electron...
   const ElectronApp = require('@o/orbit-electron')
-  ElectronApp.main()
+  ElectronApp.main(loadingWindow)
 
   // PRODUCTION
   if (

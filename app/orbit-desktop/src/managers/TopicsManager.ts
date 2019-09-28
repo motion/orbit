@@ -17,10 +17,12 @@ export class TopicsManager {
 
   async start() {
     log.info(`start()`)
-    await ensureSetting('topicsIndexUpdatedTo', 0)
-    this.scanTopicsInt = setInterval(this.scanTopics, 1000 * 60 * 15)
-    await sleep(100)
-    this.scanTopics()
+    // not important to startup
+    sleep(8000).then(async () => {
+      await ensureSetting('topicsIndexUpdatedTo', 0)
+      this.scanTopicsInt = setInterval(this.scanTopics, 1000 * 60 * 15)
+      this.scanTopics()
+    })
   }
 
   dispose() {

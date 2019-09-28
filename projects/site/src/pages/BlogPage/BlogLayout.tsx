@@ -2,14 +2,12 @@ import { Col, ColProps, Space } from '@o/ui'
 import React from 'react'
 
 import { SectionContent } from '../../views/SectionContent'
-import { BlogTitle } from '../BlogTitle'
 import { AboveFooter } from '../HomePage/AboveFooter'
 import { Footer } from '../HomePage/Footer'
 
 export function BlogLayout({ children, ...props }: ColProps) {
   return (
     <>
-      <BlogTitle />
       <Space size="xxxl" />
       <SectionContent minHeight={500}>
         <Col {...props}>{children}</Col>

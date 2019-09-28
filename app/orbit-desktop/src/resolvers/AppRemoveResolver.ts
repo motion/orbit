@@ -15,7 +15,7 @@ export const AppRemoveResolver = resolveCommand(AppRemoveCommand, async ({ appId
   })
 
   if (!app) {
-    log.info('error - cannot find requested app', { appId })
+    log.verbose('error - cannot find requested app', { appId })
     return {
       type: 'error',
       message: `Can't find app ${appId}`,
@@ -33,17 +33,17 @@ export const AppRemoveResolver = resolveCommand(AppRemoveCommand, async ({ appId
     message: '',
   }
   await getRepository(JobEntity).save(job)
-  log.info('created a new job', job)
+  log.verbose('created a new job', job)
 
   let error = ''
 
   // remove app and all its related data
-  log.info('removing app', app)
+  log.verbose('removing app', app)
   await getManager()
     .transaction(async manager => {
       // removing all synced bits
       const bits = await manager.find(BitEntity, { where: { appId }, select: ['id'] })
-      log.info('removing bits...', bits)
+      log.verbose('removing bits...', bits)
 
       if (bitRemoveFailures.has(appId)) {
         const connection = getConnection()
@@ -68,18 +68,18 @@ export const AppRemoveResolver = resolveCommand(AppRemoveCommand, async ({ appId
           throw err
         }
       }
-      log.info('bits were removed')
+      log.verbose('bits were removed')
 
       // removing jobs (including that one we created just now)
       const jobs = await manager.find(JobEntity, { appId })
-      log.info('removing jobs...', jobs)
+      log.verbose('removing jobs...', jobs)
       await manager.remove(jobs)
-      log.info('jobs were removed')
+      log.verbose('jobs were removed')
 
       // removing app itself
-      log.info('finally removing app itself...')
+      log.verbose('finally removing app itself...')
       await manager.remove(app)
-      log.info('app was removed')
+      log.verbose('app was removed')
     })
     .catch(async error => {
       log.error('error during app removal', error)

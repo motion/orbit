@@ -136,11 +136,11 @@ export default memo(() => {
       <Page.BackgroundParallax
         speed={0.3}
         offset={0.5}
-        x="60%"
+        x="90%"
         top="20%"
-        scale={1.3}
+        scale={2}
         className="glow-two"
-        opacity={0.34}
+        opacity={0.23}
         background="radial-gradient(circle closest-side, #12A1CC, transparent)"
         parallax={geometry => ({
           y: geometry.useParallax(),
@@ -148,21 +148,21 @@ export default memo(() => {
         })}
       />
 
-      {/* teal left */}
-      <Page.BackgroundParallax
+      {/* left */}
+      {/* <Page.BackgroundParallax
         speed={0.3}
         offset={0.5}
         x="60%"
         top="20%"
         scale={1.3}
         className="glow-two"
-        opacity={0.31}
+        opacity={0.25}
         background="radial-gradient(circle closest-side, #D25CCD, transparent)"
         parallax={geometry => ({
           y: geometry.useParallax(),
-          x: geometry.useParallax().transform(x => x * 1 - 240),
+          x: geometry.useParallax().transform(x => -x * 1.5 + 240),
         })}
-      />
+      /> */}
 
       <Row
         alignItems="center"
@@ -194,8 +194,8 @@ export default memo(() => {
             parallax={{
               x: {
                 transition: 'ease-in-quad',
-                move: 200,
-                clamp: [-200, 200],
+                move: 100,
+                clamp: [-100, 100],
               },
               opacity: {
                 transition: 'ease-in',
@@ -267,14 +267,14 @@ export default memo(() => {
             parallax={{
               x: {
                 transition: 'ease-in-quad',
-                move: -300,
-                clamp: [-300, 300],
+                move: -150,
+                clamp: [-150, 150],
               },
-              rotateY: {
-                transition: 'ease-in-quad',
-                move: -100,
-                clamp: [-200, 200],
-              },
+              // rotateY: {
+              //   transition: 'ease-in-quad',
+              //   move: -100,
+              //   clamp: [-200, 200],
+              // },
               opacity: {
                 transition: 'ease-in',
                 clamp: [0, 1],

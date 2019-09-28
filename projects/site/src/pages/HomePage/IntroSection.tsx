@@ -25,7 +25,7 @@ export default function IntroSection() {
         offset={-0.9}
         x="-5%"
         zIndex={-1}
-        opacity={0.55}
+        opacity={0.3}
         scale={2.5}
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
       />

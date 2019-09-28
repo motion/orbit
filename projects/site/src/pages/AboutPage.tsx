@@ -38,10 +38,10 @@ export function AboutPage() {
   })
 
   return (
-    <Page pages="auto">
-      <Fade.FadeProvide>
-        <Theme name={AboutPage.theme}>
-          <Header noBorder background="transparent" slim />
+    <Fade.FadeProvide>
+      <Theme name={AboutPage.theme}>
+        <Header noBorder background="transparent" slim />
+        <Page pages="auto">
           <main className="main-contents" ref={Fade.ref} style={{ minHeight: 2000 }}>
             <SectionContent paddingTop={60}>
               <Image margin="auto" height={714 * 0.4} width={894 * 0.4} src={confettiImage} />
@@ -158,9 +158,9 @@ export function AboutPage() {
 
             <BlogFooter />
           </main>
-        </Theme>
-      </Fade.FadeProvide>
-    </Page>
+        </Page>
+      </Theme>
+    </Fade.FadeProvide>
   )
 }
 

@@ -1,4 +1,4 @@
-import { Col, gloss, Icon, Image, Scale, SimpleText, SimpleTextProps, Space, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
+import { Col, gloss, Icon, Image, Parallax, Scale, SimpleText, SimpleTextProps, Space, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import { Base } from 'gloss'
 import React, { memo } from 'react'
@@ -78,7 +78,7 @@ export function HeadSection() {
         speed={-0.35}
         offset={-1}
         zIndex={-1}
-        opacity={0.35}
+        opacity={0.3}
         scale={1.5}
         top="-70%"
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
@@ -145,25 +145,27 @@ export function HeadSection() {
           userSelect="none"
           zIndex={-1}
         >
-          <FadeInView parallax speed={0.2} {...animation.screen}>
-            <View
-              transform={{
-                perspective: 10000,
-                rotateY: '15deg',
-                rotateX: '58deg',
-                rotateZ: '-22deg',
-              }}
-            >
-              <Image
-                display="block"
-                src={require('../../public/images/screen.jpg')}
-                width="auto"
-                height={500}
-                maxWidth={1200}
-                margin="auto"
-              />
-            </View>
-          </FadeInView>
+          <Parallax.View speed={-0.1}>
+            <FadeInView speed={1} {...animation.screen}>
+              <View
+                transform={{
+                  perspective: 10000,
+                  rotateY: '15deg',
+                  rotateX: '58deg',
+                  rotateZ: '-22deg',
+                }}
+              >
+                <Image
+                  display="block"
+                  src={require('../../public/images/screen.jpg')}
+                  width="auto"
+                  height={500}
+                  maxWidth={1200}
+                  margin="auto"
+                />
+              </View>
+            </FadeInView>
+          </Parallax.View>
         </View>
       </Col>
       <View
@@ -177,56 +179,57 @@ export function HeadSection() {
         alignItems="center"
         justifyContent="center"
       >
-        <FadeInView
-          parallax
-          speed={-0.1}
-          {...animation.watch}
-          flex={1}
-          alignItems="inherit"
-          justifyContent="inherit"
-        >
-          <View
-            animate
-            transformOrigin="center center"
-            width={80}
-            height={80}
-            whileHover={{
-              scale: 1.2,
-            }}
-            whileTap={{
-              rotate: '360deg',
-            }}
-            sm-transform={{
-              scale: 0.8,
-            }}
+        <Parallax.View speed={0.1} alignItems="inherit" justifyContent="inherit">
+          <FadeInView
+            speed={-0.1}
+            {...animation.watch}
+            flex={1}
+            alignItems="inherit"
+            justifyContent="inherit"
           >
             <View
-              background={[255, 255, 255, 0.1]}
-              borderRadius={100}
-              alignItems="center"
-              justifyContent="center"
-              width="100%"
-              height="100%"
-              pointerEvents="auto"
-              cursor="pointer"
-              transition="all ease 1s"
-              hoverStyle={{
-                background: [255, 255, 255, 0.15],
+              animate
+              transformOrigin="center center"
+              width={80}
+              height={80}
+              whileHover={{
+                scale: 1.2,
+              }}
+              whileTap={{
+                rotate: '360deg',
+              }}
+              sm-transform={{
+                scale: 0.8,
               }}
             >
-              <Icon size={28} color="#fff" name="play" />
+              <View
+                background={[255, 255, 255, 0.1]}
+                borderRadius={100}
+                alignItems="center"
+                justifyContent="center"
+                width="100%"
+                height="100%"
+                pointerEvents="auto"
+                cursor="pointer"
+                transition="all ease 1s"
+                hoverStyle={{
+                  background: [255, 255, 255, 0.15],
+                }}
+              >
+                <Icon size={28} color="#fff" name="play" />
+              </View>
             </View>
-          </View>
-          <Space />
-          <View
-            padding={[3, 8]}
-            background={[255, 255, 255, 0.1]}
-            borderRadius={100}
-            border={[2, '#00000055']}
-          >
-            <SimpleText>Watch the demo</SimpleText>
-          </View>
-        </FadeInView>
+            <Space />
+            <View
+              padding={[3, 8]}
+              background={[255, 255, 255, 0.1]}
+              borderRadius={100}
+              border={[2, '#00000055']}
+            >
+              <SimpleText>Watch the demo</SimpleText>
+            </View>
+          </FadeInView>
+        </Parallax.View>
       </View>
     </Fade.FadeProvide>
   )
@@ -273,7 +276,7 @@ const HeadTextSection = memo(() => {
             whiteSpace="nowrap"
             maxHeight={160}
           >
-            <FadeInView parallax {...animation.blog} disable={!measured}>
+            <FadeInView {...animation.blog} disable={!measured}>
               <Tag
                 size={0.85}
                 sizeHeight={1.01}
@@ -295,19 +298,19 @@ const HeadTextSection = memo(() => {
                 Orbit enters private beta!
               </Tag>
             </FadeInView>
-            <FadeInView parallax disable={!measured} {...animation.title} {...fontProps.TitleFont}>
+            <FadeInView disable={!measured} {...animation.title} {...fontProps.TitleFont}>
               Amazing internal tools
             </FadeInView>
           </TextFitTitle>
           {br}
-          <FadeInView parallax {...animation.sub1} minHeight="min-content">
+          <FadeInView {...animation.sub1} minHeight="min-content">
             <TitleParagraph {...para}>
               {/* first line */}Create internal tools you'd never have attempted before.
             </TitleParagraph>
           </FadeInView>
           <span style={{ userSelect: 'none' }}>&nbsp;</span>
           <View sm-display="none">
-            <FadeInView parallax {...animation.sub2} minHeight="min-content">
+            <FadeInView {...animation.sub2} minHeight="min-content">
               <TitleParagraph {...para}>
                 {/* second line */}
                 The all-in-one data & app studio for teams.
@@ -333,7 +336,7 @@ const HeadTextSection = memo(() => {
 const HeadJoin = memo(() => {
   return (
     <View flex={1} width="100%" alignItems="center">
-      <FadeInView parallax {...fadeAnimations.up} delay={500}>
+      <FadeInView {...fadeAnimations.up} delay={500}>
         <SurfacePassProps elevation={5} {...fontProps.TitleFont}>
           <Theme name="orbitOneDark">
             <Scale size={useScreenVal(1, 1.1, 1.2)}>

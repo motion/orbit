@@ -318,7 +318,7 @@ export class Syncer {
       message: '',
     }
     await getRepository(JobEntity).save(job)
-    log.info('created a new job', job.id)
+    log.verbose('created a new job', job.id)
 
     try {
       log.clean() // clean syncer timers, do a fresh logger start
@@ -341,7 +341,7 @@ export class Syncer {
       // update our job (finish successfully)
       job.status = 'COMPLETE'
       await getRepository(JobEntity).save(job)
-      log.info('job updated', job.id)
+      log.verbose('job updated', job.id)
       log.timer(`${this.options.name} sync`)
     } catch (error) {
       log.error(`${this.options.name} sync err`, error)

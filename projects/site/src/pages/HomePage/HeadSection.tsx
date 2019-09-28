@@ -79,7 +79,7 @@ export function HeadSection() {
         speed={-0.35}
         offset={-1}
         zIndex={-1}
-        opacity={0.35}
+        opacity={0.3}
         scale={1.5}
         top="-70%"
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"

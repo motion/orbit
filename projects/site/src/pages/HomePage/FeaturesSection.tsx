@@ -140,7 +140,7 @@ export default memo(() => {
         top="20%"
         scale={1.3}
         className="glow-two"
-        opacity={0.34}
+        opacity={0.23}
         background="radial-gradient(circle closest-side, #12A1CC, transparent)"
         parallax={geometry => ({
           y: geometry.useParallax(),
@@ -148,21 +148,21 @@ export default memo(() => {
         })}
       />
 
-      {/* teal left */}
-      <Page.BackgroundParallax
+      {/* left */}
+      {/* <Page.BackgroundParallax
         speed={0.3}
         offset={0.5}
         x="60%"
         top="20%"
         scale={1.3}
         className="glow-two"
-        opacity={0.31}
+        opacity={0.25}
         background="radial-gradient(circle closest-side, #D25CCD, transparent)"
         parallax={geometry => ({
           y: geometry.useParallax(),
-          x: geometry.useParallax().transform(x => x * 1 - 240),
+          x: geometry.useParallax().transform(x => -x * 1.5 + 240),
         })}
-      />
+      /> */}
 
       <Row
         alignItems="center"

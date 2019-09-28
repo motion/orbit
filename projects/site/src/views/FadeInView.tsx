@@ -130,6 +130,8 @@ export type FadeChildProps = ViewProps & {
   min?: number
   max?: number
   parallax?: ParallaxProp
+  speed?: number
+  offset?: number
 }
 
 const initialScreenWidth = window.innerWidth

@@ -19,7 +19,7 @@ export function Page(props: SectionContentProps) {
           parallax={{
             y: {
               relativeTo: 'frame',
-              transition: 'ease-in-out',
+              transition: 'ease-in',
               speed: 1,
               move: 200,
             },
@@ -27,8 +27,6 @@ export function Page(props: SectionContentProps) {
         > */}
         <SectionContent
           className="page"
-          // height="85vh"
-          // minHeight="max-content"
           alignItems="center"
           justifyContent="center"
           {...props}

@@ -24,7 +24,7 @@ export default function DeploySection() {
         bottom="-20%"
         scale={1.3}
         className="glow-two"
-        opacity={0.4}
+        opacity={0.14}
         background="radial-gradient(circle closest-side, #2F30C9, transparent)"
         parallax={geometry => ({
           y: geometry.useParallax(),

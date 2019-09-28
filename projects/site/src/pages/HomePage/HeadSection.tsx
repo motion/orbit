@@ -9,6 +9,7 @@ import { linkProps } from '../../useLink'
 import { fadeAnimations, FadeChildProps, FadeInView, transitions, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
+import { ParallaxStageItem } from '../../views/ParallaxStage'
 import { SectionContentChrome } from '../../views/SectionContent'
 import { TitleText } from '../../views/TitleText'
 import { Join } from './Join'
@@ -145,25 +146,27 @@ export function HeadSection() {
           userSelect="none"
           zIndex={-1}
         >
-          <FadeInView parallax speed={0.2} {...animation.screen}>
-            <View
-              transform={{
-                perspective: 10000,
-                rotateY: '15deg',
-                rotateX: '58deg',
-                rotateZ: '-22deg',
-              }}
-            >
-              <Image
-                display="block"
-                src={require('../../public/images/screen.jpg')}
-                width="auto"
-                height={500}
-                maxWidth={1200}
-                margin="auto"
-              />
-            </View>
-          </FadeInView>
+          <ParallaxStageItem>
+            <FadeInView speed={1} {...animation.screen}>
+              <View
+                transform={{
+                  perspective: 10000,
+                  rotateY: '15deg',
+                  rotateX: '58deg',
+                  rotateZ: '-22deg',
+                }}
+              >
+                <Image
+                  display="block"
+                  src={require('../../public/images/screen.jpg')}
+                  width="auto"
+                  height={500}
+                  maxWidth={1200}
+                  margin="auto"
+                />
+              </View>
+            </FadeInView>
+          </ParallaxStageItem>
         </View>
       </Col>
       <View
@@ -273,7 +276,7 @@ const HeadTextSection = memo(() => {
             whiteSpace="nowrap"
             maxHeight={160}
           >
-            <FadeInView parallax {...animation.blog} disable={!measured}>
+            <FadeInView {...animation.blog} disable={!measured}>
               <Tag
                 size={0.85}
                 sizeHeight={1.01}

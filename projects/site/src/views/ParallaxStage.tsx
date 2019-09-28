@@ -30,9 +30,9 @@ type ParallaxStageItemProps = Omit<ParallaxViewProps, 'parallax'> & {
 
 const defaultParallax: ParallaxProp = {
   y: {
-    move: 250,
+    move: 125,
     transition: 'ease-in-quad',
-    clamp: [-300, 300],
+    clamp: [-125, 125],
   },
   opacity: {
     transition: 'ease-in',
@@ -44,7 +44,10 @@ function getParallax(props: ParallaxStageItemProps): ParallaxViewProps['parallax
   if (typeof props.parallax === 'function') {
     return props.parallax
   }
-  const parallax = props.parallax === true ? defaultParallax : props.parallax
+  const parallax =
+    props.parallax === true || typeof props.parallax === 'undefined'
+      ? defaultParallax
+      : props.parallax
   return geometry => {
     return Object.keys(parallax).reduce((acc, key) => {
       const { clamp, ...prop } = parallax[key]

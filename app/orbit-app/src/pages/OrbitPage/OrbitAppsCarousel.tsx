@@ -7,7 +7,7 @@ import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from '
 import { useOm } from '../../om/om'
 import { useAppsDrawerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
-import { appsCarouselStore, stackMarginLessPct } from './OrbitAppsCarouselStore'
+import { appsCarouselStore, stackMarginLessPct, useAppsCarousel } from './OrbitAppsCarouselStore'
 import { OrbitSearchResults } from './OrbitSearchResults'
 
 const updateOnWheel = e => {
@@ -24,7 +24,7 @@ const borderRadius = 15
 
 export const OrbitAppsCarousel = memo(() => {
   const om = useOm()
-  const rowRef = appsCarouselStore.rowRef
+  const { rowRef, hidden } = useAppsCarousel()
   const apps = om.state.apps.activeClientApps
 
   const zoomOut = useMotionValue(1)
@@ -44,7 +44,7 @@ export const OrbitAppsCarousel = memo(() => {
   /**
    * Use this to update state after animations finish
    */
-  const hidden = useReaction(() => appsCarouselStore.hidden)
+  console.log('hidden', hidden)
   const scrollable = useReaction(
     () => (appsCarouselStore.zoomedIn ? false : 'x'),
     async (next, { when, sleep }) => {
@@ -87,6 +87,7 @@ export const OrbitAppsCarousel = memo(() => {
         <OrbitSearchResults />
       </FullScreen>
       <View
+        debug
         width="100%"
         height="100%"
         {...hidden && {

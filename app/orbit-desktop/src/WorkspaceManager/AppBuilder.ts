@@ -40,6 +40,7 @@ export type WebpackAppsDesc = {
 @decorate
 export class AppBuilder {
   private serveStatic = false
+  state: WebpackAppsDesc
 
   constructor(private props: AppBuilderProps) {}
 
@@ -64,11 +65,11 @@ export class AppBuilder {
     let finalDevMiddleware = null
     let finalMiddleware = null
 
-    function middleware(req, res, next) {
+    const middleware: Handler = (req, res, next) => {
       if (finalMiddleware) return finalMiddleware(req, res, next)
       else next()
     }
-    function devMiddleware(req, res, next) {
+    const devMiddleware: Handler = (req, res, next) => {
       if (finalDevMiddleware) return finalDevMiddleware(req, res, next)
       else next()
     }
@@ -81,7 +82,7 @@ export class AppBuilder {
         reporter: await this.getReporter(),
         writeToDisk: true,
       })
-      finalMiddleware = resolveIfExists(devMiddleware, [config.output.path])
+      finalMiddleware = resolveIfExists(finalDevMiddleware, [config.output.path])
     }
 
     if (this.serveStatic) {
@@ -90,7 +91,7 @@ export class AppBuilder {
       setup()
     }
 
-    return {
+    this.state = {
       config,
       devMiddleware,
       staticMiddleware: (req, res, next) => {
@@ -116,6 +117,8 @@ export class AppBuilder {
       name: this.props.name,
       hash,
     }
+
+    return this.state
   }
 
   get outputBundlePath() {
@@ -181,11 +184,10 @@ export class AppBuilder {
       }
 
       const hasErrors = stats && stats.hasErrors()
-      const success = state && hasErrors
+      const success = state && !hasErrors
 
       if (success) {
         // no longer need to serve from static
-        console.log('succes turn off static', this.props)
         this.serveStatic = false
       }
 
@@ -253,6 +255,7 @@ function webpackDevReporter(middlewareOptions, options) {
 
 const existsInCache = (middleware, path: string) => {
   try {
+    console.log('ok', middleware.fileSystem, middleware.fileSystem.readFileSync(path))
     if (middleware.fileSystem && middleware.fileSystem.readFileSync(path)) {
       return true
     }

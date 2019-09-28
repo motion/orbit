@@ -48,6 +48,7 @@ export const OrbitAppsDrawer = memo(() => {
   return (
     <FullScreen
       perspective="1200px"
+      pointerEvents="none"
       className="orbit-apps-drawer"
       // below DockBackground
       zIndex={4}

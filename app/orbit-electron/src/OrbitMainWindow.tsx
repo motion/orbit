@@ -87,7 +87,7 @@ class OrbitMainWindowStore {
 
   onClose = () => {
     console.log('setting closable')
-    this.windowRef && this.windowRef.setClosable(true)
+    if (this.windowRef) this.windowRef.closable = true
   }
 
   handleOrbitSpaceMove = react(

@@ -14,7 +14,7 @@ const eventStreams = {}
  * so it can be modified to support putting multiple compilers under one EventStream.
  */
 export function getHotMiddleware(
-  getCompilers: (() => webpack.Compiler | null)[],
+  compilerGetters: (() => webpack.Compiler | null)[],
   opts: { path: string; log: Function; heartBeat: number },
 ) {
   opts.log = typeof opts.log == 'undefined' ? console.log.bind(console) : opts.log
@@ -33,8 +33,8 @@ export function getHotMiddleware(
     if (!pathMatch(req.url, opts.path)) return next()
     if (!compilers) {
       // setup once
-      if (getCompilers.every(x => !!x())) {
-        for (const getCompiler of getCompilers) {
+      if (compilerGetters.every(x => !!x())) {
+        for (const getCompiler of compilerGetters) {
           const compiler = getCompiler()
           if (compiler.hooks) {
             compiler.hooks.invalid.tap('webpack-hot-middleware', onInvalid)

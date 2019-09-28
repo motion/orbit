@@ -125,7 +125,7 @@ export class AppsBuilder {
       }
 
       if (options.action === 'run') {
-        this.state = await this.updateBuild(buildConfigs)
+        this.state = await this.getBuildState(buildConfigs)
         return
       }
     } catch (err) {
@@ -181,12 +181,12 @@ export class AppsBuilder {
    * and if we see things that change we re-run. This could be improved by being a lot more
    * react-like in the next refactor.
    */
-  private async updateBuild({
+  private async getBuildState({
     nodeConfigs,
     clientConfigs,
     buildNameToAppMeta,
   }: AppBuildConfigs): Promise<WebpackAppsDesc[]> {
-    log.verbose(`updateBuild() configs ${Object.keys(clientConfigs).join(', ')}`, clientConfigs)
+    log.verbose(`getBuildState() configs ${Object.keys(clientConfigs).join(', ')}`, clientConfigs)
 
     let res: WebpackAppsDesc[] = []
 
@@ -222,7 +222,7 @@ export class AppsBuilder {
     //   }
     // }
 
-    log.verbose(`updateBuild() Finished updating node apps`)
+    log.verbose(`getBuildState() Finished updating node apps`)
 
     // you have to do it this janky ass way because webpack just isnt really great at
     // doing multi-config hmr, and this makes sure the 404 hot-update bug is fixed (google)

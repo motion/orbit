@@ -136,7 +136,6 @@ function AppSettings(props: { appId: number }) {
   const banner = useBanner()
   const om = useOm()
   const buildStatus = om.state.develop.buildStatus.find(x => x.identifier === app!.identifier)
-  console.log('buildStatus', buildStatus, definition, om.state.develop.buildStatus)
 
   if (!app || !definition) {
     return <CenteredText>No app/definition</CenteredText>

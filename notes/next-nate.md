@@ -12,12 +12,15 @@ ideas:
       - ❌ how do you do stuff like hooks?
 
 - devtools mini-app:
+
   - ✅ a lot like xcode's new spotlight/search devtool mode, desirable/easy/fast
   - ✅ tools:
     - react devtools, mobx, overmind, chromium repls, chrome dev tools, custom state inspector
   - ✅ easier cost to useful/attractive ratio than some features
   - ✅ helps build orbit faster
   - ❌ not insignificant amount of work
+
+-
 
 ---
 

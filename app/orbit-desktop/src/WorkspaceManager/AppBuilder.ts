@@ -255,7 +255,6 @@ function webpackDevReporter(middlewareOptions, options) {
 
 const existsInCache = (middleware, path: string) => {
   try {
-    console.log('ok', middleware.fileSystem, middleware.fileSystem.readFileSync(path))
     if (middleware.fileSystem && middleware.fileSystem.readFileSync(path)) {
       return true
     }

@@ -105,7 +105,12 @@ export function makeWebpackConfig(
       concatenateModules: false,
       namedModules: true,
       namedChunks: false,
-      splitChunks: false,
+      splitChunks:
+        name === 'main' || name === 'shared'
+          ? {
+              chunks: 'all',
+            }
+          : false,
 
       // node can't keep around a ton of cruft to parse, but in web dev mode need hmr speed
       // so optimize away side effects in node

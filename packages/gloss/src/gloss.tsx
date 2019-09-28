@@ -140,6 +140,8 @@ function createGlossIsEqual() {
   }
 }
 
+let COUNT = 0
+
 export function gloss<Props = any, ThemeProps = Props>(
   a?: CSSPropertySet | GlossView<Props, ThemeProps> | ((props: Props) => any) | string,
   b?: CSSPropertySet,
@@ -155,10 +157,17 @@ export function gloss<Props = any, ThemeProps = Props>(
   let target: any = a || 'div'
   let rawStyles = b
   const hasGlossyParent = !!target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
-  let ignoreAttrs: Object = (hasGlossyParent && target.ignoreAttrs) || baseIgnoreAttrs
   const targetConfig: GlossInternalConfig | null = hasGlossyParent
     ? target.internal.getConfig()
     : null
+
+  let ignoreAttrs: Object
+  setTimeout(() => {
+    if (!ignoreAttrs) {
+      ignoreAttrs =
+        ThemedView.ignoreAttrs || (hasGlossyParent && target.ignoreAttrs) || baseIgnoreAttrs
+    }
+  }, 0)
 
   // shorthand: gloss({ ... })
   if (
@@ -234,6 +243,9 @@ export function gloss<Props = any, ThemeProps = Props>(
       return () => {
         const x = dynClasses.current
         if (x && x.size > 0) {
+          if (dynClasses.current && [...dynClasses.current].includes('g1909893218')) {
+            console.log('unmount', props, x)
+          }
           x.forEach(deregisterClassName)
         }
       }
@@ -251,10 +263,6 @@ export function gloss<Props = any, ThemeProps = Props>(
       // because hooks can run in theme, be sure to run them
       theme && themeFn && themeFn(props, theme)
       return createElement(element, last.current.props, props.children)
-    }
-
-    if (props.className && props.className.includes('app-frame')) {
-      console.log('rendering', props)
     }
 
     const dynClassNames = addDynamicStyles(
@@ -453,10 +461,11 @@ function addStyles(
     classNames.push(className)
 
     // if this is the first mount render or we didn't previously have this class then add it as new
-    if (className === 'g1909893218') {
-      console.log('registering', prevClassNames, prevClassNames && prevClassNames.has(className))
-    }
     if (!prevClassNames || !prevClassNames.has(className)) {
+      if (className === 'g1909893218') {
+        x++
+        console.log('registering', x)
+      }
       gc.registerClassUse(className)
     }
   }
@@ -477,10 +486,6 @@ const SPECIFIC_PREFIX = 's'
 
 function deregisterClassName(name: string) {
   const nonSpecificClassName = name[0] === SPECIFIC_PREFIX ? name.slice(1) : name
-  if (nonSpecificClassName === 'g1909893218') {
-    console.warn('unregistering')
-    // debugger
-  }
   gc.deregisterClassUse(nonSpecificClassName)
 }
 
@@ -551,6 +556,9 @@ function addDynamicStyles(
     for (const className of prevClassNames) {
       // if this previous class isn't in the current classes then deregister it
       if (!classNames.has(className)) {
+        if (className === 'g1909893218') {
+          console.log(props)
+        }
         deregisterClassName(className)
       }
     }

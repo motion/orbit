@@ -362,13 +362,13 @@ const OrbitAppCard = memo(
                     : theme.backgroundStronger
                 }
                 borderRadius={borderRadius}
-                // {...(isFocused
-                //   ? {
-                //       boxShadow: [[0, 0, 0, 3, theme.coats!.selected['background']], cardBoxShadow],
-                //     }
-                //   : {
-                //       boxShadow: [cardBoxShadow],
-                //     })}
+                {...(isFocused
+                  ? {
+                      boxShadow: [[0, 0, 0, 3, theme.coats!.selected['background']], cardBoxShadow],
+                    }
+                  : {
+                      boxShadow: [cardBoxShadow],
+                    })}
                 // some delay so it happens at "end/beginning"
                 // makes it so it occludes cards behind them better if transparent
                 transition={

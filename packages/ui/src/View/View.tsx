@@ -144,6 +144,7 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
         }
 
         outProps.className = finalClassName
+        style['will-change'] = 'transform'
         outProps.style = style
         outProps['data-is'] = `${outProps['data-is']} is-animated`
       }

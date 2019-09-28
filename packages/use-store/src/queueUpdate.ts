@@ -12,7 +12,7 @@ const shouldDebug = (level: number = 0) => {
 }
 
 export function queueUpdate(fn: Function) {
-  clearImmediate(tm)
+  clearTimeout(tm)
   Updates.add(fn)
   tm = setTimeout(() => {
     if (!Updates.size) return

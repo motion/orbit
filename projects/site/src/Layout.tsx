@@ -85,7 +85,6 @@ export const Layout = memo((props: any) => {
 
   useLayoutEffect(() => {
     const background = (themes[theme].bodyBackground || themes[theme].background).toString()
-    console.log('background', themes, theme, background)
     document.body.style.background = background
   }, [theme])
 

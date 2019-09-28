@@ -9,6 +9,9 @@ const hideProps: ViewProps = {
 }
 
 let hasLoadedOnce = false
+setTimeout(() => {
+  hasLoadedOnce = true
+}, 100)
 
 export function LoadingPage() {
   let [loading, setLoading] = useState(!hasLoadedOnce)

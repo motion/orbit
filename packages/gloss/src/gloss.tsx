@@ -234,7 +234,6 @@ export function gloss<Props = any, ThemeProps = Props>(
       return () => {
         const x = dynClasses.current
         if (x && x.size > 0) {
-          console.log('unmounting', props)
           x.forEach(deregisterClassName)
         }
       }

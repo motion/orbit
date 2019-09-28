@@ -77,7 +77,7 @@ export function makeWebpackConfig(
 
   const defines = {
     'process.platform': JSON.stringify('darwin'),
-    'process.env.NODE_ENV': JSON.stringify(mode),
+    'process.env.NODE_ENV': JSON.stringify('production'),
     'process.env.SPLIT_CHUNKS': JSON.stringify(false),
   }
 

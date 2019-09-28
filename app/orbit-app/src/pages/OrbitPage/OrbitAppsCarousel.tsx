@@ -289,9 +289,8 @@ const OrbitAppCard = memo(
                   return -2
                 })
                 .transform([-1, 1], [0, 2.5])}
-              scale={geometry
-                .scrollIntersection()
-                .mergeTransform([zoomOut], (intersect, zoomOut) => {
+              scale={
+                geometry.scrollIntersection().mergeTransform([zoomOut], (intersect, zoomOut) => {
                   if (zoomOut === 0) return index === appsCarouselStore.focusedIndex ? 1 : 0.5
                   if (intersect >= -0) return 0.6
                   return 0.6
@@ -300,7 +299,8 @@ const OrbitAppCard = memo(
                   // return Math.min(Math.max(0.5, 1 - intersect * -0.8), 0.6) //todo
                 })
                 // .transform([0.25, 0.6], [0.45, 0.6])
-                .spring({ damping: 50, stiffness: 500 })}
+                // .spring({ damping: 50, stiffness: 500 })
+              }
               x={geometry
                 .useTransform(zoomOut, x => {
                   if (x) {

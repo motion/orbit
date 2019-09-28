@@ -327,14 +327,24 @@ export function useStore<A extends ReactiveStore<any> | any>(
   rerender['component'] = component
   const shouldReact = !options || options.react !== false
   const isInstantiated = Store && Store['constructor'].name !== 'Function'
-  const state = useRef({
-    lastStore: Store,
-    shouldReact,
-    isInstantiated,
-    dispose: null as any,
-    id: options ? options.id : '',
-  })
+  const state = useRef<{
+    lastStore: false | A | (new () => A)
+    shouldReact: boolean
+    isInstantiated: boolean
+    dispose: any
+    id: string | number | undefined
+  }>()
   let store: any = null
+
+  if (!state.current) {
+    state.current = {
+      lastStore: Store,
+      shouldReact,
+      isInstantiated,
+      dispose: null as any,
+      id: options ? options.id : '',
+    }
+  }
 
   // reset when id changes
   if (options && state.current.id !== options.id) {
@@ -361,7 +371,8 @@ export function useStore<A extends ReactiveStore<any> | any>(
     state.current.lastStore = Store
     store = Store
     if (shouldReact) {
-      store = useTrackableStore(store, rerender, { ...options, component, shouldUpdate }).store
+      store = useTrackableStore(component, store, rerender, { ...options, component, shouldUpdate })
+        .store
     }
     if (!!store && props) {
       updateProps(store, props as any)
@@ -373,7 +384,7 @@ export function useStore<A extends ReactiveStore<any> | any>(
       store = res.store
     }
     if (shouldReact) {
-      store = useTrackableStore(store, rerender, {
+      store = useTrackableStore(component, store, rerender, {
         ...options,
         component,
         shouldUpdate: res ? res.hasChangedSource : undefined,

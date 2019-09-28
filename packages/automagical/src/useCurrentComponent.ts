@@ -10,12 +10,15 @@ export interface CurrentComponent {
   __debug?: boolean
 }
 
+const EMPTY = {}
 export function useCurrentComponent(): CurrentComponent {
   const component =
     ReactCurrentOwner && ReactCurrentOwner.current && ReactCurrentOwner.current.elementType
       ? ReactCurrentOwner.current.elementType
-      : {}
-  component['renderName'] = component['renderName'] || getComponentName(component)
+      : EMPTY
+  if (__DEV__) {
+    component['renderName'] = component['renderName'] || getComponentName(component)
+  }
   return component
 }
 

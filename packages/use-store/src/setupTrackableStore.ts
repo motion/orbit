@@ -1,4 +1,4 @@
-import { useCurrentComponent } from '@o/automagical'
+import { CurrentComponent } from '@o/automagical'
 import { isEqual } from '@o/fast-compare'
 import { get } from 'lodash'
 import { Lambda, observable, observe, reaction } from 'mobx'
@@ -172,15 +172,15 @@ export function setupTrackableStore(
       // re-run the reaction that watches keys
       if (!isEqual(nextDeepKeys, deepKeys)) {
         deepKeys = nextDeepKeys
-        if (shouldDebug()) console.log('schedule new reaction now...')
+        if (__DEV__ && shouldDebug()) console.log('schedule new reaction now...')
         updateDeepKey.set(Math.random())
       }
-      if (shouldDebug(4)) {
+      if (__DEV__ && shouldDebug(4)) {
         console.log('untrack()', name, storeName, reactiveKeys)
       }
     },
     dispose() {
-      if (shouldDebug()) console.log('dispose reaction', name, storeName)
+      if (__DEV__ && shouldDebug()) console.log('dispose reaction', name, storeName)
       disposed = true
       if (done) done()
       removeUpdate(update)
@@ -195,11 +195,11 @@ export function setupTrackableStore(
 export type TrackableStoreObject = ReturnType<typeof setupTrackableStore>
 
 export function useTrackableStore<A>(
+  component: CurrentComponent,
   plainStore: A,
   rerenderCb: Function,
   opts?: TrackableStoreOptions,
 ): TrackableStoreObject {
-  const component = useCurrentComponent()
   const trackableStore = useRef<TrackableStoreObject>({} as any)
   let cur = trackableStore.current
 

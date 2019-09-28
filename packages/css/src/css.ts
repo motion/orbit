@@ -30,7 +30,7 @@ export function cssString(styles: Object, opts?: CSSConfig): string {
   const shouldSnake = !opts || opts.snakeCase !== false
   let toReturn = ''
   for (let key in styles) {
-    let value = cssValue(key, styles[key], opts)
+    let value = cssValue(key, styles[key], false, opts)
     // shorthands
     if (value !== undefined) {
       if (SHORTHANDS[key]) {
@@ -39,9 +39,6 @@ export function cssString(styles: Object, opts?: CSSConfig): string {
           toReturn += `${k}:${px(value)};`
         }
       } else {
-        if (__DEV__ && typeof value === 'number' && isNaN(value)) {
-          debugger
-        }
         toReturn += `${(shouldSnake && CAMEL_TO_SNAKE[key]) || key}:${value};`
       }
     }
@@ -54,7 +51,7 @@ export function css(styles: Object, opts?: CSSConfig): Object {
   const shouldSnake = !opts || opts.snakeCase !== false
   const toReturn = {}
   for (let key in styles) {
-    let value = cssValue(key, styles[key], opts)
+    let value = cssValue(key, styles[key], true, opts)
     // shorthands
     if (value !== undefined) {
       if (SHORTHANDS[key]) {
@@ -70,7 +67,7 @@ export function css(styles: Object, opts?: CSSConfig): Object {
   return toReturn
 }
 
-function cssValue(key: string, value: any, options?: CSSConfig) {
+function cssValue(key: string, value: any, recurse = false, options?: CSSConfig) {
   // get real values
   if (value === false) {
     value === FALSE_VALUES[key]
@@ -80,7 +77,6 @@ function cssValue(key: string, value: any, options?: CSSConfig) {
   if (value === undefined || value === null || value === false) {
     return
   }
-  const firstChar = key[0]
   if (valueType === 'string' || valueType === 'number') {
     if (valueType === 'number' && !unitlessNumberProperties.has(key)) {
       value += 'px'
@@ -94,27 +90,26 @@ function cssValue(key: string, value: any, options?: CSSConfig) {
     } else {
       return processArray(key, value)
     }
-  } else if (
-    // recurse into psuedo or media query
-    firstChar === '&' ||
-    firstChar === '@' ||
-    key === 'from' ||
-    key === 'to'
-  ) {
-    return css(value, options)
   } else if (valueType === 'object') {
     if (value.toCSS) {
       return value.toCSS()
     }
-    // not react element
-    if (__DEV__) {
-      if (value['$$typeof'] === Symbol.for('react.element')) {
-        throw new Error('You passed a react element to a style')
-      }
-    }
     return processObject(key, value)
   } else if (key === 'isolate') {
     return value
+  } else {
+    if (recurse) {
+      const firstChar = key[0]
+      if (
+        // recurse into psuedo or media query
+        firstChar === '&' ||
+        firstChar === '@' ||
+        key === 'from' ||
+        key === 'to'
+      ) {
+        return css(value, options)
+      }
+    }
   }
   if (__DEV__) {
     console.debug(`Invalid style value for ${key}`, value)

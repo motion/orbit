@@ -98,7 +98,7 @@ export interface GlossView<RawProps, ThemeProps = RawProps, Props = GlossProps<R
 
 const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
 export const tracker: StyleTracker = new Map()
-export const sheet = new StyleSheet(false)
+export const sheet = new StyleSheet(true)
 const gc = new GarbageCollector(sheet, tracker)
 const whiteSpaceRegex = /[\s]+/g
 
@@ -338,8 +338,8 @@ export function gloss<Props = any, ThemeProps = Props>(
       config: ogConfig,
       displayName: ThemedView.displayName || '',
       targetElement,
-      styles: staticStyles.styles,
-      conditionalStyles: staticStyles.conditionalStyles,
+      styles: { ...staticStyles.styles },
+      conditionalStyles: { ...staticStyles.conditionalStyles },
     }),
   }
 

@@ -144,7 +144,7 @@ export function makeWebpackConfig(
     {
       // even in prod ensure react-refresh is there
       enable: target === 'web' ? ['react-refresh/babel'] : [],
-      disable: target !== 'web' ? ['react-refresh/babel'] : [],
+      disable: target !== 'web' ? ['react-refresh/babel'] : ['@babel/preset-env'],
       mode,
     },
   ]

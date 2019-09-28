@@ -61,7 +61,7 @@ module.exports = function(_, givenOpts) {
             loose: true,
             modules: false,
             targets: {
-              chrome: '74',
+              chrome: '78',
               esmodules: true,
             },
             exclude: ['transform-regenerator', 'transform-async-to-generator'],

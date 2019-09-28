@@ -73,17 +73,21 @@ export class AppBuilder {
       else next()
     }
 
-    if (this.serveStatic) {
-      sleep(4000).then(async () => {
-        compiler = webpack(config)
-        const publicPath = config.output.publicPath
-        finalDevMiddleware = WebpackDevMiddleware(compiler, {
-          publicPath,
-          reporter: await this.getReporter(),
-          writeToDisk: true,
-        })
-        finalMiddleware = resolveIfExists(devMiddleware, [config.output.path])
+    async function setup() {
+      compiler = webpack(config)
+      const publicPath = config.output.publicPath
+      finalDevMiddleware = WebpackDevMiddleware(compiler, {
+        publicPath,
+        reporter: await this.getReporter(),
+        writeToDisk: true,
       })
+      finalMiddleware = resolveIfExists(devMiddleware, [config.output.path])
+    }
+
+    if (this.serveStatic) {
+      sleep(4000).then(setup)
+    } else {
+      setup()
     }
 
     return {

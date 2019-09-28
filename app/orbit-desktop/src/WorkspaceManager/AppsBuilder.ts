@@ -90,7 +90,7 @@ export class AppsBuilder {
     this.isUpdating = true
 
     try {
-      // first ensure base/main/shared dlls built etc
+      // first ensure base/shared dlls built first
       await getAppsConfig([], buildMode, options)
       // then ensure apps built
       const builtOnce = await this.ensureAppsBuiltOnce()
@@ -222,7 +222,7 @@ export class AppsBuilder {
     //   }
     // }
 
-    log.info(`updateBuild() Finished updating node apps`)
+    log.verbose(`updateBuild() Finished updating node apps`)
 
     // you have to do it this janky ass way because webpack just isnt really great at
     // doing multi-config hmr, and this makes sure the 404 hot-update bug is fixed (google)
@@ -440,7 +440,7 @@ export class AppsBuilder {
   }
 
   private async getIndex(req: Request<Dictionary<string>>) {
-    log.info('getIndex', req.path)
+    log.verbose('getIndex', req.path)
 
     const desktopRoot = join(require.resolve('@o/orbit-desktop'), '..', '..')
     const index = await readFile(join(desktopRoot, 'index.html'), 'utf8')

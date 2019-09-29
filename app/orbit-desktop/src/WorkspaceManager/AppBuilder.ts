@@ -75,12 +75,7 @@ export class AppBuilder {
     }
 
     const setup = async () => {
-      log.verbose(
-        `Starting webpack with config, plugins: ${config.plugins
-          .map(x => x.constructor && x.constructor.name)
-          .join(', ')}`,
-        config,
-      )
+      log.verbose(`Starting webpack for ${this.props.name}`)
       compiler = webpack(config)
       const publicPath = config.output.publicPath
       finalDevMiddleware = WebpackDevMiddleware(compiler, {

@@ -588,6 +588,7 @@ function mergeStyles(
   nextStyles?: CSSPropertySet | null,
   overwrite?: boolean,
 ): Object | undefined {
+  const x = Date.now()
   // this is just for the conditional prop styles
   let propStyles
   for (const key in nextStyles) {
@@ -657,7 +658,9 @@ function mergeStyles(
       }
     }
   }
-
+  if (Date.now() - x > 1) {
+    debugger
+  }
   return propStyles
 }
 

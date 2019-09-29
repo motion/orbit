@@ -34,7 +34,9 @@ const start: AsyncAction = async om => {
 
 const updateDevState: Action = om => {
   // window.__DEV__
-  window['__DEV__'] = om.state.develop.buildStatus.some(x => x.mode === 'development')
+  window['__DEV__'] =
+    Desktop.state.workspaceState.options.dev ||
+    om.state.develop.buildStatus.some(x => x.mode === 'development')
 }
 
 const getIdentifiers = (x: BuildStatus[]) => x.map(x => x.identifier)

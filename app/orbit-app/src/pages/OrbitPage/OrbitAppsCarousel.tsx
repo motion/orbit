@@ -8,6 +8,7 @@ import { useOm } from '../../om/om'
 import { useAppsDrawerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
 import { appsCarouselStore, stackMarginLessPct, useAppsCarousel } from './OrbitAppsCarouselStore'
+import { OrbitSearchResults } from './OrbitSearchResults'
 
 const updateOnWheel = e => {
   if (!appsCarouselStore.state.zoomedOut) return
@@ -80,9 +81,9 @@ export const OrbitAppsCarousel = memo(() => {
   console.warn('OrbitAppsCarousel.render()', apps.map(x => x.id))
 
   return (
-    <OrbitAppsCarouselFrame background="red">
+    <OrbitAppsCarouselFrame>
       <FullScreen nodeRef={frameRef} pointerEvents="none" zIndex={3}>
-        {/* <OrbitSearchResults /> */}
+        <OrbitSearchResults />
       </FullScreen>
       <View
         width="100%"

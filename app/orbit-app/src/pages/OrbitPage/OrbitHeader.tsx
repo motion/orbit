@@ -69,7 +69,6 @@ export const OrbitHeader = memo(() => {
       className="draggable"
       onMouseUp={headerStore.handleMouseUp}
     >
-      123
       <OrbitHeaderEditingBg isActive={isDeveloping} />
       <HeaderTop height={slim ? 40 : 50}>
         <HeaderButtonPassProps>

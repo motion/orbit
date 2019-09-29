@@ -92,6 +92,7 @@ function setupScrollableIntersectionEffect(props: ScrollableIntersectionProps) {
   function finishUpdate() {
     clearTimeout(updateTm)
     updateTm = setTimeout(() => {
+      if (!ref.current) return
       const parentOuterWidth = ref.current[props.direction === 'x' ? 'clientWidth' : 'clientHeight']
       const childrenSizes: { width: number; height: number }[] = []
 

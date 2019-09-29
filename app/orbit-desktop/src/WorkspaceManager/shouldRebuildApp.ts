@@ -43,12 +43,13 @@ export async function shouldRebuildApp(appRoot: string) {
     return true
   }
 }
+
 async function isValidJSONFile(path: string) {
   try {
     await readJSON(path)
     return true
   } catch (err) {
-    log.info(`Error reading json ${err.message}`)
+    log.debug(`Error reading json ${err.message}`)
     return false
   }
 }

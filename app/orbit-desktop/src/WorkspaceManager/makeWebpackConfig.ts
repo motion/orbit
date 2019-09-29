@@ -109,12 +109,8 @@ export function makeWebpackConfig(
       concatenateModules: false,
       namedModules: true,
       namedChunks: false,
-      splitChunks:
-        name === 'main' || name === 'shared'
-          ? {
-              chunks: 'all',
-            }
-          : false,
+      // being true i think messes up dll
+      splitChunks: false,
 
       // node can't keep around a ton of cruft to parse, but in web dev mode need hmr speed
       // so optimize away side effects in node
@@ -159,17 +155,21 @@ export function makeWebpackConfig(
   ]
 
   log.debug(
-    `props: ${JSON.stringify({
-      name,
-      entry,
-      minify,
-      dllReferences,
-      hot,
-      injectHot,
-      target,
-      mode,
-      watch,
-    })}`,
+    `props: ${JSON.stringify(
+      {
+        name,
+        entry,
+        minify,
+        dllReferences,
+        hot,
+        injectHot,
+        target,
+        mode,
+        watch,
+      },
+      null,
+      2,
+    )}`,
   )
 
   let config: webpack.Configuration = {

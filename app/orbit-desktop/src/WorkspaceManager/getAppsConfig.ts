@@ -94,7 +94,6 @@ export async function getAppsConfig(
     outputDir: baseOutputDir,
     publicPath: '/',
     outputFile: 'base.dll.js',
-    devtool: mode === 'development' ? false : 'source-map',
     output: {
       library: 'base',
     },
@@ -110,9 +109,9 @@ export async function getAppsConfig(
   // contains most dependencies
   const sharedParams = await getSharedDllParams({
     outputDir,
-    devtool: mode === 'development' ? false : 'source-map',
     context: directory,
-    mode,
+    // always development
+    mode: 'development',
     dllReferences: [baseDllReference],
   })
 
@@ -212,7 +211,6 @@ export async function getAppsConfig(
             ignore: ['electron-log', 'configstore'],
             target: 'web',
             hot: true,
-            devtool: mode === 'development' ? false : 'source-map',
             watch,
           },
           extraConfig[name],

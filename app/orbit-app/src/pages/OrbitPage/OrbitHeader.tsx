@@ -79,7 +79,6 @@ export const OrbitHeader = memo(() => {
         </HeaderButtonPassProps>
         <HeaderContain
           direction="horizontal"
-          debug
           space
           spaceAround
           isActive={false}

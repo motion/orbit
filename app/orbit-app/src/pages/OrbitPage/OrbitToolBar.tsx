@@ -1,6 +1,6 @@
 import { AppLoadContext, AppMainViewProps } from '@o/kit'
 import { Toolbar, View, ViewProps } from '@o/ui'
-import { Block, gloss, Stack, StackProps } from 'gloss'
+import { Block, gloss } from 'gloss'
 import React, { memo, useContext } from 'react'
 
 import { usePaneManagerStore } from '../../om/stores'
@@ -35,7 +35,7 @@ export const OrbitToolBar = memo((props: AppMainViewProps) => {
   )
 })
 
-const OrbitToolbarChrome = gloss<StackProps & { transparent?: boolean }>(Stack, {
+const OrbitToolbarChrome = gloss<ViewProps & { transparent?: boolean }>(View, {
   flexDirection: 'row',
   position: 'absolute',
   top: 0,

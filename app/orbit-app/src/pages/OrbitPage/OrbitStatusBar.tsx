@@ -1,6 +1,6 @@
 import { AppLoadContext } from '@o/kit'
-import { BorderTop } from '@o/ui'
-import { gloss, Stack, StackProps } from 'gloss'
+import { BorderTop, Stack, StackProps } from '@o/ui'
+import { gloss } from 'gloss'
 import React, { useContext } from 'react'
 
 import { usePaneManagerStore } from '../../om/stores'

@@ -21,10 +21,6 @@ const updateOnWheel = e => {
 
 const borderRadius = 15
 
-console.log('update 123')
-
-// *1*
-
 export const OrbitAppsCarousel = memo(() => {
   const om = useOm()
   const { rowRef, hidden } = useAppsCarousel()
@@ -254,6 +250,7 @@ const OrbitAppCard = memo(
      *
      * ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️
      */
+    console.log('hi')
     return (
       <Geometry>
         {(geometry, ref) => (
@@ -263,12 +260,12 @@ const OrbitAppCard = memo(
             data-is="OrbitAppCard-Container"
             scrollSnapAlign="center"
             marginRight={`-${stackMarginLessPct * 100}%`}
-            width={frameWidth * 0.22}
+            width={frameWidth}
             height={frameHeight}
             position="relative"
           >
             <View
-              width={frameWidth * 0.22}
+              width={frameWidth}
               height={frameHeight + borderRadius}
               animate
               zIndex={geometry.scrollIntersection().transform(x => 1 - Math.abs(x))}

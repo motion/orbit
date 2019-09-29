@@ -21,6 +21,10 @@ const updateOnWheel = e => {
 
 const borderRadius = 15
 
+console.log('update 123')
+
+// *1*
+
 export const OrbitAppsCarousel = memo(() => {
   const om = useOm()
   const { rowRef, hidden } = useAppsCarousel()

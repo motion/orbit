@@ -19,6 +19,9 @@ if ( module.hot && isReactRefreshBoundary(module) ) {
 `
 
 function refreshHotLoader(source) {
+  if (source.indexOf('*1*') > -1) {
+    console.log('injecting', source)
+  }
   return source + inject
 }
 

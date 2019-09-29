@@ -23,12 +23,10 @@ class ReactRefreshPlugin {
           if (!resolveData || !resolveData.createData) {
             return
           }
-
           data = resolveData.createData
         } else {
           data = resolveData
         }
-
         // Inject refresh loader to React files
         if (/\.([jt]sx)$/.test(data.resource)) {
           data.loaders.unshift({

@@ -1,3 +1,4 @@
+import { Logger } from '@o/logger'
 import { selectDefined } from '@o/utils'
 import ReactRefreshPlugin from '@o/webpack-fast-refresh'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
@@ -31,6 +32,8 @@ export type WebpackParams = {
   devtool?: webpack.Configuration['devtool']
   plugins?: webpack.Configuration['plugins']
 }
+
+const log = new Logger('makeWebpackConfig')
 
 export function makeWebpackConfig(
   params: WebpackParams,
@@ -155,6 +158,20 @@ export function makeWebpackConfig(
     },
   ]
 
+  log.debug(
+    `props: ${JSON.stringify({
+      name,
+      entry,
+      minify,
+      dllReferences,
+      hot,
+      injectHot,
+      target,
+      mode,
+      watch,
+    })}`,
+  )
+
   let config: webpack.Configuration = {
     cache: { type: 'filesystem' },
     name,
@@ -179,7 +196,7 @@ export function makeWebpackConfig(
     },
     devtool: selectDefined(
       devtool,
-      mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-source-map',
+      mode === 'production' || target === 'node' ? undefined : 'cheap-module-source-map',
     ),
     externals: [
       // having this on in development mode for node made exports fail

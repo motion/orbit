@@ -730,7 +730,7 @@ const lineCount = (str: string) => str.split('\n').length
 
 const CodeCard = (props: { cardProps: CardProps; inputProps: InputProps }) => {
   const initVal = props.inputProps.defaultValue || props.inputProps.value || ''
-  const [numLines, setNumLines] = useState(lineCount(initVal))
+  const [numLines, setNumLines] = useState(lineCount(`${initVal}`))
   return (
     <Card
       transition="all ease 300ms"

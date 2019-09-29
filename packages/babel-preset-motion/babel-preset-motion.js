@@ -8,15 +8,17 @@ module.exports = function(_, givenOpts) {
   let names = []
 
   const plug = (name, plOpts, opts) => {
-    if (disable.find(x => x === name)) {
-      return null
-    }
-    if (process.env.DISABLE_BABEL_PLUGIN === name) {
-      return null
-    }
-    // disable if not in preferred mode (unless enabled)
-    if (opts && opts.usually !== mode && !enable.some(x => x === name)) {
-      return null
+    if (!enable.some(x => x === name)) {
+      if (disable.some(x => x === name)) {
+        return null
+      }
+      if (process.env.DISABLE_BABEL_PLUGIN === name) {
+        return null
+      }
+      // disable if not in preferred mode
+      if (opts && opts.usually !== mode) {
+        return null
+      }
     }
     names.push(name)
     const plugin = require.resolve(name)
@@ -76,11 +78,13 @@ module.exports = function(_, givenOpts) {
       ].filter(Boolean),
   }
 
-  // console.log(`
-  // Babel config
-  //   disabled: ${disable.join(' ')}
-  //   used:     ${names.join(' ')}
-  // `)
+  // if (+process.env.LOG_LEVEL > 3) {
+  //   console.log(`
+  //   Babel config
+  //     disabled: ${disable.join(' ')}
+  //     used:     ${names.join(' ')}
+  //   `)
+  // }
 
   return config
 }

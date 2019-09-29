@@ -91,7 +91,8 @@ export function makeWebpackConfig(
       // what we could do likely is turn this on just for the main bundle
       // but also were an app platform, we dont care about file size so much for now
       sideEffects: false,
-      concatenateModules: true,
+      // this will mess up hmr
+      concatenateModules: false,
       splitChunks: false,
       // much smaller bundles
       ...(target === 'node' && {

@@ -1,15 +1,16 @@
 diff --git a/node_modules/webpack-hot-middleware/client.js b/node_modules/webpack-hot-middleware/client.js
-index abc95ed..2e1fea8 100644
+index abc95ed..6d72ef5 100644
 --- a/node_modules/webpack-hot-middleware/client.js
 +++ b/node_modules/webpack-hot-middleware/client.js
-@@ -89,6 +89,10 @@ function EventSourceWrapper() {
+@@ -89,6 +89,11 @@ function EventSourceWrapper() {
      source.onopen = handleOnline;
      source.onerror = handleDisconnect;
      source.onmessage = handleMessage;
 +
 +    window.addEventListener('beforeunload', () => {
-+      source.close()
-+    })
++      console.log('unloading webpack-hot-middleware eventsource');
++      source.close();
++    });
    }
  
    function handleOnline() {

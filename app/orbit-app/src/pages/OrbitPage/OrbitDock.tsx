@@ -38,15 +38,19 @@ export const OrbitDock = memo(() => {
         onMouseLeave={store.hoverLeave}
         zIndex={100000000}
         pointerEvents={store.state === 'closed' ? 'none' : 'inherit'}
-        transform={
-          store.isOpen
-            ? {
-                x: 0,
-              }
-            : {
-                x: '100%',
-              }
-        }
+        background="red"
+        transform={{
+          x: '100%',
+        }}
+        // transform={
+        //   store.isOpen
+        //     ? {
+        //         x: 0,
+        //       }
+        //     : {
+        //         x: '100%',
+        //       }
+        // }
         transition={store.isOpen ? `all ease 300ms` : `all ease-out 300ms 150ms`}
       >
         <OrbitDockPanel offset={0} apps={topDockApps} />

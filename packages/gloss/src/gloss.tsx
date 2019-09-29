@@ -772,17 +772,10 @@ function compileTheme(viewOG: GlossView<any>) {
 
 // adds rules to stylesheet and returns classname
 function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSpecific?: boolean) {
-  // if (rules.opacity && rules.opacity['animationHooks']) {
-  //   debugger
-  // }
-
   const [hash, style] = cssStringWithHash(rules)
-
   if (!hash) return
 
   let className = `g${hash}`
-  // console.log(hash, style)
-
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
   // ensure we are unique for unique namespaces
   if (isSubStyle(namespace)) {

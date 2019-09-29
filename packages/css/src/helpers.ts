@@ -139,7 +139,7 @@ export function processObject(key: string, object: any): string | undefined {
     }
   }
   // plain object only
-  if (!object.constructor) {
+  if (!object.constructor || Object.prototype.toString.call(object) === '[object Object]') {
     const toReturn: string[] = []
     for (const subKey in object) {
       if (!object.hasOwnProperty(subKey)) {

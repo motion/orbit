@@ -1,9 +1,9 @@
 import { gloss } from '../gloss'
-import { Col, ColProps } from './Col'
+import { Flex, FlexProps } from './Flex'
 
-export type FullScreenProps = ColProps
+export type FullScreenProps = FlexProps
 
-export const FullScreen = gloss(Col, {
+export const FullScreen = gloss(Flex, {
   position: 'absolute',
   top: 0,
   left: 0,

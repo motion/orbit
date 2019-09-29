@@ -87,6 +87,7 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
 })
   .theme(getMargin, usePadding, getElevation)
   .withConfig({
+    // shouldAvoidProcessingStyles: shouldRenderToMotion,
     postProcessProps(inProps, outProps, tracker) {
       if (shouldRenderToMotion(inProps)) {
         let style = {}
@@ -144,6 +145,7 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
         }
 
         outProps.className = finalClassName
+        style['willChange'] = 'transform'
         outProps.style = style
         outProps['data-is'] = `${outProps['data-is']} is-animated`
       }

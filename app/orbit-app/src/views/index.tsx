@@ -1,17 +1,6 @@
-import { Row } from '@o/ui'
-import { Col, gloss } from 'gloss'
+import { Box, gloss } from 'gloss'
 
-export const HorizontalScroll = gloss(Row, {
-  overflowX: 'scroll',
-  flex: 1,
-  flexDirection: 'row',
-  alignItems: 'center',
-  '&::-webkit-scrollbar': {
-    display: 'none',
-  },
-})
-
-export const AppWrapper = gloss(Col, {
+export const AppWrapper = gloss(Box, {
   maxWidth: '100%',
   maxHeight: '100%',
   overflow: 'hidden',

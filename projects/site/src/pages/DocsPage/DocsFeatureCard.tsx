@@ -1,4 +1,4 @@
-import { CardProps, Col, Icon, TiltCard } from '@o/ui'
+import { CardProps, Icon, Stack, TiltCard } from '@o/ui'
 import * as React from 'react'
 
 const FeatureCard = (props: CardProps) => (
@@ -26,7 +26,7 @@ export function DocsFeatureCard({
 }: { title: string; subTitle: string; icon: any } & CardProps) {
   return (
     <FeatureCard subTitle={subTitle} title={title} {...rest}>
-      <Col
+      <Stack
         minHeight={150}
         background={background}
         alignItems="center"
@@ -35,7 +35,7 @@ export function DocsFeatureCard({
         flex={1}
       >
         <Icon color={color} size={52} name={icon} />
-      </Col>
+      </Stack>
     </FeatureCard>
   )
 }

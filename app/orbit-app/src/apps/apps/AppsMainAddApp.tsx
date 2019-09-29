@@ -1,5 +1,5 @@
 import { AppDefinition, AppIcon, getSearchAppDefinitions, isDataDefinition, useAppDefinition, useAppDefinitionFromStore, useAppStoreInstalledAppDefinition } from '@o/kit'
-import { BannerHandle, Button, ButtonProps, Divider, Loading, Message, Paragraph, Row, Section, SubSection, SubTitle, useBanner } from '@o/ui'
+import { BannerHandle, Button, ButtonProps, Divider, Loading, Message, Paragraph, Section, Stack, SubSection, SubTitle, useBanner } from '@o/ui'
 import React, { Suspense, useState } from 'react'
 
 import { useInstallApp } from '../../helpers/installApp'
@@ -91,10 +91,10 @@ export function AppsMainAddAppContent({
       }
       belowTitle={
         !!searchApp && (
-          <Row space padding={[0, 'md', 'md']}>
+          <Stack direction="horizontal" space padding={[0, 'md', 'md']}>
             <SubItem>{searchApp.author || 'anonymous'}</SubItem>
             <SubItem icon="download">{searchApp.installs || '11,129'}</SubItem>
-          </Row>
+          </Stack>
         )
       }
     >

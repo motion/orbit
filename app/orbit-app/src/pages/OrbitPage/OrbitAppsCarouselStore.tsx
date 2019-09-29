@@ -193,6 +193,19 @@ class OrbitAppsCarouselStore {
     },
   )
 
+  updateAppUrl = react(
+    () => this.focusedIndex,
+    async (index, { sleep }) => {
+      ensure('this.apps[index]', !!this.apps[index])
+      await sleep(100)
+      const id = `${this.apps[index].id}`
+      om.actions.router.showAppPage({
+        id,
+        replace: true,
+      })
+    },
+  )
+
   shouldZoomIn() {
     this.zoomIntoNextApp = true
   }
@@ -208,12 +221,6 @@ class OrbitAppsCarouselStore {
     if (!this.apps[next]) return
     if (next !== this.focusedIndex) {
       this.focusedIndex = next
-      // update url
-      const id = `${this.apps[next].id}`
-      om.actions.router.showAppPage({
-        id,
-        replace: true,
-      })
     }
     if (forceScroll) {
       this.animateAndScrollTo(this.focusedIndex)

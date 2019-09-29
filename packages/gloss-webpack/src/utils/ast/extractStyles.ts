@@ -287,7 +287,7 @@ export function extractStyles(
             return true
           }
 
-          const name = attribute.name.name
+          let name = attribute.name.name
 
           // for fully deoptimizing certain keys
           if (staticStyleConfig.deoptProps && staticStyleConfig.deoptProps.includes(name)) {
@@ -304,7 +304,7 @@ export function extractStyles(
             return true
           }
 
-          const value =
+          let value =
             attribute.value && t.isJSXExpressionContainer(attribute.value)
               ? attribute.value.expression
               : attribute.value
@@ -334,6 +334,13 @@ export function extractStyles(
           if (!cssAttributes[name]) {
             inlinePropCount++
             return true
+          }
+
+          // allow them to have alternate names for things
+          if (typeof cssAttributes[name] === 'object') {
+            const definition = cssAttributes[name]
+            name = definition.name
+            value = definition.value[value]
           }
 
           // if value can be evaluated, extract it and filter it out

@@ -1,8 +1,7 @@
 import { useModel } from '@o/bridge'
 import { AppViewProps, createApp, ItemView, openItem } from '@o/kit'
 import { Bit, BitModel } from '@o/models'
-import { Button, Col, ItemPropsProvider, normalizeItem, Row, Text, View } from '@o/ui'
-import { gloss } from 'gloss'
+import { Button, ItemPropsProvider, normalizeItem, Stack, Text, View } from '@o/ui'
 import * as React from 'react'
 
 export default createApp({
@@ -32,9 +31,9 @@ export function BitAppMain(props: AppViewProps) {
   return (
     <ItemPropsProvider value={defaultItemProps}>
       <BitTitleBar bit={bit} />
-      <Col flex={1} scrollable="y" padding>
+      <Stack flex={1} scrollable="y" padding>
         <ItemView item={bit} />
-      </Col>
+      </Stack>
     </ItemPropsProvider>
   )
 }
@@ -43,7 +42,7 @@ function BitTitleBar({ bit }: { bit: Bit }) {
   const normalizedItem = normalizeItem(bit)
   const link = normalizedItem.desktopLink || normalizedItem.webLink
   return (
-    <ToolbarChrome space="sm" padding={[12, 12]}>
+    <Stack direction="horizontal" alignItems="center" space="sm" padding={[12, 12]}>
       {!!normalizedItem.locationLink && (
         <Button
           coat="flat"
@@ -79,10 +78,6 @@ function BitTitleBar({ bit }: { bit: Bit }) {
       <View flex={1} />
 
       <Button coat="flat" circular size={1.1} icon="plus" tooltip="Drag to use in app" />
-    </ToolbarChrome>
+    </Stack>
   )
 }
-
-const ToolbarChrome = gloss(Row, {
-  alignItems: 'center',
-})

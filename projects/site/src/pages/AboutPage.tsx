@@ -1,5 +1,4 @@
-import { BorderRight, Col, Divider, Image, ListItemSimple, PassProps, scrollTo, Space, TextProps, Theme, Title, View } from '@o/ui'
-import { Inline, Row } from 'gloss'
+import { BorderRight, Divider, Image, Inline, ListItemSimple, PassProps, scrollTo, Space, Stack, TextProps, Theme, Title, View } from '@o/ui'
 import { mount, route } from 'navi'
 import React from 'react'
 
@@ -48,9 +47,9 @@ export function AboutPage() {
             </SectionContent>
 
             <SectionContent flex={1} paddingTop="5%" paddingBottom="5%">
-              <Row id="main" alignItems="flex-start">
-                <Col id="sidebar" width={200} pointerEvents="auto" sm-width={0} sm-opacity={0}>
-                  <Col position="relative" className="sidebar__inner" flex={1}>
+              <Stack direction="horizontal" id="main" alignItems="flex-start">
+                <Stack id="sidebar" width={200} pointerEvents="auto" sm-width={0} sm-opacity={0}>
+                  <Stack position="relative" className="sidebar__inner" flex={1}>
                     <FadeInView delay={200}>
                       <Space size={35} />
                       <PassProps
@@ -84,10 +83,10 @@ export function AboutPage() {
                       </PassProps>
                       <BorderRight top={10} opacity={0.5} />
                     </FadeInView>
-                  </Col>
-                </Col>
+                  </Stack>
+                </Stack>
                 <FadeInView delay={400} style={{ flex: 1 }}>
-                  <Col
+                  <Stack
                     padding={[0, '10%']}
                     space={80}
                     spaceAround
@@ -95,7 +94,7 @@ export function AboutPage() {
                     overflow="hidden"
                     className="content"
                   >
-                    <Col space="xxxl" id="mission">
+                    <Stack space="xxxl" id="mission">
                       <BigTitle>
                         Making it easy to build beautiful apps that work for the user first.
                       </BigTitle>
@@ -110,11 +109,11 @@ export function AboutPage() {
                         It's a new type of thing: an app platform that runs for you personally, but
                         is powerful enough to build custom tools for you and your team.
                       </BigParagraph>
-                    </Col>
+                    </Stack>
 
                     <Divider />
 
-                    <Col space="xxxl" id="team">
+                    <Stack space="xxxl" id="team">
                       <BigTitle>Passionate about making it easy to build creatively.</BigTitle>
 
                       <BigParagraph>
@@ -126,13 +125,13 @@ export function AboutPage() {
                       <BigParagraph>
                         <Inline {...linkProps('mailto:hi@tryorbit.com')}>Get in touch</Inline>.
                       </BigParagraph>
-                    </Col>
+                    </Stack>
 
                     <Space size="xxxl" />
                     <Divider />
                     <Space size="xxxl" />
 
-                    <Col space="xxxl" id="contact">
+                    <Stack space="xxxl" id="contact">
                       <BigTitle>Get in touch</BigTitle>
 
                       <BigParagraph>
@@ -146,10 +145,10 @@ export function AboutPage() {
                       <BigParagraph>
                         <Inline {...linkProps('https://github.com/natew')}>Github</Inline>
                       </BigParagraph>
-                    </Col>
-                  </Col>
+                    </Stack>
+                  </Stack>
                 </FadeInView>
-              </Row>
+              </Stack>
             </SectionContent>
 
             <View flex={1} />

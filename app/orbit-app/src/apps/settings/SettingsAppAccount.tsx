@@ -1,6 +1,6 @@
 import { loadMany, remove, save, useModel } from '@o/bridge'
 import { Space, SpaceModel, UserModel, UserSettings } from '@o/models'
-import { Button, Input, Message, Row, Scale, Section } from '@o/ui'
+import { Button, Input, Message, Scale, Section, Stack } from '@o/ui'
 import * as firebase from 'firebase/app'
 import React, { useEffect, useState } from 'react'
 
@@ -162,7 +162,7 @@ export default function SettingsAppAccount() {
           )}
 
           <Scale size={1.2}>
-            <Row group>
+            <Stack direction="horizontal" group>
               <Input
                 type="email"
                 flex={1}
@@ -173,7 +173,7 @@ export default function SettingsAppAccount() {
               <Button coat="action" onClick={sendEmail}>
                 Send Login Link
               </Button>
-            </Row>
+            </Stack>
           </Scale>
         </>
       )}

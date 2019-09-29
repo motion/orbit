@@ -6,7 +6,7 @@ import { Scale } from '../Scale'
 import { getSize } from '../Sizes'
 import { Space } from '../Space'
 import { Text } from '../text/Text'
-import { Col } from '../View/Col'
+import { Stack } from '../View/Stack'
 import { View } from '../View/View'
 import { Modal, ModalProps } from './Modal'
 
@@ -44,7 +44,7 @@ export const MediaModal = memo(
               )}
             </View>
 
-            <Col
+            <Stack
               flex={1}
               alignItems="center"
               justifyContent="center"

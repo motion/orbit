@@ -1,4 +1,4 @@
-import { Col, Grid, Image, Row, Space, View } from '@o/ui'
+import { Grid, Image, Space, Stack, View } from '@o/ui'
 import { flatMap } from 'lodash'
 import React, { memo, useRef, useState } from 'react'
 
@@ -164,14 +164,15 @@ export default memo(() => {
         })}
       /> */}
 
-      <Row
+      <Stack
+        direction="horizontal"
         alignItems="center"
         nodeRef={Fade.ref}
         margin={[0, 'auto']}
         padding={['8vh', 0, '8vh']}
         maxWidth="100vw"
       >
-        <Col padding="lg" flex={2}>
+        <Stack padding="lg" flex={2}>
           <View flex={1}>
             <ParallaxStageItem stagger={0}>
               <TitleText alignItems="flex-start" justifyContent="flex-start" size="xxl">
@@ -181,13 +182,13 @@ export default memo(() => {
               </TitleText>
             </ParallaxStageItem>
             <ParallaxStageItem stagger={1}>
-              <Row space="lg" margin={['4%', 'auto', '8%', 0]}>
+              <Stack direction="horizontal" space="lg" margin={['4%', 'auto', '8%', 0]}>
                 {sectionNames.map(section => (
                   <PillButtonDark key={section} {...btnProps(section)}>
                     {section}
                   </PillButtonDark>
                 ))}
-              </Row>
+              </Stack>
             </ParallaxStageItem>
           </View>
           <ParallaxStageItem
@@ -205,7 +206,7 @@ export default memo(() => {
             stagger={2}
             nodeRef={gridContainer}
           >
-            <Row flexWrap="nowrap">
+            <Stack direction="horizontal" flexWrap="nowrap">
               {Object.keys(sections).map((section, index) => {
                 return (
                   <Grid
@@ -255,9 +256,9 @@ export default memo(() => {
                   </Grid>
                 )
               })}
-            </Row>
+            </Stack>
           </ParallaxStageItem>
-        </Col>
+        </Stack>
 
         <View flex={0.15} />
 
@@ -314,7 +315,7 @@ export default memo(() => {
             ))}
           </ParallaxStageItem>
         </View>
-      </Row>
+      </Stack>
     </Fade.FadeProvide>
   )
 })

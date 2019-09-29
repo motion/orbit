@@ -1,5 +1,6 @@
-import { Button, Col, Geometry, Row, View } from '@o/ui'
+import { Button, Geometry, Stack, View } from '@o/ui'
 import { useMotionValue, useSpring } from 'framer-motion'
+import React from 'react'
 
 export function TestUIMotion() {
   const rowRef = React.useRef(null)
@@ -29,14 +30,14 @@ export function TestUIMotion() {
     })
   }, [])
   return (
-    <Col>
-      <Row group>
+    <Stack>
+      <Stack direction="horizontal" group>
         <Button onClick={() => set(1)}>1</Button>
         <Button onClick={() => set(2)}>2</Button>
         <Button onClick={() => set(3)}>3</Button>
         <Button onClick={() => set(4)}>4</Button>
         <Button onClick={() => set(5)}>5</Button>
-      </Row>
+      </Stack>
 
       <View
         position="absolute"
@@ -73,7 +74,8 @@ export function TestUIMotion() {
           setUncontrolled()
         }}
       />
-      <Row
+      <Stack
+        direction="horizontal"
         flex={1}
         position="relative"
         zIndex={1}
@@ -108,7 +110,7 @@ export function TestUIMotion() {
             )}
           </Geometry>
         ))}
-      </Row>
-    </Col>
+      </Stack>
+    </Stack>
   )
 }

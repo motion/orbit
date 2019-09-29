@@ -1,15 +1,14 @@
 import React from 'react'
 
 import { Text, TextProps } from './text/Text'
-import { Col, ColProps } from './View/Col'
-import { Row, RowProps } from './View/Row'
+import { Stack, StackProps } from './View/Stack'
 
-export type LabeledProps = ColProps
+export type LabeledProps = StackProps
 export type LabeledTextProps = TextProps
-export type LabeledItemProps = RowProps
+export type LabeledItemProps = StackProps
 
 export const Labeled = (props: LabeledProps) => {
-  return <Col space="sm" alignItems="center" justifyContent="center" {...props} />
+  return <Stack space="sm" alignItems="center" justifyContent="center" {...props} />
 }
 
 // @ts-ignore
@@ -19,5 +18,5 @@ Labeled.Text = function LabeledText(props: LabeledTextProps) {
 
 // @ts-ignore
 Labeled.Item = function LabeledItem(props: LabeledItemProps) {
-  return <Row alignItems="center" position="relative" {...props} />
+  return <Stack direction="horizontal" alignItems="center" position="relative" {...props} />
 }

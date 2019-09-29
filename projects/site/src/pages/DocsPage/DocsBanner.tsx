@@ -1,4 +1,4 @@
-import { Button, Col, Row, useBanner, useBanners } from '@o/ui'
+import { Button, Stack, useBanner, useBanners } from '@o/ui'
 import React, { useRef } from 'react'
 
 export let Basic = () => {
@@ -9,8 +9,8 @@ export let Basic = () => {
   const count = useRef(0)
 
   return (
-    <Col space>
-      <Row space flexWrap="wrap">
+    <Stack space>
+      <Stack direction="horizontal" space flexWrap="wrap">
         <Button
           coat="info"
           onClick={() => {
@@ -46,8 +46,8 @@ export let Basic = () => {
         >
           Replace Error Banner
         </Button>
-      </Row>
-      <Row space flexWrap="wrap">
+      </Stack>
+      <Stack direction="horizontal" space flexWrap="wrap">
         <Button
           onClick={() => {
             count.current++
@@ -61,7 +61,7 @@ export let Basic = () => {
         >
           Add Timeout Banner (2s)
         </Button>
-      </Row>
-    </Col>
+      </Stack>
+    </Stack>
   )
 }

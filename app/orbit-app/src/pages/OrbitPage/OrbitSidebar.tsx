@@ -1,6 +1,5 @@
 import { AppLoadContext, AppMainViewProps } from '@o/kit'
-import { BorderTop, ListPassProps, Sidebar } from '@o/ui'
-import { Col } from 'gloss'
+import { BorderTop, ListPassProps, Sidebar, View } from '@o/ui'
 import React, { memo, useContext, useEffect } from 'react'
 
 import { useStores } from '../../hooks/useStores'
@@ -31,7 +30,7 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
       noBorder
     >
       <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar />
-      <Col flex={1} position="relative" overflow="hidden">
+      <View flex={1} position="relative" overflow="hidden">
         {props.hasToolbar && <BorderTop />}
         <ListPassProps
           shareable
@@ -42,7 +41,7 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
         >
           {props.children}
         </ListPassProps>
-      </Col>
+      </View>
       {props.hasStatusbar && statusbarPadElement}
     </Sidebar>
   )

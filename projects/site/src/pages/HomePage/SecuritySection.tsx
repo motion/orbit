@@ -1,4 +1,4 @@
-import { Col, Image, Row, Space } from '@o/ui'
+import { Image, Space, Stack } from '@o/ui'
 import React from 'react'
 
 import people from '../../assets/illustrations/undraw_server_down_s4lk.svg'
@@ -50,8 +50,8 @@ export default function SecuritySection() {
       >
         <Space size="xxxl" />
         <FadeInView parallax delayIndex={3} {...fadeAnimations.up}>
-          <Row flex={1} space="xxxl">
-            <Col flex={3} space="xl">
+          <Stack direction="horizontal" flex={1} space="xxxl">
+            <Stack flex={3} space="xl">
               <Pitch alpha={1} size="lg">
                 You're in control.
               </Pitch>
@@ -60,12 +60,12 @@ export default function SecuritySection() {
                 Orbit runs privately on your device, never sending a single bit of data outside your
                 firewall. It's completely open source. No cloud, no servers, no telemetry, no worry.
               </Pitch>
-            </Col>
+            </Stack>
 
-            <Col flex={4} padding={0} {...mediaStyles.visibleWhen.abovesm}>
+            <Stack flex={4} padding={0} {...mediaStyles.visibleWhen.abovesm}>
               <Image userSelect="none" width="100%" maxWidth={300} margin="auto" src={people} />
-            </Col>
-          </Row>
+            </Stack>
+          </Stack>
         </FadeInView>
       </SpacedPageContent>
     </Fade.FadeProvide>

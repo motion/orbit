@@ -4,10 +4,10 @@ import { Button, ButtonProps } from '../buttons/Button'
 import { CollapsableProps, splitCollapseProps, useCollapse } from '../Collapsable'
 import { PaneTitleRow, PaneTitleRowParentProps } from '../PaneTitleRow'
 import { Loading } from '../progress/Loading'
-import { Col, ColProps } from '../View/Col'
+import { Stack, StackProps } from '../View/Stack'
 import { SizablePane, SizablePaneProps } from './SizablePane'
 
-export type PaneProps = ColProps &
+export type PaneProps = StackProps &
   SizablePaneProps &
   Partial<CollapsableProps> &
   PaneTitleRowParentProps & {
@@ -49,7 +49,7 @@ export const Pane = memo((props: PaneProps) => {
       )}
       <Suspense fallback={<Loading />}>
         {above}
-        <Col
+        <Stack
           space={space}
           spaceAround={spaceAround}
           flexDirection={flexDirection}
@@ -64,7 +64,7 @@ export const Pane = memo((props: PaneProps) => {
           {isValidElement(children)
             ? cloneElement(children as any, { maxHeight: children.props['maxHeight'] || '100%' })
             : children}
-        </Col>
+        </Stack>
         {below}
       </Suspense>
     </SizablePane>

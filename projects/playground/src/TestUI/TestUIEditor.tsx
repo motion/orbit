@@ -1,10 +1,10 @@
 import { Editor } from '@o/editor'
-import { Col } from '@o/ui'
+import { Stack } from '@o/ui'
 import React from 'react'
 
 export function TestUIEditor() {
   return (
-    <Col padding={100} flex={1}>
+    <Stack padding={100} flex={1}>
       <Editor
         defaultValue={`# 📝 Our Editor
 
@@ -25,6 +25,6 @@ The editor supports a variety of content blocks including images, tables, lists,
 _Tip:_ Headings are collapsible, just click the arrow to the left of any heading to temporarily hide the content below.
 `}
       />
-    </Col>
+    </Stack>
   )
 }

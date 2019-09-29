@@ -1,4 +1,4 @@
-import { Button, Col, Divider, gloss, Icon, Loading, Row, SimpleText, Space, useIntersectionObserver, View } from '@o/ui'
+import { Button, Divider, gloss, Icon, Loading, SimpleText, Space, Stack, useIntersectionObserver, View } from '@o/ui'
 import { Box } from 'gloss'
 import { capitalize } from 'lodash'
 import React, { createElement, isValidElement, memo, Suspense, useRef, useState } from 'react'
@@ -99,7 +99,7 @@ export const Example = memo(
     )
 
     return (
-      <Col className="orbit-example" nodeRef={exampleRef}>
+      <Stack className="orbit-example" nodeRef={exampleRef}>
         <Suspense fallback={<Loading />}>
           {chromeless ? (
             <>{contents}</>
@@ -107,10 +107,10 @@ export const Example = memo(
             <>
               {/* <Divider /> */}
               <Space size="sm" />
-              <Row>
+              <Stack direction="horizontal">
                 <H5>{name || capitalize(id)}</H5>
                 <View flex={1} />
-                <Row space alignItems="center">
+                <Stack direction="horizontal" space alignItems="center">
                   {parentId && (
                     <Button
                       chromeless
@@ -131,8 +131,8 @@ export const Example = memo(
                       setShowSource(!showSource)
                     }}
                   />
-                </Row>
-              </Row>
+                </Stack>
+              </Stack>
               <Space />
               <View
                 {...fontProps.SystemFont}
@@ -145,7 +145,7 @@ export const Example = memo(
             </>
           )}
         </Suspense>
-      </Col>
+      </Stack>
     )
   },
 )
@@ -165,7 +165,7 @@ const AccidentalScrollPrevent = gloss<any>(Box, {
   },
 })
 
-const ExampleContainer = gloss(Col, {
+const ExampleContainer = gloss(Stack, {
   [mediaQueries.lg]: {
     display: 'grid',
     columnGap: 20,

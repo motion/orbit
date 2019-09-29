@@ -1,4 +1,4 @@
-import { BorderTop, Button, Col, FullScreen, Image, memoIsEqualDeep, Row, Space, useTheme, View } from '@o/ui'
+import { BorderTop, Button, FullScreen, Image, memoIsEqualDeep, Space, Stack, useTheme, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import orbits from '../../public/images/orbits.svg'
@@ -82,7 +82,8 @@ export default memo(() => {
           </>
         }
       >
-        <Row
+        <Stack
+          direction="horizontal"
           className="hide-scrollbars"
           height="auto"
           space="md"
@@ -110,16 +111,16 @@ export default memo(() => {
               />
             )
           })}
-        </Row>
+        </Stack>
 
         <Space size="lg" />
 
         <FadeInView parallax delayIndex={3} {...fadeAnimations.up}>
-          <Row space margin={[0, 'auto']}>
+          <Stack direction="horizontal" space margin={[0, 'auto']}>
             <BodyButton {...linkProps('/apps')} size="lg">
               Explore apps
             </BodyButton>
-          </Row>
+          </Stack>
         </FadeInView>
       </SpacedPageContent>
     </FadeDataApps.FadeProvide>
@@ -149,7 +150,7 @@ const Integration = memoIsEqualDeep(({ icon, title, index, downloads, hearts, ..
           border={[1, borderColor]}
           {...props}
         >
-          <Col padding space alignItems="center" justifyContent="center">
+          <Stack padding space alignItems="center" justifyContent="center">
             <Image
               src={icon}
               transition="all ease 200ms"
@@ -161,8 +162,14 @@ const Integration = memoIsEqualDeep(({ icon, title, index, downloads, hearts, ..
             <Paragraph selectable={false} size="sm">
               {title}
             </Paragraph>
-          </Col>
-          <Row opacity={0.5} position="relative" alignItems="center" justifyContent="space-between">
+          </Stack>
+          <Stack
+            direction="horizontal"
+            opacity={0.5}
+            position="relative"
+            alignItems="center"
+            justifyContent="space-between"
+          >
             <BorderTop borderColor={borderColor} />
             <Button chromeless size={0.9} icon="download">
               {downloads}
@@ -170,7 +177,7 @@ const Integration = memoIsEqualDeep(({ icon, title, index, downloads, hearts, ..
             <Button chromeless size={0.9} icon="heart" iconAfter>
               {hearts}
             </Button>
-          </Row>
+          </Stack>
         </View>
       </View>
     </FadeInView>

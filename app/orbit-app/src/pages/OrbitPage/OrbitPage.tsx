@@ -189,7 +189,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
         <OrbitInnerChrome
           nodeRef={innerRef}
           torn={appStore.isEditing}
-          vibrancy={appStore.state.userSettings.vibrancy}
+          vibrancy={appStore.state.userSettings!.vibrancy}
         >
           <OrbitContentArea>{contentArea}</OrbitContentArea>
         </OrbitInnerChrome>
@@ -223,6 +223,7 @@ const IdleLoad = (props: { children: () => React.ReactElement }) => {
 }
 
 const OrbitContentArea = gloss(Box, {
+  height: '100%',
   flexDirection: 'row',
   flex: 1,
   transform: {

@@ -1,5 +1,5 @@
 import { ensure, HighlightActiveQuery, useReaction, useSearchState } from '@o/kit'
-import { FullScreen, FullScreenProps, linearGradient, List, ProvideVisibility, Row, SelectableStore, SubTitle, Theme, useTheme, View } from '@o/ui'
+import { FullScreen, FullScreenProps, linearGradient, List, ProvideVisibility, SelectableStore, Stack, SubTitle, Theme, useTheme, View } from '@o/ui'
 import { Box, BoxProps, gloss, ThemeObject } from 'gloss'
 import React, { memo, Suspense, useCallback, useMemo, useRef } from 'react'
 
@@ -101,7 +101,8 @@ export const OrbitSearchResults = memo(() => {
 
   return (
     <ProvideVisibility visible={isActive}>
-      <Row
+      <Stack
+        direction="horizontal"
         data-is="OrbitSearchResults"
         width="100%"
         height="100%"
@@ -113,6 +114,7 @@ export const OrbitSearchResults = memo(() => {
           data-is="OrbitSearchResults-Index"
           zIndex={200}
           width="36%"
+          height="100%"
           transition="all ease 300ms"
           background={`linear-gradient(to right, ${theme.orbitLauncherSideBackground ||
             'transparent'} 15%, transparent 90%)`}
@@ -158,7 +160,7 @@ export const OrbitSearchResults = memo(() => {
             <SearchResultsApp />
           </Suspense>
         </OrbitSearchedItem>
-      </Row>
+      </Stack>
     </ProvideVisibility>
   )
 })

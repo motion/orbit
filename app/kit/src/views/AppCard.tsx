@@ -1,5 +1,5 @@
 import { AppBit, AppDefinition } from '@o/models'
-import { Button, Card, CardProps, Loading, Row, useFocusableItem } from '@o/ui'
+import { Button, Card, CardProps, Loading, Stack, useFocusableItem } from '@o/ui'
 import { isDefined } from '@o/utils'
 import React, { Suspense, useEffect, useRef, useState } from 'react'
 
@@ -36,10 +36,10 @@ export function AppCard<A extends AppDefinition>({
       key="slack"
       afterTitle={
         !isDefined(app) && (
-          <Row space="sm" minWidth={200}>
+          <Stack direction="horizontal" space="sm" minWidth={200}>
             <SelectApp appType={appType} onSelect={setApp} />
             <Button chromeless icon="cross" />
-          </Row>
+          </Stack>
         )
       }
       title="Slack Messages"

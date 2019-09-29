@@ -1,6 +1,5 @@
 import { AppWithDefinition, getItemName, useAppSyncState, useJobs } from '@o/kit'
-import { Text, View } from '@o/ui'
-import { Row } from 'gloss'
+import { Stack, Text, View } from '@o/ui'
 import pluralize from 'pluralize'
 import React from 'react'
 
@@ -25,7 +24,7 @@ export const OrbitAppInfo = ({ definition, app }: AppWithDefinition) => {
   const countSubtitle = shortNumber(bitsCount === 0 ? bitsCountCache[appId] || 0 : bitsCount)
 
   return (
-    <Row alignItems="center" flex={1}>
+    <Stack direction="horizontal" alignItems="center" flex={1}>
       <View flex={1} justifyContent="center">
         <Text size={0.9} alpha={0.5} ellipse>
           {definition.name}&nbsp;·&nbsp;
@@ -35,7 +34,7 @@ export const OrbitAppInfo = ({ definition, app }: AppWithDefinition) => {
       <Text size={0.9} alpha={0.75}>
         {!!isSyncing ? 'Syncing...' : <>&nbsp;</>}
       </Text>
-    </Row>
+    </Stack>
   )
 }
 

@@ -97,7 +97,7 @@ export const schema = {
           } else {
             editor.setNodeByKey(secondNode.key, { type: 'paragraph' })
           }
-          if (missingTitle) setImmediate(() => editor.moveFocusToStartOfDocument())
+          if (missingTitle) setTimeout(() => editor.moveFocusToStartOfDocument(), 0)
           return editor
         }
         default:

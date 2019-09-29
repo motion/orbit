@@ -1,9 +1,9 @@
-import { Col, ColProps, getSizeRelative, SizeName } from '@o/ui'
+import { getSizeRelative, SizeName, Stack, StackProps } from '@o/ui'
 import React from 'react'
 
 import { useScreenSize } from '../../hooks/useScreenSize'
 
-type SpacedPageProps = Omit<ColProps, 'space'> & {
+type SpacedPageProps = Omit<StackProps, 'space'> & {
   header?: React.ReactNode
   space?: SizeName
 }
@@ -18,7 +18,7 @@ export const SpacedPageContent = ({
   const downSpace = getSizeRelative(space, -1)
   const down2Space = getSizeRelative(space, -2)
   return (
-    <Col
+    <Stack
       width="100%"
       sm-margin={0}
       margin={['auto', 0]}
@@ -26,7 +26,7 @@ export const SpacedPageContent = ({
       sm-space={downSpace}
       {...props}
     >
-      <Col
+      <Stack
         className="spaced-page-content-inner intersect-ref"
         flex={1}
         space={space}
@@ -34,12 +34,12 @@ export const SpacedPageContent = ({
         nodeRef={nodeRef}
         width="100%"
       >
-        <Col space={downSpace} sm-space={down2Space} alignItems="center">
+        <Stack space={downSpace} sm-space={down2Space} alignItems="center">
           {header}
-        </Col>
+        </Stack>
         {children}
-      </Col>
-    </Col>
+      </Stack>
+    </Stack>
   )
 }
 

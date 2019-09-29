@@ -1,3 +1,4 @@
+import { Logger } from '@o/logger'
 import { selectDefined } from '@o/utils'
 import ReactRefreshPlugin from '@o/webpack-fast-refresh'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
@@ -31,6 +32,8 @@ export type WebpackParams = {
   devtool?: webpack.Configuration['devtool']
   plugins?: webpack.Configuration['plugins']
 }
+
+const log = new Logger('makeWebpackConfig')
 
 export function makeWebpackConfig(
   params: WebpackParams,
@@ -77,7 +80,7 @@ export function makeWebpackConfig(
 
   const defines = {
     'process.platform': JSON.stringify('darwin'),
-    'process.env.NODE_ENV': JSON.stringify('production'),
+    'process.env.NODE_ENV': JSON.stringify(mode),
     'process.env.SPLIT_CHUNKS': JSON.stringify(false),
   }
 
@@ -91,7 +94,8 @@ export function makeWebpackConfig(
       // what we could do likely is turn this on just for the main bundle
       // but also were an app platform, we dont care about file size so much for now
       sideEffects: false,
-      concatenateModules: true,
+      // this will mess up hmr
+      concatenateModules: false,
       splitChunks: false,
       // much smaller bundles
       ...(target === 'node' && {
@@ -105,12 +109,8 @@ export function makeWebpackConfig(
       concatenateModules: false,
       namedModules: true,
       namedChunks: false,
-      splitChunks:
-        name === 'main' || name === 'shared'
-          ? {
-              chunks: 'all',
-            }
-          : false,
+      // being true i think messes up dll
+      splitChunks: false,
 
       // node can't keep around a ton of cruft to parse, but in web dev mode need hmr speed
       // so optimize away side effects in node
@@ -154,6 +154,24 @@ export function makeWebpackConfig(
     },
   ]
 
+  log.debug(
+    `props: ${JSON.stringify(
+      {
+        name,
+        entry,
+        minify,
+        dllReferences,
+        hot,
+        injectHot,
+        target,
+        mode,
+        watch,
+      },
+      null,
+      2,
+    )}`,
+  )
+
   let config: webpack.Configuration = {
     cache: { type: 'filesystem' },
     name,
@@ -178,7 +196,7 @@ export function makeWebpackConfig(
     },
     devtool: selectDefined(
       devtool,
-      mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-source-map',
+      mode === 'production' || target === 'node' ? undefined : 'cheap-module-source-map',
     ),
     externals: [
       // having this on in development mode for node made exports fail

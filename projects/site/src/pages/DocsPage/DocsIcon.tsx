@@ -1,4 +1,4 @@
-import { allIcons, Col, fuzzyFilter, Grid, Icon, SimpleText, Space } from '@o/ui'
+import { allIcons, fuzzyFilter, Grid, Icon, SimpleText, Space, Stack } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 
 import { SearchInput } from '../../views/SearchInput'
@@ -11,7 +11,7 @@ export let Simple = (
 const dim = 100
 const iconElementsObj = allIcons.reduce((acc, cur) => {
   acc[cur.iconName] = (
-    <Col
+    <Stack
       key={cur.iconName}
       alignItems="center"
       justifyContent="center"
@@ -23,7 +23,7 @@ const iconElementsObj = allIcons.reduce((acc, cur) => {
       <Icon size={32} name={cur.iconName} />
       <Space />
       <SimpleText size={0.9}>{cur.iconName}</SimpleText>
-    </Col>
+    </Stack>
   )
   return acc
 }, {})
@@ -47,11 +47,11 @@ export let DocsIconSearch = () => {
     <>
       <SearchInput onChange={e => setSearch(e.target.value)} />
 
-      <Col padding>
+      <Stack padding>
         <Grid height={630} scrollable="y" space="xl" itemMinWidth={dim}>
           {search ? results : allIconsList}
         </Grid>
-      </Col>
+      </Stack>
     </>
   )
 }

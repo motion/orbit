@@ -92,6 +92,7 @@ export const SizablePane = memo(
       }
     }
 
+    // @ts-ignore
     const childElement = <SectionPassProps flex={1}>{children}</SectionPassProps>
 
     if (resizable) {

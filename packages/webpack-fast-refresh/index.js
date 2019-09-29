@@ -23,12 +23,10 @@ class ReactRefreshPlugin {
           if (!resolveData || !resolveData.createData) {
             return
           }
-
           data = resolveData.createData
         } else {
           data = resolveData
         }
-
         // Inject refresh loader to React files
         if (/\.([jt]sx)$/.test(data.resource)) {
           data.loaders.unshift({
@@ -46,10 +44,10 @@ class ReactRefreshPlugin {
         // compilation.hooks.normalModuleLoader.tap(this.constructor.name, context => {
         //   if (!context.hot) {
         //     throw Error(
-        //       'Hot Module Replacement (HMR) is not enabled! React-Refresh requires HMR to function properly.'
-        //     );
+        //       'Hot Module Replacement (HMR) is not enabled! React-Refresh requires HMR to function properly.',
+        //     )
         //   }
-        // });
+        // })
       }
     })
   }

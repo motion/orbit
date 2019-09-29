@@ -1,7 +1,7 @@
 <IntroText>
   The UI Kit gives you powerful primitives for building many layouts. At a high level, you can use a
-  Grid for automatic layouts. The other options are using a Layout, or manually placing with Row and
-  Col.
+  Grid for automatic layouts. The other options are using a Layout, or manually placing with Stack
+  and Stack.
 </IntroText>
 
 There are three main strategies:
@@ -75,9 +75,9 @@ export default () => {
 
 [Read more about layouts here](/docs/layout).
 
-## 3. Row, Col, and Grid
+## 3. Stack and Grid
 
-For all other uses, you have the amazingly powerful Row, Col, and Grid. These views allow you to use
+For all other uses, you have the amazingly powerful Stack and Grid. These views allow you to use
 Flexbox, or CSS-Grid, respectively, but they support common spacing, sizing, padding, and scrolling
 props that make it very easy to make beautiful layouts. They handle many common "gotchas" that CSS
 would normally throw at you, like having to account for it's odd margin tendencies.
@@ -85,15 +85,15 @@ would normally throw at you, like having to account for it's odd margin tendenci
 An example a using this would look like:
 
 ```tsx
-import { Row, Col, Grid, Card, Button } from '@o/kit'
+import { Stack, Grid, Card, Button } from '@o/kit'
 
 export default () => {
   return (
-    <Col padding="xl" space="xl">
-      <Row space spaceAround>
+    <Stack padding="xl" space="xl">
+      <Stack direction="horizontal" space spaceAround>
         <Button>Hello</Button>
         <Button>World</Button>
-      </Row>
+      </Stack>
 
       <Grid space="md">
         <Card title="Hello" />
@@ -101,7 +101,7 @@ export default () => {
         <Card title="The" />
         <Card title="World" />
       </Grid>
-    </Col>
+    </Stack>
   )
 }
 ```

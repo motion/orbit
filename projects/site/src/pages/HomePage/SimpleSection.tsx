@@ -1,4 +1,4 @@
-import { Col, gloss, Icon, Row, Space, View } from '@o/ui'
+import { gloss, Icon, Row, Space, Stack, View } from '@o/ui'
 import { isDefined } from '@o/utils'
 import { Box } from 'gloss'
 import React from 'react'
@@ -44,7 +44,7 @@ export const SimpleSection = ({ delay = 100, index = undefined, title, children,
   )
 }
 
-const SectionChrome = gloss(Col, {
+const SectionChrome = gloss(Stack, {
   position: 'relative',
 })
 

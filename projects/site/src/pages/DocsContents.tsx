@@ -1,6 +1,6 @@
 import GithubIcon from '!raw-loader!../public/logos/github.svg'
 import { themes } from '@o/kit'
-import { Button, gloss, Icon, Row, scrollTo, Section, Space, SurfacePassProps, Tag, View } from '@o/ui'
+import { Button, gloss, Icon, scrollTo, Section, Space, Stack, SurfacePassProps, Tag, View } from '@o/ui'
 import { ThemeProvide } from 'gloss'
 import React, { memo } from 'react'
 
@@ -33,7 +33,7 @@ export const DocsContents = memo(
           elementProps={{ tagName: 'a' }}
           textDecoration="none"
         >
-          <Row marginTop={80} width="100%" space>
+          <Stack direction="horizontal" marginTop={80} width="100%" space>
             {!!prevItem && (
               <Button
                 onClick={e => {
@@ -54,7 +54,7 @@ export const DocsContents = memo(
                 Next: {nextItem['title']}
               </Button>
             )}
-          </Row>
+          </Stack>
         </SurfacePassProps>
       </>
     )
@@ -103,7 +103,7 @@ export const DocsContents = memo(
                   color: colors.purple,
                 }}
               >
-                <Row margin={[0, 0, -8]}>
+                <Stack direction="horizontal" margin={[0, 0, -8]}>
                   {!!types && (
                     <Button
                       iconSize={16}
@@ -143,7 +143,7 @@ export const DocsContents = memo(
                       Page Source
                     </Button>
                   )}
-                </Row>
+                </Stack>
               </SurfacePassProps>
             }
             afterTitle={

@@ -1,4 +1,4 @@
-import { Button, Col, Input, Message, Row, Space } from '@o/ui'
+import { Button, Input, Message, Space, Stack } from '@o/ui'
 import jsonp from 'jsonp'
 import React from 'react'
 
@@ -62,10 +62,10 @@ export class Join extends React.Component<any> {
           ref={this.form}
           onSubmit={this.submit}
         >
-          <Col {...props}>
+          <Stack {...props}>
             {header}
 
-            <Row group>
+            <Stack direction="horizontal" group>
               <Input
                 type="email"
                 nodeRef={this.email}
@@ -95,11 +95,11 @@ export class Join extends React.Component<any> {
               >
                 Early access
               </Button>
-            </Row>
-          </Col>
+            </Stack>
+          </Stack>
         </form>
         {!!message && (
-          <Col maxWidth={500} margin={[0, 'auto']}>
+          <Stack maxWidth={500} margin={[0, 'auto']}>
             <Space size="lg" />
             <Message
               coat={success ? 'success' : error ? 'error' : undefined}
@@ -107,7 +107,7 @@ export class Join extends React.Component<any> {
                 __html: message,
               }}
             />
-          </Col>
+          </Stack>
         )}
       </>
     )

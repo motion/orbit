@@ -1,4 +1,4 @@
-import { CSSPropertySet, CSSPropertySetLoose, cssString, styleToClassName, ThemeObject, validCSSAttr } from '@o/css'
+import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, ThemeObject, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
@@ -48,6 +48,7 @@ export type GlossViewOpts<Props> = {
   displayName?: string
   ignoreAttrs?: { [key: string]: boolean }
   defaultProps?: Partial<Props>
+  shouldAvoidProcessingStyles?: (props: Props) => boolean
   postProcessProps?: (curProps: Props, nextProps: any, tracker: StyleTracker) => any
   getElement?: (props: Props) => any
   isDOMElement?: boolean
@@ -262,6 +263,18 @@ export function gloss<Props = any, ThemeProps = Props>(
       return createElement(element, last.current.props, props.children)
     }
 
+    // set up final props with filtering for various attributes
+    let finalProps: any = {}
+
+    let avoidStyles = false
+    if (config && config.shouldAvoidProcessingStyles) {
+      avoidStyles = config.shouldAvoidProcessingStyles(props)
+      if (avoidStyles) {
+        // because hooks can run in theme, be sure to run them
+        theme && themeFn && themeFn(props, theme)
+      }
+    }
+
     const dynClassNames = addDynamicStyles(
       ThemedView.displayName,
       conditionalStyles,
@@ -269,14 +282,11 @@ export function gloss<Props = any, ThemeProps = Props>(
       props,
       themeFn,
       theme,
+      avoidStyles,
     )
-
     dynClasses.current = dynClassNames
 
     const isDOMElement = typeof element === 'string' || (config ? config.isDOMElement : false)
-
-    // set up final props with filtering for various attributes
-    let finalProps: any = {}
 
     if (isDOMElement) {
       for (const key in props) {
@@ -299,12 +309,13 @@ export function gloss<Props = any, ThemeProps = Props>(
       }
     }
 
-    // we control these props
+    // we control className, dynClassNames includes any user-passed
     if (staticClasses || dynClassNames.size) {
       finalProps.className = staticClasses
         ? [...staticClasses, ...dynClassNames].join(' ')
         : [...dynClassNames].join(' ')
     }
+
     finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
 
     // hook: setting your own props
@@ -454,12 +465,13 @@ function addStyles(
     // TODO could do a simple "diff" so that fast-changing styles only change the "changing" props
     // it would likely help things like when you animate based on mousemove, may be slower in default case
     const className = addRules(displayName, style, key, moreSpecific)
-    classNames = classNames || []
-    classNames.push(className)
-
-    // if this is the first mount render or we didn't previously have this class then add it as new
-    if (!prevClassNames || !prevClassNames.has(className)) {
-      gc.registerClassUse(className[0] === 's' ? className.slice(1) : className)
+    if (className) {
+      classNames = classNames || []
+      classNames.push(className)
+      // if this is the first mount render or we didn't previously have this class then add it as new
+      if (!prevClassNames || !prevClassNames.has(className)) {
+        gc.registerClassUse(className[0] === 's' ? className.slice(1) : className)
+      }
     }
   }
   return classNames
@@ -489,6 +501,7 @@ function addDynamicStyles(
   props: CSSPropertySet,
   themeFn?: ThemeFn | null,
   theme?: ThemeObject,
+  avoidStyles?: boolean,
 ) {
   const dynStyles = {}
   let classNames = new Set<string>()
@@ -511,7 +524,7 @@ function addDynamicStyles(
       const cn = className[0] === SPECIFIC_PREFIX ? className.slice(1) : className
       const info = tracker.get(cn)
       if (info) {
-        // curId is looking if info.namespace was &:hover (sub-select) or "123" (base) and then applying
+        // curId is looking if info.namespace was &:hover (sub-select) or "." (base) and then applying
         // otherwise it would apply hover styles to the base styles here
         const ns = info.namespace
         dynStyles[ns] = dynStyles[ns] || {}
@@ -522,25 +535,27 @@ function addDynamicStyles(
     }
   }
 
-  if (conditionalStyles) {
-    mergePropStyles(dynStyles, conditionalStyles, props)
-  }
-
-  if (theme && themeFn) {
-    const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
-    dynStyles['.'] = dynStyles['.'] || {}
-    const themeStyles = themeFn(props, next)
-    const themePropStyles = mergeStyles('.', dynStyles, themeStyles, true)
-    if (themePropStyles) {
-      mergePropStyles(dynStyles, themePropStyles, props)
+  if (!avoidStyles) {
+    if (conditionalStyles) {
+      mergePropStyles(dynStyles, conditionalStyles, props)
     }
-  }
 
-  // add dyn styles
-  const dynClassNames = addStyles(dynStyles, displayName, prevClassNames, true)
-  if (dynClassNames) {
-    for (const cn of dynClassNames) {
-      classNames.add(cn)
+    if (theme && themeFn) {
+      const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
+      dynStyles['.'] = dynStyles['.'] || {}
+      const themeStyles = themeFn(props, next)
+      const themePropStyles = mergeStyles('.', dynStyles, themeStyles, true)
+      if (themePropStyles) {
+        mergePropStyles(dynStyles, themePropStyles, props)
+      }
+    }
+
+    // add dyn styles
+    const dynClassNames = addStyles(dynStyles, displayName, prevClassNames, true)
+    if (dynClassNames) {
+      for (const cn of dynClassNames) {
+        classNames.add(cn)
+      }
     }
   }
 
@@ -757,12 +772,15 @@ function compileTheme(viewOG: GlossView<any>) {
 
 // adds rules to stylesheet and returns classname
 function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSpecific?: boolean) {
-  const style = cssString(rules)
+  const [hash, style] = cssStringWithHash(rules)
+  if (!hash) return
 
+  let className = `g${hash}`
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
-  // ensure we are unique for unique namespaces, TODO we could not add it to hash and just have a separate
-  // tracker check below like tracker.get(className).has(namespace) or something similar
-  const className = styleToClassName(style + (isSubStyle(namespace) ? namespace : ''))
+  // ensure we are unique for unique namespaces
+  if (isSubStyle(namespace)) {
+    className += `-${stringHash(namespace)}`
+  }
 
   // this is the first time we've found this className
   if (!tracker.has(className)) {

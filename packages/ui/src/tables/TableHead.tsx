@@ -4,7 +4,7 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-import { Box, gloss, Row } from 'gloss'
+import { Box, gloss } from 'gloss'
 import invariant from 'invariant'
 import * as React from 'react'
 
@@ -12,14 +12,7 @@ import { ContextMenu } from '../ContextMenu'
 import { Interactive } from '../Interactive'
 import { SimpleText } from '../text/SimpleText'
 import { DataColumns, DataType } from '../types'
-import {
-  DEFAULT_ROW_HEIGHT,
-  SortOrder,
-  TableColumnOrder,
-  TableColumnSizes,
-  TableOnColumnResize,
-  TableOnSort,
-} from './types'
+import { DEFAULT_ROW_HEIGHT, SortOrder, TableColumnOrder, TableColumnSizes, TableOnColumnResize, TableOnSort } from './types'
 import { isPercentage, normaliseColumnWidth } from './utils'
 
 const TableHeaderArrow = gloss(SimpleText, {
@@ -55,7 +48,8 @@ const TableHeaderColumnContainer = gloss(Box, {
   alignItems: 'center',
 })
 
-const TableHeadContainer = gloss(Row, {
+const TableHeadContainer = gloss(Box, {
+  flexDirection: 'row',
   flexShrink: 0,
   left: 0,
   overflow: 'hidden',

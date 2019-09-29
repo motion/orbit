@@ -1,8 +1,8 @@
-import { Row, Tag } from '@o/ui'
+import { Stack, Tag } from '@o/ui'
 import React from 'react'
 
 export let Basic = (
-  <Row space>
+  <Stack direction="horizontal" space>
     <Tag coat="lightGreen">My Tag</Tag>
     <Tag coat="lightBlue">My Tag</Tag>
     <Tag coat="lightRed">My Tag</Tag>
@@ -12,5 +12,5 @@ export let Basic = (
     <Tag coat="green" icon="tag">
       My Tag
     </Tag>
-  </Row>
+  </Stack>
 )

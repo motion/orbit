@@ -1,8 +1,8 @@
-import { Row } from 'gloss'
 import * as React from 'react'
 
 import { Image } from '../Image'
 import { Text } from '../text/Text'
+import { View } from '../View/View'
 import { ButtonProps } from './Button'
 import { RoundButton } from './RoundButton'
 
@@ -14,7 +14,7 @@ type PersonButtonProps = Omit<ButtonProps, 'children'> & {
 export function ButtonPerson({ photo, name, ...props }: PersonButtonProps) {
   return (
     <RoundButton size={0.95} sizeHeight={0.8} {...props}>
-      <Row alignItems="center">
+      <View flexDirection="row" alignItems="center">
         {!!photo && (
           <Image
             src={photo}
@@ -30,7 +30,7 @@ export function ButtonPerson({ photo, name, ...props }: PersonButtonProps) {
             {name}
           </Text>
         )}
-      </Row>
+      </View>
     </RoundButton>
   )
 }

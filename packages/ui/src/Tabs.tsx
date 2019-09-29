@@ -7,9 +7,9 @@ import { useUncontrolled } from './helpers/useUncontrolled'
 import { Orderable } from './Orderable'
 import { Loading } from './progress/Loading'
 import { Tab, TabItem } from './Tab'
-import { Col } from './View/Col'
-import { Row } from './View/Row'
+import { Stack, StackProps } from './View/Stack'
 import { ViewProps } from './View/types'
+import { View } from './View/View'
 
 /**
  * Copyright 2018-present Facebook.
@@ -17,7 +17,7 @@ import { ViewProps } from './View/types'
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-export type TabsProps = Omit<ViewProps, 'order' | 'onChange'> & {
+export type TabsProps = Omit<StackProps, 'order' | 'onChange'> & {
   /** tab height */
   height?: number
   /** Callback for when the active tab has changed. */
@@ -202,7 +202,8 @@ function TabsControlled({
 
   return (
     <TabContainer>
-      <Row
+      <Stack
+        direction="horizontal"
         maxWidth="100%"
         margin={centered ? [0, 'auto'] : 'inherit'}
         justifyContent={centered ? 'center' : 'inherit'}
@@ -210,8 +211,9 @@ function TabsControlled({
         {...rest}
       >
         {before}
-        <Row
+        <View
           flex={1}
+          flexDirection="row"
           className="hide-scrollbars"
           overflowX={scrollable ? 'auto' : undefined}
           height={height}
@@ -219,9 +221,9 @@ function TabsControlled({
           {Children.map(tabList, (child, key) =>
             cloneElement(child, { key, flex: centered ? 'auto' : 1 }),
           )}
-        </Row>
+        </View>
         {after}
-      </Row>
+      </Stack>
       {tabContents}
       {tabSiblings}
     </TabContainer>
@@ -268,7 +270,7 @@ const OrderableContainer = gloss(Box, {
   display: 'inline-block',
 })
 
-const TabContent = gloss(Col, {
+const TabContent = gloss(Stack, {
   overflow: 'auto',
   width: '100%',
   flex: 1,

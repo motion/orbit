@@ -1,4 +1,4 @@
-import { Col, Grid, ListItem, SimpleText, TextProps, Theme, View } from '@o/ui'
+import { Grid, ListItem, SimpleText, Stack, TextProps, Theme, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import earth from '../../public/images/earth.jpg'
@@ -65,7 +65,7 @@ export const AboutSection = memo(() => {
       >
         <View flex={1} />
         <Grid space="10%" itemMinWidth={340} height="70%">
-          <Col space="lg">
+          <Stack space="lg">
             <FadeInView delayIndex={2}>
               <TitleTextSub textAlign="left" alpha={1}>
                 It's way too hard to build a decent application that gives you control, and lets you
@@ -89,10 +89,10 @@ export const AboutSection = memo(() => {
             <FadeInView delayIndex={5}>
               <SubParagraph>We're excited to share it with you.</SubParagraph>
             </FadeInView>
-          </Col>
+          </Stack>
 
           <MediaSmallHidden>
-            <Col space="md" justifyContent="flex-end">
+            <Stack space="md" justifyContent="flex-end">
               <FadeInView delayIndex={5}>
                 <TitleTextSub textAlign="left" alpha={1} size={1}>
                   Our goals
@@ -108,7 +108,7 @@ export const AboutSection = memo(() => {
 
                 <Item>Give users control over their data.</Item>
               </FadeInView>
-            </Col>
+            </Stack>
           </MediaSmallHidden>
         </Grid>
       </SpacedPageContent>

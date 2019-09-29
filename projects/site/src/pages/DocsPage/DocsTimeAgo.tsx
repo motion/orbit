@@ -1,8 +1,8 @@
-import { Col, TimeAgo } from '@o/ui'
+import { Stack, TimeAgo } from '@o/ui'
 import React from 'react'
 
 export let Basic = (
-  <Col space>
+  <Stack space>
     <TimeAgo date={new Date()} />
     <TimeAgo
       date={(() => {
@@ -25,5 +25,5 @@ export let Basic = (
         return d
       })()}
     />
-  </Col>
+  </Stack>
 )

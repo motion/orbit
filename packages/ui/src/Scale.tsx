@@ -1,15 +1,10 @@
-import { isDefined } from '@o/utils'
-import React from 'react'
+import { isDefined, selectDefined } from '@o/utils'
+import React, { createContext, useContext } from 'react'
 
-import { createContextualProps } from './helpers/createContextualProps'
 import { getSize } from './Sizes'
 import { Size } from './Space'
 
-const scaleContext = {
-  size: 1,
-}
-
-const { Reset, PassProps, Context, useProps } = createContextualProps(scaleContext)
+export const ScaleContext = createContext(1)
 
 export type ScaleProps = {
   size?: Size
@@ -23,14 +18,13 @@ export const Scale = (props: ScaleProps) => {
     return props.children
   }
   const size = getSize(props.size)
-  return <PassProps size={parentScale * size}>{props.children}</PassProps>
+  return <ScaleContext.Provider value={parentScale * size}>{props.children}</ScaleContext.Provider>
 }
 
-export const ScaleReset = Reset
+export const ScaleReset = ({ children }) => {
+  return <ScaleContext.Provider value={1}>{children}</ScaleContext.Provider>
+}
 
 export const useScale = () => {
-  const context = useProps()
-  return context ? context.size : 1
+  return selectDefined(useContext(ScaleContext), 1)
 }
-
-export const ScaleContext = Context

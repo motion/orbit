@@ -8,7 +8,7 @@ import { isRightClick } from '../helpers/isRightClick'
 import { useDefaultProps } from '../hooks/useDefaultProps'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { SizedSurfaceProps } from '../SizedSurface'
-import { Col, ColProps } from '../View/Col'
+import { Stack, StackProps } from '../View/Stack'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 
@@ -236,7 +236,7 @@ export const GridLayoutChildren = memo((props: GridLayoutPropsChildren) => {
   )
 })
 
-const GridWrapper = gloss<ColProps & { mounted?: boolean }>(Col, {
+const GridWrapper = gloss<StackProps & { mounted?: boolean }>(Stack, {
   width: '100%',
   flex: 1,
   opacity: 0,

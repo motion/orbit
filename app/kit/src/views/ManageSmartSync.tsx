@@ -1,4 +1,4 @@
-import { CheckBox, Label, Row, SizedSurface, Text } from '@o/ui'
+import { CheckBox, Label, SizedSurface, Stack, Text } from '@o/ui'
 import * as React from 'react'
 
 import { WhiteList } from '../hooks/useWhiteList'
@@ -14,10 +14,10 @@ export function ManageSmartSync({ whitelist }: { whitelist: WhiteList }) {
       tooltip="Turning this on will let Orbit manage space"
     >
       <Label>
-        <Row space>
+        <Stack direction="horizontal" space>
           <CheckBox onChange={whitelist.toggleActive} checked={whitelist.isWhitelisting} />
           <Text>Smart sync</Text>
-        </Row>
+        </Stack>
       </Label>
     </SizedSurface>
   )

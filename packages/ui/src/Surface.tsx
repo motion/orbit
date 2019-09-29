@@ -604,13 +604,14 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   return res
 })
 
+const halfPxDown = {
+  transform: {
+    y: 0.5,
+  },
+}
 const perfectCenterStyle = props => {
   if (props.height && props.height % 2 === 1) {
-    return {
-      transform: {
-        y: 0.5,
-      },
-    }
+    return halfPxDown
   }
 }
 

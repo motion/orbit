@@ -1,4 +1,4 @@
-import { Button, Card, Col, FloatingCard, Row } from '@o/ui'
+import { Button, Card, FloatingCard, Stack } from '@o/ui'
 import React, { useState } from 'react'
 
 const ExampleCard = ({ children = 'Hello world content', ...props }) => (
@@ -8,7 +8,7 @@ const ExampleCard = ({ children = 'Hello world content', ...props }) => (
 )
 
 export let Basic = (
-  <Row space flexWrap="wrap">
+  <Stack direction="horizontal" space flexWrap="wrap">
     <ExampleCard>hello worl2</ExampleCard>
     <ExampleCard title="Elevation = 2" elevation={2} />
     <ExampleCard coat="warn" location="warn" title="Coat = warn" elevation={4} />
@@ -19,7 +19,7 @@ export let Basic = (
     <ExampleCard width={300} height={300} location="hi" badge="1" size="xl" title="Size XL">
       hello worl2
     </ExampleCard>
-  </Row>
+  </Stack>
 )
 
 export let Collapsable = (
@@ -32,11 +32,11 @@ export let Floating = () => {
   const [show, setShow] = useState(false)
   return (
     <>
-      <Col padding>
+      <Stack padding>
         <Button coat="action" size="lg" onClick={() => setShow(!show)}>
           Toggle Floating Card
         </Button>
-      </Col>
+      </Stack>
       <FloatingCard
         visible={show}
         title="Floating Card"

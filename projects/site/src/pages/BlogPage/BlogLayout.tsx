@@ -1,16 +1,16 @@
-import { Col, ColProps, Space } from '@o/ui'
+import { Space, Stack, StackProps } from '@o/ui'
 import React from 'react'
 
 import { SectionContent } from '../../views/SectionContent'
 import { AboveFooter } from '../HomePage/AboveFooter'
 import { Footer } from '../HomePage/Footer'
 
-export function BlogLayout({ children, ...props }: ColProps) {
+export function BlogLayout({ children, ...props }: StackProps) {
   return (
     <>
       <Space size="xxxl" />
       <SectionContent minHeight={500}>
-        <Col {...props}>{children}</Col>
+        <Stack {...props}>{children}</Stack>
       </SectionContent>
       <BlogFooter />
     </>
@@ -21,9 +21,9 @@ export function BlogFooter() {
   return (
     <>
       <Space size="xxl" />
-      <Col padding={[true, 0]}>
+      <Stack padding={[true, 0]}>
         <AboveFooter />
-      </Col>
+      </Stack>
       <Space size="xxl" />
       <SectionContent>
         <Footer />

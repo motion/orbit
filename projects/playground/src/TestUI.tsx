@@ -1,4 +1,4 @@
-import { Button, CardSimple, Col, Parallax, Title, View } from '@o/ui'
+import { Button, CardSimple, Parallax, Stack, Title, View } from '@o/ui'
 import _ from 'lodash'
 import * as React from 'react'
 
@@ -207,7 +207,7 @@ export function TestUIParallax() {
         {views(0)}
       </Parallax.Container>
       <Parallax.Container overflow="hidden" height="100vh" background="indigo" timeInFrame={2}>
-        <Col margin="auto" space="xl">
+        <Stack margin="auto" space="xl">
           <Parallax.View parallax={getParallax({ speed: 1 })}>
             <Title color="yellow">Hello World</Title>
           </Parallax.View>
@@ -217,7 +217,7 @@ export function TestUIParallax() {
           <Parallax.View parallax={getParallax({ speed: 1 })}>
             <Title color="yellow">Hello World</Title>
           </Parallax.View>
-        </Col>
+        </Stack>
       </Parallax.Container>
       <Parallax.Container overflow="hidden" height="50vh" background="lightgreen">
         {views(2)}
@@ -238,15 +238,15 @@ export function TestUIParallax() {
 export function TestUIGlossSpeed() {
   const [key, setKey] = React.useState(0)
   return (
-    <Col space>
+    <Stack space>
       <Button onClick={() => setKey(key + 1)}>render</Button>
-      <Col space>
+      <Stack space>
         {_.fill(new Array(150), 0).map((_, index) => (
           <CardSimple key={index} title={`card ${index}`}>
             lorem ipsume sit amet
           </CardSimple>
         ))}
-      </Col>
-    </Col>
+      </Stack>
+    </Stack>
   )
 }

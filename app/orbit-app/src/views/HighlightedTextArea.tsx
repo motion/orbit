@@ -4,7 +4,7 @@ import * as React from 'react'
 
 const oneLine = str => str.replace(/\r?\n|\r/g, '')
 
-const TextAreaOuter = gloss(UI.Col, {
+const TextAreaOuter = gloss(UI.Stack, {
   position: 'relative',
   flex: 1,
 })

@@ -1,4 +1,4 @@
-import { Col, Row, Tag, TitleRow } from '@o/ui'
+import { Stack, Tag, TitleRow } from '@o/ui'
 import React from 'react'
 
 import { Paragraph } from '../views/Paragraph'
@@ -28,11 +28,11 @@ export function PropsTable(props: { props: Object }) {
 
   // overscan all for searchability
   return (
-    <Col space>
+    <Stack space>
       {propRows.map(row => (
-        <Col space key={row.name}>
+        <Stack space key={row.name}>
           <TitleRow padding bordered borderSize={2}>
-            <Row space alignItems="center">
+            <Stack direction="horizontal" space alignItems="center">
               <Tag coat="lightBlue">{row.name}</Tag>
               <Tag coat="lightGreen" size={0.75}>
                 {row.type}
@@ -42,11 +42,11 @@ export function PropsTable(props: { props: Object }) {
                   Required
                 </Tag>
               )}
-            </Row>
+            </Stack>
           </TitleRow>
           {!!row.description && <Paragraph>{row.description}</Paragraph>}
-        </Col>
+        </Stack>
       ))}
-    </Col>
+    </Stack>
   )
 }

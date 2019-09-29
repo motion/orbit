@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" type="image/png" href="./favicon.png" />
     <title>Orbit</title>
-    <script>
+    <script defer>
       const isInElectron = navigator.userAgent.includes('Electron')
       if (isInElectron) {
         window.electronRequire = window['require']
@@ -23,16 +23,6 @@
 
       // ensure dev is set true at first to load react dev stuff
       window['__DEV__'] = true
-    </script>
-  </head>
-
-  <body>
-    <div id="app"></div>
-    <script>
-      if (!navigator.userAgent.includes('Electron')) {
-        // easier to see what would be transparent in dev mode in browser
-        document.body.style.background = '#eee'
-      }
 
       System = {
         registry: {},
@@ -42,5 +32,16 @@
       }
     </script>
     <!-- orbit-scripts -->
+  </head>
+
+  <body>
+    <div id="app"></div>
+
+    <script>
+      if (!navigator.userAgent.includes('Electron')) {
+        // easier to see what would be transparent in dev mode in browser
+        document.body.style.background = '#eee'
+      }
+    </script>
   </body>
 </html>

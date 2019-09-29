@@ -1,5 +1,5 @@
 import { AppBit, AppIcon, AppModel, save } from '@o/kit'
-import { allIcons, Col, FormField, IconShape, Input, Row, useThrottledFn } from '@o/ui'
+import { allIcons, FormField, IconShape, Input, Stack, useThrottledFn } from '@o/ui'
 import memoize from 'memoize-weak'
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react'
 
@@ -61,7 +61,7 @@ export function AppsMainNew({
   // }, [inputRef.current])
 
   return (
-    <Col space>
+    <Stack space>
       <FormField label="Name">
         <Input
           nodeRef={inputRef}
@@ -74,13 +74,13 @@ export function AppsMainNew({
       </FormField>
       {(customizeColor || customizeIcon) && (
         <FormField label="Icon">
-          <Row space alignItems="center" overflow="hidden">
+          <Stack direction="horizontal" space alignItems="center" overflow="hidden">
             <AppIcon
               identifier={app ? app.identifier : newAppStore.app.identifier}
               colors={newAppStore.app.colors}
               size={48}
             />
-            <Col flex={1}>
+            <Stack flex={1}>
               {customizeColor && (
                 <ColorPicker
                   onChangeColor={colors => {
@@ -94,11 +94,11 @@ export function AppsMainNew({
                 />
               )}
               {customizeIcon && <IconPicker active={activeIcon} onChange={setActiveIcon} />}
-            </Col>
-          </Row>
+            </Stack>
+          </Stack>
         </FormField>
       )}
-    </Col>
+    </Stack>
   )
 }
 
@@ -113,7 +113,7 @@ function IconPicker(props: IconPickerProps) {
   })
 
   return (
-    <Row space padding="sm" scrollable="x" hideScrollbars flex={1}>
+    <Stack direction="horizontal" space padding="sm" scrollable="x" hideScrollbars flex={1}>
       {allIcons.slice(20, 100).map(icon => {
         console.log('icon, icon', icon)
         return (
@@ -127,6 +127,6 @@ function IconPicker(props: IconPickerProps) {
           />
         )
       })}
-    </Row>
+    </Stack>
   )
 }

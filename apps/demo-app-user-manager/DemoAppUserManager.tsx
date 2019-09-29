@@ -1,4 +1,4 @@
-import { Card, DefinitionList, Fetch, Fieldsets, Form, Layout, Pane, Row, Section, Select, Tab, Table, Tabs, useActiveSearchQuery, useCreateForm, useFetch } from '@o/ui'
+import { Card, DefinitionList, Fetch, Fieldsets, Form, Layout, Pane, Section, Select, Stack, Tab, Table, Tabs, useActiveSearchQuery, useCreateForm, useFetch } from '@o/ui'
 import React, { useMemo, useState } from 'react'
 
 const endpoint = 'https://jsonplaceholder.typicode.com'
@@ -24,10 +24,10 @@ export function DemoAppUserManager() {
         <Pane resizable flex={1.5}>
           <Layout type="column">
             <Pane resizable>
-              <Row space="sm" padding="sm">
+              <Stack direction="horizontal" space="sm" padding="sm">
                 <Select name="active" options={active} />
                 <Select name="type" isMulti options={type} />
-              </Row>
+              </Stack>
               <Table
                 selectable="multi"
                 shareable

@@ -4,9 +4,9 @@ import React from 'react'
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { SurfacePassProps } from './SizedSurfacePropsContext'
 import { Size } from './Space'
-import { Row, RowProps } from './View/Row'
+import { Stack, StackProps } from './View/Stack'
 
-export type ToolbarProps = Omit<RowProps, 'size'> & {
+export type ToolbarProps = Omit<StackProps, 'size'> & {
   attach?: 'bottom' | 'left' | 'right' | 'top'
   size?: Size
 }
@@ -45,15 +45,15 @@ export function Toolbar({
     >
       <ToolbarRow elevation={elevation} padding={size} hoverStyle={false} {...props}>
         {border !== false && borderElement[attach]}
-        <Row flex={1} space={size}>
+        <Stack direction="horizontal" flex={1} space={size}>
           {children}
-        </Row>
+        </Stack>
       </ToolbarRow>
     </SurfacePassProps>
   )
 }
 
-const ToolbarRow = gloss<ToolbarProps>(Row, {
+const ToolbarRow = gloss<ToolbarProps>(Stack, {
   flexDirection: 'row',
   alignItems: 'center',
   width: '100%',

@@ -1,6 +1,6 @@
 import { AppDefinition, AppIcon, ensure, react, Templates, UpdatePriority, useAppDefinition, useReaction, useStore } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, FullScreen, Geometry, Row, sleep, useDebounce, useDeepEqualState, useNodeSize, useOnMount, useOnUnmount, useScrollableParent, useScrollProgress, useTheme, View } from '@o/ui'
+import { Card, CardProps, FullScreen, Geometry, sleep, Stack, useDebounce, useDeepEqualState, useNodeSize, useOnMount, useOnUnmount, useScrollableParent, useScrollProgress, useTheme, View } from '@o/ui'
 import { MotionValue, useMotionValue } from 'framer-motion'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -98,7 +98,8 @@ export const OrbitAppsCarousel = memo(() => {
           },
         }}
       >
-        <Row
+        <Stack
+          direction="horizontal"
           data-is="OrbitAppsCarousel-Row"
           flex={1}
           alignItems="center"
@@ -126,7 +127,7 @@ export const OrbitAppsCarousel = memo(() => {
               frameHeight={frameSize[1]}
             />
           ))}
-        </Row>
+        </Stack>
       </View>
     </OrbitAppsCarouselFrame>
   )
@@ -250,6 +251,7 @@ const OrbitAppCard = memo(
      *
      * ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️
      */
+    console.log('hi')
     return (
       <Geometry>
         {(geometry, ref) => (
@@ -289,9 +291,8 @@ const OrbitAppCard = memo(
                   return -2
                 })
                 .transform([-1, 1], [0, 2.5])}
-              scale={geometry
-                .scrollIntersection()
-                .mergeTransform([zoomOut], (intersect, zoomOut) => {
+              scale={
+                geometry.scrollIntersection().mergeTransform([zoomOut], (intersect, zoomOut) => {
                   if (zoomOut === 0) return index === appsCarouselStore.focusedIndex ? 1 : 0.5
                   if (intersect >= -0) return 0.6
                   return 0.6
@@ -300,7 +301,9 @@ const OrbitAppCard = memo(
                   // return Math.min(Math.max(0.5, 1 - intersect * -0.8), 0.6) //todo
                 })
                 // .transform([0.25, 0.6], [0.45, 0.6])
-                .spring({ damping: 50, stiffness: 500 })}
+                // spring here almost doubles pain time
+                // .spring({ damping: 50, stiffness: 500 })
+              }
               x={geometry
                 .useTransform(zoomOut, x => {
                   if (x) {

@@ -48,16 +48,16 @@ function getChildrenForSpacing(childs: React.ReactNode) {
 }
 
 export function createSpacedChildren(
-  { children, space = true, spaceAround, separator, beforeSpace, afterSpace }: SpaceGroupProps,
+  props: SpaceGroupProps,
   // allow media query sizes like sm-size md-size
   allProps: {
     [key: string]: any
   },
 ) {
-  if (!children) {
+  if (!props.children) {
     return null
   }
-  const childs = getChildrenForSpacing(children)
+  const childs = getChildrenForSpacing(props.children)
   const total = childs.length
 
   // media query props
@@ -71,24 +71,28 @@ export function createSpacedChildren(
     }
   }
 
-  if ((!space && !spaceAround) || (!spaceAround && total <= 1)) {
+  if ((!props.space && !props.spaceAround) || (!props.spaceAround && total <= 1)) {
     return (
       <>
-        {beforeSpace}
-        {children}
-        {afterSpace}
+        {props.beforeSpace}
+        {props.children}
+        {props.afterSpace}
       </>
     )
   }
 
-  const spaceElement = separator || <Space size={space} {...sizeMediaQueries} />
+  const spaceElement = props.separator || <Space size={props.space} {...sizeMediaQueries} />
   const spaceAroundElement =
-    separator || spaceAround === true ? spaceElement : <Space size={spaceAround} />
+    props.separator || props.spaceAround === true ? (
+      spaceElement
+    ) : (
+      <Space size={props.spaceAround} />
+    )
 
   return (
     <>
-      {beforeSpace}
-      {spaceAround && spaceAroundElement}
+      {props.beforeSpace}
+      {props.spaceAround && spaceAroundElement}
       {childs.map((child, index) => {
         const isSpace = child && child.type && child.type.isSpace
         const isNextSpace =
@@ -102,8 +106,8 @@ export function createSpacedChildren(
           </Fragment>
         )
       })}
-      {spaceAround && spaceAroundElement}
-      {afterSpace}
+      {props.spaceAround && spaceAroundElement}
+      {props.afterSpace}
     </>
   )
 }

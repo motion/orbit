@@ -1,7 +1,7 @@
 import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, command, createApp, CurrentAppBitContext, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem, AppBit, AppBuildCommand } from '@o/models'
 import { Desktop } from '@o/stores'
-import { Button, Card, CenteredText, Col, createBanner, DefinitionList, Icon, List, ListItemProps, Section, SubTitle, useAsyncFn, useBanner } from '@o/ui'
+import { Button, Card, CenteredText, createBanner, DefinitionList, Icon, List, ListItemProps, Section, Stack, SubTitle, useAsyncFn, useBanner } from '@o/ui'
 import React, { useCallback, useState } from 'react'
 
 import { useOm } from '../../om/om'
@@ -75,9 +75,9 @@ function AppsIndex() {
           selectable: false,
           padding: false,
           children: (
-            <Col padding={[38, 8, 16]}>
+            <Stack padding={[38, 8, 16]}>
               <SubTitle>Install</SubTitle>
-            </Col>
+            </Stack>
           ),
         },
         ...localApps.map(setupAppListItem),

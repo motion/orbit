@@ -4,7 +4,7 @@ import { AppMeta, BuildStatus, CommandWsOptions } from '@o/models'
 import { decorate } from '@o/use-store'
 import { sleep } from '@o/utils'
 import { Handler } from 'express'
-import { pathExists } from 'fs-extra'
+import { pathExists, pathExistsSync } from 'fs-extra'
 import { debounce } from 'lodash'
 import hashObject from 'node-object-hash'
 import { join, relative } from 'path'
@@ -75,6 +75,7 @@ export class AppBuilder {
     }
 
     const setup = async () => {
+      log.verbose(`Starting webpack for ${this.props.name}`)
       compiler = webpack(config)
       const publicPath = config.output.publicPath
       finalDevMiddleware = WebpackDevMiddleware(compiler, {
@@ -97,9 +98,12 @@ export class AppBuilder {
       staticMiddleware: (req, res, next) => {
         if (this.serveStatic) {
           const assetName = req.path.slice(req.path.lastIndexOf('/') + 1)
-          if (name === 'main' && assetName.includes('.worker.js')) {
-            res.sendFile(join(config.output.path, assetName))
-            return
+          if (assetName.includes('.worker.js')) {
+            const path = join(config.output.path, assetName)
+            if (pathExistsSync(path)) {
+              res.sendFile(path)
+              return
+            }
           }
           if (assetName === config.output.filename) {
             res.sendFile(this.outputBundlePath)

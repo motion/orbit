@@ -12,7 +12,7 @@ import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { getSpaceSize, getSpaceSizeNum, Size, Sizes, Space } from './Space'
 import { TitleRow, TitleRowSpecificProps } from './TitleRow'
-import { Col, ColProps } from './View/Col'
+import { Stack, StackProps } from './View/Stack'
 
 // useful for making a higher order component that uses Section internally
 // & you dont want to pass *everything* done, this is a good subset
@@ -73,7 +73,7 @@ export type SectionSpecificProps = Partial<
 
 export type SectionParentProps = Omit<SectionSpecificProps, 'below' | 'innerRef'>
 
-export type SectionProps = Omit<ColProps, 'onSubmit' | 'size'> & SectionSpecificProps
+export type SectionProps = Omit<StackProps, 'onSubmit' | 'size'> & SectionSpecificProps
 
 const { useProps, Reset, PassProps } = createContextualProps<SectionProps>()
 export const SectionPassProps = PassProps
@@ -242,7 +242,7 @@ export function Section(direct: SectionProps) {
       {showTitleAbove && titleEl}
       <Reset>
         {!!droppable && <DropOverlay isDropping={isDropping} />}
-        <Col
+        <Stack
           maxHeight={maxInnerHeight}
           flex={1}
           nodeRef={composeRefs(sectionInnerRef, innerRef)}
@@ -260,7 +260,7 @@ export function Section(direct: SectionProps) {
           {...viewProps}
         >
           {children}
-        </Col>
+        </Stack>
       </Reset>
       {below}
     </SizedSurface>

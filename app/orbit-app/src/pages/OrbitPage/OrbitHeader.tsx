@@ -1,7 +1,7 @@
 import { AppIcon, useModels, useStore } from '@o/kit'
 import { BuildStatusModel } from '@o/models'
 import { App } from '@o/stores'
-import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SurfacePassProps, View } from '@o/ui'
+import { BorderBottom, Button, Popover, PopoverProps, Stack, StackProps, SurfacePassProps, View } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
@@ -77,15 +77,22 @@ export const OrbitHeader = memo(() => {
             {homeButtonElement}
           </HeaderSide>
         </HeaderButtonPassProps>
-        <HeaderContain space spaceAround isActive={false} isDeveloping={isDeveloping}>
+        <HeaderContain
+          direction="horizontal"
+          space
+          spaceAround
+          isActive={false}
+          isDeveloping={isDeveloping}
+        >
           <OrbitHeaderInput fontSize={slim ? 15 : 20} />
 
-          <Row space transition="all ease 300ms">
+          <Stack direction="horizontal" space transition="all ease 300ms">
             <SurfacePassProps sizeRadius={1.5} sizeHeight={0.9} sizeIcon={1.1} sizePadding={1.2}>
               {orbitStore.activeActions}
             </SurfacePassProps>
 
-            <Row
+            <Stack
+              direction="horizontal"
               space
               alignItems="center"
               {...!isOnTearablePane && zoomedIn && { pointerEvents: 'none', opacity: 0.3 }}
@@ -125,8 +132,8 @@ export const OrbitHeader = memo(() => {
                 isDeveloping={isDeveloping}
                 setIsDeveloping={setIsDeveloping}
               />
-            </Row>
-          </Row>
+            </Stack>
+          </Stack>
         </HeaderContain>
         <HeaderSide space="sm" justifyContent="flex-end" slim={slim}>
           <View flex={1} />
@@ -273,7 +280,7 @@ const OrbitHeaderContainer = gloss<any>(View, {
   background: props.background || theme.headerBackground || theme.background,
 }))
 
-const HeaderSide = gloss<RowProps & { slim?: boolean }>(Row, {
+const HeaderSide = gloss<StackProps & { slim?: boolean }>(Stack, {
   flexDirection: 'row',
   flex: 1,
   width: '10%',
@@ -287,6 +294,9 @@ const HeaderSide = gloss<RowProps & { slim?: boolean }>(Row, {
     minWidth: 'auto',
   },
 })
+HeaderSide.defaultProps = {
+  flexDirection: 'row',
+}
 
 const getMedia = q => window.matchMedia(q.slice(q.indexOf('(') - 1))
 
@@ -303,7 +313,8 @@ const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   // background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
 }))
 
-const HeaderContain = gloss<RowProps & { isActive?: boolean; isDeveloping: boolean }>(Row, {
+const HeaderContain = gloss<StackProps & { isActive?: boolean; isDeveloping: boolean }>(Stack, {
+  flexDirection: 'row',
   margin: ['auto', 0],
   alignItems: 'center',
   width: '67%',

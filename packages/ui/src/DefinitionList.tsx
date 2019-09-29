@@ -1,4 +1,3 @@
-import { Row } from 'gloss'
 import { isDefined } from '@o/utils'
 import React from 'react'
 
@@ -7,6 +6,7 @@ import { guessColumns } from './forms/guessColumns'
 import { Label } from './forms/Label'
 import { getRowValues } from './helpers/getRowValues'
 import { DataColumnsShort, DataType, GenericDataRow } from './types'
+import { Stack } from './View/Stack'
 
 export type DefinitionListProps = {
   columns?: DataColumnsShort
@@ -50,12 +50,12 @@ export type DefinitionItem = {
 
 export function DefinitionItem(props: DefinitionItem) {
   return (
-    <Row alignItems="center">
+    <Stack direction="horizontal" alignItems="center">
       <Label padding={0} fontWeight={400}>
         {props.label}:
       </Label>
       &nbsp;
       <DataValue type={props.type} value={props.value} />
-    </Row>
+    </Stack>
   )
 }

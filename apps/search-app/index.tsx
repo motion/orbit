@@ -1,5 +1,5 @@
 import { App, AppFilterButton, AppMainView, AppViewProps, createApp, useSearchState, useStore, useStores, useUserState } from '@o/kit'
-import { Button, Calendar, FloatingCard, List, Popover, Row, Scale, View } from '@o/ui'
+import { Button, Calendar, FloatingCard, List, Popover, Scale, Stack, View } from '@o/ui'
 import React, { useMemo } from 'react'
 
 import { SearchStore } from './SearchStore'
@@ -73,8 +73,8 @@ function SearchActions(props: { showFloating: boolean; setShowFloating: Function
   const { queryStore } = useStores()
   const { queryFilters } = queryStore
   return (
-    <Row space="sm">
-      <Row group>
+    <Stack direction="horizontal" space="sm">
+      <Stack direction="horizontal" group>
         <Button
           onClick={queryFilters.toggleSortBy}
           tooltip={`Sort by: ${queryFilters.sortBy}`}
@@ -102,9 +102,9 @@ function SearchActions(props: { showFloating: boolean; setShowFloating: Function
         </Popover>
 
         <AppFilterButton />
-      </Row>
+      </Stack>
 
-      <Row group>
+      <Stack direction="horizontal" group>
         <Button
           chromeless
           onClick={() => props.setShowFloating(!props.showFloating)}
@@ -112,7 +112,7 @@ function SearchActions(props: { showFloating: boolean; setShowFloating: Function
           icon="zoom-to-fit"
           active={props.showFloating}
         />
-      </Row>
-    </Row>
+      </Stack>
+    </Stack>
   )
 }

@@ -1,4 +1,4 @@
-import { gloss, Row, useTheme, View } from '@o/ui'
+import { gloss, Stack, useTheme, View } from '@o/ui'
 import { Box } from 'gloss'
 import React from 'react'
 
@@ -10,7 +10,7 @@ export const Spotlight = () => {
   return (
     <>
       <Above />
-      <Row>
+      <Stack direction="horizontal">
         <Left />
         <Square
           width={siteStore.sectionHeight * 0.7}
@@ -20,7 +20,7 @@ export const Spotlight = () => {
           background={`radial-gradient(circle farthest-side, transparent 0%, ${theme.background})`}
         />
         <Right />
-      </Row>
+      </Stack>
       <Below />
     </>
   )

@@ -1,6 +1,6 @@
 import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, query, react, Templates, TreeListStore, useActiveDataApps, useAppState, useAppWithDefinition, useBitHelpers, useCommand, useHooks, useStore } from '@o/kit'
 import { ApiArgType, AppMeta, AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
-import { Button, Card, CardProps, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, InputProps, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, TitleRow, Toggle, TreeList, useCreateTreeList, useGet, useTheme, View } from '@o/ui'
+import { Button, Card, CardProps, CardSimple, Center, CenteredText, Code, DataInspector, Dock, DockButton, FormField, InputProps, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, Stack, SubTitle, Tab, Table, Tabs, Tag, TextArea, TitleRow, Toggle, TreeList, useCreateTreeList, useGet, useTheme, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -463,11 +463,11 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
 
   if (!method) {
     return (
-      <Col flex={1}>
+      <Stack flex={1}>
         <Center>
           <SubTitle>No API methods found</SubTitle>
         </Center>
-      </Col>
+      </Stack>
     )
   }
 
@@ -476,8 +476,8 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
       <Pane flex={2} resizable>
         <Layout type="column">
           <Pane flex={2} resizable>
-            <Col padding space>
-              <Row>
+            <Stack padding space>
+              <Stack direction="horizontal">
                 <Tag size={1.2} coat="lightGray">
                   {method.name}
                 </Tag>
@@ -492,7 +492,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
                 >
                   Run
                 </Button>
-              </Row>
+              </Stack>
 
               {(method.args || []).map((arg, index) => {
                 if (typeof queryBuilder.arguments[index] === 'undefined') {
@@ -517,7 +517,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
                   value: queryBuilder.query,
                 }}
               />
-            </Col>
+            </Stack>
           </Pane>
           <OutputPane queryBuilder={queryBuilder} />
         </Layout>
@@ -684,9 +684,9 @@ const ArgumentField = memo(
     const [isActive, setIsActive] = useAppState(`active-${key}`, arg.isOptional ? false : true)
 
     return (
-      <Col space>
-        <Row space alignItems="center">
-          <Row opacity={isActive ? 1 : 0.35} space alignItems="center">
+      <Stack space>
+        <Stack direction="horizontal" space alignItems="center">
+          <Stack direction="horizontal" opacity={isActive ? 1 : 0.35} space alignItems="center">
             <SubTitle>{arg.name}</SubTitle>
             <Tag coat="lightGreen" size={0.75} fontWeight={200}>
               {arg.type}
@@ -696,7 +696,7 @@ const ArgumentField = memo(
                 Optional
               </Tag>
             )}
-          </Row>
+          </Stack>
           <Space flex={1} />
           {arg.isOptional && (
             <Toggle
@@ -707,7 +707,7 @@ const ArgumentField = memo(
               }}
             />
           )}
-        </Row>
+        </Stack>
         <CodeCard
           cardProps={{
             opacity: isActive ? 1 : 0.35,
@@ -721,7 +721,7 @@ const ArgumentField = memo(
             },
           }}
         />
-      </Col>
+      </Stack>
     )
   },
 )
@@ -730,7 +730,7 @@ const lineCount = (str: string) => str.split('\n').length
 
 const CodeCard = (props: { cardProps: CardProps; inputProps: InputProps }) => {
   const initVal = props.inputProps.defaultValue || props.inputProps.value || ''
-  const [numLines, setNumLines] = useState(lineCount(initVal))
+  const [numLines, setNumLines] = useState(lineCount(`${initVal}`))
   return (
     <Card
       transition="all ease 300ms"

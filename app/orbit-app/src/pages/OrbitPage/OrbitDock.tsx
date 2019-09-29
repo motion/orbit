@@ -1,6 +1,6 @@
 import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, getAppDefinition, RenderAppProps, useActiveUser, useReaction, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { Col, Divider, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, useDebounceValue, usePosition, useWindowSize, View, ViewProps } from '@o/ui'
+import { Divider, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, Stack, useDebounceValue, usePosition, useWindowSize, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { partition } from 'lodash'
 import React, { memo, useContext, useMemo, useRef } from 'react'
@@ -28,7 +28,7 @@ export const OrbitDock = memo(() => {
 
   return (
     <>
-      <Col
+      <Stack
         position="absolute"
         top={70}
         right={0}
@@ -65,13 +65,13 @@ export const OrbitDock = memo(() => {
           right={dockRightSpace}
           space="sm"
           position="relative"
-          flexDirection="column"
+          direction="vertical"
           bottom="auto"
         >
           <DockThemeButton index={topDockApps.length + bottomDockApps.length} />
           <DockVibrancyButton index={topDockApps.length + bottomDockApps.length + 1} />
         </Dock>
-      </Col>
+      </Stack>
       <DockBackground isOpen={store.isOpen} elevation={3} />
     </>
   )
@@ -108,8 +108,8 @@ export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
     <Dock
       right={dockRightSpace}
       position="relative"
-      flexDirection="column"
-      className="orbit-dock"
+      direction="vertical"
+      className="orbit-dock-panel"
       bottom="auto"
     >
       {props.apps.map((app, index) => (
@@ -194,10 +194,9 @@ const themes = [
 ] as const
 
 const DockThemeButton = memo(({ index }: { index: number }) => {
-  const drawerStore = useAppsDrawerStore()
   const dockStore = orbitDockStore.useStore()
   const [user, updateUser] = useActiveUser()
-  const curTheme = user.settings!.theme
+  const curTheme = user!.settings!.theme
   const themeIndex = themes.findIndex(x => x.value === curTheme)
   const theme = themes[themeIndex]
   return (
@@ -223,10 +222,9 @@ const vibrancies = [
 ] as const
 
 const DockVibrancyButton = memo(({ index }: { index: number }) => {
-  const drawerStore = useAppsDrawerStore()
   const dockStore = orbitDockStore.useStore()
   const [user, updateUser] = useActiveUser()
-  const curVibrancy = user.settings!.vibrancy || 'some'
+  const curVibrancy = user!.settings!.vibrancy || 'some'
   const vibrancyIndex = vibrancies.findIndex(x => x.value === curVibrancy)
   const vibrancy = vibrancies[vibrancyIndex]
 

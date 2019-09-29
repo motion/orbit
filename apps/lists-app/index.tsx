@@ -1,5 +1,5 @@
 import { AppNavigator, AppStatusBar, AppViewProps, createApp, getEditor, NavigatorProps, useBit, useSearchState } from '@o/kit'
-import { Breadcrumb, Breadcrumbs, Col, Dock, DockButton, ProvideTreeList, randomAdjective, randomNoun, StatusBarText, TreeList, useCreateTreeList, useDebounce, useTreeList, View } from '@o/ui'
+import { Breadcrumb, Breadcrumbs, Dock, DockButton, ProvideTreeList, randomAdjective, randomNoun, Stack, StatusBarText, TreeList, useCreateTreeList, useDebounce, useTreeList, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import pluralize from 'pluralize'
 import React, { memo, useCallback, useRef } from 'react'
@@ -95,11 +95,11 @@ function ListsAppMain(props: AppViewProps) {
   }
 
   return (
-    <Col padding={[30, 0]}>
+    <Stack padding={[30, 0]}>
       <Editor defaultValue={`${bit.body}`} onChange={handleChange} />
       {/* TODO put this in a modal when you click a plus here */}
       {/* <AppContentView {...props} /> */}
-    </Col>
+    </Stack>
   )
 }
 

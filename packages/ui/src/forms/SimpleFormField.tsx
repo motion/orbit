@@ -1,24 +1,23 @@
-import { Row } from 'gloss'
 import React from 'react'
 
 import { useSurfaceHeight } from '../SizedSurface'
 import { Space } from '../Space'
 import { SimpleText } from '../text/SimpleText'
-import { Col, ColProps } from '../View/Col'
+import { Stack, StackProps } from '../View/Stack'
 import { useFormError } from './Form'
 import { Label } from './Label'
 
 const FormLabel = ({ children, height }) => (
-  <Col data-is="FormLabel" width="30%" maxWidth={120} height={height}>
+  <Stack data-is="FormLabel" width="30%" maxWidth={120} height={height}>
     {children}
-  </Col>
+  </Stack>
 )
 
-const FormValueCol = (props: ColProps) => <Col minWidth="70%" flex={1} space {...props} />
+const FormValueCol = (props: StackProps) => <Stack minWidth="70%" flex={1} space {...props} />
 
 export type FormFieldLayout = 'horizontal' | 'vertical'
 
-export type SimpleFormFieldProps = ColProps & {
+export type SimpleFormFieldProps = StackProps & {
   description?: string
   label?: React.ReactNode
   layout?: FormFieldLayout
@@ -57,25 +56,25 @@ export function SimpleFormField({
   )
   if (layout === 'vertical') {
     return (
-      <Col space="sm">
+      <Stack space="sm">
         {labelElement}
         {valueElement}
         {descriptionElement}
-      </Col>
+      </Stack>
     )
   }
   return (
-    <Row width="100%" alignItems="flex-start" padding="xs">
+    <Stack direction="horizontal" width="100%" alignItems="flex-start" padding="xs">
       <FormLabel height={height}>
-        <Row flex={1} alignItems="center">
+        <Stack direction="horizontal" flex={1} alignItems="center">
           {labelElement}
           <Space />
-        </Row>
+        </Stack>
       </FormLabel>
       <FormValueCol space="sm">
         {valueElement}
         {descriptionElement}
       </FormValueCol>
-    </Row>
+    </Stack>
   )
 }

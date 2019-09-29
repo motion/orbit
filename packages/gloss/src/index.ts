@@ -9,9 +9,10 @@ export {
 } from '@o/css'
 export * from './blocks/Absolute'
 export * from './blocks/Base'
+
 // blocks
 export * from './blocks/Block'
-export * from './blocks/Col'
+export * from './blocks/Flex'
 export * from './blocks/Contents'
 export * from './blocks/FullScreen'
 export * from './blocks/Grid'
@@ -19,7 +20,7 @@ export * from './blocks/Inherit'
 export * from './blocks/Inline'
 export * from './blocks/InlineBlock'
 export * from './blocks/InlineFlex'
-export * from './blocks/Row'
+
 // configureGloss
 export { GlossDefaultConfig, configureGloss } from './configureGloss'
 export * from './gloss'

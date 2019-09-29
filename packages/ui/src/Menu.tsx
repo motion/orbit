@@ -3,12 +3,12 @@ import React, { isValidElement } from 'react'
 import { ListItem } from './lists/ListItem'
 import { ListItemProps } from './lists/ListItemViewProps'
 import { Popover, PopoverProps } from './Popover'
-import { Col, ColProps } from './View/Col'
+import { Stack, StackProps } from './View/Stack'
 
 export type MenuProps = PopoverProps & {
   /** Pass in ListItemProps to determine the items in the popover. For full control you can use children instead */
   items?: (ListItemProps | React.ReactNode)[]
-  scrollable?: ColProps['scrollable']
+  scrollable?: StackProps['scrollable']
 }
 
 export const Menu = ({
@@ -32,7 +32,7 @@ export const Menu = ({
       distance={15}
       {...props}
     >
-      <Col
+      <Stack
         scrollable={scrollable}
         overflow="hidden"
         borderRadius={borderRadius}
@@ -47,7 +47,7 @@ export const Menu = ({
             }
             return <ListItem key={item['id'] || index} {...item as any} />
           })}
-      </Col>
+      </Stack>
     </Popover>
   )
 }

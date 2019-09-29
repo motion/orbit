@@ -1,4 +1,4 @@
-import { Absolute, ListItem, ListShortcuts, Popover, RoundButton, Row, SurfacePassProps } from '@o/ui'
+import { Absolute, ListItem, ListShortcuts, Popover, RoundButton, Stack, SurfacePassProps } from '@o/ui'
 import React, { memo } from 'react'
 
 import { fontProps } from '../constants'
@@ -17,7 +17,8 @@ export const DocsPageHeader = memo(({ isSmall, inputRef, setTheme, theme }: any)
     <>
       <ListShortcuts>
         <FadeInView style={{ flex: 1 }}>
-          <Row
+          <Stack
+            direction="horizontal"
             position="relative"
             margin={[0, 'auto', 0, 'auto']}
             pointerEvents="auto"
@@ -92,16 +93,16 @@ export const DocsPageHeader = memo(({ isSmall, inputRef, setTheme, theme }: any)
               flexDirection="row"
             >
               <SurfacePassProps size={1} iconSize={12}>
-                <Row group>
+                <Stack direction="horizontal" group>
                   <RoundButton
                     icon="moon"
                     tooltip="Toggle dark mode"
                     onClick={() => setTheme(theme === 'docsPageTheme' ? 'dark' : 'docsPageTheme')}
                   />
-                </Row>
+                </Stack>
               </SurfacePassProps>
             </Absolute>
-          </Row>
+          </Stack>
         </FadeInView>
       </ListShortcuts>
     </>

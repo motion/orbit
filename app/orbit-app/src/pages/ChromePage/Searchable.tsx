@@ -1,5 +1,5 @@
 import { QueryStore } from '@o/kit'
-import { Button, Icon, Input, ProvideHighlight, Row } from '@o/ui'
+import { Button, Icon, Input, ProvideHighlight, Stack } from '@o/ui'
 import * as React from 'react'
 
 export type SearchableProps = {
@@ -11,7 +11,7 @@ export type SearchableProps = {
 export default React.memo(function Searchable(props: SearchableProps) {
   return (
     <>
-      <Row padding={6} paddingBottom={10}>
+      <Stack direction="horizontal" padding={6} paddingBottom={10}>
         <Input
           flex={1}
           hover={false}
@@ -23,7 +23,7 @@ export default React.memo(function Searchable(props: SearchableProps) {
           {...props.inputProps}
         />
         <ContextButton marginLeft={6} />
-      </Row>
+      </Stack>
       <ProvideHighlight
         value={{
           words: props.queryStore.query.split(' '),

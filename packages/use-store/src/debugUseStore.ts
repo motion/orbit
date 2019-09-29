@@ -1,5 +1,5 @@
 import { CurrentComponent } from '@o/automagical'
-import { throttle } from 'lodash'
+import { debounce } from 'lodash'
 
 import { config } from './configure'
 
@@ -47,10 +47,10 @@ export function debugUseStore(cb: (event: UseStoreDebugEvent) => any) {
 }
 
 const allStores = new Set()
-const sendStateUpdate = throttle(() => {
+const sendStateUpdate = debounce(() => {
   const value = simpleObject(allStores)
   debugFns.forEach(fn => fn({ type: 'state', value }))
-}, 100)
+}, 1000)
 
 export function debugEmit(event: UseStoreDebugEvent, options?: { debug?: boolean }) {
   const component: CurrentComponent = event['component']

@@ -1,6 +1,6 @@
 import { isDefined } from '@o/utils'
 import { Base, validCSSAttr } from 'gloss'
-import React, { isValidElement, Suspense } from 'react'
+import React, { Suspense } from 'react'
 
 import { Breadcrumbs } from '../Breadcrumbs'
 import { CollapsableProps, createCollapsableChildren, splitCollapseProps } from '../Collapsable'
@@ -14,17 +14,18 @@ type GroupProps = {
   separator?: React.ReactNode
 }
 
-export type ColProps = CollapsableProps &
-  ScrollableViewProps &
+export type StackProps = CollapsableProps &
+  Omit<ScrollableViewProps, 'direction'> &
   SpaceGroupProps &
   GroupProps & {
+    direction?: 'horizontal' | 'vertical'
     suspense?: React.ReactNode | null
   }
 
-export const Col = createBaseView({ flexDirection: 'column', 'data-is': 'Col' })
+export const Stack = createStackView({ 'data-is': 'Stack' })
 
-export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Element {
-  function BaseView(colProps: ColProps) {
+export function createStackView(defaultProps: any): (props: StackProps) => JSX.Element {
+  function BaseView(colProps: StackProps) {
     const [
       collapseProps,
       {
@@ -37,6 +38,7 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
         separator,
         suspense,
         scrollable,
+        direction,
         ...props
       },
     ] = splitCollapseProps(colProps)
@@ -64,6 +66,12 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
     // groupable
     if (group) {
       element = <Breadcrumbs separator={separator}>{element}</Breadcrumbs>
+    }
+
+    if (props.flexDirection === undefined) {
+      if (direction === 'horizontal') {
+        props.flexDirection = 'row'
+      }
     }
 
     // scrollable
@@ -101,6 +109,14 @@ export function createBaseView(defaultProps: any): (props: ColProps) => JSX.Elem
       // anything we do special with in render(), we ignore for static extraction:
       padding: false,
       minHeight: false,
+      // TODO check this works
+      direction: {
+        name: 'flexDirection',
+        value: {
+          horizontal: 'row',
+          vertical: 'column',
+        },
+      },
     },
   }
 

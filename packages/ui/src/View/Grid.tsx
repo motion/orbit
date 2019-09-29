@@ -4,9 +4,9 @@ import { Base } from 'gloss'
 import React from 'react'
 
 import { getSpaceSize, Size } from '../Space'
-import { Col, ColProps } from './Col'
+import { Stack, StackProps } from './Stack'
 
-export type GridProps = ColProps & {
+export type GridProps = StackProps & {
   columnSpace?: Size
   rowSpace?: Size
   itemMinWidth?: number | string
@@ -17,7 +17,7 @@ export type GridProps = ColProps & {
 }
 
 export const Grid = (props: GridProps) => (
-  <Col data-is="Grid" display="grid" width="100%" {...sizeGaps(autoGridLayout(props))} />
+  <Stack data-is="Grid" display="grid" width="100%" {...sizeGaps(autoGridLayout(props))} />
 )
 
 // for gloss parents

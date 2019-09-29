@@ -1,4 +1,4 @@
-import { BorderRight, Button, Col, configureHotKeys, gloss, List, ListItemProps, Portal, ProvideBanner, Row, Sidebar, sleep, Space, Theme, useFilter, useOnMount, whenIdle } from '@o/ui'
+import { BorderRight, Button, configureHotKeys, gloss, List, ListItemProps, Portal, ProvideBanner, Sidebar, sleep, Space, Stack, Theme, useFilter, useOnMount, whenIdle } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -249,9 +249,9 @@ const DocsPage = memo((props: { children?: any }) => {
         <Theme name={themeName}>
           <main className="main-contents">
             <SectionContent background={theme => theme.background} maxWidth={1400}>
-              <Row id="main" className="main">
+              <Stack direction="horizontal" id="main" className="main">
                 {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
-                <Col
+                <Stack
                   nodeRef={Fade.ref}
                   flex={1}
                   overflow="hidden"
@@ -261,8 +261,8 @@ const DocsPage = memo((props: { children?: any }) => {
                   <ContentSection>
                     <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
                   </ContentSection>
-                </Col>
-              </Row>
+                </Stack>
+              </Stack>
 
               <Space size={250} />
 
@@ -285,14 +285,14 @@ const DocsPageSidebar = memo(({ children }: any) => {
   })
 
   return (
-    <Col id="sidebar" width={230} pointerEvents="auto" height="100vh">
-      <Col position="relative" className="sidebar__inner" flex={1}>
-        <Col margin={[25, 0, 0]} flex={1} position="relative">
+    <Stack id="sidebar" width={230} pointerEvents="auto" height="100vh">
+      <Stack position="relative" className="sidebar__inner" flex={1}>
+        <Stack margin={[25, 0, 0]} flex={1} position="relative">
           {children}
           <BorderRight top={10} opacity={0.5} />
-        </Col>
-      </Col>
-    </Col>
+        </Stack>
+      </Stack>
+    </Stack>
   )
 })
 
@@ -398,7 +398,7 @@ function DocsChromeSimple({ children }) {
   return (
     <>
       <Header slim noBorder />
-      <Row padding>
+      <Stack direction="horizontal" padding>
         <Button
           {...linkProps(
             window.location.pathname
@@ -409,8 +409,8 @@ function DocsChromeSimple({ children }) {
         >
           Back to Docs
         </Button>
-      </Row>
-      <Col padding>{children}</Col>
+      </Stack>
+      <Stack padding>{children}</Stack>
     </>
   )
 }

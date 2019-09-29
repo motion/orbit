@@ -11,8 +11,7 @@ import { useWindowSize } from './hooks/useWindowSize'
 import { Spinner } from './Spinner'
 import { Message, MessageProps } from './text/Message'
 import { SimpleText } from './text/SimpleText'
-import { Col } from './View/Col'
-import { Row } from './View/Row'
+import { Stack } from './View/Stack'
 
 export type BannerProps = {
   /** Give the banner a title */
@@ -250,16 +249,24 @@ export const Banner = (props: BannerViewProps) => {
       background={useCallback(theme => theme.background, [])}
       {...rest}
     >
-      <Row flex={1} justifyContent="space-between" alignItems="center" afterSpace beforeSpace space>
+      <Stack
+        direction="horizontal"
+        flex={1}
+        justifyContent="space-between"
+        alignItems="center"
+        afterSpace
+        beforeSpace
+        space
+      >
         {!!loading && <Spinner />}
-        <Col flex={1} space="sm">
+        <Stack flex={1} space="sm">
           <Message.Title>{title}</Message.Title>
-          <Col maxHeight={maxHeight} scrollable="y">
+          <Stack maxHeight={maxHeight} scrollable="y">
             <SimpleText whiteSpace="pre" overflow="auto">
               {message}
             </SimpleText>
-          </Col>
-        </Col>
+          </Stack>
+        </Stack>
         <Button
           size="xxs"
           alignSelf="flex-start"
@@ -268,7 +275,7 @@ export const Banner = (props: BannerViewProps) => {
           iconSize={12}
           onClick={close}
         />
-      </Row>
+      </Stack>
     </Message>
   )
 }

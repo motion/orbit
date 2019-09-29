@@ -1,3 +1,4 @@
+import { idFn } from '@o/utils'
 import { spy } from 'mobx'
 
 let spyOff: any = null
@@ -16,6 +17,11 @@ export function debug(level?: number) {
   }
   window['enableLog'] = next
   localStorage.setItem('enableLog', `${next}`)
+  if (next > 0) {
+    window.onanimationiteration = console.log
+  } else {
+    window.onanimationiteration = idFn
+  }
   if (next > 5) {
     spyOff = spy(logMobxEvent)
   } else {

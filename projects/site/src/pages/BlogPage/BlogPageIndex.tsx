@@ -1,4 +1,4 @@
-import { Avatar, Row, Space, View } from '@o/ui'
+import { Avatar, Space, Stack, View } from '@o/ui'
 import React from 'react'
 
 import { linkProps } from '../../useLink'
@@ -48,7 +48,7 @@ export function BlogPageIndex() {
 
 export const PostMeta = ({ post }) => {
   return (
-    <Row fontWeight={400} alignItems="center" fontSize={15} alpha={0.65}>
+    <Stack direction="horizontal" fontWeight={400} alignItems="center" fontSize={15} alpha={0.65}>
       <Avatar size={32} src={post.authorImage} />
       &nbsp; &nbsp;
       {post.author}
@@ -61,6 +61,6 @@ export const PostMeta = ({ post }) => {
         })
         .replace(/,.*,/, ',')
         .replace(/\//g, '·')}{' '}
-    </Row>
+    </Stack>
   )
 }

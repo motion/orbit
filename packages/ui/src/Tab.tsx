@@ -1,9 +1,9 @@
 import React, { FunctionComponent } from 'react'
 
 import { Button, ButtonProps } from './buttons/Button'
-import { ColProps } from './View/Col'
+import { StackProps } from './View/Stack'
 
-export type TabProps = Omit<ColProps, 'children'> & {
+export type TabProps = Omit<StackProps, 'children'> & {
   /**
    * ID is used for onActive/Active of <Tabs /> (may also use `key`, thought that may be removed)
    */

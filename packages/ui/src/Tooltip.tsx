@@ -33,6 +33,7 @@ export const Tooltip = ({
         background
         openOnHover
         noHoverOnChildren
+        // @ts-ignore "excessively deep"
         padding={[1, 5]}
         borderRadius={4}
         distance={10}

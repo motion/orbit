@@ -1,4 +1,4 @@
-import { Col, Tab, Tabs, Title } from '@o/ui'
+import { Stack, Tab, Tabs, Title } from '@o/ui'
 import React, { useState } from 'react'
 
 export let Controlled = (
@@ -24,9 +24,9 @@ export let Uncontrolled = () => {
         <Tab id="1" label="Second" />
         <Tab id="3" label="Third" />
       </Tabs>
-      <Col>
+      <Stack>
         <Title>Active: ${active}</Title>
-      </Col>
+      </Stack>
     </>
   )
 }

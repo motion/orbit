@@ -22,7 +22,7 @@ export type StackProps = CollapsableProps &
     suspense?: React.ReactNode | null
   }
 
-export const Stack = createStackView({ flexDirection: 'column', 'data-is': 'Stack' })
+export const Stack = createStackView({ 'data-is': 'Stack' })
 
 export function createStackView(defaultProps: any): (props: StackProps) => JSX.Element {
   function BaseView(colProps: StackProps) {
@@ -68,8 +68,10 @@ export function createStackView(defaultProps: any): (props: StackProps) => JSX.E
       element = <Breadcrumbs separator={separator}>{element}</Breadcrumbs>
     }
 
-    if (direction === 'horizontal') {
-      props.flexDirection = 'row'
+    if (props.flexDirection === undefined) {
+      if (direction === 'horizontal') {
+        props.flexDirection = 'row'
+      }
     }
 
     // scrollable

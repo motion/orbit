@@ -52,6 +52,8 @@ export class Color {
   /** rounded alpha */
   roundA!: number
 
+  hash: number
+
   constructor(color: ColorInput = '', opts: Partial<ColorOptions> = {}) {
     this.originalInput = color
     // faster to parse this way
@@ -91,6 +93,8 @@ export class Color {
     if (this.b < 1) {
       this.b = Math.round(this.b)
     }
+
+    this.hash = this.r + this.g * 255 + this.b * (255 * 2) + this.a * (255 * 3)
   }
 
   toCSS() {

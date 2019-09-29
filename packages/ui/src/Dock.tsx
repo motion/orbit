@@ -61,7 +61,6 @@ export const DockButton = (props: DockButtonProps) => {
 
   return (
     <Stack
-      direction="horizontal"
       pointerEvents="none"
       // TODO do it based on attachment
       flexDirection="row-reverse"

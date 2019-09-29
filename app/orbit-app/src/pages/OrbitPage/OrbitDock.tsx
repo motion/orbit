@@ -108,8 +108,8 @@ export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
     <Dock
       right={dockRightSpace}
       position="relative"
-      flexDirection="column"
-      className="orbit-dock"
+      direction="vertical"
+      className="orbit-dock-panel"
       bottom="auto"
     >
       {props.apps.map((app, index) => (
@@ -194,10 +194,9 @@ const themes = [
 ] as const
 
 const DockThemeButton = memo(({ index }: { index: number }) => {
-  const drawerStore = useAppsDrawerStore()
   const dockStore = orbitDockStore.useStore()
   const [user, updateUser] = useActiveUser()
-  const curTheme = user.settings!.theme
+  const curTheme = user!.settings!.theme
   const themeIndex = themes.findIndex(x => x.value === curTheme)
   const theme = themes[themeIndex]
   return (
@@ -223,10 +222,9 @@ const vibrancies = [
 ] as const
 
 const DockVibrancyButton = memo(({ index }: { index: number }) => {
-  const drawerStore = useAppsDrawerStore()
   const dockStore = orbitDockStore.useStore()
   const [user, updateUser] = useActiveUser()
-  const curVibrancy = user.settings!.vibrancy || 'some'
+  const curVibrancy = user!.settings!.vibrancy || 'some'
   const vibrancyIndex = vibrancies.findIndex(x => x.value === curVibrancy)
   const vibrancy = vibrancies[vibrancyIndex]
 

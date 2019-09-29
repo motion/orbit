@@ -121,7 +121,7 @@ const gradients = {
   radialGradient: processArray,
 }
 
-export function processObject(key: string, object: any): string {
+export function processObject(key: string, object: any): string | undefined {
   if (
     key === 'background' ||
     key === 'color' ||
@@ -138,18 +138,21 @@ export function processObject(key: string, object: any): string {
       return Config.toColor(object)
     }
   }
-  const toReturn: string[] = []
-  for (const subKey in object) {
-    if (!object.hasOwnProperty(subKey)) {
-      continue
+  // plain object only
+  if (!object.constructor) {
+    const toReturn: string[] = []
+    for (const subKey in object) {
+      if (!object.hasOwnProperty(subKey)) {
+        continue
+      }
+      let value = object[subKey]
+      if (Array.isArray(value)) {
+        value = processArray(key, value)
+      } else {
+        value = objectValue(subKey, value)
+      }
+      toReturn.push(`${TRANSFORM_KEYS_MAP[subKey] || subKey}(${value})`)
     }
-    let value = object[subKey]
-    if (Array.isArray(value)) {
-      value = processArray(key, value)
-    } else {
-      value = objectValue(subKey, value)
-    }
-    toReturn.push(`${TRANSFORM_KEYS_MAP[subKey] || subKey}(${value})`)
+    return toReturn.join(' ')
   }
-  return toReturn.join(' ')
 }

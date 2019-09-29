@@ -1,4 +1,3 @@
-import { mergeDefined } from '@o/utils'
 import React from 'react'
 
 import { LINE_HEIGHT } from './constants'
@@ -52,8 +51,7 @@ const getHeight = (size: number, sizeHeight: number | boolean) => {
 }
 
 export const SizedSurface = (direct: SizedSurfaceProps) => {
-  const sizedSurfaceProps = useSizedSurfaceProps(direct)
-  return <Surface {...sizedSurfaceProps} />
+  return <Surface {...useSizedSurfaceProps(direct)} />
 }
 
 export function useSizedSurfaceProps(direct?: SizedSurfaceProps): SizedSurfaceProps {
@@ -78,6 +76,7 @@ export function useSizedSurfaceProps(direct?: SizedSurfaceProps): SizedSurfacePr
       : (typeof sizeHeight !== 'undefined' && getHeight(size, sizeHeight)) || undefined
   let iconPadding = clampRound(LINE_HEIGHT * 0.22 * num(sizeHeight || 1))
   const pass = {
+    ...rest,
     size,
   } as any
   if (sizeHeight) {
@@ -113,5 +112,5 @@ export function useSizedSurfaceProps(direct?: SizedSurfaceProps): SizedSurfacePr
   if (sizeIcon) {
     pass.sizeIcon = num(sizeIcon)
   }
-  return mergeDefined(pass, rest)
+  return pass
 }

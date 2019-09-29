@@ -28,22 +28,59 @@ const emptyObject = Object.freeze({})
 export function cssString(styles: Object, opts?: CSSConfig): string {
   if (!styles) return ''
   const shouldSnake = !opts || opts.snakeCase !== false
-  let toReturn = ''
+  let style = ''
   for (let key in styles) {
-    let value = cssValue(key, styles[key], false, opts)
+    let value = cssValue(key, styles[key], typeof styles[key], false, opts)
     // shorthands
     if (value !== undefined) {
       if (SHORTHANDS[key]) {
         for (let k of SHORTHANDS[key]) {
           k = shouldSnake ? CAMEL_TO_SNAKE[k] || k : k
-          toReturn += `${k}:${px(value)};`
+          style += `${k}:${px(value)};`
         }
       } else {
-        toReturn += `${(shouldSnake && CAMEL_TO_SNAKE[key]) || key}:${value};`
+        style += `${(shouldSnake && CAMEL_TO_SNAKE[key]) || key}:${value};`
       }
     }
   }
-  return toReturn
+  return style
+}
+
+const keyHashes = {}
+export function cssStringWithHash(styles: Object, opts?: CSSConfig): [number, string] {
+  if (!styles) return [0, '']
+  const shouldSnake = !opts || opts.snakeCase !== false
+  let style = ''
+  let hash = 0
+  for (let key in styles) {
+    const rawVal = styles[key]
+    const rawValType = typeof styles[key]
+    let value = cssValue(key, rawVal, rawValType, false, opts)
+    // shorthands
+    if (value !== undefined) {
+      if (hash === 0) hash = 5381
+      // cache keys hashes, keys are always the same
+      let keyHash = keyHashes[key]
+      if (!keyHash) {
+        keyHash = keyHashes[key] = stringHash(key)
+      }
+      hash = (hash * 33) ^ keyHash
+      if (rawValType === 'number') {
+        hash = (hash * 33) ^ (Math.abs(rawVal + 250) + (rawVal < 0 ? 100 : 0))
+      } else {
+        hash = (hash * 33) ^ stringHash(value)
+      }
+      if (SHORTHANDS[key]) {
+        for (let k of SHORTHANDS[key]) {
+          k = shouldSnake ? CAMEL_TO_SNAKE[k] || k : k
+          style += `${k}:${px(value)};`
+        }
+      } else {
+        style += `${(shouldSnake && CAMEL_TO_SNAKE[key]) || key}:${value};`
+      }
+    }
+  }
+  return [hash, style]
 }
 
 export function css(styles: Object, opts?: CSSConfig): Object {
@@ -51,7 +88,7 @@ export function css(styles: Object, opts?: CSSConfig): Object {
   const shouldSnake = !opts || opts.snakeCase !== false
   const toReturn = {}
   for (let key in styles) {
-    let value = cssValue(key, styles[key], true, opts)
+    let value = cssValue(key, styles[key], typeof styles[key], true, opts)
     // shorthands
     if (value !== undefined) {
       if (SHORTHANDS[key]) {
@@ -67,12 +104,17 @@ export function css(styles: Object, opts?: CSSConfig): Object {
   return toReturn
 }
 
-function cssValue(key: string, value: any, recurse = false, options?: CSSConfig) {
+function cssValue(
+  key: string,
+  value: any,
+  valueType: string,
+  recurse = false,
+  options?: CSSConfig,
+) {
   // get real values
   if (value === false) {
     value === FALSE_VALUES[key]
   }
-  let valueType = typeof value
   // remove nullish
   if (value === undefined || value === null || value === false) {
     return
@@ -94,7 +136,10 @@ function cssValue(key: string, value: any, recurse = false, options?: CSSConfig)
     if (value.toCSS) {
       return value.toCSS()
     }
-    return processObject(key, value)
+    const res = processObject(key, value)
+    if (res !== undefined) {
+      return res
+    }
   } else if (key === 'isolate') {
     return value
   } else {
@@ -112,7 +157,7 @@ function cssValue(key: string, value: any, recurse = false, options?: CSSConfig)
     }
   }
   if (__DEV__) {
-    console.debug(`Invalid style value for ${key}`, value)
+    throw new Error(`Invalid style value for ${key}`)
   }
 }
 
@@ -121,7 +166,7 @@ export function styleToClassName(style: string): string {
 }
 
 // thx darksky: https://git.io/v9kWO
-function stringHash(str: string): number {
+export function stringHash(str: string): number {
   let res = 5381
   let i = 0
   let len = str.length

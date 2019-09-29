@@ -87,6 +87,7 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
 })
   .theme(getMargin, usePadding, getElevation)
   .withConfig({
+    // shouldAvoidProcessingStyles: shouldRenderToMotion,
     postProcessProps(inProps, outProps, tracker) {
       if (shouldRenderToMotion(inProps)) {
         let style = {}

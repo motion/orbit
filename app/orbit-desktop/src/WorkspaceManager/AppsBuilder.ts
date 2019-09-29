@@ -445,16 +445,18 @@ export class AppsBuilder {
     const desktopRoot = join(require.resolve('@o/orbit-desktop'), '..', '..')
     const index = await readFile(join(desktopRoot, 'index.html'), 'utf8')
     const scriptsPre = `
-    <script id="script_base" src="/base.dll.js"></script>
-    <script id="script_shared" src="/shared.dll.js"></script>
+    <script defer id="script_base" src="/base.dll.js"></script>
+    <script defer id="script_shared" src="/shared.dll.js"></script>
 `
     const scriptsPost = `
-    <script src="/main.js"></script>
+    <script defer src="/main.js"></script>
 `
     const getAppScriptDLL = (app: AppMeta) =>
-      `    <script id="script_app_${stringToIdentifier(app.packageId)}" src="/${stringToIdentifier(
+      `    <script defer id="script_app_${stringToIdentifier(
         app.packageId,
-      )}.${this.buildMode[app.packageId]}.dll.js"></script>`
+      )}" src="/${stringToIdentifier(app.packageId)}.${
+        this.buildMode[app.packageId]
+      }.dll.js"></script>`
 
     if (req.path.indexOf('/chrome') > -1) {
       return index.replace('<!-- orbit-scripts -->', `${scriptsPre}${scriptsPost}`)

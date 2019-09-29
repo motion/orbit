@@ -85,7 +85,7 @@ export async function getAppsConfig(
   const baseOutputDir = join(directory, 'dist', 'development')
   const baseDllParams: WebpackParams = {
     name: `base`,
-    entry: ['react', 'react-dom', 'react-refresh/runtime'],
+    entry: ['react', 'react-dom', 'react-refresh/runtime', '@o/webpack-fast-refresh'],
     watch,
     target: 'web',
     context: directory,

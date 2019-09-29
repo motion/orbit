@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@babel/code-frame": "^7.0.0",
+    "@o/orbit-workspace-deps": "^2.6.0",
     "@o/config": "*",
     "@o/libs-node": "^2.6.0",
     "@o/logger": "*",

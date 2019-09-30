@@ -9,7 +9,7 @@ export type AlternateThemeSet = {
 }
 
 export type ThemeValue<A extends any> = {
-  getCSSVariable(): string
+  cssVariable: string
   get(): A
 }
 

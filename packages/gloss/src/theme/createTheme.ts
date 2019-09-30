@@ -10,7 +10,7 @@ let id = 0
 export function createTheme<A extends ThemeObject>(theme: A): WrappedTheme<A> {
   const name = `${theme.name || `theme-${id++}`}`
   return Object.keys(theme).reduce((acc, key) => {
-    const val = acc[key]
+    const val = theme[key]
     if (key === 'coats' || val instanceof Color) {
       acc[key] = val
     } else {

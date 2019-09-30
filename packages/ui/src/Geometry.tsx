@@ -1,10 +1,9 @@
 import { decorate, useStore } from '@o/use-store'
 import { MotionValue, useSpring, useTransform, useViewportScroll } from 'framer-motion'
 import { SpringProps } from 'popmotion'
-import React from 'react'
+import React, { memo } from 'react'
 import { RefObject, useCallback, useContext, useEffect, useRef } from 'react'
 
-import { useOnUnmount } from './hooks/useOnUnmount'
 import { useRelative } from './hooks/useRelative'
 import { useScrollProgress } from './hooks/useScrollProgress'
 import { useScrollableParent } from './View/ScrollableParentStore'
@@ -179,7 +178,8 @@ export class GeometryStore<A = any> {
           const index = scrollIntersectionState.elements.indexOf(this.props.ref.current)
           const state = scrollIntersectionState.measurements.get(index)
           const res = state ? (state.offset - scroll) * state.total : 0
-          return res
+          // sometimes we'd get incredibly close to accurate but off by just a tiny bit
+          return Math.round(res * 10000) / 10000
         })
       })
     })
@@ -204,9 +204,10 @@ export function useGeometry<A extends GeometryStore>(
   return children as JSX.Element
 }
 
-export function Geometry(props: { children: GeometryRenderer<GeometryStore> }) {
-  useOnUnmount(() => {
-    console.warn('unmounting geometry')
-  })
-  return useGeometry(props.children, GeometryStore)
-}
+export const Geometry = memo(
+  (props: { children: GeometryRenderer<GeometryStore> }) => {
+    return useGeometry(props.children, GeometryStore)
+  },
+  // because it takes a function as children we should never have to update
+  () => false,
+)

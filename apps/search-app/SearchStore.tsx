@@ -57,7 +57,7 @@ export class SearchStore {
       ensure('app', !!app)
       ensure('this.searchState', !!this.searchState)
 
-      await sleep(120)
+      await sleep(100)
 
       // RESULTS
       let results: ListItemProps[] = []
@@ -71,9 +71,6 @@ export class SearchStore {
           await when(() => this.stores.queryStore.nlpStore.nlp.query === query)
         }
       }
-
-      // pagination
-      const take = 18
 
       // query builder pieces
       const { exclusiveFilters, activeFilters, dateState, sortBy } = this.searchState.filters
@@ -106,9 +103,9 @@ export class SearchStore {
           peopleFilters,
           locationFilters,
           skip: total + props.take,
-          take: take,
+          take: props.take,
         }
-        total += take
+        total += props.take
         const nextResults = await searchBits(args)
         if (!nextResults.length) {
           return false
@@ -130,7 +127,7 @@ export class SearchStore {
       // react concurrent + react window lazy loading could do this work better
       if (
         await loadMore({
-          take: 12,
+          take: 8,
         })
       ) {
         if (
@@ -139,7 +136,7 @@ export class SearchStore {
           })
         ) {
           await loadMore({
-            take: 100,
+            take: 50,
           })
         }
       }
@@ -152,7 +149,7 @@ export class SearchStore {
       }
     },
     {
-      log: false,
+      // log: false,
       defaultValue: { results: [], query: '', finished: false },
     },
   )

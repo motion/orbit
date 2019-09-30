@@ -57,7 +57,7 @@ export class NLPStore {
     async (query, { sleep }) => {
       if (!query) return this.emptyNLP
       // debounce a bit less than query
-      await sleep(100)
+      await sleep(50)
       return {
         ...(await parseSearchQuery(query)),
         query,

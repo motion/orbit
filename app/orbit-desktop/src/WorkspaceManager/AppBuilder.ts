@@ -5,8 +5,8 @@ import { decorate } from '@o/use-store'
 import { sleep } from '@o/utils'
 import { Handler } from 'express'
 import { pathExists, pathExistsSync } from 'fs-extra'
+import hashSum from 'hash-sum'
 import { debounce } from 'lodash'
-import hashObject from 'node-object-hash'
 import { join, relative } from 'path'
 import webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
@@ -14,6 +14,8 @@ import WebpackDevMiddleware from 'webpack-dev-middleware'
 import { writeBuildInfo } from './commandBuild'
 import { shouldRebuildApp } from './shouldRebuildApp'
 
+// import hashObject from 'node-object-hash'
+// import produce from 'immer'
 const log = new Logger('AppBuilder')
 
 type AppBuilderProps = {
@@ -60,7 +62,7 @@ export class AppBuilder {
      * Were doing a delayed webpack start on serveStatic so we proxy middlewares for a bit
      */
 
-    const hash = hashObject({ sort: false }).hash(config)
+    const hash = getConfigHash(config)
     let compiler: webpack.Compiler | null = null
     let finalDevMiddleware = null
     let finalMiddleware = null
@@ -281,4 +283,28 @@ export const resolveIfExists = (middleware, basePaths: string[], exactPaths: str
     }
   }
   return handler
+}
+
+export const getConfigHash = (config: webpack.Configuration) => {
+  // node-object-hash had a bug with gloss extract statics, instead i tried hashSum and it works?
+  // const withoutObjectLoaders = produce(config as any, draft => {
+  //   draft.module.rules = draft.module.rules.map(x => {
+  //     if (x && x.use) {
+  //       return produce(x, (next, index) => {
+  //         if (next && next.loader) {
+  //           try {
+  //             return hashObject({ sort: false }).hash(next)
+  //           } catch {
+  //             return hashObject({ sort: false }).hash({
+  //               object: [Object.keys(next.loader), index]
+  //             })
+  //           }
+  //         }
+  //         return next
+  //       })
+  //     }
+  //     return x
+  //   })
+  // })
+  return hashSum(config)
 }

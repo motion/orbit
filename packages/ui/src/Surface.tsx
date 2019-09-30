@@ -250,7 +250,6 @@ export function Surface(direct: SurfaceProps) {
 
   // goes to BOTH the outer element and inner element
   let throughProps: ThroughProps = {
-    height,
     iconPadding: typeof iconPadding === 'number' ? iconPadding : size * 8,
     alignItems,
     justifyContent,
@@ -265,7 +264,7 @@ export function Surface(direct: SurfaceProps) {
   }
 
   let lineHeight = props.lineHeight
-  if (sizeLineHeight) {
+  if (!props.lineHeight && sizeLineHeight && +height == +height) {
     lineHeight = `${height}px`
   }
 
@@ -282,15 +281,19 @@ export function Surface(direct: SurfaceProps) {
 
   const childrenProps: HTMLProps<HTMLDivElement> = {}
 
+  const pxHeight = +height == +height
   const borderLeftRadius = Math.min(
+    props.borderLeftRadius ? +props.borderLeftRadius : undefined,
     segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius,
-    +height / 2,
+    pxHeight ? +height / 2 : undefined,
+    0,
   )
   const borderRightRadius = Math.min(
+    props.borderRightRadius ? +props.borderRightRadius : undefined,
     segmentedStyle ? segmentedStyle.borderRightRadius : +props.borderRadius,
-    +height / 2,
+    pxHeight ? +height / 2 : undefined,
+    0,
   )
-
   const borderProps = getBorderRadius(
     borderTopRadius,
     borderBottomRadius,
@@ -433,6 +436,7 @@ export function Surface(direct: SurfaceProps) {
         {showElement && (
           <Element
             {...throughProps}
+            height={pxHeight ? '100%' : undefined}
             {...elementProps}
             disabled={disabled}
             elementTheme={elementTheme}
@@ -488,6 +492,7 @@ export function Surface(direct: SurfaceProps) {
     borderWidth,
     borderPosition,
     coat,
+    height,
     applyPsuedoColors: true,
     disabled,
     ...(!showElement && elementProps),

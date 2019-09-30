@@ -62,15 +62,19 @@ export const OrbitHeader = memo(() => {
     [appRole],
   )
 
+  const height = slim ? 40 : 50
+
   return (
     <OrbitHeaderContainer
       nodeRef={containerRef}
       isDeveloping={isDeveloping}
       className="draggable"
       onMouseUp={headerStore.handleMouseUp}
+      contain="strict"
+      height={height}
     >
       <OrbitHeaderEditingBg isActive={isDeveloping} />
-      <HeaderTop height={slim ? 40 : 50}>
+      <HeaderTop>
         <HeaderButtonPassProps>
           <HeaderSide space="sm" slim={slim}>
             <BackButton isTorn={isTorn} />
@@ -332,6 +336,7 @@ const HeaderContain = gloss<StackProps & { isActive?: boolean; isDeveloping: boo
 }))
 
 const HeaderTop = gloss(View, {
+  height: '100%',
   flexDirection: 'row',
   position: 'relative',
 })

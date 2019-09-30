@@ -45,7 +45,7 @@ class OrbitAppsCarouselStore {
   controlled = false
 
   // motion/springs
-  scrollOut = createUpdateableSpring(0, { damping: 50, stiffness: 250 })
+  scrollOut = createUpdateableSpring(0, { damping: 45, stiffness: 180 })
 
   start() {
     this.watchScrollOut()

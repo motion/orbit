@@ -8,12 +8,11 @@ import { Handler } from 'express'
 import { Dictionary, Request } from 'express-serve-static-core'
 import { readFile } from 'fs-extra'
 import { chunk } from 'lodash'
-import hashObject from 'node-object-hash'
 import { join } from 'path'
 import Webpack from 'webpack'
 import Observable from 'zen-observable'
 
-import { AppBuilder, resolveIfExists, WebpackAppsDesc } from './AppBuilder'
+import { AppBuilder, getConfigHash, resolveIfExists, WebpackAppsDesc } from './AppBuilder'
 import { commandBuild } from './commandBuild'
 import { AppBuildConfigs, getAppsConfig } from './getAppsConfig'
 import { getHotMiddleware } from './getHotMiddleware'
@@ -418,12 +417,8 @@ export class AppsBuilder {
     return observable
   }
 
-  private getConfigHash(config: Webpack.Configuration) {
-    return hashObject({ sort: false }).hash(config)
-  }
-
   private getRunningApp(name: string, config: Webpack.Configuration) {
-    const hash = this.getConfigHash(config)
+    const hash = getConfigHash(config)
     if (name) {
       const running = this.state.find(x => x.name === name)
       if (running) {

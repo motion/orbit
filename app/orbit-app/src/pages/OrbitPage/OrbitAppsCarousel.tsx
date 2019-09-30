@@ -219,7 +219,7 @@ const OrbitAppCard = memo(
     const theme = useTheme()
     const cardRef = useRef(null)
 
-    const cardBoxShadow = [15, 30, 120, [0, 0, 0, theme.background.isDark() ? 0.5 : 0.25]]
+    const cardBoxShadow = [5, 10, 30, [0, 0, 0, theme.background.isDark() ? 0.5 : 0.25]]
 
     // group these updates together, and ensure they are low priority
     const [isFocused, isFocusZoomed] = useReaction(
@@ -251,7 +251,7 @@ const OrbitAppCard = memo(
      *
      * ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️
      */
-    console.log('hi')
+
     return (
       <Geometry>
         {(geometry, ref) => (
@@ -264,12 +264,14 @@ const OrbitAppCard = memo(
             width={frameWidth}
             height={frameHeight}
             position="relative"
+            contain="strict"
+            zIndex={1000 - index}
           >
             <View
               width={frameWidth}
               height={frameHeight + borderRadius}
               animate
-              zIndex={geometry.scrollIntersection().transform(x => 1 - Math.abs(x))}
+              // z={geometry.scrollIntersection().transform(x => 1 - Math.abs(x))}
               y={geometry
                 .useTransform(zoomOut, out => {
                   return out ? 0 : -borderRadius
@@ -285,29 +287,32 @@ const OrbitAppCard = memo(
                 .spring({ stiffness: 250, damping: 50 })}
               opacity={geometry
                 .scrollIntersection()
-                .mergeTransform([zoomOut], (prev, zoomOut) => {
-                  if (zoomOut) return prev
+                .mergeTransform([zoomOut], (i, zoomOut) => {
+                  if (zoomOut) return i
                   if (index === appsCarouselStore.focusedIndex) return 1
                   return -2
                 })
                 .transform([-1, 1], [0, 2.5])}
-              scale={
-                geometry.scrollIntersection().mergeTransform([zoomOut], (intersect, zoomOut) => {
-                  if (zoomOut === 0) return index === appsCarouselStore.focusedIndex ? 1 : 0.5
-                  if (intersect >= -0) return 0.6
-                  return 0.6
+              scale={geometry
+                .scrollIntersection()
+                .mergeTransform([zoomOut], (intersect, zoomOut) => {
+                  if (zoomOut === 0) {
+                    const pos = appsCarouselStore.focusedIndex - index
+                    if (pos === 0) return 1
+                    if (pos === -1 || pos === 1) return 0.5
+                    return 0.55 // keep the same if far out of frame
+                  }
+                  if (intersect <= 0.1) return 0.55
+                  return 0.55
                   // todo - need to add a new thing to geometry, something like:
                   // .transformIf(x => x < 0.6, [0, 1], [10, 20])
                   // return Math.min(Math.max(0.5, 1 - intersect * -0.8), 0.6) //todo
                 })
-                // .transform([0.25, 0.6], [0.45, 0.6])
-                // spring here almost doubles pain time
-                // .spring({ damping: 50, stiffness: 500 })
-              }
+                .spring({ damping: 40, stiffness: 400 })}
               x={geometry
                 .useTransform(zoomOut, x => {
                   if (x) {
-                    return '20%'
+                    return '17%'
                   }
                   const focused = appsCarouselStore.focusedIndex
                   if (index === focused) {

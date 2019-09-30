@@ -1,12 +1,12 @@
 import { toColor } from '@o/color'
-import { createTheme, WrappedTheme } from 'gloss'
+import { CompiledTheme, createTheme } from 'gloss'
 import { fromStyles } from 'gloss-theme'
 
 import { coats } from './themeCoats'
 import { dark } from './themeDark'
 import { light } from './themeLight'
 
-export const themes: { [key: string]: WrappedTheme } = {
+export const themes: { [key: string]: CompiledTheme } = {
   ...Object.keys(coats).reduce((acc, key) => {
     acc[key] = createTheme(coats[key])
     return acc

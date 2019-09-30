@@ -1,13 +1,13 @@
 import { Color } from '@o/color'
-import { AlternateThemeSet, ThemeObject, ThemeValue } from '@o/css'
+import { ThemeCoats, ThemeObject, ThemeValueLike } from '@o/css'
 
-type WrappedTheme<A extends Partial<ThemeObject>> = {
-  [key in keyof A]: A[key] extends AlternateThemeSet ? A[key] : ThemeValue<A>
+export type CompiledTheme<A extends Partial<ThemeObject> = any> = {
+  [key in keyof A]: A[key] extends ThemeCoats ? A[key] : ThemeValueLike<A>
 }
 
 let id = 0
 
-export function createTheme<A extends Partial<ThemeObject>>(theme: A): WrappedTheme<A> {
+export function createTheme<A extends Partial<ThemeObject>>(theme: A): CompiledTheme<A> {
   const name = `${theme.name || `theme-${id++}`}`
   return Object.keys(theme).reduce((acc, key) => {
     const val = theme[key]
@@ -20,9 +20,13 @@ export function createTheme<A extends Partial<ThemeObject>>(theme: A): WrappedTh
   }, {}) as any
 }
 
-function createThemeValue(themeName: string, key: string, val: any) {
-  return {
-    get: () => val,
-    cssVariable: `${themeName}_${key}`,
+export class ThemeValue<A> implements ThemeValueLike<A> {
+  constructor(public cssVariable: string, public value: A) {}
+  get() {
+    return this.value
   }
+}
+
+function createThemeValue<A>(themeName: string, key: string, val: A) {
+  return new ThemeValue<A>(`${themeName}-${key}`, val)
 }

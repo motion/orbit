@@ -16,7 +16,7 @@ export {
 } from './cssPropertySet'
 export * from './helpers'
 export { camelToSnake, snakeToCamel } from './helpers'
-export { ThemeObject, ThemeValue, ThemeSet, AlternateThemeSet } from './ThemeObject'
+export { ThemeObject, ThemeValueLike, ThemeSet, ThemeCoats } from './ThemeObject'
 
 export type CSSConfig = {
   errorMessage?: string

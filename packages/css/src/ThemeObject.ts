@@ -4,17 +4,17 @@ export type ThemeSet = {
   [key: string]: Partial<ThemeObject>
 }
 
-export type AlternateThemeSet = {
+export type ThemeCoats = {
   [key: string]: Partial<ThemeObject> | ((parentTheme: ThemeObject) => Partial<ThemeObject>)
 }
 
-export type ThemeValue<A extends any> = {
+export interface ThemeValueLike<A extends any> {
   cssVariable: string
   get(): A
 }
 
 export type ThemeObject = {
-  coats?: AlternateThemeSet
+  coats?: ThemeCoats
   background: Color
   color: Color
   borderColor?: Color

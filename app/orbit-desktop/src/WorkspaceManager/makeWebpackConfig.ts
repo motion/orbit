@@ -11,6 +11,8 @@ import merge from 'webpack-merge'
 
 export type DLLReferenceDesc = { manifest: string; filepath: string }
 
+const GlossWebpackPlugin = require('@o/gloss-webpack')
+
 export type WebpackParams = {
   name?: string
   entry?: string[]
@@ -31,6 +33,7 @@ export type WebpackParams = {
   minify?: boolean
   devtool?: webpack.Configuration['devtool']
   plugins?: webpack.Configuration['plugins']
+  extractStaticStyles?: boolean
 }
 
 const log = new Logger('makeWebpackConfig')
@@ -59,6 +62,7 @@ export function makeWebpackConfig(
     devtool,
     injectHot,
     plugins,
+    extractStaticStyles = false,
   } = params
 
   // optimize react
@@ -324,11 +328,28 @@ require('@o/kit').OrbitHot.fileLeave();
                 {
                   test: /\.tsx?$/,
                   use: [
-                    'thread-loader',
+                    // 'thread-loader',
                     {
                       loader: 'babel-loader',
                       options: {
                         presets: [babelPresetMotion],
+                      },
+                    },
+                    extractStaticStyles && {
+                      loader: GlossWebpackPlugin.loader,
+                      options: {
+                        views: require('@o/ui'),
+                        mediaQueryKeys: [
+                          'xs',
+                          'sm',
+                          'abovesm',
+                          'md',
+                          'abovemd',
+                          'lg',
+                          'belowlg',
+                          'abovelg',
+                        ],
+                        internalViewsPath: Path.join(require.resolve('@o/ui'), '..', '..'),
                       },
                     },
                   ].filter(Boolean),
@@ -453,6 +474,8 @@ require('@o/kit').OrbitHot.fileLeave();
           // multiStep is faster for app HMR but slower when developing the big bundles
           // multiStep: mode !== 'production',
         }),
+
+      extractStaticStyles && new GlossWebpackPlugin(),
 
       // new (require('bundle-analyzer-plugin').default)({
       //   analyzerMode: 'static',

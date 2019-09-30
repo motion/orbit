@@ -35,6 +35,8 @@
     "@o/use-store": "^2.6.0",
     "@o/utils": "^2.6.0",
     "@o/oracle": "*",
+    "immer": "^3.1.2",
+    "hash-sum": "^2.0.0",
     "ignore-not-found-export-webpack-plugin": "^1.0.1",
     "add-source-loader": "^2.6.0",
     "apollo-link-http": "^1.5.15",

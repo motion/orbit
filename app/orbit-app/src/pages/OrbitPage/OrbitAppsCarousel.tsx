@@ -108,7 +108,7 @@ export const OrbitAppsCarousel = memo(() => {
           overflow={scrollable ? undefined : 'hidden'}
           position="relative"
           zIndex={1}
-          perspective="1200px"
+          perspective="2000px"
           scrollSnapType="x mandatory"
           scrollSnapPointsX="repeat(100%)"
           nodeRef={appsCarouselStore.setRowNode}
@@ -219,7 +219,7 @@ const OrbitAppCard = memo(
     const theme = useTheme()
     const cardRef = useRef(null)
 
-    const cardBoxShadow = [5, 10, 30, [0, 0, 0, theme.background.isDark() ? 0.5 : 0.25]]
+    const cardBoxShadow = [10, 10, 40, [0, 0, 0, theme.background.isDark() ? 0.5 : 0.25]]
 
     // group these updates together, and ensure they are low priority
     const [isFocused, isFocusZoomed] = useReaction(
@@ -283,8 +283,7 @@ const OrbitAppCard = memo(
                 .transform(x => (x > -4 ? -4 : x))
                 .mergeTransform([zoomOut], (prev, zoomOut) => {
                   return zoomOut === 1 ? prev : 0
-                })
-                .spring({ stiffness: 250, damping: 50 })}
+                })}
               opacity={geometry
                 .scrollIntersection()
                 .mergeTransform([zoomOut], (i, zoomOut) => {

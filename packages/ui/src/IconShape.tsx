@@ -46,7 +46,9 @@ export const IconShape = memo(
     const svgPath = svgPathRaw || cache[name]
 
     useEffect(() => {
-      if (cache[name]) return
+      if (cache[name]) {
+        return setSVGPath(cache[name])
+      }
       // TODO move this off thread - this interrupts carousel animation
       let cancelled = false
       const realName = findIconName(name)

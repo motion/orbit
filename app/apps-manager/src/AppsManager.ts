@@ -164,9 +164,9 @@ export class AppsManager {
     () => [this.activeSpace, this.nodeAppDefinitions, this.packageJsonUpdate, this.localAppsUpdate],
     async ([activeSpace, appDefs], { sleep, when }) => {
       ensure('this.started', this.started)
+      await sleep(200) // debounce
       await when(() => this.updatePackagesVersion !== 0)
       ensure('info', !!activeSpace && !!appDefs)
-      await sleep(100) // debounce 100
       await this.updateAppMeta()
     },
   )

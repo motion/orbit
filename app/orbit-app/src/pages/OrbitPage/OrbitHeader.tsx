@@ -233,6 +233,7 @@ const HomeButton = memo(
     const { actions } = useOm()
     const theme = useTheme()
     const { paneState } = useHeaderStore()
+    console.log('paneState', paneState)
     return (
       <View nodeRef={ref} WebkitAppRegion="no-drag" {...props}>
         <AppIcon

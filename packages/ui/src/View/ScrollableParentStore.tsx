@@ -56,6 +56,11 @@ export function ScrollableIntersection(props: ScrollableIntersectionProps) {
   return null
 }
 
+const marginDimensions = {
+  width: ['margin-left', 'margin-right'],
+  height: ['margin-top', 'margin-bottom'],
+}
+
 function setupScrollableIntersectionEffect(props: ScrollableIntersectionProps) {
   const scrollProgress = props.scrollableParent.scrollIntersectionState.scrollProgress
   const ref = props.scrollableParent.props.ref
@@ -84,10 +89,6 @@ function setupScrollableIntersectionEffect(props: ScrollableIntersectionProps) {
   /**
    * Run finishUpdate after all children update, so we avoid reflows
    */
-  const marginDimensions = {
-    width: ['margin-left', 'margin-right'],
-    height: ['margin-top', 'margin-bottom'],
-  }
   let updateTm
   function finishUpdate() {
     clearTimeout(updateTm)

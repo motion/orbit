@@ -291,10 +291,14 @@ const OrbitAppCard = memo(
                   return -2
                 })
                 .transform([-1, 1], [0, 2.5])}
-              scale={
-                geometry.scrollIntersection().mergeTransform([zoomOut], (intersect, zoomOut) => {
-                  if (zoomOut === 0) return index === appsCarouselStore.focusedIndex ? 1 : 0.5
-                  if (intersect >= -0) return 0.55
+              scale={geometry
+                .scrollIntersection()
+                .mergeTransform([zoomOut], (intersect, zoomOut) => {
+                  if (zoomOut === 0) {
+                    if (index === appsCarouselStore.focusedIndex) return 1
+                    return 0.5
+                  }
+                  if (intersect <= 0.1) return 0.55
                   return 0.55
                   // todo - need to add a new thing to geometry, something like:
                   // .transformIf(x => x < 0.6, [0, 1], [10, 20])
@@ -302,8 +306,7 @@ const OrbitAppCard = memo(
                 })
                 // .transform([0.25, 0.6], [0.45, 0.6])
                 // spring here almost doubles pain time
-                // .spring({ damping: 50, stiffness: 500 })
-              }
+                .spring({ damping: 50, stiffness: 500 })}
               x={geometry
                 .useTransform(zoomOut, x => {
                   if (x) {

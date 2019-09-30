@@ -178,7 +178,8 @@ export class GeometryStore<A = any> {
           const index = scrollIntersectionState.elements.indexOf(this.props.ref.current)
           const state = scrollIntersectionState.measurements.get(index)
           const res = state ? (state.offset - scroll) * state.total : 0
-          return res
+          // sometimes we'd get incredibly close to accurate but off by just a tiny bit
+          return Math.round(res * 10000) / 10000
         })
       })
     })

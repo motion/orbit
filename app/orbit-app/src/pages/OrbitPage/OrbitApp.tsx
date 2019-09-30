@@ -122,6 +122,7 @@ export const OrbitApp = memo((props: OrbitAppProps) => {
         className={`orbit-app ${isActive ? 'is-active' : 'non-active'}`}
         flex={1}
         pointerEvents={disableInteraction ? 'none' : 'inherit'}
+        contain="strict"
       >
         <ScopeState id={`app-${identifier}-${id}`}>
           <ProvideStores stores={{ appStore }}>

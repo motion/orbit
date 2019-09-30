@@ -109,6 +109,7 @@ export const OrbitSearchResults = memo(() => {
         perspective="1200px"
         pointerEvents="none"
         WebkitFontSmoothing="antialiased"
+        contain="strict"
       >
         <View
           data-is="OrbitSearchResults-Index"

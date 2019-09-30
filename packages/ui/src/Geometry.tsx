@@ -1,7 +1,7 @@
 import { decorate, useStore } from '@o/use-store'
 import { MotionValue, useSpring, useTransform, useViewportScroll } from 'framer-motion'
 import { SpringProps } from 'popmotion'
-import React from 'react'
+import React, { memo } from 'react'
 import { RefObject, useCallback, useContext, useEffect, useRef } from 'react'
 
 import { useOnUnmount } from './hooks/useOnUnmount'
@@ -204,9 +204,12 @@ export function useGeometry<A extends GeometryStore>(
   return children as JSX.Element
 }
 
-export function Geometry(props: { children: GeometryRenderer<GeometryStore> }) {
-  useOnUnmount(() => {
-    console.warn('unmounting geometry')
-  })
-  return useGeometry(props.children, GeometryStore)
-}
+export const Geometry = memo(
+  (props: { children: GeometryRenderer<GeometryStore> }) => {
+    useOnUnmount(() => {
+      console.warn('unmounting geometry')
+    })
+    return useGeometry(props.children, GeometryStore)
+  },
+  () => false,
+)

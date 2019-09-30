@@ -251,7 +251,7 @@ const OrbitAppCard = memo(
      *
      * ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️ ☢️
      */
-    console.log('hi')
+
     return (
       <Geometry>
         {(geometry, ref) => (
@@ -294,8 +294,8 @@ const OrbitAppCard = memo(
               scale={
                 geometry.scrollIntersection().mergeTransform([zoomOut], (intersect, zoomOut) => {
                   if (zoomOut === 0) return index === appsCarouselStore.focusedIndex ? 1 : 0.5
-                  if (intersect >= -0) return 0.6
-                  return 0.6
+                  if (intersect >= -0) return 0.55
+                  return 0.55
                   // todo - need to add a new thing to geometry, something like:
                   // .transformIf(x => x < 0.6, [0, 1], [10, 20])
                   // return Math.min(Math.max(0.5, 1 - intersect * -0.8), 0.6) //todo

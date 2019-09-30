@@ -4,7 +4,6 @@ import { SpringProps } from 'popmotion'
 import React, { memo } from 'react'
 import { RefObject, useCallback, useContext, useEffect, useRef } from 'react'
 
-import { useOnUnmount } from './hooks/useOnUnmount'
 import { useRelative } from './hooks/useRelative'
 import { useScrollProgress } from './hooks/useScrollProgress'
 import { useScrollableParent } from './View/ScrollableParentStore'
@@ -206,10 +205,8 @@ export function useGeometry<A extends GeometryStore>(
 
 export const Geometry = memo(
   (props: { children: GeometryRenderer<GeometryStore> }) => {
-    useOnUnmount(() => {
-      console.warn('unmounting geometry')
-    })
     return useGeometry(props.children, GeometryStore)
   },
+  // because it takes a function as children we should never have to update
   () => false,
 )

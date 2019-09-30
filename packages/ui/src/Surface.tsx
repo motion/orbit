@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
-import { CSSPropertySet } from '@o/css'
+import { CSSPropertySet, ThemeObject } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
-import Gloss, { Base, Box, gloss, propsToStyles, psuedoStyleTheme, useTheme } from 'gloss'
+import { Base, Box, gloss, propsToStyles, psuedoStyleTheme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
@@ -108,7 +108,7 @@ export type SurfaceSpecificProps = {
   /** Size (relative) of the icon */
   sizeIcon?: number
 
-  theme?: Gloss.ThemeObject | string
+  theme?: ThemeObject | string
 
   /** Adds a <Tooltip /> on the surface */
   tooltip?: React.ReactNode
@@ -132,7 +132,7 @@ export type SurfaceSpecificProps = {
   type?: string
 
   /** Select a subset theme easily */
-  subTheme?: Gloss.ThemeSelect
+  subTheme?: ThemeSelect
 
   /** Amount to pad icon */
   iconPadding?: number
@@ -153,7 +153,7 @@ export type SurfaceSpecificProps = {
   segment?: 'first' | 'last' | 'middle' | 'single'
 
   /** [Advanced] Add an extra theme to the inner element */
-  elementTheme?: Gloss.ThemeFn
+  elementTheme?: ThemeFn
 }
 
 export type SurfaceProps = Omit<ViewProps, 'size'> & SurfaceSpecificProps

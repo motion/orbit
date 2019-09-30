@@ -2,6 +2,8 @@ import { Button, CardSimple, Parallax, Stack, Title, View } from '@o/ui'
 import _ from 'lodash'
 import * as React from 'react'
 
+import { TestCSSVariables } from './TestCSSVariables'
+
 export function TestUI() {
   return (
     <>
@@ -11,7 +13,8 @@ export function TestUI() {
       {/* <TestUIEditor /> */}
       {/* <TestUIMotion /> */}
       {/* <TestUIAnimation /> */}
-      <TestUIParallax />
+      {/* <TestUIParallax /> */}
+      <TestCSSVariables />
     </>
   )
 }

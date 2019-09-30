@@ -157,7 +157,7 @@ function cssValue(
     }
   }
   if (__DEV__) {
-    throw new Error(`Invalid style value for ${key}`)
+    console.error(`Invalid style value for ${key}`)
   }
 }
 

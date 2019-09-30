@@ -9,107 +9,7 @@ import { PillButtonDark } from '../../views/PillButtonDark'
 import { TitleText } from '../../views/TitleText'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
 
-const dly = 200
-
-const sectionNames = ['Integrate', 'Display', 'Build']
-
-const sections = {
-  [sectionNames[0]]: {
-    image: require('../../public/images/screen-graphql.jpg'),
-    items: [
-      {
-        title: `One-click data sources`,
-        icon: `data`,
-        body: [`Every app can provide data APIs, installs with a simple search + click.`],
-      },
-      {
-        title: 'Query Builder',
-        icon: 'code-block',
-        body: [
-          `Build and explore your data plugins, create queries and test them from the control panel.`,
-        ],
-      },
-      {
-        title: `GraphQL Explorer`,
-        icon: `satellite`,
-        body: [`Every app that exposes a GraphQL endpoint is explorable in the built-in explorer.`],
-      },
-      {
-        title: `Manage/Sync Bits`,
-        icon: `data`,
-        body: [
-          `The Bit is the universal data format for Orbit, and you view, search and manage them here.`,
-        ],
-      },
-    ],
-  },
-  [sectionNames[1]]: {
-    image: require('../../public/images/screen-people.jpg'),
-    items: [
-      {
-        title: 'Complete UI Kit',
-        icon: 'button',
-        body: [
-          `All lists and tables virtualized. React Concurrent rendering. Flexible, consistent data display across all views.`,
-        ],
-      },
-      {
-        title: `Drag & Drop Data`,
-        icon: `exchange`,
-        body: [`First class data drag & drop to move data in or out easily, or between apps.`],
-      },
-      {
-        title: `Every hook you need`,
-        icon: `shop`,
-        body: [`Extensive libraries for displaying data, all built on the latest React.`],
-      },
-      {
-        title: `Clipboard`,
-        icon: `clipboard`,
-        body: [`A persistent, incredibly easy way to enable cross-app data sharing.`],
-      },
-    ],
-  },
-  [sectionNames[2]]: {
-    image: require('../../public/images/screen-graphql.jpg'),
-    items: [
-      {
-        title: `A space to collaborate`,
-        icon: `satellite`,
-        body: [`The easiest collaboration story: no servers, no credentials.`],
-      },
-      {
-        title: `Next-gen Hot Reload`,
-        icon: `refresh`,
-        body: [
-          `Per-app Webpack for instant React Refresh hot reloading. Toggle between development and production in realtime.`,
-        ],
-      },
-      {
-        title: `Modern view system`,
-        icon: `grid-view`,
-        body: [
-          `React Concurrent, Suspense, Framer Motion and more integrated by default, in every view.`,
-        ],
-      },
-      {
-        title: `Incredible Dev Tooling`,
-        icon: `draw`,
-        body: [
-          `From logging to data management, state inspection, error recovery and more - Orbit comes with great DX.`,
-        ],
-      },
-    ],
-  },
-}
-
-const transition = {
-  type: 'spring',
-  damping: 20,
-  stiffness: 200,
-}
-
-export default memo(() => {
+export default memo(function FeaturesSection() {
   const Fade = useFadePage()
   const [activeSection, setActiveSection] = useState(sectionNames[0])
   const gridContainer = useRef(null)
@@ -319,3 +219,103 @@ export default memo(() => {
     </Fade.FadeProvide>
   )
 })
+
+const dly = 200
+
+const sectionNames = ['Integrate', 'Display', 'Build']
+
+const sections = {
+  [sectionNames[0]]: {
+    image: require('../../public/images/screen-graphql.jpg'),
+    items: [
+      {
+        title: `One-click data sources`,
+        icon: `data`,
+        body: [`Every app can provide data APIs, installs with a simple search + click.`],
+      },
+      {
+        title: 'Query Builder',
+        icon: 'code-block',
+        body: [
+          `Build and explore your data plugins, create queries and test them from the control panel.`,
+        ],
+      },
+      {
+        title: `GraphQL Explorer`,
+        icon: `satellite`,
+        body: [`Every app that exposes a GraphQL endpoint is explorable in the built-in explorer.`],
+      },
+      {
+        title: `Manage/Sync Bits`,
+        icon: `data`,
+        body: [
+          `The Bit is the universal data format for Orbit, and you view, search and manage them here.`,
+        ],
+      },
+    ],
+  },
+  [sectionNames[1]]: {
+    image: require('../../public/images/screen-people.jpg'),
+    items: [
+      {
+        title: 'Complete UI Kit',
+        icon: 'button',
+        body: [
+          `All lists and tables virtualized. React Concurrent rendering. Flexible, consistent data display across all views.`,
+        ],
+      },
+      {
+        title: `Drag & Drop Data`,
+        icon: `exchange`,
+        body: [`First class data drag & drop to move data in or out easily, or between apps.`],
+      },
+      {
+        title: `Every hook you need`,
+        icon: `shop`,
+        body: [`Extensive libraries for displaying data, all built on the latest React.`],
+      },
+      {
+        title: `Clipboard`,
+        icon: `clipboard`,
+        body: [`A persistent, incredibly easy way to enable cross-app data sharing.`],
+      },
+    ],
+  },
+  [sectionNames[2]]: {
+    image: require('../../public/images/screen-graphql.jpg'),
+    items: [
+      {
+        title: `A space to collaborate`,
+        icon: `satellite`,
+        body: [`The easiest collaboration story: no servers, no credentials.`],
+      },
+      {
+        title: `Next-gen Hot Reload`,
+        icon: `refresh`,
+        body: [
+          `Per-app Webpack for instant React Refresh hot reloading. Toggle between development and production in realtime.`,
+        ],
+      },
+      {
+        title: `Modern view system`,
+        icon: `grid-view`,
+        body: [
+          `React Concurrent, Suspense, Framer Motion and more integrated by default, in every view.`,
+        ],
+      },
+      {
+        title: `Incredible Dev Tooling`,
+        icon: `draw`,
+        body: [
+          `From logging to data management, state inspection, error recovery and more - Orbit comes with great DX.`,
+        ],
+      },
+    ],
+  },
+}
+
+const transition = {
+  type: 'spring',
+  damping: 20,
+  stiffness: 200,
+}

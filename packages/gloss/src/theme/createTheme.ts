@@ -1,13 +1,13 @@
 import { Color } from '@o/color'
 import { AlternateThemeSet, ThemeObject, ThemeValue } from '@o/css'
 
-type WrappedTheme<A extends ThemeObject> = {
+type WrappedTheme<A extends Partial<ThemeObject>> = {
   [key in keyof A]: A[key] extends AlternateThemeSet ? A[key] : ThemeValue<A>
 }
 
 let id = 0
 
-export function createTheme<A extends ThemeObject>(theme: A): WrappedTheme<A> {
+export function createTheme<A extends Partial<ThemeObject>>(theme: A): WrappedTheme<A> {
   const name = `${theme.name || `theme-${id++}`}`
   return Object.keys(theme).reduce((acc, key) => {
     const val = theme[key]

@@ -24,6 +24,14 @@ ideas:
 
 ---
 
+google sheets:
+
+this is a huge use case, and should be in the demo.
+
+sheets to form to database would be huge.
+
+---
+
 gloss:
 
 1. Make it so the second param of gloss takes props:

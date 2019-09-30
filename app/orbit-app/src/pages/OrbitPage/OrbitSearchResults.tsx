@@ -141,6 +141,8 @@ export const OrbitSearchResults = memo(() => {
                       iconBefore: true,
                       iconSize: 42,
                       activeStyle: false,
+                      contain: 'strict',
+                      height: 66,
                       titleProps: {
                         size: 1.2,
                       },

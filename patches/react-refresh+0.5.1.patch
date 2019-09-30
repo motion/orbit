@@ -1,5 +1,5 @@
 diff --git a/node_modules/react-refresh/cjs/react-refresh-runtime.development.js b/node_modules/react-refresh/cjs/react-refresh-runtime.development.js
-index 3e017a2..c4b6689 100644
+index b0ad68b..4cb15e8 100644
 --- a/node_modules/react-refresh/cjs/react-refresh-runtime.development.js
 +++ b/node_modules/react-refresh/cjs/react-refresh-runtime.development.js
 @@ -521,6 +521,10 @@ function isLikelyComponentType(type) {

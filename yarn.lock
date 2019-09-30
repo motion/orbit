@@ -18722,10 +18722,10 @@ react-reconciler@^0.21.0:
     prop-types "^15.6.2"
     scheduler "^0.15.0"
 
-react-refresh@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.4.2.tgz#54a277a6caaac2803d88f1d6f13c1dcfbd81e334"
-  integrity sha512-kv5QlFFSZWo7OlJFNYbxRtY66JImuP2LcrFgyJfQaf85gSP+byzG21UbDQEYjU7f//ny8rwiEkO6py2Y+fEgAQ==
+react-refresh@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.5.1.tgz#021c81038ae32e27ad3a99bbbd213ada1c045c73"
+  integrity sha512-YCumrfvDOxI/TXT+pUsUpGUGhRcTztf1OYdNSfNwGsFoUteA0G45XzFedXbkldM60dVn6xiy+UO29MH8P0hURA==
 
 react-resizable@1.x:
   version "1.8.0"

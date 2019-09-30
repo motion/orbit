@@ -101,6 +101,11 @@ export class Color {
     return this.toString()
   }
 
+  cssVariable = ''
+  setCSSVariable(name: string) {
+    this.cssVariable = name
+  }
+
   isDark() {
     return this.getBrightness() < 128
   }

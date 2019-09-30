@@ -16,7 +16,7 @@ export {
 } from './cssPropertySet'
 export * from './helpers'
 export { camelToSnake, snakeToCamel } from './helpers'
-export { ThemeObject, ThemeSet } from './ThemeObject'
+export { ThemeObject, ThemeValue, ThemeSet, AlternateThemeSet } from './ThemeObject'
 
 export type CSSConfig = {
   errorMessage?: string
@@ -30,7 +30,7 @@ export function cssString(styles: Object, opts?: CSSConfig): string {
   const shouldSnake = !opts || opts.snakeCase !== false
   let style = ''
   for (let key in styles) {
-    let value = cssValue(key, styles[key], typeof styles[key], false, opts)
+    let value = cssValue(key, styles[key], false, opts)
     // shorthands
     if (value !== undefined) {
       if (SHORTHANDS[key]) {
@@ -54,8 +54,7 @@ export function cssStringWithHash(styles: Object, opts?: CSSConfig): [number, st
   let hash = 0
   for (let key in styles) {
     const rawVal = styles[key]
-    const rawValType = typeof styles[key]
-    let value = cssValue(key, rawVal, rawValType, false, opts)
+    let value = cssValue(key, rawVal, false, opts)
     // shorthands
     if (value !== undefined) {
       if (hash === 0) hash = 5381
@@ -65,7 +64,7 @@ export function cssStringWithHash(styles: Object, opts?: CSSConfig): [number, st
         keyHash = keyHashes[key] = stringHash(key)
       }
       hash = (hash * 33) ^ keyHash
-      if (rawValType === 'number') {
+      if (typeof rawVal === 'number') {
         hash = (hash * 33) ^ (Math.abs(rawVal + 250) + (rawVal < 0 ? 100 : 0))
       } else {
         hash = (hash * 33) ^ stringHash(value)
@@ -88,7 +87,7 @@ export function css(styles: Object, opts?: CSSConfig): Object {
   const shouldSnake = !opts || opts.snakeCase !== false
   const toReturn = {}
   for (let key in styles) {
-    let value = cssValue(key, styles[key], typeof styles[key], true, opts)
+    let value = cssValue(key, styles[key], true, opts)
     // shorthands
     if (value !== undefined) {
       if (SHORTHANDS[key]) {
@@ -104,14 +103,8 @@ export function css(styles: Object, opts?: CSSConfig): Object {
   return toReturn
 }
 
-function cssValue(
-  key: string,
-  value: any,
-  valueType: string,
-  recurse = false,
-  options?: CSSConfig,
-) {
-  // get real values
+function cssValue(key: string, value: any, recurse = false, options?: CSSConfig) {
+  // get falsy values
   if (value === false) {
     value === FALSE_VALUES[key]
   }
@@ -119,6 +112,10 @@ function cssValue(
   if (value === undefined || value === null || value === false) {
     return
   }
+  if (value.cssVariable) {
+    return value.cssVariable
+  }
+  const valueType = typeof value
   if (valueType === 'string' || valueType === 'number') {
     if (valueType === 'number' && !unitlessNumberProperties.has(key)) {
       value += 'px'
@@ -128,7 +125,7 @@ function cssValue(
     return Config.isColor(value) ? Config.toColor(value) : value
   } else if (Array.isArray(value)) {
     if (key === 'fontFamily') {
-      return value.map(x => (x.indexOf(' ') ? `"${x}"` : x)).join(', ')
+      return value.map(x => (x.includes(' ') ? `"${x}"` : x)).join(', ')
     } else {
       return processArray(key, value)
     }

@@ -35,7 +35,7 @@ export function ThemeProvide({ activeTheme, children, themes }: ThemeProvideProp
 const cache = new WeakMap()
 const weakKey = val => {
   if (cache.has(val)) return cache.get(val)
-  let next = Math.random()
-  cache.set(val, next)
-  return next
+  let _ = Math.random()
+  cache.set(val, _)
+  return _
 }

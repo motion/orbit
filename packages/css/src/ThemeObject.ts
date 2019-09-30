@@ -8,6 +8,11 @@ export type AlternateThemeSet = {
   [key: string]: Partial<ThemeObject> | ((parentTheme: ThemeObject) => Partial<ThemeObject>)
 }
 
+export type ThemeValue<A extends any> = {
+  getCSSVariable(): string
+  get(): A
+}
+
 export type ThemeObject = {
   coats?: AlternateThemeSet
   background: Color

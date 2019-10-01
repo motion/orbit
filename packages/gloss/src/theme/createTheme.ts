@@ -3,7 +3,7 @@ import { ThemeCoats, ThemeObject, ThemeValueLike } from '@o/css'
 import { ThemeValue } from './ThemeValue'
 
 export type CompiledTheme<A extends Partial<ThemeObject> = any> = {
-  [key in keyof A]: A[key] extends ThemeCoats | string ? A[key] : ThemeValueLike<A>
+  [key in keyof A]: A[key] extends ThemeCoats | string | number ? A[key] : ThemeValueLike<A>
 }
 
 let id = 0

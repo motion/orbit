@@ -21,9 +21,9 @@ class ThemeVariableManager {
       for (const key in theme) {
         const val = theme[key]
         if (val && val.cssVariable) {
-          if (val.toCSSColorVariable) {
+          if (val.getCSSColorVariables) {
             // allows for nicer handling of alpha changes
-            const { rgb, rgba } = val.toCSSColorVariable()
+            const { rgb, rgba } = val.getCSSColorVariables()
             rules += `--${val.cssVariable}: ${rgba};`
             rules += `--${val.cssVariable}-rgb: ${rgb};`
           } else if (val.getCSSValue) {
@@ -36,6 +36,7 @@ class ThemeVariableManager {
       }
       if (rules.length) {
         const rule = `.${className} { ${rules} }`
+        console.log('rule', rule)
         this.sheet.insertRule(rule)
       }
     }

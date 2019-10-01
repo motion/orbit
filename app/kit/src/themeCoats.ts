@@ -1,6 +1,7 @@
 import { ThemeSet } from '@o/css'
 import { linearGradient } from '@o/ui'
 import { colorize, fromStyles } from 'gloss-theme'
+import { createTheme } from 'gloss/src'
 
 import { colors, transparent } from './themeColors'
 
@@ -169,17 +170,6 @@ export const coats: ThemeSet = Object.freeze({
     backgroundHover: colorThemes.blue.background,
     backgroundActive: colorThemes.blue.background,
   },
-  selectedInactive: parent => ({
-    ...colorThemes.blue,
-    ...colorize({
-      // dont make selected things hover/active, they're active already
-      background: [150, 150, 150, 0.1],
-      backgroundHover: [150, 150, 150, 0.1],
-      backgroundActive: [150, 150, 150, 0.1],
-    }),
-    borderColor: parent.borderColor,
-    color: parent.color,
-  }),
   bordered: {
     glintColor: transparent,
     borderWidth: 1,
@@ -209,29 +199,43 @@ export const coats: ThemeSet = Object.freeze({
     buttonBackgroundBlur: '#f6f6f6',
     buttonBackgroundActiveHighlight: '#ededed',
   }),
-  translucent: parent => ({
-    name: `${parent.name}-translucent`,
-    ...fromStyles({
+  selectedInactive: parent =>
+    createTheme({
+      ...colorThemes.blue,
+      ...colorize({
+        // dont make selected things hover/active, they're active already
+        background: [150, 150, 150, 0.1],
+        backgroundHover: [150, 150, 150, 0.1],
+        backgroundActive: [150, 150, 150, 0.1],
+      }),
+      borderColor: parent.borderColor,
       color: parent.color,
-      background: parent.background.setAlpha(0.33),
-      borderColor: parent.background.setAlpha(0.5),
     }),
-  }),
-  clear: parent => ({
-    name: `${parent.name}-clear`,
-    ...fromStyles({
-      glintColor: transparent,
-      color: parent.color,
-      background: parent.background.isDark()
-        ? parent.background.lighten(0.1).setAlpha(0.15)
-        : parent.background.darken(0.1).setAlpha(0.15),
-      borderColor: transparent,
-      borderWidth: 0,
+  translucent: parent =>
+    createTheme({
+      name: `${parent.name}-translucent`,
+      ...fromStyles({
+        color: parent.color,
+        background: parent.background.setAlpha(0.33),
+        borderColor: parent.background.setAlpha(0.5),
+      }),
     }),
-  }),
+  clear: parent =>
+    createTheme({
+      name: `${parent.name}-clear`,
+      ...fromStyles({
+        glintColor: transparent,
+        color: parent.color,
+        background: parent.background.isDark()
+          ? parent.background.lighten(0.1).setAlpha(0.15)
+          : parent.background.darken(0.1).setAlpha(0.15),
+        borderColor: transparent,
+        borderWidth: 0,
+      }),
+    }),
   flat: parent => {
     const background = parent.background.relativeLighten(0.05).setAlpha(0.5)
-    return {
+    return createTheme({
       name: `${parent.name}-flat`,
       ...parent,
       color: parent.color,
@@ -252,6 +256,6 @@ export const coats: ThemeSet = Object.freeze({
         borderColor: transparent,
         borderWidth: 0,
       }),
-    }
+    })
   },
 })

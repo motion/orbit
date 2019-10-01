@@ -41,9 +41,7 @@ function createAlphaColorTheme(shouldSetDefault = false) {
     const next: CSSPropertySet | null = {}
     if (color) {
       if (color !== 'inherit' && typeof alpha === 'number') {
-        console.log('before', color)
         next.color = Config.toColor(color).setAlpha(alpha)
-        console.log('after', next.color)
       } else {
         if (shouldSetDefault) {
           next.color = color

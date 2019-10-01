@@ -79,6 +79,9 @@ export function cssStringWithHash(styles: Object, opts?: CSSConfig): [number, st
       }
     }
   }
+  if (styles['debug']) {
+    debugger
+  }
   return [hash, style]
 }
 
@@ -122,9 +125,10 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
     }
     return value
   } else if (value.cssVariable) {
-    if (value.toCSSColorVariable) {
-      console.log('returning', `rgba(var(--${value.cssVariable}-rgb, ${value.alpha}))`)
-      return `rgba(var(--${value.cssVariable}-rgb, ${value.alpha}))`
+    if (value.getCSSColorVariables) {
+      const res = `rgba(var(--${value.cssVariable}-rgb), ${value.alpha})`
+      console.log('returning variable', res)
+      return res
     } else {
       return `var(--${value.cssVariable})`
     }

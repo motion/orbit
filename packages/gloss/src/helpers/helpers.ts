@@ -1,7 +1,7 @@
 export const colorToString = (obj: any) => {
   // passing through here because... in playground if you use UI kit without setting Config.toColor
   // in @o/ui, then in alphaColorTheme it will fail on setAlpha
-  if (obj.toCSS) {
+  if (obj.getCSSValue) {
     return obj
   }
   const { model, color, valpha } = obj

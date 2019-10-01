@@ -112,15 +112,14 @@ function cssValue(key: string, value: any, recurse = false, options?: CSSConfig)
   if (value === undefined || value === null || value === false) {
     return
   }
-  if (value.cssVariable) {
-    return value.cssVariable
-  }
   const valueType = typeof value
   if (valueType === 'string' || valueType === 'number') {
     if (valueType === 'number' && !unitlessNumberProperties.has(key)) {
       value += 'px'
     }
     return value
+  } else if (value.cssVariable) {
+    return `var(--${value.cssVariable})`
   } else if (COLOR_KEYS.has(key)) {
     return Config.isColor(value) ? Config.toColor(value) : value
   } else if (Array.isArray(value)) {
@@ -130,8 +129,8 @@ function cssValue(key: string, value: any, recurse = false, options?: CSSConfig)
       return processArray(key, value)
     }
   } else if (valueType === 'object') {
-    if (value.toCSS) {
-      return value.toCSS()
+    if (value.getCSSValue) {
+      return value.getCSSValue()
     }
     const res = processObject(key, value)
     if (res !== undefined) {

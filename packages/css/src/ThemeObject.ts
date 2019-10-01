@@ -14,6 +14,7 @@ export interface ThemeValueLike<A extends any> {
 }
 
 export type ThemeObject = {
+  name?: string
   coats?: ThemeCoats
   background: Color
   color: Color

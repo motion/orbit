@@ -97,7 +97,7 @@ export class Color {
     this.hash = this.r + this.g * 255 + this.b * (255 * 2) + this.a * (255 * 3)
   }
 
-  toCSS() {
+  getCSSValue() {
     return this.toString()
   }
 

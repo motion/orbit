@@ -99,7 +99,7 @@ function isColorLikeObject(object: ColorObject) {
 }
 
 function isColorLikeLibrary(val: any): boolean {
-  return typeof val.toCSS === 'function' || typeof val.css === 'function'
+  return typeof val.getCSSValue === 'function' || typeof val.css === 'function'
 }
 
 // attempts to work with a variety of css libraries
@@ -107,8 +107,8 @@ function getColorLikeLibraryValue(val: any) {
   let res = val
   if (val.css && typeof val.css === 'function') {
     res = val.css()
-  } else if (val.toCSS && typeof val.toCSS === 'function') {
-    res = val.toCSS()
+  } else if (val.getCSSValue && typeof val.getCSSValue === 'function') {
+    res = val.getCSSValue()
   }
   return res.toString ? res.toString() : res
 }

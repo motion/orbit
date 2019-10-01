@@ -1,32 +1,41 @@
-import { Color } from '@o/color'
 import { ThemeCoats, ThemeObject, ThemeValueLike } from '@o/css'
 
+import { ThemeValue } from './ThemeValue'
+
 export type CompiledTheme<A extends Partial<ThemeObject> = any> = {
-  [key in keyof A]: A[key] extends ThemeCoats ? A[key] : ThemeValueLike<A>
+  [key in keyof A]: A[key] extends ThemeCoats | string ? A[key] : ThemeValueLike<A>
 }
 
 let id = 0
 
 export function createTheme<A extends Partial<ThemeObject>>(theme: A): CompiledTheme<A> {
   const name = `${theme.name || `theme-${id++}`}`
-  return Object.keys(theme).reduce((acc, key) => {
-    const val = theme[key]
-    if (key === 'coats' || val instanceof Color) {
-      acc[key] = val
+  const res = Object.keys(theme).reduce((acc, key) => {
+    let val = theme[key]
+    const cssVariableName = `${name}-${key}`
+    if (key === 'coats') {
+      // recurse into coats
+      val = Object.keys(val).reduce((acc, ckey) => {
+        acc[ckey] = typeof val[ckey] === 'function' ? val[ckey] : createTheme(val[ckey])
+        return acc
+      }, {})
+    } else if (val && typeof val.setCSSVariable === 'function') {
+      val.setCSSVariable(cssVariableName)
     } else {
-      acc[key] = createThemeValue(name, key, val)
+      val = new ThemeValue(cssVariableName, val)
     }
+    acc[key] = val
     return acc
   }, {}) as any
+  res.name = name
+  return res
 }
 
-export class ThemeValue<A> implements ThemeValueLike<A> {
-  constructor(public cssVariable: string, public value: A) {}
-  get() {
-    return this.value
-  }
-}
-
-function createThemeValue<A>(themeName: string, key: string, val: A) {
-  return new ThemeValue<A>(`${themeName}-${key}`, val)
+export function createThemes<A extends Partial<ThemeObject>>(themes: {
+  [key: string]: A
+}): { [key: string]: CompiledTheme<A> } {
+  return Object.keys(themes).reduce((acc, key) => {
+    acc[key] = createTheme(themes[key])
+    return acc
+  }, {})
 }

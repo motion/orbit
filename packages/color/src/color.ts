@@ -99,7 +99,15 @@ export class Color {
   }
 
   getCSSValue() {
-    return this.toString()
+    return this.toString('rgb')
+  }
+
+  getCSSColorVariable() {
+    const { r, g, b, a } = this.toRgb()
+    return {
+      rgb: `${r}, ${g}, ${b}`,
+      rgba: `${r}, ${g}, ${b}, ${a}`,
+    }
   }
 
   cssVariable = ''
@@ -183,6 +191,8 @@ export class Color {
     return this.clone(next => {
       next.a = boundAlpha(typeof alpha === 'function' ? alpha(next.a) : alpha)
       next.roundA = Math.round(100 * next.a) / 100
+      // alpha adjustments are handled so we can forward cssVariable
+      next.cssVariable = this.cssVariable
     })
   }
 
@@ -274,7 +284,6 @@ export class Color {
    * Returns the RGBA values interpolated into a string with the following format:
    * "RGBA(xxx, xxx, xxx, xx)".
    */
-  // cache it
   toRgbString() {
     const r = Math.round(this.r)
     const g = Math.round(this.g)

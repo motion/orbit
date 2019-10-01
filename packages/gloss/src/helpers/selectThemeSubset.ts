@@ -11,9 +11,11 @@ const cacheVal = new WeakMap<CompiledTheme, { [key: string]: CompiledTheme }>()
 // because context provides the same theme object each time it can use weakmap for cache
 // right now it does not delete as it seems very rare where you have many many themes
 
-const mergeTheme = (parent, child) => ({
+const createSubSetTheme = (parent, child) => ({
   ...parent,
   ...child,
+  parent,
+  _isSubSet: true,
 })
 
 export function selectThemeSubset(
@@ -25,7 +27,7 @@ export function selectThemeSubset(
   }
 
   if (typeof themeSubSelect === 'function') {
-    return mergeTheme(theme, themeSubSelect(theme))
+    return createSubSetTheme(theme, themeSubSelect(theme))
   }
 
   // read from cache
@@ -50,10 +52,7 @@ export function selectThemeSubset(
   }
 
   // proxy back to full theme
-  const fullTheme = {
-    ...mergeTheme(theme, selectedTheme),
-    parent: theme,
-  }
+  const fullTheme = createSubSetTheme(theme, selectedTheme)
 
   // write to cache
   if (!cacheKey.get(theme)) {

@@ -104,6 +104,9 @@ export function css(styles: Object, opts?: CSSConfig): Object {
 }
 
 export function cssValue(key: string, value: any, recurse = false, options?: CSSConfig) {
+  // if (value && typeof value.cssVariable === 'string' && !value.cssVariable) {
+  //   debugger
+  // }
   // get falsy values
   if (value === false) {
     value === FALSE_VALUES[key]
@@ -119,7 +122,12 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
     }
     return value
   } else if (value.cssVariable) {
-    return `var(--${value.cssVariable})`
+    if (value.toCSSColorVariable) {
+      console.log('returning', `rgba(var(--${value.cssVariable}-rgb, ${value.alpha}))`)
+      return `rgba(var(--${value.cssVariable}-rgb, ${value.alpha}))`
+    } else {
+      return `var(--${value.cssVariable})`
+    }
   } else if (COLOR_KEYS.has(key)) {
     return Config.isColor(value) ? Config.toColor(value) : value
   } else if (Array.isArray(value)) {

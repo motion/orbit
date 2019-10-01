@@ -11,6 +11,7 @@ export const defaultMediaQueries = {
 }
 
 export const GlossDefaultConfig: GlossConfig = {
+  preProcessTheme,
   isColor: color => color && !!color.rgb,
   toColor: colorToString,
   mediaQueries: defaultMediaQueries,
@@ -20,7 +21,6 @@ export const GlossDefaultConfig: GlossConfig = {
     focusStyle: '&:focus',
     disabledStyle: '&:disabled',
   },
-  preProcessTheme: preProcessTheme,
 }
 
 export let Config = { ...GlossDefaultConfig }

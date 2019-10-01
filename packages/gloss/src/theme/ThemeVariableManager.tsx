@@ -20,10 +20,17 @@ class ThemeVariableManager {
       let rules = ``
       for (const key in theme) {
         const val = theme[key]
-        if (val && val.cssVariable && val.getCSSValue) {
-          const next = val.getCSSValue()
-          if (typeof next === 'string') {
-            rules += `--${val.cssVariable}: ${next};`
+        if (val && val.cssVariable) {
+          if (val.toCSSColorVariable) {
+            // allows for nicer handling of alpha changes
+            const { rgb, rgba } = val.toCSSColorVariable()
+            rules += `--${val.cssVariable}: ${rgba};`
+            rules += `--${val.cssVariable}-rgb: ${rgb};`
+          } else if (val.getCSSValue) {
+            const next = val.getCSSValue()
+            if (typeof next === 'string') {
+              rules += `--${val.cssVariable}: ${next};`
+            }
           }
         }
       }

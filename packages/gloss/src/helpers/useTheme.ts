@@ -31,7 +31,7 @@ export function useTheme(props?: { ignoreCoat?: boolean }) {
 
   let theme = cur.activeTheme
   // TODO this should not go here, maybe just wrap those themes in <Theme coat={false}> or something
-  if (props && props.ignoreCoat) {
+  if (theme && props && props.ignoreCoat) {
     theme = theme._originalTheme || theme
   }
 

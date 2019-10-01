@@ -28,13 +28,13 @@ export const Theme = (props: ThemeProps) => {
     return <ThemeByName name={nextName}>{children}</ThemeByName>
   }
   const next = getNextTheme(props, prev)
-  return <ThemeProvideHelper themeContext={next}>{children}</ThemeProvideHelper>
+  return <ThemeProvideHelper themeContext={next || prev}>{children}</ThemeProvideHelper>
 }
 
 function ThemeProvideHelper(props: { themeContext: ThemeContextType; children: any }) {
   const themeObservableContext = useProvideThemeObservable(props)
   return (
-    <ThemeVariableContext theme={props.themeContext.activeTheme}>
+    <ThemeVariableContext theme={props.themeContext}>
       <ThemeContext.Provider value={props.themeContext}>
         <ThemeObservable.Provider value={themeObservableContext}>
           {props.children}

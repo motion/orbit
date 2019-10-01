@@ -53,6 +53,10 @@ export function ThemeVariableContext({ theme, children }: { theme: CompiledTheme
     }
   }, [theme])
 
+  if (!theme) {
+    return children
+  }
+
   return (
     <div style={{ display: 'contents' }} className={className}>
       {children}

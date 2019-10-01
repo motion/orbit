@@ -126,9 +126,7 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
     return value
   } else if (value.cssVariable) {
     if (value.getCSSColorVariables) {
-      const res = `rgba(var(--${value.cssVariable}-rgb), ${value.alpha})`
-      console.log('returning variable', res)
-      return res
+      return `rgba(var(--${value.cssVariable}-rgb), ${value.alpha})`
     } else {
       return `var(--${value.cssVariable})`
     }

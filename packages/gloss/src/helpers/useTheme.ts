@@ -10,6 +10,7 @@ export const useThemeContext = () => useContext(ThemeContext)
 
 type ThemeTrackState = {
   hasUsedOnlyCSSVariables: boolean
+  nonCSSVariables: Set<string>
 }
 
 export function useTheme(props?: { ignoreCoat?: boolean }) {
@@ -17,6 +18,7 @@ export function useTheme(props?: { ignoreCoat?: boolean }) {
   const [cur, setCur] = useState<ThemeContextType>(themeObservable.current)
   const trackState = useRef<ThemeTrackState>({
     hasUsedOnlyCSSVariables: true,
+    nonCSSVariables: new Set(),
   })
 
   useEffect(() => {
@@ -24,6 +26,7 @@ export function useTheme(props?: { ignoreCoat?: boolean }) {
       if (trackState.current.hasUsedOnlyCSSVariables) {
         // no need to change
       } else {
+        console.warn('re-rendering because used variables')
         setCur(theme)
       }
     })
@@ -50,7 +53,10 @@ function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
         if (val && val.cssVariable) {
           return val
         } else {
-          trackState.hasUsedOnlyCSSVariables = false
+          if (typeof key === 'string') {
+            trackState.nonCSSVariables.add(key)
+            trackState.hasUsedOnlyCSSVariables = false
+          }
           return val
         }
       },

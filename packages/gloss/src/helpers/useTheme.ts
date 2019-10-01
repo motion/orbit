@@ -1,6 +1,6 @@
-import { ThemeObject } from '@o/css/src/css'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
+import { CompiledTheme } from '../theme/createTheme'
 import { ThemeContext, ThemeContextType } from '../theme/ThemeContext'
 import { ThemeObservable } from '../theme/ThemeObservable'
 
@@ -16,10 +16,8 @@ export function useTheme(props?: { ignoreCoat?: boolean }) {
   const themeObservable = useContext(ThemeObservable)
   const [cur, setCur] = useState<ThemeContextType>(themeObservable.current)
   const trackState = useRef<ThemeTrackState>({
-    hasUsedOnlyCSSVariables: false,
+    hasUsedOnlyCSSVariables: true,
   })
-
-  console.log('themeObservable.current', themeObservable)
 
   useEffect(() => {
     themeObservable.subscribe(theme => {
@@ -40,12 +38,15 @@ export function useTheme(props?: { ignoreCoat?: boolean }) {
   return proxyTheme(theme, trackState.current)
 }
 
-function proxyTheme(theme: ThemeObject, trackState: ThemeTrackState) {
+function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
   return useMemo(() => {
     return new Proxy(theme, {
       get(target, key) {
+        if (!Reflect.has(target, key)) {
+          return
+        }
         const val = Reflect.get(target, key)
-        if (val && val.toCSSVariable) {
+        if (val && val.cssVariable) {
           return val
         } else {
           trackState.hasUsedOnlyCSSVariables = false

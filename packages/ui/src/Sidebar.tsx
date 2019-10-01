@@ -5,7 +5,7 @@
  * @format
  */
 import { selectDefined } from '@o/utils'
-import { ThemeContext, ThemeObject } from 'gloss'
+import { CompiledTheme, ThemeContext } from 'gloss'
 import * as React from 'react'
 
 import { Interactive, InteractiveProps, ResizableSides } from './Interactive'
@@ -154,7 +154,7 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
       horizontal,
     } = this.state
 
-    const theme: ThemeObject = this.context.activeTheme
+    const theme: CompiledTheme = this.context.activeTheme
 
     // ignore
     ignoreWidth

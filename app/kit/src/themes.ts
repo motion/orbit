@@ -21,3 +21,9 @@ export const themes: { [key: string]: CompiledTheme } = createThemes({
     separatorBackground: 'rgba(30,30,30)',
   }),
 })
+
+// @ts-ignore
+if (typeof window !== 'undefiend' && !window['themes']) {
+  // @ts-ignore
+  window['themes'] = themes
+}

@@ -45,9 +45,9 @@ export function TestCSSVariables() {
           <Button size={2} onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
             Change theme
           </Button>
-          <Button coat="lightBlue">lightBlue</Button>
+          {/* <Button coat="lightBlue">lightBlue</Button>
           <Button coat="flat">flat</Button>
-          <Button coat="bordered">bordered</Button>
+          <Button coat="bordered">bordered</Button> */}
         </Stack>
       </View>
     </Theme>

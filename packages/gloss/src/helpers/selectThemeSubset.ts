@@ -1,11 +1,10 @@
-import { ThemeObject } from '@o/css'
-
+import { CompiledTheme } from '../theme/createTheme'
 import { ThemeSelect } from '../theme/Theme'
 
-type PartialTheme = Partial<ThemeObject>
+type PartialTheme = Partial<CompiledTheme>
 
-const cacheKey = new WeakMap<ThemeObject, Set<Object>>()
-const cacheVal = new WeakMap<ThemeObject, { [key: string]: ThemeObject }>()
+const cacheKey = new WeakMap<CompiledTheme, Set<Object>>()
+const cacheVal = new WeakMap<CompiledTheme, { [key: string]: CompiledTheme }>()
 
 // this selects a subset theme given a string
 // because it's manipulating strings and objects we cache it
@@ -17,7 +16,10 @@ const mergeTheme = (parent, child) => ({
   ...child,
 })
 
-export function selectThemeSubset(themeSubSelect: ThemeSelect, theme: ThemeObject): ThemeObject {
+export function selectThemeSubset(
+  themeSubSelect: ThemeSelect,
+  theme: CompiledTheme,
+): CompiledTheme {
   if (!themeSubSelect) {
     return theme
   }

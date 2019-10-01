@@ -1,15 +1,15 @@
-import { ThemeObject } from '@o/css'
+import { CompiledTheme } from '../theme/createTheme'
 
 // this lets you do simple subsets using syntax:
 // <Button coat="action" />
 const cache = new WeakMap<
-  ThemeObject,
+  CompiledTheme,
   {
-    [key: string]: ThemeObject
+    [key: string]: CompiledTheme
   }
 >()
 
-export function getThemeCoat(name: string | undefined, inTheme: ThemeObject): ThemeObject {
+export function getThemeCoat(name: string | undefined, inTheme: CompiledTheme): CompiledTheme {
   if (!name || typeof name !== 'string') {
     return inTheme
   }
@@ -39,7 +39,7 @@ export function getThemeCoat(name: string | undefined, inTheme: ThemeObject): Th
   return next
 }
 
-function createCoatTheme(theme: ThemeObject, coat: string): ThemeObject {
+function createCoatTheme(theme: CompiledTheme, coat: string): CompiledTheme {
   if (!theme.coats) {
     throw new Error('No coats in themes')
   }

@@ -12,7 +12,7 @@ export function createTheme<A extends Partial<ThemeObject>>(theme: A): CompiledT
   const name = `${theme.name || `theme-${id++}`}`
   const res = Object.keys(theme).reduce((acc, key) => {
     let val = theme[key]
-    const cssVariableName = `${name}-${key}`
+    const cssVariableName = `${key}`
     if (key === 'coats') {
       // recurse into coats
       val = Object.keys(val).reduce((acc, ckey) => {
@@ -28,14 +28,23 @@ export function createTheme<A extends Partial<ThemeObject>>(theme: A): CompiledT
     return acc
   }, {}) as any
   res.name = name
+  Object.freeze(res)
   return res
 }
 
 export function createThemes<A extends Partial<ThemeObject>>(themes: {
   [key: string]: A
 }): { [key: string]: CompiledTheme<A> } {
-  return Object.keys(themes).reduce((acc, key) => {
-    acc[key] = createTheme(themes[key])
-    return acc
-  }, {})
+  const names = Object.keys(themes)
+    .map(k => themes[k].name)
+    .filter(Boolean)
+  return Object.freeze(
+    Object.keys(themes).reduce((acc, key) => {
+      if (!themes[key].name && !names.some(x => x === key)) {
+        themes[key].name = key
+      }
+      acc[key] = createTheme(themes[key])
+      return acc
+    }, {}),
+  )
 }

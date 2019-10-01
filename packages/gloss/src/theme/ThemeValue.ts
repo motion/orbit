@@ -7,7 +7,7 @@ export class ThemeValue<A> implements ThemeValueLike<A> {
     return this.value
   }
 
-  get() {
-    return this.value
+  toString() {
+    return `${this.value}`
   }
 }

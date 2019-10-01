@@ -1,10 +1,11 @@
-import { ThemeObject } from '@o/css'
 import * as React from 'react'
 
+import { CompiledTheme } from './createTheme'
+
 export type ThemeContextType = {
-  allThemes: { [key: string]: ThemeObject }
+  allThemes: { [key: string]: CompiledTheme }
   activeThemeName: string
-  activeTheme: ThemeObject
+  activeTheme: CompiledTheme
 }
 
 const themeContext: ThemeContextType = {

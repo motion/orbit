@@ -1,4 +1,5 @@
-import { ThemeObject } from '@o/css'
+import { CompiledTheme } from 'gloss/src'
+
 import { colors } from '../helpers/colors'
 
 export const presetTheme = {
@@ -52,6 +53,6 @@ export const guesses = {
   verbose: presetTheme.grey,
 }
 
-export function guessTheme(name: string, theme: ThemeObject) {
+export function guessTheme(name: string, theme: CompiledTheme) {
   return guesses[name] ? guesses[name](theme) : null
 }

@@ -45,12 +45,14 @@ const themeVariableManager = new ThemeVariableManager()
 
 export function ThemeVariableContext({ theme, children }: { theme: CompiledTheme; children: any }) {
   const className = themeVariableManager.getClassName(theme)
+
   useEffect(() => {
     themeVariableManager.mount(theme)
     return () => {
       themeVariableManager.unmount(theme)
     }
-  }, [])
+  }, [theme])
+
   return (
     <div style={{ display: 'contents' }} className={className}>
       {children}

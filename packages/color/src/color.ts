@@ -5,8 +5,8 @@ import { HSL, HSLA, HSV, HSVA, RGB, RGBA } from './interfaces'
 import { bound01, boundAlpha, clamp01 } from './util'
 
 export interface ColorOptions {
-  format: ColorFormats
-  gradientType: string
+  format?: ColorFormats
+  gradientType?: string
 }
 
 export type ColorInput = string | RGB | RGBA | HSL | HSLA | HSV | HSVA | Color
@@ -65,6 +65,7 @@ export class Color {
       this.roundA = color.roundA
       this.format = opts.format || color.format
       this.gradientType = opts.gradientType
+
       this.isValid = true
     } else {
       const rgb = inputToRGB(color)

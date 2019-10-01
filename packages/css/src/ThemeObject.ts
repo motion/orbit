@@ -10,7 +10,8 @@ export type ThemeCoats = {
 
 export interface ThemeValueLike<A extends any> {
   cssVariable: string
-  get(): A
+  getCSSValue(): A
+  toString(): string
 }
 
 export type ThemeObject = {

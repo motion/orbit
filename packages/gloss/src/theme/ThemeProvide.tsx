@@ -1,4 +1,4 @@
-import { ThemeObject, ThemeSet } from '@o/css'
+import { ThemeSet } from '@o/css'
 import React, { useContext, useMemo } from 'react'
 
 import { Theme } from './Theme'
@@ -16,7 +16,7 @@ export function ThemeProvide({ activeTheme, children, themes }: ThemeProvideProp
   const val: ThemeContextType = useMemo(() => {
     return {
       ...themeContext,
-      allThemes: { ...themeContext.allThemes, ...themes } as ThemeObject,
+      allThemes: { ...themeContext.allThemes, ...themes },
     }
   }, [themeContext, themes])
 

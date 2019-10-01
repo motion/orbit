@@ -1,4 +1,4 @@
-import { ThemeObject } from '@o/css'
+import { CompiledTheme } from './theme/createTheme'
 
 export type Psuedos = '&:hover' | '&:active' | '&:focus' | '&:disabled'
 
@@ -6,7 +6,7 @@ export type GlossConfig = {
   toColor: Function
   isColor: Function
   pseudoAbbreviations?: { [key: string]: Psuedos }
-  preProcessTheme?: (props: any, theme: ThemeObject) => ThemeObject
+  preProcessTheme?: (props: any, theme: CompiledTheme) => CompiledTheme
   mediaQueries?: null | {
     [key: string]: string
   }

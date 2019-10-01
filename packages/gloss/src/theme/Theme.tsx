@@ -3,14 +3,15 @@ import { uniqueId } from 'lodash'
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import { Config } from '../configureGloss'
+import { CompiledTheme } from './createTheme'
 import { ThemeContext, ThemeContextType } from './ThemeContext'
-import { ThemeObservable, ThemeObservableType, ThemeObserver } from './ThemeObservable'
+import { ThemeObservable, useProvideThemeObservable } from './ThemeObservable'
 import { ThemeVariableContext } from './ThemeVariableManager'
 
-export type ThemeSelect = ((theme: ThemeObject) => ThemeObject) | string | false | undefined
+export type ThemeSelect = ((theme: CompiledTheme) => CompiledTheme) | string | false | undefined
 
 type ThemeProps = {
-  theme?: string | ThemeObject
+  theme?: string | CompiledTheme
   themeSubSelect?: ThemeSelect
   coat?: string | false
   name?: string
@@ -24,47 +25,14 @@ export const Theme = (props: ThemeProps) => {
   const nextName = (typeof name === 'string' && name) || (typeof theme === 'string' && theme) || ''
   const prev = useContext(ThemeContext)
   if (prev.allThemes[nextName]) {
-    if (prev.allThemes[nextName] === prev.activeTheme) {
-      return children
-    }
     return <ThemeByName name={nextName}>{children}</ThemeByName>
   }
   const next = getNextTheme(props, prev)
-  if (!next || next === prev) {
-    return children
-  }
   return <ThemeProvideHelper themeContext={next}>{children}</ThemeProvideHelper>
 }
 
 function ThemeProvideHelper(props: { themeContext: ThemeContextType; children: any }) {
-  const themeObservers = useRef<Set<ThemeObserver>>(new Set())
-
-  // never change this just emit
-  const themeObservableContext: ThemeObservableType = useMemo(() => {
-    return {
-      current: props.themeContext,
-      subscribe: cb => {
-        themeObservers.current.add(cb)
-        return {
-          unsubscribe: () => {
-            themeObservers.current.delete(cb)
-          },
-        }
-      },
-    }
-  }, [])
-
-  if (!themeObservableContext.current) {
-    themeObservableContext.current = props.themeContext
-  }
-
-  useEffect(() => {
-    themeObservableContext.current = props.themeContext
-    themeObservers.current.forEach(cb => {
-      cb(props.themeContext)
-    })
-  }, [props.themeContext])
-
+  const themeObservableContext = useProvideThemeObservable(props)
   return (
     <ThemeVariableContext theme={props.themeContext.activeTheme}>
       <ThemeContext.Provider value={props.themeContext}>

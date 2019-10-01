@@ -1,4 +1,4 @@
-import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, ThemeObject, validCSSAttr } from '@o/css'
+import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
@@ -7,6 +7,7 @@ import { useTheme } from './helpers/useTheme'
 import { validPropLoose, ValidProps } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
+import { CompiledTheme } from './theme/createTheme'
 import { ThemeSelect } from './theme/Theme'
 
 // so you can reference in postProcessProps
@@ -40,7 +41,7 @@ export type GlossProps<Props> = Props & {
 
 export type ThemeFn<Props = any> = (
   props: GlossProps<Props>,
-  theme: ThemeObject,
+  theme: CompiledTheme,
   previous?: CSSPropertySetLoose | null,
 ) => CSSPropertySetLoose | undefined | null
 
@@ -222,7 +223,7 @@ export function gloss<Props = any, ThemeProps = Props>(
     const dynClasses = useRef<Set<string> | null>(null)
 
     // for smarter update tracking
-    const last = useRef<{ props: Object; theme: ThemeObject }>()
+    const last = useRef<{ props: Object; theme: CompiledTheme }>()
     let shouldAvoidStyleUpdate = false
     if (!last.current) {
       last.current = {
@@ -500,7 +501,7 @@ function addDynamicStyles(
   prevClassNames: Set<string> | null,
   props: CSSPropertySet,
   themeFn?: ThemeFn | null,
-  theme?: ThemeObject,
+  theme?: CompiledTheme,
   avoidStyles?: boolean,
 ) {
   const dynStyles = {}
@@ -757,7 +758,7 @@ function compileTheme(viewOG: GlossView<any>) {
     return null
   }
 
-  return (props: Object, theme: ThemeObject) => {
+  return (props: Object, theme: CompiledTheme) => {
     let styles: CSSPropertySetLoose | null = null
     for (const themeFn of themes) {
       const next = themeFn(props, theme, styles)

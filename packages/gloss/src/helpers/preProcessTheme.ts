@@ -1,6 +1,5 @@
-import { ThemeObject } from '@o/css'
-
 import { GlossProps } from '../gloss'
+import { CompiledTheme } from '../theme/createTheme'
 import { getThemeCoat } from './getThemeCoat'
 import { selectThemeSubset } from './selectThemeSubset'
 
@@ -8,6 +7,6 @@ import { selectThemeSubset } from './selectThemeSubset'
 //   1. if coat="" prop, drill down to that theme
 //   2. if themeSubSelect="" prop, select that subset of the theme
 
-export const preProcessTheme = (props: GlossProps<any>, theme: ThemeObject) => {
+export const preProcessTheme = (props: GlossProps<any>, theme: CompiledTheme) => {
   return selectThemeSubset(props.themeSubSelect, getThemeCoat(props.coat, theme))
 }

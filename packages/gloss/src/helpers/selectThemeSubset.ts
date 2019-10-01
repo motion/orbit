@@ -1,5 +1,6 @@
 import { CompiledTheme } from '../theme/createTheme'
 import { ThemeSelect } from '../theme/Theme'
+import { UnwrapTheme } from './useTheme'
 
 type PartialTheme = Partial<CompiledTheme>
 
@@ -24,6 +25,12 @@ export function selectThemeSubset(
 ): CompiledTheme {
   if (!themeSubSelect) {
     return theme
+  }
+
+  // unwrap from its proxy to avoid triggering change tracking
+  if (theme) {
+    // @ts-ignore
+    theme = theme[UnwrapTheme] || theme
   }
 
   if (typeof themeSubSelect === 'function') {

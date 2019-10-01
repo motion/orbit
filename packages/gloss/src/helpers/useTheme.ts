@@ -43,12 +43,20 @@ export function useTheme(props?: { ignoreCoat?: boolean }) {
   return proxyTheme(theme, trackState.current)
 }
 
+export const UnwrapTheme = Symbol('UnwrapTheme')
+
 function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
   return useMemo(() => {
     return new Proxy(theme, {
       get(target, key) {
+        if (key === UnwrapTheme) {
+          return theme
+        }
         if (!Reflect.has(target, key)) {
           return
+        }
+        if (key === 'name') {
+          debugger
         }
         const val = Reflect.get(target, key)
         if (val && val.cssVariable) {

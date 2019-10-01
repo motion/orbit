@@ -1,10 +1,12 @@
 TODO
 
-- don't memo the whole gloss view, instead:
-  - memo the work inside the view
-  - why? lots of views take children, so memo does nothing
-  - plus we can eventually memo things really smart, handling the various object syntax like boxShadow={{  }}
-
+- get much better static extraction
+  - extract from gloss() style views
+  - extract ...conditional ? {} : {} and ...conditional && {}
+  - extract css variables stuff
+- support flattened transform props (x, y, scale, etc)
+- maybe flatten psuedos
+-
 
 
 # gloss 💅

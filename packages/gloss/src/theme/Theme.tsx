@@ -34,7 +34,7 @@ export const Theme = (props: ThemeProps) => {
 function ThemeProvideHelper(props: { themeContext: ThemeContextType; children: any }) {
   const themeObservableContext = useProvideThemeObservable(props)
   return (
-    <ThemeVariableContext theme={props.themeContext}>
+    <ThemeVariableContext theme={props.themeContext.activeTheme}>
       <ThemeContext.Provider value={props.themeContext}>
         <ThemeObservable.Provider value={themeObservableContext}>
           {props.children}

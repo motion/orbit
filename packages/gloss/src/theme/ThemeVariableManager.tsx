@@ -17,17 +17,20 @@ class ThemeVariableManager {
     } else {
       this.mounted.set(theme, 1)
       const className = this.getClassName(theme)
-      let rule = `.${className} {`
+      let rules = ``
       for (const key in theme) {
         const val = theme[key]
         if (val && val.cssVariable && val.getCSSValue) {
           const next = val.getCSSValue()
           if (typeof next === 'string') {
-            rule += `--${val.cssVariable}: ${next};`
+            rules += `--${val.cssVariable}: ${next};`
           }
         }
       }
-      this.sheet.insertRule(rule)
+      if (rules.length) {
+        const rule = `.${className} { ${rules} }`
+        this.sheet.insertRule(rule)
+      }
     }
   }
 
@@ -41,6 +44,7 @@ class ThemeVariableManager {
   }
 }
 
+// singletone
 const themeVariableManager = new ThemeVariableManager()
 
 export function ThemeVariableContext({ theme, children }: { theme: CompiledTheme; children: any }) {

@@ -20,14 +20,15 @@ export function useTheme(props?: { ignoreCoat?: boolean }) {
   })
 
   useEffect(() => {
-    themeObservable.subscribe(theme => {
+    const sub = themeObservable.subscribe(theme => {
       if (trackState.current.hasUsedOnlyCSSVariables) {
         // no need to change
       } else {
         setCur(theme)
       }
     })
-  })
+    return sub.unsubscribe
+  }, [])
 
   let theme = cur.activeTheme
   // TODO this should not go here, maybe just wrap those themes in <Theme coat={false}> or something

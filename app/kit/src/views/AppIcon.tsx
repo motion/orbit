@@ -15,7 +15,7 @@ export type AppIconProps = Omit<IconShapeProps, 'color' | 'gradient'> & {
 }
 
 export const AppIcon = memo((props: AppIconProps) => {
-  const theme = useTheme({ ignroeCoat: true })
+  const theme = useTheme({ ignoreCoat: true })
   const { app, ...rest } = props
   let icon = props.icon || props.identifier || ''
   let iconLight = ''

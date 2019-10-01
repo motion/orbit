@@ -1,6 +1,6 @@
 import { ThemeObject } from '@o/css'
 import { uniqueId } from 'lodash'
-import React, { useContext, useEffect, useMemo } from 'react'
+import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import { Contents } from '../blocks/Contents'
 import { Config } from '../configureGloss'
@@ -18,7 +18,17 @@ type ThemeProps = {
   children: any
 }
 
-export const cacheThemes = new WeakMap<any, ThemeContextType>()
+const themeCache = new WeakMap<any, ThemeContextType>()
+
+type ThemeObserver = (theme: CompiledTheme) => any
+type ThemeObservable = (onChange: ThemeObserver) => { unsubscribe: () => void }
+type ThemeObservableType = {
+  subscribe: ThemeObservable
+}
+
+export const ThemeObservable = createContext<ThemeObservableType>({
+  subscribe: _ => ({ unsubscribe: () => {} }),
+})
 
 export const Theme = (props: ThemeProps) => {
   const { theme, name, children } = props
@@ -36,9 +46,39 @@ export const Theme = (props: ThemeProps) => {
   if (!next || next === prev) {
     return children
   }
+  return <ThemeProvideHelper themeContext={next}>{children}</ThemeProvideHelper>
+}
+
+function ThemeProvideHelper(props: { themeContext: ThemeContextType; children: any }) {
+  const themeObservers = useRef<Set<ThemeObserver>>(new Set())
+
+  // never change this just emit
+  const themeObservableContext: ThemeObservableType = useMemo(() => {
+    return {
+      subscribe: cb => {
+        themeObservers.current.add(cb)
+        return {
+          unsubscribe: () => {
+            themeObservers.current.delete(cb)
+          },
+        }
+      },
+    }
+  }, [])
+
+  useEffect(() => {
+    themeObservers.current.forEach(cb => {
+      cb(props.themeContext.activeTheme)
+    })
+  }, [props.themeContext])
+
   return (
-    <ThemeVariableContext theme={next.activeTheme}>
-      <ThemeContext.Provider value={next}>{children}</ThemeContext.Provider>
+    <ThemeVariableContext theme={props.themeContext.activeTheme}>
+      <ThemeContext.Provider value={props.themeContext}>
+        <ThemeObservable.Provider value={themeObservableContext}>
+          {props.children}
+        </ThemeObservable.Provider>
+      </ThemeContext.Provider>
     </ThemeVariableContext>
   )
 }
@@ -47,8 +87,8 @@ function getNextTheme(props: ThemeProps, prev: ThemeContextType) {
   const { theme, coat } = props
   let next: any = null
 
-  if (typeof theme === 'object' && cacheThemes.has(theme)) {
-    next = cacheThemes.get(theme) as ThemeContextType
+  if (typeof theme === 'object' && themeCache.has(theme)) {
+    next = themeCache.get(theme) as ThemeContextType
   } else {
     // getting the alt theme or create theme
     let previousOriginalTheme = prev.activeTheme
@@ -64,7 +104,7 @@ function getNextTheme(props: ThemeProps, prev: ThemeContextType) {
       nextTheme = Config.preProcessTheme
         ? Config.preProcessTheme(props, previousOriginalTheme)
         : prev.activeTheme
-      next = cacheThemes.get(nextTheme)
+      next = themeCache.get(nextTheme)
     } else {
       nextTheme = props.theme
       if (!nextTheme) {
@@ -73,8 +113,8 @@ function getNextTheme(props: ThemeProps, prev: ThemeContextType) {
     }
 
     if (!next) {
-      next = createThemeFromObject(props, prev, nextTheme)
-      cacheThemes.set(nextTheme, next)
+      next = createThemeContext(props, prev, nextTheme)
+      themeCache.set(nextTheme, next)
     }
 
     if (nextTheme === prev.activeTheme) {
@@ -89,30 +129,33 @@ class ThemeVariableManager {
   tag = makeStyleTag()
   mounted = new Map()
 
+  get sheet() {
+    return this.tag!.sheet! as CSSStyleSheet
+  }
+
   mount(theme: CompiledTheme) {
     if (this.mounted.has(theme)) {
       this.mounted.set(theme, this.mounted.get(theme) + 1)
     } else {
       this.mounted.set(theme, 1)
-      // insert rules
-      const rootName = this.getClassName(theme)
-      const insert = this.tag!.sheet!['insertRule']
-      const rules: any = {}
+
+      const className = this.getClassName(theme)
+      let rule = `.${className} {`
       for (const key in theme) {
         const val = theme[key]
         if (val && val.cssVariable && val.getCSSValue) {
           const next = val.getCSSValue()
           if (typeof next === 'string') {
-            rules[val.cssVariable] = next
+            rule += `--${val.cssVariable}: ${next};`
           }
         }
       }
-
-      console.log('rules', rules)
+      this.sheet.insertRule(rule)
     }
   }
 
-  unmount(_: CompiledTheme) {
+  unmount(theme: CompiledTheme) {
+    this.mounted.set(theme, (this.mounted.get(theme) || 1) - 1)
     // noop for now, not a big memory use
   }
 
@@ -135,7 +178,7 @@ function ThemeVariableContext({ theme, children }: { theme: CompiledTheme; child
   return <Contents className={className}>{children}</Contents>
 }
 
-function createThemeFromObject(
+function createThemeContext(
   props: ThemeProps,
   prev: ThemeContextType,
   next: ThemeObject,
@@ -151,7 +194,7 @@ function createThemeFromObject(
 
 function ThemeByName({ name, children }: ThemeProps) {
   const { allThemes } = React.useContext(ThemeContext)
-  const memoValue = useMemo(() => {
+  const themeMemo = useMemo(() => {
     if (!name) {
       return children
     }
@@ -164,10 +207,9 @@ function ThemeByName({ name, children }: ThemeProps) {
       activeTheme: nextTheme,
       activeThemeName: name,
     }
-
-    cacheThemes.set(nextTheme, next)
-
+    themeCache.set(nextTheme, next)
     return next
   }, [name])
-  return <ThemeContext.Provider value={memoValue}>{children}</ThemeContext.Provider>
+
+  return <ThemeProvideHelper themeContext={themeMemo}>{children}</ThemeProvideHelper>
 }

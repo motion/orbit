@@ -79,7 +79,7 @@ export const IconShape = memo(
 
     const scale = size / 28
     const theme = useTheme({
-      ignroeCoat: true,
+      ignoreCoat: true,
     })
 
     const themeColor = theme.iconFillColor || theme.color

@@ -1,11 +1,11 @@
-import { IconProps, SVG, ThemeContext } from '@o/ui'
+import { IconProps, SVG, useTheme } from '@o/ui'
 import React, { useContext } from 'react'
 
 import { useAppDefinition } from './useAppDefinition'
 
 export function useAppIcon(props: IconProps) {
   const { name } = props
-  const { activeTheme } = useContext(ThemeContext)
+  const activeTheme = useTheme()
   const def = useAppDefinition(name)
   if (!name || !def) return null
   const extImg = name && (name[0] === '/' || name.indexOf('http') === 0) ? name : null

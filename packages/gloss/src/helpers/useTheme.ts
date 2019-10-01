@@ -9,10 +9,10 @@ import { ThemeContext } from '../theme/ThemeContext'
 export function useTheme(props?: {
   themeSubSelect?: ThemeSelect
   coat?: string | false
-  ignroeCoat?: boolean
+  ignoreCoat?: boolean
 }) {
   let theme = useContext(ThemeContext).activeTheme
-  if (props && props.ignroeCoat) {
+  if (props && props.ignoreCoat) {
     theme = theme._originalTheme || theme
   }
   if (

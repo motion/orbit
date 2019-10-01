@@ -1,6 +1,6 @@
 import { createUsableStore, react, useActiveSpace, useReaction } from '@o/kit'
-import { ClearButton, ThemeContext, useSearch, View } from '@o/ui'
-import { Box, gloss } from 'gloss'
+import { ClearButton, useSearch, View } from '@o/ui'
+import { Box, gloss, useTheme } from 'gloss'
 import React, { memo, useCallback, useState } from 'react'
 
 import { appsDrawerStore, queryStore, useOrbitWindowStore, useQueryStore } from '../../om/stores'
@@ -86,7 +86,7 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { f
   const qs = useQueryStore()
   const orbitWindowStore = useOrbitWindowStore()
   const headerStore = useHeaderStore()
-  const { activeTheme } = React.useContext(ThemeContext)
+  const activeTheme = useTheme()
   const [activeSpace] = useActiveSpace()
   const focusedApp = headerStore.paneState.focusedApp
   const placeholder = !focusedApp

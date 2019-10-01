@@ -26,7 +26,8 @@ export function useTheme(props?: { ignoreCoat?: boolean }) {
       if (trackState.current.hasUsedOnlyCSSVariables) {
         // no need to change
       } else {
-        console.warn('re-rendering because used variables')
+        console.warn('re-rendering because used variables', trackState.current)
+        debugger
         setCur(theme)
       }
     })

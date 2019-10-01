@@ -43,8 +43,9 @@ class ThemeVariableManager {
   }
 
   unmount(theme: CompiledTheme) {
-    this.mounted.set(theme, (this.mounted.get(theme) || 1) - 1)
     // noop for now, not a big memory use
+    // would want to garbage collect too and maybe only remove if lots of others are added
+    // this.mounted.set(theme, (this.mounted.get(theme) || 1) - 1)
   }
 
   getClassName(theme: CompiledTheme) {

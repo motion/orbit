@@ -103,7 +103,7 @@ export function css(styles: Object, opts?: CSSConfig): Object {
   return toReturn
 }
 
-function cssValue(key: string, value: any, recurse = false, options?: CSSConfig) {
+export function cssValue(key: string, value: any, recurse = false, options?: CSSConfig) {
   // get falsy values
   if (value === false) {
     value === FALSE_VALUES[key]

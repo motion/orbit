@@ -14,7 +14,7 @@ const backgroundStronger = lightBackground.darken(0.05)
 const backgroundStrongest = lightBackground.darken(0.075)
 
 export const light: ThemeObject = Object.freeze({
-  _name: 'light',
+  name: 'light',
   coats: coats,
   cardShadow: [0, 6, 14, [0, 0, 0, 0.058]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
@@ -50,11 +50,9 @@ export const light: ThemeObject = Object.freeze({
     sidebarBackgroundTransparent: [255, 255, 255, 0.7],
     appCardBackground: '#f5f7f9',
     appCardBackgroundTransparent: [255, 255, 255, 0],
-    orbitLauncherBackground: {
-      none: [255, 255, 255],
-      some: [255, 255, 255, 0.15],
-      more: [255, 255, 255, 0.15],
-    },
+    'orbitLauncherBackground-none': [255, 255, 255],
+    'orbitLauncherBackground-some': [255, 255, 255, 0.15],
+    'orbitLauncherBackground-more': [255, 255, 255, 0.15],
     orbitLauncherSideBackground: [255, 255, 255, 0.4],
     tabBackgroundHover: [0, 0, 0, 0.1],
     tabBackgroundActive: [0, 0, 0, 0.15],

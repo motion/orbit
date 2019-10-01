@@ -240,7 +240,7 @@ const OrbitInnerChrome = gloss<
   zIndex: 0,
 }).theme(({ torn, vibrancy }, theme) => ({
   boxShadow: [torn ? null : [0, 0, 80, [0, 0, 0, 0.05]]],
-  background: theme.orbitLauncherBackground[vibrancy || 'some'],
+  background: theme[`orbitLauncherBackground-${[vibrancy || 'some']}`],
 }))
 
 // /**

@@ -100,9 +100,11 @@ class ThemeVariableManager {
       const rules: any = {}
       for (const key in theme) {
         const val = theme[key]
-        console.log('val', key, val)
         if (val && val.cssVariable && val.getCSSValue) {
-          rules[val.cssVariable] = val.getCSSValue()
+          const next = val.getCSSValue()
+          if (typeof next === 'string') {
+            rules[val.cssVariable] = next
+          }
         }
       }
 

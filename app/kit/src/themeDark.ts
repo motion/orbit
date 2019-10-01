@@ -67,19 +67,20 @@ const darkCoats: ThemeSet = {
 }
 
 export const dark: ThemeObject = {
+  name: 'dark',
   coats: darkCoats,
   backgroundZebra: background.lighten(0.2).setAlpha(0.35),
   backgroundStrongest,
   backgroundStronger,
   backgroundStrong,
-  boxShadowColor: [0, 0, 0],
   boxShadowOpacity: 0.32,
   // elevatedShadowY: (elevation: number) => smoother(x, 1),
   // elevatedShadowSpread: (elevation: number) => smoother(x, 1),
   // elevatedShadowColor: (elevation: number) => smoother(x, 1),
-  separatorBackground: backgroundStrong,
+  boxShadowColor: toColor([0, 0, 0]),
   cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
+  separatorBackground: backgroundStrong,
   ...fromStyles({
     background,
     backgroundHover: [20, 20, 20, 0.2],
@@ -104,11 +105,9 @@ Object.assign(
     sidebarBackgroundTransparent: [15, 15, 15, 0.4],
     appCardBackground: [15, 15, 15],
     appCardBackgroundTransparent: [15, 15, 15, 0],
-    orbitLauncherBackground: {
-      none: [30, 30, 30],
-      some: [10, 10, 13, 0.2], // we use thicker vibrancy here
-      more: [25, 25, 30, 0.4],
-    },
+    'orbitLauncherBackground-none': [30, 30, 30],
+    'orbitLauncherBackground-some': [10, 10, 13, 0.2], // we use thicker vibrancy here
+    'orbitLauncherBackground-more': [25, 25, 30, 0.4],
     sidebarBorderColor: '#444',
     headerBorderBottom: '#151515',
     headerBackground: linearGradient([0, 0, 0, 0.4], [0, 0, 0, 0.3]),

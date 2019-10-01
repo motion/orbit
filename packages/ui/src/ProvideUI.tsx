@@ -11,7 +11,7 @@ import { ProvideShortcut } from './Shortcut'
 import { ProvideVisibility } from './Visibility'
 
 export type ProvideUIProps = {
-  activeTheme?: string
+  activeTheme: string
   themes: ThemeSet
   children?: any
 }

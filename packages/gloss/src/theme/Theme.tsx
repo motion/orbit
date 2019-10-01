@@ -1,12 +1,11 @@
 import { ThemeObject } from '@o/css'
 import { uniqueId } from 'lodash'
-import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
-import { Contents } from '../blocks/Contents'
 import { Config } from '../configureGloss'
-import { makeStyleTag } from '../stylesheet/makeStyleTag'
-import { CompiledTheme } from './createTheme'
 import { ThemeContext, ThemeContextType } from './ThemeContext'
+import { ThemeObservable, ThemeObservableType, ThemeObserver } from './ThemeObservable'
+import { ThemeVariableContext } from './ThemeVariableManager'
 
 export type ThemeSelect = ((theme: ThemeObject) => ThemeObject) | string | false | undefined
 
@@ -20,28 +19,16 @@ type ThemeProps = {
 
 const themeCache = new WeakMap<any, ThemeContextType>()
 
-type ThemeObserver = (theme: CompiledTheme) => any
-type ThemeObservable = (onChange: ThemeObserver) => { unsubscribe: () => void }
-type ThemeObservableType = {
-  subscribe: ThemeObservable
-}
-
-export const ThemeObservable = createContext<ThemeObservableType>({
-  subscribe: _ => ({ unsubscribe: () => {} }),
-})
-
 export const Theme = (props: ThemeProps) => {
   const { theme, name, children } = props
   const nextName = (typeof name === 'string' && name) || (typeof theme === 'string' && theme) || ''
   const prev = useContext(ThemeContext)
-
   if (prev.allThemes[nextName]) {
     if (prev.allThemes[nextName] === prev.activeTheme) {
       return children
     }
     return <ThemeByName name={nextName}>{children}</ThemeByName>
   }
-
   const next = getNextTheme(props, prev)
   if (!next || next === prev) {
     return children
@@ -55,6 +42,7 @@ function ThemeProvideHelper(props: { themeContext: ThemeContextType; children: a
   // never change this just emit
   const themeObservableContext: ThemeObservableType = useMemo(() => {
     return {
+      current: props.themeContext,
       subscribe: cb => {
         themeObservers.current.add(cb)
         return {
@@ -66,9 +54,14 @@ function ThemeProvideHelper(props: { themeContext: ThemeContextType; children: a
     }
   }, [])
 
+  if (!themeObservableContext.current) {
+    themeObservableContext.current = props.themeContext
+  }
+
   useEffect(() => {
+    themeObservableContext.current = props.themeContext
     themeObservers.current.forEach(cb => {
-      cb(props.themeContext.activeTheme)
+      cb(props.themeContext)
     })
   }, [props.themeContext])
 
@@ -123,59 +116,6 @@ function getNextTheme(props: ThemeProps, prev: ThemeContextType) {
   }
 
   return next
-}
-
-class ThemeVariableManager {
-  tag = makeStyleTag()
-  mounted = new Map()
-
-  get sheet() {
-    return this.tag!.sheet! as CSSStyleSheet
-  }
-
-  mount(theme: CompiledTheme) {
-    if (this.mounted.has(theme)) {
-      this.mounted.set(theme, this.mounted.get(theme) + 1)
-    } else {
-      this.mounted.set(theme, 1)
-
-      const className = this.getClassName(theme)
-      let rule = `.${className} {`
-      for (const key in theme) {
-        const val = theme[key]
-        if (val && val.cssVariable && val.getCSSValue) {
-          const next = val.getCSSValue()
-          if (typeof next === 'string') {
-            rule += `--${val.cssVariable}: ${next};`
-          }
-        }
-      }
-      this.sheet.insertRule(rule)
-    }
-  }
-
-  unmount(theme: CompiledTheme) {
-    this.mounted.set(theme, (this.mounted.get(theme) || 1) - 1)
-    // noop for now, not a big memory use
-  }
-
-  getClassName(theme: CompiledTheme) {
-    return `theme-context-${theme.name}`
-  }
-}
-const themeVariableManager = new ThemeVariableManager()
-
-function ThemeVariableContext({ theme, children }: { theme: CompiledTheme; children: any }) {
-  const className = themeVariableManager.getClassName(theme)
-
-  useEffect(() => {
-    themeVariableManager.mount(theme)
-    return () => {
-      themeVariableManager.unmount(theme)
-    }
-  }, [])
-
-  return <Contents className={className}>{children}</Contents>
 }
 
 function createThemeContext(

@@ -1,0 +1,47 @@
+## Orbit User Interface
+
+<IntroText>
+  The user interface for Orbit has a few goals. It wants to feel native; in effect, to handle the
+  various keyboard and mouse interactions you'd expect while having strong performance. It's other
+  primary goal is to provide everything you need.
+</IntroText>
+
+One great way to start understanding the UI kit is to see what is provided at the root of your
+views. This is essentially gives you a roadmap to the internal functionality of the kit.
+
+```
+export const ProvideUI = (props: ProvideUIProps) => {
+  return (
+    <ProvideHighlight>
+      <ThemeProvide activeTheme={props.activeTheme} themes={props.themes}>
+        <ProvideDraggable>
+          <ProvideSearch query="">
+            <ProvideVisibility visible={true}>
+              <ProvideFocus focused={true}>
+                <ProvideShortcut>
+                  <ProvideFocusManager>
+                    <ProvideShare>{props.children}</ProvideShare>
+                  </ProvideFocusManager>
+                </ProvideShortcut>
+              </ProvideFocus>
+            </ProvideVisibility>
+          </ProvideSearch>
+        </ProvideDraggable>
+      </ThemeProvide>
+    </ProvideHighlight>
+  )
+}
+```
+
+As you can see, the UI kit has a variety of "modules", from highlighting text to drag and drop,
+handling focus and visibility as well as shortcuts, shared data and themes.
+
+Another good way to familiarize yourself is through the base level views that build upwards into the
+higher level ones. To get familiar with layouts and the fundamental views, check out the docs on the
+following:
+
+- [View](/docs/view)
+- [Text](/docs/text)
+- [Stack](/docs/stack)
+- [Surface](/docs/surface)
+- [Button](/docs/button)

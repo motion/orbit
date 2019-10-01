@@ -8,10 +8,13 @@ export type ThemeableProps = {
 }
 
 export function themeable<A extends any>(Component: A): A {
-  return function ThemeProp({ themeSubSelect, coat, theme, ...rest }: ThemeableProps) {
+  return function ThemeProp(props: ThemeableProps) {
+    if (!props.themeSubSelect && !props.coat && !props.theme) {
+      return <Component {...props} />
+    }
     return (
-      <Theme themeSubSelect={themeSubSelect} coat={coat} theme={theme}>
-        <Component {...rest} />
+      <Theme themeSubSelect={props.themeSubSelect} coat={props.coat} theme={props.theme}>
+        <Component {...props} />
       </Theme>
     )
   } as any

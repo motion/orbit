@@ -8,6 +8,7 @@ import { Badge } from './Badge'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
+import { themeable } from './helpers/themeable'
 import { Icon, IconProps } from './Icon'
 import { IconPropsContext } from './IconPropsContext'
 import { InvertScale } from './InvertScale'
@@ -189,11 +190,11 @@ type ThroughProps = Pick<
 const acceptsIcon = child =>
   child && child.type.acceptsProps && child.type.acceptsProps.icon === true
 
-export function Surface(direct: SurfaceProps) {
+export const Surface = themeable((direct: SurfaceProps) => {
   const props = SizedSurfacePropsContext.useProps(direct) as SurfaceProps
   const crumb = useBreadcrumb()
   const [tooltipState, setTooltipState] = useState({ id: null, show: false })
-  const theme = useTheme(props)
+  const theme = useTheme()
 
   useEffect(() => {
     const id = `Surface-${Math.round(Math.random() * 100000000)}`
@@ -516,7 +517,7 @@ export function Surface(direct: SurfaceProps) {
       </IconPropsContext.Provider>
     </SizedSurfacePropsContext.Reset>
   )
-}
+})
 
 const hasChildren = (children: React.ReactNode) => {
   if (Array.isArray(children)) {

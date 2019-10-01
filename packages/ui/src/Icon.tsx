@@ -73,7 +73,7 @@ export const PlainIcon = ({
   name,
   ...props
 }: IconProps) => {
-  const theme = useTheme(props)
+  const theme = useTheme()
   const size = snapToSizes(props.size) * useScale()
   let color = props.color || (theme.color ? theme.color.toString() : '#fff')
   let opacity

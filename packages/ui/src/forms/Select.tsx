@@ -1,4 +1,4 @@
-import { ThemeContext, useTheme } from 'gloss'
+import { CompiledTheme, ThemeContext, useTheme } from 'gloss'
 import React, { useCallback, useContext, useMemo } from 'react'
 import ReactSelect from 'react-select'
 import { Props } from 'react-select/src/Select'

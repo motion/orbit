@@ -1,5 +1,6 @@
 import { ColorLike } from '@o/color'
-import { CSSPropertySetResolved, ThemeObject } from '@o/css'
+import { CSSPropertySetResolved } from '@o/css'
+import { CompiledTheme } from 'gloss/src'
 
 import { weakKey } from '../helpers/weakKey'
 
@@ -20,7 +21,7 @@ const smoother = (base: number, amt = 1) =>
 /**
  * Accounts for darkness of background by default, but you can ovverride in Theme
  */
-const elevatedShadow = (props: ElevatableProps, theme: ThemeObject) => {
+const elevatedShadow = (props: ElevatableProps, theme: CompiledTheme) => {
   const el = props.elevation
   return [
     // x
@@ -43,7 +44,7 @@ const elevatedShadow = (props: ElevatableProps, theme: ThemeObject) => {
   ]
 }
 
-export const getElevation = (props: ElevatableProps, theme: ThemeObject) => {
+export const getElevation = (props: ElevatableProps, theme: CompiledTheme) => {
   return cacheReturn({
     keys: [JSON.stringify([props.elevation, props.boxShadow]), theme],
     value: () => {

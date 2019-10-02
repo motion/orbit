@@ -125,7 +125,7 @@ export default memo(function FeaturesSection() {
                     key={section}
                     space={20}
                     alignItems="start"
-                    itemMinWidth={280}
+                    itemMinWidth={240}
                     className="feature-grid"
                     marginRight="-100%"
                   >
@@ -163,7 +163,7 @@ export default memo(function FeaturesSection() {
 
         <View flex={0.15} />
 
-        <View sm-display="none" position="relative" flex={1} height={500}>
+        <View sm-display="none" position="relative" flex={1.25} height={500}>
           <ParallaxStageItem
             stagger={2}
             parallax={{
@@ -232,26 +232,22 @@ const sections = {
       {
         title: `One-click data sources`,
         icon: `data`,
-        body: [`Every app can provide data APIs, installs with a simple search + click.`],
+        body: [`Every app provides data, installs with a click.`],
       },
       {
         title: 'Query Builder',
         icon: 'code-block',
-        body: [
-          `Build and explore your data plugins, create queries and test them from the control panel.`,
-        ],
+        body: [`Create queries visually, plug into apps with a drag.`],
       },
       {
         title: `GraphQL Explorer`,
         icon: `satellite`,
-        body: [`Every app that exposes a GraphQL endpoint is explorable in the built-in explorer.`],
+        body: [`A full graph of your data sources by default.`],
       },
       {
         title: `Manage/Sync Bits`,
         icon: `data`,
-        body: [
-          `The Bit is the universal data format for Orbit, and you view, search and manage them here.`,
-        ],
+        body: [`Store results as bits, use them in other apps easily.`],
       },
     ],
   },
@@ -261,19 +257,17 @@ const sections = {
       {
         title: 'Complete UI Kit',
         icon: 'button',
-        body: [
-          `All lists and tables virtualized. React Concurrent rendering. Flexible, consistent data display across all views.`,
-        ],
+        body: [`Beautiful, flexible, virtualized, concurrent, with easy data loading.`],
       },
       {
         title: `Drag & Drop Data`,
         icon: `exchange`,
-        body: [`First class data drag & drop to move data in or out easily, or between apps.`],
+        body: [`First class data drag & drop to move data in, out & between apps.`],
       },
       {
         title: `Every hook you need`,
         icon: `shop`,
-        body: [`Extensive libraries for displaying data, all built on the latest React.`],
+        body: [`Extensive libraries for displaying data all built on the latest React.`],
       },
       {
         title: `Clipboard`,
@@ -294,7 +288,7 @@ const sections = {
         title: `Next-gen Hot Reload`,
         icon: `refresh`,
         body: [
-          `Per-app Webpack for instant React Refresh hot reloading. Toggle between development and production in realtime.`,
+          `Per-app Webpack with instant React Refresh. Toggle between editing and production instantly.`,
         ],
       },
       {
@@ -308,7 +302,7 @@ const sections = {
         title: `Incredible Dev Tooling`,
         icon: `draw`,
         body: [
-          `From logging to data management, state inspection, error recovery and more - Orbit comes with great DX.`,
+          `From debuggins to data management, error recovery and more - Orbit comes with great DX.`,
         ],
       },
     ],

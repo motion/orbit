@@ -25,7 +25,6 @@ export {
   gloss,
   GlossProps,
   Theme,
-  ThemeContext,
   useTheme,
   Inline,
   InlineBlock,

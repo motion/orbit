@@ -49,7 +49,7 @@ class ThemeVariableManager {
   }
 
   getClassName(theme: CompiledTheme) {
-    return `theme-context-${weakKey(theme)}`
+    return `theme--${theme.name}-${weakKey(theme)}`
   }
 }
 

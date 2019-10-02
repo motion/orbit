@@ -28,10 +28,6 @@ const mergeDisabled = merge.bind(
   'alphaDisabled',
 )
 
-export const colorTheme: ThemeFn = (props, theme, previous) => {
-  return alphaColorTheme(props, theme, previous)
-}
-
 export const alphaColorTheme = createAlphaColorTheme(true)
 
 function createAlphaColorTheme(shouldSetDefault = false) {
@@ -71,8 +67,8 @@ function merge(
   key: string,
   styleKey: string,
   colorKey: string,
-  alphaKey,
-  next,
+  alphaKey: string,
+  next: Object,
   parentColor,
   props,
   theme,

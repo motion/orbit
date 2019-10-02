@@ -31,9 +31,10 @@ export function useTheme(props?: { ignoreCoat?: boolean }) {
   }, [])
 
   let theme = cur
+
   // TODO this should not go here, maybe just wrap those themes in <Theme coat={false}> or something
   if (theme && props && props.ignoreCoat) {
-    theme = theme._originalTheme || theme
+    theme = theme.parent || theme
   }
 
   return proxyTheme(theme, trackState.current)

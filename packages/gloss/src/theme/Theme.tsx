@@ -20,11 +20,18 @@ export const Theme = (props: ThemeProps) => {
   const { theme, name, children } = props
   const nextName = (typeof name === 'string' && name) || (typeof theme === 'string' && theme) || ''
   const themes = useContext(AllThemesContext)
-  const cur = useContext(CurrentThemeContext).current
+  const curContext = useContext(CurrentThemeContext)
+  // const [_, set] = useState(0)
+  // useEffect(() => {
+  //   curContext.subscribe(() => {
+  //     console.log('got a new theme')
+  //     set(Math.random())
+  //   })
+  // }, [])
   if (!theme && !name && !props.themeSubSelect && !props.coat) {
     return children
   }
-  const next = themes[nextName] || getNextTheme(props, cur)
+  const next = themes[nextName] || getNextTheme(props, curContext.current)
   return <ThemeProvideHelper theme={next}>{children}</ThemeProvideHelper>
 }
 
@@ -44,22 +51,25 @@ const themeAltCache = new WeakMap<CompiledTheme, { [key: string]: CompiledTheme 
 
 function getNextTheme(props: ThemeProps, curTheme: CompiledTheme): CompiledTheme {
   const { theme, coat } = props
-  const altKey = `${props.coat || ''}-${
-    typeof props.themeSubSelect === 'string' ? props.themeSubSelect : ''
-  }`
   if (typeof theme === 'object') {
     if (themeCache.has(theme)) {
       return themeCache.get(theme)!
     }
-    const altCache = themeAltCache.has(theme)
-    if (altCache && altCache[altKey]) {
-      return altCache[altKey]
+  }
+
+  // if coat is defined and were already on coat/sub, swap to original theme before going to new coat
+  if (typeof coat !== 'undefined') {
+    while (curTheme.parent) {
+      curTheme = curTheme.parent
     }
   }
 
-  // if coat is defined and were already on coat, swap to original theme before going to new coat
-  if (typeof coat !== 'undefined') {
-    curTheme = curTheme._originalTheme || curTheme
+  const altCache = themeAltCache.get(curTheme)
+  const altKey = [props.coat, props.themeSubSelect]
+    .filter(x => typeof x === 'string' && !!x)
+    .join('-')
+  if (altCache && altCache[altKey]) {
+    return altCache[altKey]
   }
 
   let nextTheme: CompiledTheme | null = null
@@ -68,7 +78,7 @@ function getNextTheme(props: ThemeProps, curTheme: CompiledTheme): CompiledTheme
     nextTheme = Config.preProcessTheme ? Config.preProcessTheme(props, curTheme) : curTheme
     nextTheme = {
       ...nextTheme,
-      name: `coat-${altKey}`,
+      name: altKey,
     }
     if (!themeAltCache.has(curTheme)) {
       themeAltCache.set(curTheme, {})

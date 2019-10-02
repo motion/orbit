@@ -20,7 +20,7 @@ export function getThemeCoat(name: string | undefined, inTheme: CompiledTheme): 
   // prevent nesting coats, could work but not sure if wanted...
   // could be done using a weakmap likely
   if (theme._isCoat) {
-    theme = theme._originalTheme
+    theme = theme.parent
   }
   // find, set, cache coat theme
   if (!cache.has(theme)) {
@@ -58,6 +58,5 @@ function createCoatTheme(theme: CompiledTheme, coat: string): CompiledTheme {
     name: `coat-${coat}`,
     _coatName: coat,
     _isCoat: true,
-    _originalTheme: theme,
   }
 }

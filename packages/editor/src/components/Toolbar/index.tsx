@@ -32,7 +32,7 @@ export class Toolbar extends React.Component<Props, State> {
 
   menu?: HTMLElement
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.update()
     if (typeof window !== 'undefined') {
       window.addEventListener('mousedown', this.handleMouseDown)
@@ -40,16 +40,18 @@ export class Toolbar extends React.Component<Props, State> {
     }
   }
 
-  componentWillUnmount = () => {
+  componentWillUnmount() {
     if (typeof window !== 'undefined') {
       window.removeEventListener('mousedown', this.handleMouseDown)
       window.removeEventListener('mouseup', this.handleMouseUp)
     }
   }
 
-  componentWillReceiveProps = debounce(() => {
-    this.update()
-  }, 100)
+  componentWillReceiveProps() {
+    this.updateDebounce()
+  }
+
+  updateDebounce = debounce(() => this.update(), 100)
 
   hideLinkToolbar = () => {
     this.setState({ link: undefined })

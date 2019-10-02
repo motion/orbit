@@ -1,4 +1,5 @@
 import { Menu, Tray as ElectronTray } from 'electron'
+
 import { BaseComponent } from './BaseComponent'
 
 const EVENT_KEYS = {
@@ -40,7 +41,7 @@ export class Tray extends BaseComponent {
     highlightMode: highlightMode => this.tray.setHighlightMode(highlightMode || 'selection'),
   }
 
-  handleNewProps = keys => {
+  handleNewProps(keys) {
     try {
       for (const key of keys) {
         const val = this.props[key]

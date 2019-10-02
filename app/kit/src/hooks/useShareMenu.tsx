@@ -17,6 +17,7 @@ const getItemShareMenu = memoize((listItem, themeStore) => {
       after: (
         <SearchItemShareProvide item={item}>
           <Popover
+            // @ts-ignore
             towards="right"
             // selected would otherwise override this theme
             popoverTheme={themeStore.isDark ? 'light' : 'dark'}

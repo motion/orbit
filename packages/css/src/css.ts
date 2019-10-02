@@ -128,10 +128,6 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
       return `var(--${value.cssVariable})`
     }
   } else if (COLOR_KEYS.has(key)) {
-    console.log('value.toString()', value.toString())
-    // if (value.toString() === '#000000') {
-    //   debugger
-    // }
     return Config.isColor(value) ? Config.toColor(value) : value
   } else if (Array.isArray(value)) {
     if (key === 'fontFamily') {

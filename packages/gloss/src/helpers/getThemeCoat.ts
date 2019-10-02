@@ -2,41 +2,20 @@ import { CompiledTheme } from '../theme/createTheme'
 
 // this lets you do simple subsets using syntax:
 // <Button coat="action" />
-const cache = new WeakMap<
-  CompiledTheme,
-  {
-    [key: string]: CompiledTheme
-  }
->()
 
-export function getThemeCoat(name: string | undefined, inTheme: CompiledTheme): CompiledTheme {
+export function getThemeCoat(name: string | undefined, theme: CompiledTheme): CompiledTheme {
   if (!name || typeof name !== 'string') {
-    return inTheme
+    return theme
   }
-  if (!inTheme.coats) {
-    return inTheme
-  }
-  let theme = inTheme
   // prevent nesting coats, could work but not sure if wanted...
   // could be done using a weakmap likely
-  if (theme._isCoat) {
+  while (theme._isCoat) {
     theme = theme.parent
   }
-  // find, set, cache coat theme
-  if (!cache.has(theme)) {
-    cache.set(theme, {})
+  if (!theme.coats) {
+    return theme
   }
-  const coats = cache.get(theme)
-  if (!coats) {
-    throw new Error('unreachable')
-  }
-  const cached = coats[name]
-  if (cached) {
-    return cached
-  }
-  const next = createCoatTheme(theme, name)
-  coats[name] = next
-  return next
+  return createCoatTheme(theme, name)
 }
 
 function createCoatTheme(theme: CompiledTheme, coat: string): CompiledTheme {

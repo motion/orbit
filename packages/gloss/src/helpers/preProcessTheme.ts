@@ -11,24 +11,21 @@ import { UnwrapTheme } from './useTheme'
 const themeAltCache = new WeakMap<CompiledTheme, { [key: string]: CompiledTheme }>()
 
 export const preProcessTheme = (props: GlossProps<any>, theme: CompiledTheme) => {
-  theme = theme[UnwrapTheme] || theme
   if (props.theme) {
-    if (typeof props.theme !== 'object') {
-      debugger
-    }
     return props.theme
   }
+  theme = theme[UnwrapTheme] || theme
   if (props.coat || props.themeSubSelect) {
     const altKey = getAltKey(props)
     const existing = getThemeFromCache(altKey, theme)
     if (existing) {
       return existing
     }
-    console.warn('create new', props.coat, props.themeSubSelect)
     const coatTheme = getThemeCoat(props.coat, theme)
     const subSetTheme = selectThemeSubset(props.themeSubSelect, coatTheme)
     const nextTheme = createTheme({
       ...subSetTheme,
+      coats: undefined, // no coat with sub-coats
       name: altKey,
     })
     setThemeInCache(altKey, theme, nextTheme)

@@ -25,7 +25,7 @@ const createSubSetTheme = (
     ...child,
     parent,
     name: `sub-${name}`,
-    _isSubSet: true,
+    _isSubTheme: true,
   }
 }
 

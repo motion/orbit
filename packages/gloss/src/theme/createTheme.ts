@@ -13,10 +13,16 @@ export function createTheme<A extends Partial<ThemeObject>>(theme: A): CompiledT
   const res = Object.keys(theme).reduce((acc, key) => {
     let val = theme[key]
     const cssVariableName = `${key}`
-    if (key === 'coats') {
+    if (key === 'coats' && val) {
       // recurse into coats
       val = Object.keys(val).reduce((acc, ckey) => {
-        acc[ckey] = typeof val[ckey] === 'function' ? val[ckey] : createTheme(val[ckey])
+        acc[ckey] =
+          typeof val[ckey] === 'function'
+            ? val[ckey]
+            : createTheme({
+                ...val[ckey],
+                coats: undefined,
+              })
         return acc
       }, {})
     } else if (val && typeof val.setCSSVariable === 'function') {

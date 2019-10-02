@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react'
 
-import { weakKey } from '../helpers/WeakKeys'
 import { makeStyleTag } from '../stylesheet/makeStyleTag'
 import { CompiledTheme } from './createTheme'
 
@@ -12,32 +11,47 @@ class ThemeVariableManager {
     return this.tag!.sheet! as CSSStyleSheet
   }
 
+  getThemeVariables(theme: CompiledTheme) {
+    let rules = ``
+    for (const key in theme) {
+      const val = theme[key]
+      if (val && val.cssVariable) {
+        if (val.getCSSColorVariables) {
+          // allows for nicer handling of alpha changes
+          const { rgb, rgba } = val.getCSSColorVariables()
+          rules += `--${val.cssVariable}: ${rgba};`
+          rules += `--${val.cssVariable}-rgb: ${rgb};`
+        } else if (val.getCSSValue) {
+          const next = val.getCSSValue()
+          if (typeof next === 'string') {
+            rules += `--${val.cssVariable}: ${next};`
+          }
+        }
+      }
+    }
+    return rules
+  }
+
   mount(theme: CompiledTheme) {
     if (this.mounted.has(theme)) {
       this.mounted.set(theme, this.mounted.get(theme) + 1)
     } else {
       this.mounted.set(theme, 1)
-      const className = this.getClassName(theme)
-      let rules = ``
-      for (const key in theme) {
-        const val = theme[key]
-        if (val && val.cssVariable) {
-          if (val.getCSSColorVariables) {
-            // allows for nicer handling of alpha changes
-            const { rgb, rgba } = val.getCSSColorVariables()
-            rules += `--${val.cssVariable}: ${rgba};`
-            rules += `--${val.cssVariable}-rgb: ${rgb};`
-          } else if (val.getCSSValue) {
-            const next = val.getCSSValue()
-            if (typeof next === 'string') {
-              rules += `--${val.cssVariable}: ${next};`
-            }
-          }
-        }
-      }
+      const classNames = this.getClassNames(theme)
+      const className = classNames.join(' .')
+      const rules = this.getThemeVariables(theme)
       if (rules.length) {
         const rule = `.${className} { ${rules} }`
         this.sheet.insertRule(rule)
+      }
+
+      if (theme.coats) {
+        for (const coatKey in theme.coats) {
+          const coat = theme.coats[coatKey]
+          const coatRules = this.getThemeVariables(coat)
+          const rule = `.${className}.coat-${coatKey} { ${coatRules} }`
+          this.sheet.insertRule(rule)
+        }
       }
     }
   }
@@ -48,8 +62,18 @@ class ThemeVariableManager {
     // this.mounted.set(theme, (this.mounted.get(theme) || 1) - 1)
   }
 
-  getClassName(theme: CompiledTheme) {
-    return `theme--${theme.name}-${weakKey(theme)}`
+  getClassNames(theme: CompiledTheme) {
+    let res: string[] = []
+    if (theme._isCoat) {
+      res.push(`coat-${theme.name}`)
+    }
+    if (theme._isSubTheme) {
+      res.push(`sub-${theme.name}`)
+    }
+    if (!theme._isCoat && !theme._isSubTheme) {
+      res.push(`theme-${theme.name}`)
+    }
+    return res
   }
 }
 
@@ -57,7 +81,7 @@ class ThemeVariableManager {
 const themeVariableManager = new ThemeVariableManager()
 
 export function ThemeVariableContext({ theme, children }: { theme: CompiledTheme; children: any }) {
-  const className = themeVariableManager.getClassName(theme)
+  const classNames = themeVariableManager.getClassNames(theme)
 
   useEffect(() => {
     themeVariableManager.mount(theme)
@@ -71,7 +95,7 @@ export function ThemeVariableContext({ theme, children }: { theme: CompiledTheme
   }
 
   return (
-    <div style={{ display: 'contents' }} className={className}>
+    <div style={{ display: 'contents' }} className={classNames.join(' ')}>
       {children}
     </div>
   )

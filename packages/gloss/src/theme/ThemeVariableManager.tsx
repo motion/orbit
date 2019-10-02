@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 import { makeStyleTag } from '../stylesheet/makeStyleTag'
 import { CompiledTheme } from './createTheme'
@@ -65,12 +65,15 @@ export function ThemeVariableContext({ theme, children }: { theme: CompiledTheme
     }
   }, [theme])
 
+  const ref = useRef(null)
+  console.log('ref', ref, className, theme)
+
   if (!theme) {
     return children
   }
 
   return (
-    <div style={{ display: 'contents' }} className={className}>
+    <div ref={ref} style={{ display: 'contents' }} className={className}>
       {children}
     </div>
   )

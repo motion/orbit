@@ -20,10 +20,10 @@ const createSubSetTheme = (
   child: ThemeObject | CompiledTheme,
 ) => {
   return createTheme({
-    name: `${parent.name}-sub-${name}`,
     ...parent,
     ...child,
     parent,
+    name: `${parent.name}-sub-${name}`,
     _isSubSet: true,
   })
 }

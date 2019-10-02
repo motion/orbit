@@ -21,6 +21,9 @@ export const Theme = (props: ThemeProps) => {
   const nextName = (typeof name === 'string' && name) || (typeof theme === 'string' && theme) || ''
   const themes = useContext(AllThemesContext)
   const cur = useContext(CurrentThemeContext).current
+  if (!theme && !name && !props.themeSubSelect && !props.coat) {
+    return children
+  }
   const next = themes[nextName] || getNextTheme(props, cur)
   return <ThemeProvideHelper theme={next}>{children}</ThemeProvideHelper>
 }

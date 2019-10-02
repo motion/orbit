@@ -1,5 +1,5 @@
 import { isDefined } from '@o/utils'
-import { Box, gloss } from 'gloss'
+import { Box, gloss, Theme } from 'gloss'
 import React, { useCallback, useRef, useState } from 'react'
 
 import { useDraggable } from '../Draggable'
@@ -117,24 +117,26 @@ export const ListItem = (props: ListItemProps) => {
     // this focused={} conditional may look weird. it's because we want to disable the focus state while editing
     // so we look for edit, then turn off focus. `undefined` means "defer to parent value", so we are just ignoring
     <ProvideFocus focused={isEditing === true ? false : undefined}>
-      <ListItemSimple
-        // @ts-ignore
-        nodeRef={composeRefs(listItemRef, nodeRef)}
-        coat={coat}
-        {...itemProps}
-        {...rest}
-        onStartEdit={onStartEditCb}
-        onEdit={onEditCb}
-        onCancelEdit={onCancelEditCb}
-        icon={icon}
-        date={normalized ? normalized.updatedAt || normalized.createdAt : props.date}
-        location={normalized ? normalized.location : props.location}
-        {...getItemProps && getItemProps(item)}
-        isSelected={getIsSelected}
-        // dont put children unless you actually have children,
-        // otherwise you trip up some spacing stuff in ListItem
-        {...childrenProps}
-      />
+      {/* this coat is for the user coat, the inner one is just for the selected/selectedActive */}
+      <Theme coat={coat}>
+        <ListItemSimple
+          // @ts-ignore
+          nodeRef={composeRefs(listItemRef, nodeRef)}
+          {...itemProps}
+          {...rest}
+          onStartEdit={onStartEditCb}
+          onEdit={onEditCb}
+          onCancelEdit={onCancelEditCb}
+          icon={icon}
+          date={normalized ? normalized.updatedAt || normalized.createdAt : props.date}
+          location={normalized ? normalized.location : props.location}
+          {...getItemProps && getItemProps(item)}
+          isSelected={getIsSelected}
+          // dont put children unless you actually have children,
+          // otherwise you trip up some spacing stuff in ListItem
+          {...childrenProps}
+        />
+      </Theme>
     </ProvideFocus>
   )
 }

@@ -29,7 +29,6 @@ const activeStyle = {
 
 const ButtonInner = (props: ButtonProps) => {
   const theme = useTheme()
-  console.log('button2', theme.borderWidth)
   return (
     <SizedSurface
       borderPosition="inside"
@@ -70,8 +69,6 @@ export const Button = memoIsEqualDeep((buttonProps: ButtonProps) => {
   const controlledProps = useUncontrolled(rest, {
     active: 'onChangeActive',
   })
-  const theme2 = useTheme()
-  console.log('button', theme2.borderWidth)
   return (
     <Theme themeSubSelect={themeSubSelect} coat={coat} theme={theme}>
       <ButtonInner {...rest} {...controlledProps} />

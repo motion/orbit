@@ -50,7 +50,7 @@ export type GlossViewOpts<Props> = {
   ignoreAttrs?: { [key: string]: boolean }
   defaultProps?: Partial<Props>
   shouldAvoidProcessingStyles?: (props: Props) => boolean
-  postProcessProps?: (curProps: Props, nextProps: any, tracker: StyleTracker) => any
+  postProcessProps?: (curProps: Props, nextProps: any, getFinalStyles: () => CSSPropertySet) => any
   getElement?: (props: Props) => any
   isDOMElement?: boolean
 }
@@ -276,7 +276,7 @@ export function gloss<Props = any, ThemeProps = Props>(
       }
     }
 
-    const dynClassNames = addDynamicStyles(
+    const dynStyles = addDynamicStyles(
       ThemedView.displayName,
       conditionalStyles,
       dynClasses.current,
@@ -285,6 +285,7 @@ export function gloss<Props = any, ThemeProps = Props>(
       theme,
       avoidStyles,
     )
+    const dynClassNames = dynStyles.classNames
     dynClasses.current = dynClassNames
 
     const isDOMElement = typeof element === 'string' || (config ? config.isDOMElement : false)
@@ -317,12 +318,19 @@ export function gloss<Props = any, ThemeProps = Props>(
         : [...dynClassNames].join(' ')
     }
 
-    finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
+    if (process.env.NODE_ENV === 'development') {
+      finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
+    }
 
     // hook: setting your own props
     const postProcessProps = config && config.postProcessProps
     if (postProcessProps) {
-      postProcessProps(props, finalProps, tracker)
+      postProcessProps(props, finalProps, () => {
+        return {
+          ...staticStyles.styles['.'],
+          ...dynStyles['.'],
+        }
+      })
     }
 
     if (process.env.NODE_ENV === 'development') {
@@ -504,8 +512,9 @@ function addDynamicStyles(
   theme?: CompiledTheme,
   avoidStyles?: boolean,
 ) {
-  const dynStyles = {}
-  let classNames = new Set<string>()
+  const dynStyles = {
+    classNames: new Set<string>(),
+  }
 
   // applies styles most important to least important
   // that saves us some processing time (no need to set multiple times)
@@ -531,7 +540,7 @@ function addDynamicStyles(
         dynStyles[ns] = dynStyles[ns] || {}
         mergeStyles(ns, dynStyles, info.rules)
       } else if (className) {
-        classNames.add(className)
+        dynStyles.classNames.add(className)
       }
     }
   }
@@ -555,7 +564,7 @@ function addDynamicStyles(
     const dynClassNames = addStyles(dynStyles, displayName, prevClassNames, true)
     if (dynClassNames) {
       for (const cn of dynClassNames) {
-        classNames.add(cn)
+        dynStyles.classNames.add(cn)
       }
     }
   }
@@ -564,13 +573,13 @@ function addDynamicStyles(
   if (prevClassNames) {
     for (const className of prevClassNames) {
       // if this previous class isn't in the current classes then deregister it
-      if (!classNames.has(className)) {
+      if (!dynStyles.classNames.has(className)) {
         deregisterClassName(className)
       }
     }
   }
 
-  return classNames
+  return dynStyles
 }
 
 const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
@@ -716,9 +725,9 @@ function getCompiledConfig(
         const og = compiledConf.postProcessProps
         if (curConf.postProcessProps !== og) {
           compiledConf.postProcessProps = og
-            ? (a, b) => {
-                og(a, b, tracker)
-                curConf.postProcessProps!(a, b, tracker)
+            ? (a, b, c) => {
+                og(a, b, c)
+                curConf.postProcessProps!(a, b, c)
               }
             : curConf.postProcessProps
         }

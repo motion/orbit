@@ -36,7 +36,6 @@ class ThemeVariableManager {
       }
       if (rules.length) {
         const rule = `.${className} { ${rules} }`
-        console.log('rule', rule)
         this.sheet.insertRule(rule)
       }
     }

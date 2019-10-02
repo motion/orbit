@@ -1,7 +1,6 @@
 import { css, GlossPropertySet } from '@o/css'
 import { motion } from 'framer-motion'
 import { Base, gloss } from 'gloss'
-import { partition } from 'lodash'
 
 import { AnimationStore } from '../Geometry'
 import { Sizes } from '../Space'
@@ -88,37 +87,38 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
   .theme(getMargin, usePadding, getElevation)
   .withConfig({
     // shouldAvoidProcessingStyles: shouldRenderToMotion,
-    postProcessProps(inProps, outProps, tracker) {
+    postProcessProps(inProps, outProps, getStyles) {
       if (shouldRenderToMotion(inProps)) {
-        let style = {}
+        let style = css(getStyles(), { snakeCase: false })
 
-        let finalClassName = inProps.className
-
+        // let finalClassName = inProps.className
         // parse style back from classname to style tag for motion
-        if (outProps.className) {
-          finalClassName = ''
-          const [specific, nonSpecific] = partition(
-            outProps.className.split(' '),
-            x => x[0] === 's',
-          )
-          // order them so specific gets most importance
-          for (const name of [...nonSpecific, ...specific]) {
-            const key = name[0] === 's' ? name.slice(1) : name
-            if (tracker.has(key)) {
-              const styles = tracker.get(key)
-              if (styles.namespace == '.') {
-                if (!styles.styleObject) {
-                  styles.styleObject = css(styles.rules, { snakeCase: false })
-                }
-                Object.assign(style, styles.styleObject)
-              } else {
-                finalClassName += ` ${name}`
-              }
-            } else {
-              finalClassName += ` ${name}`
-            }
-          }
-        }
+        // if (outProps.className) {
+        //   Object.assign(style, )
+        //   console.log('classnames are', style, outProps.className)
+        //   // finalClassName = ''
+        //   // const [specific, nonSpecific] = partition(
+        //   //   outProps.className.split(' '),
+        //   //   x => x[0] === 's',
+        //   // )
+        //   // // order them so specific gets most importance
+        //   // for (const name of [...nonSpecific, ...specific]) {
+        //   //   const key = name[0] === 's' ? name.slice(1) : name
+        //   //   if (tracker.has(key)) {
+        //   //     const styles = tracker.get(key)
+        //   //     if (styles.namespace == '.') {
+        //   //       if (!styles.styleObject) {
+        //   //         styles.styleObject = css(styles.rules, { snakeCase: false })
+        //   //       }
+        //   //       Object.assign(style, styles.styleObject)
+        //   //     } else {
+        //   //       finalClassName += ` ${name}`
+        //   //     }
+        //   //   } else {
+        //   //     finalClassName += ` ${name}`
+        //   //   }
+        //   // }
+        // }
 
         for (const key in inProps) {
           const val = inProps[key]
@@ -144,7 +144,7 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
           Object.assign(style, inProps.style)
         }
 
-        outProps.className = finalClassName
+        // outProps.className = finalClassName
         style['willChange'] = 'transform'
         outProps.style = style
         outProps['data-is'] = `${outProps['data-is']} is-animated`

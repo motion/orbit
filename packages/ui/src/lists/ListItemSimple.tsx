@@ -1,7 +1,7 @@
 import { isEqual } from '@o/fast-compare'
 import { idFn, isDefined, selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
-import { Box, gloss, Theme, useTheme } from 'gloss'
+import { Box, gloss, Theme } from 'gloss'
 import React, { isValidElement, memo, useCallback } from 'react'
 
 import { BorderBottom } from '../Border'
@@ -74,7 +74,6 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
     onDelete,
     ...surfaceProps
   } = props
-  const theme = useTheme()
   const isFocused = useFocus()
   const isSelected = useIsSelected(props)
   const showChildren = !props.hideBody
@@ -102,8 +101,6 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
       {children}
     </SimpleText>
   )
-
-  const activeThemeName = useTheme().name
 
   // TODO could let a prop control content
   const afterHeaderElement = showDate && (
@@ -135,7 +132,6 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
 
   const hasAfterTitle = isDefined(props.afterTitle, afterHeaderElement)
   const coat = isSelected ? (isFocused ? 'selected' : 'selectedInactive') : null
-  console.log('coat', coat)
 
   // its a lot easier at times to just get the props from the click event
   const handleClick = useCallback(
@@ -158,164 +154,171 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
   )
 
   return (
-    <Theme coat={coat}>
-      {above}
+    <>
+      {above && <Theme coat={coat}>{above}</Theme>}
       {/* unset the theme for the separator */}
       {!!separator && (
         // remove any special indicator we add for alt themes
         // TODO this is awkward (the split)
-        <Theme name={activeThemeName.split('.')[0]}>
+        <>
           {isValidElement(separator) ? (
             separator
           ) : (
             <ListSeparator {...separatorProps}>{separator}</ListSeparator>
           )}
-        </Theme>
+        </>
       )}
-      <SizedSurface
-        className="list-item-surface"
-        flexDirection="row"
-        alignItems="stretch"
-        themeSubSelect="listItem"
-        borderRadius={borderRadius}
-        onClick={(!hasMouseDownEvent && handleClick) || undefined}
-        {...listItemAdjustedPadding}
-        paddingLeft={
-          (indent || 1) * (listItemAdjustedPadding ? listItemAdjustedPadding.paddingLeft : 0)
-        }
-        width="100%"
-        before={
-          <>
-            {before}
-            {!!before && <Space size={space} />}
-            {!hideBorder && <BorderBottom right={5} left={5} opacity={0.2} />}
-          </>
-        }
-        space={space}
-        icon={iconBefore && iconElement}
-        noInnerElement={!iconElement}
-        {...disablePsuedoProps}
-        {...surfaceProps}
-        onMouseUp={handleMouseUp}
-      >
-        <ListItemMainContent>
-          <View flex={1}>
-            {showTitle && (
-              <ListItemTitleBar direction="horizontal" space={space} alignItems={alignItems}>
-                {showIcon && !iconBefore && iconElement}
-                {isValidElement(title) ? (
-                  title
-                ) : (
-                  <HighlightText
-                    autoselect
-                    editable={editable}
-                    onFinishEdit={onEdit}
-                    onCancelEdit={onCancelEdit}
-                    onStartEdit={onStartEdit}
-                    flex={1}
-                    ellipse
-                    fontWeight={theme.fontWeight || 400}
-                    {...titleProps}
-                  >
-                    {title}
-                  </HighlightText>
-                )}
-              </ListItemTitleBar>
-            )}
-            {showSubtitle && (
-              <>
-                <Space size={space / 2} />
-                <ListItemSubtitle>
-                  {!!location && locationElement}
-                  {!!subTitle &&
-                    (typeof subTitle === 'string' ? (
-                      <HighlightText
-                        className="ui-list-item-subtitle-text"
-                        alpha={subTextOpacity}
-                        size={0.9}
-                        ellipse
-                        {...subTitleProps}
-                      >
-                        {subTitle}
-                      </HighlightText>
-                    ) : (
-                      subTitle
-                    ))}
-                  {!subTitle && (
-                    <>
-                      <div style={{ display: 'flex', flex: showPreviewInSubtitle ? 0 : 1 }} />
-                    </>
-                  )}
-                  {!showTitle && (
-                    <>
-                      <Space />
-                      {afterHeaderElement}
-                    </>
-                  )}
-                </ListItemSubtitle>
-              </>
-            )}
-            {/* vertical space only if needed */}
-            {showSubtitle && !!(children || showPreview) && (
-              <div style={{ flex: 1, maxHeight: 4 }} />
-            )}
-            {showPreview && (
-              <>
-                {locationElement}
-                <Preview>
-                  {typeof preview !== 'string' && preview}
-                  {typeof preview === 'string' && (
-                    <HighlightText alpha={subTextOpacity} size={1} sizeLineHeight={0.9} ellipse={3}>
-                      {preview}
+      <Theme coat={coat}>
+        <SizedSurface
+          className="list-item-surface"
+          flexDirection="row"
+          alignItems="stretch"
+          themeSubSelect="listItem"
+          borderRadius={borderRadius}
+          onClick={(!hasMouseDownEvent && handleClick) || undefined}
+          {...listItemAdjustedPadding}
+          paddingLeft={
+            (indent || 1) * (listItemAdjustedPadding ? listItemAdjustedPadding.paddingLeft : 0)
+          }
+          width="100%"
+          before={
+            <>
+              {before}
+              {!!before && <Space size={space} />}
+              {!hideBorder && <BorderBottom right={5} left={5} opacity={0.2} />}
+            </>
+          }
+          space={space}
+          icon={iconBefore && iconElement}
+          noInnerElement={!iconElement}
+          {...disablePsuedoProps}
+          {...surfaceProps}
+          onMouseUp={handleMouseUp}
+        >
+          <ListItemMainContent>
+            <View flex={1}>
+              {showTitle && (
+                <ListItemTitleBar direction="horizontal" space={space} alignItems={alignItems}>
+                  {showIcon && !iconBefore && iconElement}
+                  {isValidElement(title) ? (
+                    title
+                  ) : (
+                    <HighlightText
+                      autoselect
+                      editable={editable}
+                      onFinishEdit={onEdit}
+                      onCancelEdit={onCancelEdit}
+                      onStartEdit={onStartEdit}
+                      flex={1}
+                      ellipse
+                      fontWeight={400}
+                      {...titleProps}
+                    >
+                      {title}
                     </HighlightText>
                   )}
-                </Preview>
+                </ListItemTitleBar>
+              )}
+              {showSubtitle && (
+                <>
+                  <Space size={space / 2} />
+                  <ListItemSubtitle>
+                    {!!location && locationElement}
+                    {!!subTitle &&
+                      (typeof subTitle === 'string' ? (
+                        <HighlightText
+                          className="ui-list-item-subtitle-text"
+                          alpha={subTextOpacity}
+                          size={0.9}
+                          ellipse
+                          {...subTitleProps}
+                        >
+                          {subTitle}
+                        </HighlightText>
+                      ) : (
+                        subTitle
+                      ))}
+                    {!subTitle && (
+                      <>
+                        <div style={{ display: 'flex', flex: showPreviewInSubtitle ? 0 : 1 }} />
+                      </>
+                    )}
+                    {!showTitle && (
+                      <>
+                        <Space />
+                        {afterHeaderElement}
+                      </>
+                    )}
+                  </ListItemSubtitle>
+                </>
+              )}
+              {/* vertical space only if needed */}
+              {showSubtitle && !!(children || showPreview) && (
+                <div style={{ flex: 1, maxHeight: 4 }} />
+              )}
+              {showPreview && (
+                <>
+                  {locationElement}
+                  <Preview>
+                    {typeof preview !== 'string' && preview}
+                    {typeof preview === 'string' && (
+                      <HighlightText
+                        alpha={subTextOpacity}
+                        size={1}
+                        sizeLineHeight={0.9}
+                        ellipse={3}
+                      >
+                        {preview}
+                      </HighlightText>
+                    )}
+                  </Preview>
+                </>
+              )}
+              {childrenElement}
+            </View>
+            {hasAfterTitle && (
+              <>
+                <Space size={space} />
+                <Stack space={space}>
+                  {props.afterTitle}
+                  {afterHeaderElement}
+                </Stack>
               </>
             )}
-            {childrenElement}
-          </View>
-          {hasAfterTitle && (
+          </ListItemMainContent>
+          {/* TODO we should make this a right click option at least in electron */}
+          {!!deletable && (
             <>
-              <Space size={space} />
-              <Stack space={space}>
-                {props.afterTitle}
-                {afterHeaderElement}
-              </Stack>
+              <Space />
+              <Button
+                className="ui-listitem-delete"
+                chromeless
+                circular
+                icon="cross"
+                opacity={0.35}
+                hoverStyle={{
+                  opacity: 1,
+                }}
+                onMouseDown={e => {
+                  e.stopPropagation()
+                }}
+                onClick={() => {
+                  if (window.confirm(`Are you sure you'd like to delete?`)) {
+                    onDelete(props)
+                  }
+                }}
+              />
             </>
           )}
-        </ListItemMainContent>
-        {/* TODO we should make this a right click option at least in electron */}
-        {!!deletable && (
-          <>
-            <Space />
-            <Button
-              className="ui-listitem-delete"
-              chromeless
-              circular
-              icon="cross"
-              opacity={0.35}
-              hoverStyle={{
-                opacity: 1,
-              }}
-              onMouseDown={e => {
-                e.stopPropagation()
-              }}
-              onClick={() => {
-                if (window.confirm(`Are you sure you'd like to delete?`)) {
-                  onDelete(props)
-                }
-              }}
-            />
-          </>
-        )}
-        {!!after && (
-          <>
-            <Space />
-            {after}
-          </>
-        )}
-      </SizedSurface>
-    </Theme>
+          {!!after && (
+            <>
+              <Space />
+              {after}
+            </>
+          )}
+        </SizedSurface>
+      </Theme>
+    </>
   )
 }, isEqual)
 

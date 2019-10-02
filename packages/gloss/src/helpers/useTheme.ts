@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import { CompiledTheme } from '../theme/createTheme'
-import { CurrentThemeContext } from '../theme/ThemeObservable'
+import { CurrentThemeContext } from '../theme/CurrentThemeContext'
 
 // can optionally pass in props accepted by theme
 
@@ -12,7 +12,6 @@ type ThemeTrackState = {
 
 export function useTheme(props?: { ignoreCoat?: boolean }) {
   const themeObservable = useContext(CurrentThemeContext)
-  console.log('themeObservable', themeObservable)
   const [cur, setCur] = useState<CompiledTheme>(themeObservable.current)
   const trackState = useRef<ThemeTrackState>({
     hasUsedOnlyCSSVariables: true,
@@ -25,7 +24,6 @@ export function useTheme(props?: { ignoreCoat?: boolean }) {
         // no need to change
       } else {
         console.warn('re-rendering because used variables', trackState.current)
-        debugger
         setCur(theme)
       }
     })
@@ -70,3 +68,14 @@ function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
     })
   }, [])
 }
+
+// simpler hooks for simpler use cases
+// todo they'd need to update..
+
+// export function useThemeContext() {
+//   return useContext(CurrentThemeContext).current
+// }
+
+// export function useThemeName() {
+//   return useThemeContext().name
+// }

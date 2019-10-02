@@ -14,14 +14,24 @@ const cacheVal = new WeakMap<CompiledTheme, { [key: string]: CompiledTheme }>()
 // because context provides the same theme object each time it can use weakmap for cache
 // right now it does not delete as it seems very rare where you have many many themes
 
-const createSubSetTheme = (parent: CompiledTheme, child: ThemeObject | CompiledTheme) => {
-  debugger
+const createSubSetTheme = (
+  name: string,
+  parent: CompiledTheme,
+  child: ThemeObject | CompiledTheme,
+) => {
   return createTheme({
+    name: `${parent.name}-sub-${name}`,
     ...parent,
     ...child,
     parent,
     _isSubSet: true,
   })
+}
+
+const WeakKeys = new WeakMap<any, number>()
+const weakKey = (x: any) => {
+  if (!WeakKeys.has(x)) WeakKeys.set(x, Math.random())
+  return WeakKeys.get(x)!
 }
 
 export function selectThemeSubset(
@@ -39,7 +49,7 @@ export function selectThemeSubset(
   }
 
   if (typeof themeSubSelect === 'function') {
-    return createSubSetTheme(theme, themeSubSelect(theme))
+    return createSubSetTheme(`fn-${weakKey(themeSubSelect)}`, theme, themeSubSelect(theme))
   }
 
   // read from cache
@@ -63,10 +73,7 @@ export function selectThemeSubset(
     }
   }
 
-  const fullTheme = {
-    ...createSubSetTheme(theme, selectedTheme),
-    _subsetName: themeSubSelect,
-  }
+  const fullTheme = createSubSetTheme(themeSubSelect, theme, selectedTheme)
 
   // write to cache
   if (!cacheKey.get(theme)) {

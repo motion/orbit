@@ -31,9 +31,13 @@ export type InputProps = React.HTMLAttributes<HTMLInputElement> &
     step?: any
   }
 
-export function Input({ onEnter, type = 'text', nodeRef, ...props }: InputProps) {
+export function Input({ onEnter, type = 'text', nodeRef, children, ...props }: InputProps) {
   const innerRef = useRef<HTMLInputElement>(null)
   const formStore = useParentForm()
+
+  if (children) {
+    debugger
+  }
 
   // update form context every so often, avoid too many re-renders
   const updateFormContext = useThrottledFn(

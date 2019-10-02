@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import { Config } from '../configureGloss'
 import { CompiledTheme } from './createTheme'
+import { CurrentThemeContext, useProvideCurrentTheme } from './CurrentThemeContext'
 import { AllThemes, AllThemesContext } from './ThemeContext'
-import { CurrentThemeContext, useProvideCurrentTheme } from './ThemeObservable'
 import { ThemeVariableContext } from './ThemeVariableManager'
 
 export type ThemeSelect = ((theme: CompiledTheme) => CompiledTheme) | string | false | undefined
@@ -21,12 +21,7 @@ export const Theme = (props: ThemeProps) => {
   const nextName = (typeof name === 'string' && name) || (typeof theme === 'string' && theme) || ''
   const themes = useContext(AllThemesContext)
   const cur = useContext(CurrentThemeContext).current
-  console.log('cur', cur)
-  if (themes[nextName]) {
-    return <ThemeProvideHelper theme={themes[nextName]}>{children}</ThemeProvideHelper>
-  }
-  debugger
-  const next = getNextTheme(props, cur)
+  const next = themes[nextName] || getNextTheme(props, cur)
   return <ThemeProvideHelper theme={next}>{children}</ThemeProvideHelper>
 }
 

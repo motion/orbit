@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
-import { Base, Box, CompiledTheme, CurrentThemeContext, gloss, propsToStyles, psuedoStyleTheme, Theme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
+import { Base, Box, CompiledTheme, gloss, propsToStyles, psuedoStyleTheme, ThemeFn, ThemeResetSubTheme, ThemeSelect, useTheme } from 'gloss'
 import React, { HTMLProps, useContext, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
@@ -442,7 +442,7 @@ export const Surface = themeable((direct: SurfaceProps) => {
             disabled={disabled}
             elementTheme={elementTheme}
           >
-            <ThemeResetSubTheme>{children}</ThemeResetSubTheme>
+            {children ? <ThemeResetSubTheme>{children}</ThemeResetSubTheme> : undefined}
           </Element>
         )}
         {!!after && (
@@ -504,7 +504,7 @@ export const Surface = themeable((direct: SurfaceProps) => {
     borderTopRadius,
     borderBottomRadius,
     ...childrenProps,
-    ...(!noInnerElement && { tagName }),
+    tagName: noInnerElement ? tagName : 'div',
     opacity: crumb && crumb.total === 0 ? 0 : props.opacity,
   }
 
@@ -518,12 +518,6 @@ export const Surface = themeable((direct: SurfaceProps) => {
     </SizedSurfacePropsContext.Reset>
   )
 })
-
-// TODO move into gloss
-function ThemeResetSubTheme(props: { children: any }) {
-  const theme = useContext(CurrentThemeContext).current
-  return <Theme theme={theme.parent || theme}>{props.children}</Theme>
-}
 
 const hasChildren = (children: React.ReactNode) => {
   if (Array.isArray(children)) {

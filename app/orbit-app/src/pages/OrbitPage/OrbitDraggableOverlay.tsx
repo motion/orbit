@@ -1,4 +1,4 @@
-import { getNormalPropsForListItem, ListItemSimple, normalizeItem, Portal, Theme, useCurrentDraggable, View } from '@o/ui'
+import { getNormalPropsForListItem, ListItemSimple, normalizeItem, Portal, Theme, useCurrentDraggable, useThemeName, View } from '@o/ui'
 import React, { memo } from 'react'
 
 export const OrbitDraggableOverlay = memo(() => {
@@ -6,7 +6,7 @@ export const OrbitDraggableOverlay = memo(() => {
     item,
     position: [x, y],
   } = useCurrentDraggable()
-  const activeThemeName = useTheme().name
+  const activeThemeName = useThemeName()
   if (!item) {
     return null
   }

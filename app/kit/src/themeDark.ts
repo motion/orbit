@@ -67,7 +67,6 @@ const darkCoats: ThemeSet = {
 }
 
 export const dark: ThemeObject = {
-  name: 'dark',
   coats: darkCoats,
   backgroundZebra: background.lighten(0.2).setAlpha(0.35),
   backgroundStrongest,

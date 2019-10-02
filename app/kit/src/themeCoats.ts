@@ -233,8 +233,6 @@ export const coats: ThemeSet = Object.freeze({
     const background = parent.background.relativeLighten(0.05).setAlpha(0.5)
     return {
       name: `${parent.name}-flat`,
-      ...parent,
-      color: parent.color,
       searchInputSizeRadius: 1,
       background,
       backgroundHover: background,

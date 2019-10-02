@@ -44,6 +44,9 @@ function createAlphaColorTheme(shouldSetDefault = false) {
         }
       }
     }
+    if (next.color && next.color['cssVariable'] === '') {
+      debugger
+    }
     const applyPsuedos = props.applyPsuedoColors
     if (
       applyPsuedos === true ||

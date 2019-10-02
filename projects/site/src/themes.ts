@@ -1,6 +1,6 @@
 import { themes as KitThemes } from '@o/kit'
 import { linearGradient, toColor } from '@o/ui'
-import { ThemeObject } from 'gloss'
+import { createThemes, ThemeObject } from 'gloss'
 import { colorize, fromStyles } from 'gloss-theme'
 
 import { colors } from './colors'
@@ -65,7 +65,7 @@ const dark = {
   }),
 }
 
-export const themes = {
+export const themes = createThemes({
   ...KitThemes,
 
   orbitOneDark: fromStyles({
@@ -114,6 +114,6 @@ export const themes = {
       popoverBackground: '#111',
     }),
   },
-}
+})
 
 console.log(themes)

@@ -30,22 +30,47 @@ export function createTheme<A extends Partial<ThemeObject>>(theme: A): CompiledT
     return acc
   }, {}) as any
   res.name = name
-  Object.freeze(res)
   return res
 }
 
 export function createThemes<A extends Partial<ThemeObject>>(themes: {
   [key: string]: A
 }): { [key: string]: CompiledTheme<A> } {
-  const names = Object.keys(themes)
-    .map(k => themes[k].name)
-    .filter(Boolean)
+  // ensure we don't have name collisions
+  const existing = new Set<string>()
+  const duplicates = new Set<Partial<ThemeObject>>()
   return Object.freeze(
     Object.keys(themes).reduce((acc, key) => {
-      if (!themes[key].name && !names.some(x => x === key)) {
-        themes[key].name = key
+      let theme = themes[key]
+      if (typeof theme !== 'function') {
+        if (duplicates.has(theme)) {
+          // clone duplicate themes
+          theme = {
+            ...theme,
+            name: key,
+          }
+        } else {
+          theme.name = key
+        }
       }
-      acc[key] = createTheme(themes[key])
+      const name = theme.name!
+      if (process.env.NODE_ENV === 'development') {
+        if (existing.has(name)) {
+          console.warn(
+            'Themes error on themes:',
+            themes,
+            Object.keys(themes).map(k => `key: ${k}, name: ${themes[k].name}`),
+          )
+          throw new Error(`Name collision on theme: ${name}`)
+        }
+        existing.add(name)
+      }
+      duplicates.add(theme)
+      if (name) {
+        acc[key] = createTheme(theme)
+      } else {
+        throw new Error(`Unreachable`)
+      }
       return acc
     }, {}),
   )

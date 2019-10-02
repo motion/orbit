@@ -40,7 +40,7 @@ export function useTheme(props?: { ignoreCoat?: boolean }) {
   return proxyTheme(theme, trackState.current)
 }
 
-export const UnwrapTheme = Symbol('UnwrapTheme')
+export const UnwrapTheme = Symbol('UnwrapTheme') as any
 
 function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
   return useMemo(() => {

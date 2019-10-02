@@ -165,9 +165,6 @@ export class StackNavigatorStore {
     item: StackItem,
     { forcePush = false, replaceAll = false }: { forcePush?: boolean; replaceAll?: boolean } = {},
   ) {
-    if (!this.hooks.setState) {
-      debugger
-    }
     this.hooks.setState(current => {
       if (!current) return
       if (!current.stack) {

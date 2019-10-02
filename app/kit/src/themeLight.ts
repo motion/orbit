@@ -14,7 +14,6 @@ const backgroundStronger = lightBackground.darken(0.05)
 const backgroundStrongest = lightBackground.darken(0.075)
 
 export const light: ThemeObject = {
-  name: 'light',
   coats: coats,
   cardShadow: [0, 6, 14, [0, 0, 0, 0.058]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],

@@ -1,6 +1,6 @@
 import { ThemeObject } from '@o/css/src/css'
 
-import { CompiledTheme, createTheme } from '../theme/createTheme'
+import { CompiledTheme } from '../theme/createTheme'
 import { ThemeSelect } from '../theme/Theme'
 import { UnwrapTheme } from './useTheme'
 import { weakKey } from './WeakKeys'
@@ -20,13 +20,13 @@ const createSubSetTheme = (
   parent: CompiledTheme,
   child: ThemeObject | CompiledTheme,
 ) => {
-  return createTheme({
+  return {
     ...parent,
     ...child,
     parent,
     name: `sub-${name}`,
     _isSubSet: true,
-  })
+  }
 }
 
 export function selectThemeSubset(

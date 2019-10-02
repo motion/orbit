@@ -168,7 +168,7 @@ export type MarginProps = {
 }
 
 export function getMargin(props: MarginProps) {
-  if (props.margin) {
+  if (props.margin && props.margin !== 0) {
     return { margin: getSizableValue(props.margin) }
   }
 }

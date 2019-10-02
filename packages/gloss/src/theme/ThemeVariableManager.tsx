@@ -47,10 +47,14 @@ class ThemeVariableManager {
 
       if (theme.coats) {
         for (const coatKey in theme.coats) {
+          if (coatKey === 'cssVariable') {
+            debugger
+          }
           const coat = theme.coats[coatKey]
           const coatRules = this.getThemeVariables(coat)
-          const rule = `${selector}.coat-${coatKey} { ${coatRules} }`
+          const rule = `${selector} .coat-${coatKey} { ${coatRules} }`
           this.sheet.insertRule(rule)
+          console.log('inserting', rule)
         }
       }
     }
@@ -64,6 +68,7 @@ class ThemeVariableManager {
 
   getClassNames(theme: CompiledTheme) {
     let res: string[] = []
+    // ensure coat before subTheme, thats the more logical priority
     if (theme._isCoat) {
       res.push(`coat-${theme.name}`)
     }
@@ -94,9 +99,13 @@ export function ThemeVariableContext({ theme, children }: { theme: CompiledTheme
     return children
   }
 
-  return (
-    <div style={{ display: 'contents' }} className={classNames.join(' ')}>
-      {children}
-    </div>
-  )
+  let childrenFinal = children
+  for (const className of classNames) {
+    childrenFinal = (
+      <div style={{ display: 'contents' }} className={className}>
+        {childrenFinal}
+      </div>
+    )
+  }
+  return childrenFinal
 }

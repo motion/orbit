@@ -26,7 +26,7 @@ export const preProcessTheme = (props: GlossProps<any>, theme: CompiledTheme) =>
     const nextTheme = createTheme({
       ...subSetTheme,
       coats: undefined, // no coat with sub-coats
-      name: altKey,
+      // name: altKey,
     })
     setThemeInCache(altKey, theme, nextTheme)
     return nextTheme

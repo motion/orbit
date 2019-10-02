@@ -23,8 +23,9 @@ const createSubSetTheme = (
   return {
     ...parent,
     ...child,
+    coats: undefined,
     parent,
-    name: `sub-${name}`,
+    name,
     _isSubTheme: true,
   }
 }

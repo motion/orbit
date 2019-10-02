@@ -519,9 +519,11 @@ export const Surface = themeable((direct: SurfaceProps) => {
   )
 })
 
-function ResetSubTheme() {
+function ResetSubTheme(props: { children: any }) {
   const theme = useContext(ThemeContext)
-  return <ThemeContext.Provider value={theme.activeTheme.parent} />
+  return (
+    <ThemeContext.Provider value={theme.activeTheme.parent}>{props.children}</ThemeContext.Provider>
+  )
 }
 
 const hasChildren = (children: React.ReactNode) => {

@@ -1,5 +1,5 @@
 import { isDefined, selectDefined } from '@o/utils'
-import { Theme } from 'gloss'
+import { Theme, useTheme } from 'gloss'
 import React, { useCallback } from 'react'
 
 import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'

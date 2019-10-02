@@ -22028,10 +22028,10 @@ typeorm@0.3.0-alpha.23, typeorm@^0.3.0-alpha.23:
     yargs "^13.2.1"
     zen-observable "^0.8.9"
 
-typescript@3.7.0-dev.20190926:
-  version "3.7.0-dev.20190926"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-3.7.0-dev.20190926.tgz#2e90fa4e56fad0fddb87e4d837cd33c7e4a55e7c"
-  integrity sha512-uOQij3UHJnzxY/8Kv1kdmvWTjghgbCD0kBOgVGbY7Rni8ER51O8iPMmI4YpanZmaiZbPK6zUaS60b04/2C91bA==
+typescript@3.7.0-beta:
+  version "3.7.0-beta"
+  resolved "https://registry.npmjs.org/typescript/-/typescript-3.7.0-beta.tgz#4ad556e0eee14b90ecc39261001690e16e5eeba9"
+  integrity sha512-4jyCX+IQamrPJxgkABPq9xf+hUN+GWHVxoj+oey1TadCPa4snQl1RKwUba+1dyzYCamwlCxKvZQ3TjyWLhMGBA==
 
 ua-parser-js@^0.7.18:
   version "0.7.20"

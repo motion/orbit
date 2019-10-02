@@ -38,10 +38,10 @@ class ThemeVariableManager {
     } else {
       this.mounted.set(theme, 1)
       const classNames = this.getClassNames(theme)
-      const className = classNames.join(' .')
+      const selector = `.${classNames.join(' .')}`
       const rules = this.getThemeVariables(theme)
       if (rules.length) {
-        const rule = `.${className} { ${rules} }`
+        const rule = `${selector} { ${rules} }`
         this.sheet.insertRule(rule)
       }
 
@@ -49,7 +49,7 @@ class ThemeVariableManager {
         for (const coatKey in theme.coats) {
           const coat = theme.coats[coatKey]
           const coatRules = this.getThemeVariables(coat)
-          const rule = `.${className}.coat-${coatKey} { ${coatRules} }`
+          const rule = `${selector}.coat-${coatKey} { ${coatRules} }`
           this.sheet.insertRule(rule)
         }
       }

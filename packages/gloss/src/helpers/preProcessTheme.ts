@@ -35,7 +35,7 @@ export const preProcessTheme = (props: GlossProps<any>, theme: CompiledTheme) =>
 }
 
 function getAltKey(props: GlossProps<any>) {
-  return `coat-${props.coat || '_'}-sub-${props.themeSubSelect || '_'}`
+  return `coat${props.coat || '_'}-sub${props.themeSubSelect || '_'}`
 }
 
 function getThemeFromCache(altKey: string, theme: CompiledTheme) {

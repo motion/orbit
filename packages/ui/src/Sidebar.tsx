@@ -5,7 +5,7 @@
  * @format
  */
 import { selectDefined } from '@o/utils'
-import { CompiledTheme, ThemeContext } from 'gloss'
+import { CompiledTheme, CurrentThemeContext } from 'gloss'
 import * as React from 'react'
 
 import { Interactive, InteractiveProps, ResizableSides } from './Interactive'
@@ -67,7 +67,7 @@ type SidebarState = {
 }
 
 export class Sidebar extends React.Component<SidebarProps, SidebarState> {
-  static contextType = ThemeContext
+  static contextType = CurrentThemeContext
 
   static defaultProps = {
     position: 'left',
@@ -154,7 +154,7 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
       horizontal,
     } = this.state
 
-    const theme: CompiledTheme = this.context.activeTheme
+    const theme: CompiledTheme = this.context.current
 
     // ignore
     ignoreWidth

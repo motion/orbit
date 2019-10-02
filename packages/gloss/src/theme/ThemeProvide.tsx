@@ -2,7 +2,7 @@ import { ThemeSet } from '@o/css'
 import React, { useContext, useMemo } from 'react'
 
 import { Theme } from './Theme'
-import { ThemeContext } from './ThemeContext'
+import { AllThemesContext } from './ThemeContext'
 
 type ThemeProvideProps = {
   activeTheme?: string
@@ -16,16 +16,8 @@ export function ThemeProvide({ activeTheme, children, themes }: ThemeProvideProp
     return null
   }
   return (
-    <ThemeContext.Provider key={weakKey(themes)} value={themes}>
+    <AllThemesContext.Provider value={themes}>
       <Theme name={activeTheme}>{children}</Theme>
-    </ThemeContext.Provider>
+    </AllThemesContext.Provider>
   )
-}
-
-const cache = new WeakMap()
-const weakKey = val => {
-  if (cache.has(val)) return cache.get(val)
-  let _ = Math.random()
-  cache.set(val, _)
-  return _
 }

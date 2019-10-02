@@ -4,21 +4,21 @@ import { CompiledTheme } from './createTheme'
 
 export type ThemeObserver = (theme: CompiledTheme) => any
 type ThemeObservable = (onChange: ThemeObserver) => { unsubscribe: () => void }
-export type ThemeObservableType = {
+export type CurrentTheme = {
   subscribe: ThemeObservable
   current: CompiledTheme
 }
 
-export const ThemeObservable = createContext<ThemeObservableType>({
+export const CurrentThemeContext = createContext<CurrentTheme>({
   subscribe: _ => ({ unsubscribe: () => {} }),
   current: null as any,
 })
 
-export function useProvideThemeObservable(props: { theme: CompiledTheme }) {
+export function useProvideCurrentTheme(props: { theme: CompiledTheme }) {
   const themeObservers = useRef<Set<ThemeObserver>>(new Set())
 
   // never change this just emit
-  const themeObservableContext: ThemeObservableType = useMemo(() => {
+  const context: CurrentTheme = useMemo(() => {
     return {
       current: props.theme,
       subscribe: cb => {
@@ -33,13 +33,13 @@ export function useProvideThemeObservable(props: { theme: CompiledTheme }) {
   }, [])
 
   useEffect(() => {
-    if (themeObservableContext.current !== props.theme) {
-      themeObservableContext.current = props.theme
+    if (context.current !== props.theme) {
+      context.current = props.theme
       themeObservers.current.forEach(cb => {
         cb(props.theme)
       })
     }
   }, [props.theme])
 
-  return themeObservableContext
+  return context
 }

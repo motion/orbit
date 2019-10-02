@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { isEqual } from '@o/fast-compare'
 import { on } from '@o/utils'
-import { Box, gloss, isGlossView, Theme, ThemeContext } from 'gloss'
+import { Box, CurrentThemeContext, gloss, isGlossView, Theme } from 'gloss'
 import { debounce, isNumber, pick } from 'lodash'
 import * as React from 'react'
 
@@ -379,7 +379,7 @@ const shouldShowPopover = (props: PopoverProps, state: PopoverState) => {
 
 export class Popover extends React.Component<PopoverProps, PopoverState> {
   static defaultProps = defaultProps
-  static contextType = ThemeContext
+  static contextType = CurrentThemeContext
 
   targetRef = React.createRef<HTMLDivElement>()
   popoverRef: HTMLElement
@@ -1089,7 +1089,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
                   towards={INVERSE[direction]}
                   // TODO this is bad because were allowing setting theme from the property...
                   // so this wont get the theme set through the property, we should remove the property
-                  {...getElevation({ elevation }, this.context.activeTheme)}
+                  {...getElevation({ elevation }, this.context.current)}
                 />
               </ArrowContain>
             )}

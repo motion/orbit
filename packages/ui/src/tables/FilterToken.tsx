@@ -1,4 +1,4 @@
-import { gloss, Theme, ThemeContext } from 'gloss'
+import { CurrentThemeContext, gloss, Theme } from 'gloss'
 import { colorize } from 'gloss-theme'
 import { capitalize } from 'lodash'
 import { PureComponent } from 'react'
@@ -46,7 +46,7 @@ export class FilterToken extends PureComponent {
   props: Props
   _ref: Element | void
 
-  static contextType = ThemeContext
+  static contextType = CurrentThemeContext
 
   state = {
     menuTemplate: [],
@@ -156,7 +156,7 @@ export class FilterToken extends PureComponent {
 
   render() {
     const { filter } = this.props
-    const theme = this.context.activeTheme
+    const theme = this.context.current
 
     let background
     let value = ''
@@ -189,7 +189,7 @@ export class FilterToken extends PureComponent {
         <Menu
           // only show popover for non-electron environment
           openOnClick={!Electron.remote}
-          popoverTheme={this.context.activeTheme._originalTheme}
+          popoverTheme={this.context.current._originalTheme}
           target={
             <Token
               tagName="div"

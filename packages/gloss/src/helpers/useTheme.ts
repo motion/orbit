@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import { CompiledTheme } from '../theme/createTheme'
-import { ThemeObservable } from '../theme/ThemeObservable'
+import { CurrentThemeContext } from '../theme/ThemeObservable'
 
 // can optionally pass in props accepted by theme
 
@@ -11,7 +11,8 @@ type ThemeTrackState = {
 }
 
 export function useTheme(props?: { ignoreCoat?: boolean }) {
-  const themeObservable = useContext(ThemeObservable)
+  const themeObservable = useContext(CurrentThemeContext)
+  console.log('themeObservable', themeObservable)
   const [cur, setCur] = useState<CompiledTheme>(themeObservable.current)
   const trackState = useRef<ThemeTrackState>({
     hasUsedOnlyCSSVariables: true,
@@ -31,7 +32,7 @@ export function useTheme(props?: { ignoreCoat?: boolean }) {
     return sub.unsubscribe
   }, [])
 
-  let theme = cur.activeTheme
+  let theme = cur
   // TODO this should not go here, maybe just wrap those themes in <Theme coat={false}> or something
   if (theme && props && props.ignoreCoat) {
     theme = theme._originalTheme || theme

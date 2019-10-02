@@ -2,6 +2,5 @@ import * as React from 'react'
 
 import { CompiledTheme } from './createTheme'
 
-export type ThemeContextType = { [key: string]: CompiledTheme }
-const themeContext: ThemeContextType = {}
-export const ThemeContext = React.createContext(themeContext)
+export type AllThemes = { [key: string]: CompiledTheme }
+export const AllThemesContext = React.createContext<AllThemes>({})

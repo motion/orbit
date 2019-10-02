@@ -1,7 +1,7 @@
 import { isEqual } from '@o/fast-compare'
 import { idFn, isDefined, selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
-import { Box, gloss, Theme, ThemeContext, useTheme } from 'gloss'
+import { Box, gloss, Theme, useTheme } from 'gloss'
 import React, { isValidElement, memo, useCallback } from 'react'
 
 import { BorderBottom } from '../Border'
@@ -103,7 +103,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
     </SimpleText>
   )
 
-  const { activeThemeName } = React.useContext(ThemeContext)
+  const activeThemeName = useTheme().name
 
   // TODO could let a prop control content
   const afterHeaderElement = showDate && (

@@ -55,6 +55,7 @@ function createCoatTheme(theme: CompiledTheme, coat: string): CompiledTheme {
   return {
     ...nextTheme,
     parent: theme,
+    name: `coat-${coat}`,
     _coatName: coat,
     _isCoat: true,
     _originalTheme: theme,

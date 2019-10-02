@@ -3,6 +3,7 @@ import { ThemeObject } from '@o/css/src/css'
 import { CompiledTheme, createTheme } from '../theme/createTheme'
 import { ThemeSelect } from '../theme/Theme'
 import { UnwrapTheme } from './useTheme'
+import { weakKey } from './WeakKeys'
 
 type PartialTheme = Partial<CompiledTheme>
 
@@ -23,15 +24,9 @@ const createSubSetTheme = (
     ...parent,
     ...child,
     parent,
-    name: `${parent.name}-sub-${name}`,
+    name: `sub-${name}`,
     _isSubSet: true,
   })
-}
-
-const WeakKeys = new WeakMap<any, number>()
-const weakKey = (x: any) => {
-  if (!WeakKeys.has(x)) WeakKeys.set(x, Math.random())
-  return WeakKeys.get(x)!
 }
 
 export function selectThemeSubset(

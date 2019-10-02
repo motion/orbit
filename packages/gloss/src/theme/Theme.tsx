@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Config } from '../configureGloss'
 import { CompiledTheme } from './createTheme'
 import { CurrentThemeContext, useProvideCurrentTheme } from './CurrentThemeContext'
-import { AllThemes, AllThemesContext } from './ThemeContext'
+import { AllThemesContext } from './ThemeContext'
 import { ThemeVariableContext } from './ThemeVariableManager'
 
 export type ThemeSelect = ((theme: CompiledTheme) => CompiledTheme) | string | false | undefined
@@ -39,56 +39,53 @@ function ThemeProvideHelper(props: { theme: CompiledTheme; children: any }) {
   )
 }
 
-const themeCache = new WeakMap<any, AllThemes>()
-const themeCoatCache = new WeakMap<any, { [coatName: string]: AllThemes }>()
+const themeCache = new WeakMap<CompiledTheme, CompiledTheme>()
+const themeAltCache = new WeakMap<CompiledTheme, { [key: string]: CompiledTheme }>()
 
 function getNextTheme(props: ThemeProps, curTheme: CompiledTheme): CompiledTheme {
   const { theme, coat } = props
-  if (typeof theme === 'object' && themeCache.has(theme)) {
-    return themeCache.get(theme)!
-  }
-
-  // getting the alt theme or create theme
-  let previousOriginalTheme = curTheme
-
-  if (coat) {
-    const coatCache = themeCoatCache.get(previousOriginalTheme)
-    if (coatCache && coatCache[coat]) {
-      return coatCache[coat]!
+  const altKey = `${props.coat || ''}-${
+    typeof props.themeSubSelect === 'string' ? props.themeSubSelect : ''
+  }`
+  if (typeof theme === 'object') {
+    if (themeCache.has(theme)) {
+      return themeCache.get(theme)!
+    }
+    const altCache = themeAltCache.has(theme)
+    if (altCache && altCache[altKey]) {
+      return altCache[altKey]
     }
   }
 
-  // if coat is defined and were already on coat, swap to original theme before going to new alternate
+  // if coat is defined and were already on coat, swap to original theme before going to new coat
   if (typeof coat !== 'undefined') {
-    previousOriginalTheme = curTheme._originalTheme || curTheme
+    curTheme = curTheme._originalTheme || curTheme
   }
 
-  let nextTheme
+  let nextTheme: CompiledTheme | null = null
 
   if (coat || props.themeSubSelect) {
-    nextTheme = Config.preProcessTheme
-      ? Config.preProcessTheme(props, previousOriginalTheme)
-      : curTheme
-    let coatCache = themeCoatCache.get(previousOriginalTheme)
-
-    // set coatCache
-    if (coat) {
-      if (!coatCache) {
-        themeCoatCache.set(previousOriginalTheme, {})
-        coatCache = themeCoatCache.get(previousOriginalTheme)
-      }
-      coatCache![coat] = nextTheme
-      return coatCache![coat]
+    nextTheme = Config.preProcessTheme ? Config.preProcessTheme(props, curTheme) : curTheme
+    nextTheme = {
+      ...nextTheme,
+      name: `coat-${altKey}`,
     }
+    if (!themeAltCache.has(curTheme)) {
+      themeAltCache.set(curTheme, {})
+    }
+    const altCache = themeAltCache.get(curTheme)!
+    altCache[altKey] = nextTheme
   } else {
-    nextTheme = props.theme
+    if (typeof theme === 'object') {
+      nextTheme = theme
+    }
   }
-
   if (!nextTheme || nextTheme === curTheme) {
     return curTheme
   }
+  if (typeof theme === 'object') {
+    themeCache.set(theme, nextTheme)
+  }
 
-  const next = nextTheme
-  themeCache.set(nextTheme, next)
-  return next
+  return nextTheme
 }

@@ -11,5 +11,8 @@ import { UnwrapTheme } from './useTheme'
 export const preProcessTheme = (props: GlossProps<any>, theme: CompiledTheme) => {
   // @ts-ignore
   theme = theme[UnwrapTheme] || theme
-  return selectThemeSubset(props.themeSubSelect, getThemeCoat(props.coat, theme))
+  // TODO we should handle all caching + naming here not in getThemeCoat and selectThemeSubset
+  const coatTheme = getThemeCoat(props.coat, theme)
+  const subSetTheme = selectThemeSubset(props.themeSubSelect, coatTheme)
+  return subSetTheme
 }

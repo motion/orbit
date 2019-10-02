@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
+import { weakKey } from '../helpers/WeakKeys'
 import { makeStyleTag } from '../stylesheet/makeStyleTag'
 import { CompiledTheme } from './createTheme'
 
@@ -48,7 +49,7 @@ class ThemeVariableManager {
   }
 
   getClassName(theme: CompiledTheme) {
-    return `theme-context-${theme.name}`
+    return `theme-context-${weakKey(theme)}`
   }
 }
 
@@ -65,15 +66,12 @@ export function ThemeVariableContext({ theme, children }: { theme: CompiledTheme
     }
   }, [theme])
 
-  const ref = useRef(null)
-  console.log('ref', ref, className, theme)
-
   if (!theme) {
     return children
   }
 
   return (
-    <div ref={ref} style={{ display: 'contents' }} className={className}>
+    <div style={{ display: 'contents' }} className={className}>
       {children}
     </div>
   )

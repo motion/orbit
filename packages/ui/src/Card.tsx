@@ -1,5 +1,5 @@
 import { isDefined, selectDefined } from '@o/utils'
-import { Theme, useThemeContext } from 'gloss'
+import { Theme } from 'gloss'
 import React, { useCallback } from 'react'
 
 import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
@@ -56,7 +56,7 @@ export function Card(props: CardProps) {
     ...sizedSurfaceProps
   } = rest
   // end
-  const { activeThemeName } = useThemeContext()
+  const activeThemeName = useTheme().name
   const isSelected = useIsSelected(props)
   const showChildren = typeof children !== 'undefined' && !props.hideBody
   const toggle = useCollapse(collapseProps)

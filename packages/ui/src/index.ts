@@ -29,7 +29,6 @@ export {
   useTheme,
   Inline,
   InlineBlock,
-  useThemeContext,
 } from 'gloss'
 export { arrayMove } from './helpers/arrayMove'
 export { GlobalHotKeys, HotKeys, KeySequence } from './helpers/reactHotkeys'

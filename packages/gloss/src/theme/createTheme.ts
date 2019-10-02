@@ -22,7 +22,9 @@ export function createTheme<A extends Partial<ThemeObject>>(theme: A): CompiledT
     } else if (val && typeof val.setCSSVariable === 'function') {
       val.setCSSVariable(cssVariableName)
     } else {
-      val = new ThemeValue(cssVariableName, val)
+      if (key !== 'parent' && key !== 'name' && key[0] !== '_') {
+        val = new ThemeValue(cssVariableName, val)
+      }
     }
     acc[key] = val
     return acc

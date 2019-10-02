@@ -1,4 +1,3 @@
-import { ThemeObject } from '@o/css'
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import { Config } from '../configureGloss'
@@ -20,23 +19,22 @@ type ThemeProps = {
 export const Theme = (props: ThemeProps) => {
   const { theme, name, children } = props
   const nextName = (typeof name === 'string' && name) || (typeof theme === 'string' && theme) || ''
-  const prev = useContext(ThemeContext)
-  if (prev.allThemes[nextName]) {
+  const themes = useContext(ThemeContext)
+  const cur = useContext(ThemeObservable).current
+  if (themes.allThemes[nextName]) {
     return <ThemeByName name={nextName}>{children}</ThemeByName>
   }
-  const next = getNextTheme(props, prev)
-  return <ThemeProvideHelper themeContext={next}>{children}</ThemeProvideHelper>
+  const next = getNextTheme(props, cur)
+  return <ThemeProvideHelper theme={next}>{children}</ThemeProvideHelper>
 }
 
-function ThemeProvideHelper(props: { themeContext: ThemeContextType; children: any }) {
+function ThemeProvideHelper(props: { theme: CompiledTheme; children: any }) {
   const themeObservableContext = useProvideThemeObservable(props)
   return (
-    <ThemeVariableContext theme={props.themeContext.activeTheme}>
-      <ThemeContext.Provider value={props.themeContext}>
-        <ThemeObservable.Provider value={themeObservableContext}>
-          {props.children}
-        </ThemeObservable.Provider>
-      </ThemeContext.Provider>
+    <ThemeVariableContext theme={props.theme}>
+      <ThemeObservable.Provider value={themeObservableContext}>
+        {props.children}
+      </ThemeObservable.Provider>
     </ThemeVariableContext>
   )
 }
@@ -44,7 +42,7 @@ function ThemeProvideHelper(props: { themeContext: ThemeContextType; children: a
 const themeCache = new WeakMap<any, ThemeContextType>()
 const themeCoatCache = new WeakMap<any, { [coatName: string]: ThemeContextType }>()
 
-function getNextTheme(props: ThemeProps, prev: ThemeContextType): ThemeContextType {
+function getNextTheme(props: ThemeProps, prev: CompiledTheme): CompiledTheme {
   const { theme, coat } = props
   if (typeof theme === 'object' && themeCache.has(theme)) {
     return themeCache.get(theme) as ThemeContextType
@@ -79,7 +77,7 @@ function getNextTheme(props: ThemeProps, prev: ThemeContextType): ThemeContextTy
         themeCoatCache.set(previousOriginalTheme, {})
         coatCache = themeCoatCache.get(previousOriginalTheme)
       }
-      coatCache![coat] = createThemeContext(props, prev, nextTheme)
+      coatCache![coat] = nextTheme
       return coatCache![coat]
     }
   } else {
@@ -90,31 +88,13 @@ function getNextTheme(props: ThemeProps, prev: ThemeContextType): ThemeContextTy
     return prev
   }
 
-  const next = createThemeContext(props, prev, nextTheme)
+  const next = nextTheme
   themeCache.set(nextTheme, next)
   return next
 }
 
-const cacheByName = {}
-function createThemeContext(
-  props: ThemeProps,
-  prev: ThemeContextType,
-  next: ThemeObject,
-): ThemeContextType {
-  const activeThemeName = `${prev.activeThemeName}.${props.coat || props.themeSubSelect}`
-  if (cacheByName[activeThemeName]) {
-    return cacheByName[activeThemeName]
-  }
-  cacheByName[activeThemeName] = {
-    ...prev,
-    activeThemeName,
-    activeTheme: next,
-  }
-  return cacheByName[activeThemeName]
-}
-
 function ThemeByName({ name, children }: ThemeProps) {
-  const { allThemes } = React.useContext(ThemeContext)
+  const allThemes = React.useContext(ThemeContext)
   const themeMemo = useMemo(() => {
     if (!name) {
       return children
@@ -123,11 +103,7 @@ function ThemeByName({ name, children }: ThemeProps) {
       throw new Error(`No theme in context: ${name}. Themes are: ${Object.keys(allThemes)}`)
     }
     const nextTheme = allThemes[name]
-    const next: ThemeContextType = {
-      allThemes,
-      activeTheme: nextTheme,
-      activeThemeName: name,
-    }
+    const next = nextTheme
     themeCache.set(nextTheme, next)
     return next
   }, [name])

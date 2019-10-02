@@ -135,6 +135,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
 
   const hasAfterTitle = isDefined(props.afterTitle, afterHeaderElement)
   const coat = isSelected ? (isFocused ? 'selected' : 'selectedInactive') : null
+  console.log('coat', coat)
 
   // its a lot easier at times to just get the props from the click event
   const handleClick = useCallback(

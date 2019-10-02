@@ -1,8 +1,8 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
-import { Base, Box, CompiledTheme, gloss, propsToStyles, psuedoStyleTheme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
-import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
+import { Base, Box, CompiledTheme, gloss, propsToStyles, psuedoStyleTheme, ThemeContext, ThemeFn, ThemeSelect, useTheme } from 'gloss'
+import React, { HTMLProps, useContext, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
@@ -442,7 +442,7 @@ export const Surface = themeable((direct: SurfaceProps) => {
             disabled={disabled}
             elementTheme={elementTheme}
           >
-            {children}
+            <ResetSubTheme>{children}</ResetSubTheme>
           </Element>
         )}
         {!!after && (
@@ -518,6 +518,11 @@ export const Surface = themeable((direct: SurfaceProps) => {
     </SizedSurfacePropsContext.Reset>
   )
 })
+
+function ResetSubTheme() {
+  const theme = useContext(ThemeContext)
+  return <ThemeContext.Provider value={theme.activeTheme.parent} />
+}
 
 const hasChildren = (children: React.ReactNode) => {
   if (Array.isArray(children)) {

@@ -1,12 +1,12 @@
 import { createContext, useEffect, useMemo, useRef } from 'react'
 
-import { ThemeContextType } from './ThemeContext'
+import { CompiledTheme } from './createTheme'
 
-export type ThemeObserver = (theme: ThemeContextType) => any
+export type ThemeObserver = (theme: CompiledTheme) => any
 type ThemeObservable = (onChange: ThemeObserver) => { unsubscribe: () => void }
 export type ThemeObservableType = {
   subscribe: ThemeObservable
-  current: ThemeContextType
+  current: CompiledTheme
 }
 
 export const ThemeObservable = createContext<ThemeObservableType>({
@@ -14,13 +14,13 @@ export const ThemeObservable = createContext<ThemeObservableType>({
   current: null as any,
 })
 
-export function useProvideThemeObservable(props: { themeContext: ThemeContextType }) {
+export function useProvideThemeObservable(props: { theme: CompiledTheme }) {
   const themeObservers = useRef<Set<ThemeObserver>>(new Set())
 
   // never change this just emit
   const themeObservableContext: ThemeObservableType = useMemo(() => {
     return {
-      current: props.themeContext,
+      current: props.theme,
       subscribe: cb => {
         themeObservers.current.add(cb)
         return {
@@ -33,13 +33,13 @@ export function useProvideThemeObservable(props: { themeContext: ThemeContextTyp
   }, [])
 
   useEffect(() => {
-    if (themeObservableContext.current !== props.themeContext) {
-      themeObservableContext.current = props.themeContext
+    if (themeObservableContext.current !== props.theme) {
+      themeObservableContext.current = props.theme
       themeObservers.current.forEach(cb => {
-        cb(props.themeContext)
+        cb(props.theme)
       })
     }
-  }, [props.themeContext])
+  }, [props.theme])
 
   return themeObservableContext
 }

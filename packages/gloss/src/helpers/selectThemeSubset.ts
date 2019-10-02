@@ -1,4 +1,6 @@
-import { CompiledTheme } from '../theme/createTheme'
+import { ThemeObject } from '@o/css/src/css'
+
+import { CompiledTheme, createTheme } from '../theme/createTheme'
 import { ThemeSelect } from '../theme/Theme'
 import { UnwrapTheme } from './useTheme'
 
@@ -12,12 +14,15 @@ const cacheVal = new WeakMap<CompiledTheme, { [key: string]: CompiledTheme }>()
 // because context provides the same theme object each time it can use weakmap for cache
 // right now it does not delete as it seems very rare where you have many many themes
 
-const createSubSetTheme = (parent, child) => ({
-  ...parent,
-  ...child,
-  parent,
-  _isSubSet: true,
-})
+const createSubSetTheme = (parent: CompiledTheme, child: ThemeObject | CompiledTheme) => {
+  debugger
+  return createTheme({
+    ...parent,
+    ...child,
+    parent,
+    _isSubSet: true,
+  })
+}
 
 export function selectThemeSubset(
   themeSubSelect: ThemeSelect,
@@ -58,8 +63,10 @@ export function selectThemeSubset(
     }
   }
 
-  // proxy back to full theme
-  const fullTheme = createSubSetTheme(theme, selectedTheme)
+  const fullTheme = {
+    ...createSubSetTheme(theme, selectedTheme),
+    _subsetName: themeSubSelect,
+  }
 
   // write to cache
   if (!cacheKey.get(theme)) {
@@ -73,8 +80,8 @@ export function selectThemeSubset(
     cacheVal.set(theme, {})
   }
 
-  const val = cacheVal.get(theme)
-  if (val) val[themeSubSelect] = fullTheme
+  const subCache = cacheVal.get(theme)!
+  subCache[themeSubSelect] = fullTheme
 
   return fullTheme
 }

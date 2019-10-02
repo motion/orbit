@@ -16,7 +16,7 @@ export function ThemeProvide({ activeTheme, children, themes }: ThemeProvideProp
     return null
   }
   return (
-    <ThemeContext.Provider key={weakKey(themes)} value={val as any}>
+    <ThemeContext.Provider key={weakKey(themes)} value={themes}>
       <Theme name={activeTheme}>{children}</Theme>
     </ThemeContext.Provider>
   )

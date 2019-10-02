@@ -21,8 +21,8 @@ export const Theme = (props: ThemeProps) => {
   const nextName = (typeof name === 'string' && name) || (typeof theme === 'string' && theme) || ''
   const themes = useContext(ThemeContext)
   const cur = useContext(ThemeObservable).current
-  if (themes.allThemes[nextName]) {
-    return <ThemeByName name={nextName}>{children}</ThemeByName>
+  if (themes[nextName]) {
+    return <ThemeProvideHelper theme={themes[nextName]}>{children}</ThemeProvideHelper>
   }
   const next = getNextTheme(props, cur)
   return <ThemeProvideHelper theme={next}>{children}</ThemeProvideHelper>
@@ -91,22 +91,4 @@ function getNextTheme(props: ThemeProps, prev: CompiledTheme): CompiledTheme {
   const next = nextTheme
   themeCache.set(nextTheme, next)
   return next
-}
-
-function ThemeByName({ name, children }: ThemeProps) {
-  const allThemes = React.useContext(ThemeContext)
-  const themeMemo = useMemo(() => {
-    if (!name) {
-      return children
-    }
-    if (!allThemes || !allThemes[name]) {
-      throw new Error(`No theme in context: ${name}. Themes are: ${Object.keys(allThemes)}`)
-    }
-    const nextTheme = allThemes[name]
-    const next = nextTheme
-    themeCache.set(nextTheme, next)
-    return next
-  }, [name])
-
-  return <ThemeProvideHelper themeContext={themeMemo}>{children}</ThemeProvideHelper>
 }

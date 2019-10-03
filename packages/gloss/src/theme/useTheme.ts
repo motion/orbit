@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
-import { CompiledTheme } from '../theme/createTheme'
-import { CurrentThemeContext } from '../theme/Theme'
+import { CompiledTheme } from './createTheme'
+import { CurrentThemeContext } from './Theme'
 
 // can optionally pass in props accepted by theme
 
@@ -11,7 +11,11 @@ type ThemeTrackState = {
 }
 
 export function useTheme(props?: { ignoreCoat?: boolean }) {
-  const themeObservable = useContext(CurrentThemeContext)
+  let themeObservable = useContext(CurrentThemeContext)
+  // TODO why was this being cleared
+  while (!themeObservable.current && themeObservable.parentContext) {
+    themeObservable = themeObservable.parentContext
+  }
   const [cur, setCur] = useState<CompiledTheme>(themeObservable.current)
   const trackState = useRef<ThemeTrackState>({
     hasUsedOnlyCSSVariables: true,
@@ -44,6 +48,9 @@ export const UnwrapTheme = Symbol('UnwrapTheme') as any
 
 function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
   return useMemo(() => {
+    if (!theme) {
+      debugger
+    }
     return new Proxy(theme, {
       get(target, key) {
         if (key === UnwrapTheme) {

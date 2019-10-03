@@ -1,9 +1,9 @@
 import { ThemeObject } from '@o/css/src/css'
 
-import { CompiledTheme } from '../theme/createTheme'
-import { ThemeSelect } from '../theme/Theme'
+import { weakKey } from '../helpers/WeakKeys'
+import { CompiledTheme } from './createTheme'
+import { ThemeSelect } from './Theme'
 import { UnwrapTheme } from './useTheme'
-import { weakKey } from './WeakKeys'
 
 type PartialTheme = Partial<CompiledTheme>
 

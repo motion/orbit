@@ -29,6 +29,7 @@ const mergeDisabled = merge.bind(
 )
 
 export const alphaColorTheme = createAlphaColorTheme(true)
+export const alphaColorThemeLoose = createAlphaColorTheme(false)
 
 function createAlphaColorTheme(shouldSetDefault = false) {
   const themeFn: ThemeFn = (props, theme, previous) => {

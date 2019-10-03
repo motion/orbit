@@ -1,4 +1,4 @@
-import { CompiledTheme } from '../theme/createTheme'
+import { CompiledTheme } from './createTheme'
 
 // this lets you do simple subsets using syntax:
 // <Button coat="action" />

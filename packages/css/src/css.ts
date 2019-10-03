@@ -1,7 +1,8 @@
 import { Config } from './config'
-import { COLOR_KEYS, FALSE_VALUES, SHORTHANDS, unitlessNumberProperties } from './constants'
+import { BORDER_KEY, COLOR_KEYS, COMMA_JOINED, FALSE_VALUES, SHORTHANDS, TRANSFORM_KEYS_MAP, unitlessNumberProperties } from './constants'
 import { CAMEL_TO_SNAKE } from './cssNameMap'
-import { processArray, processObject, px } from './helpers'
+import { boxShadowItem, boxShadowSyntax } from './cssPropertySet'
+import { px, stringHash } from './helpers'
 
 // exports
 
@@ -104,9 +105,6 @@ export function css(styles: Object, opts?: CSSConfig): Object {
 }
 
 export function cssValue(key: string, value: any, recurse = false, options?: CSSConfig) {
-  // if (value && typeof value.cssVariable === 'string' && !value.cssVariable) {
-  //   debugger
-  // }
   // get falsy values
   if (value === false) {
     value === FALSE_VALUES[key]
@@ -168,13 +166,119 @@ export function styleToClassName(style: string): string {
   return `g${stringHash(style)}`
 }
 
-// thx darksky: https://git.io/v9kWO
-export function stringHash(str: string): number {
-  let res = 5381
-  let i = 0
-  let len = str.length
-  while (i < len) {
-    res = (res * 33) ^ str.charCodeAt(i++)
+const objectToCSS = {
+  textShadow: ({ x, y, blur, color }) =>
+    `${px(x || 0)} ${px(y || 0)} ${px(blur || 0)} ${Config.toColor(color)}`,
+  boxShadow: (v: boxShadowSyntax) =>
+    `${v.inset ? 'inset ' : ''}${px(v.x || 0)} ${px(v.y || 0)} ${px(v.blur || 0)} ${px(
+      v.spread || 0,
+    )} ${Config.isColor(v.color) ? Config.toColor(v.color) : v.color || ''}`,
+  background: v =>
+    Config.isColor(v)
+      ? Config.toColor(v)
+      : `${Config.toColor(v.color)} ${v.image || ''} ${(v.position
+          ? v.position.join(' ')
+          : v.position) || ''} ${v.repeat || ''}`,
+}
+
+function processArrayItem(key: string, val: any, level: number = 0) {
+  // recurse
+  if (Array.isArray(val)) {
+    return processArray(key, val, level + 1)
   }
-  return res >>> 0
+  return cssValue(key, val)
+}
+
+export function processArray(key: string, value: any[], level: number = 0): string {
+  if (key === 'background') {
+    if (Config.isColor(value)) {
+      return Config.toColor(value)
+    }
+  }
+  // solid default option for borders
+  if (BORDER_KEY[key] && value.length === 2) {
+    value.push('solid')
+  }
+  if (key === 'boxShadow') {
+    value = value.map(x => processBoxShadow(key, x))
+  } else {
+    value = value.map(val => processArrayItem(key, val))
+  }
+  return value.join(level === 0 && COMMA_JOINED[key] ? ', ' : ' ')
+}
+
+function processBoxShadow(key: string, val: boxShadowItem) {
+  if (Array.isArray(val)) {
+    return val.map(x => processArrayItem(key, x)).join(' ')
+  }
+  if (val && typeof val === 'object') {
+    return objectToCSS.boxShadow(val)
+  }
+  return val
+}
+
+function objectValue(key: string, value: any) {
+  if (objectToCSS[key]) {
+    return objectToCSS[key](value)
+  }
+  if (
+    key === 'scale' ||
+    key === 'scaleX' ||
+    key === 'scaleY' ||
+    key === 'grayscale' ||
+    key === 'brightness'
+  ) {
+    return value
+  }
+  if (typeof value === 'number') {
+    return `${value}px`
+  }
+  return value
+}
+
+const arrayOrObject = (arr, obj) => val => (Array.isArray(val) ? arr(val) : obj(val))
+
+const gradients = {
+  linearGradient: (key, object) =>
+    `linear-gradient(${arrayOrObject(
+      all => processArray(key, all),
+      ({ deg, from, to }) => `${deg || 0}deg, ${from || 'transparent'}, ${to || 'transparent'}`,
+    )(object)})`,
+  radialGradient: processArray,
+}
+
+export function processObject(key: string, object: any): string | undefined {
+  if (
+    key === 'background' ||
+    key === 'color' ||
+    key === 'borderColor' ||
+    key === 'backgroundColor'
+  ) {
+    if (object.linearGradient) {
+      return gradients.linearGradient(key, object.linearGradient)
+    }
+    if (object.radialGradient) {
+      return gradients.radialGradient(key, object.radialGradient)
+    }
+    if (Config.isColor(object)) {
+      return Config.toColor(object)
+    }
+  }
+  // plain object only
+  if (!object.constructor || Object.prototype.toString.call(object) === '[object Object]') {
+    const toReturn: string[] = []
+    for (const subKey in object) {
+      if (!object.hasOwnProperty(subKey)) {
+        continue
+      }
+      let value = object[subKey]
+      if (Array.isArray(value)) {
+        value = processArray(key, value)
+      } else {
+        value = objectValue(subKey, value)
+      }
+      toReturn.push(`${TRANSFORM_KEYS_MAP[subKey] || subKey}(${value})`)
+    }
+    return toReturn.join(' ')
+  }
 }

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 
-import { preProcessTheme } from '../helpers/preProcessTheme'
 import { CompiledTheme } from './createTheme'
+import { preProcessTheme } from './preProcessTheme'
 import { AllThemesContext } from './ThemeContext'
 import { themeVariableManager } from './themeVariableManager'
 
@@ -27,14 +27,14 @@ export const Theme = (props: ThemeProps) => {
   const theme = getNextTheme(props)
   const themeObservableContext = useCreateThemeObservable({ theme: theme! })
   useLayoutEffect(() => {
-    if (theme) {
+    if (theme && typeof theme !== 'function') {
       themeVariableManager.mount(theme)
       return () => {
         themeVariableManager.unmount(theme)
       }
     }
   }, [theme])
-  if (!theme) {
+  if (!theme || !themeObservableContext) {
     return props.children as JSX.Element
   }
   return (
@@ -87,7 +87,10 @@ export function useCreateThemeObservable(props: { theme: CompiledTheme }) {
   const themeObservers = useRef<Set<ThemeObserver>>(new Set())
 
   // never change this just emit
-  const context: CurrentTheme = useMemo(() => {
+  const context: CurrentTheme | null = useMemo(() => {
+    if (!props.theme) {
+      return null
+    }
     return {
       parentContext,
       current: props.theme,
@@ -103,7 +106,7 @@ export function useCreateThemeObservable(props: { theme: CompiledTheme }) {
   }, [])
 
   useLayoutEffect(() => {
-    if (props.theme) {
+    if (context) {
       if (context.current !== props.theme) {
         context.current = props.theme
         themeObservers.current.forEach(cb => {

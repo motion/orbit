@@ -1,5 +1,4 @@
 import { colorToString } from './helpers/helpers'
-import { preProcessTheme } from './helpers/preProcessTheme'
 import { GlossConfig } from './types'
 
 export const defaultMediaQueries = {
@@ -11,7 +10,6 @@ export const defaultMediaQueries = {
 }
 
 export const GlossDefaultConfig: GlossConfig = {
-  preProcessTheme,
   isColor: color => color && !!color.rgb,
   toColor: colorToString,
   mediaQueries: defaultMediaQueries,

@@ -1,7 +1,6 @@
-import React, { useEffect, useLayoutEffect, useRef } from 'react'
-
 import { makeStyleTag } from '../stylesheet/makeStyleTag'
 import { CompiledTheme } from './createTheme'
+import { preProcessTheme } from './preProcessTheme'
 
 class ThemeVariableManager {
   tag = makeStyleTag()
@@ -43,6 +42,10 @@ class ThemeVariableManager {
         return
       }
 
+      if (theme._isCoat) {
+        return
+      }
+
       const classNames = this.getClassNames(theme)
       const selector = `.${classNames.join(' .')}`
       const rules = this.getThemeVariables(theme)
@@ -53,8 +56,14 @@ class ThemeVariableManager {
 
       if (theme.coats) {
         for (const coatKey in theme.coats) {
-          const coat = theme.coats[coatKey]
+          let coat = theme.coats[coatKey]
+          if (typeof coat === 'function') {
+            coat = preProcessTheme({ coat: coatKey }, theme)
+          }
           const coatRules = this.getThemeVariables(coat)
+          if (coatKey === 'flat') {
+            console.log('inserting', selector, coatKey, coatRules)
+          }
           const rule = `${selector} .coat-${coatKey} { ${coatRules} }`
           this.sheet.insertRule(rule)
         }

@@ -1,5 +1,5 @@
 import { GlossProps } from '../gloss'
-import { CompiledTheme, createTheme } from '../theme/createTheme'
+import { CompiledTheme, createTheme } from './createTheme'
 import { getThemeCoat } from './getThemeCoat'
 import { selectThemeSubset } from './selectThemeSubset'
 import { UnwrapTheme } from './useTheme'
@@ -11,24 +11,24 @@ import { UnwrapTheme } from './useTheme'
 const themeAltCache = new WeakMap<CompiledTheme, { [key: string]: CompiledTheme }>()
 
 export const preProcessTheme = (props: GlossProps<any>, theme: CompiledTheme) => {
-  if (props.theme) {
+  if (props.theme || !theme) {
     return props.theme
   }
-  theme = theme[UnwrapTheme] || theme
+  const ogTheme = theme[UnwrapTheme] || theme
   if (props.coat || props.themeSubSelect) {
     const altKey = getAltKey(props)
-    const existing = getThemeFromCache(altKey, theme)
+    const existing = getThemeFromCache(altKey, ogTheme)
     if (existing) {
       return existing
     }
-    const coatTheme = getThemeCoat(props.coat, theme)
+    const coatTheme = getThemeCoat(props.coat, ogTheme)
     const subSetTheme = selectThemeSubset(props.themeSubSelect, coatTheme)
     const nextTheme = createTheme({
       ...subSetTheme,
       coats: undefined, // no coat with sub-coats
       // name: altKey,
     })
-    setThemeInCache(altKey, theme, nextTheme)
+    setThemeInCache(altKey, ogTheme, nextTheme)
     return nextTheme
   }
   return theme

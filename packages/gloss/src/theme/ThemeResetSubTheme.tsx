@@ -10,12 +10,17 @@ export function ThemeResetSubTheme({ children }: { children: any }) {
 
   useLayoutEffect(() => {
     if (themeContext.parentContext) {
-      const getClassName = () =>
-        themeVariableManager.getClassNames(themeContext.parentContext!.current).join(' ')
+      const getClassName = () => {
+        if (themeContext.parentContext?.current) {
+          return themeVariableManager.getClassNames(themeContext.parentContext!.current).join(' ')
+        }
+        return ''
+      }
       nodeRef.current!.className = getClassName()
-      themeContext.parentContext.subscribe(() => {
+      const unsub = themeContext.parentContext.subscribe(() => {
         nodeRef.current!.className = getClassName()
       })
+      return unsub.unsubscribe
     }
   }, [])
 

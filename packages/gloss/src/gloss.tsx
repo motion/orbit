@@ -3,12 +3,13 @@ import { isEqual } from '@o/fast-compare'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
-import { useTheme } from './helpers/useTheme'
 import { validPropLoose, ValidProps } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
+import { preProcessTheme } from './theme/preProcessTheme'
 import { ThemeSelect } from './theme/Theme'
+import { useTheme } from './theme/useTheme'
 
 // so you can reference in postProcessProps
 export { StyleTracker } from './stylesheet/gc'
@@ -551,7 +552,7 @@ function addDynamicStyles(
     }
 
     if (theme && themeFn) {
-      const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
+      const next = preProcessTheme(props, theme)
       dynStyles['.'] = dynStyles['.'] || {}
       const themeStyles = themeFn(props, next)
       const themePropStyles = mergeStyles('.', dynStyles, themeStyles, true)

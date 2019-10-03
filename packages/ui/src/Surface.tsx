@@ -109,7 +109,7 @@ export type SurfaceSpecificProps = {
   /** Size (relative) of the icon */
   sizeIcon?: number
 
-  theme?: CompiledTheme | string
+  theme?: CompiledTheme
 
   /** Adds a <Tooltip /> on the surface */
   tooltip?: React.ReactNode

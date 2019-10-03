@@ -90,14 +90,3 @@ function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
     })
   }, [])
 }
-
-// simpler hooks for simpler use cases
-// todo they'd need to update..
-
-// export function useThemeContext() {
-//   return useContext(CurrentThemeContext).current
-// }
-
-// export function useThemeName() {
-//   return useThemeContext().name
-// }

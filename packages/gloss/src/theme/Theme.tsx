@@ -20,7 +20,7 @@ type ThemeProps = {
   themeSubSelect?: ThemeSelect
   coat?: string | false
   name?: string
-  children: React.ReactElement
+  children: React.ReactNode
 }
 
 export const Theme = (props: ThemeProps) => {
@@ -65,7 +65,7 @@ export const getThemeContainer = ({
   children,
 }: {
   theme: CompiledTheme
-  children: React.ReactElement
+  children: React.ReactNode
 }) => {
   if (!theme) {
     return children

@@ -34,7 +34,7 @@ class ThemeVariableManager {
 
   mount(theme: CompiledTheme) {
     if (this.mounted.has(theme)) {
-      this.mounted.set(theme, this.mounted.get(theme) + 1)
+      this.mounted.set(theme, this.mounted.get(theme)! + 1)
     } else {
       this.mounted.set(theme, 1)
 

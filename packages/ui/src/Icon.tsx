@@ -75,7 +75,7 @@ export const PlainIcon = ({
 }: IconProps) => {
   const theme = useTheme()
   const size = snapToSizes(props.size) * useScale()
-  let color = props.color || (theme.color ? theme.color.toString() : '#fff')
+  let color = props.color || (theme.color ? theme.color : '#fff')
   let opacity
 
   if (isDefined(props.opacity)) {
@@ -83,9 +83,9 @@ export const PlainIcon = ({
       opacity = props.opacity
     } else {
       try {
-        color = toColor(color as any)
-          .setAlpha(typeof props.opacity === 'number' ? props.opacity : 1)
-          .toString()
+        color = toColor(color as any).setAlpha(
+          typeof props.opacity === 'number' ? props.opacity : 1,
+        )
       } catch {
         console.debug('couldnt interpret color', color)
         opacity = props.opacity
@@ -139,9 +139,9 @@ export const PlainIcon = ({
     const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
 
     contents = (
-      <View width={size} height={size} {...props}>
+      <View color={color} width={size} height={size} {...props}>
         <svg
-          style={{ color: `${color}`, ...style }}
+          style={{ fill: 'currentColor', ...style }}
           data-icon={iconName}
           width={`${size}px`}
           height={`${size}px`}

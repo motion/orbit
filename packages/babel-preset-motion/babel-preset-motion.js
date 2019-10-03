@@ -30,6 +30,8 @@ module.exports = function(_, givenOpts) {
       plug('babel-plugin-lodash', undefined, { usually: 'production' }),
       plug('react-refresh/babel', undefined, { usually: 'development' }),
       plug('./babel-plugin-react-displayname.js', undefined, { usually: 'development' }),
+      plug('@babel/plugin-proposal-optional-chaining'),
+      plug('@babel/plugin-proposal-nullish-coalescing-operator'),
       plug('@babel/plugin-syntax-dynamic-import'),
       plug('@babel/plugin-transform-runtime', {
         regenerator: false,

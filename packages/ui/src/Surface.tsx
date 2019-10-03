@@ -462,14 +462,10 @@ export const Surface = themeable((direct: SurfaceProps) => {
   }
 
   const iconOpacity = typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any)
-  const iconColor = `${(props.iconProps && props.iconProps.color) ||
-    props.color ||
-    theme.color ||
-    ''}`
+  const iconColor = (props.iconProps && props.iconProps.color) || props.color || theme.color
   const iconColorHover =
     (!!props.hoverStyle && typeof props.hoverStyle === 'object' && props.hoverStyle.color) ||
-    theme.colorHover ||
-    'inherit'
+    theme.colorHover
 
   const iconContext = useMemo<Partial<IconProps>>(() => {
     return {
@@ -483,6 +479,8 @@ export const Surface = themeable((direct: SurfaceProps) => {
       },
     }
   }, [coat, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
+
+  console.log('iconContext', iconContext)
 
   // @ts-ignore
   const surfaceFrameProps: SurfaceFrameProps = {

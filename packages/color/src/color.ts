@@ -195,6 +195,9 @@ export class Color {
    * @param alpha - The new alpha value. The accepted range is 0-1.
    */
   setAlpha(alpha?: string | number | ((current: number) => number)): Color {
+    if (alpha === this.alpha) {
+      return this
+    }
     return this.clone(next => {
       next.alpha = boundAlpha(typeof alpha === 'function' ? alpha(next.alpha) : alpha)
       next.roundA = Math.round(100 * next.alpha) / 100

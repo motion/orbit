@@ -71,6 +71,19 @@ const getNextTheme = (props: ThemeProps) => {
   return (name && themes[name]) || preProcessTheme(props, curContext.current)
 }
 
+// much lighter weight for simple use case
+export const ThemeByName = (props: { name?: string; children: React.ReactNode }) => {
+  const curContext = useContext(CurrentThemeContext)
+  return (
+    <div
+      style={{ display: 'contents' }}
+      className={`theme-${props.name || (curContext.parentContext || curContext).current.name}`}
+    >
+      {props.children}
+    </div>
+  )
+}
+
 export const CurrentThemeContext = createContext<CurrentTheme>({
   subscribe: _ => ({ unsubscribe: () => {} }),
   current: null as any,

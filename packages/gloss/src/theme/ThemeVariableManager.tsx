@@ -89,7 +89,21 @@ class ThemeVariableManager {
 
   mountSubThemeFromParent(parent: CompiledTheme, subThemeContext: CurrentTheme) {
     const selector = `.theme-${parent.name} .${this.getClassNames(subThemeContext)}`
-    const subRules = this.getThemeVariables(subThemeContext.current)
+    let subTheme = subThemeContext.current
+    // need to re-run select using new parent theme
+    if (subTheme._themeSubSelect) {
+      subTheme = preProcessTheme(
+        {
+          coat: subTheme._coatName,
+          themeSubSelect: subThemeContext.current._themeSubSelect,
+        },
+        parent,
+      )
+    }
+    const subRules = this.getThemeVariables(subTheme)
+    if (selector === '.theme-docsPageTheme .sub-listItem') {
+      console.warn('how many times doing this?', subRules, subTheme, parent)
+    }
     if (subRules.length) {
       const rule = `${selector} { ${subRules} }`
       this.sheet.insertRule(rule)

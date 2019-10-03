@@ -1,7 +1,7 @@
 import { isEqual } from '@o/fast-compare'
 import { idFn, isDefined, selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
-import { Box, gloss, Theme } from 'gloss'
+import { Box, gloss, Theme, ThemeByName } from 'gloss'
 import React, { isValidElement, memo, useCallback } from 'react'
 
 import { BorderBottom } from '../Border'
@@ -262,19 +262,14 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
                 <Preview>
                   {typeof preview !== 'string' && preview}
                   {typeof preview === 'string' && (
-                    <HighlightText
-                      alpha={subTextOpacity}
-                      size={1}
-                      sizeLineHeight={0.9}
-                      ellipse={3}
-                    >
+                    <HighlightText alpha={subTextOpacity} size={1} sizeLineHeight={0.9} ellipse={3}>
                       {preview}
                     </HighlightText>
                   )}
                 </Preview>
               </>
             )}
-            {childrenElement}
+            <ThemeByName>{childrenElement}</ThemeByName>
           </View>
           {hasAfterTitle && (
             <>

@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
-import { Base, Box, CompiledTheme, gloss, propsToStyles, psuedoStyleTheme, ThemeFn, ThemeResetSubTheme, ThemeSelect, useTheme } from 'gloss'
+import { Base, Box, CompiledTheme, gloss, propsToStyles, psuedoStyleTheme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
 import React, { HTMLProps, useContext, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
@@ -443,11 +443,7 @@ export const Surface = themeable((direct: SurfaceProps) => {
             disabled={disabled}
             elementTheme={elementTheme}
           >
-            {children && typeof children !== 'string' ? (
-              <ThemeResetSubTheme>{children}</ThemeResetSubTheme>
-            ) : (
-              children
-            )}
+            {children}
           </Element>
         )}
         {!!after && (

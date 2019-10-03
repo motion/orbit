@@ -117,4 +117,4 @@ export const themes = createThemes({
   },
 })
 
-console.log(themes)
+window['themes'] = themes

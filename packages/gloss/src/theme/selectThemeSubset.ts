@@ -24,7 +24,12 @@ export function selectThemeSubset(
     theme = theme[UnwrapTheme] || theme
   }
   if (typeof themeSubSelect === 'function') {
-    return createSubSetTheme(`subfn${weakKey(themeSubSelect)}`, theme, themeSubSelect(theme))
+    return createSubSetTheme(
+      `subfn${weakKey(themeSubSelect)}`,
+      theme,
+      themeSubSelect(theme),
+      themeSubSelect,
+    )
   }
   // generate new subset theme
   const len = themeSubSelect.length
@@ -36,13 +41,14 @@ export function selectThemeSubset(
       selectedTheme[newKeyCamelCase] = theme[subKey]
     }
   }
-  return createSubSetTheme(themeSubSelect, theme, selectedTheme)
+  return createSubSetTheme(themeSubSelect, theme, selectedTheme, themeSubSelect)
 }
 
 const createSubSetTheme = (
   name: string,
   parent: CompiledTheme,
   child: ThemeObject | CompiledTheme,
+  themeSubSelect: ThemeSelect,
 ) => {
   return {
     ...parent,
@@ -51,6 +57,7 @@ const createSubSetTheme = (
     parent,
     name,
     _subThemeName: name,
+    _themeSubSelect: themeSubSelect,
     _isSubTheme: true,
   }
 }

@@ -111,6 +111,7 @@ export class Color {
   }
 
   cssVariable = ''
+  cssUseAlpha = false
   setCSSVariable(name: string) {
     // dont overwrite
     if (this.cssVariable && this.cssVariable !== name) {
@@ -203,6 +204,7 @@ export class Color {
       next.roundA = Math.round(100 * next.alpha) / 100
       // alpha adjustments are handled so we can forward cssVariable
       next.cssVariable = this.cssVariable
+      next.cssUseAlpha = true
     })
   }
 

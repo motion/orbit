@@ -49,7 +49,8 @@
     "@welldone-software/why-did-you-render": "3.3.3",
     "static-mock-data": "4.0.0",
     "sticky-sidebar": "3.3.1",
-    "use-memo-one": "^1.1.0"
+    "use-memo-one": "^1.1.0",
+    "react-reverse-portal": "^1.0.3"
   },
   "devDependencies": {
     "nodemon": "^1.19.1",

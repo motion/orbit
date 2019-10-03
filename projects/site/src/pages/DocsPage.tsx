@@ -1,8 +1,9 @@
-import { BorderRight, Button, configureHotKeys, gloss, List, ListItemProps, Portal, ProvideBanner, Sidebar, sleep, Space, Stack, Theme, useFilter, useOnMount, whenIdle } from '@o/ui'
+import { BorderRight, Button, configureHotKeys, gloss, List, ListItemProps, ListProps, Portal, ProvideBanner, Sidebar, sleep, Space, Stack, Theme, useFilter, useOnMount, whenIdle } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { NotFoundBoundary, View } from 'react-navi'
+import * as portals from 'react-reverse-portal'
 
 import { Header } from '../Header'
 import { useScreenSize } from '../hooks/useScreenSize'
@@ -38,7 +39,7 @@ configureHotKeys({
   ignoreTags: [],
 })
 
-const DocsList = memo(() => {
+const DocsList = memo((props: Partial<ListProps>) => {
   const docsStore = DocsStoreContext.useStore()
   const [mounted, setMounted] = useState(false)
 
@@ -94,6 +95,7 @@ const DocsList = memo(() => {
           docsNavigate(rows[0].id)
         }
       }, [])}
+      {...props}
     />
   )
 })
@@ -107,6 +109,12 @@ const DocsPage = memo((props: { children?: any }) => {
   const [showSidebar, setShowSidebar] = useState(false)
   const inputRef = useRef(null)
   const [themeName, setThemeName] = usePageTheme()
+  const portalNode = React.useMemo(() => {
+    const div = portals.createPortalNode()
+    div.style.display = 'flex'
+    div.style.height = 'calc(100vh - 100px)'
+    return div
+  }, [])
 
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))
@@ -155,16 +163,12 @@ const DocsPage = memo((props: { children?: any }) => {
     inputRef.current && inputRef.current.focus()
   }, [inputRef.current])
 
-  const sidebarChildren = (
-    <React.Fragment key="content">
-      <FadeInView data-is="DocsPageSidebar" flex={1} pointerEvents="auto">
-        <DocsList />
-      </FadeInView>
-    </React.Fragment>
-  )
-
   return (
     <DocsStoreContext.Provider>
+      {/* this is expensive so we use react-reverse-portal to only render once and move it around */}
+      <portals.InPortal node={portalNode}>
+        <DocsList />
+      </portals.InPortal>
       <Fade.FadeProvide>
         <Portal
           prepend
@@ -240,7 +244,7 @@ const DocsPage = memo((props: { children?: any }) => {
                   zIndex={100}
                   opacity={0.5}
                 />
-                {sidebarChildren}
+                {showSidebar && <portals.OutPortal measureKey={Math.random()} node={portalNode} />}
               </Sidebar>
             </FixedLayout>
           </Portal>
@@ -250,7 +254,13 @@ const DocsPage = memo((props: { children?: any }) => {
           <main className="main-contents">
             <SectionContent background={theme => theme.background} maxWidth={1400}>
               <Stack direction="horizontal" id="main" className="main">
-                {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
+                {!isSmall && (
+                  <DocsPageSidebar>
+                    <FadeInView data-is="DocsPageSidebar" flex={1} pointerEvents="auto">
+                      <portals.OutPortal measureKey={Math.random()} node={portalNode} />
+                    </FadeInView>
+                  </DocsPageSidebar>
+                )}
                 <Stack
                   nodeRef={Fade.ref}
                   flex={1}
@@ -289,7 +299,7 @@ const DocsPageSidebar = memo(({ children }: any) => {
       <Stack position="relative" className="sidebar__inner" flex={1}>
         <Stack margin={[25, 0, 0]} flex={1} position="relative">
           {children}
-          <BorderRight top={10} opacity={0.5} />
+          <BorderRight debug top={10} />
         </Stack>
       </Stack>
     </Stack>

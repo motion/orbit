@@ -1,19 +1,19 @@
-import { toColor } from '@o/color'
 import { Absolute, AbsoluteProps, CSSPropertySet, gloss } from 'gloss'
 
 const Border = gloss<
   AbsoluteProps & {
     borderColor?: CSSPropertySet['borderColor']
+    borderColorHover?: CSSPropertySet['borderColor']
     hoverable?: boolean
   }
 >(Absolute).theme((p, theme) => {
-  const background = toColor(p.borderColor ? p.borderColor : (theme.borderColor as any))
+  const background = p.borderColor ? p.borderColor : theme.borderColor
   return {
     ...p,
     background,
     ...(p.hoverable && {
       '&:hover': {
-        background: background.relativeLighten(0.2),
+        background: p.borderColorHover || theme.backgroundStronger,
       },
     }),
   }

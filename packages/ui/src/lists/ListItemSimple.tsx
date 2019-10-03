@@ -269,7 +269,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
                 </Preview>
               </>
             )}
-            <ThemeByName>{childrenElement}</ThemeByName>
+            {coat ? <ThemeByName>{childrenElement}</ThemeByName> : childrenElement}
           </View>
           {hasAfterTitle && (
             <>

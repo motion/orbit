@@ -20,13 +20,17 @@ export type DynamicListProps = Omit<VariableSizeListProps, 'itemSize' | 'height'
   height?: number
   width?: number
   disableMeasure?: boolean
+  measureKey?: any
 }
 
 export const DynamicList = memo(
-  forwardRef(({ disableMeasure, ...props }: DynamicListProps, listRef) => {
-    const { ref, width, height } = useNodeSize({
-      disable: disableMeasure,
-    })
+  forwardRef(({ disableMeasure, measureKey, ...props }: DynamicListProps, listRef) => {
+    const { ref, width, height } = useNodeSize(
+      {
+        disable: disableMeasure,
+      },
+      [measureKey],
+    )
     return (
       <View data-is="DynamicListChrome" overflow="hidden" flex={1} nodeRef={ref}>
         <DynamicSizeList ref={listRef} width={width} height={height} {...props} />

@@ -120,10 +120,10 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
     }
     return value
   } else if (value.cssVariable) {
-    if (value.getCSSColorVariables) {
+    if (value.cssUseAlpha) {
       return `rgba(var(--${value.cssVariable}-rgb), ${value.alpha})`
     } else {
-      return `var(--${value.cssVariable})`
+      return `rgba(var(--${value.cssVariable}))`
     }
   } else if (COLOR_KEYS.has(key)) {
     return Config.isColor(value) ? Config.toColor(value) : value

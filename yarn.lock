@@ -18735,6 +18735,11 @@ react-resizable@1.x:
     prop-types "15.x"
     react-draggable "^3.0.3"
 
+react-reverse-portal@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/react-reverse-portal/-/react-reverse-portal-1.0.3.tgz#38cd2d40f40862352dd63905f9b923f9c41f474b"
+  integrity sha512-mCtpp3BzPedmGTAMqT2v5U1hwnAvRfSqMusriON/GxnedT9gvNNTvai24NnrfKfQ78zqPo4e3N5nWPLpY7bORQ==
+
 react-select@^3.0.4:
   version "3.0.4"
   resolved "https://registry.npmjs.org/react-select/-/react-select-3.0.4.tgz#16bde37c24fd4f6444914d4681e78f15ffbc86d3"

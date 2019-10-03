@@ -7,7 +7,7 @@ import { AllThemesContext } from './ThemeContext'
 type ThemeProvideProps = {
   activeTheme?: string
   themes: ThemeSet
-  children: React.ReactNode
+  children: React.ReactElement
 }
 
 export function ThemeProvide({ activeTheme, children, themes }: ThemeProvideProps) {

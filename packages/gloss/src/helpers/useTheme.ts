@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import { CompiledTheme } from '../theme/createTheme'
-import { CurrentThemeContext } from '../theme/CurrentThemeContext'
+import { CurrentThemeContext } from '../theme/Theme'
 
 // can optionally pass in props accepted by theme
 

@@ -26,7 +26,6 @@ export const SectionContent = ({
 }: SectionContentProps) => {
   return (
     <Section
-      debug
       zIndex={zIndex}
       background={background}
       padding={padding}

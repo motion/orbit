@@ -42,7 +42,6 @@ export default memo(function FeaturesSection() {
         className="glow-two"
         opacity={0.23}
         background="radial-gradient(circle closest-side, #12A1CC, transparent)"
-        debug
         parallax={geometry => ({
           y: geometry.useParallax(),
           x: geometry.useParallax().transform(x => -x * 1 + 240),

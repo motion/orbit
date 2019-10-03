@@ -550,6 +550,11 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
     cursor: 'not-allowed',
   },
 }).theme((props, theme) => {
+
+  if (props['debug']) {
+    console.log('theme is', theme)
+  }
+
   const { fontSize, lineHeight } = scaledTextSizeTheme(props) || defaultTextTheme
   const themeStyle = psuedoStyleTheme(props, theme)
   const propStyles = propsToStyles(props, theme)

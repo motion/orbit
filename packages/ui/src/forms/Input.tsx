@@ -35,10 +35,6 @@ export function Input({ onEnter, type = 'text', nodeRef, children, ...props }: I
   const innerRef = useRef<HTMLInputElement>(null)
   const formStore = useParentForm()
 
-  if (children) {
-    debugger
-  }
-
   // update form context every so often, avoid too many re-renders
   const updateFormContext = useThrottledFn(
     (value: string) => {

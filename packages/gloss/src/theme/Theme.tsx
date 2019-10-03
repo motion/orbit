@@ -46,9 +46,13 @@ export const Theme = (props: ThemeProps) => {
     }
   }, [theme])
 
-  if (!themeObservableContext) {
+  if (
+    !themeObservableContext ||
+    (!props.coat && !props.theme && !props.themeSubSelect && !props.name)
+  ) {
     return props.children as JSX.Element
   }
+
   return (
     <CurrentThemeContext.Provider value={themeObservableContext}>
       <div ref={nodeRef} style={{ display: 'contents' }}>
@@ -123,7 +127,6 @@ function useCreateThemeObservable(props: { theme?: CompiledTheme }) {
   useLayoutEffect(() => {
     if (context && props.theme) {
       if (context.current !== props.theme) {
-        console.log('setting it', context.current)
         context.current = props.theme
         themeObservers.current.forEach(cb => {
           props.theme && cb(props.theme)

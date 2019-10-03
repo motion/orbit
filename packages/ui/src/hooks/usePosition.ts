@@ -15,9 +15,6 @@ export type Rect = {
 }
 
 export function getRect(o: any): Rect {
-  if (!('width' in o)) {
-    debugger
-  }
   return { width: +o.width, height: +o.height, left: +o.left, top: +o.top }
 }
 

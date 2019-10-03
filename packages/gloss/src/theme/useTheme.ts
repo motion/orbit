@@ -1,6 +1,7 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import { CompiledTheme } from './createTheme'
+import { preProcessTheme } from './preProcessTheme'
 import { CurrentThemeContext } from './Theme'
 
 // can optionally pass in props accepted by theme
@@ -10,14 +11,11 @@ type ThemeTrackState = {
   nonCSSVariables: Set<string>
 }
 
-export function useTheme(props?: { ignoreCoat?: boolean }) {
-  let themeObservable = useContext(CurrentThemeContext)
-  // TODO why was this being cleared
-  while (!themeObservable.current && themeObservable.parentContext) {
-    console.log('a bit weird here')
-    themeObservable = themeObservable.parentContext
-  }
-  const [cur, setCur] = useState<CompiledTheme>(themeObservable.current)
+type UseThemeProps = { coat?: string | false }
+
+export function useTheme(props?: UseThemeProps) {
+  const themeObservable = useContext(CurrentThemeContext)
+  const [cur, setCur] = useState<CompiledTheme>(getTheme(themeObservable.current, props))
   const trackState = useRef<ThemeTrackState>({
     hasUsedOnlyCSSVariables: true,
     nonCSSVariables: new Set(),
@@ -29,20 +27,26 @@ export function useTheme(props?: { ignoreCoat?: boolean }) {
         // no need to change
       } else {
         console.warn('re-rendering because used variables', trackState.current)
-        setCur(theme)
+        setCur(getTheme(theme, props))
       }
     })
     return sub.unsubscribe
   }, [])
 
-  let theme = cur
+  return proxyTheme(cur, trackState.current)
+}
 
-  // TODO this should not go here, maybe just wrap those themes in <Theme coat={false}> or something
-  if (theme && props && props.ignoreCoat) {
-    theme = theme.parent || theme
+const getTheme = (theme?: CompiledTheme, props?: UseThemeProps) => {
+  if (theme) {
+    // TODO this should not go here, maybe just wrap those themes in <Theme coat={false}> or something
+    if (props?.coat === false) {
+      return theme.parent || theme
+    }
+    if (props?.coat) {
+      return preProcessTheme(props, theme)
+    }
   }
-
-  return proxyTheme(theme, trackState.current)
+  return theme
 }
 
 export const UnwrapThemeSymbol = Symbol('UnwrapTheme') as any

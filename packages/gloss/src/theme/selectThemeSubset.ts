@@ -14,11 +14,12 @@ type PartialTheme = Partial<CompiledTheme>
 export function selectThemeSubset(
   themeSubSelect: ThemeSelect,
   theme: CompiledTheme,
-): CompiledTheme {
+): CompiledTheme | null {
   if (!themeSubSelect) {
     return theme
   }
   if (!theme._isCoat && themeSubSelect === theme._themeSubSelect) {
+    // hasnt changed
     return theme
   }
   // allow only subsetting coats or original themes, not subsets
@@ -45,7 +46,7 @@ export function selectThemeSubset(
   }
   if (!Object.keys(selectedTheme).length) {
     // no changes made, dont do any extra work
-    return theme
+    return null
   }
   return createSubSetTheme(themeSubSelect, theme, selectedTheme, themeSubSelect)
 }

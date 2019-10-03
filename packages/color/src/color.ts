@@ -112,6 +112,7 @@ export class Color {
 
   cssVariable = ''
   cssUseAlpha = false
+  cssUseRgb = true
   setCSSVariable(name: string) {
     // dont overwrite
     if (this.cssVariable && this.cssVariable !== name) {

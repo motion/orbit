@@ -167,8 +167,6 @@ const DocsPage = memo((props: { children?: any }) => {
     inputRef.current && inputRef.current.focus()
   }, [inputRef.current])
 
-  console.log('themeName', themeName)
-
   return (
     <DocsStoreContext.Provider>
       {/* this is expensive so we use react-reverse-portal to only render once and move it around */}
@@ -259,12 +257,7 @@ const DocsPage = memo((props: { children?: any }) => {
 
         <Theme name={themeName}>
           <main className="main-contents">
-            <SectionContent
-              color="purple"
-              debug
-              background={theme => theme.background}
-              maxWidth={1400}
-            >
+            <SectionContent background={theme => theme.background} maxWidth={1400}>
               <Stack direction="horizontal" id="main" className="main">
                 <DocsPageSidebar sm-display="none">
                   <FadeInView data-is="DocsPageSidebar" flex={1} pointerEvents="auto">

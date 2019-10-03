@@ -23,13 +23,13 @@ export const preProcessTheme = (props: GlossProps<any>, theme: CompiledTheme) =>
     }
     const coatTheme = getThemeCoat(props.coat, parent)
     const subSetTheme = selectThemeSubset(props.themeSubSelect, coatTheme)
-    if (subSetTheme !== parent) {
-      let nextTheme = createTheme(subSetTheme, false)
-      if (props.themeSubSelect && theme._isSubSelect) {
+    const next = subSetTheme || coatTheme
+    if (next && next !== parent) {
+      let nextTheme = createTheme(next, false)
+      if (props.themeSubSelect && next._isSubTheme) {
         // proxy back to parent but don't merge,
         // because we want sub-themes to be lighter (ie in CSS variable generation)
         // and generally to only enumerate their unique keys
-        console.log('creating proxy', props.themeSubSelect, nextTheme)
         const ogSubTheme = nextTheme
         nextTheme = new Proxy(ogSubTheme, {
           get(target, key) {
@@ -49,7 +49,7 @@ export const preProcessTheme = (props: GlossProps<any>, theme: CompiledTheme) =>
       return nextTheme
     }
   }
-  return parent
+  return theme
 }
 
 function getAltKey(props: GlossProps<any>) {

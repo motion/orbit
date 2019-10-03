@@ -1,11 +1,10 @@
-import { CurrentThemeContext, gloss, Theme } from 'gloss'
-import { colorize } from 'gloss-theme'
+import { CurrentThemeContext } from 'gloss'
 import { capitalize } from 'lodash'
 import { PureComponent } from 'react'
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 
-import { Button, ButtonProps } from '../buttons/Button'
+import { Button } from '../buttons/Button'
 import { Icon } from '../Icon'
 import { Menu } from '../Menu'
 import { TableFilter, TableFilterColumns } from './types'
@@ -18,19 +17,6 @@ import { TableFilter, TableFilterColumns } from './types'
  */
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
-
-const Token = gloss<ButtonProps & { focused?: boolean }>(Button, {
-  alignItems: 'center',
-}).theme(({ focused }, theme) => ({
-  background:
-    'red' || focused
-      ? theme.backgroundHighlightActive
-      : theme.background || theme.backgroundHighlight,
-  color: theme.colorActiveHighlight || theme.color,
-  '&:active': {
-    background: theme.backgroundHighlightActive,
-  },
-}))
 
 type Props = {
   filter: TableFilter
@@ -179,45 +165,42 @@ export class FilterToken extends PureComponent {
       value = filter.value
     }
 
-    const filterTheme = colorize({
-      background: 'red' || background || theme.backgroundStrong,
-      color: '#fff',
-    })
-
     return (
-      <Theme theme={filterTheme}>
-        <Menu
-          // only show popover for non-electron environment
-          openOnClick={!Electron.remote}
-          popoverTheme={this.context.current._originalTheme}
-          target={
-            <Token
-              tagName="div"
-              tabIndex={-1}
-              onMouseDown={this.onMouseDown}
-              focused={this.props.focused}
-              nodeRef={this.setRef}
-              size={0.8}
-              sizeIcon={1.2}
-              icon="chevron-down"
-              iconAfter
-            >
-              {capitalize(filter.key)}
-              {this.props.filter.type === 'exclude' ? '≠' : '='}
-              {value}
-            </Token>
-          }
-          items={
-            Electron.remote
-              ? []
-              : this.state.menuTemplate.map(item => ({
-                  title: item.label,
-                  onClick: item.click,
-                  after: item.checked && <Icon name="tick" size={12} />,
-                }))
-          }
-        />
-      </Theme>
+      <Menu
+        // only show popover for non-electron environment
+        openOnClick={!Electron.remote}
+        popoverTheme={this.context.current._originalTheme}
+        target={
+          <Button
+            tagName="div"
+            tabIndex={-1}
+            onMouseDown={this.onMouseDown}
+            nodeRef={this.setRef}
+            size={0.8}
+            sizeIcon={1.2}
+            icon="chevron-down"
+            iconAfter
+            background={background || theme.backgroundStrong || 'red'}
+            color="#fff"
+            {...this.props.focused && {
+              background: theme.backgroundStronger || 'black',
+            }}
+          >
+            {capitalize(filter.key)}
+            {this.props.filter.type === 'exclude' ? '≠' : '='}
+            {value}
+          </Button>
+        }
+        items={
+          Electron.remote
+            ? []
+            : this.state.menuTemplate.map(item => ({
+                title: item.label,
+                onClick: item.click,
+                after: item.checked && <Icon name="tick" size={12} />,
+              }))
+        }
+      />
     )
   }
 }

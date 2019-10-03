@@ -7,7 +7,6 @@ import { validPropLoose, ValidProps } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
-import { preProcessTheme } from './theme/preProcessTheme'
 import { ThemeSelect } from './theme/Theme'
 import { themeVariableManager } from './theme/themeVariableManager'
 import { useTheme } from './theme/useTheme'
@@ -221,7 +220,7 @@ export function gloss<Props = any, ThemeProps = Props>(
       shouldUpdateMap = GlossView['shouldUpdateMap']
     }
 
-    const theme = useTheme()
+    const theme = useTheme(props)
     const dynClasses = useRef<Set<string> | null>(null)
 
     // for smarter update tracking
@@ -554,9 +553,8 @@ function addDynamicStyles(
     }
 
     if (theme && themeFn) {
-      const next = preProcessTheme(props, theme)
       dynStyles['.'] = dynStyles['.'] || {}
-      const themeStyles = themeFn(props, next)
+      const themeStyles = themeFn(props, theme)
       const themePropStyles = mergeStyles('.', dynStyles, themeStyles, true)
       if (themePropStyles) {
         mergePropStyles(dynStyles, themePropStyles, props)

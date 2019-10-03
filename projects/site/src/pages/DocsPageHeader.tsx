@@ -55,11 +55,7 @@ export const DocsPageHeader = memo(({ isSmall, inputRef, setTheme, theme }: any)
                 closeOnClickAway
                 elevation={100}
                 zIndex={1000000000000000}
-                target={
-                  <RoundButton debug icon="filter">
-                    {isSmall ? '' : 'Filter'}
-                  </RoundButton>
-                }
+                target={<RoundButton icon="filter">{isSmall ? '' : 'Filter'}</RoundButton>}
               >
                 <>
                   <ListItem selectable={false}>

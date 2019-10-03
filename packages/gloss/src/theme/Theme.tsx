@@ -21,13 +21,6 @@ export const Theme = (props: ThemeProps) => {
   const nextName = (typeof name === 'string' && name) || ''
   const themes = useContext(AllThemesContext)
   const curContext = useContext(CurrentThemeContext)
-  // const [_, set] = useState(0)
-  // useEffect(() => {
-  //   curContext.subscribe(() => {
-  //     console.log('got a new theme')
-  //     set(Math.random())
-  //   })
-  // }, [])
   if (!name && !props.themeSubSelect && !props.coat && !props.theme) {
     return children
   }

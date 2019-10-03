@@ -283,13 +283,13 @@ export const Surface = themeable((direct: SurfaceProps) => {
   const childrenProps: HTMLProps<HTMLDivElement> = {}
 
   const pxHeight = +height == +height
-  const borderLeftRadius = Math.min(
+  const borderLeftRadius = selectDefined(
     props.borderLeftRadius ? +props.borderLeftRadius : undefined,
     segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius,
     pxHeight ? +height / 2 : undefined,
     0,
   )
-  const borderRightRadius = Math.min(
+  const borderRightRadius = selectDefined(
     props.borderRightRadius ? +props.borderRightRadius : undefined,
     segmentedStyle ? segmentedStyle.borderRightRadius : +props.borderRadius,
     pxHeight ? +height / 2 : undefined,

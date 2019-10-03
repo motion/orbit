@@ -49,7 +49,8 @@ export const UnwrapTheme = Symbol('UnwrapTheme') as any
 function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
   return useMemo(() => {
     if (!theme) {
-      debugger
+      console.warn('no theme??')
+      return {}
     }
     return new Proxy(theme, {
       get(target, key) {

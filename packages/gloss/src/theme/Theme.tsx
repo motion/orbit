@@ -26,61 +26,55 @@ type ThemeProps = {
 export const Theme = (props: ThemeProps) => {
   const theme = getNextTheme(props)
   const themeObservableContext = useCreateThemeObservable({ theme: theme! })
+  const nodeRef = useRef<HTMLDivElement>(null)
+
   useLayoutEffect(() => {
-    if (theme && typeof theme !== 'function') {
+    if (themeObservableContext && theme) {
+      const setClassName = () => {
+        const classNames = themeVariableManager.getClassNames(theme)
+        if (nodeRef.current) {
+          nodeRef.current.className = classNames.join(' ')
+        }
+      }
+
+      setClassName()
+      const themeListen = themeObservableContext.subscribe(setClassName)
+
       themeVariableManager.mount(theme)
       return () => {
         themeVariableManager.unmount(theme)
+        themeListen.unsubscribe()
       }
     }
   }, [theme])
+
   if (!theme || !themeObservableContext) {
     return props.children as JSX.Element
   }
+
   return (
     <CurrentThemeContext.Provider value={themeObservableContext}>
-      {getThemeContainer({ theme, children: props.children })}
+      <div ref={nodeRef} style={{ display: 'contents' }}>
+        {props.children}
+      </div>
     </CurrentThemeContext.Provider>
   )
 }
 
 const getNextTheme = (props: ThemeProps) => {
   const { name, theme, themeSubSelect, coat } = props
-  const nextName = (typeof name === 'string' && name) || ''
   const themes = useContext(AllThemesContext)
   const curContext = useContext(CurrentThemeContext)
   if (!name && !themeSubSelect && !coat && !theme) {
     return
   }
-  return themes[nextName] || preProcessTheme(props, curContext.current)
+  return (name && themes[name]) || preProcessTheme(props, curContext.current)
 }
 
 export const CurrentThemeContext = createContext<CurrentTheme>({
   subscribe: _ => ({ unsubscribe: () => {} }),
   current: null as any,
 })
-
-export const getThemeContainer = ({
-  theme,
-  children,
-}: {
-  theme: CompiledTheme
-  children: React.ReactNode
-}) => {
-  if (!theme) {
-    return children
-  }
-  const classNames = themeVariableManager.getClassNames(theme)
-  let childrenFinal = children
-  for (const className of classNames) {
-    childrenFinal = (
-      <div style={{ display: 'contents' }} className={className}>
-        {childrenFinal}
-      </div>
-    )
-  }
-  return childrenFinal
-}
 
 export function useCreateThemeObservable(props: { theme: CompiledTheme }) {
   const parentContext = useContext(CurrentThemeContext)

@@ -561,7 +561,7 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   let styles: CSSPropertySet = {}
   let boxShadow = props.boxShadow || theme.boxShadow || null
 
-  const borderColor = `${themeStyle.borderColor || ''}`
+  const borderColor = themeStyle.borderColor
   const borderWidth = selectDefined(props.borderWidth, theme.borderWidth, 0)
 
   // borderPosition controls putting borders inside vs outside

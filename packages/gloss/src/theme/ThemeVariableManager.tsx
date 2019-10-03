@@ -61,9 +61,6 @@ class ThemeVariableManager {
             coat = preProcessTheme({ coat: coatKey }, theme)
           }
           const coatRules = this.getThemeVariables(coat)
-          if (coatKey === 'flat') {
-            console.log('inserting', selector, coatKey, coatRules)
-          }
           const rule = `${selector} .coat-${coatKey} { ${coatRules} }`
           this.sheet.insertRule(rule)
         }

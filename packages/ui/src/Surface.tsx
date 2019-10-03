@@ -306,7 +306,8 @@ export const Surface = themeable((direct: SurfaceProps) => {
     props.borderBottomLeftRadius,
   )
 
-  const hasAnyGlint = !props.chromeless && !!(glint || glintBottom)
+  const disableGlint = theme.disableGlint ? theme.disableGlint.get() : false
+  const hasAnyGlint = !disableGlint && !props.chromeless && !!(glint || glintBottom)
   let showElement = false
 
   // because we can't define children at all on tags like input

@@ -170,7 +170,7 @@ export const coats: ThemeSet = Object.freeze({
     backgroundActive: colorThemes.blue.background,
   },
   bordered: {
-    glintColor: transparent,
+    disableGlint: true,
     borderWidth: 1,
     ...colorThemes.transparent,
   },
@@ -211,6 +211,7 @@ export const coats: ThemeSet = Object.freeze({
   }),
   translucent: parent => ({
     name: `${parent.name}-translucent`,
+    disableGlint: true,
     ...fromStyles({
       color: parent.color,
       background: parent.background.setAlpha(0.33),
@@ -219,6 +220,7 @@ export const coats: ThemeSet = Object.freeze({
   }),
   clear: parent => ({
     name: `${parent.name}-clear`,
+    disableGlint: true,
     ...fromStyles({
       glintColor: transparent,
       color: parent.color,
@@ -234,6 +236,7 @@ export const coats: ThemeSet = Object.freeze({
     return {
       name: `${parent.name}-flat`,
       searchInputSizeRadius: 1,
+      disableGlint: true,
       background,
       backgroundHover: background,
       buttonBackground: background,
@@ -244,8 +247,6 @@ export const coats: ThemeSet = Object.freeze({
       backgroundStrong: parent.backgroundStrong,
       backgroundStronger: parent.backgroundStronger,
       backgroundStrongest: parent.backgroundStrongest,
-      glintColor: transparent,
-      glintColorBottom: transparent,
       ...colorize({
         borderColor: transparent,
         borderWidth: 0,

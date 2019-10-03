@@ -2,7 +2,7 @@ import { CompiledTheme, Theme, ThemeSelect } from 'gloss'
 import React from 'react'
 
 export type ThemeableProps = {
-  theme?: string | CompiledTheme
+  theme?: CompiledTheme
   themeSubSelect?: ThemeSelect
   coat?: string | false
 }

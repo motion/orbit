@@ -112,7 +112,14 @@ export class Color {
 
   cssVariable = ''
   setCSSVariable(name: string) {
-    this.cssVariable = name
+    // dont overwrite
+    if (this.cssVariable && this.cssVariable !== name) {
+      return this.clone(next => {
+        next.cssVariable = name
+      })
+    } else {
+      this.cssVariable = name
+    }
   }
 
   isDark() {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useLayoutEffect, useRef } from 'react'
 
 import { makeStyleTag } from '../stylesheet/makeStyleTag'
 import { CompiledTheme } from './createTheme'
@@ -47,14 +47,10 @@ class ThemeVariableManager {
 
       if (theme.coats) {
         for (const coatKey in theme.coats) {
-          if (coatKey === 'cssVariable') {
-            debugger
-          }
           const coat = theme.coats[coatKey]
           const coatRules = this.getThemeVariables(coat)
           const rule = `${selector} .coat-${coatKey} { ${coatRules} }`
           this.sheet.insertRule(rule)
-          console.log('inserting', rule)
         }
       }
     }
@@ -69,11 +65,11 @@ class ThemeVariableManager {
   getClassNames(theme: CompiledTheme) {
     let res: string[] = []
     // ensure coat before subTheme, thats the more logical priority
-    if (theme._isCoat) {
-      res.push(`coat-${theme.name}`)
+    if (theme._coatName) {
+      res.push(`coat-${theme._coatName}`)
     }
-    if (theme._isSubTheme) {
-      res.push(`sub-${theme.name}`)
+    if (theme._subThemeName) {
+      res.push(`sub-${theme._subThemeName}`)
     }
     if (!theme._isCoat && !theme._isSubTheme) {
       res.push(`theme-${theme.name}`)
@@ -88,7 +84,7 @@ const themeVariableManager = new ThemeVariableManager()
 export function ThemeVariableContext({ theme, children }: { theme: CompiledTheme; children: any }) {
   const classNames = themeVariableManager.getClassNames(theme)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     themeVariableManager.mount(theme)
     return () => {
       themeVariableManager.unmount(theme)

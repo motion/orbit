@@ -65,6 +65,18 @@ const dark = {
   }),
 }
 
+const home = {
+  ...dark,
+  ...colorize({
+    background: '#000',
+    inputBackground: '#111',
+    inputBackgroundHover: '#111',
+    inputBackgroundActive: '#111',
+    listItemBackgroundHover: 'rgba(255,255,255,0.05)',
+    popoverBackground: '#111',
+  }),
+}
+
 export const themes = createThemes({
   ...KitThemes,
 
@@ -79,11 +91,7 @@ export const themes = createThemes({
 
   light,
   dark,
-
-  docsPageTheme: {
-    ...light,
-    bodyBackground: toColor('#000'),
-  },
+  home,
 
   blogHeaderTheme: {
     ...dark,
@@ -103,16 +111,9 @@ export const themes = createThemes({
     }),
   },
 
-  home: {
-    ...dark,
-    ...colorize({
-      background: '#000',
-      inputBackground: '#111',
-      inputBackgroundHover: '#111',
-      inputBackgroundActive: '#111',
-      listItemBackgroundHover: 'rgba(255,255,255,0.05)',
-      popoverBackground: '#111',
-    }),
+  docsPageTheme: {
+    ...light,
+    bodyBackground: toColor('#000'),
   },
 })
 

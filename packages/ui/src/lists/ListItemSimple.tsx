@@ -172,7 +172,6 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
         className="list-item-surface"
         flexDirection="row"
         alignItems="stretch"
-        themeSubSelect="listItem"
         coat={coat}
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && handleClick) || undefined}

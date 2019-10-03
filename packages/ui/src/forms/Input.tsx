@@ -142,11 +142,11 @@ const SimpleInput = ({
         }),
         [nodeRef, value, defaultValue, placeholder, tagName, elementProps],
       )}
-      elementTheme={useCallback(
-        (p, theme) => ({
+      elementTheme={useCallback((p, theme) => {
+        return {
           // apple selection color
           '&::selection': {
-            color: theme.color.lighten(0.1),
+            color: theme.colorLight,
             background: theme.backgroundSelection || theme.backgroundStronger,
           },
           // autofill keep proper color
@@ -156,9 +156,8 @@ const SimpleInput = ({
               backgroundColor: 'transparent',
             },
           }),
-        }),
-        [],
-      )}
+        }
+      }, [])}
       type="input"
       maxWidth="100%"
       alignItems="center"

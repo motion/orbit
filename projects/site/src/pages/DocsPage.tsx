@@ -1,4 +1,4 @@
-import { BorderRight, Button, configureHotKeys, gloss, List, ListItemProps, ListProps, Portal, ProvideBanner, Sidebar, sleep, Space, Stack, Theme, useFilter, useOnMount, whenIdle } from '@o/ui'
+import { BorderRight, Button, configureHotKeys, gloss, List, ListItemProps, Portal, ProvideBanner, Sidebar, sleep, Space, Stack, Theme, useFilter, useOnMount, whenIdle } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -39,19 +39,21 @@ configureHotKeys({
   ignoreTags: [],
 })
 
-const DocsList = memo((props: Partial<ListProps>) => {
+const DocsList = memo((props: { shouldRenderAll?: boolean }) => {
   const docsStore = DocsStoreContext.useStore()
   const [mounted, setMounted] = useState(false)
 
   useOnMount(async () => {
-    await whenIdle()
-    await sleep(50)
-    await whenIdle()
-    await sleep(50)
-    await whenIdle()
-    await sleep(50)
-    await whenIdle()
-    setMounted(true)
+    if (props.shouldRenderAll) {
+      await whenIdle()
+      await sleep(50)
+      await whenIdle()
+      await sleep(50)
+      await whenIdle()
+      await sleep(50)
+      await whenIdle()
+      setMounted(true)
+    }
   })
 
   const curRow = useRef(docsItems[docsStore.section][0])
@@ -76,6 +78,8 @@ const DocsList = memo((props: Partial<ListProps>) => {
     items = [...items, ...results]
     return items
   }, [docsStore.search, results])
+
+  console.log('re-render me')
 
   return (
     <List
@@ -163,12 +167,15 @@ const DocsPage = memo((props: { children?: any }) => {
     inputRef.current && inputRef.current.focus()
   }, [inputRef.current])
 
+  console.log('themeName', themeName)
+
   return (
     <DocsStoreContext.Provider>
       {/* this is expensive so we use react-reverse-portal to only render once and move it around */}
-      <portals.InPortal node={portalNode}>
+      {/* this caused themes to re-render wholesale :( */}
+      {/* <portals.InPortal node={portalNode}>
         <DocsList />
-      </portals.InPortal>
+      </portals.InPortal> */}
       <Fade.FadeProvide>
         <Portal
           prepend
@@ -244,7 +251,7 @@ const DocsPage = memo((props: { children?: any }) => {
                   zIndex={100}
                   opacity={0.5}
                 />
-                {showSidebar && <portals.OutPortal measureKey={Math.random()} node={portalNode} />}
+                <DocsList />
               </Sidebar>
             </FixedLayout>
           </Portal>
@@ -252,15 +259,18 @@ const DocsPage = memo((props: { children?: any }) => {
 
         <Theme name={themeName}>
           <main className="main-contents">
-            <SectionContent background={theme => theme.background} maxWidth={1400}>
+            <SectionContent
+              color="purple"
+              debug
+              background={theme => theme.background}
+              maxWidth={1400}
+            >
               <Stack direction="horizontal" id="main" className="main">
-                {!isSmall && (
-                  <DocsPageSidebar>
-                    <FadeInView data-is="DocsPageSidebar" flex={1} pointerEvents="auto">
-                      <portals.OutPortal measureKey={Math.random()} node={portalNode} />
-                    </FadeInView>
-                  </DocsPageSidebar>
-                )}
+                <DocsPageSidebar sm-display="none">
+                  <FadeInView data-is="DocsPageSidebar" flex={1} pointerEvents="auto">
+                    <DocsList shouldRenderAll />
+                  </FadeInView>
+                </DocsPageSidebar>
                 <Stack
                   nodeRef={Fade.ref}
                   flex={1}
@@ -285,7 +295,7 @@ const DocsPage = memo((props: { children?: any }) => {
   )
 })
 
-const DocsPageSidebar = memo(({ children }: any) => {
+const DocsPageSidebar = memo(({ children, ...rest }: any) => {
   const screen = useScreenSize()
 
   useStickySidebar({
@@ -295,11 +305,11 @@ const DocsPageSidebar = memo(({ children }: any) => {
   })
 
   return (
-    <Stack id="sidebar" width={230} pointerEvents="auto" height="100vh">
+    <Stack id="sidebar" width={230} pointerEvents="auto" height="100vh" {...rest}>
       <Stack position="relative" className="sidebar__inner" flex={1}>
         <Stack margin={[25, 0, 0]} flex={1} position="relative">
           {children}
-          <BorderRight debug top={10} />
+          <BorderRight top={10} />
         </Stack>
       </Stack>
     </Stack>

@@ -24,34 +24,31 @@ type ThemeProps = {
 }
 
 export const Theme = (props: ThemeProps) => {
-  const theme = getNextTheme(props)
-  const themeObservableContext = useCreateThemeObservable({ theme: theme! })
+  const theme = useNextTheme(props)
+  const themeObservableContext = useCreateThemeObservable({ theme })
   const nodeRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
-    if (themeObservableContext && theme) {
-      const setClassName = () => {
-        const classNames = themeVariableManager.getClassNames(themeObservableContext)
-        if (nodeRef.current) {
-          nodeRef.current.className = classNames
-        }
+    // hasnt changed
+    if (!themeObservableContext) return
+    const setClassName = () => {
+      const classNames = themeVariableManager.getClassNames(themeObservableContext.current)
+      if (nodeRef.current) {
+        nodeRef.current.className = classNames
       }
-
-      setClassName()
-      const themeListen = themeObservableContext.subscribe(setClassName)
-
-      themeVariableManager.mount(themeObservableContext)
-      return () => {
-        themeVariableManager.unmount(themeObservableContext)
-        themeListen.unsubscribe()
-      }
+    }
+    setClassName()
+    const themeListen = themeObservableContext.subscribe(setClassName)
+    themeVariableManager.mount(themeObservableContext)
+    return () => {
+      themeVariableManager.unmount(themeObservableContext)
+      themeListen.unsubscribe()
     }
   }, [theme])
 
-  if (!theme || !themeObservableContext) {
+  if (!themeObservableContext) {
     return props.children as JSX.Element
   }
-
   return (
     <CurrentThemeContext.Provider value={themeObservableContext}>
       <div ref={nodeRef} style={{ display: 'contents' }}>
@@ -61,7 +58,7 @@ export const Theme = (props: ThemeProps) => {
   )
 }
 
-const getNextTheme = (props: ThemeProps) => {
+const useNextTheme = (props: ThemeProps) => {
   const { name, theme, themeSubSelect, coat } = props
   const themes = useContext(AllThemesContext)
   const curContext = useContext(CurrentThemeContext)
@@ -77,11 +74,22 @@ export const ThemeByName = (props: { name?: string; children: React.ReactNode })
   return (
     <div
       style={{ display: 'contents' }}
-      className={`theme-${props.name || (curContext.parentContext || curContext).current.name}`}
+      className={`theme-${props.name || getNonSubThemeName(curContext)}`}
     >
       {props.children}
     </div>
   )
+}
+
+const getNonSubThemeName = (cur: CurrentTheme) => {
+  while (true) {
+    if (cur.parentContext && (cur.current._isCoat || cur.current._isSubTheme)) {
+      cur = cur.parentContext
+    } else {
+      break
+    }
+  }
+  return cur.current.name
 }
 
 export const CurrentThemeContext = createContext<CurrentTheme>({
@@ -89,14 +97,14 @@ export const CurrentThemeContext = createContext<CurrentTheme>({
   current: null as any,
 })
 
-export function useCreateThemeObservable(props: { theme: CompiledTheme }) {
-  const parentContext = useContext(CurrentThemeContext)
+function useCreateThemeObservable(props: { theme?: CompiledTheme }) {
   const themeObservers = useRef<Set<ThemeObserver>>(new Set())
+  const parentContext = useContext(CurrentThemeContext)
 
   // never change this just emit
   const context: CurrentTheme | null = useMemo(() => {
     if (!props.theme) {
-      return null
+      return parentContext
     }
     return {
       parentContext,
@@ -113,11 +121,12 @@ export function useCreateThemeObservable(props: { theme: CompiledTheme }) {
   }, [])
 
   useLayoutEffect(() => {
-    if (context) {
+    if (context && props.theme) {
       if (context.current !== props.theme) {
+        console.log('setting it', context.current)
         context.current = props.theme
         themeObservers.current.forEach(cb => {
-          cb(props.theme)
+          props.theme && cb(props.theme)
         })
       }
     }

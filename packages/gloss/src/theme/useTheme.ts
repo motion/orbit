@@ -14,6 +14,7 @@ export function useTheme(props?: { ignoreCoat?: boolean }) {
   let themeObservable = useContext(CurrentThemeContext)
   // TODO why was this being cleared
   while (!themeObservable.current && themeObservable.parentContext) {
+    console.log('a bit weird here')
     themeObservable = themeObservable.parentContext
   }
   const [cur, setCur] = useState<CompiledTheme>(themeObservable.current)
@@ -44,7 +45,18 @@ export function useTheme(props?: { ignoreCoat?: boolean }) {
   return proxyTheme(theme, trackState.current)
 }
 
-export const UnwrapTheme = Symbol('UnwrapTheme') as any
+export const UnwrapThemeSymbol = Symbol('UnwrapTheme') as any
+export const unwrapTheme = <CompiledTheme>(theme: CompiledTheme): CompiledTheme => {
+  let res = theme
+  while (true) {
+    if (res[UnwrapThemeSymbol]) {
+      res = res[UnwrapThemeSymbol]
+    } else {
+      break
+    }
+  }
+  return res
+}
 
 function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
   return useMemo(() => {
@@ -54,7 +66,7 @@ function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
     }
     return new Proxy(theme, {
       get(target, key) {
-        if (key === UnwrapTheme) {
+        if (key === UnwrapThemeSymbol) {
           return theme
         }
         if (!Reflect.has(target, key)) {

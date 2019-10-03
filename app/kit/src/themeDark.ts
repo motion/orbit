@@ -6,6 +6,9 @@ import { coats } from './themeCoats'
 import { transparent } from './themeColors'
 
 const color = [255, 255, 255]
+const colorLight = toColor([255, 255, 255, 0.9])
+const colorLighter = toColor([255, 255, 255, 0.8])
+const colorLightest = toColor([255, 255, 255, 0.7])
 const background = toColor([25, 25, 25])
 const borderColor = [180, 180, 180, 0.25]
 
@@ -80,6 +83,9 @@ export const dark: ThemeObject = {
   cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
   separatorBackground: backgroundStrong,
+  colorLight,
+  colorLighter,
+  colorLightest,
   ...fromStyles({
     background,
     backgroundHover: [20, 20, 20, 0.2],

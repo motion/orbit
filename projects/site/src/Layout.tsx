@@ -88,6 +88,7 @@ export const Layout = memo((props: any) => {
     document.body.style.background = background
   }, [theme])
 
+  console.log('provide themes', theme, themes)
   return (
     <ProvideUI themes={themes} activeTheme={theme}>
       <PageLoading />

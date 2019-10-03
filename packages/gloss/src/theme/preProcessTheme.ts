@@ -2,7 +2,7 @@ import { GlossProps } from '../gloss'
 import { CompiledTheme, createTheme } from './createTheme'
 import { getThemeCoat } from './getThemeCoat'
 import { selectThemeSubset } from './selectThemeSubset'
-import { UnwrapTheme } from './useTheme'
+import { unwrapTheme, UnwrapThemeSymbol } from './useTheme'
 
 // Default pre process theme is:
 //   1. if coat="" prop, drill down to that theme
@@ -14,38 +14,56 @@ export const preProcessTheme = (props: GlossProps<any>, theme: CompiledTheme) =>
   if (props.theme || !theme) {
     return props.theme
   }
-  const ogTheme = theme[UnwrapTheme] || theme
+  const parent = unwrapTheme(theme)
   if (props.coat || props.themeSubSelect) {
     const altKey = getAltKey(props)
-    const existing = getThemeFromCache(altKey, ogTheme)
+    const existing = getThemeFromCache(parent, altKey)
     if (existing) {
       return existing
     }
-    const coatTheme = getThemeCoat(props.coat, ogTheme)
+    const coatTheme = getThemeCoat(props.coat, parent)
     const subSetTheme = selectThemeSubset(props.themeSubSelect, coatTheme)
-    const nextTheme = createTheme({
-      ...subSetTheme,
-      coats: undefined, // no coat with sub-coats
-      // name: altKey,
-    })
-    setThemeInCache(altKey, ogTheme, nextTheme)
-    return nextTheme
+    if (subSetTheme !== parent) {
+      let nextTheme = createTheme(subSetTheme, false)
+      if (props.themeSubSelect && theme._isSubSelect) {
+        // proxy back to parent but don't merge,
+        // because we want sub-themes to be lighter (ie in CSS variable generation)
+        // and generally to only enumerate their unique keys
+        console.log('creating proxy', props.themeSubSelect, nextTheme)
+        const ogSubTheme = nextTheme
+        nextTheme = new Proxy(ogSubTheme, {
+          get(target, key) {
+            if (key === UnwrapThemeSymbol) {
+              return ogSubTheme
+            }
+            if (Reflect.has(target, key)) {
+              return Reflect.get(target, key)
+            }
+            if (Reflect.has(parent, key)) {
+              return Reflect.get(parent, key)
+            }
+          },
+        })
+      }
+      setThemeInCache(parent, altKey, nextTheme)
+      return nextTheme
+    }
   }
-  return theme
+  return parent
 }
 
 function getAltKey(props: GlossProps<any>) {
   return `coat${props.coat || '_'}-sub${props.themeSubSelect || '_'}`
 }
 
-function getThemeFromCache(altKey: string, theme: CompiledTheme) {
-  const altCache = themeAltCache.get(theme)
+function getThemeFromCache(parent: CompiledTheme, altKey: string) {
+  const altCache = themeAltCache.get(parent)
   if (altCache && altCache[altKey]) {
     return altCache[altKey]
   }
 }
 
-function setThemeInCache(key: string, parent: CompiledTheme, theme: CompiledTheme) {
+function setThemeInCache(parent: CompiledTheme, key: string, theme: CompiledTheme) {
   if (!themeAltCache.has(parent)) {
     themeAltCache.set(parent, {})
   }

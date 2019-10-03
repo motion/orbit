@@ -330,7 +330,7 @@ export const Surface = themeable((direct: SurfaceProps) => {
     showElement = !!(hasChildren(children) || elementProps)
     const spaceElement = <Space size={selectDefined(space, size * 6)} />
 
-    const innerElements = (
+    const innerElements = !!icon && (
       <PassProps
         passCondition={acceptsIcon}
         coat={coat}
@@ -344,8 +344,8 @@ export const Surface = themeable((direct: SurfaceProps) => {
         {...perfectCenterStyle(throughProps)}
         {...iconProps}
       >
-        {icon && !stringIcon && icon}
-        {icon && stringIcon && <Icon name={`${icon}`} />}
+        {!stringIcon && icon}
+        {stringIcon && <Icon name={`${icon}`} />}
       </PassProps>
     )
 
@@ -558,7 +558,7 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   let styles: CSSPropertySet = {}
   let boxShadow = props.boxShadow || theme.boxShadow || null
 
-  const borderColor = themeStyle.borderColor
+  const borderColor = themeStyle?.borderColor
   const borderWidth = selectDefined(props.borderWidth, theme.borderWidth, 0)
 
   // borderPosition controls putting borders inside vs outside
@@ -598,7 +598,7 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
     '&:hover': props.active
       ? null
       : {
-          ...(!props.chromeless && themeStyle['&:hover']),
+          ...(!props.chromeless && themeStyle?.['&:hover']),
           ...propStyles['&:hover'],
         },
   }

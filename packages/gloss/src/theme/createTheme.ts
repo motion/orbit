@@ -8,7 +8,10 @@ export type CompiledTheme<A extends Partial<ThemeObject> = any> = {
 
 let id = 0
 
-export function createTheme<A extends Partial<ThemeObject>>(theme: A): CompiledTheme<A> {
+export function createTheme<A extends Partial<ThemeObject>>(
+  theme: A,
+  renameKeys = true,
+): CompiledTheme<A> {
   const name = `${theme.name || `theme-${id++}`}`
   const res = Object.keys(theme).reduce((acc, key) => {
     let val = theme[key]
@@ -26,9 +29,11 @@ export function createTheme<A extends Partial<ThemeObject>>(theme: A): CompiledT
         return acc
       }, {})
     } else if (val && typeof val.setCSSVariable === 'function') {
-      const res = val.setCSSVariable(cssVariableName)
-      if (res) {
-        val = res
+      if (renameKeys) {
+        const res = val.setCSSVariable(cssVariableName)
+        if (res) {
+          val = res
+        }
       }
     } else {
       if (key !== 'parent' && key !== 'name' && key !== 'coats' && key[0] !== '_') {

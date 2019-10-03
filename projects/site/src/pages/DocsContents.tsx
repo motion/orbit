@@ -1,7 +1,5 @@
 import GithubIcon from '!raw-loader!../public/logos/github.svg'
-import { themes } from '@o/kit'
 import { Button, gloss, Icon, scrollTo, Section, Space, Stack, SurfacePassProps, Tag, View } from '@o/ui'
-import { ThemeProvide } from 'gloss'
 import React, { memo } from 'react'
 
 import { colors } from '../colors'
@@ -66,135 +64,133 @@ export const DocsContents = memo(
     )
 
     return (
-      <ThemeProvide themes={themes}>
-        <MDX
-          components={{
-            Example: props => (
-              <Example parentId={id} examples={examples} source={examplesSource} {...props} />
-            ),
-          }}
-        >
-          <Section
-            width="100%"
-            margin={[0, 'auto']}
-            padding={padding}
-            titlePadding={padding}
-            titleBorder
-            space
-            title={
-              <TitleText size={(title || '').length > 16 ? 'lg' : 'xl'}>
-                {title || 'No title'}
-              </TitleText>
-            }
-            belowTitle={
-              <SurfacePassProps
-                chromeless
-                cursor="pointer"
-                tagName="a"
-                textDecoration="none"
-                borderWidth={0}
-                glint={false}
-                sizeRadius={0}
-                sizePadding={0}
-                marginRight={30}
-                size="md"
-                alpha={0.65}
-                hoverStyle={{
-                  color: colors.purple,
-                }}
-              >
-                <Stack direction="horizontal" margin={[0, 0, -8]}>
-                  {!!types && (
-                    <Button
-                      iconSize={16}
-                      icon="properties"
-                      tooltip="Component Props"
-                      onClick={e => {
-                        e.stopPropagation()
-                        scrollTo('#component-props')
-                      }}
-                    >
-                      Props
-                    </Button>
-                  )}
-                  {!!source && (
-                    <Button
-                      iconSize={16}
-                      icon="code"
-                      tooltip="View Component Source"
-                      onClick={e => {
-                        e.stopPropagation()
-                        scrollTo('#component-source')
-                      }}
-                    >
-                      Component Source
-                    </Button>
-                  )}
-                  {!!source && (
-                    <Button
-                      iconSize={16}
-                      icon="code"
-                      tooltip="View Source for this Page"
-                      onClick={e => {
-                        e.stopPropagation()
-                        scrollTo('#component-source')
-                      }}
-                    >
-                      Page Source
-                    </Button>
-                  )}
-                </Stack>
-              </SurfacePassProps>
-            }
-            afterTitle={
-              <>
-                {beta && <Tag coat="lightRed">Beta</Tag>}
+      <MDX
+        components={{
+          Example: props => (
+            <Example parentId={id} examples={examples} source={examplesSource} {...props} />
+          ),
+        }}
+      >
+        <Section
+          width="100%"
+          margin={[0, 'auto']}
+          padding={padding}
+          titlePadding={padding}
+          titleBorder
+          space
+          title={
+            <TitleText size={(title || '').length > 16 ? 'lg' : 'xl'}>
+              {title || 'No title'}
+            </TitleText>
+          }
+          belowTitle={
+            <SurfacePassProps
+              chromeless
+              cursor="pointer"
+              tagName="a"
+              textDecoration="none"
+              borderWidth={0}
+              glint={false}
+              sizeRadius={0}
+              sizePadding={0}
+              marginRight={30}
+              size="md"
+              alpha={0.65}
+              hoverStyle={{
+                color: colors.purple,
+              }}
+            >
+              <Stack direction="horizontal" margin={[0, 0, -8]}>
+                {!!types && (
+                  <Button
+                    iconSize={16}
+                    icon="properties"
+                    tooltip="Component Props"
+                    onClick={e => {
+                      e.stopPropagation()
+                      scrollTo('#component-props')
+                    }}
+                  >
+                    Props
+                  </Button>
+                )}
                 {!!source && (
                   <Button
-                    tooltip="Source in Github"
-                    size="lg"
-                    {...linkProps(`https://github.com/motion/orbit`)}
-                    icon={<Icon size={16} svg={GithubIcon} />}
-                    onClick={e => e.stopPropagation()}
-                  />
+                    iconSize={16}
+                    icon="code"
+                    tooltip="View Component Source"
+                    onClick={e => {
+                      e.stopPropagation()
+                      scrollTo('#component-source')
+                    }}
+                  >
+                    Component Source
+                  </Button>
                 )}
-              </>
-            }
-          >
-            <View className="orbit-example-section">{children}</View>
+                {!!source && (
+                  <Button
+                    iconSize={16}
+                    icon="code"
+                    tooltip="View Source for this Page"
+                    onClick={e => {
+                      e.stopPropagation()
+                      scrollTo('#component-source')
+                    }}
+                  >
+                    Page Source
+                  </Button>
+                )}
+              </Stack>
+            </SurfacePassProps>
+          }
+          afterTitle={
+            <>
+              {beta && <Tag coat="lightRed">Beta</Tag>}
+              {!!source && (
+                <Button
+                  tooltip="Source in Github"
+                  size="lg"
+                  {...linkProps(`https://github.com/motion/orbit`)}
+                  icon={<Icon size={16} svg={GithubIcon} />}
+                  onClick={e => e.stopPropagation()}
+                />
+              )}
+            </>
+          }
+        >
+          <View className="orbit-example-section">{children}</View>
 
-            <Space size="xxl" />
+          <Space size="xxl" />
 
-            {nextPrevious}
+          {nextPrevious}
 
-            {!!(types || source) && (
-              <>
-                <Space size="xxl" />
+          {!!(types || source) && (
+            <>
+              <Space size="xxl" />
 
-                <MetaSection>
-                  {!!types && (
-                    <Section size="sm" titleBorder title="Props" id="component-props">
-                      <PropsTable props={types.props} />
-                    </Section>
-                  )}
+              <MetaSection>
+                {!!types && (
+                  <Section size="sm" titleBorder title="Props" id="component-props">
+                    <PropsTable props={types.props} />
+                  </Section>
+                )}
 
-                  <Space size="xl" />
+                <Space size="xl" />
 
-                  {!!source && (
-                    <Section titleBorder size="sm" title={`${title} Source`} id="component-source">
-                      <CodeBlock>{source}</CodeBlock>
-                    </Section>
-                  )}
-                </MetaSection>
+                {!!source && (
+                  <Section titleBorder size="sm" title={`${title} Source`} id="component-source">
+                    <CodeBlock>{source}</CodeBlock>
+                  </Section>
+                )}
+              </MetaSection>
 
-                <Space size="xxl" />
+              <Space size="xxl" />
 
-                {nextPrevious}
-              </>
-            )}
-          </Section>
-        </MDX>
-      </ThemeProvide>
+              {nextPrevious}
+            </>
+          )}
+        </Section>
+      </MDX>
     )
   },
 )

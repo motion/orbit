@@ -3,7 +3,6 @@ import { ThemeObject } from '@o/css/src/css'
 import { weakKey } from '../helpers/WeakKeys'
 import { CompiledTheme } from './createTheme'
 import { ThemeSelect } from './Theme'
-import { UnwrapTheme } from './useTheme'
 
 type PartialTheme = Partial<CompiledTheme>
 
@@ -19,9 +18,12 @@ export function selectThemeSubset(
   if (!themeSubSelect) {
     return theme
   }
-  if (theme) {
-    // unwrap from its proxy to avoid triggering change tracking
-    theme = theme[UnwrapTheme] || theme
+  if (!theme._isCoat && themeSubSelect === theme._themeSubSelect) {
+    return theme
+  }
+  // allow only subsetting coats or original themes, not subsets
+  while (theme._isSubTheme && !theme._isCoat) {
+    theme = theme.parent
   }
   if (typeof themeSubSelect === 'function') {
     return createSubSetTheme(
@@ -35,11 +37,15 @@ export function selectThemeSubset(
   const len = themeSubSelect.length
   const selectedTheme: PartialTheme = {}
   for (const subKey in theme) {
-    if (subKey.indexOf(themeSubSelect) === 0) {
+    if (subKey.indexOf(themeSubSelect) === 0 && typeof theme[subKey] !== 'undefined') {
       const newKey = subKey.slice(len)
       const newKeyCamelCase = `${newKey[0].toLowerCase()}${newKey.slice(1)}`
       selectedTheme[newKeyCamelCase] = theme[subKey]
     }
+  }
+  if (!Object.keys(selectedTheme).length) {
+    // no changes made, dont do any extra work
+    return theme
   }
   return createSubSetTheme(themeSubSelect, theme, selectedTheme, themeSubSelect)
 }
@@ -51,7 +57,6 @@ const createSubSetTheme = (
   themeSubSelect: ThemeSelect,
 ) => {
   return {
-    ...parent,
     ...child,
     coats: undefined,
     parent,

@@ -2,6 +2,7 @@ import { makeStyleTag } from '../stylesheet/makeStyleTag'
 import { CompiledTheme } from './createTheme'
 import { preProcessTheme } from './preProcessTheme'
 import { CurrentTheme } from './Theme'
+import { unwrapTheme } from './useTheme'
 
 class ThemeVariableManager {
   tag = makeStyleTag()
@@ -34,7 +35,7 @@ class ThemeVariableManager {
   }
 
   mount(themeContext: CurrentTheme) {
-    const theme = themeContext.current
+    const theme = unwrapTheme(themeContext.current)
 
     if (this.mounted.has(theme)) {
       this.mounted.set(theme, this.mounted.get(theme)! + 1)
@@ -43,21 +44,27 @@ class ThemeVariableManager {
 
       if (theme._isSubTheme) {
         this.mountSubTheme(themeContext)
-        this.mountedSubThemes.add(themeContext)
+        // clone for now to avoid mutations
+        this.mountedSubThemes.add({
+          ...themeContext,
+          current: { ...themeContext.current },
+        })
         return
       }
       if (theme._isCoat) {
         return
       }
 
-      const classNames = this.getClassNames(themeContext)
+      const classNames = this.getClassNames(themeContext.current)
       const selector = `.${classNames}`
       const rules = this.getThemeVariables(theme)
       if (rules.length) {
         const rule = `${selector} { ${rules} }`
+        if (selector === 'theme-docsPageTheme' && rules.includes('background: linear')) {
+          debugger
+        }
         this.sheet.insertRule(rule)
       }
-
       if (theme.coats) {
         for (const coatKey in theme.coats) {
           let coat = theme.coats[coatKey]
@@ -69,10 +76,9 @@ class ThemeVariableManager {
           this.sheet.insertRule(rule)
         }
       }
-
       if (this.mountedSubThemes.size) {
-        this.mountedSubThemes.forEach(subTheme => {
-          this.mountSubThemeFromParent(theme, subTheme)
+        this.mountedSubThemes.forEach(subThemeContext => {
+          this.mountSubThemeFromParent(theme, subThemeContext)
         })
       }
     }
@@ -88,22 +94,19 @@ class ThemeVariableManager {
   }
 
   mountSubThemeFromParent(parent: CompiledTheme, subThemeContext: CurrentTheme) {
-    const selector = `.theme-${parent.name} .${this.getClassNames(subThemeContext)}`
+    const selector = `.theme-${parent.name} .${this.getClassNames(subThemeContext.current)}`
     let subTheme = subThemeContext.current
     // need to re-run select using new parent theme
     if (subTheme._themeSubSelect) {
       subTheme = preProcessTheme(
         {
           coat: subTheme._coatName,
-          themeSubSelect: subThemeContext.current._themeSubSelect,
+          themeSubSelect: subTheme._themeSubSelect,
         },
         parent,
       )
     }
     const subRules = this.getThemeVariables(subTheme)
-    if (selector === '.theme-docsPageTheme .sub-listItem') {
-      console.warn('how many times doing this?', subRules, subTheme, parent)
-    }
     if (subRules.length) {
       const rule = `${selector} { ${subRules} }`
       this.sheet.insertRule(rule)
@@ -116,10 +119,12 @@ class ThemeVariableManager {
     // this.mounted.set(theme, (this.mounted.get(theme) || 1) - 1)
   }
 
-  getClassNames(themeContext: CurrentTheme) {
-    const theme = themeContext.current
+  getClassNames(theme: CompiledTheme) {
     const isOriginal = !theme._isCoat && !theme._isSubTheme
     if (isOriginal) {
+      if (!theme.name) {
+        debugger
+      }
       return `theme-${theme.name}`
     }
     let res: string[] = []

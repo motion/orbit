@@ -9,6 +9,7 @@ import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
 import { preProcessTheme } from './theme/preProcessTheme'
 import { ThemeSelect } from './theme/Theme'
+import { themeVariableManager } from './theme/themeVariableManager'
 import { useTheme } from './theme/useTheme'
 
 // so you can reference in postProcessProps
@@ -475,6 +476,7 @@ function addStyles(
     // TODO could do a simple "diff" so that fast-changing styles only change the "changing" props
     // it would likely help things like when you animate based on mousemove, may be slower in default case
     const className = addRules(displayName, style, key, moreSpecific)
+
     if (className) {
       classNames = classNames || []
       classNames.push(className)
@@ -784,6 +786,7 @@ function compileTheme(viewOG: GlossView<any>) {
 // adds rules to stylesheet and returns classname
 function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSpecific?: boolean) {
   const [hash, style] = cssStringWithHash(rules)
+
   if (!hash) return
 
   let className = `g${hash}`
@@ -843,6 +846,7 @@ if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
     gc,
     sheet,
     validCSSAttr,
+    themeVariableManager,
   }
 }
 

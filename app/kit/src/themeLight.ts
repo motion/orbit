@@ -5,7 +5,10 @@ import { fromStyles } from 'gloss-theme'
 import { coats } from './themeCoats'
 import { colors } from './themeColors'
 
-const lightColor = '#444'
+const color = toColor('#444')
+const colorLight = color.lighten(0.1)
+const colorLighter = color.lighten(0.2)
+const colorLightest = color.lighten(0.3)
 const lightBackground = toColor('#fff')
 const lightButtonBg = linearGradient('#FCFCFC', '#F5F5F6')
 
@@ -18,6 +21,9 @@ export const light: ThemeObject = {
   cardShadow: [0, 6, 14, [0, 0, 0, 0.058]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
   boxShadowOpacity: 0.01,
+  colorLight,
+  colorLighter,
+  colorLightest,
   ...fromStyles({
     iconFillColor: '#000',
     glintColor: [255, 255, 255, 0.85],
@@ -32,7 +38,7 @@ export const light: ThemeObject = {
     mainBackground: lightBackground,
     backgroundActive: '#eee',
     backgroundHover: '#eee',
-    color: lightColor,
+    color,
     colorHighlight: '#fff',
     colorHighlightActive: '#fff',
     buttonBackground: lightButtonBg,

@@ -1,10 +1,12 @@
 import { makeStyleTag } from '../stylesheet/makeStyleTag'
 import { CompiledTheme } from './createTheme'
 import { preProcessTheme } from './preProcessTheme'
+import { CurrentTheme } from './Theme'
 
 class ThemeVariableManager {
   tag = makeStyleTag()
   mounted = new Map<CompiledTheme, number>()
+  mountedSubThemes = new Set<CurrentTheme>()
 
   get sheet() {
     return this.tag!.sheet! as CSSStyleSheet
@@ -31,23 +33,25 @@ class ThemeVariableManager {
     return rules
   }
 
-  mount(theme: CompiledTheme) {
+  mount(themeContext: CurrentTheme) {
+    const theme = themeContext.current
+
     if (this.mounted.has(theme)) {
       this.mounted.set(theme, this.mounted.get(theme)! + 1)
     } else {
       this.mounted.set(theme, 1)
 
       if (theme._isSubTheme) {
-        this.mountSubSelect(theme)
+        this.mountSubTheme(themeContext)
+        this.mountedSubThemes.add(themeContext)
         return
       }
-
       if (theme._isCoat) {
         return
       }
 
-      const classNames = this.getClassNames(theme)
-      const selector = `.${classNames.join(' .')}`
+      const classNames = this.getClassNames(themeContext)
+      const selector = `.${classNames}`
       const rules = this.getThemeVariables(theme)
       if (rules.length) {
         const rule = `${selector} { ${rules} }`
@@ -65,42 +69,53 @@ class ThemeVariableManager {
           this.sheet.insertRule(rule)
         }
       }
-    }
-  }
 
-  mountSubSelect(subTheme: CompiledTheme) {
-    for (const [theme] of this.mounted.entries()) {
-      // if its a base level theme, add all subtheme rules
-      if (!theme.parent) {
-        const selector = `.theme-${theme.name} .sub-${subTheme.name}`
-        const subRules = this.getThemeVariables(subTheme)
-        if (subRules.length) {
-          const rule = `${selector} { ${subRules} }`
-          this.sheet.insertRule(rule)
-        }
+      if (this.mountedSubThemes.size) {
+        this.mountedSubThemes.forEach(subTheme => {
+          this.mountSubThemeFromParent(theme, subTheme)
+        })
       }
     }
   }
 
-  unmount(_theme: CompiledTheme) {
+  mountSubTheme(subThemeContext: CurrentTheme) {
+    for (const [theme] of this.mounted.entries()) {
+      // if its a base level theme, add all subtheme rules
+      if (!theme.parent) {
+        this.mountSubThemeFromParent(theme, subThemeContext)
+      }
+    }
+  }
+
+  mountSubThemeFromParent(parent: CompiledTheme, subThemeContext: CurrentTheme) {
+    const selector = `.theme-${parent.name} .${this.getClassNames(subThemeContext)}`
+    const subRules = this.getThemeVariables(subThemeContext.current)
+    if (subRules.length) {
+      const rule = `${selector} { ${subRules} }`
+      this.sheet.insertRule(rule)
+    }
+  }
+
+  unmount(_theme: CurrentTheme) {
     // noop for now, not a big memory use
     // would want to garbage collect too and maybe only remove if lots of others are added
     // this.mounted.set(theme, (this.mounted.get(theme) || 1) - 1)
   }
 
-  getClassNames(theme: CompiledTheme) {
+  getClassNames(themeContext: CurrentTheme) {
+    const theme = themeContext.current
+    const isOriginal = !theme._isCoat && !theme._isSubTheme
+    if (isOriginal) {
+      return `theme-${theme.name}`
+    }
     let res: string[] = []
-    // ensure coat before subTheme, thats the more logical priority
     if (theme._coatName) {
       res.push(`coat-${theme._coatName}`)
     }
     if (theme._subThemeName) {
       res.push(`sub-${theme._subThemeName}`)
     }
-    if (!theme._isCoat && !theme._isSubTheme) {
-      res.push(`theme-${theme.name}`)
-    }
-    return res
+    return res.join('-')
   }
 }
 

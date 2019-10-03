@@ -12,7 +12,7 @@ export function ThemeResetSubTheme({ children }: { children: any }) {
     if (themeContext.parentContext) {
       const getClassName = () => {
         if (themeContext.parentContext?.current) {
-          return themeVariableManager.getClassNames(themeContext.parentContext!.current).join(' ')
+          return themeVariableManager.getClassNames(themeContext.parentContext!)
         }
         return ''
       }

@@ -31,18 +31,18 @@ export const Theme = (props: ThemeProps) => {
   useLayoutEffect(() => {
     if (themeObservableContext && theme) {
       const setClassName = () => {
-        const classNames = themeVariableManager.getClassNames(theme)
+        const classNames = themeVariableManager.getClassNames(themeObservableContext)
         if (nodeRef.current) {
-          nodeRef.current.className = classNames.join(' ')
+          nodeRef.current.className = classNames
         }
       }
 
       setClassName()
       const themeListen = themeObservableContext.subscribe(setClassName)
 
-      themeVariableManager.mount(theme)
+      themeVariableManager.mount(themeObservableContext)
       return () => {
-        themeVariableManager.unmount(theme)
+        themeVariableManager.unmount(themeObservableContext)
         themeListen.unsubscribe()
       }
     }

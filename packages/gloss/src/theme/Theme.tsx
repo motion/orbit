@@ -35,7 +35,7 @@ export const Theme = (props: ThemeProps) => {
     }
   }, [theme])
   if (!theme) {
-    return props.children
+    return props.children as JSX.Element
   }
   return (
     <CurrentThemeContext.Provider value={themeObservableContext}>

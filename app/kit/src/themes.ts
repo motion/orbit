@@ -23,7 +23,7 @@ export const themes: { [key: string]: CompiledTheme } = createThemes({
 })
 
 // @ts-ignore
-if (typeof window !== 'undefiend' && !window['themes']) {
+if (typeof window !== 'undefined' && !window['themes']) {
   // @ts-ignore
   window['themes'] = themes
 }

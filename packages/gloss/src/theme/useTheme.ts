@@ -73,10 +73,7 @@ function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
         if (key === UnwrapThemeSymbol) {
           return theme
         }
-        if (!Reflect.has(target, key)) {
-          return
-        }
-        if (key[0] === '_') {
+        if (key[0] === '_' || !Reflect.has(target, key)) {
           return Reflect.get(target, key)
         }
         const val = Reflect.get(target, key)

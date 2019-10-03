@@ -39,9 +39,7 @@ export const preProcessTheme = (props: GlossProps<any>, theme: CompiledTheme) =>
             if (Reflect.has(target, key)) {
               return Reflect.get(target, key)
             }
-            if (Reflect.has(parent, key)) {
-              return Reflect.get(parent, key)
-            }
+            return Reflect.get(parent, key)
           },
         })
       }

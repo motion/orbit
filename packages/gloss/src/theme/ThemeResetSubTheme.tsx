@@ -2,9 +2,12 @@ import { useContext } from 'react'
 import React from 'react'
 
 import { CurrentThemeContext } from './CurrentThemeContext'
-import { Theme } from './Theme'
+import { getThemeContainer } from './ThemeVariableManager'
 
-export function ThemeResetSubTheme(props: { children: any }) {
+export function ThemeResetSubTheme({ children }: { children: any }) {
   const theme = useContext(CurrentThemeContext).current
-  return <Theme theme={theme.parent || theme}>{props.children}</Theme>
+  if (theme.parent) {
+    return getThemeContainer({ children, theme })
+  }
+  return children
 }

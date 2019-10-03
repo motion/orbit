@@ -101,20 +101,26 @@ class ThemeVariableManager {
 // singletone
 const themeVariableManager = new ThemeVariableManager()
 
-export function ThemeVariableContext({ theme, children }: { theme: CompiledTheme; children: any }) {
-  const classNames = themeVariableManager.getClassNames(theme)
+type ThemeContainerProps = { theme: CompiledTheme; children: React.ReactElement }
+
+export function ThemeVariableContext(props: ThemeContainerProps) {
+  const classNames = themeVariableManager.getClassNames(props.theme)
 
   useLayoutEffect(() => {
-    themeVariableManager.mount(theme)
+    themeVariableManager.mount(props.theme)
     return () => {
-      themeVariableManager.unmount(theme)
+      themeVariableManager.unmount(props.theme)
     }
-  }, [theme])
+  }, [props.theme])
 
+  return getThemeContainer(props)
+}
+
+export const getThemeContainer = ({ theme, children }: ThemeContainerProps) => {
   if (!theme) {
     return children
   }
-
+  const classNames = themeVariableManager.getClassNames(theme)
   let childrenFinal = children
   for (const className of classNames) {
     childrenFinal = (

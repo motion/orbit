@@ -5,7 +5,7 @@ import { CompiledTheme } from './createTheme'
 
 class ThemeVariableManager {
   tag = makeStyleTag()
-  mounted = new Map()
+  mounted = new Map<CompiledTheme, number>()
 
   get sheet() {
     return this.tag!.sheet! as CSSStyleSheet
@@ -37,6 +37,12 @@ class ThemeVariableManager {
       this.mounted.set(theme, this.mounted.get(theme) + 1)
     } else {
       this.mounted.set(theme, 1)
+
+      if (theme._isSubTheme) {
+        this.mountSubSelect(theme)
+        return
+      }
+
       const classNames = this.getClassNames(theme)
       const selector = `.${classNames.join(' .')}`
       const rules = this.getThemeVariables(theme)
@@ -50,6 +56,20 @@ class ThemeVariableManager {
           const coat = theme.coats[coatKey]
           const coatRules = this.getThemeVariables(coat)
           const rule = `${selector} .coat-${coatKey} { ${coatRules} }`
+          this.sheet.insertRule(rule)
+        }
+      }
+    }
+  }
+
+  mountSubSelect(subTheme: CompiledTheme) {
+    for (const [theme] of this.mounted.entries()) {
+      // if its a base level theme, add all subtheme rules
+      if (!theme.parent) {
+        const selector = `.theme-${theme.name} .sub-${subTheme.name}`
+        const subRules = this.getThemeVariables(subTheme)
+        if (subRules.length) {
+          const rule = `${selector} { ${subRules} }`
           this.sheet.insertRule(rule)
         }
       }

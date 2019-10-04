@@ -197,17 +197,21 @@ const InlineCode = gloss({
   lineHeight: '1.4rem',
   fontWeight: 400,
   fontSize: '80%',
-}).theme((_, theme) =>
-  theme.background.isDark()
-    ? {
-        background: '#1A71E399',
-        color: [255, 255, 255, 0.8],
-      }
-    : {
-        background: '#efefef',
-        color: [0, 0, 0, 0.8],
-      },
-)
+}).theme((_, theme) => ({
+  background: theme.backgroundStronger,
+  color: theme.colorLighter,
+}))
+
+//   theme.background.isDark()
+//     ? {
+//         background: '#1A71E399',
+//         color: [255, 255, 255, 0.8],
+//       }
+//     : {
+//         background: '#efefef',
+//         color: [0, 0, 0, 0.8],
+//       },
+// )
 
 const LinkedInlineCode = gloss(InlineCode, {
   cursor: 'pointer',

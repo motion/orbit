@@ -51,6 +51,8 @@ export class Window extends BaseComponent {
       // closable: !!props.closable,
       // minimizable: !!props.minimizable,
       // maximizable: !!props.maximizable,
+      opacity: props.opacity,
+      ignoreMouseEvents: props.ignoreMouseEvents,
       webPreferences: props.webPreferences,
       blinkFeatures: props.blinkFeatures,
       hasShadow: typeof props.hasShadow === 'undefined' ? true : !!props.hasShadow,

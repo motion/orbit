@@ -69,6 +69,7 @@ type AppWindowProps = BrowserWindowConstructorOptions & {
   defaultBounds?: any
   animateBounds?: boolean
   onClose?: Function
+  ignoreMouseEvents?: boolean
 }
 
 export function OrbitAppWindow({
@@ -97,6 +98,7 @@ export function OrbitAppWindow({
       file={url}
       webPreferences={{
         nodeIntegration: true,
+        scrollBounds: true,
       }}
       titleBarStyle="hiddenInset"
       {...!(windowProps.defaultBounds && !windowProps.bounds) && {

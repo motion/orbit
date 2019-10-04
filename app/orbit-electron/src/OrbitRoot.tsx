@@ -7,7 +7,6 @@ import React, { useState } from 'react'
 
 import { devTools } from './helpers/devTools'
 import { MenuItems } from './MenuItems'
-import { OrbitActionsAppWindow } from './OrbitActionsAppWindow'
 import { OrbitMainWindow } from './OrbitMainWindow'
 
 const log = new Logger('OrbitRoot')
@@ -32,7 +31,7 @@ export function OrbitRoot(props: { loadingWindow: BrowserWindow }) {
       <MenuItems
         restart={() => setState(state => ({ ...setState, restartKey: state.restartKey + 1 }))}
       />
-      <OrbitActionsAppWindow />
+      {/* <OrbitActionsAppWindow /> */}
       <OrbitMainWindow window={props.loadingWindow} restartKey={state.restartKey} />
     </ReactronApp>
   )

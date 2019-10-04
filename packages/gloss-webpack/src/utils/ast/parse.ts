@@ -13,6 +13,7 @@ export function parse(code: string | Buffer): any {
       'optionalCatchBinding',
       'decorators-legacy',
       'typescript',
+      'optionalChaining',
     ],
     sourceType: 'module',
   })

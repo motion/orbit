@@ -1,4 +1,6 @@
+//!
 import { Stack, View } from '@o/ui/test'
+import { gloss } from 'gloss'
 import * as React from 'react'
 import { render } from 'react-dom'
 
@@ -30,10 +32,16 @@ function Main() {
           >
             some children
           </View>
+          <MySubView>hello world</MySubView>
         </Stack>
       </View>
     </>
   )
 }
+
+const MySubView = gloss(View, {
+  background: 'red',
+  color: [255, 255, 255],
+})
 
 render(<Main />, document.querySelector('#app'))

@@ -1,5 +1,5 @@
 import generate from '@babel/generator'
-import traverse, { VisitNodeObject } from '@babel/traverse'
+import traverse from '@babel/traverse'
 import t = require('@babel/types')
 import { getStylesClassName, GlossView, validCSSAttr } from 'gloss'
 import invariant = require('invariant')
@@ -100,7 +100,8 @@ export function extractStyles(
   const validComponents = {}
   // default to using require syntax
   let useImportSyntax = false
-  let hasValidComponents = false
+
+  const shouldPrintDebug = src[0] === '/' && src[1] === '/' && src[2] === '!'
 
   const views: { [key: string]: GlossView<any> } = {}
 
@@ -108,17 +109,20 @@ export function extractStyles(
   const isInternal =
     options.internalViewsPath && sourceFileName.indexOf(options.internalViewsPath) === 0
 
+  let importsGloss = false
+
   // Find jsxstyle require in program root
   ast.program.body = ast.program.body.filter((item: t.Node) => {
     if (t.isImportDeclaration(item)) {
       // not imported from jsxstyle? byeeee
+      if (item.source.value === 'gloss') {
+        importsGloss = true
+      }
       if (!isInternal && !JSXSTYLE_SOURCES.hasOwnProperty(item.source.value)) {
         return true
       }
-
       jsxstyleSrc = true
       useImportSyntax = true
-
       item.specifiers = item.specifiers.filter(specifier => {
         // keep the weird stuff
         if (
@@ -128,28 +132,73 @@ export function extractStyles(
         ) {
           return true
         }
-
         if (specifier.local.name[0] !== specifier.local.name[0].toUpperCase()) {
           return true
         }
-
         if (!JSX_VALID_NAMES.includes(specifier.local.name)) {
           return true
         }
-
         views[specifier.local.name] = options.views[specifier.local.name]
-        validComponents[specifier.local.name] = specifier.imported.name
-        hasValidComponents = true
+        validComponents[specifier.local.name] = true
         // dont remove the import
         return true
       })
     }
-
     return true
   })
 
+  /**
+   * Step 1: Compiled the gloss() style views and remember if they are able to be compiled
+   * in step 2
+   */
+  // traverse and find base level gloss views
+  if (shouldPrintDebug && importsGloss) {
+    traverse(ast, {
+      // only if its declared as a variable (const MyView = gloss())
+      CallExpression: {
+        enter(path) {
+          if (t.isCallExpression(path.node) && t.isIdentifier(path.node.callee)) {
+            // imported from gloss
+            if (path.node.callee.name !== 'gloss') {
+              return
+            }
+            // assigned to a variable
+            if (t.isVariableDeclarator(path.parent) && t.isIdentifier(path.parent.id)) {
+              const name = path.parent.id.name
+
+              // mark as valid component to optimize later in JSX usage
+              // TODO we need to distinguish between local and exported, local
+              //   should only optimize in this file, exported should go across borders
+
+              // now optimize and compile away
+              if (path.node.arguments.length) {
+                const extendsViewIdentifier =
+                  t.isIdentifier(path.node.arguments[0]) && path.node.arguments[0].name
+
+                if (extendsViewIdentifier) {
+                  // extends on of our optimizable views
+                  if (views[extendsViewIdentifier]) {
+                    console.log('extends an optimizing view', name)
+                    views[name] = options.views[extendsViewIdentifier]
+                    validComponents[name] = true
+                  }
+                }
+
+                const styleObject = path.node.arguments.find(x => t.isObjectExpression(x))
+                if (styleObject) {
+                  // we have some styles to optimize away
+                  console.log('lets od this', name, styleObject)
+                }
+              }
+            }
+          }
+        },
+      },
+    })
+  }
+
   // jsxstyle isn't included anywhere, so let's bail
-  if (!jsxstyleSrc || !hasValidComponents) {
+  if (!jsxstyleSrc || !Object.keys(validComponents).length) {
     return {
       ast,
       css: '',
@@ -162,7 +211,10 @@ export function extractStyles(
   // per-file cache of evaluated bindings
   // const bindingCache = {}
 
-  const traverseOptions: { JSXElement: VisitNodeObject<t.JSXElement, any> } = {
+  /**
+   * Step 2: Statically extract from JSX < /> nodes
+   */
+  traverse(ast, {
     JSXElement: {
       enter(traversePath: TraversePath<t.JSXElement>) {
         const node = traversePath.node.openingElement
@@ -304,7 +356,7 @@ export function extractStyles(
             return true
           }
 
-          let value =
+          let value: any =
             attribute.value && t.isJSXExpressionContainer(attribute.value)
               ? attribute.value.expression
               : attribute.value
@@ -314,23 +366,19 @@ export function extractStyles(
             inlinePropCount++
             return true
           }
-
           // if one or more spread operators are present and we haven't hit the last one yet, the prop stays inline
           if (lastSpreadIndex > -1 && idx <= lastSpreadIndex) {
             inlinePropCount++
             return true
           }
-
           // pass ref, key, and style props through untouched
           if (UNTOUCHED_PROPS.hasOwnProperty(name)) {
             return true
           }
-
           if (name === 'ref') {
             inlinePropCount++
             return true
           }
-
           if (!cssAttributes[name]) {
             inlinePropCount++
             return true
@@ -600,9 +648,7 @@ export function extractStyles(
         }
       },
     },
-  }
-
-  traverse(ast, traverseOptions)
+  })
 
   const resultCSS = Array.from(cssMap.values())
     .map(n => n.commentTexts.map(txt => `${txt}\n`).join('') + n.css)
@@ -632,6 +678,7 @@ export function extractStyles(
       compact: 'auto',
       concise: false,
       filename: sourceFileName,
+      // @ts-ignore
       quotes: 'single',
       retainLines: false,
       sourceFileName,
@@ -640,7 +687,9 @@ export function extractStyles(
     src,
   )
 
-  console.log('result', result.code)
+  if (shouldPrintDebug) {
+    console.log('output >>', result.code)
+  }
 
   return {
     ast,

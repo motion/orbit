@@ -2,7 +2,7 @@ import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
 import { Base, Box, CompiledTheme, gloss, propsToStyles, psuedoStyleTheme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
-import React, { HTMLProps, useContext, useEffect, useMemo, useState } from 'react'
+import React, { HTMLProps, memo, useContext, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
 import { useBreadcrumb, useBreadcrumbReset } from './Breadcrumbs'
@@ -509,8 +509,6 @@ export const Surface = themeable((direct: SurfaceProps) => {
       },
     }
   }, [coat, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
-
-  console.log('render Surface')
 
   // @ts-ignore
   const surfaceFrameProps: SurfaceFrameProps = {

@@ -1,6 +1,6 @@
 import { ensure, HighlightActiveQuery, useReaction, useSearchState } from '@o/kit'
-import { FullScreen, FullScreenProps, linearGradient, List, ProvideVisibility, SelectableStore, Stack, SubTitle, Theme, useTheme, View } from '@o/ui'
-import { Box, BoxProps, gloss, ThemeObject } from 'gloss'
+import { FullScreen, FullScreenProps, List, ProvideVisibility, SelectableStore, Stack, SubTitle, useTheme, View } from '@o/ui'
+import { Box, BoxProps, gloss } from 'gloss'
 import React, { memo, Suspense, useCallback, useMemo, useRef } from 'react'
 
 import { SearchResultsApp } from '../../apps/SearchResultsApp'
@@ -38,23 +38,23 @@ export const OrbitSearchResults = memo(() => {
         },
       }
 
-  const highlightTheme: ThemeObject = useMemo(() => {
-    return {
-      ...theme,
-      coats: {
-        ...theme.coats!,
-        selected: {
-          ...theme.coats!.selected,
-          listItemBackground: theme.background.isDark()
-            ? linearGradient('to right', 'rgba(255,255,255,0.2)', 'transparent')
-            : theme.backgroundHighlight,
-          listItemBackgroundHover: theme.background.isDark()
-            ? linearGradient('to right', 'rgba(255,255,255,0.2)', 'transparent')
-            : theme.backgroundHighlight,
-        },
-      },
-    }
-  }, [theme])
+  // const highlightTheme: ThemeObject = useMemo(() => {
+  //   return {
+  //     ...theme,
+  //     coats: {
+  //       ...theme.coats!,
+  //       selected: {
+  //         ...theme.coats!.selected,
+  //         listItemBackground: theme.background.isDark()
+  //           ? linearGradient('to right', 'rgba(255,255,255,0.2)', 'transparent')
+  //           : theme.backgroundHighlight,
+  //         listItemBackgroundHover: theme.background.isDark()
+  //           ? linearGradient('to right', 'rgba(255,255,255,0.2)', 'transparent')
+  //           : theme.backgroundHighlight,
+  //       },
+  //     },
+  //   }
+  // }, [theme])
 
   /**
    * BEWARE! TWO WAY SYNC AHEAD
@@ -129,32 +129,30 @@ export const OrbitSearchResults = memo(() => {
             paddingRight="5%"
             {...carouselProps}
           >
-            <Theme theme={highlightTheme}>
-              <HighlightActiveQuery query={searchStore.query.length > 2 ? searchStore.query : ''}>
-                <List
-                  ref={listRef}
-                  alwaysSelected
-                  shareable
-                  selectable
-                  itemProps={useMemo(
-                    () => ({
-                      iconBefore: true,
-                      iconSize: 42,
-                      activeStyle: false,
-                      contain: 'strict',
-                      height: 66,
-                      titleProps: {
-                        size: 1.2,
-                      },
-                    }),
-                    [],
-                  )}
-                  onSelect={handleSelect}
-                  items={searchStore.results}
-                  Separator={ListSeparatorLarge}
-                />
-              </HighlightActiveQuery>
-            </Theme>
+            <HighlightActiveQuery query={searchStore.query.length > 2 ? searchStore.query : ''}>
+              <List
+                ref={listRef}
+                alwaysSelected
+                shareable
+                selectable
+                itemProps={useMemo(
+                  () => ({
+                    iconBefore: true,
+                    iconSize: 42,
+                    activeStyle: false,
+                    contain: 'strict',
+                    height: 66,
+                    titleProps: {
+                      size: 1.2,
+                    },
+                  }),
+                  [],
+                )}
+                onSelect={handleSelect}
+                items={searchStore.results}
+                Separator={ListSeparatorLarge}
+              />
+            </HighlightActiveQuery>
           </FullScreen>
         </View>
 

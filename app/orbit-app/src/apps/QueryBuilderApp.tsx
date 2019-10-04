@@ -1,6 +1,7 @@
 import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, query, react, Templates, TreeListStore, useActiveDataApps, useAppState, useAppWithDefinition, useBitHelpers, useCommand, useHooks, useStore } from '@o/kit'
 import { ApiArgType, AppMeta, AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
 import { Button, Card, CardProps, CardSimple, Center, CenteredText, Code, DataInspector, Dock, DockButton, FormField, InputProps, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, Stack, SubTitle, Tab, Table, Tabs, Tag, TextArea, TitleRow, Toggle, TreeList, useCreateTreeList, useGet, useTheme, View } from '@o/ui'
+import { isEqualDebug } from '@o/ui/src/helpers/isEqualDebug'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -627,7 +628,9 @@ const SelectMethodPane = memo(
       </Pane>
     )
   },
+  isEqualDebug,
 )
+
 SelectMethodPane['acceptsProps'] = {
   paneProps: true,
 }

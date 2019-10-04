@@ -1,6 +1,6 @@
 import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, getAppDefinition, RenderAppProps, useActiveUser, useReaction, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { Divider, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, Stack, useDebounceValue, usePosition, useWindowSize, View, ViewProps } from '@o/ui'
+import { Divider, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, memoizeWeak, Stack, useDebounceValue, usePosition, useWindowSize, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { partition } from 'lodash'
 import React, { memo, useContext, useMemo, useRef } from 'react'
@@ -135,57 +135,56 @@ export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
   )
 }
 
-const dockButtonProps = (
-  index: number,
-  dockStore: OrbitDockStore,
-  showLabel: boolean,
-): Partial<DockButtonProps> => {
-  return {
-    background: 'transparent',
-    glint: false,
-    elevation: 0,
-    space: 16,
-    showLabelOnHover: true,
-    onMouseMove: () => {
-      if (appsDrawerStore.isOpen) return
-      // wait for settle
-      if (dockStore.hoveredIndex === -1) {
-        dockStore.hoverEnterButton(index)
-      }
-    },
-    onMouseEnter: () => {
-      if (appsDrawerStore.isOpen) return
-      dockStore.hoverEnterButton(index)
-    },
-    onMouseLeave: () => {
-      dockStore.hoverLeaveButton()
-    },
-    labelProps: {
-      transition: `all ease-out 80ms ${100 - index * 30}ms`,
-      background: [0, 0, 0, 0.65],
-      elevation: 1,
-      opacity: 0,
-      transform: {
-        y: -10,
+const dockButtonProps = memoizeWeak(
+  (index: number, dockStore: OrbitDockStore, showLabel: boolean): Partial<DockButtonProps> => {
+    console.log('get now', index, showLabel)
+    return {
+      background: 'transparent',
+      glint: false,
+      elevation: 0,
+      space: 16,
+      showLabelOnHover: true,
+      onMouseMove: () => {
+        if (appsDrawerStore.isOpen) return
+        // wait for settle
+        if (dockStore.hoveredIndex === -1) {
+          dockStore.hoverEnterButton(index)
+        }
       },
-      ...(showLabel &&
-        dockStore.isOpen && {
-          transition: `all ease-out 400ms ${230 + index * 30}ms`,
+      onMouseEnter: () => {
+        if (appsDrawerStore.isOpen) return
+        dockStore.hoverEnterButton(index)
+      },
+      onMouseLeave: () => {
+        dockStore.hoverLeaveButton()
+      },
+      labelProps: {
+        transition: `all ease-out 80ms ${100 - index * 30}ms`,
+        background: [0, 0, 0, 0.65],
+        elevation: 1,
+        opacity: 0,
+        transform: {
+          y: -10,
+        },
+        ...(showLabel &&
+          dockStore.isOpen && {
+            transition: `all ease-out 400ms ${230 + index * 30}ms`,
+            opacity: 1,
+            transform: {
+              y: 0,
+            },
+          }),
+        hoverStyle: {
+          transition: `all ease-out 200ms`,
           opacity: 1,
           transform: {
             y: 0,
           },
-        }),
-      hoverStyle: {
-        transition: `all ease-out 200ms`,
-        opacity: 1,
-        transform: {
-          y: 0,
         },
       },
-    },
-  }
-}
+    }
+  },
+)
 
 const themes = [
   { name: 'Auto', value: 'automatic', icon: 'right-join' },
@@ -256,7 +255,7 @@ const OrbitDockButton = memo(function OrbitDockButton({
 } & Partial<DockButtonProps>) {
   const drawerStore = useAppsDrawerStore()
   const dockStore = orbitDockStore.useStore()
-  const definition = getAppDefinition(app.identifier!)
+  const definition = getAppDefinition(app.identifier!)!
   const buttonRef = useRef(null)
   const om = useOm()
   const fullyOpened = useDebounceValue(dockStore.isOpen, 300)
@@ -277,9 +276,9 @@ const OrbitDockButton = memo(function OrbitDockButton({
         hoverStyle={{
           opacity: 1,
         }}
-        onClick={() => {
+        onClick={useMemo(() => {
           om.actions.router.showAppPage({ id: `${app.id!}` })
-        }}
+        }, [app])}
         icon={definition.icon || 'layers'}
         label={app.name}
         nodeRef={buttonRef}
@@ -300,6 +299,12 @@ const OrbitDockButton = memo(function OrbitDockButton({
   )
 })
 
+const bounds = {
+  top: 70,
+  right: 60,
+  left: 20,
+  bottom: 20,
+}
 const FloatingAppWindow = memo(
   ({ showMenu, buttonRect, app, definition, index, windowHeight }: any) => {
     const width = 300
@@ -315,23 +320,22 @@ const FloatingAppWindow = memo(
         defaultHeight={height}
         defaultTop={top}
         defaultLeft={left}
-        bounds={{
-          top: 70,
-          right: 60,
-          left: 20,
-          bottom: 20,
-        }}
+        bounds={bounds}
         maxHeight={windowHeight - 80}
         padding={0}
         zIndex={10000000000000}
         visible={showMenu}
         pointerEvents={showMenu ? 'auto' : 'none'}
-        onMouseEnter={() => {
-          orbitDockStore.hoverEnterButton(index)
-        }}
-        onMouseLeave={() => {
-          orbitDockStore.hoverLeaveButton()
-        }}
+        onMouseEnter={
+          useMemo(() => {
+            orbitDockStore.hoverEnterButton(index)
+          }, [index]) as any
+        }
+        onMouseLeave={
+          useMemo(() => {
+            orbitDockStore.hoverLeaveButton()
+          }, []) as any
+        }
         outside={<FloatingLabel visible={showMenu}>{app.name}</FloatingLabel>}
       >
         <AppViewsContext.Provider

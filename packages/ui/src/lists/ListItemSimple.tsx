@@ -323,7 +323,7 @@ const ListItemTitleBar = gloss(Stack, {
   textAlign: 'left',
 })
 
-const Preview = gloss({
+const Preview = gloss(Box, {
   flex: 1,
   zIndex: -1,
 })

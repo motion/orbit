@@ -163,14 +163,7 @@ export function gloss<Props = any, ThemeProps = Props>(
   const targetConfig: GlossInternalConfig | null = hasGlossyParent
     ? target.internal.getConfig()
     : null
-
-  let ignoreAttrs: Object
-  setTimeout(() => {
-    if (!ignoreAttrs) {
-      ignoreAttrs =
-        ThemedView.ignoreAttrs || (hasGlossyParent && target.ignoreAttrs) || baseIgnoreAttrs
-    }
-  }, 0)
+  let ignoreAttrs: any
 
   // shorthand: gloss({ ... })
   if (
@@ -213,6 +206,8 @@ export function gloss<Props = any, ThemeProps = Props>(
     // compile on first run to avoid extra work
     if (!hasCompiled) {
       hasCompiled = true
+      ignoreAttrs =
+        ThemedView.ignoreAttrs || (hasGlossyParent && target.ignoreAttrs) || baseIgnoreAttrs
       themeFn = compileTheme(ThemedView)
       staticClasses = addStyles(staticStyles.styles, ThemedView.displayName)
       config = getCompiledConfig(ThemedView, ogConfig)

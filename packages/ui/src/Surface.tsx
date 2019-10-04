@@ -504,14 +504,12 @@ export const Surface = themeable((direct: SurfaceProps) => {
     opacity: crumb && crumb.total === 0 ? 0 : props.opacity,
   }
 
-  return (
-    <SizedSurfacePropsContext.Reset>
-      <IconPropsContext.Provider value={iconContext}>
-        <BreadcrumbReset>
-          <SurfaceFrame {...surfaceFrameProps} />
-        </BreadcrumbReset>
-      </IconPropsContext.Provider>
-    </SizedSurfacePropsContext.Reset>
+  return SizedSurfacePropsContext.useReset(
+    <IconPropsContext.Provider value={iconContext}>
+      <BreadcrumbReset>
+        <SurfaceFrame {...surfaceFrameProps} />
+      </BreadcrumbReset>
+    </IconPropsContext.Provider>
   )
 })
 

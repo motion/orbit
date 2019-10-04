@@ -16,16 +16,17 @@ type UseThemeProps = { coat?: string | false }
 export function useTheme(props?: UseThemeProps) {
   const themeObservable = useContext(CurrentThemeContext)
   const [cur, setCur] = useState<CompiledTheme>(getTheme(themeObservable.current, props))
-  const trackState = useRef<ThemeTrackState>({
-    hasUsedOnlyCSSVariables: true,
-    nonCSSVariables: new Set(),
-  })
+  const trackState = useRef<ThemeTrackState>()
+  if (!trackState.current) {
+    trackState.current = {
+      hasUsedOnlyCSSVariables: true,
+      nonCSSVariables: new Set(),
+    }
+  }
 
   useEffect(() => {
     const sub = themeObservable.subscribe(theme => {
-      if (trackState.current.hasUsedOnlyCSSVariables) {
-        // no need to change
-      } else {
+      if (!trackState.current!.hasUsedOnlyCSSVariables) {
         console.warn('re-rendering because used variables', trackState.current)
         setCur(getTheme(theme, props))
       }
@@ -66,6 +67,7 @@ function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
   return useMemo(() => {
     if (!theme) {
       console.warn('no theme??')
+      debugger
       return {}
     }
     return new Proxy(theme, {

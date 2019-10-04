@@ -130,6 +130,9 @@ export class Color {
     'cacheToString',
     'hash',
     'valueOf',
+    'cssVariableSafeKeys',
+    'originalInput',
+    'isValid',
   ]
   cssVariable = ''
   cssUseAlpha = false

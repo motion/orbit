@@ -97,6 +97,7 @@ export class Window extends BaseComponent {
       show: propVal => {
         if (propVal === this.options.show) return
         this.options.show = propVal
+        console.log('Window.show', propVal)
         if (propVal) {
           // ensure it happens after positioning
           setTimeout(() => {

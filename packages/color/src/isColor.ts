@@ -76,7 +76,6 @@ function memoizeOne<Result>(cb: Function): (a: any) => Result {
     if (mappable) {
       const res = Cache.get(key)
       if (res) {
-        console.log('memo hit!')
         return res
       }
     }
@@ -84,7 +83,6 @@ function memoizeOne<Result>(cb: Function): (a: any) => Result {
     if (mappable) {
       Cache.set(key, newVal)
     }
-    console.log('memo miss!')
     return newVal
   }
 }

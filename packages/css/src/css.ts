@@ -58,9 +58,6 @@ export function cssStringWithHash(styles: Object, opts?: CSSConfig): [number, st
     let value = cssValue(key, rawVal, false, opts)
     // shorthands
     if (value !== undefined) {
-      if (value?.includes && value?.includes(`10px 10px 40px`)) {
-        debugger
-      }
       if (hash === 0) hash = 5381
       // cache keys hashes, keys are always the same
       let keyHash = keyHashes[key]
@@ -112,7 +109,6 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
   if (value === false) {
     value === FALSE_VALUES[key]
   }
-  console.log('key', key)
   // remove nullish
   if (value === undefined || value === null || value === false) {
     return
@@ -200,17 +196,21 @@ export function processArray(key: string, value: any[], level: number = 0): stri
     value.push('solid')
   }
   if (key === 'boxShadow') {
-    value = value.map(x => processBoxShadow(key, x))
+    value = value.map(processBoxShadow)
   } else {
     value = value.map(val => processArrayItem(key, val))
   }
   return value.join(level === 0 && COMMA_JOINED[key] ? ', ' : ' ')
 }
 
-function processBoxShadow(key: string, val: boxShadowItem) {
+function processBoxShadow(val: boxShadowItem) {
   if (Array.isArray(val)) {
-    debugger
-    return val.map(x => cssValue(key, x)).join(' ')
+    return val
+      .map(x => {
+        if (Config.isColor(x)) return Config.toColor(x)
+        return px(x as any)
+      })
+      .join(' ')
   }
   if (val && typeof val === 'object') {
     return objectToCSS.boxShadow(val)

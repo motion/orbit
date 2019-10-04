@@ -104,7 +104,7 @@ export class AppsManager {
 
   activeSpace = react(
     () => [this.user, this.spaces],
-    () => this.spaces.find(x => x.id === this.user.activeSpace)
+    () => this.user && this.spaces.find(x => x.id === this.user.activeSpace),
   )
 
   activeSpaceDirectory = react(

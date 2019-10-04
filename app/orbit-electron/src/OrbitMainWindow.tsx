@@ -2,7 +2,7 @@ import { isEqual } from '@o/fast-compare'
 import { Logger } from '@o/logger'
 import { ChangeDesktopThemeCommand } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
-import { ensure, react, useStore } from '@o/use-store'
+import { createUsableStore, ensure, react, useStore } from '@o/use-store'
 import { app, BrowserWindow, screen, systemPreferences } from 'electron'
 import { join } from 'path'
 import React, { useEffect } from 'react'
@@ -131,12 +131,20 @@ class OrbitMainWindowStore {
   }
 }
 
+const orbitMainWindowStore = createUsableStore(OrbitMainWindowStore, {
+  enabled: Electron.isMainWindow,
+})
+global['orbitMainWindowStore'] = orbitMainWindowStore
+
 export function OrbitMainWindow(props: { restartKey?: any; window?: BrowserWindow }) {
   const { isMainWindow, windowId } = useStore(Electron)
-  const store = useStore(OrbitMainWindowStore, {
-    enabled: isMainWindow,
-  })
-  global['OrbitMainWindowStore'] = store
+  const store = orbitMainWindowStore.useStore()
+
+  useEffect(() => {
+    orbitMainWindowStore.setProps({
+      enabled: isMainWindow,
+    })
+  }, [isMainWindow])
 
   log.info(
     `render ${Electron.appConf.appRole} ${isMainWindow} ${windowId} ${store.show} ${

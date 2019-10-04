@@ -47,6 +47,8 @@ const getUID = () => {
   return uid
 }
 
+const WrappedFns = new WeakMap()
+
 export function mobxProxyWorm<A extends Function>(
   obj: A,
   parentPath = '',
@@ -97,9 +99,15 @@ export function mobxProxyWorm<A extends Function>(
         if (isObservableProp(store, key)) {
           return val
         }
+        if (WrappedFns.has(val)) {
+          return WrappedFns.get(val)
+        }
         // this will ensure prototypical fns will still move through proxyWorm
         // by binding store to val, so they use the proxy worm as `this`
-        return (...args: any[]) => val.call(store, ...args)
+        const next = (...args: any[]) => val.call(store, ...args)
+        // dont re-wrap it every time
+        WrappedFns.set(val, next)
+        return next
       }
       state.add(nextPath)
       if (val) {

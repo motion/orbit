@@ -13,10 +13,9 @@ export const logo = {
 export const LogoHorizontal = memo((props: ViewProps & { slim?: boolean }) => {
   const theme = useTheme()
   const scaleDown = 0.43 + (props.slim ? 0 : 0.5)
-
   return (
     <View
-      color={theme.color.toString()}
+      color={theme.color}
       cursor="pointer"
       alignItems="center"
       justifyContent="center"

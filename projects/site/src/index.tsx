@@ -21,6 +21,18 @@ async function start() {
 
   await Promise.all(polyfills.map(x => x()))
 
+  let unloaded = false
+  window.addEventListener('beforeunload', () => {
+    console.log('unloading')
+    unloaded = true
+  })
+  const og = window.requestAnimationFrame
+  window.requestAnimationFrame = cb => {
+    if (!unloaded) {
+      return og(cb)
+    }
+  }
+
   require('./configurations')
   require('./startSite')
 }

@@ -154,7 +154,7 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
     }
   }
   if (__DEV__) {
-    console.error(`Invalid style value for ${key}`)
+    console.error(`Invalid style value for ${key}`, value)
   }
 }
 
@@ -269,7 +269,7 @@ export function processObject(key: string, object: any): string | undefined {
   if (!object.constructor || Object.prototype.toString.call(object) === '[object Object]') {
     const toReturn: string[] = []
     for (const subKey in object) {
-      if (!object.hasOwnProperty(subKey)) {
+      if (!Object.hasOwnProperty.call(object, subKey)) {
         continue
       }
       let value = object[subKey]

@@ -14,7 +14,14 @@ import { useResizeObserver } from './hooks/useResizeObserver'
 import { ViewProps } from './View/types'
 import { View } from './View/View'
 
-const rnd = x => (typeof x === 'number' ? Math.round(x * 100) / 100 : x)
+// const rnd = x => (typeof x === 'number' ? Math.round(x * 100) / 100 : x)
+// const table = x =>
+//   console.table(
+//     Object.keys(x).reduce((acc, k) => {
+//       acc[k] = rnd(x[k])
+//       return acc
+//     }, {}),
+//   )
 
 class ParallaxStore {
   bounds: Rect = {
@@ -97,14 +104,6 @@ type ParallaxGeometryProps = ParallaxProps & {
   measurements: RefObject<ParallaxMeasurements>
 }
 
-const table = x =>
-  console.table(
-    Object.keys(x).reduce((acc, k) => {
-      acc[k] = rnd(x[k])
-      return acc
-    }, {}),
-  )
-
 class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
   useParallaxIntersection(props?: ParallaxItemProps) {
     const {
@@ -135,6 +134,9 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
           nodeSizePct,
           parentSizePct,
         } = measurements.current
+
+        // early called (not sure why)
+        if (frameSizePct === undefined) return 0
 
         let intersection = 0
         const parentCenter = parentEndPct - parentSizePct / 2

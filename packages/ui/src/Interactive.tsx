@@ -631,7 +631,6 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       bordered,
       ...props
     } = this.props
-    const { resizingSides } = this.state
     const cursor = this.state.cursor
     const nesting = this.context ? this.context.nesting || 0 : 0
     const zIndex = typeof props.zIndex === 'undefined' ? 10000000 - nesting : props.zIndex
@@ -668,6 +667,8 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       onMouseLeave: this.onMouseLeave,
     }
     const useFloatingGrabbers = !disabled && resizable && !disableFloatingGrabbers
+
+    console.log('render', props)
 
     return (
       <InteractiveNesting.Provider value={nesting + 1}>

@@ -99,7 +99,7 @@ export class Color {
   }
 
   getCSSValue() {
-    return this.toString('rgb')
+    return this.toRgbString()
   }
 
   getCSSColorVariables() {
@@ -110,6 +110,27 @@ export class Color {
     }
   }
 
+  cssVariableSafeKeys = [
+    'toRgbValue',
+    'toRgbString',
+    'getCSSValue',
+    'cssVariable',
+    'getCSSColorVariables',
+    'cssUseRgb',
+    'cssUseAlpha',
+    'setAlpha',
+    'alpha',
+    'clone',
+    'r',
+    'g',
+    'b',
+    'toRgb',
+    'roundA',
+    'format',
+    'cacheToString',
+    'hash',
+    'valueOf',
+  ]
   cssVariable = ''
   cssUseAlpha = false
   cssUseRgb = true

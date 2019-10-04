@@ -84,7 +84,6 @@ const startLoading = once(async () => {
   while (allUpcoming.length) {
     await onIdle()
     const next = allUpcoming.reduce((a, b) => (b.top < a.top ? b : a), { top: Infinity })
-    console.log('loading', next)
     next.load()
     allUpcoming.splice(allUpcoming.findIndex(x => x.load === next.load), 1)
   }

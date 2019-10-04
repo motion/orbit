@@ -241,7 +241,7 @@ const HomeButton = memo(
       <View nodeRef={ref} WebkitAppRegion="no-drag" {...props}>
         <AppIcon
           cutout
-          colors={[theme.color.toString(), theme.color.toString()] as any}
+          colors={[theme.color, theme.color] as any}
           onMouseEnter={() => actions.setNavHovered(true)}
           onMouseLeave={() => actions.setNavHovered(false)}
           opacity={0.5}

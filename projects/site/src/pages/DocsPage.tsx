@@ -1,8 +1,8 @@
-import { BorderRight, Button, configureHotKeys, gloss, List, ListItemProps, Portal, ProvideBanner, Sidebar, sleep, Space, Stack, Theme, useFilter, useOnMount, whenIdle } from '@o/ui'
+import { BorderRight, Button, configureHotKeys, gloss, List, ListItemProps, Portal, ProvideBanner, Sidebar, sleep, Space, Stack, Theme, useFilter, useOnMount, View, whenIdle } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { NotFoundBoundary, View } from 'react-navi'
+import { NotFoundBoundary, View as NaviView } from 'react-navi'
 import * as portals from 'react-reverse-portal'
 
 import { Header } from '../Header'
@@ -229,29 +229,34 @@ const DocsPage = memo((props: { children?: any }) => {
 
         {isSmall && (
           <Portal>
-            <FixedLayout isSmall>
-              <Sidebar
-                hidden={!showSidebar}
-                zIndex={10000000}
-                elevation={25}
-                width={260}
-                background={theme => theme.background}
-              >
-                <Button
-                  chromeless
-                  size={1.5}
-                  icon="cross"
-                  position="absolute"
-                  top={0}
-                  right={0}
-                  onClick={() => setShowSidebar(false)}
-                  pointerEvents="auto"
-                  zIndex={100}
-                  opacity={0.5}
-                />
-                <DocsList />
-              </Sidebar>
-            </FixedLayout>
+            <Theme name={themeName}>
+              <FixedLayout isSmall>
+                <Sidebar
+                  hidden={!showSidebar}
+                  zIndex={10000000}
+                  elevation={25}
+                  width={260}
+                  data-is="SmallSidebar"
+                  background={theme => theme.background}
+                >
+                  <View flex={1} pointerEvents="auto">
+                    <Button
+                      chromeless
+                      size={1.5}
+                      icon="cross"
+                      position="absolute"
+                      top={0}
+                      right={0}
+                      onClick={() => setShowSidebar(false)}
+                      pointerEvents="auto"
+                      zIndex={100}
+                      opacity={0.5}
+                    />
+                    <DocsList />
+                  </View>
+                </Sidebar>
+              </FixedLayout>
+            </Theme>
           </Portal>
         )}
 
@@ -331,14 +336,14 @@ export default compose(
     if (window.location.pathname.indexOf('/isolate') >= 0) {
       return (
         <DocsChromeSimple>
-          <View />
+          <NaviView />
         </DocsChromeSimple>
       )
     }
     return (
       <ProvideBanner>
         <DocsPage>
-          <View disableScrolling={window['recentHMR']} />
+          <NaviView disableScrolling={window['recentHMR']} />
         </DocsPage>
       </ProvideBanner>
     )

@@ -81,7 +81,22 @@ function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
         }
         const val = Reflect.get(target, key)
         if (val && val.cssVariable) {
-          return val
+          return new Proxy(val, {
+            get(starget, skey) {
+              if (skey === 'cssVariable') {
+                // unwrap
+                return starget[skey]
+              }
+              if (typeof key === 'string' && typeof skey === 'string') {
+                if (!starget.cssVariableSafeKeys.includes(skey)) {
+                  console.log('deopt me', skey)
+                  trackState.nonCSSVariables.add(key)
+                  trackState.hasUsedOnlyCSSVariables = false
+                }
+              }
+              return Reflect.get(starget, skey)
+            }
+          })
         } else {
           if (typeof key === 'string') {
             trackState.nonCSSVariables.add(key)

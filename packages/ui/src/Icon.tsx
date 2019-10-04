@@ -75,7 +75,7 @@ export const PlainIcon = ({
 }: IconProps) => {
   const theme = useTheme()
   const size = snapToSizes(props.size) * useScale()
-  let color = props.color || (theme.color ? theme.color : '#fff')
+  let color = props.color || theme.color || '#fff'
   let opacity
 
   if (isDefined(props.opacity)) {
@@ -83,9 +83,8 @@ export const PlainIcon = ({
       opacity = props.opacity
     } else {
       try {
-        color = toColor(color as any).setAlpha(
-          typeof props.opacity === 'number' ? props.opacity : 1,
-        )
+        const opcty = typeof props.opacity === 'number' ? props.opacity : 1
+        color = toColor(color as any).setAlpha(opcty)
       } catch {
         console.debug('couldnt interpret color', color)
         opacity = props.opacity

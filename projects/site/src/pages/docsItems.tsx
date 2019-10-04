@@ -17,7 +17,6 @@ const guides = [
   {
     id: '',
     title: 'Introduction',
-    debug: true,
     ...titleItem,
   },
   {

@@ -100,7 +100,6 @@ class ThemeVariableManager {
     const parentParent = subThemeContext.parentContext?.parentContext?.current
     if (parentParent && parentParent.name !== parent.name) {
       selectors += `, .theme-${parentParent.name} ${selectors}`
-      console.log('selectors', selectors)
     }
 
     let subTheme = subThemeContext.current

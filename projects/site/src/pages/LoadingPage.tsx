@@ -37,7 +37,7 @@ export function LoadingPage() {
       justifyContent="center"
       {...!loading && hideProps}
     >
-      <BrandMark id="orbit-mark" />
+      <BrandMark />
     </FullScreen>
   )
 }

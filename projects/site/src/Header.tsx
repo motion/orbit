@@ -21,6 +21,7 @@ export type HeaderProps = {
 
 export const Header = memo(({ slim, noBorder, before, logoProps, ...rest }: HeaderProps) => {
   const theme = useTheme()
+  console.log('theme is', theme.name)
   const siteStore = useSiteStore()
   const headerStore = HeaderContext.useCreateStore()
   // only animate once

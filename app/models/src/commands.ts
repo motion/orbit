@@ -205,3 +205,5 @@ export const CallAppBitApiMethodCommand = new Command<
 >('CallAppBitApiMethodCommand')
 
 export const OracleCommand = new Command<void, OracleActions>('OracleCommand')
+
+export const ToggleOrbitActionsCommand = new Command<void, void>('ToggleOrbitActionsCommand')

@@ -98,7 +98,7 @@
     "jest": "24.8.0",
     "lerna": "^3.16.4",
     "mobx": "^5.13.0",
-    "overmind-devtools": "20.1.2",
+    "overmind-devtools": "^20.3.0",
     "patch-package": "6.1.2",
     "prettier": "1.17.0",
     "sb-promisify": "^2.0.2",

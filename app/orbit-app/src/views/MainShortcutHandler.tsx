@@ -1,4 +1,4 @@
-import { useStoresSimple } from '@o/kit'
+import { command, useStoresSimple } from '@o/kit'
 import { App } from '@o/stores'
 import { Direction, GlobalHotKeys, GlobalPopovers, useShortcutStore } from '@o/ui'
 import React, { memo, useMemo } from 'react'
@@ -14,7 +14,8 @@ const rootShortcuts = {
   COMMAND_NEW: 'command+n',
   COMMAND_OPEN: 'command+enter',
   OPEN: ['tab', 'enter'],
-  SWITCH_SPACE: 'command+k',
+  COMMAND_K: 'command+k',
+  COMMAND_P: 'command+p',
   COPY_LINK: 'command+shift+c',
   ESCAPE: 'esc',
   ENTER: 'enter',
@@ -42,7 +43,7 @@ export default memo(function MainShortcutHandler(props: {
   handlers?: any
 }) {
   const { queryStore, paneManagerStore } = useStoresSimple()
-  const shortcutStore = useShortcutStore({ react: false })
+  const shortcutStore = useShortcutStore({ react: false })!
   const { actions, effects } = useOm()
 
   console.warn('rendering main shortcut handler')
@@ -51,7 +52,10 @@ export default memo(function MainShortcutHandler(props: {
     let res: any = {
       COMMAND_NEW: actions.router.showSetupAppPage,
       COMMAND_OPEN: effects.openCurrentApp,
-      SWITCH_SPACE: () => actions.router.showAppPage({ id: 'spaces' }),
+      COMMAND_K: () => actions.router.showAppPage({ id: 'spaces' }),
+      COMMAND_P: () => {
+        command(ToggleOrbitActions)
+      },
       OPEN: () => {
         if (document.activeElement && document.activeElement.classList.contains('ui-input')) {
           // TODO this could be done in a more standard, nice way

@@ -16409,40 +16409,34 @@ output-file-sync@^2.0.0:
     is-plain-obj "^1.1.0"
     mkdirp "^0.5.1"
 
-overmind-devtools-client@2.1.2:
-  version "2.1.2"
-  resolved "https://registry.npmjs.org/overmind-devtools-client/-/overmind-devtools-client-2.1.2.tgz#92df6ef66d54081678ab25eac3bf267c46810394"
-  integrity sha512-PBS58y7pP8L6SaIhJsM4eFXsZ5zrX4/1ZiuZOlj9ED3kvadoUAbqdwgsKQIsnTpu1uiDjf3HYOhUfrKrb1W/BQ==
+overmind-devtools-client@2.3.0:
+  version "2.3.0"
+  resolved "https://registry.npmjs.org/overmind-devtools-client/-/overmind-devtools-client-2.3.0.tgz#7f5db1961b0d4a8a6d26c363bbee5b17db5a4006"
+  integrity sha512-IzOWO1mmKSuAGHJzQvIcSKGuYf9k0j1EaA+z46mXCdX/Exefa3RLU+9VrKiZ34PVECnJMc9YDFBs3cOZ4KPwYQ==
   dependencies:
     emotion "^9.2.12"
     lodash.throttle "^4.1.1"
-    overmind-react "20.1.1"
+    overmind-react "20.2.0"
     overmind-themes "1.0.2"
     react "16.8.1"
     react-dom "16.8.1"
+    react-split-pane "^0.1.87"
     ws "^7.0.0"
 
-overmind-devtools@20.1.2:
-  version "20.1.2"
-  resolved "https://registry.npmjs.org/overmind-devtools/-/overmind-devtools-20.1.2.tgz#f2af90a3e15e3ff06146d3e8e2217ecda99e07d3"
-  integrity sha512-94y2BPAzX4Ms4S3paIgClCOB+2sbFHVjpfxTo+zA6sQpMe6P/n/7nEEUKOk69VpDAh5zGF9uxU3dCqKb5IYVgw==
+overmind-devtools@^20.3.0:
+  version "20.3.0"
+  resolved "https://registry.npmjs.org/overmind-devtools/-/overmind-devtools-20.3.0.tgz#43b2c71a92b122b4b15fe459a054d4ccba512d30"
+  integrity sha512-XilrIfDlxevFDCkVUSTNxSUq6ERBKoan8YWm1sfLjaSDg6XSkflGmfIxf69UxsQp8C1qxsCfwiXzzTVrn7XT+Q==
   dependencies:
     color "^3.0.0"
     color-hash "^1.0.3"
     electron "^2.0.8"
     electron-json-storage "^4.1.0"
     electron-prompt "^1.3.1"
-    overmind-devtools-client "2.1.2"
+    overmind-devtools-client "2.3.0"
     ws "^7.0.0"
 
-overmind-react@20.1.1:
-  version "20.1.1"
-  resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-20.1.1.tgz#7cf60f885ea47d5a47e045b23a61e810c5a0cb52"
-  integrity sha512-2qZmjiihnn+tRpkD97TYm1OuVPpEC7Fsle80PUj7XZL6hrENdmY1BwoOMZfLhuhscgjaFUXtQGayVZ1WPfSjbg==
-  dependencies:
-    overmind "19.1.1"
-
-overmind-react@^20.2.0:
+overmind-react@20.2.0, overmind-react@^20.2.0:
   version "20.2.0"
   resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-20.2.0.tgz#c771d10263b6a55fa815733cec3b531116b43cb1"
   integrity sha512-xdIJw0e/9n10MQMzpXqfw6DcY3aYRBQjR/krxtpPFnOu7Fe3UM/dGUtZMvawgnHQT7GQrurFpJeqJL3FUfqoAA==
@@ -16457,15 +16451,6 @@ overmind-themes@1.0.2:
     "@types/node" "^10.5.1"
     color "^3.0.0"
     tslib "^1.9.3"
-
-overmind@19.1.1:
-  version "19.1.1"
-  resolved "https://registry.npmjs.org/overmind/-/overmind-19.1.1.tgz#aab60547f611c1a05bc036c568b0557e8fd522d2"
-  integrity sha512-XxDJGY6rZRdhurLuuuawrkTZw9uV+2sAL5ee/oL/P1LccoEfDznaWaY8Ky6+mXRi8MZrN9VVAnsIhHnZD0WNdQ==
-  dependencies:
-    betsy "1.0.2"
-    is-plain-obj "^1.1.0"
-    proxy-state-tree "4.4.3"
 
 overmind@19.2.0, overmind@^19.2.0:
   version "19.2.0"
@@ -18762,6 +18747,22 @@ react-shadow@^17.1.3:
   integrity sha512-T0TETccduTNwid9/URfWRhtAH0Fv3eA1zra7cq+2bY5u4fd4oBjtXA629h/95QN8aznlJof3ELd36qOyzaGdHQ==
   dependencies:
     humps "^2.0.1"
+
+react-split-pane@^0.1.87:
+  version "0.1.87"
+  resolved "https://registry.npmjs.org/react-split-pane/-/react-split-pane-0.1.87.tgz#a7027ae554abfacca35f5f780288b07fe4ec4cbd"
+  integrity sha512-F22jqWyKB1WximT0U5HKdSuB9tmJGjjP+WUyveHxJJys3ANsljj163kCdsI6M3gdfyCVC+B2rq8sc5m2Ko02RA==
+  dependencies:
+    prop-types "^15.5.10"
+    react-lifecycles-compat "^3.0.4"
+    react-style-proptype "^3.0.0"
+
+react-style-proptype@^3.0.0:
+  version "3.2.2"
+  resolved "https://registry.npmjs.org/react-style-proptype/-/react-style-proptype-3.2.2.tgz#d8e998e62ce79ec35b087252b90f19f1c33968a0"
+  integrity sha512-ywYLSjNkxKHiZOqNlso9PZByNEY+FTyh3C+7uuziK0xFXu9xzdyfHwg4S9iyiRRoPCR4k2LqaBBsWVmSBwCWYQ==
+  dependencies:
+    prop-types "^15.5.4"
 
 react-svg-inline@^2.1.1:
   version "2.1.1"

@@ -43,8 +43,10 @@ class OrbitMainWindowStore {
   hasMoved = false
   isReady = false
   bounds = {
-    size: [0, 0],
-    position: [0, 0],
+    width: 0,
+    height: 0,
+    x: 0,
+    y: 0,
   }
   initialBounds = null
   windowRef = null
@@ -70,14 +72,16 @@ class OrbitMainWindowStore {
     },
   )
 
-  setSize = size => {
+  setSize = ([width, height]) => {
     this.hasMoved = true
-    this.bounds.size = size
+    this.bounds.width = width
+    this.bounds.height = height
   }
 
-  setPosition = position => {
+  setPosition = ([x, y]) => {
     this.hasMoved = true
-    this.bounds.position = position
+    this.bounds.x = x
+    this.bounds.y = y
   }
 
   handleRef = ref => {
@@ -144,7 +148,7 @@ export function OrbitMainWindow(props: { restartKey?: any; window?: BrowserWindo
   useMainWindowEffects({ isMainWindow })
 
   // wait for screensize/measure
-  if (!store.bounds.size[0]) {
+  if (!store.bounds.width) {
     return null
   }
 
@@ -176,12 +180,7 @@ export function OrbitMainWindow(props: { restartKey?: any; window?: BrowserWindo
       // alwaysOnTop={store.isReady ? [store.alwaysOnTop, 'floating', 1] : false}
       forwardRef={store.handleRef}
       animateBounds
-      defaultBounds={{
-        x: store.bounds.position[0],
-        y: store.bounds.position[1],
-        width: store.bounds.size[0],
-        height: store.bounds.size[1],
-      }}
+      defaultBounds={store.bounds}
       onResize={store.setSize}
       onPosition={store.setPosition}
       onMove={store.setPosition}

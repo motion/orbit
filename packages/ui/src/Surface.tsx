@@ -274,7 +274,7 @@ export const Surface = themeable((direct: SurfaceProps) => {
   } = props
 
   const size = getSize(selectDefined(ogSize, 1))
-  const segmentedStyle = getSegmentedStyle(props, {} as any)
+  const segmentedStyle = getSegmentedStyle(props, crumb)
   const stringIcon = typeof icon === 'string'
 
   useEffect(() => setTooltip(tooltip, setTooltipState), [tooltip])

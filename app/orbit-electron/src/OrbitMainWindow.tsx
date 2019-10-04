@@ -1,13 +1,15 @@
 import { isEqual } from '@o/fast-compare'
 import { Logger } from '@o/logger'
 import { ChangeDesktopThemeCommand } from '@o/models'
-import { Desktop, Electron } from '@o/stores'
+import { App, Desktop, Electron } from '@o/stores'
 import { createUsableStore, ensure, react, useStore } from '@o/use-store'
 import { app, BrowserWindow, screen, systemPreferences } from 'electron'
+import { reaction } from 'mobx'
 import { join } from 'path'
 import React, { useEffect } from 'react'
 
 import { ROOT } from './constants'
+import { ElectronShortcutManager } from './helpers/ElectronShortcutManager'
 import { getDefaultAppBounds } from './helpers/getDefaultAppBounds'
 import { getScreenSize } from './helpers/getScreenSize'
 import { moveWindowToCurrentSpace } from './helpers/moveWindowToCurrentSpace'
@@ -20,14 +22,6 @@ const setScreenSize = () => {
   const screenSize = getScreenSize()
   log.verbose(`Updating screen size ${JSON.stringify(screenSize)}`)
   Electron.setState({ screenSize })
-}
-
-function focusApp(shown: boolean) {
-  if (shown) {
-    app.focus()
-  } else {
-    app.hide()
-  }
 }
 
 class OrbitMainWindowStore {
@@ -110,15 +104,6 @@ class OrbitMainWindowStore {
     },
   )
 
-  handleShowOrbitMain = react(
-    () => Electron.state.showOrbitMain,
-    shown => {
-      ensure('enabled', !!this.props.enabled)
-      ensure('Electron.isMainWindow', Electron.isMainWindow)
-      focusApp(shown)
-    },
-  )
-
   get show() {
     if (Electron.isMainWindow) {
       return (this.props.window || this.isReady) && Electron.state.showOrbitMain
@@ -139,6 +124,46 @@ global['orbitMainWindowStore'] = orbitMainWindowStore
 export function OrbitMainWindow(props: { restartKey?: any; window?: BrowserWindow }) {
   const { isMainWindow, windowId } = useStore(Electron)
   const store = orbitMainWindowStore.useStore()
+
+  useEffect(() => {
+    if (isMainWindow) {
+      const globalShortcut = new ElectronShortcutManager({
+        shortcuts: {
+          toggleApp: 'Option+Space',
+        },
+        onShortcut: () => {
+          console.log('got toggle shortcut')
+          const showOrbitMain = !Electron.state.showOrbitMain
+          Electron.setState({
+            showOrbitMain,
+          })
+          if (showOrbitMain) {
+            store.windowRef.window.show()
+          }
+        },
+      })
+
+      globalShortcut.registerShortcuts()
+
+      const disableDuringShortcutCreation = reaction(
+        () => App.orbitState.shortcutInputFocused,
+        focused => {
+          if (focused) {
+            log.info('Removing global shortcut temporarily...')
+            globalShortcut.unregisterShortcuts()
+          } else {
+            log.info('Restoring global shortcut...')
+            globalShortcut.registerShortcuts()
+          }
+        },
+      )
+
+      return () => {
+        disableDuringShortcutCreation()
+        globalShortcut.unregisterShortcuts()
+      }
+    }
+  }, [isMainWindow])
 
   useEffect(() => {
     orbitMainWindowStore.setProps({
@@ -182,7 +207,7 @@ export function OrbitMainWindow(props: { restartKey?: any; window?: BrowserWindo
     // alwaysOnTop: store.isReady ? [true, 'floating', 1] : false,
     show: store.isReady,
     opacity: store.show ? 1 : 0,
-    // ignoreMouseEvents: store.show ? false : true,
+    ignoreMouseEvents: store.show ? false : true,
     onReadyToShow: store.setIsReady,
     onClose: store.onClose,
     focus: isMainWindow,

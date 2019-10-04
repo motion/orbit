@@ -177,7 +177,7 @@ export class Logger {
     const logLevel = getLogLevel(0)
 
     // in verbose/debug we can avoid flush altogether for performance
-    if (level === 'verbose' && logLevel <= 1) return
+    if (level === 'verbose' && logLevel <= 3) return
     if (level === 'debug' && logLevel <= 4) return
 
     // don't log if we have logging disabled
@@ -272,9 +272,9 @@ export class Logger {
       )
     } else if (level === 'verbose') {
       this.flush(
-        true,
+        logLevel > 3,
         // log direct to console if in high log mode
-        logLevel > 3 ? 'info' : 'debug',
+        logLevel > 4 ? 'info' : 'debug',
         this.namespace,
         ...messages,
       )
@@ -289,7 +289,7 @@ export class Logger {
         ...messages,
       )
     } else if (level === 'timer' || level === 'vtimer') {
-      const shouldLog = logLevel > 2 || (level === 'timer' && logLevel > 1)
+      const shouldLog = logLevel > 3 || (level === 'timer' && logLevel > 2)
       const type = level === 'timer' ? 'info' : ('debug' as const)
       const labelMessage = messages[0]
       const existTimer = this.timers.find(timer => timer.message === labelMessage)

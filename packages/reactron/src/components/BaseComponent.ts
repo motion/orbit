@@ -77,7 +77,6 @@ export class BaseComponent implements ReactronComponent {
   }
 
   update(oldProps?) {
-    console.log('got update', this.props, oldProps)
     if (!this.mounted) {
       this.mount()
       this.mounted = true

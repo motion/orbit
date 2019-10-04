@@ -103,6 +103,7 @@ export class WorkspaceManager {
    */
   get activeAppsMeta(): AppMeta[] {
     const wsAppsMeta = this.appsManager.appMeta
+    console.log('update app meta')
     return uniqBy(
       [
         // developing apps
@@ -250,6 +251,7 @@ export class WorkspaceManager {
       this.developingApps = _.filter(this.developingApps, x => x.packageId === appMeta.packageId)
     }
     this.updateDevelopingAppIdentifiers()
+    console.log('setting build mode')
     this.buildMode = {
       ...this.buildMode,
       [appMeta.packageId]: mode,

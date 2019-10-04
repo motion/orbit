@@ -106,7 +106,7 @@ export default memo(function MainShortcutHandler(props: {
             return
           }
         }
-        // close orbit itself
+        // hide orbit itself
         // if (Electron.state.showOrbitMain) {
         //   command(ToggleOrbitMainCommand)
         // }

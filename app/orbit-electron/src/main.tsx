@@ -47,9 +47,6 @@ export async function main(loadingWindow?: BrowserWindow) {
     // register app schema
     const { app } = require('electron')
 
-    // start shortcuts listening on main process
-    require('./stores/OrbitShortcutsStore')
-
     if (app.isDefaultProtocolClient('orbit') === false) {
       app.setAsDefaultProtocolClient('orbit')
     }

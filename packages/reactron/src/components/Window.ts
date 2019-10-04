@@ -142,13 +142,12 @@ export class Window extends BaseComponent {
   }
 
   handleSetProp(key, handler = _ => _) {
-    const setter = propVal => {
+    return (propVal: any) => {
       if (this.unmounted) return
       // changed value
       const newVal = handler(propVal)
       if (!isEqual(this.options[key], newVal)) {
         const setterInst = this.window[`set${properCase(key)}`]
-        console.log('setting new prop', key, newVal, !!setterInst)
         if (typeof setterInst === 'function') {
           setterInst.call(this.window, ...[].concat(newVal))
         } else {
@@ -157,7 +156,6 @@ export class Window extends BaseComponent {
         this.options[key] = newVal
       }
     }
-    return setter
   }
 
   unmount() {
@@ -186,6 +184,7 @@ export class Window extends BaseComponent {
 }
 
 function configureFile(this: Window, { file }) {
+  console.log('configureFile')
   if (file) {
     this.window.loadURL(`${file}`)
   } else {
@@ -194,6 +193,7 @@ function configureFile(this: Window, { file }) {
 }
 
 function configureSize(this: Window, { size, onResize, animateSize }) {
+  console.log('configureSize')
   if (this.unmounted) return
   if (Array.isArray(size)) {
     size = size.map(x => Math.round(x))
@@ -226,6 +226,7 @@ function configureSize(this: Window, { size, onResize, animateSize }) {
 }
 
 function configureBounds(this: Window, { defaultBounds, bounds, animateBounds }) {
+  console.log('configureBounds')
   if (this.unmounted) return
   const allBounds = bounds || defaultBounds
   if (!allBounds) return
@@ -243,6 +244,7 @@ function configurePosition(
   this: Window,
   { position, onMove, onMoved, defaultPosition, animatePosition },
 ) {
+  console.log('configurePosition')
   if (this.unmounted) return
   if (!this.window) return
   try {

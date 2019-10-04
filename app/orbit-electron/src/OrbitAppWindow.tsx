@@ -73,6 +73,11 @@ type AppWindowProps = Omit<BrowserWindowConstructorOptions, 'alwaysOnTop'> & {
   alwaysOnTop?: any
 }
 
+const webPreferences = {
+  nodeIntegration: true,
+  scrollBounds: true,
+}
+
 export function OrbitAppWindow({
   windowId,
   forwardRef,
@@ -97,10 +102,7 @@ export function OrbitAppWindow({
       show={store.show}
       ref={forwardRef}
       file={url}
-      webPreferences={{
-        nodeIntegration: true,
-        scrollBounds: true,
-      }}
+      webPreferences={webPreferences}
       titleBarStyle="hiddenInset"
       {...!(windowProps.defaultBounds && !windowProps.bounds) && {
         defaultBounds: store.bounds,

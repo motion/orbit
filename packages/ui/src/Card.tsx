@@ -6,12 +6,12 @@ import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from
 import { ListItemSimple } from './lists/ListItemSimple'
 import { ListItemProps, ListItemSpecificProps } from './lists/ListItemViewProps'
 import { useIsSelected } from './lists/useIsSelected'
-import { SizedSurface, SizedSurfaceSpecificProps } from './SizedSurface'
 import { getSize } from './Sizes'
 import { getSpaceSizeNum, Sizes } from './Space'
+import { Surface, SurfaceSpecificProps } from './Surface'
 import { Stack, StackProps } from './View/Stack'
 
-export type CardProps = SizedSurfaceSpecificProps &
+export type CardProps = SurfaceSpecificProps &
   ListItemSpecificProps &
   Partial<CollapsableProps> &
   Omit<StackProps, 'size'> & {
@@ -64,7 +64,7 @@ export function Card(props: CardProps) {
   const hasTitle = selectDefined(title, afterTitle, subTitle, icon, date, location)
   return (
     <Theme coat={isSelected ? 'selected' : coat || null}>
-      <SizedSurface
+      <Surface
         data-is="Card"
         borderWidth={1}
         overflow={isDefined(scrollable, maxHeight) ? 'hidden' : 'hidden'}
@@ -143,7 +143,7 @@ export function Card(props: CardProps) {
           {showChildren && children}
         </Stack>
         {/* </Theme> */}
-      </SizedSurface>
+      </Surface>
     </Theme>
   )
 }

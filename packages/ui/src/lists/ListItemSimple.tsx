@@ -11,8 +11,8 @@ import { useFocus } from '../Focus'
 import { HighlightText } from '../Highlight'
 import { Icon } from '../Icon'
 import { ListSeparator } from '../ListSeparator'
-import { SizedSurface } from '../SizedSurface'
 import { Space } from '../Space'
+import { Surface } from '../Surface'
 import { DateFormat } from '../text/DateFormat'
 import { SimpleText } from '../text/SimpleText'
 import { Text } from '../text/Text'
@@ -168,7 +168,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
           )}
         </>
       )}
-      <SizedSurface
+      <Surface
         className="list-item-surface"
         flexDirection="row"
         alignItems="stretch"
@@ -310,7 +310,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
             {after}
           </>
         )}
-      </SizedSurface>
+      </Surface>
     </>
   )
 }, isEqual)

@@ -1,4 +1,4 @@
-import { FullScreen, fuzzyFilter, gloss, Grid, HotKeys, Image, SimpleText, SizedSurface, Space, Stack, SubTitle, Theme, Title, View } from '@o/ui'
+import { FullScreen, fuzzyFilter, gloss, Grid, HotKeys, Image, SimpleText, Space, Stack, SubTitle, Surface, Theme, Title, View } from '@o/ui'
 import { createStoreContext } from '@o/use-store'
 import { Box } from 'gloss'
 import { mount, route } from 'navi'
@@ -178,7 +178,7 @@ const AppDescription = () => {
   return (
     <SectionContent background="red" height={0} zIndex={100000}>
       <Theme name="dark">
-        <SizedSurface
+        <Surface
           margin={[-75, 'auto']}
           height={155}
           padding
@@ -198,7 +198,7 @@ const AppDescription = () => {
               {activeApp.description}
             </Paragraph>
           </Stack>
-        </SizedSurface>
+        </Surface>
       </Theme>
     </SectionContent>
   )

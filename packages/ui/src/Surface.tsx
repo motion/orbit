@@ -5,7 +5,7 @@ import { Base, Box, CompiledTheme, gloss, propsToStyles, psuedoStyleTheme, Theme
 import React, { HTMLProps, useContext, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
-import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
+import { useBreadcrumb, useBreadcrumbReset } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
 import { themeable } from './helpers/themeable'
@@ -15,9 +15,10 @@ import { InvertScale } from './InvertScale'
 import { PassProps } from './PassProps'
 import { PopoverProps } from './Popover'
 import { getSegmentedStyle } from './SegmentedRow'
-import { SizedSurfacePropsContext } from './SizedSurfacePropsContext'
+import { useSizedSurfaceProps } from './SizedSurface'
 import { getSize } from './Sizes'
 import { Size, Space } from './Space'
+import { SizedSurfacePropsContext } from './SurfacePropsContext'
 import { scaledTextSizeTheme } from './text/scaledTextSizeTheme'
 import { Tooltip } from './Tooltip'
 import { getElevation } from './View/elevation'
@@ -27,7 +28,30 @@ import { getMargin, View } from './View/View'
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
 
-export type SurfaceSpecificProps = {
+/** Controlled height, relative adjusted to size */
+export type SizedSurfaceSpecificProps = {
+  /** size affects all other sizing props */
+  size?: Size
+
+  sizeHeight?: boolean | number
+
+  /** Controlled font size, relative adjusted to size */
+  sizeFont?: boolean | number
+
+  /** Controlled horizontal padding, relative adjusted to size */
+  sizePadding?: boolean | number
+
+  /** Controlled margin, relative adjusted to size */
+  sizeMargin?: boolean | number
+
+  /** Controlled border radius size, relative adjusted to size */
+  sizeRadius?: boolean | number
+
+  /** Controlled icon size, relative adjusted to size */
+  sizeIcon?: boolean | number
+}
+
+export type SurfaceSpecificProps = SizedSurfaceSpecificProps & {
   /** Inside uses a shadow instead of border for finder borders */
   borderPosition?: 'inside' | 'outside'
 
@@ -103,12 +127,6 @@ export type SurfaceSpecificProps = {
   /** Avoid adding the inner element: will prevent icons from working */
   noInnerElement?: boolean
 
-  /** Size of the surface */
-  size?: Size
-
-  /** Size (relative) of the icon */
-  sizeIcon?: number
-
   theme?: CompiledTheme
 
   /** Adds a <Tooltip /> on the surface */
@@ -116,9 +134,6 @@ export type SurfaceSpecificProps = {
 
   /** Extra props for the <Tooltip /> */
   tooltipProps?: PopoverProps
-
-  /** Control the width */
-  width?: number | string
 
   /** Text alpha */
   alpha?: number
@@ -190,20 +205,32 @@ type ThroughProps = Pick<
 const acceptsIcon = child =>
   child && child.type.acceptsProps && child.type.acceptsProps.icon === true
 
+// why? need to document bug that led to this hackty patch
+// im guessing popover is looking for selector too early, that should be patched in popover
+const setTooltip = (tooltip, setTooltipState) => {
+  if (tooltip) {
+    setTooltipState(prev => {
+      prev.id = prev.id || `Surface-${Math.round(Math.random() * 100000000)}`
+      prev.show = false
+      return prev
+    })
+
+    let tm = setTimeout(() => {
+      setTooltipState(prev => {
+        prev.show = true
+        return prev
+      })
+    })
+    return () => clearTimeout(tm)
+  }
+}
+
 export const Surface = themeable((direct: SurfaceProps) => {
-  const props = SizedSurfacePropsContext.useProps(direct) as SurfaceProps
+  const sizedProps = useSizedSurfaceProps(direct)
+  const props = SizedSurfacePropsContext.useProps(sizedProps) as SurfaceProps
   const crumb = useBreadcrumb()
   const [tooltipState, setTooltipState] = useState({ id: null, show: false })
   const theme = useTheme()
-
-  useEffect(() => {
-    const id = `Surface-${Math.round(Math.random() * 100000000)}`
-    setTooltipState({ id, show: false })
-    let tm = setTimeout(() => {
-      setTooltipState({ id, show: true })
-    })
-    return () => clearTimeout(tm)
-  }, [])
 
   const {
     alignItems,
@@ -245,9 +272,12 @@ export const Surface = themeable((direct: SurfaceProps) => {
     borderBottomRadius,
     ...viewProps
   } = props
+
   const size = getSize(selectDefined(ogSize, 1))
-  const segmentedStyle = getSegmentedStyle(props, crumb)
+  const segmentedStyle = getSegmentedStyle(props, {} as any)
   const stringIcon = typeof icon === 'string'
+
+  useEffect(() => setTooltip(tooltip, setTooltipState), [tooltip])
 
   // goes to BOTH the outer element and inner element
   let throughProps: ThroughProps = {
@@ -480,6 +510,8 @@ export const Surface = themeable((direct: SurfaceProps) => {
     }
   }, [coat, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
 
+  console.log('render Surface')
+
   // @ts-ignore
   const surfaceFrameProps: SurfaceFrameProps = {
     className: `${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`,
@@ -504,13 +536,12 @@ export const Surface = themeable((direct: SurfaceProps) => {
     opacity: crumb && crumb.total === 0 ? 0 : props.opacity,
   }
 
-  return SizedSurfacePropsContext.useReset(
+  return useBreadcrumbReset(
+    SizedSurfacePropsContext.useReset(
     <IconPropsContext.Provider value={iconContext}>
-      <BreadcrumbReset>
         <SurfaceFrame {...surfaceFrameProps} />
-      </BreadcrumbReset>
     </IconPropsContext.Provider>
-  )
+  ))
 })
 
 const hasChildren = (children: React.ReactNode) => {
@@ -645,7 +676,7 @@ const Element = gloss<SurfaceFrameProps & { disabled?: boolean }>({
 const getIconSize = (props: SurfaceProps) => {
   if (isDefined(props.iconSize)) return props.iconSize
   const iconSize = props.height ? +props.height * 0.1 + 8 : 12
-  const size = getSize(props.size) * iconSize * (props.sizeIcon || 1)
+  const size = getSize(props.size) * iconSize * (props.sizeIcon === true ? 1 : selectDefined(props.sizeIcon, 1))
   return Math.floor(size)
 }
 

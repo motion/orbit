@@ -9,8 +9,8 @@ import { composeRefs } from './helpers/composeRefs'
 import { createContextualProps } from './helpers/createContextualProps'
 import { Loading } from './progress/Loading'
 import { Scale } from './Scale'
-import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { getSpaceSize, getSpaceSizeNum, Size, Sizes, Space } from './Space'
+import { Surface, SurfaceProps } from './Surface'
 import { TitleRow, TitleRowSpecificProps } from './TitleRow'
 import { Stack, StackProps } from './View/Stack'
 
@@ -20,7 +20,7 @@ export type SectionSpecificProps = Partial<
   Omit<TitleRowSpecificProps, 'after' | 'below' | 'margin' | 'size' | 'selectable'>
 > & {
   /** Add shadow to section */
-  elevation?: SizedSurfaceProps['elevation']
+  elevation?: SurfaceProps['elevation']
 
   /** Allow scaling just the TitleRow element */
   titleScale?: number
@@ -208,7 +208,7 @@ export function Section(direct: SectionProps) {
   }
 
   return (
-    <SizedSurface
+    <Surface
       className={`ui-section ${className}`}
       hoverStyle={null}
       activeStyle={null}
@@ -265,6 +265,6 @@ export function Section(direct: SectionProps) {
         </>,
       )}
       {below}
-    </SizedSurface>
+    </Surface>
   )
 }

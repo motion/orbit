@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { BorderBottom } from '../Border'
-import { SurfacePassProps } from '../SizedSurfacePropsContext'
+import { SurfacePassProps } from '../SurfacePropsContext'
 import { Stack } from '../View/Stack'
 
 export type TopBarProps = {

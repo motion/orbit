@@ -4,7 +4,7 @@ import React, { useContext } from 'react'
 import { ButtonPerson } from '../buttons/ButtonPerson'
 import { Bit } from '../helpers/BitLike'
 import { HighlightText } from '../Highlight'
-import { SizedSurface } from '../SizedSurface'
+import { Surface } from '../Surface'
 import { DateFormat } from '../text/DateFormat'
 import { Text } from '../text/Text'
 import { View } from '../View/View'
@@ -82,14 +82,14 @@ export function ChatMessage(rawProps: ChatMessageProps) {
           )}
         </View>
       )}
-      <SizedSurface
+      <Surface
         background={theme => theme.backgroundStronger.setAlpha(0.33)}
         padding={[6, 10]}
         noInnerElement
         sizeRadius={1}
       >
         {content}
-      </SizedSurface>
+      </Surface>
     </ChatMessageFrame>
   )
 }

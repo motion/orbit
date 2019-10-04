@@ -1,12 +1,12 @@
 import { isDefined } from '@o/utils'
 import React from 'react'
 
-import { SizedSurface, SizedSurfaceSpecificProps } from './SizedSurface'
+import { Surface, SurfaceSpecificProps } from './Surface'
 import { Tag, TagProps } from './Tag'
 import { SimpleText } from './text/SimpleText'
 import { Stack, StackProps } from './View/Stack'
 
-export type CardSimpleProps = SizedSurfaceSpecificProps &
+export type CardSimpleProps = SurfaceSpecificProps &
   Omit<StackProps, 'size'> & {
     title?: React.ReactNode
     titleProps?: TagProps
@@ -26,7 +26,7 @@ export const CardSimple = ({
 }: CardSimpleProps) => {
   const hasClick = !!props.onClick
   return (
-    <SizedSurface
+    <Surface
       className="ui-cardsimple-surface"
       borderWidth={0}
       overflow={isDefined(scrollable, props.maxHeight) ? 'hidden' : 'hidden'}
@@ -47,7 +47,7 @@ export const CardSimple = ({
           {children}
         </SimpleText>
       </Stack>
-    </SizedSurface>
+    </Surface>
   )
 }
 

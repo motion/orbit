@@ -21,6 +21,7 @@ export const Menu = ({
 }: MenuProps) => {
   return (
     <Popover
+      // @ts-ignore
       popoverTheme="tooltip"
       openOnClick
       closeOnClickAway

@@ -11,15 +11,15 @@ import { zIndex } from './constants'
 import { GlobalPopovers } from './GlobalPopovers'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
-import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
-import { SurfacePassPropsReset } from './SizedSurfacePropsContext'
+import { Surface, SurfaceProps } from './Surface'
+import { SurfacePassPropsReset } from './SurfacePropsContext'
 import { getElevation } from './View/elevation'
 import { ViewProps } from './View/types'
 import { View } from './View/View'
 
 const acceptsProps = (x, val) => x.type.acceptsProps && x.type.acceptsProps[val]
 
-export type PopoverProps = Omit<SizedSurfaceProps, 'background'> & {
+export type PopoverProps = Omit<SurfaceProps, 'background'> & {
   /** Custom theme for just the popover content */
   popoverTheme?: string
 
@@ -1095,7 +1095,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
             )}
             <BreadcrumbReset>
               <SurfacePassPropsReset>
-                <SizedSurface
+                <Surface
                   className="popover-inner-surface"
                   themeSubSelect="popover"
                   sizeRadius
@@ -1112,7 +1112,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
                   {typeof children === 'function'
                     ? (children as PopoverChildrenFn)(showPopover)
                     : children}
-                </SizedSurface>
+                </Surface>
               </SurfacePassPropsReset>
             </BreadcrumbReset>
           </PopoverInner>

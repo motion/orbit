@@ -2,8 +2,8 @@ import { gloss } from 'gloss'
 import React from 'react'
 
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
-import { SurfacePassProps } from './SizedSurfacePropsContext'
 import { Size } from './Space'
+import { SurfacePassProps } from './SurfacePropsContext'
 import { Stack, StackProps } from './View/Stack'
 
 export type ToolbarProps = Omit<StackProps, 'size'> & {

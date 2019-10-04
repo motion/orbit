@@ -112,21 +112,26 @@ class OrbitMainWindowStore {
     return true
   }
 
-  // focused comes next, it ensures focus goes back to previous app
+  // why this?
+  // we have to use opacity to control visibility because it prevents a flicker
   unfocused = false
   handleFocusBack = react(
     () => this.show,
     async (shown, { sleep }) => {
-      console.log('focus back', shown)
-      ensure('hidden', !shown)
       ensure('this.window', !!this.window)
       await sleep()
-      this.window.hide()
-      // for a moment we'll be unfocused, so lets avoid race condition
-      this.unfocused = true
-      await sleep()
-      this.window.show()
-      this.unfocused = false
+      if (shown) {
+        this.window.show()
+      } else {
+        // sends focus to last app
+        require('electron').Menu.sendActionToFirstResponder('hide:')
+        // for a moment we'll be unfocused, so lets avoid race condition
+        this.unfocused = true
+        await sleep()
+        console.log('show again')
+        this.window.show()
+        this.unfocused = false
+      }
     },
     {
       lazy: true,

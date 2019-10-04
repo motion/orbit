@@ -16,9 +16,9 @@ type UseThemeProps = { coat?: string | false }
 export function useTheme(props?: UseThemeProps) {
   const themeObservable = useContext(CurrentThemeContext)
   const [cur, setCur] = useState<CompiledTheme>(getTheme(themeObservable.current, props))
-  const trackState = useRef<ThemeTrackState>()
-  if (!trackState.current) {
-    trackState.current = {
+  const state = useRef<ThemeTrackState>()
+  if (!state.current) {
+    state.current = {
       hasUsedOnlyCSSVariables: true,
       nonCSSVariables: new Set(),
     }
@@ -26,15 +26,21 @@ export function useTheme(props?: UseThemeProps) {
 
   useEffect(() => {
     const sub = themeObservable.subscribe(theme => {
-      if (!trackState.current!.hasUsedOnlyCSSVariables) {
-        console.warn('re-rendering because used variables', trackState.current)
+      if (!state.current!.hasUsedOnlyCSSVariables) {
+        console.warn('re-rendering because used variables', state.current)
         setCur(getTheme(theme, props))
       }
     })
     return sub.unsubscribe
   }, [])
 
-  return proxyTheme(cur, trackState.current)
+  if (!cur) {
+    console.warn('no theme??', themeObservable, props)
+    debugger
+    return {}
+  }
+
+  return proxyTheme(cur, state.current)
 }
 
 const getTheme = (theme?: CompiledTheme, props?: UseThemeProps) => {
@@ -65,11 +71,6 @@ export const unwrapTheme = <CompiledTheme>(theme: CompiledTheme): CompiledTheme 
 
 function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
   return useMemo(() => {
-    if (!theme) {
-      console.warn('no theme??')
-      debugger
-      return {}
-    }
     return new Proxy(theme, {
       get(target, key) {
         if (key === UnwrapThemeSymbol) {

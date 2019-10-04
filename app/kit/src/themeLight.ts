@@ -3,7 +3,7 @@ import { ThemeObject } from 'gloss'
 import { fromStyles } from 'gloss-theme'
 
 import { coats } from './themeCoats'
-import { colors } from './themeColors'
+import { colors, transparent } from './themeColors'
 
 const color = toColor('#444')
 const colorLight = color.lighten(0.1)
@@ -24,6 +24,7 @@ export const light: ThemeObject = {
   colorLight,
   colorLighter,
   colorLightest,
+  listItemBackground: transparent,
   ...fromStyles({
     iconFillColor: '#000',
     glintColor: [255, 255, 255, 0.85],

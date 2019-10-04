@@ -86,6 +86,7 @@ export const dark: ThemeObject = {
   colorLight,
   colorLighter,
   colorLightest,
+  listItemBackground: transparent,
   ...fromStyles({
     background,
     backgroundHover: [20, 20, 20, 0.2],

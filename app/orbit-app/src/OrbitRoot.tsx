@@ -23,14 +23,14 @@ export function OrbitRoot() {
   }
 
   return (
-    <ContextMenuProvider
-      onContextMenu={items => {
-        if (IS_ELECTRON) {
-          ContextMenu.update({ prepend: items })
-        }
-      }}
-    >
-      <ProvideUI themes={themes} activeTheme={themeStore.themeColor}>
+    <ProvideUI themes={themes} activeTheme={themeStore.themeColor}>
+      <ContextMenuProvider
+        onContextMenu={items => {
+          if (IS_ELECTRON) {
+            ContextMenu.update({ prepend: items })
+          }
+        }}
+      >
         <ProvideBanner>
           <ErrorBoundary name="Root">
             <React.Suspense fallback={<Loading />}>
@@ -38,8 +38,8 @@ export function OrbitRoot() {
             </React.Suspense>
           </ErrorBoundary>
         </ProvideBanner>
-      </ProvideUI>
-    </ContextMenuProvider>
+      </ContextMenuProvider>
+    </ProvideUI>
   )
 }
 

@@ -58,6 +58,9 @@ export function cssStringWithHash(styles: Object, opts?: CSSConfig): [number, st
     let value = cssValue(key, rawVal, false, opts)
     // shorthands
     if (value !== undefined) {
+      if (value?.includes && value?.includes(`10px 10px 40px`)) {
+        debugger
+      }
       if (hash === 0) hash = 5381
       // cache keys hashes, keys are always the same
       let keyHash = keyHashes[key]
@@ -109,6 +112,7 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
   if (value === false) {
     value === FALSE_VALUES[key]
   }
+  console.log('key', key)
   // remove nullish
   if (value === undefined || value === null || value === false) {
     return
@@ -120,17 +124,9 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
     }
     return value
   } else if (value.cssVariable) {
-    if (value.cssUseRgb) {
-      if (value.cssUseAlpha) {
-        return `rgba(var(--${value.cssVariable}-rgb), ${value.alpha})`
-      } else {
-        return `rgba(var(--${value.cssVariable}))`
-      }
-    } else {
-      return `var(--${value.cssVariable})`
-    }
+    return Config.toColor(value)
   } else if (COLOR_KEYS.has(key)) {
-    return Config.isColor(value) ? Config.toColor(value) : value
+    return Config.toColor(value)
   } else if (Array.isArray(value)) {
     if (key === 'fontFamily') {
       return value.map(x => (x.includes(' ') ? `"${x}"` : x)).join(', ')
@@ -213,7 +209,8 @@ export function processArray(key: string, value: any[], level: number = 0): stri
 
 function processBoxShadow(key: string, val: boxShadowItem) {
   if (Array.isArray(val)) {
-    return val.map(x => processArrayItem(key, x)).join(' ')
+    debugger
+    return val.map(x => cssValue(key, x)).join(' ')
   }
   if (val && typeof val === 'object') {
     return objectToCSS.boxShadow(val)

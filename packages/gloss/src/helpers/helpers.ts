@@ -1,17 +1,6 @@
 // passing through here because... in playground if you use UI kit without setting Config.toColor
 // in @o/ui, then in alphaColorTheme it will fail on setAlpha
 export const colorToString = (obj: any) => {
-  if (obj.cssVariable) {
-    if (obj.cssUseRgb) {
-      if (obj.cssUseAlpha) {
-        return `rgba(var(--${obj.cssVariable}-rgb), ${obj.alpha})`
-      } else {
-        return `rgba(var(--${obj.cssVariable}))`
-      }
-    } else {
-      return `var(--${obj.cssVariable})`
-    }
-  }
   const { model, color, valpha } = obj
   const hasAlpha = typeof valpha === 'number' && valpha !== 1
   if (model === 'rgb') {

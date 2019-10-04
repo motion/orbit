@@ -1,3 +1,4 @@
+import { Color } from './color'
 import { names } from './css-color-names'
 import { ColorLike, ColorObject } from './types'
 
@@ -8,6 +9,19 @@ export const toColorString = memoizeOne<string>(
     }
     if (!color) {
       return 'transparent'
+    }
+    if (color instanceof Color) {
+      if (color.cssVariable) {
+        if (color.cssUseRgb) {
+          if (color.cssUseAlpha) {
+            return `rgba(var(--${color.cssVariable}-rgb), ${color.alpha})`
+          } else {
+            return `rgba(var(--${color.cssVariable}))`
+          }
+        } else {
+          return `var(--${color.cssVariable})`
+        }
+      }
     }
     if (isColorLikeLibrary(color)) {
       return `${getColorLikeLibraryValue(color)}`
@@ -22,6 +36,12 @@ export const toColorString = memoizeOne<string>(
         return `rgb(${color.join(', ')})`
       }
     } else if (color instanceof Object) {
+      // TODO improve types
+      // @ts-ignore
+      if (color.cssVariable) {
+        // @ts-ignore
+        return `var(--${color.cssVariable})`
+      }
       const clr = color as any
       if (clr.a) {
         return `rgba(${clr.r}, ${clr.g}, ${clr.b}, ${clr.a})`
@@ -56,6 +76,7 @@ function memoizeOne<Result>(cb: Function): (a: any) => Result {
     if (mappable) {
       const res = Cache.get(key)
       if (res) {
+        console.log('memo hit!')
         return res
       }
     }
@@ -63,6 +84,7 @@ function memoizeOne<Result>(cb: Function): (a: any) => Result {
     if (mappable) {
       Cache.set(key, newVal)
     }
+    console.log('memo miss!')
     return newVal
   }
 }

@@ -20,13 +20,13 @@ export const UNDEFINED = 'undefined'
 // not the best tradeoff here for understanding where you can pass in colors
 export const COLOR_KEYS = new Set<string>([
   'color',
-  'background-color',
-  'border-color',
-  'border-bottom-color',
-  'border-top-color',
-  'border-left-color',
-  'border-right-color',
-  'text-decoration-color',
+  'backgroundColor',
+  'borderColor',
+  'borderBottomColor',
+  'borderTopColor',
+  'borderLeftColor',
+  'borderRightColor',
+  'textDecorationColor',
 ])
 
 export const TRANSFORM_KEYS_MAP = {

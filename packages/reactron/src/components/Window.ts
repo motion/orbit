@@ -95,7 +95,8 @@ export class Window extends BaseComponent {
         }
       },
       show: propVal => {
-        console.log('show', propVal)
+        if (propVal === this.options.show) return
+        this.options.show = propVal
         if (propVal) {
           // ensure it happens after positioning
           setTimeout(() => {
@@ -143,15 +144,16 @@ export class Window extends BaseComponent {
     const setter = propVal => {
       if (this.unmounted) return
       // changed value
-      const newVal = [].concat(handler(propVal))
+      const newVal = handler(propVal)
       if (!isEqual(this.options[key], newVal)) {
         const setterInst = this.window[`set${properCase(key)}`]
-        if (setterInst) {
-          setterInst.call(this.window, ...newVal)
-          this.options[key] = newVal
+        console.log('setting new prop', key, newVal, !!setterInst)
+        if (typeof setterInst === 'function') {
+          setterInst.call(this.window, ...[].concat(newVal))
         } else {
           this.window[key] = newVal
         }
+        this.options[key] = newVal
       }
     }
     return setter

@@ -52,7 +52,7 @@ class OrbitAppWindowStore {
   }
 }
 
-type AppWindowProps = BrowserWindowConstructorOptions & {
+type AppWindowProps = Omit<BrowserWindowConstructorOptions, 'alwaysOnTop'> & {
   forwardRef?: any
   windowId: number
   size?: number[]
@@ -70,6 +70,7 @@ type AppWindowProps = BrowserWindowConstructorOptions & {
   animateBounds?: boolean
   onClose?: Function
   ignoreMouseEvents?: boolean
+  alwaysOnTop?: any
 }
 
 export function OrbitAppWindow({

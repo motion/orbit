@@ -286,7 +286,7 @@ export function gloss<Props = any, ThemeProps = Props>(
       theme,
       avoidStyles,
     )
-    const dynClassNames = dynStyles.classNames
+    const dynClassNames = lastDynamicClassNames
     dynClasses.current = dynClassNames
 
     const isDOMElement = typeof element === 'string' || (config ? config.isDOMElement : false)
@@ -505,6 +505,7 @@ function deregisterClassName(name: string) {
   gc.deregisterClassUse(nonSpecificClassName)
 }
 
+let lastDynamicClassNames = new Set<string>()
 function addDynamicStyles(
   displayName: string = 'g',
   conditionalStyles: Object | undefined,
@@ -514,9 +515,8 @@ function addDynamicStyles(
   theme?: CompiledTheme,
   avoidStyles?: boolean,
 ) {
-  const dynStyles = {
-    classNames: new Set<string>(),
-  }
+  const dynStyles = {}
+  lastDynamicClassNames = new Set<string>()
 
   // applies styles most important to least important
   // that saves us some processing time (no need to set multiple times)
@@ -542,7 +542,7 @@ function addDynamicStyles(
         dynStyles[ns] = dynStyles[ns] || {}
         mergeStyles(ns, dynStyles, info.rules)
       } else if (className) {
-        dynStyles.classNames.add(className)
+        lastDynamicClassNames.add(className)
       }
     }
   }
@@ -565,7 +565,7 @@ function addDynamicStyles(
     const dynClassNames = addStyles(dynStyles, displayName, prevClassNames, true)
     if (dynClassNames) {
       for (const cn of dynClassNames) {
-        dynStyles.classNames.add(cn)
+        lastDynamicClassNames.add(cn)
       }
     }
   }
@@ -574,7 +574,7 @@ function addDynamicStyles(
   if (prevClassNames) {
     for (const className of prevClassNames) {
       // if this previous class isn't in the current classes then deregister it
-      if (!dynStyles.classNames.has(className)) {
+      if (!lastDynamicClassNames.has(className)) {
         deregisterClassName(className)
       }
     }
@@ -785,12 +785,14 @@ function compileTheme(viewOG: GlossView<any>) {
 function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSpecific?: boolean) {
   const [hash, style] = cssStringWithHash(rules)
 
-  if (!hash) return
+  if (!hash) {
+    return
+  }
 
   let className = `g${hash}`
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
   // ensure we are unique for unique namespaces
-  if (isSubStyle(namespace)) {
+  if (namespace !== '.') {
     className += `-${stringHash(namespace)}`
   }
 

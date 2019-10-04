@@ -52,6 +52,7 @@ const home = {
   ...dark,
   ...colorize({
     background: '#000',
+    backgroundHover: '#111',
     inputBackground: '#111',
     inputBackgroundHover: '#111',
     inputBackgroundActive: '#111',

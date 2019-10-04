@@ -94,7 +94,15 @@ class ThemeVariableManager {
   }
 
   mountSubThemeFromParent(parent: CompiledTheme, subThemeContext: CurrentTheme) {
-    const selector = `.theme-${parent.name} .${this.getClassNames(subThemeContext.current)}`
+    let selectors = `.theme-${parent.name} .${this.getClassNames(subThemeContext.current)}`
+
+    // making sure css selectors bind strongly
+    const parentParent = subThemeContext.parentContext?.parentContext?.current
+    if (parentParent && parentParent.name !== parent.name) {
+      selectors += `, .theme-${parentParent.name} ${selectors}`
+      console.log('selectors', selectors)
+    }
+
     let subTheme = subThemeContext.current
     // need to re-run select using new parent theme
     if (subTheme._themeSubSelect) {
@@ -108,7 +116,7 @@ class ThemeVariableManager {
     }
     const subRules = this.getThemeVariables(subTheme)
     if (subRules.length) {
-      const rule = `${selector} { ${subRules} }`
+      const rule = `${selectors} { ${subRules} }`
       this.sheet.insertRule(rule)
     }
   }

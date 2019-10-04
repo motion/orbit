@@ -45,7 +45,7 @@ class OrbitMainWindowStore {
   initialBounds = null
   windowRef = null
 
-  get orbitRef(): BrowserWindow | null {
+  get window(): BrowserWindow | null {
     return (this.windowRef && this.windowRef.window) || null
   }
 
@@ -93,17 +93,18 @@ class OrbitMainWindowStore {
     async (moved, { sleep, when }) => {
       ensure('enabled', !!this.props.enabled)
       ensure('did move', !!moved)
-      ensure('window', !!this.orbitRef)
+      ensure('window', !!this.window)
       // wait for move to finish
       await sleep(150)
       // wait for showing
       await when(() => Electron.state.showOrbitMain)
-      if (this.orbitRef) {
-        moveWindowToCurrentSpace(this.orbitRef)
+      if (this.window) {
+        moveWindowToCurrentSpace(this.window)
       }
     },
   )
 
+  // show comes first, controls opacity which prevents flicker on show/hide
   get show() {
     if (Electron.isMainWindow) {
       return (this.props.window || this.isReady) && Electron.state.showOrbitMain
@@ -111,14 +112,46 @@ class OrbitMainWindowStore {
     return true
   }
 
+  // focused comes next, it ensures focus goes back to previous app
+  unfocused = false
+  handleFocusBack = react(
+    () => this.show,
+    async (shown, { sleep }) => {
+      console.log('focus back', shown)
+      ensure('hidden', !shown)
+      ensure('this.window', !!this.window)
+      await sleep()
+      this.window.hide()
+      // for a moment we'll be unfocused, so lets avoid race condition
+      this.unfocused = true
+      await sleep()
+      this.window.show()
+      this.unfocused = false
+    },
+    {
+      lazy: true,
+    },
+  )
+
+  toggleOrbitVisibility(showOrbitMain: boolean = !Electron.state.showOrbitMain) {
+    Electron.setState({
+      showOrbitMain,
+    })
+    if (this.unfocused) {
+      this.window.show()
+      this.unfocused = false
+    }
+  }
+
   setIsReady = () => {
     this.isReady = true
   }
 }
 
-const orbitMainWindowStore = createUsableStore(OrbitMainWindowStore, {
+export const orbitMainWindowStore = createUsableStore(OrbitMainWindowStore, {
   enabled: Electron.isMainWindow,
 })
+
 global['orbitMainWindowStore'] = orbitMainWindowStore
 
 export function OrbitMainWindow(props: { restartKey?: any; window?: BrowserWindow }) {
@@ -133,13 +166,7 @@ export function OrbitMainWindow(props: { restartKey?: any; window?: BrowserWindo
         },
         onShortcut: () => {
           console.log('got toggle shortcut')
-          const showOrbitMain = !Electron.state.showOrbitMain
-          Electron.setState({
-            showOrbitMain,
-          })
-          if (showOrbitMain) {
-            store.windowRef.window.show()
-          }
+          store.toggleOrbitVisibility()
         },
       })
 

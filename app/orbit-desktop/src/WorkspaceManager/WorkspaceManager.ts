@@ -125,7 +125,7 @@ export class WorkspaceManager {
       ensure('directory', !!this.options.workspaceRoot)
       ensure('not in single build mode', this.options.action !== 'build')
       await sleep(100)
-      log.info(`updating workspace build`)
+      log.info(`\n\n\nupdate -- starting new workspace build\n\n\n`)
       const space = await getActiveSpace()
       const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
       this.graphServer.setupGraph(apps)

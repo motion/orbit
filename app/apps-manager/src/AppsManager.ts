@@ -161,7 +161,7 @@ export class AppsManager {
   }
 
   updateAppMetaWatcher = react(
-    () => [this.activeSpace, this.nodeAppDefinitions, this.packageJsonUpdate, this.localAppsUpdate],
+    () => [this.activeSpace, this.packageJsonUpdate, this.localAppsUpdate],
     async ([activeSpace, appDefs], { sleep, when }) => {
       ensure('this.started', this.started)
       await sleep(200) // debounce

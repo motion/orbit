@@ -1,6 +1,6 @@
 import { getGlobalConfig } from '@o/config'
-import { resolveCommand } from '@o/mediator/src'
-import { ToggleOrbitActionsCommand } from '@o/models/src'
+import { resolveCommand } from '@o/mediator'
+import { ToggleOrbitActionsCommand } from '@o/models'
 import { Window } from '@o/reactron'
 import { Electron } from '@o/stores'
 import { useToggle } from '@o/ui'

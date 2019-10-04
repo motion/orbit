@@ -30,7 +30,7 @@ export async function getWorkspaceApps(workspaceRoot: string): Promise<AppMeta[]
     )
     const wsDirs = await getWorkspaceLocalAppsMeta(workspaceRoot)
     const res = [...packageDirs, ...wsDirs].filter(Boolean)
-    log.verbose(`allDirs ${res.length}`, res)
+    log.verbose(`allDirs ${res.length}`)
     return res
   } catch (err) {
     log.error(`Error finding app paths`, err)

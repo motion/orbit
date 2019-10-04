@@ -1,4 +1,4 @@
-import { CompiledTheme } from 'gloss/src'
+import { CompiledTheme } from 'gloss'
 
 import { colors } from '../helpers/colors'
 

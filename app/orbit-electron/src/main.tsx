@@ -16,6 +16,7 @@ import waitOn from 'wait-on'
 
 import { IS_MAIN_ORBIT } from './constants'
 import ElectronRoot from './ElectronRoot'
+import { ToggleOrbitActionsResolver } from './OrbitActionsAppWindow'
 import { OrbitChromeWindow } from './OrbitChromeWindow'
 import { OrbitRoot } from './OrbitRoot'
 import { AppCloseWindowResolver } from './resolver/AppCloseWindowResolver'
@@ -85,6 +86,7 @@ export async function main(loadingWindow?: BrowserWindow) {
         AppCloseWindowResolver,
         TearAppResolver,
         RestartAppResolver,
+        ToggleOrbitActionsResolver,
 
         resolveCommand(ToggleOrbitMainCommand, async next => {
           const showOrbitMain = typeof next === 'boolean' ? next : !Electron.state.showOrbitMain

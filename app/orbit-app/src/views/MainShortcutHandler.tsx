@@ -1,4 +1,5 @@
 import { command, useStoresSimple } from '@o/kit'
+import { ToggleOrbitActionsCommand } from '@o/models'
 import { App } from '@o/stores'
 import { Direction, GlobalHotKeys, GlobalPopovers, useShortcutStore } from '@o/ui'
 import React, { memo, useMemo } from 'react'
@@ -54,7 +55,7 @@ export default memo(function MainShortcutHandler(props: {
       COMMAND_OPEN: effects.openCurrentApp,
       COMMAND_K: () => actions.router.showAppPage({ id: 'spaces' }),
       COMMAND_P: () => {
-        command(ToggleOrbitActions)
+        command(ToggleOrbitActionsCommand)
       },
       OPEN: () => {
         if (document.activeElement && document.activeElement.classList.contains('ui-input')) {

@@ -128,8 +128,7 @@ class OrbitMainWindowStore {
         // for a moment we'll be unfocused, so lets avoid race condition
         this.unfocused = true
         await sleep()
-        console.log('show again')
-        this.window.show()
+        this.window.showInactive()
         this.unfocused = false
       }
     },

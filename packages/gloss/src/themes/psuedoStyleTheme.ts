@@ -110,9 +110,10 @@ const applyPsuedoTheme = (props: any, theme: CompiledTheme, previous: any, useTh
     let psuedoStyle = getPsuedoStyles(props, theme, subKeys, useTheme).styles
 
     // for any prop overrides from base, override them on psuedo too
-    // (this could be an optional parameter)
-    if (psuedoStyle && overrides) {
-      Object.assign(psuedoStyle, overrides)
+    if (props.overridePsuedoStyles) {
+      if (psuedoStyle && overrides) {
+        Object.assign(psuedoStyle, overrides)
+      }
     }
 
     // merge any user-defined psuedo style

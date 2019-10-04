@@ -1,4 +1,4 @@
-import { colorTheme, gloss, psuedoStyleTheme, selectThemeSubset, ThemeSelect } from 'gloss'
+import { alphaColorTheme, gloss, psuedoStyleTheme, selectThemeSubset, ThemeSelect } from 'gloss'
 import React, { memo } from 'react'
 
 import { BorderBottom, BorderTop } from './Border'
@@ -40,7 +40,7 @@ const ListSeparatorText = gloss<ListSeparatorProps>(SimpleText, {
     }
   },
   scaledTextSizeTheme,
-  colorTheme,
+  alphaColorTheme,
 )
 
 ListSeparator['defaultProps'] = {

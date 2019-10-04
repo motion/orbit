@@ -169,19 +169,8 @@ export const coats: ThemeSet = Object.freeze({
     backgroundHover: colorThemes.blue.background,
     backgroundActive: colorThemes.blue.background,
   },
-  selectedInactive: parent => ({
-    ...colorThemes.blue,
-    ...colorize({
-      // dont make selected things hover/active, they're active already
-      background: [150, 150, 150, 0.1],
-      backgroundHover: [150, 150, 150, 0.1],
-      backgroundActive: [150, 150, 150, 0.1],
-    }),
-    borderColor: parent.borderColor,
-    color: parent.color,
-  }),
   bordered: {
-    glintColor: transparent,
+    disableGlint: true,
     borderWidth: 1,
     ...colorThemes.transparent,
   },
@@ -209,14 +198,30 @@ export const coats: ThemeSet = Object.freeze({
     buttonBackgroundBlur: '#f6f6f6',
     buttonBackgroundActiveHighlight: '#ededed',
   }),
-  translucent: parent =>
-    fromStyles({
+  selectedInactive: parent => ({
+    ...colorThemes.blue,
+    ...colorize({
+      // dont make selected things hover/active, they're active already
+      background: [150, 150, 150, 0.1],
+      backgroundHover: [150, 150, 150, 0.1],
+      backgroundActive: [150, 150, 150, 0.1],
+    }),
+    borderColor: parent.borderColor,
+    color: parent.color,
+  }),
+  translucent: parent => ({
+    name: `${parent.name}-translucent`,
+    disableGlint: true,
+    ...fromStyles({
       color: parent.color,
       background: parent.background.setAlpha(0.33),
       borderColor: parent.background.setAlpha(0.5),
     }),
-  clear: parent =>
-    fromStyles({
+  }),
+  clear: parent => ({
+    name: `${parent.name}-clear`,
+    disableGlint: true,
+    ...fromStyles({
       glintColor: transparent,
       color: parent.color,
       background: parent.background.isDark()
@@ -225,12 +230,13 @@ export const coats: ThemeSet = Object.freeze({
       borderColor: transparent,
       borderWidth: 0,
     }),
+  }),
   flat: parent => {
     const background = parent.background.relativeLighten(0.05).setAlpha(0.5)
     return {
-      ...parent,
-      color: parent.color,
+      name: `${parent.name}-flat`,
       searchInputSizeRadius: 1,
+      disableGlint: true,
       background,
       backgroundHover: background,
       buttonBackground: background,
@@ -241,8 +247,6 @@ export const coats: ThemeSet = Object.freeze({
       backgroundStrong: parent.backgroundStrong,
       backgroundStronger: parent.backgroundStronger,
       backgroundStrongest: parent.backgroundStrongest,
-      glintColor: transparent,
-      glintColorBottom: transparent,
       ...colorize({
         borderColor: transparent,
         borderWidth: 0,

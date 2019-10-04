@@ -1,6 +1,6 @@
 import { AppBit } from '@o/models'
 import { IconShape, IconShapeProps, SVG, toColor, useTheme } from '@o/ui'
-import { ThemeObject } from 'gloss'
+import { CompiledTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
 import { useAppDefinition } from '../hooks/useAppDefinition'
@@ -15,7 +15,7 @@ export type AppIconProps = Omit<IconShapeProps, 'color' | 'gradient'> & {
 }
 
 export const AppIcon = memo((props: AppIconProps) => {
-  const theme = useTheme({ ignroeCoat: true })
+  const theme = useTheme({ coat: false })
   const { app, ...rest } = props
   let icon = props.icon || props.identifier || ''
   let iconLight = ''
@@ -41,6 +41,8 @@ export const AppIcon = memo((props: AppIconProps) => {
       .slice(0, 20)
       .trim()
       .indexOf('<svg') > -1
+
+  // @ts-ignore
   const color = getIconColor(props, theme)
 
   if (isSVGIcon) {
@@ -71,7 +73,7 @@ AppIcon.acceptsProps = {
   icon: true,
 }
 
-const getIconColor = (props: AppIconProps, theme: ThemeObject) => {
+const getIconColor = (props: AppIconProps, theme: CompiledTheme) => {
   let fill
   try {
     fill = toColor((props.colors && props.colors[0]) || theme.color).toHexString()

@@ -1,14 +1,15 @@
-import { CSSPropertySet, ThemeObject, validCSSAttr } from '@o/css'
+import { CSSPropertySet, validCSSAttr } from '@o/css'
 
 import { Config } from '../configureGloss'
+import { CompiledTheme } from '../theme/createTheme'
 
-export function styleVal(val: any, theme: ThemeObject, props?: Object) {
+export function styleVal(val: any, theme: CompiledTheme, props?: Object) {
   return typeof val === 'function' ? val(theme, props) : val
 }
 
 // resolves props into styles for valid css
 
-export function propsToStyles(props: any, theme: ThemeObject): CSSPropertySet | null {
+export function propsToStyles(props: any, theme: CompiledTheme): CSSPropertySet | null {
   let styles: CSSPropertySet | null = null
   // loop over props turning into styles
   for (let key in props) {

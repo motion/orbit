@@ -25,11 +25,9 @@ export {
   gloss,
   GlossProps,
   Theme,
-  ThemeContext,
   useTheme,
   Inline,
   InlineBlock,
-  useThemeContext,
 } from 'gloss'
 export { arrayMove } from './helpers/arrayMove'
 export { GlobalHotKeys, HotKeys, KeySequence } from './helpers/reactHotkeys'
@@ -191,7 +189,6 @@ export * from './Share'
 export * from './Shortcut'
 export * from './Sidebar'
 export * from './SidebarLabel'
-export * from './SizedSurface'
 export * from './Slider'
 export * from './SliderPane'
 export * from './SortableGrid'
@@ -201,7 +198,7 @@ export * from './Spinner'
 export * from './StatusBar'
 export * from './SubSection'
 export * from './Surface'
-export * from './SizedSurfacePropsContext'
+export * from './SurfacePropsContext'
 export * from './SuspenseWithBanner'
 export * from './SVG'
 export * from './Tab'

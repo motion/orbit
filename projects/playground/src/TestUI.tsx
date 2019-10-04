@@ -7,11 +7,12 @@ export function TestUI() {
     <>
       {/* <TestMediaQueries /> */}
       {/* <TestUIPopovers /> */}
-      {/* <TestUIGlossSpeed /> */}
+      <TestUIGlossSpeed />
       {/* <TestUIEditor /> */}
       {/* <TestUIMotion /> */}
       {/* <TestUIAnimation /> */}
-      <TestUIParallax />
+      {/* <TestUIParallax /> */}
+      {/* <TestCSSVariables /> */}
     </>
   )
 }
@@ -237,11 +238,18 @@ export function TestUIParallax() {
 
 export function TestUIGlossSpeed() {
   const [key, setKey] = React.useState(0)
-  return (
+
+  console.time('render')
+  console.time('write')
+  React.useLayoutEffect(() => {
+    console.timeEnd('write')
+  }, [])
+
+  const items = (
     <Stack space>
       <Button onClick={() => setKey(key + 1)}>render</Button>
       <Stack space>
-        {_.fill(new Array(150), 0).map((_, index) => (
+        {_.fill(new Array(50), 0).map((_, index) => (
           <CardSimple key={index} title={`card ${index}`}>
             lorem ipsume sit amet
           </CardSimple>
@@ -249,4 +257,6 @@ export function TestUIGlossSpeed() {
       </Stack>
     </Stack>
   )
+  console.timeEnd('render')
+  return items
 }

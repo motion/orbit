@@ -1,8 +1,9 @@
-import { BorderRight, Button, configureHotKeys, gloss, List, ListItemProps, Portal, ProvideBanner, Sidebar, sleep, Space, Stack, Theme, useFilter, useOnMount, whenIdle } from '@o/ui'
+import { BorderRight, Button, configureHotKeys, gloss, List, ListItemProps, Portal, ProvideBanner, Sidebar, sleep, Space, Stack, Theme, useFilter, useOnMount, View, whenIdle } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { NotFoundBoundary, View } from 'react-navi'
+import { NotFoundBoundary, View as NaviView } from 'react-navi'
+import * as portals from 'react-reverse-portal'
 
 import { Header } from '../Header'
 import { useScreenSize } from '../hooks/useScreenSize'
@@ -38,19 +39,21 @@ configureHotKeys({
   ignoreTags: [],
 })
 
-const DocsList = memo(() => {
+const DocsList = memo((props: { shouldRenderAll?: boolean }) => {
   const docsStore = DocsStoreContext.useStore()
   const [mounted, setMounted] = useState(false)
 
   useOnMount(async () => {
-    await whenIdle()
-    await sleep(50)
-    await whenIdle()
-    await sleep(50)
-    await whenIdle()
-    await sleep(50)
-    await whenIdle()
-    setMounted(true)
+    if (props.shouldRenderAll) {
+      await whenIdle()
+      await sleep(50)
+      await whenIdle()
+      await sleep(50)
+      await whenIdle()
+      await sleep(50)
+      await whenIdle()
+      setMounted(true)
+    }
   })
 
   const curRow = useRef(docsItems[docsStore.section][0])
@@ -76,6 +79,8 @@ const DocsList = memo(() => {
     return items
   }, [docsStore.search, results])
 
+  console.log('re-render me')
+
   return (
     <List
       selectable
@@ -94,6 +99,7 @@ const DocsList = memo(() => {
           docsNavigate(rows[0].id)
         }
       }, [])}
+      {...props}
     />
   )
 })
@@ -107,6 +113,12 @@ const DocsPage = memo((props: { children?: any }) => {
   const [showSidebar, setShowSidebar] = useState(false)
   const inputRef = useRef(null)
   const [themeName, setThemeName] = usePageTheme()
+  const portalNode = React.useMemo(() => {
+    const div = portals.createPortalNode()
+    div.style.display = 'flex'
+    div.style.height = 'calc(100vh - 100px)'
+    return div
+  }, [])
 
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))
@@ -155,16 +167,13 @@ const DocsPage = memo((props: { children?: any }) => {
     inputRef.current && inputRef.current.focus()
   }, [inputRef.current])
 
-  const sidebarChildren = (
-    <React.Fragment key="content">
-      <FadeInView data-is="DocsPageSidebar" flex={1} pointerEvents="auto">
-        <DocsList />
-      </FadeInView>
-    </React.Fragment>
-  )
-
   return (
     <DocsStoreContext.Provider>
+      {/* this is expensive so we use react-reverse-portal to only render once and move it around */}
+      {/* this caused themes to re-render wholesale :( */}
+      {/* <portals.InPortal node={portalNode}>
+        <DocsList />
+      </portals.InPortal> */}
       <Fade.FadeProvide>
         <Portal
           prepend
@@ -220,29 +229,34 @@ const DocsPage = memo((props: { children?: any }) => {
 
         {isSmall && (
           <Portal>
-            <FixedLayout isSmall>
-              <Sidebar
-                hidden={!showSidebar}
-                zIndex={10000000}
-                elevation={25}
-                width={260}
-                background={theme => theme.background}
-              >
-                <Button
-                  chromeless
-                  size={1.5}
-                  icon="cross"
-                  position="absolute"
-                  top={0}
-                  right={0}
-                  onClick={() => setShowSidebar(false)}
-                  pointerEvents="auto"
-                  zIndex={100}
-                  opacity={0.5}
-                />
-                {sidebarChildren}
-              </Sidebar>
-            </FixedLayout>
+            <Theme name={themeName}>
+              <FixedLayout isSmall>
+                <Sidebar
+                  hidden={!showSidebar}
+                  zIndex={10000000}
+                  elevation={25}
+                  width={260}
+                  data-is="SmallSidebar"
+                  background={theme => theme.background}
+                >
+                  <View flex={1} pointerEvents="auto">
+                    <Button
+                      chromeless
+                      size={1.5}
+                      icon="cross"
+                      position="absolute"
+                      top={0}
+                      right={0}
+                      onClick={() => setShowSidebar(false)}
+                      pointerEvents="auto"
+                      zIndex={100}
+                      opacity={0.5}
+                    />
+                    <DocsList />
+                  </View>
+                </Sidebar>
+              </FixedLayout>
+            </Theme>
           </Portal>
         )}
 
@@ -250,7 +264,11 @@ const DocsPage = memo((props: { children?: any }) => {
           <main className="main-contents">
             <SectionContent background={theme => theme.background} maxWidth={1400}>
               <Stack direction="horizontal" id="main" className="main">
-                {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
+                <DocsPageSidebar sm-display="none">
+                  <FadeInView data-is="DocsPageSidebar" flex={1} pointerEvents="auto">
+                    <DocsList shouldRenderAll />
+                  </FadeInView>
+                </DocsPageSidebar>
                 <Stack
                   nodeRef={Fade.ref}
                   flex={1}
@@ -275,7 +293,7 @@ const DocsPage = memo((props: { children?: any }) => {
   )
 })
 
-const DocsPageSidebar = memo(({ children }: any) => {
+const DocsPageSidebar = memo(({ children, ...rest }: any) => {
   const screen = useScreenSize()
 
   useStickySidebar({
@@ -285,11 +303,11 @@ const DocsPageSidebar = memo(({ children }: any) => {
   })
 
   return (
-    <Stack id="sidebar" width={230} pointerEvents="auto" height="100vh">
+    <Stack id="sidebar" width={230} pointerEvents="auto" height="100vh" {...rest}>
       <Stack position="relative" className="sidebar__inner" flex={1}>
         <Stack margin={[25, 0, 0]} flex={1} position="relative">
           {children}
-          <BorderRight top={10} opacity={0.5} />
+          <BorderRight top={10} />
         </Stack>
       </Stack>
     </Stack>
@@ -318,14 +336,14 @@ export default compose(
     if (window.location.pathname.indexOf('/isolate') >= 0) {
       return (
         <DocsChromeSimple>
-          <View />
+          <NaviView />
         </DocsChromeSimple>
       )
     }
     return (
       <ProvideBanner>
         <DocsPage>
-          <View disableScrolling={window['recentHMR']} />
+          <NaviView disableScrolling={window['recentHMR']} />
         </DocsPage>
       </ProvideBanner>
     )

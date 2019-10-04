@@ -1,5 +1,4 @@
 import { colorToString } from './helpers/helpers'
-import { preProcessTheme } from './helpers/preProcessTheme'
 import { GlossConfig } from './types'
 
 export const defaultMediaQueries = {
@@ -20,7 +19,6 @@ export const GlossDefaultConfig: GlossConfig = {
     focusStyle: '&:focus',
     disabledStyle: '&:disabled',
   },
-  preProcessTheme: preProcessTheme,
 }
 
 export let Config = { ...GlossDefaultConfig }

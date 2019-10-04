@@ -1,13 +1,15 @@
-import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, ThemeObject, validCSSAttr } from '@o/css'
+import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
-import { useTheme } from './helpers/useTheme'
 import { validPropLoose, ValidProps } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
+import { CompiledTheme } from './theme/createTheme'
 import { ThemeSelect } from './theme/Theme'
+import { themeVariableManager } from './theme/themeVariableManager'
+import { useTheme } from './theme/useTheme'
 
 // so you can reference in postProcessProps
 export { StyleTracker } from './stylesheet/gc'
@@ -40,7 +42,7 @@ export type GlossProps<Props> = Props & {
 
 export type ThemeFn<Props = any> = (
   props: GlossProps<Props>,
-  theme: ThemeObject,
+  theme: CompiledTheme,
   previous?: CSSPropertySetLoose | null,
 ) => CSSPropertySetLoose | undefined | null
 
@@ -49,7 +51,7 @@ export type GlossViewOpts<Props> = {
   ignoreAttrs?: { [key: string]: boolean }
   defaultProps?: Partial<Props>
   shouldAvoidProcessingStyles?: (props: Props) => boolean
-  postProcessProps?: (curProps: Props, nextProps: any, tracker: StyleTracker) => any
+  postProcessProps?: (curProps: Props, nextProps: any, getFinalStyles: () => CSSPropertySet) => any
   getElement?: (props: Props) => any
   isDOMElement?: boolean
 }
@@ -161,14 +163,7 @@ export function gloss<Props = any, ThemeProps = Props>(
   const targetConfig: GlossInternalConfig | null = hasGlossyParent
     ? target.internal.getConfig()
     : null
-
-  let ignoreAttrs: Object
-  setTimeout(() => {
-    if (!ignoreAttrs) {
-      ignoreAttrs =
-        ThemedView.ignoreAttrs || (hasGlossyParent && target.ignoreAttrs) || baseIgnoreAttrs
-    }
-  }, 0)
+  let ignoreAttrs: any
 
   // shorthand: gloss({ ... })
   if (
@@ -211,6 +206,8 @@ export function gloss<Props = any, ThemeProps = Props>(
     // compile on first run to avoid extra work
     if (!hasCompiled) {
       hasCompiled = true
+      ignoreAttrs =
+        ThemedView.ignoreAttrs || (hasGlossyParent && target.ignoreAttrs) || baseIgnoreAttrs
       themeFn = compileTheme(ThemedView)
       staticClasses = addStyles(staticStyles.styles, ThemedView.displayName)
       config = getCompiledConfig(ThemedView, ogConfig)
@@ -218,11 +215,11 @@ export function gloss<Props = any, ThemeProps = Props>(
       shouldUpdateMap = GlossView['shouldUpdateMap']
     }
 
-    const theme = useTheme()
+    const theme = useTheme(props)
     const dynClasses = useRef<Set<string> | null>(null)
 
     // for smarter update tracking
-    const last = useRef<{ props: Object; theme: ThemeObject }>()
+    const last = useRef<{ props: Object; theme: CompiledTheme }>()
     let shouldAvoidStyleUpdate = false
     if (!last.current) {
       last.current = {
@@ -275,7 +272,7 @@ export function gloss<Props = any, ThemeProps = Props>(
       }
     }
 
-    const dynClassNames = addDynamicStyles(
+    const dynStyles = addDynamicStyles(
       ThemedView.displayName,
       conditionalStyles,
       dynClasses.current,
@@ -284,6 +281,7 @@ export function gloss<Props = any, ThemeProps = Props>(
       theme,
       avoidStyles,
     )
+    const dynClassNames = lastDynamicClassNames
     dynClasses.current = dynClassNames
 
     const isDOMElement = typeof element === 'string' || (config ? config.isDOMElement : false)
@@ -316,12 +314,19 @@ export function gloss<Props = any, ThemeProps = Props>(
         : [...dynClassNames].join(' ')
     }
 
-    finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
+    if (process.env.NODE_ENV === 'development') {
+      finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
+    }
 
     // hook: setting your own props
     const postProcessProps = config && config.postProcessProps
     if (postProcessProps) {
-      postProcessProps(props, finalProps, tracker)
+      postProcessProps(props, finalProps, () => {
+        return {
+          ...staticStyles.styles['.'],
+          ...dynStyles['.'],
+        }
+      })
     }
 
     if (process.env.NODE_ENV === 'development') {
@@ -465,6 +470,7 @@ function addStyles(
     // TODO could do a simple "diff" so that fast-changing styles only change the "changing" props
     // it would likely help things like when you animate based on mousemove, may be slower in default case
     const className = addRules(displayName, style, key, moreSpecific)
+
     if (className) {
       classNames = classNames || []
       classNames.push(className)
@@ -494,17 +500,18 @@ function deregisterClassName(name: string) {
   gc.deregisterClassUse(nonSpecificClassName)
 }
 
+let lastDynamicClassNames = new Set<string>()
 function addDynamicStyles(
   displayName: string = 'g',
   conditionalStyles: Object | undefined,
   prevClassNames: Set<string> | null,
   props: CSSPropertySet,
   themeFn?: ThemeFn | null,
-  theme?: ThemeObject,
+  theme?: CompiledTheme,
   avoidStyles?: boolean,
 ) {
   const dynStyles = {}
-  let classNames = new Set<string>()
+  lastDynamicClassNames = new Set<string>()
 
   // applies styles most important to least important
   // that saves us some processing time (no need to set multiple times)
@@ -530,7 +537,7 @@ function addDynamicStyles(
         dynStyles[ns] = dynStyles[ns] || {}
         mergeStyles(ns, dynStyles, info.rules)
       } else if (className) {
-        classNames.add(className)
+        lastDynamicClassNames.add(className)
       }
     }
   }
@@ -541,9 +548,8 @@ function addDynamicStyles(
     }
 
     if (theme && themeFn) {
-      const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
       dynStyles['.'] = dynStyles['.'] || {}
-      const themeStyles = themeFn(props, next)
+      const themeStyles = themeFn(props, theme)
       const themePropStyles = mergeStyles('.', dynStyles, themeStyles, true)
       if (themePropStyles) {
         mergePropStyles(dynStyles, themePropStyles, props)
@@ -554,7 +560,7 @@ function addDynamicStyles(
     const dynClassNames = addStyles(dynStyles, displayName, prevClassNames, true)
     if (dynClassNames) {
       for (const cn of dynClassNames) {
-        classNames.add(cn)
+        lastDynamicClassNames.add(cn)
       }
     }
   }
@@ -563,13 +569,13 @@ function addDynamicStyles(
   if (prevClassNames) {
     for (const className of prevClassNames) {
       // if this previous class isn't in the current classes then deregister it
-      if (!classNames.has(className)) {
+      if (!lastDynamicClassNames.has(className)) {
         deregisterClassName(className)
       }
     }
   }
 
-  return classNames
+  return dynStyles
 }
 
 const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
@@ -715,9 +721,9 @@ function getCompiledConfig(
         const og = compiledConf.postProcessProps
         if (curConf.postProcessProps !== og) {
           compiledConf.postProcessProps = og
-            ? (a, b) => {
-                og(a, b, tracker)
-                curConf.postProcessProps!(a, b, tracker)
+            ? (a, b, c) => {
+                og(a, b, c)
+                curConf.postProcessProps!(a, b, c)
               }
             : curConf.postProcessProps
         }
@@ -757,7 +763,7 @@ function compileTheme(viewOG: GlossView<any>) {
     return null
   }
 
-  return (props: Object, theme: ThemeObject) => {
+  return (props: Object, theme: CompiledTheme) => {
     let styles: CSSPropertySetLoose | null = null
     for (const themeFn of themes) {
       const next = themeFn(props, theme, styles)
@@ -773,12 +779,15 @@ function compileTheme(viewOG: GlossView<any>) {
 // adds rules to stylesheet and returns classname
 function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSpecific?: boolean) {
   const [hash, style] = cssStringWithHash(rules)
-  if (!hash) return
+
+  if (!hash) {
+    return
+  }
 
   let className = `g${hash}`
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
   // ensure we are unique for unique namespaces
-  if (isSubStyle(namespace)) {
+  if (namespace !== '.') {
     className += `-${stringHash(namespace)}`
   }
 
@@ -832,6 +841,7 @@ if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
     gc,
     sheet,
     validCSSAttr,
+    themeVariableManager,
   }
 }
 

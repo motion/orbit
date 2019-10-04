@@ -93,20 +93,22 @@ export const Layout = memo((props: any) => {
       <PageLoading />
       <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
       {/* small */}
-      <Button
-        className="sidebar-open-button"
-        abovemd-display="none"
-        pointerEvents="auto"
-        position="fixed"
-        top={-3}
-        right={10}
-        zIndex={1000000000}
-        icon="menu"
-        iconSize={16}
-        size={2}
-        chromeless
-        onClick={siteStore.toggleSidebar}
-      />
+      <Theme name="home">
+        <Button
+          className="sidebar-open-button"
+          abovemd-display="none"
+          pointerEvents="auto"
+          position="fixed"
+          top={-3}
+          right={10}
+          zIndex={1000000000}
+          icon="menu"
+          iconSize={16}
+          size={2}
+          chromeless
+          onClick={siteStore.toggleSidebar}
+        />
+      </Theme>
       <View
         className={`view-layout theme-${theme}`}
         minHeight="100vh"

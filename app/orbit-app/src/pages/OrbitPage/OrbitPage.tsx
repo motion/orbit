@@ -162,7 +162,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
   const onOpen = useCallback(rows => {
     if (rows.length) {
-      if (rows[0] === undefined) debugger
       if (rows[0] && rows[0].extraData) {
         actions.router.showAppPage({ id: rows[0].extraData.id })
       }
@@ -240,7 +239,7 @@ const OrbitInnerChrome = gloss<
   zIndex: 0,
 }).theme(({ torn, vibrancy }, theme) => ({
   boxShadow: [torn ? null : [0, 0, 80, [0, 0, 0, 0.05]]],
-  background: theme.orbitLauncherBackground[vibrancy || 'some'],
+  background: theme[`orbitLauncherBackground-${[vibrancy || 'some']}`],
 }))
 
 // /**

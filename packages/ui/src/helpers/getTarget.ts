@@ -11,7 +11,6 @@ export function getTarget(target) {
     case 'string':
       return document.querySelector(target)
     case 'function':
-      debugger
       return findDOMNode(target())
   }
   return target

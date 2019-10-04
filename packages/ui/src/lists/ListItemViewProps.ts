@@ -5,7 +5,7 @@ import { Bit } from '../helpers/BitLike'
 import { NormalItem } from '../helpers/normalizeItem'
 import { IconProps } from '../Icon'
 import { ListSeparatorProps } from '../ListSeparator'
-import { SizedSurfaceProps } from '../SizedSurface'
+import { SurfaceProps } from '../Surface'
 import { TextProps } from '../text/Text'
 import { SelectableStore } from './SelectableStore'
 import { VirtualListItemProps } from './VirtualListItem'
@@ -39,7 +39,7 @@ export type ListItemHide = {
 
 export type HandleSelection = (index: number, event?: any) => any
 
-export type ListItemSimpleProps = Omit<SizedSurfaceProps, 'onClick'> &
+export type ListItemSimpleProps = Omit<SurfaceProps, 'onClick'> &
   ListItemSpecificProps & {
     onClick?: (e: Event, props: ListItemSimpleProps) => any
   }

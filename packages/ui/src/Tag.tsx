@@ -1,14 +1,16 @@
-import React from 'react'
+import React, { memo } from 'react'
 
-import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
+import { memoIsEqualDeep } from './helpers/memoHelpers'
 import { getSize } from './Sizes'
+import { Surface, SurfaceProps } from './Surface'
 
-export type TagProps = SizedSurfaceProps
+export type TagProps = SurfaceProps
 
-export const Tag = ({ size = 0.9, ...props }: TagProps) => {
+// tag often takes string/simple children so use memo
+export const Tag = memoIsEqualDeep(({ size = 0.9, ...props }: TagProps) => {
   const sz = getSize(size)
   return (
-    <SizedSurface
+    <Surface
       ellipse
       sizeRadius={0.9 * sz}
       sizeFont={1.15 * sz}
@@ -28,4 +30,4 @@ export const Tag = ({ size = 0.9, ...props }: TagProps) => {
       {...props}
     />
   )
-}
+})

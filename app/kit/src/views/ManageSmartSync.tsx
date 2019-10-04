@@ -1,11 +1,11 @@
-import { CheckBox, Label, SizedSurface, Stack, Text } from '@o/ui'
+import { CheckBox, Label, Stack, Surface, Text } from '@o/ui'
 import * as React from 'react'
 
 import { WhiteList } from '../hooks/useWhiteList'
 
 export function ManageSmartSync({ whitelist }: { whitelist: WhiteList }) {
   return (
-    <SizedSurface
+    <Surface
       coat={whitelist.isWhitelisting ? 'selected' : null}
       sizeRadius
       sizePadding
@@ -19,6 +19,6 @@ export function ManageSmartSync({ whitelist }: { whitelist: WhiteList }) {
           <Text>Smart sync</Text>
         </Stack>
       </Label>
-    </SizedSurface>
+    </Surface>
   )
 }

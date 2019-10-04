@@ -23,7 +23,7 @@ export function SearchResultsApp() {
 
   if (item && item.item) {
     return (
-      <Card margin={14} flex={1} elevation={1.5} sizeRadius={1.2}>
+      <Card margin={14} flex={1} boxShadow={[[0, 5, 20, [0, 0, 0, 0.05]]]} sizeRadius={1.5}>
         <BitAppMain id={`${item.item.id}`} />
       </Card>
     )

@@ -84,7 +84,6 @@ const startLoading = once(async () => {
   while (allUpcoming.length) {
     await onIdle()
     const next = allUpcoming.reduce((a, b) => (b.top < a.top ? b : a), { top: Infinity })
-    console.log('loading', next)
     next.load()
     allUpcoming.splice(allUpcoming.findIndex(x => x.load === next.load), 1)
   }
@@ -163,11 +162,10 @@ function retry<A>(fn, retriesLeft = 5, interval = 1000) {
       .catch(error => {
         setTimeout(() => {
           if (retriesLeft === 1) {
-            // reject('maximum retries exceeded');
+            console.log('maximum retries exceeded', fn)
             reject(error)
             return
           }
-
           // Passing on "reject" is the important part
           retry(fn, retriesLeft - 1, interval).then(x => resolve(x as A), reject)
         }, interval)

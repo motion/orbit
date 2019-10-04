@@ -1,4 +1,4 @@
-import { ThemeObject, useTheme } from 'gloss'
+import { CompiledTheme, useTheme } from 'gloss'
 import React, { memo } from 'react'
 import Switch, { ReactSwitchProps } from 'react-switch'
 
@@ -52,7 +52,7 @@ export const Toggle = memo(({ defaultChecked, size, nodeRef, ...props }: ToggleP
   return element
 })
 
-function toggleTheme(theme: ThemeObject) {
+function toggleTheme(theme: CompiledTheme) {
   return {
     boxShadow: undefined,
     offColor: (theme.backgroundStrongest || theme.background).toHexString(),

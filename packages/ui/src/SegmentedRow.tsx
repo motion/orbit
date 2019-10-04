@@ -2,9 +2,8 @@ import { isDefined, selectDefined } from '@o/utils'
 import React from 'react'
 
 import { BreadcrumbInfo, Breadcrumbs, BreadcrumbsProps } from './Breadcrumbs'
-import { SizedSurfaceProps } from './SizedSurface'
-import { SurfacePassProps, useSurfaceProps } from './SizedSurfacePropsContext'
 import { SurfaceProps } from './Surface'
+import { SurfacePassProps, useSurfaceProps } from './SurfacePropsContext'
 
 // manages a row of surfaces nicely
 // will round the start/end corners
@@ -14,7 +13,7 @@ export function SegmentedRow({
   children,
   separator,
   ...rest
-}: BreadcrumbsProps & Partial<SizedSurfaceProps>) {
+}: BreadcrumbsProps & Partial<SurfaceProps>) {
   const props = useSurfaceProps(rest)
   return (
     <SurfacePassProps {...props}>

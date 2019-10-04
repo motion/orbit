@@ -6,7 +6,7 @@
  */
 import { Color } from '@o/color'
 import { useReaction } from '@o/use-store'
-import { Box, gloss, ThemeObject } from 'gloss'
+import { Box, CompiledTheme, gloss } from 'gloss'
 import React, { memo } from 'react'
 
 import { DataValue } from '../DataValue'
@@ -134,7 +134,7 @@ export const TableRow = memo(function TableRow({
   )
 })
 
-const backgroundColor = (props: TableRowProps, theme: ThemeObject) => {
+const backgroundColor = (props: TableRowProps, theme: CompiledTheme) => {
   if (props.background) {
     return props.background
   }
@@ -155,7 +155,7 @@ const backgroundColor = (props: TableRowProps, theme: ThemeObject) => {
   }
 }
 
-const getColor = (props: TableRowProps, theme: ThemeObject) => {
+const getColor = (props: TableRowProps, theme: CompiledTheme) => {
   let color = props.color
   if (props.row) {
     const cat = props.row.category

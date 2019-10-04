@@ -3,15 +3,15 @@ import { gloss } from 'gloss'
 import { FunctionComponent } from 'react'
 import React from 'react'
 
-import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
+import { Surface, SurfaceProps } from '../Surface'
 import { SubTitle } from './SubTitle'
 import { TitleProps } from './Title'
 
-type MessageView = FunctionComponent<SizedSurfaceProps> & {
+type MessageView = FunctionComponent<SurfaceProps> & {
   Title: FunctionComponent<TitleProps>
 }
 
-export type MessageProps = SizedSurfaceProps & { title?: string }
+export type MessageProps = SurfaceProps & { title?: string }
 
 export const Message: MessageView = (props: MessageProps) => {
   if (isDefined(props.title)) {
@@ -28,7 +28,7 @@ export const Message: MessageView = (props: MessageProps) => {
 export const MessageTitle = SubTitle
 Message.Title = MessageTitle
 
-const MessageChrome = gloss(SizedSurface, {
+const MessageChrome = gloss(Surface, {
   userSelect: 'text',
   cursor: 'text',
 })

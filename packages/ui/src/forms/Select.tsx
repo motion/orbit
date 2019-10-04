@@ -1,4 +1,4 @@
-import { ThemeContext, ThemeObject, useTheme } from 'gloss'
+import { CompiledTheme, useTheme } from 'gloss'
 import React, { useCallback, useContext, useMemo } from 'react'
 import ReactSelect from 'react-select'
 import { Props } from 'react-select/src/Select'
@@ -9,7 +9,7 @@ import { SimpleText } from '../text/SimpleText'
 import { View } from '../View/View'
 import { useParentForm } from './FormContext'
 
-const selectStyles = (theme: ThemeObject) => ({
+const selectStyles = (theme: CompiledTheme) => ({
   placeholder: provided => ({
     ...provided,
     whiteSpace: 'nowrap',
@@ -101,7 +101,7 @@ export type SelectProps =
 
 export function Select({ minWidth, ...props }: SelectProps) {
   const theme = useTheme()
-  const { activeThemeName } = useContext(ThemeContext)
+  const activeThemeName = useTheme().name
   const options = normalizeOptions(props.options)
   const formStore = useParentForm()
 

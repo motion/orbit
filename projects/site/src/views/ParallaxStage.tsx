@@ -4,6 +4,10 @@ import * as React from 'react'
 
 import { Page } from './Page'
 
+/**
+ * TODO this into Parallax.View itself
+ */
+
 const transitionTransforms = {
   'ease-in-out': [[-1, -0.2, 0, 0.2, 1], [-1, -0.2, 0, 0.2, 1]],
   'ease-in-out-quad': [[-1, -0.2, -0.1, 0, 1], [-2, -0.1, 0, 0.1, 2]],
@@ -56,6 +60,7 @@ function getParallax(props: ParallaxStageItemProps): ParallaxViewProps['parallax
         ...props,
         ...prop,
       })
+
       if (prop.transition) {
         // @ts-ignore
         cur = cur.transform(...transitionTransforms[prop.transition])
@@ -67,7 +72,9 @@ function getParallax(props: ParallaxStageItemProps): ParallaxViewProps['parallax
         cur = cur.transform(prop.transform)
       }
       if (clamp) {
-        cur = cur.transform(x => Math.max(clamp[0], Math.min(x, clamp[1])))
+        cur = cur.transform(x => {
+          return Math.max(clamp[0], Math.min(x, clamp[1]))
+        })
       }
       acc[key] = cur
       return acc

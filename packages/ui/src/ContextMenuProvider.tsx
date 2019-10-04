@@ -1,4 +1,3 @@
-import { gloss } from 'gloss'
 import React, { createContext, useCallback, useMemo, useRef } from 'react'
 
 export type ContextMenuHandler = {
@@ -53,11 +52,9 @@ export function ContextMenuProvider(props: {
 
   return (
     <ContextMenuContext.Provider value={memoValue}>
-      <Container onContextMenu={showContextMenu}>{props.children}</Container>
+      <div style={{ display: 'contents' }} onContextMenu={showContextMenu}>
+        {props.children}
+      </div>
     </ContextMenuContext.Provider>
   )
 }
-
-const Container = gloss({
-  display: 'contents',
-})

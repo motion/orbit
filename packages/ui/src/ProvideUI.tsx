@@ -1,5 +1,4 @@
-import { ThemeSet } from '@o/css'
-import { ThemeProvide } from 'gloss'
+import { CompiledTheme, ThemeProvide } from 'gloss'
 import React from 'react'
 
 import { ProvideDraggable } from './Draggable'
@@ -11,8 +10,8 @@ import { ProvideShortcut } from './Shortcut'
 import { ProvideVisibility } from './Visibility'
 
 export type ProvideUIProps = {
-  activeTheme?: string
-  themes: ThemeSet
+  activeTheme: string
+  themes: { [key: string]: CompiledTheme }
   children?: any
 }
 

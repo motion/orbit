@@ -1,7 +1,7 @@
 import { isEqual } from '@o/fast-compare'
 import { idFn, isDefined, selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
-import { Box, gloss, Theme, ThemeContext, useTheme } from 'gloss'
+import { Box, gloss, Theme, ThemeByName } from 'gloss'
 import React, { isValidElement, memo, useCallback } from 'react'
 
 import { BorderBottom } from '../Border'
@@ -11,8 +11,8 @@ import { useFocus } from '../Focus'
 import { HighlightText } from '../Highlight'
 import { Icon } from '../Icon'
 import { ListSeparator } from '../ListSeparator'
-import { SizedSurface } from '../SizedSurface'
 import { Space } from '../Space'
+import { Surface } from '../Surface'
 import { DateFormat } from '../text/DateFormat'
 import { SimpleText } from '../text/SimpleText'
 import { Text } from '../text/Text'
@@ -74,7 +74,6 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
     onDelete,
     ...surfaceProps
   } = props
-  const theme = useTheme()
   const isFocused = useFocus()
   const isSelected = useIsSelected(props)
   const showChildren = !props.hideBody
@@ -102,8 +101,6 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
       {children}
     </SimpleText>
   )
-
-  const { activeThemeName } = React.useContext(ThemeContext)
 
   // TODO could let a prop control content
   const afterHeaderElement = showDate && (
@@ -134,7 +131,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
   )
 
   const hasAfterTitle = isDefined(props.afterTitle, afterHeaderElement)
-  const coat = isSelected ? (isFocused ? 'selected' : 'selectedInactive') : null
+  const coat = isSelected ? (isFocused ? 'selected' : 'selectedInactive') : undefined
 
   // its a lot easier at times to just get the props from the click event
   const handleClick = useCallback(
@@ -157,27 +154,28 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
   )
 
   return (
-    <Theme coat={coat}>
-      {above}
+    <>
+      {above && <Theme coat={coat}>{above}</Theme>}
       {/* unset the theme for the separator */}
       {!!separator && (
         // remove any special indicator we add for alt themes
         // TODO this is awkward (the split)
-        <Theme name={activeThemeName.split('.')[0]}>
+        <>
           {isValidElement(separator) ? (
             separator
           ) : (
             <ListSeparator {...separatorProps}>{separator}</ListSeparator>
           )}
-        </Theme>
+        </>
       )}
-      <SizedSurface
+      <Surface
         className="list-item-surface"
         flexDirection="row"
         alignItems="stretch"
-        themeSubSelect="listItem"
+        coat={coat}
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && handleClick) || undefined}
+        background={coat ? undefined : 'transparent'}
         {...listItemAdjustedPadding}
         paddingLeft={
           (indent || 1) * (listItemAdjustedPadding ? listItemAdjustedPadding.paddingLeft : 0)
@@ -213,7 +211,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
                     onStartEdit={onStartEdit}
                     flex={1}
                     ellipse
-                    fontWeight={theme.fontWeight || 400}
+                    fontWeight={400}
                     {...titleProps}
                   >
                     {title}
@@ -271,7 +269,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
                 </Preview>
               </>
             )}
-            {childrenElement}
+            {coat ? <ThemeByName>{childrenElement}</ThemeByName> : childrenElement}
           </View>
           {hasAfterTitle && (
             <>
@@ -313,8 +311,8 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
             {after}
           </>
         )}
-      </SizedSurface>
-    </Theme>
+      </Surface>
+    </>
   )
 }, isEqual)
 
@@ -326,7 +324,7 @@ const ListItemTitleBar = gloss(Stack, {
   textAlign: 'left',
 })
 
-const Preview = gloss({
+const Preview = gloss(Box, {
   flex: 1,
   zIndex: -1,
 })

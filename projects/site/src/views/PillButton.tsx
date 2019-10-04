@@ -1,11 +1,11 @@
-import { ButtonProps, SizedSurface } from '@o/ui'
+import { ButtonProps, Surface } from '@o/ui'
 import React from 'react'
 
 import { fontProps } from '../constants'
 
 export function PillButton({ children, ...props }: ButtonProps) {
   return (
-    <SizedSurface
+    <Surface
       sizeRadius={100}
       background="linear-gradient(to right, #B65138, #BE0DBE)"
       color={theme => theme.background}
@@ -23,6 +23,6 @@ export function PillButton({ children, ...props }: ButtonProps) {
       {...props}
     >
       {children}
-    </SizedSurface>
+    </Surface>
   )
 }

@@ -1,4 +1,4 @@
-import { gloss, Icon, Row, Space, Stack, View } from '@o/ui'
+import { gloss, Icon, Space, Stack, View } from '@o/ui'
 import { isDefined } from '@o/utils'
 import { Box } from 'gloss'
 import React from 'react'
@@ -70,7 +70,8 @@ export const SectionIcon = gloss(props => <Icon size={32} {...props} />, {
   // opacity: 0.2,
 })
 
-const SectionTitle = gloss(Row, {
+const SectionTitle = gloss(View, {
+  flexDirection: 'row',
   flex: 1,
   maxWidth: '80%',
 })

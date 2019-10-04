@@ -1,4 +1,4 @@
-import { Block, ThemeContext } from 'gloss'
+import { Block, useTheme } from 'gloss'
 import { flow } from 'lodash'
 import * as React from 'react'
 
@@ -21,7 +21,7 @@ const Person = props => (
 )
 
 export function PersonRow({ people, onClickPerson = null }) {
-  const { activeTheme } = React.useContext(ThemeContext)
+  const activeTheme = useTheme()
   const total = (people || []).length
   if (total === 0) {
     return null

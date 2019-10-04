@@ -2,6 +2,7 @@ import { CSSPropertySetStrict, ThemeObject } from '@o/css'
 
 import { ThemeFn } from '../gloss'
 import { mergeStyles } from '../helpers/mergeStyles'
+import { CompiledTheme } from '../theme/createTheme'
 import { styleVal } from './propStyleTheme'
 
 // resolves props into styles for valid css
@@ -83,7 +84,7 @@ const themeKeys: KeyMap = [
 
 const SubThemeKeys: { [key: string]: KeyMap } = {}
 
-const applyPsuedoTheme = (props: any, theme: ThemeObject, previous: any, useTheme = false) => {
+const applyPsuedoTheme = (props: any, theme: CompiledTheme, previous: any, useTheme = false) => {
   if (!theme) {
     throw new Error('No theme passed to psuedoStyleTheme')
   }
@@ -109,9 +110,10 @@ const applyPsuedoTheme = (props: any, theme: ThemeObject, previous: any, useThem
     let psuedoStyle = getPsuedoStyles(props, theme, subKeys, useTheme).styles
 
     // for any prop overrides from base, override them on psuedo too
-    // (this could be an optional parameter)
-    if (psuedoStyle && overrides) {
-      Object.assign(psuedoStyle, overrides)
+    if (props.overridePsuedoStyles) {
+      if (psuedoStyle && overrides) {
+        Object.assign(psuedoStyle, overrides)
+      }
     }
 
     // merge any user-defined psuedo style
@@ -139,7 +141,7 @@ const applyPsuedoTheme = (props: any, theme: ThemeObject, previous: any, useThem
   return mergeStyles(previous, styles)
 }
 
-function getPsuedoStyles(props: Object, theme: ThemeObject, keyMap: KeyMap, useTheme = false) {
+function getPsuedoStyles(props: Object, theme: CompiledTheme, keyMap: KeyMap, useTheme = false) {
   let styles: any = null
   let overrides: Object | null = null
   for (const [name, mapName] of keyMap) {

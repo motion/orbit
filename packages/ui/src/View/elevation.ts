@@ -1,5 +1,6 @@
 import { ColorLike } from '@o/color'
-import { CSSPropertySetResolved, ThemeObject } from '@o/css'
+import { CSSPropertySetResolved } from '@o/css'
+import { CompiledTheme } from 'gloss/src'
 
 import { weakKey } from '../helpers/weakKey'
 
@@ -13,14 +14,14 @@ export type ElevatableProps = {
   boxShadow?: CSSPropertySetResolved['boxShadow']
 }
 
-const round = (x: number) => Math.round(x * 35) / 35
+const round = (x: number) => Math.round(x * 100) / 100
 const smoother = (base: number, amt = 1) =>
   round((Math.log(Math.max(1, base + 0.2)) + 0.75) * amt * 2)
 
 /**
  * Accounts for darkness of background by default, but you can ovverride in Theme
  */
-const elevatedShadow = (props: ElevatableProps, theme: ThemeObject) => {
+const elevatedShadow = (props: ElevatableProps, theme: CompiledTheme) => {
   const el = props.elevation
   return [
     // x
@@ -38,12 +39,13 @@ const elevatedShadow = (props: ElevatableProps, theme: ThemeObject) => {
             0,
             0,
             props.elevationShadowOpacity ||
-              round(0.05 * smoother((11 - Math.min(10, el)) * 0.2)) + (theme.boxShadowOpacity || 0),
+              round(0.05 * smoother((11 - Math.min(10, el)) * 0.2)) +
+                (theme.boxShadowOpacity ? theme.boxShadowOpacity.get() : 0),
           ]),
   ]
 }
 
-export const getElevation = (props: ElevatableProps, theme: ThemeObject) => {
+export const getElevation = (props: ElevatableProps, theme: CompiledTheme) => {
   return cacheReturn({
     keys: [JSON.stringify([props.elevation, props.boxShadow]), theme],
     value: () => {

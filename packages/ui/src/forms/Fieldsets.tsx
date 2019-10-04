@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { getRowValues } from '../helpers/getRowValues'
-import { SurfacePassProps } from '../SizedSurfacePropsContext'
+import { SurfacePassProps } from '../SurfacePropsContext'
 import { DataColumnsShort, GenericDataRow } from '../types'
 import { Fieldset } from './Fieldset'
 import { FormField } from './FormField'

@@ -15,11 +15,17 @@ export class LinearGradient {
     this.items = items
   }
 
+  cssVariableSafeKeys = ['cssVariable', 'setCSSVariable', 'getCSSValue']
+  cssVariable = ''
+  setCSSVariable(name: string) {
+    this.cssVariable = name
+  }
+
   getColors() {
     return this.items.filter(isColorLike).map(convertToColor)
   }
 
-  toCSS() {
+  getCSSValue() {
     return this.toString()
   }
 

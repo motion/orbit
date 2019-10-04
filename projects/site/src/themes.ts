@@ -1,23 +1,11 @@
 import { themes as KitThemes } from '@o/kit'
 import { linearGradient, toColor } from '@o/ui'
-import { ThemeObject } from 'gloss'
+import { createThemes } from 'gloss'
 import { colorize, fromStyles } from 'gloss-theme'
 
 import { colors } from './colors'
 
 const buttonBackground = linearGradient(colors.purple.lighten(0.035), colors.purple)
-
-const selectedTheme = KitThemes.light.coats.selected as ThemeObject
-const transparent = 'transparent'
-
-const selectedMinimal = {
-  ...colorize({
-    color: selectedTheme.background,
-    background: transparent,
-    backgroundHover: transparent,
-    backgroundActive: transparent,
-  }),
-}
 
 const purple = fromStyles({
   background: colors.purple,
@@ -39,11 +27,7 @@ const light = {
     ...KitThemes.light.coats,
     selected,
     purple,
-    selectedMinimal,
   },
-  ...colorize({
-    color: '#000',
-  }),
 }
 
 const dark = {
@@ -52,7 +36,6 @@ const dark = {
     ...KitThemes.dark.coats,
     selected,
     purple,
-    selectedMinimal,
   },
   ...colorize({
     background: '#111',
@@ -65,7 +48,20 @@ const dark = {
   }),
 }
 
-export const themes = {
+const home = {
+  ...dark,
+  ...colorize({
+    background: '#000',
+    backgroundHover: '#111',
+    inputBackground: '#111',
+    inputBackgroundHover: '#111',
+    inputBackgroundActive: '#111',
+    listItemBackgroundHover: 'rgba(255,255,255,0.05)',
+    popoverBackground: '#111',
+  }),
+}
+
+export const themes = createThemes({
   ...KitThemes,
 
   orbitOneDark: fromStyles({
@@ -79,11 +75,7 @@ export const themes = {
 
   light,
   dark,
-
-  docsPageTheme: {
-    ...light,
-    bodyBackground: toColor('#000'),
-  },
+  home,
 
   blogHeaderTheme: {
     ...dark,
@@ -103,17 +95,10 @@ export const themes = {
     }),
   },
 
-  home: {
-    ...dark,
-    ...colorize({
-      background: '#000',
-      inputBackground: '#111',
-      inputBackgroundHover: '#111',
-      inputBackgroundActive: '#111',
-      listItemBackgroundHover: 'rgba(255,255,255,0.05)',
-      popoverBackground: '#111',
-    }),
+  docsPageTheme: {
+    ...light,
+    bodyBackground: toColor('#000'),
   },
-}
+})
 
-console.log(themes)
+window['themes'] = themes

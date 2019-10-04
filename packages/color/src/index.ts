@@ -15,5 +15,5 @@ export * from './random'
 export * from './interfaces'
 
 export function toColor(obj: ColorInput | ColorLike) {
-  return new Color(obj as any)
+  return obj instanceof Color ? obj : new Color(obj as any)
 }

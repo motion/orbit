@@ -9,8 +9,8 @@ import { composeRefs } from './helpers/composeRefs'
 import { createContextualProps } from './helpers/createContextualProps'
 import { Loading } from './progress/Loading'
 import { Scale } from './Scale'
-import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { getSpaceSize, getSpaceSizeNum, Size, Sizes, Space } from './Space'
+import { Surface, SurfaceProps } from './Surface'
 import { TitleRow, TitleRowSpecificProps } from './TitleRow'
 import { Stack, StackProps } from './View/Stack'
 
@@ -20,7 +20,7 @@ export type SectionSpecificProps = Partial<
   Omit<TitleRowSpecificProps, 'after' | 'below' | 'margin' | 'size' | 'selectable'>
 > & {
   /** Add shadow to section */
-  elevation?: SizedSurfaceProps['elevation']
+  elevation?: SurfaceProps['elevation']
 
   /** Allow scaling just the TitleRow element */
   titleScale?: number
@@ -75,7 +75,7 @@ export type SectionParentProps = Omit<SectionSpecificProps, 'below' | 'innerRef'
 
 export type SectionProps = Omit<StackProps, 'onSubmit' | 'size'> & SectionSpecificProps
 
-const { useProps, Reset, PassProps } = createContextualProps<SectionProps>()
+const { useProps, useReset, PassProps } = createContextualProps<SectionProps>()
 export const SectionPassProps = PassProps
 export const useSectionProps = useProps
 
@@ -208,7 +208,7 @@ export function Section(direct: SectionProps) {
   }
 
   return (
-    <SizedSurface
+    <Surface
       className={`ui-section ${className}`}
       hoverStyle={null}
       activeStyle={null}
@@ -240,29 +240,31 @@ export function Section(direct: SectionProps) {
       nodeRef={nodeRef}
     >
       {showTitleAbove && titleEl}
-      <Reset>
-        {!!droppable && <DropOverlay isDropping={isDropping} />}
-        <Stack
-          maxHeight={maxInnerHeight}
-          flex={1}
-          nodeRef={composeRefs(sectionInnerRef, innerRef)}
-          space={spaceSize}
-          spaceAround={spaceAround}
-          flexDirection={flexDirection}
-          scrollable={scrollable}
-          padding={innerPad}
-          beforeSpace={!showTitleAbove && titleEl}
-          useCollapse={collapse}
-          suspense={<Loading />}
-          // this helps flex issues
-          // see QueryBuilder sidebar when lots of API props come down
-          overflow="hidden"
-          {...viewProps}
-        >
-          {children}
-        </Stack>
-      </Reset>
+      {useReset(
+        <>
+          {!!droppable && <DropOverlay isDropping={isDropping} />}
+          <Stack
+            maxHeight={maxInnerHeight}
+            flex={1}
+            nodeRef={composeRefs(sectionInnerRef, innerRef)}
+            space={spaceSize}
+            spaceAround={spaceAround}
+            flexDirection={flexDirection}
+            scrollable={scrollable}
+            padding={innerPad}
+            beforeSpace={!showTitleAbove && titleEl}
+            useCollapse={collapse}
+            suspense={<Loading />}
+            // this helps flex issues
+            // see QueryBuilder sidebar when lots of API props come down
+            overflow="hidden"
+            {...viewProps}
+          >
+            {children}
+          </Stack>
+        </>,
+      )}
       {below}
-    </SizedSurface>
+    </Surface>
   )
 }

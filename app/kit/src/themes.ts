@@ -1,12 +1,12 @@
 import { toColor } from '@o/color'
-import { ThemeObject } from 'gloss'
+import { CompiledTheme, createThemes } from 'gloss'
 import { fromStyles } from 'gloss-theme'
 
 import { coats } from './themeCoats'
 import { dark } from './themeDark'
 import { light } from './themeLight'
 
-export const themes: { [key: string]: ThemeObject } = {
+export const themes: { [key: string]: CompiledTheme } = createThemes({
   ...coats,
   dark,
   light,
@@ -20,4 +20,10 @@ export const themes: { [key: string]: ThemeObject } = {
     backgroundHighlight: toColor('#363165'),
     separatorBackground: 'rgba(30,30,30)',
   }),
+})
+
+// @ts-ignore
+if (typeof window !== 'undefined' && !window['themes']) {
+  // @ts-ignore
+  window['themes'] = themes
 }

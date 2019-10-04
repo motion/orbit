@@ -5,8 +5,8 @@ import { HSL, HSLA, HSV, HSVA, RGB, RGBA } from './interfaces'
 import { bound01, boundAlpha, clamp01 } from './util'
 
 export interface ColorOptions {
-  format: ColorFormats
-  gradientType: string
+  format?: ColorFormats
+  gradientType?: string
 }
 
 export type ColorInput = string | RGB | RGBA | HSL | HSLA | HSV | HSVA | Color
@@ -36,7 +36,7 @@ export class Color {
   b!: number
 
   /** alpha */
-  a!: number
+  alpha!: number
 
   /** the format used to create the tinycolor instance */
   format!: ColorFormats
@@ -61,18 +61,19 @@ export class Color {
       this.r = color.r
       this.g = color.g
       this.b = color.b
-      this.a = color.a
+      this.alpha = color.alpha
       this.roundA = color.roundA
       this.format = opts.format || color.format
       this.gradientType = opts.gradientType
+
       this.isValid = true
     } else {
       const rgb = inputToRGB(color)
       this.r = rgb.r
       this.g = rgb.g
       this.b = rgb.b
-      this.a = rgb.a
-      this.roundA = Math.round(100 * this.a) / 100
+      this.alpha = rgb.a
+      this.roundA = Math.round(100 * this.alpha) / 100
       this.format = opts.format || rgb.format
       this.gradientType = opts.gradientType
       this.isValid = rgb.ok
@@ -94,11 +95,58 @@ export class Color {
       this.b = Math.round(this.b)
     }
 
-    this.hash = this.r + this.g * 255 + this.b * (255 * 2) + this.a * (255 * 3)
+    this.hash = this.r + this.g * 255 + this.b * (255 * 2) + this.alpha * (255 * 3)
   }
 
-  toCSS() {
-    return this.toString()
+  getCSSValue() {
+    return this.toRgbString()
+  }
+
+  getCSSColorVariables() {
+    const { r, g, b, a } = this.toRgb()
+    return {
+      rgb: `${r}, ${g}, ${b}`,
+      rgba: `${r}, ${g}, ${b}, ${a}`,
+    }
+  }
+
+  cssVariableSafeKeys = [
+    'toRgbValue',
+    'toRgbString',
+    'getCSSValue',
+    'cssVariable',
+    'getCSSColorVariables',
+    'cssUseRgb',
+    'cssUseAlpha',
+    'setAlpha',
+    'alpha',
+    'clone',
+    'r',
+    'g',
+    'b',
+    'toRgb',
+    'roundA',
+    'format',
+    'cacheToString',
+    'hash',
+    'valueOf',
+    'cssVariableSafeKeys',
+    'originalInput',
+    'isValid',
+    '$$typeof',
+  ]
+  cssVariable = ''
+  cssUseAlpha = false
+  cssUseRgb = true
+  setCSSVariable(name: string) {
+    // dont overwrite
+    if (this.cssVariable && this.cssVariable !== name) {
+      return this.clone(next => {
+        next.cssVariable = name
+      })
+    } else {
+      this.cssVariable = name
+    }
   }
 
   isDark() {
@@ -156,7 +204,7 @@ export class Color {
    * Returns the alpha value of a color, from 0-1.
    */
   getAlpha(): number {
-    return this.a
+    return this.alpha
   }
 
   /**
@@ -174,9 +222,15 @@ export class Color {
    * @param alpha - The new alpha value. The accepted range is 0-1.
    */
   setAlpha(alpha?: string | number | ((current: number) => number)): Color {
+    if (alpha === this.alpha) {
+      return this
+    }
     return this.clone(next => {
-      next.a = boundAlpha(typeof alpha === 'function' ? alpha(next.a) : alpha)
-      next.roundA = Math.round(100 * next.a) / 100
+      next.alpha = boundAlpha(typeof alpha === 'function' ? alpha(next.alpha) : alpha)
+      next.roundA = Math.round(100 * next.alpha) / 100
+      // alpha adjustments are handled so we can forward cssVariable
+      next.cssVariable = this.cssVariable
+      next.cssUseAlpha = true
     })
   }
 
@@ -185,7 +239,7 @@ export class Color {
    */
   toHsv() {
     const hsv = rgbToHsv(this.r, this.g, this.b)
-    return { h: hsv.h * 360, s: hsv.s, v: hsv.v, a: this.a }
+    return { h: hsv.h * 360, s: hsv.s, v: hsv.v, a: this.alpha }
   }
 
   /**
@@ -197,7 +251,7 @@ export class Color {
     const h = Math.round(hsv.h * 360)
     const s = Math.round(hsv.s * 100)
     const v = Math.round(hsv.v * 100)
-    return this.a === 1 ? `hsv(${h}, ${s}%, ${v}%)` : `hsva(${h}, ${s}%, ${v}%, ${this.roundA})`
+    return this.alpha === 1 ? `hsv(${h}, ${s}%, ${v}%)` : `hsva(${h}, ${s}%, ${v}%, ${this.roundA})`
   }
 
   /**
@@ -205,7 +259,7 @@ export class Color {
    */
   toHsl() {
     const hsl = rgbToHsl(this.r, this.g, this.b)
-    return { h: hsl.h * 360, s: hsl.s, l: hsl.l, a: this.a }
+    return { h: hsl.h * 360, s: hsl.s, l: hsl.l, a: this.alpha }
   }
 
   /**
@@ -217,7 +271,7 @@ export class Color {
     const h = Math.round(hsl.h * 360)
     const s = Math.round(hsl.s * 100)
     const l = Math.round(hsl.l * 100)
-    return this.a === 1 ? `hsl(${h}, ${s}%, ${l}%)` : `hsla(${h}, ${s}%, ${l}%, ${this.roundA})`
+    return this.alpha === 1 ? `hsl(${h}, ${s}%, ${l}%)` : `hsla(${h}, ${s}%, ${l}%, ${this.roundA})`
   }
 
   /**
@@ -241,7 +295,7 @@ export class Color {
    * @param allow4Char will shorten hex value to 4 char if possible
    */
   toHex8(allow4Char = false): string {
-    return rgbaToHex(this.r, this.g, this.b, this.a, allow4Char)
+    return rgbaToHex(this.r, this.g, this.b, this.alpha, allow4Char)
   }
 
   /**
@@ -260,7 +314,7 @@ export class Color {
       r: Math.round(this.r),
       g: Math.round(this.g),
       b: Math.round(this.b),
-      a: this.a,
+      a: this.alpha,
     }
   }
 
@@ -268,12 +322,11 @@ export class Color {
    * Returns the RGBA values interpolated into a string with the following format:
    * "RGBA(xxx, xxx, xxx, xx)".
    */
-  // cache it
   toRgbString() {
     const r = Math.round(this.r)
     const g = Math.round(this.g)
     const b = Math.round(this.b)
-    return this.a === 1 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${this.roundA})`
+    return this.alpha === 1 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${this.roundA})`
   }
 
   /**
@@ -285,7 +338,7 @@ export class Color {
       r: fmt(this.r),
       g: fmt(this.g),
       b: fmt(this.b),
-      a: this.a,
+      a: this.alpha,
     }
   }
 
@@ -294,7 +347,7 @@ export class Color {
    */
   toPercentageRgbString() {
     const rnd = (x: number) => Math.round(bound01(x, 255) * 100)
-    return this.a === 1
+    return this.alpha === 1
       ? `rgb(${rnd(this.r)}%, ${rnd(this.g)}%, ${rnd(this.b)}%)`
       : `rgba(${rnd(this.r)}%, ${rnd(this.g)}%, ${rnd(this.b)}%, ${this.roundA})`
   }
@@ -303,10 +356,10 @@ export class Color {
    * The 'real' name of the color -if there is one.
    */
   toName(): string | false {
-    if (this.a === 0) {
+    if (this.alpha === 0) {
       return 'transparent'
     }
-    if (this.a < 1) {
+    if (this.alpha < 1) {
       return false
     }
     const hex = '#' + rgbToHex(this.r, this.g, this.b, false)
@@ -332,14 +385,14 @@ export class Color {
     const formatSet = Boolean(format)
     format = format || this.format
     let formattedString: string | false = false
-    const hasAlpha = this.a < 1 && this.a >= 0
+    const hasAlpha = this.alpha < 1 && this.alpha >= 0
     const needsAlphaFormat =
       !formatSet && hasAlpha && (format.startsWith('hex') || format === 'name')
 
     if (needsAlphaFormat) {
       // Special case for "transparent", all other non-alpha formats
       // will return rgba when there is transparency.
-      if (format === 'name' && this.a === 0) {
+      if (format === 'name' && this.alpha === 0) {
         formattedString = this.toName()
       } else {
         formattedString = this.toRgbString()

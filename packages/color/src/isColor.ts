@@ -1,3 +1,4 @@
+import { Color } from './color'
 import { names } from './css-color-names'
 import { ColorLike, ColorObject } from './types'
 
@@ -8,6 +9,19 @@ export const toColorString = memoizeOne<string>(
     }
     if (!color) {
       return 'transparent'
+    }
+    if (color instanceof Color) {
+      if (color.cssVariable) {
+        if (color.cssUseRgb) {
+          if (color.cssUseAlpha) {
+            return `rgba(var(--${color.cssVariable}-rgb), ${color.alpha})`
+          } else {
+            return `rgba(var(--${color.cssVariable}))`
+          }
+        } else {
+          return `var(--${color.cssVariable})`
+        }
+      }
     }
     if (isColorLikeLibrary(color)) {
       return `${getColorLikeLibraryValue(color)}`
@@ -22,6 +36,12 @@ export const toColorString = memoizeOne<string>(
         return `rgb(${color.join(', ')})`
       }
     } else if (color instanceof Object) {
+      // TODO improve types
+      // @ts-ignore
+      if (color.cssVariable) {
+        // @ts-ignore
+        return `var(--${color.cssVariable})`
+      }
       const clr = color as any
       if (clr.a) {
         return `rgba(${clr.r}, ${clr.g}, ${clr.b}, ${clr.a})`
@@ -99,7 +119,7 @@ function isColorLikeObject(object: ColorObject) {
 }
 
 function isColorLikeLibrary(val: any): boolean {
-  return typeof val.toCSS === 'function' || typeof val.css === 'function'
+  return typeof val.getCSSValue === 'function' || typeof val.css === 'function'
 }
 
 // attempts to work with a variety of css libraries
@@ -107,8 +127,8 @@ function getColorLikeLibraryValue(val: any) {
   let res = val
   if (val.css && typeof val.css === 'function') {
     res = val.css()
-  } else if (val.toCSS && typeof val.toCSS === 'function') {
-    res = val.toCSS()
+  } else if (val.getCSSValue && typeof val.getCSSValue === 'function') {
+    res = val.getCSSValue()
   }
   return res.toString ? res.toString() : res
 }

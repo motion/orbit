@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { isEqual } from '@o/fast-compare'
 import { on } from '@o/utils'
-import { Box, gloss, isGlossView, Theme, ThemeContext } from 'gloss'
+import { Box, CurrentThemeContext, gloss, isGlossView, Theme } from 'gloss'
 import { debounce, isNumber, pick } from 'lodash'
 import * as React from 'react'
 
@@ -11,15 +11,15 @@ import { zIndex } from './constants'
 import { GlobalPopovers } from './GlobalPopovers'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
-import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
-import { SurfacePassPropsReset } from './SizedSurfacePropsContext'
+import { Surface, SurfaceProps } from './Surface'
+import { SurfacePassPropsReset } from './SurfacePropsContext'
 import { getElevation } from './View/elevation'
 import { ViewProps } from './View/types'
 import { View } from './View/View'
 
 const acceptsProps = (x, val) => x.type.acceptsProps && x.type.acceptsProps[val]
 
-export type PopoverProps = Omit<SizedSurfaceProps, 'background'> & {
+export type PopoverProps = Omit<SurfaceProps, 'background'> & {
   /** Custom theme for just the popover content */
   popoverTheme?: string
 
@@ -379,7 +379,7 @@ const shouldShowPopover = (props: PopoverProps, state: PopoverState) => {
 
 export class Popover extends React.Component<PopoverProps, PopoverState> {
   static defaultProps = defaultProps
-  static contextType = ThemeContext
+  static contextType = CurrentThemeContext
 
   targetRef = React.createRef<HTMLDivElement>()
   popoverRef: HTMLElement
@@ -1089,13 +1089,13 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
                   towards={INVERSE[direction]}
                   // TODO this is bad because were allowing setting theme from the property...
                   // so this wont get the theme set through the property, we should remove the property
-                  {...getElevation({ elevation }, this.context.activeTheme)}
+                  {...getElevation({ elevation }, this.context.current)}
                 />
               </ArrowContain>
             )}
             <BreadcrumbReset>
               <SurfacePassPropsReset>
-                <SizedSurface
+                <Surface
                   className="popover-inner-surface"
                   themeSubSelect="popover"
                   sizeRadius
@@ -1112,7 +1112,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
                   {typeof children === 'function'
                     ? (children as PopoverChildrenFn)(showPopover)
                     : children}
-                </SizedSurface>
+                </Surface>
               </SurfacePassPropsReset>
             </BreadcrumbReset>
           </PopoverInner>
@@ -1121,7 +1121,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
     )
 
     if (popoverTheme) {
-      popoverContent = <Theme theme={popoverTheme}>{popoverContent}</Theme>
+      popoverContent = <Theme name={popoverTheme}>{popoverContent}</Theme>
     }
 
     if (noPortal) {

@@ -1,7 +1,7 @@
 import { CSSPropertySetStrict } from '@o/css'
 
 import { baseIgnoreAttrs, gloss, GlossProps } from '../gloss'
-import { AlphaColorProps, alphaColorTheme, propsToStyles, PseudoStyleProps, psuedoStylePropsTheme } from '../themes'
+import { AlphaColorProps, alphaColorThemeLoose, propsToStyles, PseudoStyleProps, psuedoStylePropsTheme } from '../themes'
 import { TextSizeProps } from '../themes/textSizeTheme'
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
@@ -60,7 +60,7 @@ export const Base = gloss<BaseProps>(Box).theme(
   // <Base hoverStyle={{ color: 'red' }} />, focusStyle, activeStyle
   psuedoStylePropsTheme,
   // <Base alpha={0.5} /> for text opacity
-  alphaColorTheme,
+  alphaColorThemeLoose,
 )
 
 // ignore all valid css props, except src for images

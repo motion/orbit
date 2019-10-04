@@ -2,32 +2,12 @@ import React from 'react'
 
 import { LINE_HEIGHT } from './constants'
 import { useScale } from './Scale'
-import { useSurfaceProps } from './SizedSurfacePropsContext'
 import { getSize } from './Sizes'
 import { Size } from './Space'
-import { Surface, SurfaceProps, SurfaceSpecificProps } from './Surface'
+import { Surface, SurfaceProps } from './Surface'
+import { useSurfaceProps } from './SurfacePropsContext'
 
-export type SizedSurfaceSpecificProps = SurfaceSpecificProps & {
-  /** Controlled height, relative adjusted to size */
-  sizeHeight?: boolean | number
-
-  /** Controlled font size, relative adjusted to size */
-  sizeFont?: boolean | number
-
-  /** Controlled horizontal padding, relative adjusted to size */
-  sizePadding?: boolean | number
-
-  /** Controlled margin, relative adjusted to size */
-  sizeMargin?: boolean | number
-
-  /** Controlled border radius size, relative adjusted to size */
-  sizeRadius?: boolean | number
-
-  /** Controlled icon size, relative adjusted to size */
-  sizeIcon?: boolean | number
-}
-
-export type SizedSurfaceProps = SurfaceProps & SizedSurfaceSpecificProps
+export type SizedSurfaceProps = SurfaceProps
 
 const num = (x: number | boolean) => (x === true ? 1 : +x)
 const clampRound = (x: number) => Math.round(x)

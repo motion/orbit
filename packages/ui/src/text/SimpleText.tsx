@@ -1,4 +1,4 @@
-import { Base, BaseProps, colorTheme, gloss } from 'gloss'
+import { alphaColorTheme, Base, BaseProps, gloss } from 'gloss'
 
 import { Config } from '../helpers/configureUI'
 import { Size } from '../Space'
@@ -25,7 +25,7 @@ export const SimpleText = gloss<SimpleTextProps>(Base, {
   pointable: {
     cursor: 'pointer',
   },
-}).theme(colorTheme, scaledTextSizeTheme)
+}).theme(alphaColorTheme, scaledTextSizeTheme)
 
 SimpleText.defaultProps = {
   ...Config.defaultProps.text,

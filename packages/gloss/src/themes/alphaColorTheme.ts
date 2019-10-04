@@ -28,46 +28,48 @@ const mergeDisabled = merge.bind(
   'alphaDisabled',
 )
 
-export const colorTheme: ThemeFn = (props, theme, previous) => {
-  return alphaColorTheme(props, theme, previous, true)
-}
+export const alphaColorTheme = createAlphaColorTheme(true)
+export const alphaColorThemeLoose = createAlphaColorTheme(false)
 
-export const alphaColorTheme = (props, theme, previous, shouldSetDefault = false) => {
-  const color = props.color || theme.color
-  const alpha = selectDefined(props.alpha, theme.alpha)
-  const next: CSSPropertySet | null = {}
-  if (color) {
-    if (color !== 'inherit' && typeof alpha === 'number') {
-      next.color = Config.toColor(color).setAlpha(alpha)
-    } else {
-      if (shouldSetDefault) {
-        next.color = color
+function createAlphaColorTheme(shouldSetDefault = false) {
+  const themeFn: ThemeFn = (props, theme, previous) => {
+    const color = props.color || theme.color
+    const alpha = selectDefined(props.alpha, theme.alpha)
+    const next: CSSPropertySet | null = {}
+    if (color) {
+      if (color !== 'inherit' && typeof alpha === 'number') {
+        next.color = Config.toColor(color).setAlpha(alpha)
+      } else {
+        if (shouldSetDefault) {
+          next.color = color
+        }
       }
     }
+    const applyPsuedos = props.applyPsuedoColors
+    if (
+      applyPsuedos === true ||
+      (applyPsuedos === 'only-if-defined' &&
+        (!!props.hoverStyle || !!props.activeStyle || !!props.focusStyle || !!props.disabledStyle))
+    ) {
+      mergeFocus(next, color, props, theme)
+      mergeHover(next, color, props, theme)
+      mergeActive(next, color, props, theme)
+      mergeDisabled(next, color, props, theme)
+    }
+    if (Object.keys(next).length) {
+      const res = mergeStyles(previous, next)
+      return res
+    }
   }
-  const applyPsuedos = props.applyPsuedoColors
-  if (
-    applyPsuedos === true ||
-    (applyPsuedos === 'only-if-defined' &&
-      (!!props.hoverStyle || !!props.activeStyle || !!props.focusStyle || !!props.disabledStyle))
-  ) {
-    mergeFocus(next, color, props, theme)
-    mergeHover(next, color, props, theme)
-    mergeActive(next, color, props, theme)
-    mergeDisabled(next, color, props, theme)
-  }
-  if (Object.keys(next).length) {
-    const res = mergeStyles(previous, next)
-    return res
-  }
+  return themeFn
 }
 
 function merge(
   key: string,
   styleKey: string,
   colorKey: string,
-  alphaKey,
-  next,
+  alphaKey: string,
+  next: Object,
   parentColor,
   props,
   theme,
@@ -77,7 +79,9 @@ function merge(
   if (color) {
     if (color !== 'inherit' && typeof alpha === 'number') {
       next[key] = {
-        color: `${Config.toColor(color).setAlpha(alpha)}`,
+        color: Config.toColor(color)
+          .setAlpha(alpha)
+          .toRgbString(),
       }
     } else if (parentColor !== color) {
       next[key] = {

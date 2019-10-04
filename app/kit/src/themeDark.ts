@@ -6,6 +6,9 @@ import { coats } from './themeCoats'
 import { transparent } from './themeColors'
 
 const color = [255, 255, 255]
+const colorLight = toColor([255, 255, 255, 0.9])
+const colorLighter = toColor([255, 255, 255, 0.8])
+const colorLightest = toColor([255, 255, 255, 0.7])
 const background = toColor([25, 25, 25])
 const borderColor = [180, 180, 180, 0.25]
 
@@ -72,14 +75,18 @@ export const dark: ThemeObject = {
   backgroundStrongest,
   backgroundStronger,
   backgroundStrong,
-  boxShadowColor: [0, 0, 0],
   boxShadowOpacity: 0.32,
   // elevatedShadowY: (elevation: number) => smoother(x, 1),
   // elevatedShadowSpread: (elevation: number) => smoother(x, 1),
   // elevatedShadowColor: (elevation: number) => smoother(x, 1),
-  separatorBackground: backgroundStrong,
+  boxShadowColor: toColor([0, 0, 0]),
   cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
+  separatorBackground: backgroundStrong,
+  colorLight,
+  colorLighter,
+  colorLightest,
+  listItemBackground: transparent,
   ...fromStyles({
     background,
     backgroundHover: [20, 20, 20, 0.2],
@@ -104,11 +111,9 @@ Object.assign(
     sidebarBackgroundTransparent: [15, 15, 15, 0.4],
     appCardBackground: [15, 15, 15],
     appCardBackgroundTransparent: [15, 15, 15, 0],
-    orbitLauncherBackground: {
-      none: [30, 30, 30],
-      some: [10, 10, 13, 0.2], // we use thicker vibrancy here
-      more: [25, 25, 30, 0.4],
-    },
+    'orbitLauncherBackground-none': [30, 30, 30],
+    'orbitLauncherBackground-some': [10, 10, 13, 0.2], // we use thicker vibrancy here
+    'orbitLauncherBackground-more': [25, 25, 30, 0.4],
     sidebarBorderColor: '#444',
     headerBorderBottom: '#151515',
     headerBackground: linearGradient([0, 0, 0, 0.4], [0, 0, 0, 0.3]),

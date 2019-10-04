@@ -26,15 +26,15 @@ export const Glint = gloss<Props>(Box, {
   height: 10,
   zIndex: 10000,
 }).theme((props, theme) => {
-  const { bottom, opacity, size = 1, y, ...radiusProps } = props
+  let { bottom, opacity, size = 1, y, ...radiusProps } = props
   const isTop = isUndef(bottom)
-  const themeProp = isTop ? 'glintColor' : 'glintColorBottom'
-  let glintColor = props.color || theme[themeProp]
+  let glintColor = props.color || theme[isTop ? 'glintColor' : 'glintColorBottom']
   if (!isDefined(glintColor)) {
+    opacity = 0.1
     if (isTop) {
-      glintColor = theme.glintColor || theme.color.setAlpha(0.25)
+      glintColor = theme.backgroundStrong
     } else {
-      glintColor = theme.backgroundStrong || theme.background.darken(0.1)
+      glintColor = theme.backgroundStronger
     }
   }
   const autoHalf = (isTop ? -0.5 : 0.5) * size

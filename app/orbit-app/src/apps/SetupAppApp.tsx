@@ -249,10 +249,6 @@ export const SetupAppHome = memo((props: SetupAppHomeProps) => {
     },
   })
 
-  if (!flow.data) {
-    debugger
-  }
-
   useSearchState({
     onChange(state) {
       if (!state.query) {

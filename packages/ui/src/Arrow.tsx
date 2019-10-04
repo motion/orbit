@@ -1,5 +1,5 @@
-import { gloss, ThemeContext } from 'gloss'
-import React, { useContext, useMemo } from 'react'
+import { gloss, useTheme } from 'gloss'
+import React, { useMemo } from 'react'
 
 import { ViewProps } from './View/types'
 import { View } from './View/View'
@@ -25,7 +25,7 @@ export const Arrow = ({
   background,
   ...props
 }: ArrowProps) => {
-  const theme = useContext(ThemeContext).activeTheme
+  const theme = useTheme()
   const onBottom = towards === 'bottom'
   const innerTop = size * (onBottom ? -1 : 1)
   const transformOuter = transforms[towards]

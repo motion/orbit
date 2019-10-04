@@ -5,7 +5,7 @@ import React, { forwardRef, useCallback, useEffect, useMemo, useRef } from 'reac
 import { isWebkit } from '../constants'
 import { composeRefs } from '../helpers/composeRefs'
 import { useThrottledFn } from '../hooks/useThrottleFn'
-import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
+import { Surface, SurfaceProps } from '../Surface'
 import { DataType } from '../types'
 import { getElevation } from '../View/elevation'
 import { useVisibility } from '../Visibility'
@@ -23,7 +23,7 @@ export type InputType =
   | DataType
 
 export type InputProps = React.HTMLAttributes<HTMLInputElement> &
-  Omit<SizedSurfaceProps, 'type'> & {
+  Omit<SurfaceProps, 'type'> & {
     onEnter?: Function
     type?: InputType
     form?: Object
@@ -31,7 +31,7 @@ export type InputProps = React.HTMLAttributes<HTMLInputElement> &
     step?: any
   }
 
-export function Input({ onEnter, type = 'text', nodeRef, ...props }: InputProps) {
+export function Input({ onEnter, type = 'text', nodeRef, children, ...props }: InputProps) {
   const innerRef = useRef<HTMLInputElement>(null)
   const formStore = useParentForm()
 
@@ -116,11 +116,11 @@ const SimpleInput = ({
   defaultValue,
   nodeRef,
   ...props
-}: SizedSurfaceProps & InputProps) => {
+}: SurfaceProps & InputProps) => {
   const visible = useVisibility()
   const theme = useTheme()
   return (
-    <SizedSurface
+    <Surface
       elementProps={useMemo(
         () => ({
           nodeRef,
@@ -138,11 +138,11 @@ const SimpleInput = ({
         }),
         [nodeRef, value, defaultValue, placeholder, tagName, elementProps],
       )}
-      elementTheme={useCallback(
-        (p, theme) => ({
+      elementTheme={useCallback((p, theme) => {
+        return {
           // apple selection color
           '&::selection': {
-            color: theme.color.lighten(0.1),
+            color: theme.colorLight,
             background: theme.backgroundSelection || theme.backgroundStronger,
           },
           // autofill keep proper color
@@ -152,9 +152,8 @@ const SimpleInput = ({
               backgroundColor: 'transparent',
             },
           }),
-        }),
-        [],
-      )}
+        }
+      }, [])}
       type="input"
       maxWidth="100%"
       alignItems="center"

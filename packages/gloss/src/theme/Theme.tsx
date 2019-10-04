@@ -1,115 +1,139 @@
-import { ThemeObject } from '@o/css'
-import { uniqueId } from 'lodash'
-import React, { useContext, useMemo } from 'react'
+import React, { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 
-import { Config } from '../configureGloss'
-import { ThemeContext, ThemeContextType } from './ThemeContext'
+import { CompiledTheme } from './createTheme'
+import { preProcessTheme } from './preProcessTheme'
+import { AllThemesContext } from './ThemeContext'
+import { themeVariableManager } from './themeVariableManager'
 
-export type ThemeSelect = ((theme: ThemeObject) => ThemeObject) | string | false | undefined
+export type ThemeSelect = ((theme: CompiledTheme) => CompiledTheme) | string | false | undefined
+export type ThemeObserver = (theme: CompiledTheme) => any
+type ThemeSubscriber = (onChange: ThemeObserver) => { unsubscribe: () => void }
+
+export type CurrentTheme = {
+  subscribe: ThemeSubscriber
+  current: CompiledTheme
+  parentContext?: CurrentTheme
+}
 
 type ThemeProps = {
-  theme?: string | ThemeObject
+  theme?: CompiledTheme
   themeSubSelect?: ThemeSelect
   coat?: string | false
   name?: string
-  children: any
+  children: React.ReactNode
 }
-
-export const cacheThemes = new WeakMap<any, ThemeContextType>()
 
 export const Theme = (props: ThemeProps) => {
-  const { theme, name, children, themeSubSelect, coat } = props
-  const nextName = (typeof name === 'string' && name) || (typeof theme === 'string' && theme) || ''
-  const prev = useContext(ThemeContext)
+  const theme = useNextTheme(props)
+  const themeObservableContext = useCreateThemeObservable({ theme })
+  const nodeRef = useRef<HTMLDivElement>(null)
 
-  if (!theme && !name && !themeSubSelect && !coat) {
-    return children
-  }
-
-  if (prev.allThemes[nextName]) {
-    if (prev.allThemes[nextName] === prev.activeTheme) {
-      return children
-    }
-    return <ThemeByName name={nextName}>{children}</ThemeByName>
-  }
-
-  let next: any = null
-
-  if (typeof theme === 'object' && cacheThemes.has(theme)) {
-    next = cacheThemes.get(theme) as ThemeContextType
-  } else {
-    // getting the alt theme or create theme
-    let previousOriginalTheme = prev.activeTheme
-
-    // if coat is defined and were already on coat, swap to original theme before going to new alternate
-    if (typeof coat !== 'undefined') {
-      previousOriginalTheme = prev.activeTheme._originalTheme || prev.activeTheme
-    }
-
-    let nextTheme
-
-    if (coat || props.themeSubSelect) {
-      nextTheme = Config.preProcessTheme
-        ? Config.preProcessTheme(props, previousOriginalTheme)
-        : prev.activeTheme
-      next = cacheThemes.get(nextTheme)
-    } else {
-      nextTheme = props.theme
-      if (!nextTheme) {
-        return children
+  useLayoutEffect(() => {
+    // hasnt changed
+    if (!themeObservableContext) return
+    const setClassName = () => {
+      const classNames = themeVariableManager.getClassNames(themeObservableContext.current)
+      if (nodeRef.current) {
+        nodeRef.current.className = classNames
       }
     }
-
-    if (!next) {
-      next = createThemeFromObject(props, prev, nextTheme)
-      cacheThemes.set(nextTheme, next)
+    setClassName()
+    const themeListen = themeObservableContext.subscribe(setClassName)
+    themeVariableManager.mount(themeObservableContext)
+    return () => {
+      themeVariableManager.unmount(themeObservableContext)
+      themeListen.unsubscribe()
     }
+  }, [theme])
 
-    if (nextTheme === prev.activeTheme) {
-      return children
-    }
+  if (
+    !themeObservableContext ||
+    (!props.coat && !props.theme && !props.themeSubSelect && !props.name)
+  ) {
+    return props.children as JSX.Element
   }
 
-  if (next === prev) {
-    return children
-  }
-
-  return <ThemeContext.Provider value={next}>{children}</ThemeContext.Provider>
+  return (
+    <CurrentThemeContext.Provider value={themeObservableContext}>
+      <div ref={nodeRef} style={{ display: 'contents' }}>
+        {props.children}
+      </div>
+    </CurrentThemeContext.Provider>
+  )
 }
 
-function createThemeFromObject(
-  props: ThemeProps,
-  prev: ThemeContextType,
-  next: ThemeObject,
-): ThemeContextType {
-  const activeThemeName = `${prev.activeThemeName}.${props.coat ||
-    props.themeSubSelect}.${uniqueId()}`
-  return {
-    ...prev,
-    activeThemeName,
-    activeTheme: next,
+const useNextTheme = (props: ThemeProps) => {
+  const { name, theme, themeSubSelect, coat } = props
+  const themes = useContext(AllThemesContext)
+  const curContext = useContext(CurrentThemeContext)
+  if (!name && !themeSubSelect && !coat && !theme) {
+    return
   }
+  return (name && themes[name]) || preProcessTheme(props, curContext.current)
 }
 
-function ThemeByName({ name, children }: ThemeProps) {
-  const { allThemes } = React.useContext(ThemeContext)
-  const memoValue = useMemo(() => {
-    if (!name) {
-      return children
-    }
-    if (!allThemes || !allThemes[name]) {
-      throw new Error(`No theme in context: ${name}. Themes are: ${Object.keys(allThemes)}`)
-    }
-    const nextTheme = allThemes[name]
-    const next: ThemeContextType = {
-      allThemes,
-      activeTheme: nextTheme,
-      activeThemeName: name,
-    }
+// much lighter weight for simple use case
+export const ThemeByName = (props: { name?: string; children: React.ReactNode }) => {
+  const curContext = useContext(CurrentThemeContext)
+  return (
+    <div
+      style={{ display: 'contents' }}
+      className={`theme-${props.name || getNonSubThemeName(curContext)}`}
+    >
+      {props.children}
+    </div>
+  )
+}
 
-    cacheThemes.set(nextTheme, next)
+const getNonSubThemeName = (cur: CurrentTheme) => {
+  while (true) {
+    if (cur.parentContext && (cur.current._isCoat || cur.current._isSubTheme)) {
+      cur = cur.parentContext
+    } else {
+      break
+    }
+  }
+  return cur.current.name
+}
 
-    return next
-  }, [name])
-  return <ThemeContext.Provider value={memoValue}>{children}</ThemeContext.Provider>
+export const CurrentThemeContext = createContext<CurrentTheme>({
+  subscribe: _ => ({ unsubscribe: () => {} }),
+  current: null as any,
+})
+
+function useCreateThemeObservable(props: { theme?: CompiledTheme }) {
+  const themeObservers = useRef<Set<ThemeObserver>>(new Set())
+  const parentContext = useContext(CurrentThemeContext)
+
+  // never change this just emit
+  const context: CurrentTheme | null = useMemo(() => {
+    if (!props.theme) {
+      return parentContext
+    }
+    return {
+      parentContext,
+      current: props.theme,
+      subscribe: cb => {
+        themeObservers.current.add(cb)
+        return {
+          unsubscribe: () => {
+            themeObservers.current.delete(cb)
+          },
+        }
+      },
+    }
+  }, [])
+
+  useLayoutEffect(() => {
+    if (context && props.theme) {
+      if (context.current !== props.theme) {
+        context.current = props.theme
+        themeObservers.current.forEach(cb => {
+          props.theme && cb(props.theme)
+        })
+      }
+    }
+  }, [props.theme])
+
+  return context
 }

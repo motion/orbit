@@ -1,7 +1,7 @@
 import { createStoreContext, ensure, react } from '@o/use-store'
 import { selectDefined } from '@o/utils'
 import { ObservableSet } from 'mobx'
-import React, { ReactNode, useLayoutEffect, useRef } from 'react'
+import React, { ReactNode, useContext, useLayoutEffect, useRef } from 'react'
 
 import { Text, TextProps } from './text/Text'
 
@@ -66,8 +66,8 @@ export function Breadcrumb({
     return children(crumb)
   }
 
-  return (
-    <BreadcrumbReset>
+  return useBreadcrumbReset(
+    <>
       <Text
         {...props}
         opacity={crumb && crumb.total === 0 ? 0 : selectDefined(props.opacity, 1)}
@@ -76,13 +76,21 @@ export function Breadcrumb({
         {children}
       </Text>
       {crumb && crumb.isLast ? '' : separator}
-    </BreadcrumbReset>
+    </>,
   )
 }
 
 // recommended to use below each breadcrumb to avoid accidental nesting
 export function BreadcrumbReset(props: { children: any }) {
-  return <BContext.ProvideStore value={null}>{props.children}</BContext.ProvideStore>
+  return useBreadcrumbReset(props.children)
+}
+
+export const useBreadcrumbReset = (children: any) => {
+  const hasContext = !!useContext(BContext.Context)
+  if (hasContext) {
+    return <BContext.ProvideStore value={null}>{children}</BContext.ProvideStore>
+  }
+  return children
 }
 
 export type BreadcrumbInfo = {

@@ -1,17 +1,20 @@
-import { Theme, ThemeObject, ThemeSelect } from 'gloss'
+import { CompiledTheme, Theme, ThemeSelect } from 'gloss'
 import React from 'react'
 
 export type ThemeableProps = {
-  theme?: string | ThemeObject
+  theme?: CompiledTheme
   themeSubSelect?: ThemeSelect
   coat?: string | false
 }
 
 export function themeable<A extends any>(Component: A): A {
-  return function ThemeProp({ themeSubSelect, coat, theme, ...rest }: ThemeableProps) {
+  return function ThemeProp(props: ThemeableProps) {
+    if (!props.themeSubSelect && !props.coat && !props.theme) {
+      return <Component {...props} />
+    }
     return (
-      <Theme themeSubSelect={themeSubSelect} coat={coat} theme={theme}>
-        <Component {...rest} />
+      <Theme themeSubSelect={props.themeSubSelect} coat={props.coat} theme={props.theme}>
+        <Component {...props} />
       </Theme>
     )
   } as any

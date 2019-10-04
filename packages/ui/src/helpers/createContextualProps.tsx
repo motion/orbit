@@ -8,6 +8,7 @@ export type ContextualProps<A> = {
   }: Partial<Pick<A, Exclude<keyof A, 'children'>> & { children?: any }>) => JSX.Element
   useProps<B extends Partial<A>>(componentProps?: B): B extends undefined ? A : B & A
   Reset(props: { children: any }): any
+  useReset<A>(children: A): A
 }
 
 export function createContextualProps<A extends any>(defaults?: A): ContextualProps<A> {
@@ -21,6 +22,13 @@ export function createContextualProps<A extends any>(defaults?: A): ContextualPr
       [...Object.keys(val).map(k => val[k])],
     )
     return <Context.Provider value={memoVal}>{children}</Context.Provider>
+  }
+  const useReset = (children: any) => {
+    const extraProps = useContext(Context)
+    if (extraProps) {
+      return <Context.Provider value={null}>{children}</Context.Provider>
+    }
+    return children
   }
   return {
     Context,
@@ -46,12 +54,9 @@ export function createContextualProps<A extends any>(defaults?: A): ContextualPr
         return final as any
       }, [extra, componentProps])
     },
-    Reset({ children }: { children: any }) {
-      const extraProps = useContext(Context)
-      if (!extraProps) {
-        return children
-      }
-      return <Context.Provider value={null}>{children}</Context.Provider>
+    Reset({ children }) {
+      return useReset(children)
     },
+    useReset,
   }
 }

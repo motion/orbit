@@ -1,5 +1,5 @@
 import { useTheme } from 'gloss'
-import React, { HTMLAttributes, memo } from 'react'
+import React, { HTMLAttributes, memo, useRef } from 'react'
 
 import { useDefaultProps } from './hooks/useDefaultProps'
 import { useVisibility } from './Visibility'
@@ -16,6 +16,12 @@ export type SpinnerProps = HTMLAttributes<SVGElement> & {
 
 export const Spinner = memo((directProps: SpinnerProps) => {
   const visibility = useVisibility()
+  const nodeRef = useRef()
+  // const intersection = useIntersectionObserver({
+  //   ref: nodeRef,
+  // })
+  // const isIntersecting = intersection && intersection.some(x => x.isIntersecting)
+  const isIntersecting = false
   const theme = useTheme()
   const { color, gap, thickness, size, speed, ...rest } = useDefaultProps(
     {
@@ -27,6 +33,7 @@ export const Spinner = memo((directProps: SpinnerProps) => {
     },
     directProps,
   )
+  console.log('rendering me')
   if (!visibility) {
     return null
   }
@@ -36,10 +43,11 @@ export const Spinner = memo((directProps: SpinnerProps) => {
       width={size}
       {...rest}
       style={{ animationDuration: `${speedSwitch(speed)}ms` }}
-      className="__react-svg-spinner_circle"
+      className={isIntersecting ? '__react-svg-spinner_circle' : ''}
       role="img"
       aria-labelledby="title desc"
       viewBox="0 0 32 32"
+      ref={nodeRef}
     >
       <title id="title">Circle loading spinner</title>
       <desc id="desc">Image of a partial circle indicating "loading."</desc>

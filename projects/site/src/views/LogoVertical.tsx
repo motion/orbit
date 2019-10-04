@@ -8,7 +8,6 @@ import { logo } from './LogoHorizontal'
 
 export const LogoVertical = memo(
   ({ size, ...rest }: ViewProps & { size?: 'small' | 'medium' | 'large' }) => {
-    const theme = useTheme()
     const nav = useNavigation()
     return (
       <View
@@ -33,20 +32,20 @@ export const LogoVertical = memo(
         }}
         {...rest}
       >
-        <BrandMark id="orbit-mark" />
+        <BrandMark />
         <Space size={12} />
-        <BrandWords fill={theme.color} width={logo.w * 0.47} height={logo.h * 0.47} />
+        <BrandWords width={logo.w * 0.47} height={logo.h * 0.47} />
       </View>
     )
   },
 )
 
-export const BrandMark = memo((props: any) => {
+export const BrandMark = memo(() => {
   return (
-    <svg className="brand-mark" width="43px" height="53px" viewBox="0 0 43 53" {...props}>
+    <svg id="orbit-mark" className="brand-mark" width="43px" height="53px" viewBox="0 0 43 53">
       <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="home" transform="translate(-760.000000, -31.000000)" fillRule="nonzero">
-          <g transform="translate(25.000000, -32.000000)" id="orbit-mark">
+          <g transform="translate(25.000000, -32.000000)">
             <g transform="translate(735.000000, 63.000000)">
               <path
                 d="M4.15309578,32.1280955 C4.58662941,32.9167853 5.25340762,33.5368306 6.11507116,33.9685898 C6.25897174,34.0406949 6.40805726,34.107507 6.56224442,34.1691096 C6.56262188,34.1897269 6.56301465,34.2103081 6.56342281,34.2308625 C6.6018013,36.163551 6.6052835,37.8788144 7.3150935,44.3403557 C7.4837425,45.875601 8.3606098,47.1959201 9.837338,48.1948295 C11.293817,49.1800416 13.2432607,49.7787765 15.2857775,49.8704957 C17.3677537,49.9639868 19.3894789,49.5257763 20.9844366,48.6114366 C22.674532,47.6425575 23.8214186,46.1891015 24.2987446,44.2926798 C25.4506197,39.7162661 26.5177732,36.385146 27.6260581,33.929568 L30.8882997,32.939124 C29.4814382,35.2108162 28.144836,38.9201556 26.6314206,44.9329731 C25.9797036,47.5222527 24.3964295,49.528745 22.1450837,50.8193715 C20.1439378,51.9665662 17.6859249,52.4993425 15.1821601,52.3869109 C12.7272055,52.2766712 10.360756,51.5498609 8.5260872,50.3088283 C6.47793142,48.9233858 5.17536477,46.9620815 4.91889824,44.6274156 C4.19958146,38.0793319 4.19258582,36.3253902 4.15203056,34.2830826 C4.14042539,33.6986619 4.14056919,33.1005239 4.15057686,32.3081002 C4.1511622,32.2617516 4.15202146,32.2006474 4.15309578,32.1280955 Z"
@@ -79,7 +78,7 @@ const cleanBrand = wordsLines.join('')
 export const BrandWords = memo(({ fill, ...props }: any) => {
   const theme = useTheme()
   const f = fill || theme.color
-  return <SVG svg={cleanBrand} cleanup fill={f} {...props} />
+  return <SVG svg={cleanBrand} cleanup fill={`${f}`} {...props} />
 })
 
 const Image = gloss(View)

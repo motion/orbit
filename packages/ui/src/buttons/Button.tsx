@@ -4,11 +4,11 @@ import React, { memo, useCallback } from 'react'
 
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { useUncontrolled } from '../helpers/useUncontrolled'
-import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
-import { useSurfaceProps } from '../SizedSurfacePropsContext'
+import { Surface, SurfaceProps } from '../Surface'
+import { useSurfaceProps } from '../SurfacePropsContext'
 
 export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> &
-  SizedSurfaceProps & {
+  SurfaceProps & {
     /** force button not to apply hover styles */
     ignoreHover?: boolean
 
@@ -30,7 +30,7 @@ const activeStyle = {
 const ButtonInner = (props: ButtonProps) => {
   const theme = useTheme()
   return (
-    <SizedSurface
+    <Surface
       borderPosition="inside"
       userSelect="none"
       tagName="button"

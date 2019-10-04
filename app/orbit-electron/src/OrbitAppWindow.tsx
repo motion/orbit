@@ -84,7 +84,7 @@ export function OrbitAppWindow({
   }
   const url = `${Config.urls.server}/?${stringify(query)}`
 
-  log.info(`OrbitAppWindow ${windowId} ${url} ${size} ${store.position}`)
+  log.info(`OrbitAppWindow ${windowId} ${url} ${JSON.stringify(store.bounds)}`)
 
   if (!store.bounds.width) {
     return null

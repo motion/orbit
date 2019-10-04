@@ -133,6 +133,7 @@ export class Color {
     'cssVariableSafeKeys',
     'originalInput',
     'isValid',
+    '$$typeof',
   ]
   cssVariable = ''
   cssUseAlpha = false

@@ -89,7 +89,6 @@ function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
               }
               if (typeof key === 'string' && typeof skey === 'string') {
                 if (!starget.cssVariableSafeKeys.includes(skey)) {
-                  console.log('deopt me', skey)
                   trackState.nonCSSVariables.add(key)
                   trackState.hasUsedOnlyCSSVariables = false
                 }

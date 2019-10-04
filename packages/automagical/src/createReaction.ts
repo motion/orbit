@@ -19,7 +19,7 @@ type ReactionConfig = {
   nameFull: string
 }
 
-const isVerbose = process.env.LOG_LEVEL && +process.env.LOG_LEVEL > 5
+const isVerbose = process.env.LOG_LEVEL && +process.env.LOG_LEVEL > 3
 
 // watches values in an autorun, and resolves their results
 export function createReaction(

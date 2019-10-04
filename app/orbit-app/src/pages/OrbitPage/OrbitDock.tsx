@@ -137,7 +137,6 @@ export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
 
 const dockButtonProps = memoizeWeak(
   (index: number, dockStore: OrbitDockStore, showLabel: boolean): Partial<DockButtonProps> => {
-    console.log('get now', index, showLabel)
     return {
       background: 'transparent',
       glint: false,

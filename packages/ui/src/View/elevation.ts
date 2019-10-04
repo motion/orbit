@@ -1,6 +1,6 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySetResolved } from '@o/css'
-import { CompiledTheme } from 'gloss/src'
+import { CompiledTheme } from 'gloss'
 
 import { weakKey } from '../helpers/weakKey'
 

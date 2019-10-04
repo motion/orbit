@@ -1,4 +1,4 @@
-import { AppBit } from '@o/kit/src'
+import { AppBit } from '@o/kit'
 import { Electron } from '@o/stores'
 import { createUsableStore, ensure, react, UpdatePriority } from '@o/use-store'
 import { createRef } from 'react'

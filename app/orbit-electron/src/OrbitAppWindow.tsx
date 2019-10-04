@@ -25,8 +25,6 @@ class OrbitAppWindowStore {
     return getDefaultAppBounds(Electron.state.screenSize)
   }
 
-  size = this.bounds.size
-  position = this.bounds.position
   vibrancy = 'light'
 
   // use reaction to allow us to modify it at runtime to test
@@ -54,7 +52,7 @@ class OrbitAppWindowStore {
   }
 }
 
-type AppWindowProps = BrowserWindowConstructorOptions & {
+type AppWindowProps = Omit<BrowserWindowConstructorOptions, 'alwaysOnTop'> & {
   forwardRef?: any
   windowId: number
   size?: number[]
@@ -71,6 +69,13 @@ type AppWindowProps = BrowserWindowConstructorOptions & {
   defaultBounds?: any
   animateBounds?: boolean
   onClose?: Function
+  ignoreMouseEvents?: boolean
+  alwaysOnTop?: any
+}
+
+const webPreferences = {
+  nodeIntegration: true,
+  scrollBounds: true,
 }
 
 export function OrbitAppWindow({
@@ -86,11 +91,9 @@ export function OrbitAppWindow({
   }
   const url = `${Config.urls.server}/?${stringify(query)}`
 
-  const size = windowProps.size || store.size
+  log.info(`OrbitAppWindow ${windowId} ${url} ${JSON.stringify(store.bounds)}`)
 
-  log.info(`OrbitAppWindow ${windowId} ${url} ${size} ${store.position}`)
-
-  if (!size[0]) {
+  if (!store.bounds.width) {
     return null
   }
 
@@ -99,13 +102,10 @@ export function OrbitAppWindow({
       show={store.show}
       ref={forwardRef}
       file={url}
-      webPreferences={{
-        nodeIntegration: true,
-      }}
+      webPreferences={webPreferences}
       titleBarStyle="hiddenInset"
       {...!(windowProps.defaultBounds && !windowProps.bounds) && {
-        defaultPosition: store.position.slice(),
-        defaultSize: store.size.slice(),
+        defaultBounds: store.bounds,
       }}
       onFocus={store.handleFocus}
       showDevTools={store.showDevTools}

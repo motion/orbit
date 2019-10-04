@@ -31,6 +31,7 @@ export function OrbitRoot(props: { loadingWindow: BrowserWindow }) {
       <MenuItems
         restart={() => setState(state => ({ ...setState, restartKey: state.restartKey + 1 }))}
       />
+      {/* <OrbitActionsAppWindow /> */}
       <OrbitMainWindow window={props.loadingWindow} restartKey={state.restartKey} />
     </ReactronApp>
   )

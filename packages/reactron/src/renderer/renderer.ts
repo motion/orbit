@@ -41,15 +41,13 @@ const HostConfig = {
   finalizeInitialChildren(instance, _type, props) {
     if (!instance) return
     instance.applyProps(props)
-    // return false
   },
 
   getPublicInstance(instance) {
     return instance
   },
 
-  prepareUpdate(instance, _type, oldProps, newProps) {
-    instance.applyProps(newProps, oldProps)
+  prepareUpdate() {
     return emptyObject
   },
 

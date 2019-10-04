@@ -1,13 +1,15 @@
 import { isEqual } from '@o/fast-compare'
 import { Logger } from '@o/logger'
 import { ChangeDesktopThemeCommand } from '@o/models'
-import { Desktop, Electron } from '@o/stores'
-import { ensure, react, useStore } from '@o/use-store'
+import { App, Desktop, Electron } from '@o/stores'
+import { createUsableStore, ensure, react, useStore } from '@o/use-store'
 import { app, BrowserWindow, screen, systemPreferences } from 'electron'
+import { reaction } from 'mobx'
 import { join } from 'path'
 import React, { useEffect } from 'react'
 
 import { ROOT } from './constants'
+import { ElectronShortcutManager } from './helpers/ElectronShortcutManager'
 import { getDefaultAppBounds } from './helpers/getDefaultAppBounds'
 import { getScreenSize } from './helpers/getScreenSize'
 import { moveWindowToCurrentSpace } from './helpers/moveWindowToCurrentSpace'
@@ -22,18 +24,10 @@ const setScreenSize = () => {
   Electron.setState({ screenSize })
 }
 
-function focusApp(shown: boolean) {
-  if (shown) {
-    app.focus()
-  } else {
-    app.hide()
-  }
-}
-
 class OrbitMainWindowStore {
   props: {
     enabled: boolean
-    window: BrowserWindow
+    window?: BrowserWindow
   } = {
     enabled: false,
     window: null,
@@ -43,13 +37,15 @@ class OrbitMainWindowStore {
   hasMoved = false
   isReady = false
   bounds = {
-    size: [0, 0],
-    position: [0, 0],
+    width: 0,
+    height: 0,
+    x: 0,
+    y: 0,
   }
   initialBounds = null
   windowRef = null
 
-  get orbitRef(): BrowserWindow | null {
+  get window(): BrowserWindow | null {
     return (this.windowRef && this.windowRef.window) || null
   }
 
@@ -70,14 +66,16 @@ class OrbitMainWindowStore {
     },
   )
 
-  setSize = size => {
+  setSize = ([width, height]) => {
     this.hasMoved = true
-    this.bounds.size = size
+    this.bounds.width = width
+    this.bounds.height = height
   }
 
-  setPosition = position => {
+  setPosition = ([x, y]) => {
     this.hasMoved = true
-    this.bounds.position = position
+    this.bounds.x = x
+    this.bounds.y = y
   }
 
   handleRef = ref => {
@@ -95,26 +93,18 @@ class OrbitMainWindowStore {
     async (moved, { sleep, when }) => {
       ensure('enabled', !!this.props.enabled)
       ensure('did move', !!moved)
-      ensure('window', !!this.orbitRef)
+      ensure('window', !!this.window)
       // wait for move to finish
       await sleep(150)
       // wait for showing
       await when(() => Electron.state.showOrbitMain)
-      if (this.orbitRef) {
-        moveWindowToCurrentSpace(this.orbitRef)
+      if (this.window) {
+        moveWindowToCurrentSpace(this.window)
       }
     },
   )
 
-  handleShowOrbitMain = react(
-    () => Electron.state.showOrbitMain,
-    shown => {
-      ensure('enabled', !!this.props.enabled)
-      ensure('Electron.isMainWindow', Electron.isMainWindow)
-      focusApp(shown)
-    },
-  )
-
+  // show comes first, controls opacity which prevents flicker on show/hide
   get show() {
     if (Electron.isMainWindow) {
       return (this.props.window || this.isReady) && Electron.state.showOrbitMain
@@ -122,71 +112,149 @@ class OrbitMainWindowStore {
     return true
   }
 
+  // why this?
+  // we have to use opacity to control visibility because it prevents a flicker
+  unfocused = false
+  handleFocusBack = react(
+    () => this.show,
+    async (shown, { sleep }) => {
+      ensure('this.window', !!this.window)
+      await sleep()
+      if (shown) {
+        this.window.show()
+      } else {
+        // sends focus to last app
+        require('electron').Menu.sendActionToFirstResponder('hide:')
+        // for a moment we'll be unfocused, so lets avoid race condition
+        this.unfocused = true
+        await sleep()
+        this.window.showInactive()
+        this.unfocused = false
+      }
+    },
+    {
+      lazy: true,
+    },
+  )
+
+  toggleOrbitVisibility(showOrbitMain: boolean = !Electron.state.showOrbitMain) {
+    Electron.setState({
+      showOrbitMain,
+    })
+    if (this.unfocused) {
+      this.window.show()
+      this.unfocused = false
+    }
+  }
+
   setIsReady = () => {
     this.isReady = true
   }
 }
 
+export const orbitMainWindowStore = createUsableStore(OrbitMainWindowStore, {
+  enabled: Electron.isMainWindow,
+})
+
+global['orbitMainWindowStore'] = orbitMainWindowStore
+
 export function OrbitMainWindow(props: { restartKey?: any; window?: BrowserWindow }) {
   const { isMainWindow, windowId } = useStore(Electron)
-  const store = useStore(OrbitMainWindowStore, {
-    enabled: isMainWindow,
-    window: props.window,
-  })
-  global['OrbitMainWindowStore'] = OrbitMainWindowStore
+  const store = orbitMainWindowStore.useStore()
+
+  useEffect(() => {
+    if (isMainWindow) {
+      const globalShortcut = new ElectronShortcutManager({
+        shortcuts: {
+          toggleApp: 'Option+Space',
+        },
+        onShortcut: () => {
+          console.log('got toggle shortcut')
+          store.toggleOrbitVisibility()
+        },
+      })
+
+      globalShortcut.registerShortcuts()
+
+      const disableDuringShortcutCreation = reaction(
+        () => App.orbitState.shortcutInputFocused,
+        focused => {
+          if (focused) {
+            log.info('Removing global shortcut temporarily...')
+            globalShortcut.unregisterShortcuts()
+          } else {
+            log.info('Restoring global shortcut...')
+            globalShortcut.registerShortcuts()
+          }
+        },
+      )
+
+      return () => {
+        disableDuringShortcutCreation()
+        globalShortcut.unregisterShortcuts()
+      }
+    }
+  }, [isMainWindow])
+
+  useEffect(() => {
+    orbitMainWindowStore.setProps({
+      enabled: isMainWindow,
+    })
+  }, [isMainWindow])
 
   log.info(
-    `render ${Electron.appConf.appRole} ${isMainWindow} ${windowId} ${store.show} ${JSON.stringify(
-      store.bounds,
-    )}`,
+    `render ${Electron.appConf.appRole} ${isMainWindow} ${windowId} ${store.show} ${
+      store.isReady
+    } ${JSON.stringify(store.bounds)}`,
   )
 
   useMainWindowEffects({ isMainWindow })
 
   // wait for screensize/measure
-  if (!store.bounds.size[0]) {
+  if (!store.bounds.width) {
     return null
   }
 
-  return (
-    <OrbitAppWindow
-      key={props.restartKey}
-      window={props.window}
-      windowId={windowId}
-      locationQuery={{
-        ...(process.env.NODE_ENV !== 'development' && {
-          renderMode: 'react.concurrent',
-        }),
-      }}
-      // titleBarStyle="customButtonsOnHover"
-      show={store.show}
-      onReadyToShow={store.setIsReady}
-      onClose={store.onClose}
-      // TODO i think i need to make this toggle on show for a few ms, then go back to normal
-      // or maybe simpler imperative API, basically need to bring it to front and then not have it hog the front
-      focus={isMainWindow}
-      // want to fix top glint in dark mode?
-      // titleBarStyle={isMainWindow ? 'customButtonsOnHover' : 'hiddenInset'}
-      // // bugfix white border https://github.com/electron/electron/issues/15008#issuecomment-497498135
-      // {...isMainWindow && {
-      //   minimizable: false,
-      //   maximizable: false,
-      //   closable: false,
-      // }}
-      // alwaysOnTop={store.isReady ? [store.alwaysOnTop, 'floating', 1] : false}
-      forwardRef={store.handleRef}
-      animateBounds
-      defaultBounds={{
-        x: store.bounds.position[0],
-        y: store.bounds.position[1],
-        width: store.bounds.size[0],
-        height: store.bounds.size[1],
-      }}
-      onResize={store.setSize}
-      onPosition={store.setPosition}
-      onMove={store.setPosition}
-    />
-  )
+  // TODO i think i need to make this toggle on show for a few ms, then go back to normal
+  // or maybe simpler imperative API, basically need to bring it to front and then not have it hog the front
+  // titleBarStyle="customButtonsOnHover"
+  // want to fix top glint in dark mode?
+  // titleBarStyle={isMainWindow ? 'customButtonsOnHover' : 'hiddenInset'}
+  // // bugfix white border https://github.com/electron/electron/issues/15008#issuecomment-497498135
+  // {...isMainWindow && {
+  //   minimizable: false,
+  //   maximizable: false,
+  //   closable: false,
+  // }}
+  const windowProps = {
+    key: props.restartKey,
+    window: props.window,
+    windowId,
+    locationQuery: {
+      ...(process.env.NODE_ENV !== 'development' && {
+        renderMode: 'react.concurrent',
+      }),
+    },
+    // alwaysOnTop: store.isReady ? [true, 'floating', 1] : false,
+    show: store.isReady,
+    opacity: store.show ? 1 : 0,
+    ignoreMouseEvents: store.show ? false : true,
+    onReadyToShow: store.setIsReady,
+    onClose: store.onClose,
+    focus: isMainWindow,
+    forwardRef: store.handleRef,
+    animateBounds: true,
+    defaultBounds: store.bounds,
+    onResize: store.setSize,
+    onPosition: store.setPosition,
+    onMove: store.setPosition,
+  }
+
+  if (process.env.NODE_ENV === 'development') {
+    log.verbose(`windowProps: ${JSON.stringify(windowProps, null, 2)}`)
+  }
+
+  return <OrbitAppWindow {...windowProps} />
 }
 
 function useMainWindowEffects({ isMainWindow }) {

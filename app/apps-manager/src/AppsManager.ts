@@ -102,13 +102,20 @@ export class AppsManager {
     throw new Error(`No identifer for packageId ${packageId}`)
   }
 
-  get activeSpace() {
-    const user = this.user
-    if (!user) {
-      return null
-    }
-    return this.spaces.find(x => x.id === user.activeSpace)
-  }
+  activeSpace = react(
+    () => [this.user, this.spaces],
+    () => this.user && this.spaces.find(x => x.id === this.user.activeSpace),
+  )
+
+  activeSpaceDirectory = react(
+    () => this.activeSpace,
+    x => x?.directory || '',
+  )
+
+  activeSpaceId = react(
+    () => this.activeSpace,
+    x => x?.id || -1,
+  )
 
   private observeModels = () => {
     const spacesSubscription = getRepository(SpaceEntity)
@@ -132,14 +139,14 @@ export class AppsManager {
   }
 
   appsUpdate = react(
-    () => this.activeSpace,
-    (_, { useEffect }) => {
-      ensure('this.activeSpace', !!this.activeSpace)
+    () => this.activeSpaceId,
+    (id, { useEffect }) => {
+      ensure('id', id !== -1)
       useEffect(() => {
         const subsription = getRepository(AppEntity)
           .observe({
             where: {
-              spaceId: this.activeSpace.id,
+              spaceId: this.activeSpaceId,
             },
           })
           .subscribe(next => {
@@ -161,22 +168,22 @@ export class AppsManager {
   }
 
   updateAppMetaWatcher = react(
-    () => [this.activeSpace, this.nodeAppDefinitions, this.packageJsonUpdate, this.localAppsUpdate],
-    async ([activeSpace, appDefs], { sleep, when }) => {
+    () => [this.activeSpaceDirectory, this.packageJsonUpdate, this.localAppsUpdate],
+    async (_, { sleep, when }) => {
       ensure('this.started', this.started)
+      ensure('activeSpaceDirectory', !!this.activeSpaceDirectory)
       await sleep(200) // debounce
       await when(() => this.updatePackagesVersion !== 0)
-      ensure('info', !!activeSpace && !!appDefs)
       await this.updateAppMeta()
     },
   )
 
   updatePackageJsonVersionWatcher = react(
-    () => [this.activeSpace, this.started],
-    async ([space], { useEffect }) => {
-      ensure('directory', space && !!space.directory)
+    () => [this.activeSpaceDirectory, this.started],
+    async (_, { useEffect }) => {
+      ensure('directory', !!this.activeSpaceDirectory)
       ensure('this.started', this.started)
-      const pkg = join(space.directory || '', 'package.json')
+      const pkg = join(this.activeSpaceDirectory, 'package.json')
       log.info('watching package.json for changes', pkg)
       useEffect(() => {
         let watcher = watch(pkg, {
@@ -195,11 +202,11 @@ export class AppsManager {
   )
 
   updateLocalAppsWatcher = react(
-    () => [this.activeSpace, this.started],
-    async ([space], { useEffect }) => {
-      ensure('directory', space && !!space.directory)
+    () => [this.activeSpaceDirectory, this.started],
+    async (_, { useEffect }) => {
+      ensure('directory', !!this.activeSpaceDirectory)
       ensure('this.started', this.started)
-      const appsDir = join(space.directory || '', 'apps')
+      const appsDir = join(this.activeSpaceDirectory, 'apps')
       log.info('watching local apps for changes', appsDir)
       useEffect(() => {
         let watcher = watch([appsDir], {

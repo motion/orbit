@@ -76,18 +76,18 @@ export class BaseComponent implements ReactronComponent {
     this.update(oldProps)
   }
 
-  update(prevProps?) {
+  update(oldProps?) {
     if (!this.mounted) {
       this.mount()
       this.mounted = true
     }
-    const currentPropKeys = Object.keys(this.props)
-    const newPropKeys = !prevProps
-      ? currentPropKeys
-      : currentPropKeys
-          .map(k => (!isEqual(this.props[k], prevProps[k]) ? k : NOT_NEW))
-          .filter(x => x !== NOT_NEW)
-    this.handleNewProps.call(this, newPropKeys, prevProps)
+    const curPropKeys = Object.keys(this.props)
+    const newPropKeys = !oldProps
+      ? curPropKeys
+      : curPropKeys.filter(k => !isEqual(this.props[k], oldProps[k]))
+    if (newPropKeys.length) {
+      this.handleNewProps.call(this, newPropKeys, oldProps)
+    }
   }
 
   // helpers for events

@@ -51,6 +51,8 @@ export class Window extends BaseComponent {
       // closable: !!props.closable,
       // minimizable: !!props.minimizable,
       // maximizable: !!props.maximizable,
+      opacity: props.opacity,
+      ignoreMouseEvents: props.ignoreMouseEvents,
       webPreferences: props.webPreferences,
       blinkFeatures: props.blinkFeatures,
       hasShadow: typeof props.hasShadow === 'undefined' ? true : !!props.hasShadow,
@@ -93,7 +95,9 @@ export class Window extends BaseComponent {
         }
       },
       show: propVal => {
-        console.log('show', propVal)
+        if (propVal === this.options.show) return
+        this.options.show = propVal
+        console.log('Window.show', propVal)
         if (propVal) {
           // ensure it happens after positioning
           setTimeout(() => {
@@ -138,21 +142,20 @@ export class Window extends BaseComponent {
   }
 
   handleSetProp(key, handler = _ => _) {
-    const setter = propVal => {
+    return (propVal: any) => {
       if (this.unmounted) return
       // changed value
-      const newVal = [].concat(handler(propVal))
+      const newVal = handler(propVal)
       if (!isEqual(this.options[key], newVal)) {
         const setterInst = this.window[`set${properCase(key)}`]
-        if (setterInst) {
-          setterInst.call(this.window, ...newVal)
-          this.options[key] = newVal
+        if (typeof setterInst === 'function') {
+          setterInst.call(this.window, ...[].concat(newVal))
         } else {
           this.window[key] = newVal
         }
+        this.options[key] = newVal
       }
     }
-    return setter
   }
 
   unmount() {
@@ -181,6 +184,7 @@ export class Window extends BaseComponent {
 }
 
 function configureFile(this: Window, { file }) {
+  console.log('configureFile')
   if (file) {
     this.window.loadURL(`${file}`)
   } else {
@@ -189,6 +193,7 @@ function configureFile(this: Window, { file }) {
 }
 
 function configureSize(this: Window, { size, onResize, animateSize }) {
+  console.log('configureSize')
   if (this.unmounted) return
   if (Array.isArray(size)) {
     size = size.map(x => Math.round(x))
@@ -221,6 +226,7 @@ function configureSize(this: Window, { size, onResize, animateSize }) {
 }
 
 function configureBounds(this: Window, { defaultBounds, bounds, animateBounds }) {
+  console.log('configureBounds')
   if (this.unmounted) return
   const allBounds = bounds || defaultBounds
   if (!allBounds) return
@@ -238,6 +244,7 @@ function configurePosition(
   this: Window,
   { position, onMove, onMoved, defaultPosition, animatePosition },
 ) {
+  console.log('configurePosition')
   if (this.unmounted) return
   if (!this.window) return
   try {

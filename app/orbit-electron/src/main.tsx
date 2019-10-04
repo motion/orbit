@@ -16,7 +16,9 @@ import waitOn from 'wait-on'
 
 import { IS_MAIN_ORBIT } from './constants'
 import ElectronRoot from './ElectronRoot'
+import { ToggleOrbitActionsResolver } from './OrbitActionsAppWindow'
 import { OrbitChromeWindow } from './OrbitChromeWindow'
+import { orbitMainWindowStore } from './OrbitMainWindow'
 import { OrbitRoot } from './OrbitRoot'
 import { AppCloseWindowResolver } from './resolver/AppCloseWindowResolver'
 import { AppOpenWindowResolver } from './resolver/AppOpenWindowResolver'
@@ -45,9 +47,6 @@ export async function main(loadingWindow?: BrowserWindow) {
   if (IS_MAIN_ORBIT) {
     // register app schema
     const { app } = require('electron')
-
-    // start shortcuts listening on main process
-    require('./stores/OrbitShortcutsStore')
 
     if (app.isDefaultProtocolClient('orbit') === false) {
       app.setAsDefaultProtocolClient('orbit')
@@ -85,10 +84,12 @@ export async function main(loadingWindow?: BrowserWindow) {
         AppCloseWindowResolver,
         TearAppResolver,
         RestartAppResolver,
+        ToggleOrbitActionsResolver,
 
         resolveCommand(ToggleOrbitMainCommand, async next => {
-          const showOrbitMain = typeof next === 'boolean' ? next : !Electron.state.showOrbitMain
-          Electron.setState({ showOrbitMain })
+          orbitMainWindowStore.toggleOrbitVisibility(
+            typeof next === 'boolean' ? next : !Electron.state.showOrbitMain,
+          )
         }),
       ],
     })

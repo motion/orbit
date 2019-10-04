@@ -106,7 +106,7 @@ export class AuthServer {
     this.app.use('/assets', express.static(Path.join(Config.paths.desktopRoot, 'assets')))
     this.app.get('/config', (_, res) => {
       const config = getGlobalConfig()
-      log.verbose(`Send config ${JSON.stringify(config, null, 2)}`)
+      log.verbose(`Send /config`, config)
       res.json(config)
     })
   }

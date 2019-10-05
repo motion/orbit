@@ -144,6 +144,30 @@ But back to the question, how does an Icon thats a child of a Button automatical
 
 ??????? hard need to think over more
 
+basically you could go all "full optimizing compiler" in a sense, not crazy advanced but pretty damn advanced, you could do this:
+
+<Theme theme={{ buttonGlint: true }}>
+  <Surface size="lg" tooltip="hi" glint={false} />
+</Theme>
+
+wait........ contextual themes :/
+
+function Surface(props) {
+  return (
+    <Stack id="id">
+      {props.glint && (
+        <Glint />
+      )}
+      {props.tooltip && (
+        <Tooltip>id</Tooltip>
+      )}
+      {props.badge && (
+        <Badge>123</Badge>
+      )}
+    </Stack>
+  )
+}
+
 What about glints?
 
 as long as we can optimize them all down to "div"s then I see no reason why we dont just render the divs on every surface. i think thats the way to get it to optimize, lets say:

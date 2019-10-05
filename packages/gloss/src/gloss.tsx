@@ -250,6 +250,10 @@ export function gloss<Props = any, ThemeProps = Props>(
       shouldUpdateMap = GlossView['shouldUpdateMap']
     }
 
+    if ((props.className || '').includes('ui-border-bottom')) {
+      debugger
+    }
+
     const theme = useTheme(props)
     const dynClasses = useRef<Set<string> | null>(null)
 
@@ -316,8 +320,7 @@ export function gloss<Props = any, ThemeProps = Props>(
       theme,
       avoidStyles,
     )
-    const dynClassNames = lastDynamicClassNames
-    dynClasses.current = dynClassNames
+    dynClasses.current = curDynClassNames
 
     const isDOMElement = typeof element === 'string' || (config ? config.isDOMElement : false)
 
@@ -347,10 +350,10 @@ export function gloss<Props = any, ThemeProps = Props>(
     }
 
     // we control className, dynClassNames includes any user-passed
-    if (staticClasses || dynClassNames.size) {
+    if (staticClasses || curDynClassNames.size) {
       className += staticClasses
-        ? [...staticClasses, ...dynClassNames].join(' ')
-        : [...dynClassNames].join(' ')
+        ? [...staticClasses, ...curDynClassNames].join(' ')
+        : [...curDynClassNames].join(' ')
     }
     if (compiledClassName) {
       className += compiledClassName
@@ -544,7 +547,7 @@ function deregisterClassName(name: string) {
   gc.deregisterClassUse(nonSpecificClassName)
 }
 
-let lastDynamicClassNames = new Set<string>()
+let curDynClassNames = new Set<string>()
 function addDynamicStyles(
   displayName: string = 'g',
   conditionalStyles: Object | undefined,
@@ -555,7 +558,7 @@ function addDynamicStyles(
   avoidStyles?: boolean,
 ) {
   const dynStyles = {}
-  lastDynamicClassNames = new Set<string>()
+  curDynClassNames = new Set<string>()
 
   // applies styles most important to least important
   // that saves us some processing time (no need to set multiple times)
@@ -581,7 +584,7 @@ function addDynamicStyles(
         dynStyles[ns] = dynStyles[ns] || {}
         mergeStyles(ns, dynStyles, info.rules)
       } else if (className) {
-        lastDynamicClassNames.add(className)
+        curDynClassNames.add(className)
       }
     }
   }
@@ -604,7 +607,7 @@ function addDynamicStyles(
     const dynClassNames = addStyles(dynStyles, displayName, prevClassNames, true)
     if (dynClassNames) {
       for (const cn of dynClassNames) {
-        lastDynamicClassNames.add(cn)
+        curDynClassNames.add(cn)
       }
     }
   }
@@ -613,7 +616,7 @@ function addDynamicStyles(
   if (prevClassNames) {
     for (const className of prevClassNames) {
       // if this previous class isn't in the current classes then deregister it
-      if (!lastDynamicClassNames.has(className)) {
+      if (!curDynClassNames.has(className)) {
         deregisterClassName(className)
       }
     }

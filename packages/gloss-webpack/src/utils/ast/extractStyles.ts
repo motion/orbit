@@ -522,7 +522,7 @@ export function extractStyles(
             }
             node.name.name = 'div'
           }
-          if (view?.internal) {
+          if (view?.internal && !view.internal.themeFns) {
             // local views we already parsed the css out
             const localView = localViews[node.name.name]
             if (localView) {

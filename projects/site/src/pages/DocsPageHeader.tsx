@@ -103,14 +103,11 @@ export const DocsPageHeader = memo(({ isSmall, inputRef, setTheme, theme }: any)
             justifyContent="flex-start"
             flexDirection="row"
           >
-            <Stack debug direction="horizontal" group>
+            <Stack direction="horizontal" group>
               <HeaderButton
                 icon="moon"
                 tooltip="Toggle dark mode"
-                onClick={useMemo(
-                  () => setTheme(theme === 'docsPageTheme' ? 'home' : 'docsPageTheme'),
-                  [],
-                )}
+                onClick={() => setTheme(theme === 'docsPageTheme' ? 'home' : 'docsPageTheme')}
               />
             </Stack>
           </Absolute>

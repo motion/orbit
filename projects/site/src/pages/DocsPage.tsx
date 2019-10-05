@@ -3,7 +3,6 @@ import { useReaction } from '@o/use-store'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { NotFoundBoundary, View as NaviView } from 'react-navi'
-import * as portals from 'react-reverse-portal'
 
 import { Header } from '../Header'
 import { useScreenSize } from '../hooks/useScreenSize'
@@ -114,12 +113,12 @@ const DocsPage = memo((props: { children?: any }) => {
   const [showSidebar, setShowSidebar] = useState(false)
   const inputRef = useRef(null)
   const [themeName, setThemeName] = usePageTheme()
-  const portalNode = React.useMemo(() => {
-    const div = portals.createPortalNode()
-    div.style.display = 'flex'
-    div.style.height = 'calc(100vh - 100px)'
-    return div
-  }, [])
+  // const portalNode = React.useMemo(() => {
+  //   const div = portals.createPortalNode()
+  //   div.style.display = 'flex'
+  //   div.style.height = 'calc(100vh - 100px)'
+  //   return div
+  // }, [])
 
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))

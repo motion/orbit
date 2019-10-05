@@ -1,7 +1,8 @@
 import generate from '@babel/generator'
 import traverse from '@babel/traverse'
 import t = require('@babel/types')
-import { getStaticStyles, getStylesClassName, GlossView, validCSSAttr } from 'gloss'
+import literalToAst from 'babel-literal-to-ast'
+import { getAllStyles, getStylesClassName, GlossStaticStyleDescription, GlossView, validCSSAttr } from 'gloss'
 import invariant = require('invariant')
 import path = require('path')
 import util = require('util')
@@ -51,7 +52,7 @@ const JSXSTYLE_SOURCES = {
 export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
-  { cacheObject, warnCallback, errorCallback }: Options,
+  { cacheObject, warnCallback }: Options,
   options: ExtractStylesOptions,
 ): {
   js: string | Buffer
@@ -81,12 +82,6 @@ export function extractStyles(
   if (typeof warnCallback !== 'undefined') {
     invariant(typeof warnCallback === 'function', '`warnCallback` is expected to be a function')
     logWarning = warnCallback
-  }
-
-  let logError = console.error
-  if (typeof errorCallback !== 'undefined') {
-    invariant(typeof errorCallback === 'function', '`errorCallback` is expected to be a function')
-    logError = errorCallback
   }
 
   const sourceDir = path.dirname(sourceFileName)
@@ -152,7 +147,7 @@ export function extractStyles(
    * in step 2
    */
   // traverse and find base level gloss views
-  if (shouldPrintDebug && importsGloss) {
+  if (importsGloss) {
     traverse(ast, {
       // only if its declared as a variable (const MyView = gloss())
       CallExpression: {
@@ -175,37 +170,69 @@ export function extractStyles(
                 const extendsViewIdentifier =
                   t.isIdentifier(path.node.arguments[0]) && path.node.arguments[0].name
 
+                let view: GlossView<any> | null = null
+
                 if (extendsViewIdentifier) {
                   // extends on of our optimizable views
                   if (views[extendsViewIdentifier]) {
                     console.log('extends an optimizing view', name, extendsViewIdentifier)
                     views[name] = options.views[extendsViewIdentifier]
+                    view = views[name]
                     validComponents[name] = true
                   }
                 }
 
                 // parse style objects out and return them as array of [{ ['namespace']: 'className' }]
-                path.node.arguments = path.node.arguments.map(arg => {
-                  if (t.isObjectExpression(arg)) {
+                let staticStyleConfig: GlossStaticStyleDescription | null = null
+
+                path.node.arguments = path.node.arguments.map((arg, index) => {
+                  if ((index === 0 || index === 1) && t.isObjectExpression(arg)) {
                     const styleObject = evaluateAstNode(arg)
-                    const styles = getStaticStyles(styleObject)
-                    const out = []
+                    // uses the base styles if necessary, merges just like gloss does
+                    const { styles, conditionalStyles } = getAllStyles(
+                      view ? view.internal.getConfig() : undefined,
+                      styleObject,
+                    )
+                    // then put them all into an array so gloss later can use that
+                    const out: GlossStaticStyleDescription = {
+                      className: '',
+                    }
                     for (const key in styles) {
                       const info = getStylesClassName(key, styles[key])
                       cssMap.set(info.className, { css: info.css, commentTexts: [] })
-                      out.push([key, info.className])
+                      out.className += ` ${info.className}`
                     }
-                    console.log('got', styleObject, out)
-                    return t.arrayExpression(
-                      out.map(([key, className]) => {
-                        return t.objectExpression([
-                          t.objectProperty(t.stringLiteral(key), t.stringLiteral(className)),
-                        ])
-                      }),
-                    )
+                    if (conditionalStyles) {
+                      out.conditionalClassNames = {}
+                      for (const prop in conditionalStyles) {
+                        out.conditionalClassNames[prop] = ''
+                        for (const key in conditionalStyles[prop]) {
+                          const val = conditionalStyles[prop][key]
+                          const info = getStylesClassName(prop, val)
+                          cssMap.set(info.className, { css: info.css, commentTexts: [] })
+                          out.conditionalClassNames[prop] += ` ${info.className}`
+                        }
+                      }
+                    }
+                    staticStyleConfig = out
+                    return t.nullLiteral()
                   }
                   return arg
                 })
+
+                if (staticStyleConfig) {
+                  path.node.arguments.push(
+                    literalToAst(staticStyleConfig),
+                    // t.objectExpression(
+                    //   Object.keys(staticStyleConfig).map(k => {
+                    //     return t.objectProperty(
+                    //       t.stringLiteral(k),
+                    //       t.stringLiteral(staticStyleConfig[k]),
+                    //     )
+                    //   }),
+                    // ),
+                  )
+                }
               }
             }
           }

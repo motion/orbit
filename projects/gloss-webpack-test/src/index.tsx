@@ -42,6 +42,18 @@ function Main() {
 const MySubView = gloss(View, {
   background: 'red',
   color: [255, 255, 255],
+
+  boolProp: {
+    color: 'blue',
+
+    '&:hover': {
+      color: 'green',
+    },
+  },
+
+  '@media screen and (max-width: 100px)': {
+    background: 'red',
+  },
 })
 
 render(<Main />, document.querySelector('#app'))

@@ -145,9 +145,17 @@ function createGlossIsEqual() {
   }
 }
 
+export type GlossStaticStyleDescription = {
+  className: string
+  conditionalClassNames?: {
+    [key: string]: string
+  }
+}
+
 export function gloss<Props = any, ThemeProps = Props>(
   a?: CSSPropertySet | GlossView<Props, ThemeProps> | ((props: Props) => any) | string,
   b?: CSSPropertySet,
+  _compiledStyles?: GlossStaticStyleDescription,
 ): GlossView<GlossProps<Props>, ThemeProps> {
   if (process.env.NODE_ENV === 'development') {
     if (a === undefined && !!b) {
@@ -579,14 +587,6 @@ function addDynamicStyles(
 }
 
 const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
-
-export function getStaticStyles(styleObject: Object) {
-  const styles = {
-    '.': {},
-  }
-  mergeStyles('.', styles, styleObject)
-  return styles
-}
 
 //
 // this... THIS...

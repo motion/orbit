@@ -1,3 +1,163 @@
+
+gloss:
+
+1. Make it so the second param of gloss takes props:
+
+const X = gloss(Stack, { direction: 'horizontal' })
+
+gloss would have to split it out
+
+1. Add an `is={}` property, can be `is="Name"` or `is={Component}`, doesnt replace tagname its more for describing.
+
+---
+
+need to make some changes to gloss to make it work well with static styles
+
+right now view looks like this:
+
+Base = gloss().theme(propsToStyles, pseudosToStyles, alphaColorTheme)
+View = gloss(Base).theme(usePadding, useMargin)
+
+this is really flexible, but not really statically analyzable.
+
+changes we want to make:
+
+1. gloss should handle propsToStyles + pseudosToStyles automatically
+
+changes would be:
+
+ - make gloss do propsToStyles + psuedosToStyles for all views
+ - remove it from Base
+
+2. alphaColorTheme basically does this:
+
+<Theme theme={{ color: 'red', colorHover: 'blue', alphaHover: 0.5 }}>
+  <View color="red" alpha={0.5} alphaHover={1} />
+</Theme>
+
+how do we make that statically extractable?
+
+options are:
+
+  - make alpha first class in gloss, since its used almost everywhere
+  - if we have the theme function there, we can run it and determine if it uses only variables, and then continue to statically extract, we do already have the tracking
+
+actually theme tracking seems really nice because it basically requires no
+rewrite and we can determine many things. it only adds one constraint:
+
+"no themeFn should use a conditional inside of it"
+
+which is reasonable because... we don't really do that now. maybe in a couple cases, but almost never and its easy to rewrite to avoid. plus, we can detect it and bail at compile time if necessary.
+
+for example look at Input.tsx, it has an elementTheme it passes
+
+
+---
+
+re: Surface
+
+this could be redone to be more composable:
+
+Surface does a lot right now, and its quite powerful and flexible but hard to optimize and heavy for basic use cases.
+
+- Glint
+- Hoverglow
+- AutoSizing
+- Breadcrumbs/Segmenting
+- Tooltip
+- Badge
+
+we can split this all up, at the cost of the user having to understand a lot more and not "just use props", with benefit of full static compilation abilities and less overhead in non-static cases + a lot more flexibility in styling.
+
+plus, we could then re-build surface if we wanted to anyway. something like RichSurface and Button/Input could use them by default. though i think i'd still write them differently and you'd get better optimization....
+
+still, its a good exercise because figuring it out means we figure out a good theme system in general soooo away we go:
+
+<Stack theme="surface" size="lg" space spaceAround direction="horizontal">
+  <Icon />
+  <Text></Text>
+</Stack>
+
+actually this seems to work.... because themes can handle all the hovering, border radius etc. size/space can go directly into theme variables right?
+
+then we could just abbreviate it as:
+
+<Surface icon="">
+  Hello world
+</Surface>
+
+and still get the benefits?
+
+button would look like:
+
+<Surface coat="button">
+  Hello world
+</Surface>
+
+we'd basically remove subSelects and just have them be coats right?
+
+...wrong. how do we then do <Button coat="flat" />. hm.
+
+so themeSelect would stay?...
+
+<Surface themeSelect="button" coat="flat">
+  Hi
+</Surface>
+
+where themeSelect basically just puts together a selection of variables from the parent theme, which are *just props*!. So keep in mind we can do stuff like:
+
+const LightTheme: Theme = {
+  background: 'red',
+  backgroundLight: 'pink',
+  buttonBackground: 'green',
+  buttonBorderWidth: 1,
+  buttonHoverStyle: {
+    background: '--backgroundLight'
+  },
+}
+
+How does this help in the case where you have grouping? It seems it really can't
+account for that. Wait, nm, it can. We can deopt on group which we already basically do.
+
+What about all the weird transforms we do for icons/children in Surface render function right now?
+
+That basically is all passing down stuff we'd capture in props or theme. It seems the commong pattern is we need:
+
+- Theme === Props, theme should just be a default representation of props that simplifies so much in terms of rules.
+- Actually in that way we could probably have the following themes:
+
+const LightTheme: Theme = {
+  background: 'green',
+
+  Button: {
+    background: 'red',
+  },
+
+  Input: {
+    ...
+  }
+}
+
+Second, we'd have an idea of the props they accept so we can know if we can compile away.
+
+But back to the question, how does an Icon thats a child of a Button automatically receive the colors and such, even if its set through props?
+
+??????? hard need to think over more
+
+What about glints?
+
+as long as we can optimize them all down to "div"s then I see no reason why we dont just render the divs on every surface. i think thats the way to get it to optimize, lets say:
+
+Surface = () => do {
+  const theme = useTheme()
+  <Stack ...>
+    {theme.glint && props.glint !== false && <Glints  />}
+  </Stack>
+}
+
+
+---
+
 ideas:
 
 - mdx mode:
@@ -29,20 +189,6 @@ google sheets:
 this is a huge use case, and should be in the demo.
 
 sheets to form to database would be huge.
-
----
-
-gloss:
-
-1. Make it so the second param of gloss takes props:
-
-const X = gloss(Stack, { direction: 'horizontal' })
-
-gloss would have to split it out
-
-2. Make gloss extract the gloss() styles into css
-
-3. Add an `is={}` property, can be `is="Name"` or `is={Component}`, doesnt replace tagname its more for describing.
 
 ---
 

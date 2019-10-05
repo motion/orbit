@@ -1,9 +1,9 @@
 import React, { memo, useRef } from 'react'
 
 import { BorderLeft } from '../Border'
+import { useScaledSize, useSizedSurfaceProps, useSurfaceHeight } from '../hooks/useSizedSurface'
 import { Icon, IconProps } from '../Icon'
 import { Menu, MenuProps } from '../Menu'
-import { useScaledSize, useSizedSurfaceProps, useSurfaceHeight } from '../SizedSurface'
 import { getSize } from '../Sizes'
 import { Space } from '../Space'
 import { SimpleText } from '../text/SimpleText'

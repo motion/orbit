@@ -4,8 +4,7 @@ import React, { memo } from 'react'
 import { Button } from '../buttons/Button'
 import { Portal } from '../helpers/portal'
 import { Section, SectionProps } from '../Section'
-import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
-import { SurfaceProps } from '../Surface'
+import { Surface, SurfaceProps } from '../Surface'
 import { ViewProps } from '../View/types'
 import { View } from '../View/View'
 import { ProvideVisibility } from '../Visibility'
@@ -13,7 +12,7 @@ import { ProvideVisibility } from '../Visibility'
 // import { GlobalHotKeys } from 'react-hotkeys'
 
 export type SimpleModalProps = SectionProps &
-  SizedSurfaceProps & {
+  SurfaceProps & {
     open?: boolean
     onChangeOpen?: (next: boolean) => any
     closable?: boolean
@@ -122,7 +121,7 @@ function SimpleModal({
   )
 }
 
-const ModalSizedSurface = gloss<SurfaceProps & { open?: boolean }>(SizedSurface, {
+const ModalSizedSurface = gloss<SurfaceProps & { open?: boolean }>(Surface, {
   opacity: 0,
   pointerEvents: 'none',
   open: {

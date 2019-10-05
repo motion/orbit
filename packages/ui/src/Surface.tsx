@@ -9,13 +9,13 @@ import { useBreadcrumb, useBreadcrumbReset } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
 import { themeable } from './helpers/themeable'
+import { useSizedSurfaceProps } from './hooks/useSizedSurface'
 import { Icon, IconProps } from './Icon'
 import { IconPropsContext } from './IconPropsContext'
 import { InvertScale } from './InvertScale'
 import { PassProps } from './PassProps'
 import { PopoverProps } from './Popover'
 import { getSegmentedStyle } from './SegmentedRow'
-import { useSizedSurfaceProps } from './SizedSurface'
 import { getSize } from './Sizes'
 import { Size, Space } from './Space'
 import { SizedSurfacePropsContext } from './SurfacePropsContext'
@@ -628,6 +628,7 @@ const halfPxDown = {
     y: 0.5,
   },
 }
+
 const perfectCenterStyle = props => {
   if (props.height && props.height % 2 === 1) {
     return halfPxDown

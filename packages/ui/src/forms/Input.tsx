@@ -102,6 +102,23 @@ const inputSurfaceTheme: ThemeFn = (props, theme) => ({
   }),
 })
 
+const inputElementTheme: ThemeFn = (p, theme) => {
+  return {
+    // apple selection color
+    '&::selection': {
+      color: theme.colorLight,
+      background: theme.backgroundSelection || theme.backgroundStronger,
+    },
+    // autofill keep proper color
+    ...(isWebkit && {
+      '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
+        WebkitTextFillColor: p.color || theme.color,
+        backgroundColor: 'transparent',
+      },
+    }),
+  }
+}
+
 const SimpleInput = ({
   placeholder,
   tagName = 'input',
@@ -138,22 +155,7 @@ const SimpleInput = ({
         }),
         [nodeRef, value, defaultValue, placeholder, tagName, elementProps],
       )}
-      elementTheme={useCallback((p, theme) => {
-        return {
-          // apple selection color
-          '&::selection': {
-            color: theme.colorLight,
-            background: theme.backgroundSelection || theme.backgroundStronger,
-          },
-          // autofill keep proper color
-          ...(isWebkit && {
-            '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
-              WebkitTextFillColor: p.color || theme.color,
-              backgroundColor: 'transparent',
-            },
-          }),
-        }
-      }, [])}
+      elementTheme={inputElementTheme}
       type="input"
       maxWidth="100%"
       alignItems="center"

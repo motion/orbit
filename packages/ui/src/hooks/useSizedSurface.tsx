@@ -1,13 +1,11 @@
 import React from 'react'
 
-import { LINE_HEIGHT } from './constants'
-import { useScale } from './Scale'
-import { getSize } from './Sizes'
-import { Size } from './Space'
-import { Surface, SurfaceProps } from './Surface'
-import { useSurfaceProps } from './SurfacePropsContext'
-
-export type SizedSurfaceProps = SurfaceProps
+import { LINE_HEIGHT } from '../constants'
+import { useScale } from '../Scale'
+import { getSize } from '../Sizes'
+import { Size } from '../Space'
+import { SurfaceProps } from '../Surface'
+import { useSurfaceProps } from '../SurfacePropsContext'
 
 const num = (x: number | boolean) => (x === true ? 1 : +x)
 const clampRound = (x: number) => Math.round(x)
@@ -30,11 +28,7 @@ const getHeight = (size: number, sizeHeight: number | boolean) => {
   return height % 2 === 0 ? height : height + 1
 }
 
-export const SizedSurface = (direct: SizedSurfaceProps) => {
-  return <Surface {...useSizedSurfaceProps(direct)} />
-}
-
-export function useSizedSurfaceProps(direct?: SizedSurfaceProps): SizedSurfaceProps {
+export function useSizedSurfaceProps(direct?: SurfaceProps): SurfaceProps {
   const props = useSurfaceProps(direct)
   const scale = useScale()
   const {

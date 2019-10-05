@@ -7,7 +7,7 @@ import { isBrowser } from '../constants'
 import { isRightClick } from '../helpers/isRightClick'
 import { useDefaultProps } from '../hooks/useDefaultProps'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
-import { SizedSurfaceProps } from '../SizedSurface'
+import { SurfaceProps } from '../Surface'
 import { Stack, StackProps } from '../View/Stack'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
@@ -321,7 +321,7 @@ GridItem.isGridItem = true
 
 // TODO this could be a pattern
 
-function forwardSurfaceProps(children: any, props: SizedSurfaceProps) {
+function forwardSurfaceProps(children: any, props: SurfaceProps) {
   if (children && children.type && children.type.accepts && children.type.accepts.surfaceProps) {
     return cloneElement(children, props)
   }

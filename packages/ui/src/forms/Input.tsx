@@ -121,11 +121,11 @@ const SimpleInput = ({
   const theme = useTheme()
   return (
     <Surface
+      tagName={tagName}
       elementProps={useMemo(
         () => ({
           nodeRef,
           placeholder,
-          tagName,
           name,
           type,
           value,

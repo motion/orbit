@@ -28,7 +28,7 @@
     "get-port": "4.0.0",
     "global": "4.3.2",
     "isomorphic-fetch": "2.2.1",
-    "mobx": "^5.13.0",
+    "mobx": "^5.14.0",
     "open": "^6.3.0",
     "ps-tree": "1.1.0",
     "raven": "2.6.4",

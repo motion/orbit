@@ -33,7 +33,7 @@
     "jsonp": "^0.2.1",
     "lodash": "4.17.11",
     "memoize-weak": "1.0.2",
-    "mobx": "^5.13.0",
+    "mobx": "^5.14.0",
     "navi": "^0.13.6",
     "react-navi": "^0.13.6",
     "prism-react-renderer": "0.1.6",

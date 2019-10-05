@@ -250,7 +250,7 @@ export function gloss<Props = any, ThemeProps = Props>(
       shouldUpdateMap = GlossView['shouldUpdateMap']
     }
 
-    if ((props.className || '').includes('ui-border-bottom')) {
+    if (props['className']?.includes('ui-border-top')) {
       debugger
     }
 

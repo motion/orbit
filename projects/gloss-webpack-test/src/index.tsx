@@ -1,6 +1,6 @@
 //!
 import { themes } from '@o/kit'
-import { BorderTop, ListItemSimple, ProvideUI, Text, View } from '@o/ui/test'
+import { BorderTop, ProvideUI, View } from '@o/ui/test'
 import { gloss } from 'gloss'
 import * as React from 'react'
 import { render } from 'react-dom'
@@ -12,9 +12,9 @@ function Main() {
   return (
     <ProvideUI themes={themes} activeTheme="light">
       <View sm-marginBottom={20}>
-        <Text selectable>hello world</Text>
+        {/* <Text selectable>hello world</Text>
         <ListItemSimple title="First" icon="ok" />
-        <ListItemSimple isSelected title="ok" icon="ok" />
+        <ListItemSimple isSelected title="ok" icon="ok" /> */}
         <BorderTop />
         {/* <Stack direction="horizontal" space="lg">
         <Surface>hello world</Surface>

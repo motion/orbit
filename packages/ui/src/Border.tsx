@@ -9,7 +9,7 @@ type BorderProps = AbsoluteProps & {
 
 const borderTheme: ThemeFn = (_, theme) => {
   return {
-    background: theme.borderColor,
+    background: 'red' || theme.borderColor,
     hoverable: {
       '&:hover': {
         background: theme.backgroundStronger,

@@ -61,7 +61,6 @@ export function extractStyles(
   ast: t.File
   map: any // RawSourceMap from 'source-map'
 } {
-  console.log('sourceFileName', sourceFileName)
   const JSX_VALID_NAMES = Object.keys(options.views).filter(x => {
     return options.views[x] && !!options.views[x].staticStyleConfig
   })
@@ -514,6 +513,7 @@ export function extractStyles(
           //  take View and run it, get the classnames, and return the div here
           //  because View may add more styles on top
           // add static styles base
+
           const localView = localViews[node.name.name]
           if (localView) {
             for (const className of localView.className.trim().split(' ')) {
@@ -522,6 +522,8 @@ export function extractStyles(
             }
             node.name.name = 'div'
           }
+
+          // if view + doesn't extend a theme fn, optimize
           if (view?.internal && !view.internal.themeFns) {
             // local views we already parsed the css out
             const localView = localViews[node.name.name]

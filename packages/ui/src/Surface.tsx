@@ -1,659 +1,654 @@
 //!
-import { gloss } from 'gloss'
-
-// //!
-// import { ColorLike } from '@o/color'
-// import { CSSPropertySet } from '@o/css'
-// import { isDefined, selectDefined, selectObject } from '@o/utils'
-// import { Base, Box, CompiledTheme, gloss, propsToStyles, psuedoStyleTheme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
-// import React, { HTMLProps, memo, useContext, useEffect, useMemo, useState } from 'react'
+import { ColorLike } from '@o/color'
+import { CSSPropertySet } from '@o/css'
+import { isDefined, selectDefined, selectObject } from '@o/utils'
+import { Base, Box, CompiledTheme, gloss, propsToStyles, psuedoStyleTheme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
+import React, { HTMLProps, memo, useContext, useEffect, useMemo, useState } from 'react'
 
-// import { Badge } from './Badge'
-// import { useBreadcrumb, useBreadcrumbReset } from './Breadcrumbs'
-// import { Glint } from './effects/Glint'
-// import { HoverGlow } from './effects/HoverGlow'
-// import { themeable } from './helpers/themeable'
-// import { Icon, IconProps } from './Icon'
-// import { IconPropsContext } from './IconPropsContext'
-// import { InvertScale } from './InvertScale'
-// import { PassProps } from './PassProps'
-// import { PopoverProps } from './Popover'
-// import { getSegmentedStyle } from './SegmentedRow'
-// import { useSizedSurfaceProps } from './SizedSurface'
-// import { getSize } from './Sizes'
-// import { Size, Space } from './Space'
-// import { SizedSurfacePropsContext } from './SurfacePropsContext'
-// import { scaledTextSizeTheme } from './text/scaledTextSizeTheme'
-// import { Tooltip } from './Tooltip'
-// import { getElevation } from './View/elevation'
-// import { ViewProps } from './View/types'
-// import { getMargin, View } from './View/View'
+import { Badge } from './Badge'
+import { useBreadcrumb, useBreadcrumbReset } from './Breadcrumbs'
+import { Glint } from './effects/Glint'
+import { HoverGlow } from './effects/HoverGlow'
+import { themeable } from './helpers/themeable'
+import { Icon, IconProps } from './Icon'
+import { IconPropsContext } from './IconPropsContext'
+import { InvertScale } from './InvertScale'
+import { PassProps } from './PassProps'
+import { PopoverProps } from './Popover'
+import { getSegmentedStyle } from './SegmentedRow'
+import { useSizedSurfaceProps } from './SizedSurface'
+import { getSize } from './Sizes'
+import { Size, Space } from './Space'
+import { SizedSurfacePropsContext } from './SurfacePropsContext'
+import { scaledTextSizeTheme } from './text/scaledTextSizeTheme'
+import { Tooltip } from './Tooltip'
+import { getElevation } from './View/elevation'
+import { ViewProps } from './View/types'
+import { getMargin, View } from './View/View'
 
-// // an element for creating surfaces that look like buttons
-// // they basically can control a prefix/postfix icon, and a few other bells
+// an element for creating surfaces that look like buttons
+// they basically can control a prefix/postfix icon, and a few other bells
 
-// /** Controlled height, relative adjusted to size */
-// export type SizedSurfaceSpecificProps = {
-//   /** size affects all other sizing props */
-//   size?: Size
+/** Controlled height, relative adjusted to size */
+export type SizedSurfaceSpecificProps = {
+  /** size affects all other sizing props */
+  size?: Size
 
-//   sizeHeight?: boolean | number
+  sizeHeight?: boolean | number
 
-//   /** Controlled font size, relative adjusted to size */
-//   sizeFont?: boolean | number
+  /** Controlled font size, relative adjusted to size */
+  sizeFont?: boolean | number
 
-//   /** Controlled horizontal padding, relative adjusted to size */
-//   sizePadding?: boolean | number
+  /** Controlled horizontal padding, relative adjusted to size */
+  sizePadding?: boolean | number
 
-//   /** Controlled margin, relative adjusted to size */
-//   sizeMargin?: boolean | number
+  /** Controlled margin, relative adjusted to size */
+  sizeMargin?: boolean | number
 
-//   /** Controlled border radius size, relative adjusted to size */
-//   sizeRadius?: boolean | number
+  /** Controlled border radius size, relative adjusted to size */
+  sizeRadius?: boolean | number
 
-//   /** Controlled icon size, relative adjusted to size */
-//   sizeIcon?: boolean | number
-// }
+  /** Controlled icon size, relative adjusted to size */
+  sizeIcon?: boolean | number
+}
 
-// export type SurfaceSpecificProps = SizedSurfaceSpecificProps & {
-//   /** Inside uses a shadow instead of border for finder borders */
-//   borderPosition?: 'inside' | 'outside'
+export type SurfaceSpecificProps = SizedSurfaceSpecificProps & {
+  /** Inside uses a shadow instead of border for finder borders */
+  borderPosition?: 'inside' | 'outside'
 
-//   /** Force focus state on */
-//   focus?: boolean
+  /** Force focus state on */
+  focus?: boolean
 
-//   /** Force hover state on */
-//   hover?: boolean
+  /** Force hover state on */
+  hover?: boolean
 
-//   /** Force active state on  */
-//   active?: boolean
+  /** Force active state on  */
+  active?: boolean
 
-//   /** Ellipse text used inside children of surface */
-//   ellipse?: boolean
+  /** Ellipse text used inside children of surface */
+  ellipse?: boolean
 
-//   /** Element before surface elements */
-//   before?: React.ReactNode
+  /** Element before surface elements */
+  before?: React.ReactNode
 
-//   /** Element after surface elements */
-//   after?: React.ReactNode
+  /** Element after surface elements */
+  after?: React.ReactNode
 
-//   /** Add a badge to surface, see <Badge /> */
-//   badge?: React.ReactNode
+  /** Add a badge to surface, see <Badge /> */
+  badge?: React.ReactNode
 
-//   /** Extra props for badge */
-//   badgeProps?: Object
+  /** Extra props for badge */
+  badgeProps?: Object
 
-//   /** Button children / text */
-//   children?: React.ReactNode
+  /** Button children / text */
+  children?: React.ReactNode
 
-//   /** Name for surface  */
-//   name?: string
+  /** Name for surface  */
+  name?: string
 
-//   /** Removes background, border, glint styles */
-//   chromeless?: boolean
+  /** Removes background, border, glint styles */
+  chromeless?: boolean
 
-//   /** Forces surface into circle shape */
-//   circular?: boolean
+  /** Forces surface into circle shape */
+  circular?: boolean
 
-//   /** Add extra props to the inner element  */
-//   elementProps?: Object
+  /** Add extra props to the inner element  */
+  elementProps?: Object
 
-//   /** Props for <Glint />, shown at bottom of surface */
-//   glintBottom?: boolean
+  /** Props for <Glint />, shown at bottom of surface */
+  glintBottom?: boolean
 
-//   /** Props for <Glint />, shown at top of surface */
-//   glint?: boolean
+  /** Props for <Glint />, shown at top of surface */
+  glint?: boolean
 
-//   /** Add a <HoverGlow /> to the surface */
-//   glow?: boolean
+  /** Add a <HoverGlow /> to the surface */
+  glow?: boolean
 
-//   /** Add <HoverGlwo /> props if glow enabled */
-//   glowProps?: Object
+  /** Add <HoverGlwo /> props if glow enabled */
+  glowProps?: Object
 
-//   /** Add a <HoverGlow /> to the surface */
-//   hovered?: boolean
+  /** Add a <HoverGlow /> to the surface */
+  hovered?: boolean
 
-//   /** Name for <Icon /> element, or custom element */
-//   icon?: React.ReactNode
+  /** Name for <Icon /> element, or custom element */
+  icon?: React.ReactNode
 
-//   /** Show icon after text */
-//   iconAfter?: boolean
+  /** Show icon after text */
+  iconAfter?: boolean
 
-//   /** Set icon color separately */
-//   iconColor?: ColorLike
+  /** Set icon color separately */
+  iconColor?: ColorLike
 
-//   /** Extra props for <Icon /> element */
-//   iconProps?: Partial<IconProps>
-
-//   /** Set icon size separately */
-//   iconSize?: number
-
-//   /** Avoid adding the inner element: will prevent icons from working */
-//   noInnerElement?: boolean
-
-//   theme?: CompiledTheme
-
-//   /** Adds a <Tooltip /> on the surface */
-//   tooltip?: React.ReactNode
-
-//   /** Extra props for the <Tooltip /> */
-//   tooltipProps?: PopoverProps
-
-//   /** Text alpha */
-//   alpha?: number
-
-//   /** Text alpha on hover */
-//   alphaHover?: number
-
-//   /** Force disabled state of surface */
-//   disabled?: boolean
-
-//   /** HTML prop type */
-//   type?: string
-
-//   /** Select a subset theme easily */
-//   subTheme?: ThemeSelect
-
-//   /** Amount to pad icon */
-//   iconPadding?: number
-
-//   /** Force ignore grouping */
-//   ignoreSegment?: boolean
-
-//   /** Override space between sizing between Icon/Element */
-//   space?: Size
-
-//   /** Override space between sizing between Icon/Element */
-//   spaceAround?: Size
-
-//   /** Add an element between the icon and inner element */
-//   betweenIconElement?: React.ReactNode
-
-//   /** Style as part of a group */
-//   segment?: 'first' | 'last' | 'middle' | 'single'
-
-//   /** [Advanced] Add an extra theme to the inner element */
-//   elementTheme?: ThemeFn
-// }
-
-// export type SurfaceProps = Omit<ViewProps, 'size'> & SurfaceSpecificProps
-
-// const getBorderRadius = (t, b, l, r, tl, tr, bl, br) => {
-//   return {
-//     borderTopLeftRadius: selectDefined(tl, t, l),
-//     borderTopRightRadius: selectDefined(tr, t, r),
-//     borderBottomRightRadius: selectDefined(br, b, r),
-//     borderBottomLeftRadius: selectDefined(bl, b, l),
-//   }
-// }
-
-// type ThroughProps = Pick<
-//   SurfaceProps,
-//   | 'height'
-//   | 'iconPadding'
-//   | 'alignItems'
-//   | 'justifyContent'
-//   | 'sizeIcon'
-//   | 'iconSize'
-//   | 'iconAfter'
-//   | 'fontWeight'
-//   | 'ellipse'
-//   | 'overflow'
-//   | 'textDecoration'
-//   | 'elementTheme'
-// > & {
-//   hasIcon: boolean
-//   tagName?: string
-// }
-
-// const acceptsIcon = child =>
-//   child && child.type.acceptsProps && child.type.acceptsProps.icon === true
-
-// // why? need to document bug that led to this hackty patch
-// // im guessing popover is looking for selector too early, that should be patched in popover
-// const setTooltip = (tooltip, setTooltipState) => {
-//   if (tooltip) {
-//     setTooltipState(prev => {
-//       prev.id = prev.id || `Surface-${Math.round(Math.random() * 100000000)}`
-//       prev.show = false
-//       return prev
-//     })
-
-//     let tm = setTimeout(() => {
-//       setTooltipState(prev => {
-//         prev.show = true
-//         return prev
-//       })
-//     })
-//     return () => clearTimeout(tm)
-//   }
-// }
-
-// export const Surface = themeable((direct: SurfaceProps) => {
-//   const sizedProps = useSizedSurfaceProps(direct)
-//   const props = SizedSurfacePropsContext.useProps(sizedProps) as SurfaceProps
-//   const crumb = useBreadcrumb()
-//   const [tooltipState, setTooltipState] = useState({ id: null, show: false })
-//   const theme = useTheme()
-
-//   const {
-//     alignItems,
-//     children,
-//     className,
-//     disabled,
-//     elementProps,
-//     elementTheme,
-//     glintBottom,
-//     glint,
-//     glow,
-//     glowProps,
-//     height,
-//     icon,
-//     iconAfter,
-//     iconPadding,
-//     iconProps,
-//     justifyContent,
-//     noInnerElement,
-//     size: ogSize,
-//     sizeLineHeight,
-//     tagName,
-//     themeSubSelect: subTheme,
-//     tooltip,
-//     tooltipProps,
-//     padding,
-//     badgeProps,
-//     badge,
-//     after,
-//     borderPosition = 'outside',
-//     borderWidth,
-//     coat,
-//     before,
-//     dangerouslySetInnerHTML,
-//     space,
-//     spaceAround,
-//     betweenIconElement,
-//     borderTopRadius,
-//     borderBottomRadius,
-//     ...viewProps
-//   } = props
-
-//   const size = getSize(selectDefined(ogSize, 1))
-//   const segmentedStyle = getSegmentedStyle(props, crumb)
-//   const stringIcon = typeof icon === 'string'
-
-//   useEffect(() => setTooltip(tooltip, setTooltipState), [tooltip])
-
-//   // goes to BOTH the outer element and inner element
-//   let throughProps: ThroughProps = {
-//     iconPadding: typeof iconPadding === 'number' ? iconPadding : size * 8,
-//     alignItems,
-//     justifyContent,
-//     sizeIcon: props.sizeIcon,
-//     iconSize: props.iconSize,
-//     iconAfter: props.iconAfter,
-//     hasIcon: !!props.icon,
-//     fontWeight: props.fontWeight,
-//     ellipse: props.ellipse,
-//     overflow: props.overflow,
-//     textDecoration: props.textDecoration,
-//   }
-
-//   let lineHeight = props.lineHeight
-//   if (!props.lineHeight && sizeLineHeight && +height == +height) {
-//     lineHeight = `${height}px`
-//   }
-
-//   if (noInnerElement) {
-//     throughProps.tagName = tagName
-//     if (elementProps) {
-//       throughProps = {
-//         elementTheme,
-//         ...throughProps,
-//         ...elementProps,
-//       }
-//     }
-//   }
-
-//   const childrenProps: HTMLProps<HTMLDivElement> = {}
-
-//   const pxHeight = +height == +height
-//   const borderLeftRadius = selectDefined(
-//     props.borderLeftRadius ? +props.borderLeftRadius : undefined,
-//     segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius,
-//     pxHeight ? +height / 2 : undefined,
-//     0,
-//   )
-//   const borderRightRadius = selectDefined(
-//     props.borderRightRadius ? +props.borderRightRadius : undefined,
-//     segmentedStyle ? segmentedStyle.borderRightRadius : +props.borderRadius,
-//     pxHeight ? +height / 2 : undefined,
-//     0,
-//   )
-//   const borderProps = getBorderRadius(
-//     borderTopRadius,
-//     borderBottomRadius,
-//     borderLeftRadius,
-//     borderRightRadius,
-//     props.borderTopLeftRadius,
-//     props.borderTopRightRadius,
-//     props.borderBottomRightRadius,
-//     props.borderBottomLeftRadius,
-//   )
-
-//   const disableGlint = theme.disableGlint ? theme.disableGlint.get() : false
-//   const hasAnyGlint = !disableGlint && !props.chromeless && !!(glint || glintBottom)
-//   let showElement = false
-
-//   // because we can't define children at all on tags like input
-//   // we conditionally set children here to avoid having children: undefined
-//   if (dangerouslySetInnerHTML) {
-//     childrenProps.dangerouslySetInnerHTML = dangerouslySetInnerHTML
-//   } else if (noInnerElement) {
-//     if (isDefined(before, after)) {
-//       childrenProps.children = (
-//         <>
-//           {before}
-//           {children || null}
-//           {after}
-//         </>
-//       )
-//     } else {
-//       childrenProps.children = children || null
-//     }
-//   } else {
-//     showElement = !!(hasChildren(children) || elementProps)
-//     const spaceElement = <Space size={selectDefined(space, size * 6)} />
-
-//     const innerElements = !!icon && (
-//       <PassProps
-//         passCondition={acceptsIcon}
-//         coat={coat}
-//         size={getIconSize(props)}
-//         opacity={selectDefined(props.alpha, props.opacity)}
-//         hoverStyle={props.hoverStyle}
-//         activeStyle={props.activeStyle}
-//         focusStyle={props.focusStyle}
-//         disabledStyle={props.disabledStyle}
-//         color="inherit"
-//         {...perfectCenterStyle(throughProps)}
-//         {...iconProps}
-//       >
-//         {!stringIcon && icon}
-//         {stringIcon && <Icon name={`${icon}`} />}
-//       </PassProps>
-//     )
-
-//     childrenProps.children = (
-//       <>
-//         {before}
-//         {!!badge && (
-//           <Badge
-//             coat={coat}
-//             zIndex={typeof props.zIndex === 'number' ? props.zIndex + 1 : 100}
-//             position="absolute"
-//             top="-18%"
-//             left="-18%"
-//             size={size}
-//             {...badgeProps}
-//           >
-//             {badge}
-//           </Badge>
-//         )}
-//         {!!tooltip && tooltipState.show && (
-//           <Tooltip label={tooltip} {...tooltipProps}>
-//             {`.${tooltipState.id}`}
-//           </Tooltip>
-//         )}
-//         {hasAnyGlint && (
-//           <GlintContain
-//             className="ui-glint-contain"
-//             {...borderProps}
-//             {...borderPosition === 'inside' &&
-//               borderWidth > 0 && {
-//                 height: roundHalf(+height - size / 2) - 1,
-//                 transform: {
-//                   y: roundHalf(size),
-//                 },
-//               }}
-//           >
-//             {glint && !props.chromeless && (
-//               <Glint coat={coat} size={size} {...borderProps} themeSubSelect={subTheme} />
-//             )}
-//             {glintBottom && !props.chromeless && (
-//               <Glint
-//                 coat={coat}
-//                 size={size}
-//                 bottom={0}
-//                 {...borderProps}
-//                 themeSubSelect={subTheme}
-//               />
-//             )}
-//           </GlintContain>
-//         )}
-//         {!!icon && iconAfter ? (
-//           <Box
-//             style={
-//               {
-//                 flexDirection: 'inherit',
-//                 order: 3,
-//               } as any
-//             }
-//           >
-//             {showElement && spaceElement}
-//             {!!betweenIconElement && (
-//               <>
-//                 {betweenIconElement}
-//                 {spaceElement}
-//               </>
-//             )}
-//             {innerElements}
-//           </Box>
-//         ) : (
-//           <>
-//             {innerElements}
-//             {!!betweenIconElement && (
-//               <>
-//                 {spaceElement}
-//                 {betweenIconElement}
-//               </>
-//             )}
-//             {showElement && icon && spaceElement}
-//           </>
-//         )}
-//         {!!glow && !disabled && (
-//           <HoverGlow
-//             full
-//             scale={1.1}
-//             opacity={0.35}
-//             borderRadius={+props.borderRadius}
-//             {...glowProps}
-//           />
-//         )}
-//         {showElement && (
-//           <Element
-//             {...throughProps}
-//             height={pxHeight ? '100%' : undefined}
-//             {...elementProps}
-//             disabled={disabled}
-//             elementTheme={elementTheme}
-//           >
-//             {children}
-//           </Element>
-//         )}
-//         {!!after && (
-//           <>
-//             {spaceElement}
-//             {after}
-//           </>
-//         )}
-//       </>
-//     )
-//   }
-
-//   // automatically invert transition
-//   if (props.layoutTransition) {
-//     const ogChildren = childrenProps.children
-//     childrenProps.children = <InvertScale>{ogChildren}</InvertScale>
-//   }
-
-//   const iconOpacity = typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any)
-//   const iconColor = (props.iconProps && props.iconProps.color) || props.color || theme.color
-//   const iconColorHover =
-//     (!!props.hoverStyle && typeof props.hoverStyle === 'object' && props.hoverStyle.color) ||
-//     theme.colorHover
-//   const iconContext = useMemo<Partial<IconProps>>(() => {
-//     return {
-//       coat,
-//       opacity: iconOpacity,
-//       color: iconColor,
-//       justifyContent: 'center',
-//       hoverStyle: {
-//         ...selectObject(props.hoverStyle),
-//         color: iconColorHover,
-//       },
-//     }
-//   }, [coat, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
-
-//   // @ts-ignore
-//   const surfaceFrameProps: SurfaceFrameProps = {
-//     className: `${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`,
-//     themeSubSelect: subTheme,
-//     lineHeight,
-//     padding,
-//     borderWidth,
-//     borderPosition,
-//     coat,
-//     height,
-//     applyPsuedoColors: true,
-//     disabled,
-//     ...(!showElement && elementProps),
-//     ...throughProps,
-//     ...viewProps,
-//     ...segmentedStyle,
-//     // ensure borderTopRadius, borderBottomRadius override
-//     borderTopRadius,
-//     borderBottomRadius,
-//     ...childrenProps,
-//     tagName: noInnerElement ? tagName : 'div',
-//     opacity: crumb && crumb.total === 0 ? 0 : props.opacity,
-//   }
-
-//   return useBreadcrumbReset(
-//     SizedSurfacePropsContext.useReset(
-//     <IconPropsContext.Provider value={iconContext}>
-//         <SurfaceFrame {...surfaceFrameProps} />
-//     </IconPropsContext.Provider>
-//   ))
-// })
-
-// const hasChildren = (children: React.ReactNode) => {
-//   if (Array.isArray(children)) {
-//     return children.some(x => isDefined(x) && x !== null && x !== false)
-//   }
-//   return !!children
-// }
-
-// const chromelessStyle = {
-//   borderColor: 'transparent',
-//   background: 'transparent',
-// }
-
-// const defaultTextTheme = {
-//   fontSize: undefined,
-//   lineHeight: undefined,
-// }
-
-// // fontFamily: inherit on both fixes elements
-// type SurfaceFrameProps = SurfaceProps & ThroughProps
-// const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
-//   display: 'flex', // in case they change tagName
-//   fontFamily: 'inherit',
-//   position: 'relative',
-//   whiteSpace: 'pre',
-
-//   circular: {
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     padding: 0,
-//   },
-
-//   disabled: {
-//     cursor: 'not-allowed',
-//   },
-// }).theme((props, theme) => {
-//   const { fontSize, lineHeight } = scaledTextSizeTheme(props) || defaultTextTheme
-//   const themeStyle = psuedoStyleTheme(props, theme)
-//   const propStyles = propsToStyles(props, theme)
-//   const marginStyle = getMargin(props)
-
-//   let styles: CSSPropertySet = {}
-//   let boxShadow = props.boxShadow || theme.boxShadow || null
-
-//   const borderColor = themeStyle?.borderColor
-//   const borderWidth = selectDefined(props.borderWidth, theme.borderWidth, 0)
-
-//   // borderPosition controls putting borders inside vs outside
-//   // useful for having nice looking buttons (inside) vs container-like views (outside)
-//   if (borderColor && !props.chromeless) {
-//     if (props.borderPosition === 'inside') {
-//       // inside
-//       boxShadow = [...(boxShadow || []), ['inset', 0, 0, 0, borderWidth, borderColor]]
-//       styles.borderWidth = 0
-//     } else {
-//       // outside
-//       styles.border = [borderWidth, props.borderStyle || 'solid', borderColor]
-//     }
-//   }
-
-//   if (props.elevation) {
-//     boxShadow = [...(boxShadow || []), ...getElevation(props, theme).boxShadow]
-//   }
-
-//   const res = {
-//     fontWeight: props.fontWeight || theme.fontWeight,
-//     overflow: props.overflow || theme.overflow,
-//     // note: base theme styles go *above* propsToStyles...
-//     ...themeStyle,
-//     // TODO this could be automatically handled in propStyles if we want...
-//     ...(!props.chromeless && props.active && { '&:hover': themeStyle['&:active'] }),
-//     ...(props.chromeless && chromelessStyle),
-//     ...(props.circular && {
-//       width: props.height,
-//     }),
-//     fontSize,
-//     lineHeight,
-//     ...propStyles,
-//     ...marginStyle,
-//     ...styles,
-//     boxShadow,
-//     '&:hover': props.active
-//       ? null
-//       : {
-//           ...(!props.chromeless && themeStyle?.['&:hover']),
-//           ...propStyles['&:hover'],
-//         },
-//   }
-
-//   return res
-// })
-
-// const halfPxDown = {
-//   transform: {
-//     y: 0.5,
-//   },
-// }
-// const perfectCenterStyle = props => {
-//   if (props.height && props.height % 2 === 1) {
-//     return halfPxDown
-//   }
-// }
-
-// const applyElementTheme = (props, theme) =>
-//   props.elementTheme ? props.elementTheme(props, theme) : null
-
-type Type = {}
-
-const Element = gloss<Type>({
+  /** Extra props for <Icon /> element */
+  iconProps?: Partial<IconProps>
+
+  /** Set icon size separately */
+  iconSize?: number
+
+  /** Avoid adding the inner element: will prevent icons from working */
+  noInnerElement?: boolean
+
+  theme?: CompiledTheme
+
+  /** Adds a <Tooltip /> on the surface */
+  tooltip?: React.ReactNode
+
+  /** Extra props for the <Tooltip /> */
+  tooltipProps?: PopoverProps
+
+  /** Text alpha */
+  alpha?: number
+
+  /** Text alpha on hover */
+  alphaHover?: number
+
+  /** Force disabled state of surface */
+  disabled?: boolean
+
+  /** HTML prop type */
+  type?: string
+
+  /** Select a subset theme easily */
+  subTheme?: ThemeSelect
+
+  /** Amount to pad icon */
+  iconPadding?: number
+
+  /** Force ignore grouping */
+  ignoreSegment?: boolean
+
+  /** Override space between sizing between Icon/Element */
+  space?: Size
+
+  /** Override space between sizing between Icon/Element */
+  spaceAround?: Size
+
+  /** Add an element between the icon and inner element */
+  betweenIconElement?: React.ReactNode
+
+  /** Style as part of a group */
+  segment?: 'first' | 'last' | 'middle' | 'single'
+
+  /** [Advanced] Add an extra theme to the inner element */
+  elementTheme?: ThemeFn
+}
+
+export type SurfaceProps = Omit<ViewProps, 'size'> & SurfaceSpecificProps
+
+const getBorderRadius = (t, b, l, r, tl, tr, bl, br) => {
+  return {
+    borderTopLeftRadius: selectDefined(tl, t, l),
+    borderTopRightRadius: selectDefined(tr, t, r),
+    borderBottomRightRadius: selectDefined(br, b, r),
+    borderBottomLeftRadius: selectDefined(bl, b, l),
+  }
+}
+
+type ThroughProps = Pick<
+  SurfaceProps,
+  | 'height'
+  | 'iconPadding'
+  | 'alignItems'
+  | 'justifyContent'
+  | 'sizeIcon'
+  | 'iconSize'
+  | 'iconAfter'
+  | 'fontWeight'
+  | 'ellipse'
+  | 'overflow'
+  | 'textDecoration'
+  | 'elementTheme'
+> & {
+  hasIcon: boolean
+  tagName?: string
+}
+
+const acceptsIcon = child =>
+  child && child.type.acceptsProps && child.type.acceptsProps.icon === true
+
+// why? need to document bug that led to this hackty patch
+// im guessing popover is looking for selector too early, that should be patched in popover
+const setTooltip = (tooltip, setTooltipState) => {
+  if (tooltip) {
+    setTooltipState(prev => {
+      prev.id = prev.id || `Surface-${Math.round(Math.random() * 100000000)}`
+      prev.show = false
+      return prev
+    })
+
+    let tm = setTimeout(() => {
+      setTooltipState(prev => {
+        prev.show = true
+        return prev
+      })
+    })
+    return () => clearTimeout(tm)
+  }
+}
+
+export const Surface = themeable((direct: SurfaceProps) => {
+  const sizedProps = useSizedSurfaceProps(direct)
+  const props = SizedSurfacePropsContext.useProps(sizedProps) as SurfaceProps
+  const crumb = useBreadcrumb()
+  const [tooltipState, setTooltipState] = useState({ id: null, show: false })
+  const theme = useTheme()
+
+  const {
+    alignItems,
+    children,
+    className,
+    disabled,
+    elementProps,
+    elementTheme,
+    glintBottom,
+    glint,
+    glow,
+    glowProps,
+    height,
+    icon,
+    iconAfter,
+    iconPadding,
+    iconProps,
+    justifyContent,
+    noInnerElement,
+    size: ogSize,
+    sizeLineHeight,
+    tagName,
+    themeSubSelect: subTheme,
+    tooltip,
+    tooltipProps,
+    padding,
+    badgeProps,
+    badge,
+    after,
+    borderPosition = 'outside',
+    borderWidth,
+    coat,
+    before,
+    dangerouslySetInnerHTML,
+    space,
+    spaceAround,
+    betweenIconElement,
+    borderTopRadius,
+    borderBottomRadius,
+    ...viewProps
+  } = props
+
+  const size = getSize(selectDefined(ogSize, 1))
+  const segmentedStyle = getSegmentedStyle(props, crumb)
+  const stringIcon = typeof icon === 'string'
+
+  useEffect(() => setTooltip(tooltip, setTooltipState), [tooltip])
+
+  // goes to BOTH the outer element and inner element
+  let throughProps: ThroughProps = {
+    iconPadding: typeof iconPadding === 'number' ? iconPadding : size * 8,
+    alignItems,
+    justifyContent,
+    sizeIcon: props.sizeIcon,
+    iconSize: props.iconSize,
+    iconAfter: props.iconAfter,
+    hasIcon: !!props.icon,
+    fontWeight: props.fontWeight,
+    ellipse: props.ellipse,
+    overflow: props.overflow,
+    textDecoration: props.textDecoration,
+  }
+
+  let lineHeight = props.lineHeight
+  if (!props.lineHeight && sizeLineHeight && +height == +height) {
+    lineHeight = `${height}px`
+  }
+
+  if (noInnerElement) {
+    throughProps.tagName = tagName
+    if (elementProps) {
+      throughProps = {
+        elementTheme,
+        ...throughProps,
+        ...elementProps,
+      }
+    }
+  }
+
+  const childrenProps: HTMLProps<HTMLDivElement> = {}
+
+  const pxHeight = +height == +height
+  const borderLeftRadius = selectDefined(
+    props.borderLeftRadius ? +props.borderLeftRadius : undefined,
+    segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius,
+    pxHeight ? +height / 2 : undefined,
+    0,
+  )
+  const borderRightRadius = selectDefined(
+    props.borderRightRadius ? +props.borderRightRadius : undefined,
+    segmentedStyle ? segmentedStyle.borderRightRadius : +props.borderRadius,
+    pxHeight ? +height / 2 : undefined,
+    0,
+  )
+  const borderProps = getBorderRadius(
+    borderTopRadius,
+    borderBottomRadius,
+    borderLeftRadius,
+    borderRightRadius,
+    props.borderTopLeftRadius,
+    props.borderTopRightRadius,
+    props.borderBottomRightRadius,
+    props.borderBottomLeftRadius,
+  )
+
+  const disableGlint = theme.disableGlint ? theme.disableGlint.get() : false
+  const hasAnyGlint = !disableGlint && !props.chromeless && !!(glint || glintBottom)
+  let showElement = false
+
+  // because we can't define children at all on tags like input
+  // we conditionally set children here to avoid having children: undefined
+  if (dangerouslySetInnerHTML) {
+    childrenProps.dangerouslySetInnerHTML = dangerouslySetInnerHTML
+  } else if (noInnerElement) {
+    if (isDefined(before, after)) {
+      childrenProps.children = (
+        <>
+          {before}
+          {children || null}
+          {after}
+        </>
+      )
+    } else {
+      childrenProps.children = children || null
+    }
+  } else {
+    showElement = !!(hasChildren(children) || elementProps)
+    const spaceElement = <Space size={selectDefined(space, size * 6)} />
+
+    const innerElements = !!icon && (
+      <PassProps
+        passCondition={acceptsIcon}
+        coat={coat}
+        size={getIconSize(props)}
+        opacity={selectDefined(props.alpha, props.opacity)}
+        hoverStyle={props.hoverStyle}
+        activeStyle={props.activeStyle}
+        focusStyle={props.focusStyle}
+        disabledStyle={props.disabledStyle}
+        color="inherit"
+        {...perfectCenterStyle(throughProps)}
+        {...iconProps}
+      >
+        {!stringIcon && icon}
+        {stringIcon && <Icon name={`${icon}`} />}
+      </PassProps>
+    )
+
+    childrenProps.children = (
+      <>
+        {before}
+        {!!badge && (
+          <Badge
+            coat={coat}
+            zIndex={typeof props.zIndex === 'number' ? props.zIndex + 1 : 100}
+            position="absolute"
+            top="-18%"
+            left="-18%"
+            size={size}
+            {...badgeProps}
+          >
+            {badge}
+          </Badge>
+        )}
+        {!!tooltip && tooltipState.show && (
+          <Tooltip label={tooltip} {...tooltipProps}>
+            {`.${tooltipState.id}`}
+          </Tooltip>
+        )}
+        {hasAnyGlint && (
+          <GlintContain
+            className="ui-glint-contain"
+            {...borderProps}
+            {...borderPosition === 'inside' &&
+              borderWidth > 0 && {
+                height: roundHalf(+height - size / 2) - 1,
+                transform: {
+                  y: roundHalf(size),
+                },
+              }}
+          >
+            {glint && !props.chromeless && (
+              <Glint coat={coat} size={size} {...borderProps} themeSubSelect={subTheme} />
+            )}
+            {glintBottom && !props.chromeless && (
+              <Glint
+                coat={coat}
+                size={size}
+                bottom={0}
+                {...borderProps}
+                themeSubSelect={subTheme}
+              />
+            )}
+          </GlintContain>
+        )}
+        {!!icon && iconAfter ? (
+          <Box
+            style={
+              {
+                flexDirection: 'inherit',
+                order: 3,
+              } as any
+            }
+          >
+            {showElement && spaceElement}
+            {!!betweenIconElement && (
+              <>
+                {betweenIconElement}
+                {spaceElement}
+              </>
+            )}
+            {innerElements}
+          </Box>
+        ) : (
+          <>
+            {innerElements}
+            {!!betweenIconElement && (
+              <>
+                {spaceElement}
+                {betweenIconElement}
+              </>
+            )}
+            {showElement && icon && spaceElement}
+          </>
+        )}
+        {!!glow && !disabled && (
+          <HoverGlow
+            full
+            scale={1.1}
+            opacity={0.35}
+            borderRadius={+props.borderRadius}
+            {...glowProps}
+          />
+        )}
+        {showElement && (
+          <Element
+            {...throughProps}
+            height={pxHeight ? '100%' : undefined}
+            {...elementProps}
+            disabled={disabled}
+            elementTheme={elementTheme}
+          >
+            {children}
+          </Element>
+        )}
+        {!!after && (
+          <>
+            {spaceElement}
+            {after}
+          </>
+        )}
+      </>
+    )
+  }
+
+  // automatically invert transition
+  if (props.layoutTransition) {
+    const ogChildren = childrenProps.children
+    childrenProps.children = <InvertScale>{ogChildren}</InvertScale>
+  }
+
+  const iconOpacity = typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any)
+  const iconColor = (props.iconProps && props.iconProps.color) || props.color || theme.color
+  const iconColorHover =
+    (!!props.hoverStyle && typeof props.hoverStyle === 'object' && props.hoverStyle.color) ||
+    theme.colorHover
+  const iconContext = useMemo<Partial<IconProps>>(() => {
+    return {
+      coat,
+      opacity: iconOpacity,
+      color: iconColor,
+      justifyContent: 'center',
+      hoverStyle: {
+        ...selectObject(props.hoverStyle),
+        color: iconColorHover,
+      },
+    }
+  }, [coat, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
+
+  // @ts-ignore
+  const surfaceFrameProps: SurfaceFrameProps = {
+    className: `${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`,
+    themeSubSelect: subTheme,
+    lineHeight,
+    padding,
+    borderWidth,
+    borderPosition,
+    coat,
+    height,
+    applyPsuedoColors: true,
+    disabled,
+    ...(!showElement && elementProps),
+    ...throughProps,
+    ...viewProps,
+    ...segmentedStyle,
+    // ensure borderTopRadius, borderBottomRadius override
+    borderTopRadius,
+    borderBottomRadius,
+    ...childrenProps,
+    tagName: noInnerElement ? tagName : 'div',
+    opacity: crumb && crumb.total === 0 ? 0 : props.opacity,
+  }
+
+  return useBreadcrumbReset(
+    SizedSurfacePropsContext.useReset(
+    <IconPropsContext.Provider value={iconContext}>
+        <SurfaceFrame {...surfaceFrameProps} />
+    </IconPropsContext.Provider>
+  ))
+})
+
+const hasChildren = (children: React.ReactNode) => {
+  if (Array.isArray(children)) {
+    return children.some(x => isDefined(x) && x !== null && x !== false)
+  }
+  return !!children
+}
+
+const chromelessStyle = {
+  borderColor: 'transparent',
+  background: 'transparent',
+}
+
+const defaultTextTheme = {
+  fontSize: undefined,
+  lineHeight: undefined,
+}
+
+// fontFamily: inherit on both fixes elements
+type SurfaceFrameProps = SurfaceProps & ThroughProps
+const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
+  display: 'flex', // in case they change tagName
+  fontFamily: 'inherit',
+  position: 'relative',
+  whiteSpace: 'pre',
+
+  circular: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+  },
+
+  disabled: {
+    cursor: 'not-allowed',
+  },
+}).theme((props, theme) => {
+  const { fontSize, lineHeight } = scaledTextSizeTheme(props) || defaultTextTheme
+  const themeStyle = psuedoStyleTheme(props, theme)
+  const propStyles = propsToStyles(props, theme)
+  const marginStyle = getMargin(props)
+
+  let styles: CSSPropertySet = {}
+  let boxShadow = props.boxShadow || theme.boxShadow || null
+
+  const borderColor = themeStyle?.borderColor
+  const borderWidth = selectDefined(props.borderWidth, theme.borderWidth, 0)
+
+  // borderPosition controls putting borders inside vs outside
+  // useful for having nice looking buttons (inside) vs container-like views (outside)
+  if (borderColor && !props.chromeless) {
+    if (props.borderPosition === 'inside') {
+      // inside
+      boxShadow = [...(boxShadow || []), ['inset', 0, 0, 0, borderWidth, borderColor]]
+      styles.borderWidth = 0
+    } else {
+      // outside
+      styles.border = [borderWidth, props.borderStyle || 'solid', borderColor]
+    }
+  }
+
+  if (props.elevation) {
+    boxShadow = [...(boxShadow || []), ...getElevation(props, theme).boxShadow]
+  }
+
+  const res = {
+    fontWeight: props.fontWeight || theme.fontWeight,
+    overflow: props.overflow || theme.overflow,
+    // note: base theme styles go *above* propsToStyles...
+    ...themeStyle,
+    // TODO this could be automatically handled in propStyles if we want...
+    ...(!props.chromeless && props.active && { '&:hover': themeStyle['&:active'] }),
+    ...(props.chromeless && chromelessStyle),
+    ...(props.circular && {
+      width: props.height,
+    }),
+    fontSize,
+    lineHeight,
+    ...propStyles,
+    ...marginStyle,
+    ...styles,
+    boxShadow,
+    '&:hover': props.active
+      ? null
+      : {
+          ...(!props.chromeless && themeStyle?.['&:hover']),
+          ...propStyles['&:hover'],
+        },
+  }
+
+  return res
+})
+
+const halfPxDown = {
+  transform: {
+    y: 0.5,
+  },
+}
+const perfectCenterStyle = props => {
+  if (props.height && props.height % 2 === 1) {
+    return halfPxDown
+  }
+}
+
+const applyElementTheme = (props, theme) =>
+  props.elementTheme ? props.elementTheme(props, theme) : null
+
+const Element = gloss<SurfaceFrameProps & { disabled?: boolean }>({
   display: 'flex', // in case they change tagName
   flex: 1,
   overflow: 'hidden',
@@ -661,7 +656,6 @@ const Element = gloss<Type>({
   fontSize: 'inherit',
   lineHeight: 'inherit',
   color: 'inherit',
-
   textAlign: 'inherit',
   fontFamily: 'inherit',
   padding: 0,
@@ -676,38 +670,28 @@ const Element = gloss<Type>({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-}).theme(_ => _)
+}).theme(propsToStyles, perfectCenterStyle, applyElementTheme)
 
-const extrenalTheme = _ => _
+const getIconSize = (props: SurfaceProps) => {
+  if (isDefined(props.iconSize)) return props.iconSize
+  const iconSize = props.height ? +props.height * 0.1 + 8 : 12
+  const size = getSize(props.size) * iconSize * (props.sizeIcon === true ? 1 : selectDefined(props.sizeIcon, 1))
+  return Math.floor(size)
+}
 
-const NotSimple = gloss(Element)
-  .withConfig({})
-  .theme(_ => _, extrenalTheme)
-const Simple2 = gloss({})
-const Simple3 = gloss(Element, {})
+const GlintContain = gloss(Base, {
+  height: '100%',
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  pointerEvents: 'none',
+  zIndex: 10,
+  overflow: 'hidden',
+})
 
-export const Surface = Element
-
-// const getIconSize = (props: SurfaceProps) => {
-//   if (isDefined(props.iconSize)) return props.iconSize
-//   const iconSize = props.height ? +props.height * 0.1 + 8 : 12
-//   const size = getSize(props.size) * iconSize * (props.sizeIcon === true ? 1 : selectDefined(props.sizeIcon, 1))
-//   return Math.floor(size)
-// }
-
-// const GlintContain = gloss(Base, {
-//   height: '100%',
-//   position: 'absolute',
-//   top: 0,
-//   left: 0,
-//   right: 0,
-//   pointerEvents: 'none',
-//   zIndex: 10,
-//   overflow: 'hidden',
-// })
-
-// const roundHalf = (x: number) => {
-//   const oneDec = Math.round((x % 1) * 10) / 10
-//   const roundedToPointFive = oneDec > 6 ? 0.5 : 0
-//   return Math.floor(x) + roundedToPointFive
-// }
+const roundHalf = (x: number) => {
+  const oneDec = Math.round((x % 1) * 10) / 10
+  const roundedToPointFive = oneDec > 6 ? 0.5 : 0
+  return Math.floor(x) + roundedToPointFive
+}

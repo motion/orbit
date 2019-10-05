@@ -1,5 +1,3 @@
-import { GlossView } from 'gloss'
-
 import { CacheObject } from '../types'
 import { getClassNameFromCache } from './getClassNameFromCache'
 
@@ -18,7 +16,7 @@ export interface StylesByClassName {
 export function getStylesByClassName(
   staticAttributes: Record<string, any>,
   cacheObject: CacheObject,
-  view: GlossView<any>,
+  cssAttributes: Object,
 ): StylesByClassName {
   if (typeof staticAttributes !== 'undefined' && staticAttributes == null) {
     throw new Error('getStylesByClassName expects an object as its second parameter')
@@ -29,9 +27,8 @@ export function getStylesByClassName(
 
   let hasItems = false
   const styleProps = {}
-  const attrs = view.staticStyleConfig.cssAttributes
   for (const item in staticAttributes) {
-    if (attrs[item]) {
+    if (cssAttributes[item]) {
       hasItems = true
       styleProps[item] = staticAttributes[item]
     }

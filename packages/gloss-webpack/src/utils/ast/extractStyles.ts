@@ -286,15 +286,13 @@ export function extractStyles(
         // Remember the source component
         const originalNodeName = node.name.name
         const view = views[originalNodeName]
-        invariant(!!view, `Must have a view passed to config ${originalNodeName}`)
-        const { staticStyleConfig } = view
-        invariant(
-          !!staticStyleConfig,
-          `Must have a view with staticStyleConfig for ${originalNodeName}`,
-        )
+        let staticStyleConfig: GlossView<any>['staticStyleConfig'] | null = null
+        if (view) {
+          staticStyleConfig = view.staticStyleConfig
+        }
 
         // Get valid css props
-        const cssAttributes = staticStyleConfig.cssAttributes || validCSSAttr
+        const cssAttributes = staticStyleConfig?.cssAttributes || validCSSAttr
 
         // evaluateVars = false
         const attemptEval = evaluateAstNode
@@ -397,18 +395,19 @@ export function extractStyles(
           let name = attribute.name.name
 
           // for fully deoptimizing certain keys
-          if (staticStyleConfig.deoptProps && staticStyleConfig.deoptProps.includes(name)) {
-            shouldDeopt = true
-            return true
-          }
-          if (shouldDeopt) {
-            return true
-          }
-
-          // for avoiding processing certain keys
-          if (staticStyleConfig.avoidProps && staticStyleConfig.avoidProps.includes(name)) {
-            inlinePropCount++
-            return true
+          if (staticStyleConfig) {
+            if (staticStyleConfig.deoptProps && staticStyleConfig.deoptProps.includes(name)) {
+              shouldDeopt = true
+              return true
+            }
+            if (shouldDeopt) {
+              return true
+            }
+            // for avoiding processing certain keys
+            if (staticStyleConfig.avoidProps && staticStyleConfig.avoidProps.includes(name)) {
+              inlinePropCount++
+              return true
+            }
           }
 
           let value: any =
@@ -510,7 +509,7 @@ export function extractStyles(
           node.attributes.splice(classNamePropIndex, 1)
         }
 
-        const stylesByClassName = getStylesByClassName(staticAttributes, cacheObject, view)
+        const stylesByClassName = getStylesByClassName(staticAttributes, cacheObject, cssAttributes)
 
         // if all style props have been extracted, jsxstyle component can be
         // converted to a div or the specified component
@@ -520,7 +519,15 @@ export function extractStyles(
           //  take View and run it, get the classnames, and return the div here
           //  because View may add more styles on top
           // add static styles base
-          if (view.internal) {
+          const localView = localViews[node.name.name]
+          if (localView) {
+            for (const className of localView.className.trim().split(' ')) {
+              // empty object because we already parsed it out and added to map
+              stylesByClassName[className] = {}
+            }
+            node.name.name = 'div'
+          }
+          if (view?.internal) {
             // local views we already parsed the css out
             const localView = localViews[node.name.name]
             if (localView) {
@@ -538,7 +545,6 @@ export function extractStyles(
               const info = getStylesClassName('.', styles)
               stylesByClassName[info.className] = styles
             }
-
             node.name.name = (view.defaultProps && view.defaultProps.tagName) || 'div'
           }
         } else {

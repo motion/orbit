@@ -580,6 +580,14 @@ function addDynamicStyles(
 
 const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
 
+export function getStaticStyles(styleObject: Object) {
+  const styles = {
+    '.': {},
+  }
+  mergeStyles('.', styles, styleObject)
+  return styles
+}
+
 //
 // this... THIS...
 //  ... this is a tricky function
@@ -669,7 +677,7 @@ function mergeStyles(
 
 // happens once at initial gloss() call, so not as perf intense
 // get all parent styles and merge them into a big object
-function getAllStyles(config: GlossInternalConfig | null, rawStyles: CSSPropertySet | null) {
+export function getAllStyles(config: GlossInternalConfig | null, rawStyles: CSSPropertySet | null) {
   const styles = {
     '.': {},
   }

@@ -1,7 +1,7 @@
 import generate from '@babel/generator'
 import traverse from '@babel/traverse'
 import t = require('@babel/types')
-import { getStylesClassName, GlossView, validCSSAttr } from 'gloss'
+import { getStaticStyles, getStylesClassName, GlossView, validCSSAttr } from 'gloss'
 import invariant = require('invariant')
 import path = require('path')
 import util = require('util')
@@ -178,17 +178,34 @@ export function extractStyles(
                 if (extendsViewIdentifier) {
                   // extends on of our optimizable views
                   if (views[extendsViewIdentifier]) {
-                    console.log('extends an optimizing view', name)
+                    console.log('extends an optimizing view', name, extendsViewIdentifier)
                     views[name] = options.views[extendsViewIdentifier]
                     validComponents[name] = true
                   }
                 }
 
-                const styleObject = path.node.arguments.find(x => t.isObjectExpression(x))
-                if (styleObject) {
-                  // we have some styles to optimize away
-                  console.log('lets od this', name, styleObject)
-                }
+                // parse style objects out and return them as array of [{ ['namespace']: 'className' }]
+                path.node.arguments = path.node.arguments.map(arg => {
+                  if (t.isObjectExpression(arg)) {
+                    const styleObject = evaluateAstNode(arg)
+                    const styles = getStaticStyles(styleObject)
+                    const out = []
+                    for (const key in styles) {
+                      const info = getStylesClassName(key, styles[key])
+                      cssMap.set(info.className, { css: info.css, commentTexts: [] })
+                      out.push([key, info.className])
+                    }
+                    console.log('got', styleObject, out)
+                    return t.arrayExpression(
+                      out.map(([key, className]) => {
+                        return t.objectExpression([
+                          t.objectProperty(t.stringLiteral(key), t.stringLiteral(className)),
+                        ])
+                      }),
+                    )
+                  }
+                  return arg
+                })
               }
             }
           }

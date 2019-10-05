@@ -66,6 +66,12 @@ export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any
     return null
   }
 
+  if (t.isArrayExpression(exprNode)) {
+    return exprNode.elements.map(x => {
+      return evaluateAstNode(x, evalFn)
+    })
+  }
+
   if (t.isNumericLiteral(exprNode) || t.isStringLiteral(exprNode)) {
     // In the interest of representing the "evaluated" prop
     // as the user intended, we support negative null. Why not.

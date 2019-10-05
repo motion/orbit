@@ -152,6 +152,8 @@ export type GlossStaticStyleDescription = {
   }
 }
 
+const emptyObject = {}
+
 export function gloss<Props = any, ThemeProps = Props>(
   a?: CSSPropertySet | GlossView<Props, ThemeProps> | ((props: Props) => any) | string,
   b?: CSSPropertySet,
@@ -171,7 +173,7 @@ export function gloss<Props = any, ThemeProps = Props>(
   const targetConfig: GlossInternalConfig | null = hasGlossyParent
     ? target.internal.getConfig()
     : null
-  let ignoreAttrs: any
+  let ignoreAttrs = emptyObject
 
   // shorthand: gloss({ ... })
   if (
@@ -191,6 +193,7 @@ export function gloss<Props = any, ThemeProps = Props>(
   const targetElement = !!targetConfig ? targetConfig.targetElement : target
   const staticStyles = getAllStyles(targetConfig, rawStyles || null)
   const conditionalStyles = staticStyles.conditionalStyles
+  const conditionalClassNames = (compiledInfo && compiledInfo.conditionalClassNames) || emptyObject
 
   let themeFn: ThemeFn | null = null
   let staticClasses: string[] | null = null
@@ -297,14 +300,12 @@ export function gloss<Props = any, ThemeProps = Props>(
     let className = ''
 
     for (const key in props) {
-      if (compiledInfo && compiledInfo.conditionalClassNames) {
-        if (compiledInfo.conditionalClassNames[key]) {
-          className += ` ${compiledInfo.conditionalClassNames} `
-          continue
-        }
+      if (conditionalClassNames[key]) {
+        className += ` ${conditionalClassNames[key]} `
+        continue
       }
       if (isDOMElement) {
-        if (ignoreAttrs && ignoreAttrs[key]) continue
+        if (ignoreAttrs[key]) continue
         if (conditionalStyles && conditionalStyles[key]) continue
         // TODO: need to figure out this use case: when a valid prop attr, but invalid val
         if (key === 'size' && typeof props[key] !== 'string') continue

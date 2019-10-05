@@ -1,6 +1,6 @@
 //!
 import { themes } from '@o/kit'
-import { ListItemSimple, ProvideUI, Text, View } from '@o/ui/test'
+import { BorderTop, ListItemSimple, ProvideUI, Text, View } from '@o/ui/test'
 import { gloss } from 'gloss'
 import * as React from 'react'
 import { render } from 'react-dom'
@@ -15,6 +15,7 @@ function Main() {
         <Text selectable>hello world</Text>
         <ListItemSimple title="First" icon="ok" />
         <ListItemSimple isSelected title="ok" icon="ok" />
+        <BorderTop />
         {/* <Stack direction="horizontal" space="lg">
         <Surface>hello world</Surface>
           <View

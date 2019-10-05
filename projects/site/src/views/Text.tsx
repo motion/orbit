@@ -1,4 +1,3 @@
-//!
 import { SimpleText } from '@o/ui'
 import { gloss } from 'gloss'
 

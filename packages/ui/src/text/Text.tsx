@@ -1,4 +1,3 @@
-//!
 import { CSSPropertySetStrict } from '@o/css'
 import { HighlightOptions, highlightText, on } from '@o/utils'
 import { alphaColorTheme, CSSPropertySet, gloss, propsToStyles } from 'gloss'

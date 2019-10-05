@@ -201,7 +201,7 @@ export function Section(direct: SectionProps) {
       titleEl = (
         <Base position="relative">
           {titleEl}
-          {!!(bordered || titleBorder) && <BorderBottom opacity={0.5} />}
+          {!!(bordered || titleBorder) && <BorderBottom />}
         </Base>
       )
     }

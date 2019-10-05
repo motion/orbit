@@ -1,25 +1,24 @@
-import { Absolute, AbsoluteProps, CSSPropertySet, gloss } from 'gloss'
+//!
+import { Absolute, AbsoluteProps, CSSPropertySet, gloss, ThemeFn } from 'gloss'
 
-const Border = gloss<
-  AbsoluteProps & {
-    borderColor?: CSSPropertySet['borderColor']
-    borderColorHover?: CSSPropertySet['borderColor']
-    hoverable?: boolean
-  }
->(Absolute).theme((p, theme) => {
-  const background = p.borderColor ? p.borderColor : theme.borderColor
+type BorderProps = AbsoluteProps & {
+  borderColor?: CSSPropertySet['borderColor']
+  borderColorHover?: CSSPropertySet['borderColor']
+  hoverable?: boolean
+}
+
+const borderTheme: ThemeFn = (_, theme) => {
   return {
-    ...p,
-    background,
-    ...(p.hoverable && {
+    background: theme.borderColor,
+    hoverable: {
       '&:hover': {
-        background: p.borderColorHover || theme.backgroundStronger,
+        background: theme.backgroundStronger,
       },
-    }),
+    },
   }
-})
+}
 
-export const BorderTop = gloss(Border, {
+export const BorderTop = gloss<BorderProps>(Absolute, {
   height: 1,
   zIndex: 100000,
   top: 0,
@@ -28,13 +27,15 @@ export const BorderTop = gloss(Border, {
   transform: {
     y: -0.5,
   },
-}).withConfig({
-  defaultProps: {
-    className: 'ui-border-top',
-  },
 })
+  .theme(borderTheme)
+  .withConfig({
+    defaultProps: {
+      className: 'ui-border-top',
+    },
+  })
 
-export const BorderBottom = gloss(Border, {
+export const BorderBottom = gloss<BorderProps>(Absolute, {
   height: 1,
   zIndex: 100000,
   bottom: 0,
@@ -43,13 +44,15 @@ export const BorderBottom = gloss(Border, {
   transform: {
     y: 0.5,
   },
-}).withConfig({
-  defaultProps: {
-    className: 'ui-border-bottom',
-  },
 })
+  .theme(borderTheme)
+  .withConfig({
+    defaultProps: {
+      className: 'ui-border-bottom',
+    },
+  })
 
-export const BorderLeft = gloss(Border, {
+export const BorderLeft = gloss<BorderProps>(Absolute, {
   width: 1,
   zIndex: 100000,
   top: 0,
@@ -58,13 +61,15 @@ export const BorderLeft = gloss(Border, {
   transform: {
     x: -0.5,
   },
-}).withConfig({
-  defaultProps: {
-    className: 'ui-border-left',
-  },
 })
+  .theme(borderTheme)
+  .withConfig({
+    defaultProps: {
+      className: 'ui-border-left',
+    },
+  })
 
-export const BorderRight = gloss(Border, {
+export const BorderRight = gloss<BorderProps>(Absolute, {
   width: 1,
   zIndex: 100000,
   top: 0,
@@ -73,8 +78,10 @@ export const BorderRight = gloss(Border, {
   transform: {
     x: 0.5,
   },
-}).withConfig({
-  defaultProps: {
-    className: 'ui-border-right',
-  },
 })
+  .theme(borderTheme)
+  .withConfig({
+    defaultProps: {
+      className: 'ui-border-right',
+    },
+  })

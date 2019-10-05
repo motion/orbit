@@ -149,96 +149,105 @@ export function extractStyles(
   const localViews: { [key: string]: GlossStaticStyleDescription } = {}
   if (importsGloss) {
     traverse(ast, {
-      // only if its declared as a variable (const MyView = gloss())
-      CallExpression: {
-        enter(path) {
-          if (t.isCallExpression(path.node) && t.isIdentifier(path.node.callee)) {
-            // imported from gloss
-            if (path.node.callee.name !== 'gloss') {
-              return
+      VariableDeclaration(path) {
+        const dec = path.node.declarations[0]
+        if (!dec || !t.isVariableDeclarator(dec) || !t.isIdentifier(dec.id)) return
+        const name = dec.id.name
+
+        // traverse and find gloss call
+        let glossCall: t.CallExpression
+        let chain = dec.init
+        while (
+          t.isCallExpression(chain) &&
+          t.isMemberExpression(chain.callee) &&
+          t.isCallExpression(chain.callee.object)
+        ) {
+          chain = chain.callee.object
+        }
+        // verify we found it
+        if (
+          t.isCallExpression(chain) &&
+          t.isIdentifier(chain.callee) &&
+          chain.callee.name === 'gloss'
+        ) {
+          // simple gloss without .theme etc
+          glossCall = chain
+        }
+
+        if (!glossCall || !glossCall.arguments.length) {
+          return
+        }
+
+        validComponents[name] = true
+
+        const extendsViewIdentifier = t.isIdentifier(glossCall[0]) && glossCall[0].name
+        let view: GlossView<any> | null = null
+
+        if (extendsViewIdentifier) {
+          // extends one of our optimizable views
+          if (views[extendsViewIdentifier]) {
+            view = views[name]
+            views[name] = options.views[extendsViewIdentifier]
+          }
+        }
+
+        // parse style objects out and return them as array of [{ ['namespace']: 'className' }]
+        let staticStyleConfig: GlossStaticStyleDescription | null = null
+
+        glossCall.arguments = glossCall.arguments.map((arg, index) => {
+          if ((index === 0 || index === 1) && t.isObjectExpression(arg)) {
+            let styleObject = null
+            try {
+              styleObject = evaluateAstNode(arg)
+            } catch (err) {
+              console.log(
+                'note, couldnt parse this style object statically',
+                name,
+                'extends',
+                extendsViewIdentifier,
+              )
+              return arg
             }
-            // assigned to a variable
-            if (t.isVariableDeclarator(path.parent) && t.isIdentifier(path.parent.id)) {
-              const name = path.parent.id.name
-
-              // mark as valid component to optimize later in JSX usage
-              // TODO we need to distinguish between local and exported, local
-              //   should only optimize in this file, exported should go across borders
-
-              // now optimize and compile away
-              if (path.node.arguments.length) {
-                const extendsViewIdentifier =
-                  t.isIdentifier(path.node.arguments[0]) && path.node.arguments[0].name
-
-                let view: GlossView<any> | null = null
-
-                if (extendsViewIdentifier) {
-                  // extends one of our optimizable views
-                  if (views[extendsViewIdentifier]) {
-                    view = views[name]
-                    views[name] = options.views[extendsViewIdentifier]
-                    validComponents[name] = true
-                  }
-                }
-
-                // parse style objects out and return them as array of [{ ['namespace']: 'className' }]
-                let staticStyleConfig: GlossStaticStyleDescription | null = null
-
-                path.node.arguments = path.node.arguments.map((arg, index) => {
-                  if ((index === 0 || index === 1) && t.isObjectExpression(arg)) {
-                    let styleObject = null
-                    try {
-                      styleObject = evaluateAstNode(arg)
-                    } catch (err) {
-                      console.log(
-                        'note, couldnt parse this style object statically',
-                        name,
-                        'extends',
-                        extendsViewIdentifier,
-                      )
-                      return arg
-                    }
-                    // uses the base styles if necessary, merges just like gloss does
-                    const { styles, conditionalStyles } = getAllStyles(
-                      view ? view.internal.getConfig() : undefined,
-                      styleObject,
-                    )
-                    // then put them all into an array so gloss later can use that
-                    const out: GlossStaticStyleDescription = {
-                      className: '',
-                    }
-                    for (const key in styles) {
-                      const info = getStylesClassName(key, styles[key])
-                      cssMap.set(info.className, { css: info.css, commentTexts: [] })
-                      out.className += ` ${info.className}`
-                    }
-                    if (conditionalStyles) {
-                      out.conditionalClassNames = {}
-                      for (const prop in conditionalStyles) {
-                        out.conditionalClassNames[prop] = ''
-                        for (const key in conditionalStyles[prop]) {
-                          const val = conditionalStyles[prop][key]
-                          const info = getStylesClassName(prop, val)
-                          cssMap.set(info.className, { css: info.css, commentTexts: [] })
-                          out.conditionalClassNames[prop] += ` ${info.className}`
-                        }
-                      }
-                    }
-                    staticStyleConfig = out
-                    localViews[name] = out
-                    return t.nullLiteral()
-                  }
-                  return arg
-                })
-
-                // add it to runtime: gloss(View, null, { ...staticStyleConfig })
-                if (staticStyleConfig) {
-                  path.node.arguments.push(literalToAst(staticStyleConfig))
+            // uses the base styles if necessary, merges just like gloss does
+            const { styles, conditionalStyles } = getAllStyles(
+              view ? view.internal.getConfig() : undefined,
+              styleObject,
+            )
+            // then put them all into an array so gloss later can use that
+            const out: GlossStaticStyleDescription = {
+              className: '',
+            }
+            for (const key in styles) {
+              const info = getStylesClassName(key, styles[key])
+              cssMap.set(info.className, { css: info.css, commentTexts: [] })
+              out.className += ` ${info.className}`
+            }
+            if (conditionalStyles) {
+              out.conditionalClassNames = {}
+              for (const prop in conditionalStyles) {
+                out.conditionalClassNames[prop] = ''
+                for (const key in conditionalStyles[prop]) {
+                  const val = conditionalStyles[prop][key]
+                  const info = getStylesClassName(prop, val)
+                  cssMap.set(info.className, { css: info.css, commentTexts: [] })
+                  out.conditionalClassNames[prop] += ` ${info.className}`
                 }
               }
             }
+            staticStyleConfig = out
+            localViews[name] = out
+            return t.nullLiteral()
           }
-        },
+          return arg
+        })
+
+        // add it to runtime: gloss(View, null, { ...staticStyleConfig })
+        if (staticStyleConfig) {
+          if (glossCall.arguments.length === 1) {
+            glossCall.arguments.push(t.nullLiteral())
+          }
+          glossCall.arguments.push(literalToAst(staticStyleConfig))
+        }
       },
     })
   }

@@ -1,65 +1,71 @@
-//!
-import { Stack, Table, View } from '@o/ui/test'
-import { gloss } from 'gloss'
-import * as React from 'react'
-import { render } from 'react-dom'
+import { Surface } from '@o/ui/test'
 
-function Main() {
-  const ref = React.useRef(null)
-  const sidebarWidth = 100
-  const bg = '#000'
-  return (
-    <>
-      <div>hi</div>
-      <Table />
-      <View sm-marginBottom={20}>
-        <Stack direction="horizontal" space="lg">
-          <View
-            nodeRef={ref}
-            pointerEvents="auto"
-            position="fixed"
-            top={0}
-            right={0}
-            height="100vh"
-            background={bg}
-            opacity={bg ? 1 : 0}
-            style={{
-              width: sidebarWidth,
-              transform: `translateX(${sidebarWidth}px)`,
-            }}
-            className="test"
-            color={theme => theme.red}
-            onClick={() => {}}
-          >
-            some children
-          </View>
-          <MySimpleView>hihi</MySimpleView>
-          <MySubView>hello world</MySubView>
-        </Stack>
-      </View>
-    </>
-  )
-}
+console.log(Surface)
+// //!
+// import { ListItemSimple, Stack, Surface, View } from '@o/ui/test'
+// import { gloss } from 'gloss'
+// import * as React from 'react'
+// import { render } from 'react-dom'
 
-const MySimpleView = gloss({
-  color: 'yellow',
-})
+// function Main() {
+//   const ref = React.useRef(null)
+//   const sidebarWidth = 100
+//   const bg = '#000'
+//   return (
+//     <>
+//       <div>hi</div>
+//       <View sm-marginBottom={20}>
+//         <Surface>hello world</Surface>
+//         <ListItemSimple isSelected title="ok" icon="ok">
+//           hi
+//         </ListItemSimple>
+//         <Stack direction="horizontal" space="lg">
+//           <View
+//             nodeRef={ref}
+//             pointerEvents="auto"
+//             position="fixed"
+//             top={0}
+//             right={0}
+//             height="100vh"
+//             background={bg}
+//             opacity={bg ? 1 : 0}
+//             style={{
+//               width: sidebarWidth,
+//               transform: `translateX(${sidebarWidth}px)`,
+//             }}
+//             className="test"
+//             color={theme => theme.red}
+//             onClick={() => {}}
+//           >
+//             some children
+//           </View>
+//           <MySimpleView>hihi</MySimpleView>
+//           <MySubView>hello world</MySubView>
+//         </Stack>
+//       </View>
+//     </>
+//   )
+// }
 
-const MySubView = gloss(View, {
-  background: 'red',
-  color: [255, 255, 255],
+// const MySimpleView = gloss({
+//   color: 'yellow',
+// })
 
-  boolProp: {
-    color: 'blue',
+// const MySubView = gloss(View, {
+//   background: 'red',
+//   color: [255, 255, 255],
 
-    '&:hover': {
-      color: 'green',
-    },
-  },
+//   boolProp: {
+//     color: 'blue',
 
-  '@media screen and (max-width: 100px)': {
-    background: 'red',
-  },
-})
+//     '&:hover': {
+//       color: 'green',
+//     },
+//   },
 
-render(<Main />, document.querySelector('#app'))
+//   '@media screen and (max-width: 100px)': {
+//     background: 'red',
+//   },
+// })
+
+// render(<Main />, document.querySelector('#app'))

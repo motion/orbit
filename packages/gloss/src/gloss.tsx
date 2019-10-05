@@ -155,7 +155,7 @@ export type GlossStaticStyleDescription = {
 export function gloss<Props = any, ThemeProps = Props>(
   a?: CSSPropertySet | GlossView<Props, ThemeProps> | ((props: Props) => any) | string,
   b?: CSSPropertySet,
-  _compiledStyles?: GlossStaticStyleDescription,
+  compiledInfo?: GlossStaticStyleDescription,
 ): GlossView<GlossProps<Props>, ThemeProps> {
   if (process.env.NODE_ENV === 'development') {
     if (a === undefined && !!b) {
@@ -294,8 +294,16 @@ export function gloss<Props = any, ThemeProps = Props>(
 
     const isDOMElement = typeof element === 'string' || (config ? config.isDOMElement : false)
 
-    if (isDOMElement) {
-      for (const key in props) {
+    let className = ''
+
+    for (const key in props) {
+      if (compiledInfo && compiledInfo.conditionalClassNames) {
+        if (compiledInfo.conditionalClassNames[key]) {
+          className += ` ${compiledInfo.conditionalClassNames} `
+          continue
+        }
+      }
+      if (isDOMElement) {
         if (ignoreAttrs && ignoreAttrs[key]) continue
         if (conditionalStyles && conditionalStyles[key]) continue
         // TODO: need to figure out this use case: when a valid prop attr, but invalid val
@@ -307,9 +315,7 @@ export function gloss<Props = any, ThemeProps = Props>(
         if (ValidProps[key] || validPropLoose(key)) {
           finalProps[key] = props[key]
         }
-      }
-    } else {
-      for (const key in props) {
+      } else {
         if (conditionalStyles && conditionalStyles[key]) continue
         finalProps[key] = props[key]
       }
@@ -317,10 +323,14 @@ export function gloss<Props = any, ThemeProps = Props>(
 
     // we control className, dynClassNames includes any user-passed
     if (staticClasses || dynClassNames.size) {
-      finalProps.className = staticClasses
+      className += staticClasses
         ? [...staticClasses, ...dynClassNames].join(' ')
         : [...dynClassNames].join(' ')
     }
+    if (compiledInfo && compiledInfo.className) {
+      className += ` ${compiledInfo.className}`
+    }
+    finalProps.className = className
 
     if (process.env.NODE_ENV === 'development') {
       finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName

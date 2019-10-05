@@ -837,10 +837,10 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSp
 }
 
 // has to return a .s-id and .id selector for use in parents passing down styles
-function getSelector(className: string, namespace: string) {
+function getSelector(className: string, namespace: string, parentSelector = 'html body') {
   if (namespace[0] === '@') {
     // double specificity hack
-    return `.${className}.${className}, body .${SPECIFIC_PREFIX}${className}.${SPECIFIC_PREFIX}${className}`
+    return `.${className}.${className}, ${parentSelector} .${SPECIFIC_PREFIX}${className}.${SPECIFIC_PREFIX}${className}`
   }
   if (namespace.indexOf('&') !== -1) {
     // namespace === '&:hover, &:focus, & > div'
@@ -848,12 +848,12 @@ function getSelector(className: string, namespace: string) {
       .split(',')
       .flatMap(part => {
         const selector = part.replace('&', className).trim()
-        return [`body .${SPECIFIC_PREFIX}${selector}`, `.${selector}`]
+        return [`${parentSelector} .${SPECIFIC_PREFIX}${selector}`, `.${selector}`]
       })
       .join(',')
     return namespacedSelectors
   }
-  return `body .${SPECIFIC_PREFIX}${className}, .${className}`
+  return `${parentSelector} .${SPECIFIC_PREFIX}${className}, .${className}`
 }
 
 if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
@@ -872,7 +872,9 @@ if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
 export function getStylesClassName(namespace: string, styles: CSSPropertySet) {
   const style = cssString(styles)
   let className = styleToClassName(style + (isSubStyle(namespace) ? namespace : ''))
-  const selector = getSelector(className, namespace)
+  // selector less specific than the default one in getSelector,
+  // since we want dynamic styles at runtime to be more specific
+  const selector = getSelector(className, namespace, 'body')
   className = `${SPECIFIC_PREFIX}${className}`
   let css: string
   if (namespace[0] === '@') {

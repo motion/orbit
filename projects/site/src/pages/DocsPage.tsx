@@ -45,6 +45,7 @@ const DocsList = memo((props: { shouldRenderAll?: boolean }) => {
 
   useOnMount(async () => {
     if (props.shouldRenderAll) {
+      await sleep(1400) // wait for intro animation
       await whenIdle()
       await sleep(50)
       await whenIdle()

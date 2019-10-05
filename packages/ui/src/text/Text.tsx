@@ -9,6 +9,7 @@ import { ScaleContext } from '../Scale'
 import { Size } from '../Space'
 import { getMediaQueryTextSizeTheme } from './scaledTextSizeTheme'
 
+//!
 type ChildrenHlFn = (Highlights) => JSX.Element | null
 
 export type TextProps = CSSPropertySetStrict &

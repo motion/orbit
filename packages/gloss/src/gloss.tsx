@@ -300,9 +300,11 @@ export function gloss<Props = any, ThemeProps = Props>(
     let className = ''
 
     for (const key in props) {
-      if (conditionalClassNames[key]) {
-        className += ` ${conditionalClassNames[key]} `
-        continue
+      if (props[key] === true) {
+        if (conditionalClassNames[key]) {
+          className += ` ${conditionalClassNames[key]} `
+          continue
+        }
       }
       if (isDOMElement) {
         if (ignoreAttrs[key]) continue

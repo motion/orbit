@@ -1,3 +1,4 @@
+import { toColor } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 
 import { Config } from '../configureGloss'
@@ -38,7 +39,7 @@ function createAlphaColorTheme(shouldSetDefault = false) {
     const next: CSSPropertySet | null = {}
     if (color) {
       if (color !== 'inherit' && typeof alpha === 'number') {
-        next.color = Config.toColor(color).setAlpha(alpha)
+        next.color = toColor(color).setAlpha(alpha)
       } else {
         if (shouldSetDefault) {
           next.color = color

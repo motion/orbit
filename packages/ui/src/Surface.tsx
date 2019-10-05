@@ -300,17 +300,6 @@ export const Surface = themeable((direct: SurfaceProps) => {
     lineHeight = `${height}px`
   }
 
-  if (noInnerElement) {
-    throughProps.tagName = tagName
-    if (elementProps) {
-      throughProps = {
-        elementTheme,
-        ...throughProps,
-        ...elementProps,
-      }
-    }
-  }
-
   const childrenProps: HTMLProps<HTMLDivElement> = {}
 
   const pxHeight = +height == +height
@@ -473,6 +462,7 @@ export const Surface = themeable((direct: SurfaceProps) => {
             {...elementProps}
             disabled={disabled}
             elementTheme={elementTheme}
+            tagName={tagName}
           >
             {children}
           </Element>
@@ -531,7 +521,7 @@ export const Surface = themeable((direct: SurfaceProps) => {
     borderTopRadius,
     borderBottomRadius,
     ...childrenProps,
-    tagName: noInnerElement ? tagName : 'div',
+    tagName: !showElement ? tagName : 'div',
     opacity: crumb && crumb.total === 0 ? 0 : props.opacity,
   }
 

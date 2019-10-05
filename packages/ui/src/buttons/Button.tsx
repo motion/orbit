@@ -31,6 +31,7 @@ const ButtonInner = (props: ButtonProps) => {
   const theme = useTheme()
   return (
     <Surface
+      data-is="Button"
       borderPosition="inside"
       userSelect="none"
       tagName="button"

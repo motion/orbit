@@ -180,7 +180,7 @@ export function extractStyles(
 
         validComponents[name] = true
 
-        const extendsViewIdentifier = t.isIdentifier(glossCall[0]) && glossCall[0].name
+        const extendsViewIdentifier = t.isIdentifier(glossCall.arguments[0]) && glossCall.arguments[0].name
         let view: GlossView<any> | null = null
 
         if (extendsViewIdentifier) {
@@ -200,12 +200,7 @@ export function extractStyles(
             try {
               styleObject = evaluateAstNode(arg)
             } catch (err) {
-              console.log(
-                'note, couldnt parse this style object statically',
-                name,
-                'extends',
-                extendsViewIdentifier,
-              )
+              console.log('Cant parse style object', name, '>', extendsViewIdentifier)
               return arg
             }
             // uses the base styles if necessary, merges just like gloss does
@@ -273,7 +268,6 @@ export function extractStyles(
     JSXElement: {
       enter(traversePath: TraversePath<t.JSXElement>) {
         const node = traversePath.node.openingElement
-
         if (
           // skip non-identifier opening elements (member expressions, etc.)
           !t.isJSXIdentifier(node.name) ||

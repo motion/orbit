@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { idFn, isDefined, selectDefined } from '@o/utils'
+import { idFn, selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
 import { Box, gloss, Theme, ThemeByName } from 'gloss'
 import React, { isValidElement, memo, useCallback } from 'react'
@@ -130,7 +130,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
     </>
   )
 
-  const hasAfterTitle = isDefined(props.afterTitle, afterHeaderElement)
+  const hasAfterTitle = !!(props.afterTitle || afterHeaderElement)
   const coat = isSelected ? (isFocused ? 'selected' : 'selectedInactive') : undefined
 
   // its a lot easier at times to just get the props from the click event
@@ -273,7 +273,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
           </View>
           {hasAfterTitle && (
             <>
-              <Space size={space} />
+              <Space data-is="AfterTitleSpace" size={space} />
               <Stack space={space}>
                 {props.afterTitle}
                 {afterHeaderElement}

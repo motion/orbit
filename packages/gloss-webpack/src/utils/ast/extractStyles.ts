@@ -146,7 +146,7 @@ export function extractStyles(
    * Step 1: Compiled the gloss() style views and remember if they are able to be compiled
    * in step 2
    */
-  // traverse and find base level gloss views
+  const localViews: { [key: string]: GlossStaticStyleDescription } = {}
   if (importsGloss) {
     traverse(ast, {
       // only if its declared as a variable (const MyView = gloss())
@@ -173,11 +173,10 @@ export function extractStyles(
                 let view: GlossView<any> | null = null
 
                 if (extendsViewIdentifier) {
-                  // extends on of our optimizable views
+                  // extends one of our optimizable views
                   if (views[extendsViewIdentifier]) {
-                    console.log('extends an optimizing view', name, extendsViewIdentifier)
-                    views[name] = options.views[extendsViewIdentifier]
                     view = views[name]
+                    views[name] = options.views[extendsViewIdentifier]
                     validComponents[name] = true
                   }
                 }
@@ -215,23 +214,15 @@ export function extractStyles(
                       }
                     }
                     staticStyleConfig = out
+                    localViews[name] = out
                     return t.nullLiteral()
                   }
                   return arg
                 })
 
+                // add it to runtime: gloss(View, null, { ...staticStyleConfig })
                 if (staticStyleConfig) {
-                  path.node.arguments.push(
-                    literalToAst(staticStyleConfig),
-                    // t.objectExpression(
-                    //   Object.keys(staticStyleConfig).map(k => {
-                    //     return t.objectProperty(
-                    //       t.stringLiteral(k),
-                    //       t.stringLiteral(staticStyleConfig[k]),
-                    //     )
-                    //   }),
-                    // ),
-                  )
+                  path.node.arguments.push(literalToAst(staticStyleConfig))
                 }
               }
             }
@@ -510,16 +501,24 @@ export function extractStyles(
           //  because View may add more styles on top
           // add static styles base
           if (view.internal) {
-            // weird we have to compile twice, need to redo a bit
-            const styles = {
-              ...view.internal.staticStyles.styles['.'],
-              // we may have set some default props
-              ...view.defaultProps,
+            // local views we already parsed the css out
+            const localView = localViews[node.name.name]
+            if (localView) {
+              for (const className of localView.className.trim().split(' ')) {
+                // empty object because we already parsed it out and added to map
+                stylesByClassName[className] = {}
+              }
+            } else {
+              // weird we have to compile twice, need to redo a bit
+              const styles = {
+                ...view.internal.staticStyles.styles['.'],
+                // we may have set some default props
+                ...view.defaultProps,
+              }
+              const info = getStylesClassName('.', styles)
+              stylesByClassName[info.className] = styles
             }
-            const info = getStylesClassName('.', styles)
-            const className = info.className[0] === 's' ? info.className.slice(1) : info.className
-            stylesByClassName[className] = styles
-            console.log('view.internal', className, styles)
+
             node.name.name = (view.defaultProps && view.defaultProps.tagName) || 'div'
           }
         } else {

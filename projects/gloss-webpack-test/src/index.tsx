@@ -1,5 +1,5 @@
 //!
-import { Stack, View } from '@o/ui/test'
+import { Stack, Table, View } from '@o/ui/test'
 import { gloss } from 'gloss'
 import * as React from 'react'
 import { render } from 'react-dom'
@@ -11,6 +11,7 @@ function Main() {
   return (
     <>
       <div>hi</div>
+      <Table />
       <View sm-marginBottom={20}>
         <Stack direction="horizontal" space="lg">
           <View

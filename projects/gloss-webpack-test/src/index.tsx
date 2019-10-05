@@ -33,12 +33,17 @@ function Main() {
           >
             some children
           </View>
+          <MySimpleView>hihi</MySimpleView>
           <MySubView>hello world</MySubView>
         </Stack>
       </View>
     </>
   )
 }
+
+const MySimpleView = gloss({
+  color: 'yellow',
+})
 
 const MySubView = gloss(View, {
   background: 'red',

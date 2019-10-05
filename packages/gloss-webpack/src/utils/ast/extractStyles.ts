@@ -186,7 +186,18 @@ export function extractStyles(
 
                 path.node.arguments = path.node.arguments.map((arg, index) => {
                   if ((index === 0 || index === 1) && t.isObjectExpression(arg)) {
-                    const styleObject = evaluateAstNode(arg)
+                    let styleObject = null
+                    try {
+                      styleObject = evaluateAstNode(arg)
+                    } catch (err) {
+                      console.log(
+                        'note, couldnt parse this style object statically',
+                        name,
+                        'extends',
+                        extendsViewIdentifier,
+                      )
+                      return arg
+                    }
                     // uses the base styles if necessary, merges just like gloss does
                     const { styles, conditionalStyles } = getAllStyles(
                       view ? view.internal.getConfig() : undefined,

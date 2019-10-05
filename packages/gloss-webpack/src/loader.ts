@@ -10,6 +10,9 @@ import { extractStyles } from './utils/ast/extractStyles'
 
 const counter: any = Symbol.for('counter')
 
+// for orbit stack support
+global['__DEV__'] = false
+
 const jsxstyleLoader: webpack.loader.Loader = function(this: any, content) {
   if (this.cacheable) {
     this.cacheable()

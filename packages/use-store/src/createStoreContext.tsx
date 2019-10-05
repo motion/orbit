@@ -18,6 +18,7 @@ export function createStoreContext<Instance>(constructor: { new (): Instance }) 
     // @ts-ignore
     Provider: ({ children, ...props }: InferProps<Instance> & { children: any }) => {
       const store = useStore(constructor, props as any, { react: false })
+      console.log('providing', unwrapProxy(store), children)
       return <Context.Provider value={unwrapProxy(store)}>{children}</Context.Provider>
     },
     // memo props by default, this seems to be the least confusing design for now

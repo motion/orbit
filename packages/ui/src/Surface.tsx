@@ -225,7 +225,7 @@ const setTooltip = (tooltip, setTooltipState) => {
   }
 }
 
-export const Surface = themeable((direct: SurfaceProps) => {
+export const Surface = themeable(function Surface(direct: SurfaceProps) {
   const sizedProps = useSizedSurfaceProps(direct)
   const props = SizedSurfacePropsContext.useProps(sizedProps) as SurfaceProps
   const crumb = useBreadcrumb()

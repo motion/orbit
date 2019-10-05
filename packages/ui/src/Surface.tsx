@@ -275,9 +275,6 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
 
   const size = getSize(selectDefined(ogSize, 1))
   const segmentedStyle = getSegmentedStyle(props, crumb)
-  if (props.icon==='moon') {
-    console.log('segmentedStyle', props.segment,crumb, segmentedStyle)
-  }
   const stringIcon = typeof icon === 'string'
 
   useEffect(() => setTooltip(tooltip, setTooltipState), [tooltip])

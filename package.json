@@ -105,7 +105,8 @@
     "sqlite": "^3.0.3",
     "ts-jest": "24.0.0",
     "typescript": "3.7.0-beta",
-    "webpack-cli": "^3.3.7"
+    "webpack-cli": "^3.3.7",
+    "lerna-changelog": "^0.8.2"
   },
   "resolutions": {
     "framer-motion": "1.6.7",

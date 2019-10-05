@@ -13,6 +13,7 @@ export type BreadcrumbsProps = {
 class BreadcrumbStore {
   props: {
     separator?: BreadcrumbsProps['separator']
+    id?: string
   }
 
   selectors = new ObservableSet<string>()
@@ -42,6 +43,7 @@ class BreadcrumbStore {
   mount(node: string) {
     this.selectors.add(node)
   }
+
   unmount(node: string) {
     this.selectors.delete(node)
   }
@@ -50,7 +52,7 @@ class BreadcrumbStore {
 const BreadcrumbStoreContext = createStoreContext(BreadcrumbStore)
 
 export function Breadcrumbs(props: BreadcrumbsProps) {
-  return <BreadcrumbStoreContext.Provider {...props} />
+  return <BreadcrumbStoreContext.Provider id={useRef(`${Math.random()}`).current} {...props} />
 }
 
 export function Breadcrumb({
@@ -111,7 +113,6 @@ export function useBreadcrumb(): BreadcrumbInfo | null {
 
   useLayoutEffect(() => {
     if (!crumbStore) return
-    console.log('mounting', selector, crumbStore)
     crumbStore.mount(selector)
     return () => {
       crumbStore.unmount(selector)

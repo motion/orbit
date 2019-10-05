@@ -64,9 +64,17 @@ type GlossInternalConfig = {
   config: GlossViewOpts<any> | null
 }
 
+export type GlossStaticStyleDescription = {
+  className: string
+  conditionalClassNames?: {
+    [key: string]: string
+  }
+}
+
 type GlossInternals<Props> = {
   parent: any
   themeFns: ThemeFn<Props>[] | null
+  compiledInfo?: GlossStaticStyleDescription
   staticStyles: {
     styles: Object
     conditionalStyles: Object | undefined
@@ -145,13 +153,6 @@ function createGlossIsEqual() {
   }
 }
 
-export type GlossStaticStyleDescription = {
-  className: string
-  conditionalClassNames?: {
-    [key: string]: string
-  }
-}
-
 const emptyObject = {}
 
 export function gloss<Props = any, ThemeProps = Props>(
@@ -193,7 +194,30 @@ export function gloss<Props = any, ThemeProps = Props>(
   const targetElement = !!targetConfig ? targetConfig.targetElement : target
   const staticStyles = getAllStyles(targetConfig, rawStyles || null)
   const conditionalStyles = staticStyles.conditionalStyles
-  const conditionalClassNames = (compiledInfo && compiledInfo.conditionalClassNames) || emptyObject
+
+  // compiled classNames
+  let compiledClassName = compiledInfo && compiledInfo.className ? ` ${compiledInfo.className}` : ''
+  // conditional classNames
+  let conditionalClassNames = emptyObject
+  if (compiledInfo?.conditionalClassNames) {
+    conditionalClassNames = compiledInfo.conditionalClassNames
+  }
+  // compiled classNames inheritance
+  if (hasGlossyParent) {
+    const parentCompiledInfo = target.internal.compiledInfo
+    if (parentCompiledInfo) {
+      // merge in parents conditionals (lesser priority)
+      if (parentCompiledInfo.conditionalClassNames) {
+        conditionalClassNames = {
+          ...target.internal.conditionalClassNames,
+          ...conditionalClassNames,
+        }
+      }
+      if (parentCompiledInfo.className) {
+        compiledClassName += ` ${parentCompiledInfo.className}`
+      }
+    }
+  }
 
   let themeFn: ThemeFn | null = null
   let staticClasses: string[] | null = null
@@ -300,11 +324,9 @@ export function gloss<Props = any, ThemeProps = Props>(
     let className = ''
 
     for (const key in props) {
-      if (props[key] === true) {
-        if (conditionalClassNames[key]) {
-          className += ` ${conditionalClassNames[key]} `
-          continue
-        }
+      if (props[key] === true && conditionalClassNames[key]) {
+        className += ` ${conditionalClassNames[key]} `
+        continue
       }
       if (isDOMElement) {
         if (ignoreAttrs[key]) continue
@@ -330,8 +352,8 @@ export function gloss<Props = any, ThemeProps = Props>(
         ? [...staticClasses, ...dynClassNames].join(' ')
         : [...dynClassNames].join(' ')
     }
-    if (compiledInfo && compiledInfo.className) {
-      className += ` ${compiledInfo.className}`
+    if (compiledClassName) {
+      className += compiledClassName
     }
     finalProps.className = className
 
@@ -373,6 +395,7 @@ export function gloss<Props = any, ThemeProps = Props>(
 
   const parent = hasGlossyParent ? target : null
   const internal: GlossInternals<Props> = {
+    compiledInfo,
     staticStyles,
     themeFns: null,
     parent,

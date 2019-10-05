@@ -1,3 +1,4 @@
+//!
 import { themes } from '@o/kit'
 import { ListItemSimple, ProvideUI, Text, View } from '@o/ui/test'
 import { gloss } from 'gloss'
@@ -11,7 +12,7 @@ function Main() {
   return (
     <ProvideUI themes={themes} activeTheme="light">
       <View sm-marginBottom={20}>
-        <Text selectable />
+        <Text selectable>hello world</Text>
         <ListItemSimple title="First" icon="ok" />
         <ListItemSimple isSelected title="ok" icon="ok" />
         {/* <Stack direction="horizontal" space="lg">

@@ -61,6 +61,7 @@ export function extractStyles(
   ast: t.File
   map: any // RawSourceMap from 'source-map'
 } {
+  console.log('sourceFileName', sourceFileName)
   const JSX_VALID_NAMES = Object.keys(options.views).filter(x => {
     return options.views[x] && !!options.views[x].staticStyleConfig
   })

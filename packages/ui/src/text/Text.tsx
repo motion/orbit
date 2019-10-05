@@ -1,3 +1,4 @@
+//!
 import { CSSPropertySetStrict } from '@o/css'
 import { HighlightOptions, highlightText, on } from '@o/utils'
 import { alphaColorTheme, CSSPropertySet, gloss, propsToStyles } from 'gloss'
@@ -9,7 +10,6 @@ import { ScaleContext } from '../Scale'
 import { Size } from '../Space'
 import { getMediaQueryTextSizeTheme } from './scaledTextSizeTheme'
 
-//!
 type ChildrenHlFn = (Highlights) => JSX.Element | null
 
 export type TextProps = CSSPropertySetStrict &

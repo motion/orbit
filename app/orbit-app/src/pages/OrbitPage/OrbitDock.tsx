@@ -1,6 +1,6 @@
 import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, getAppDefinition, RenderAppProps, useActiveUser, useReaction, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { Divider, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, memoizeWeak, Stack, useDebounceValue, usePosition, useWindowSize, View, ViewProps } from '@o/ui'
+import { Divider, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, memoizeWeak, Stack, useDebounceValue, usePosition, useWindowSize, View } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { partition } from 'lodash'
 import React, { memo, useContext, useMemo, useRef } from 'react'
@@ -77,7 +77,7 @@ export const OrbitDock = memo(() => {
   )
 })
 
-const DockBackground = gloss<ViewProps & { isOpen: boolean }>(View, {
+const DockBackground = gloss<{ isOpen: boolean }>(View, {
   position: 'absolute',
   top: 0,
   right: 0,

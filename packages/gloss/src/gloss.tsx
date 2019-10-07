@@ -10,7 +10,6 @@ import { CompiledTheme } from './theme/createTheme'
 import { ThemeSelect } from './theme/Theme'
 import { themeVariableManager } from './theme/themeVariableManager'
 import { useTheme } from './theme/useTheme'
-import { Spread } from './types'
 
 // so you can reference in postProcessProps
 export { StyleTracker } from './stylesheet/gc'
@@ -22,7 +21,7 @@ const gc = new GarbageCollector(sheet, tracker)
 const whiteSpaceRegex = /[\s]+/g
 const emptyObject = {}
 
-export type GlossProps<Props> = Spread<CSSPropertySetStrict, Props> & {
+export type GlossProps<Props> = CSSPropertySetStrict & Props & {
   className?: string
   tagName?: string
   children?: React.ReactNode
@@ -31,6 +30,16 @@ export type GlossProps<Props> = Spread<CSSPropertySetStrict, Props> & {
   coat?: string | false
   subTheme?: ThemeSelect
 }
+
+// Spread<CSSPropertySetStrict, Props> & {
+//   className?: string
+//   tagName?: string
+//   children?: React.ReactNode
+//   nodeRef?: any
+//   style?: any
+//   coat?: string | false
+//   subTheme?: ThemeSelect
+// }
 
 export type ThemeFn<Props = any> = (
   props: Props,
@@ -45,7 +54,7 @@ export type ThemeFn<Props = any> = (
  */
 export interface GlossView<Props = any, FinalProps = GlossProps<Props>> {
   (props: FinalProps, context?: any): React.ReactElement<any> | null
-  shouldUpdateMap: WeakMap<any, boolean>
+  shouldUpdateMap: WeakMap<object, boolean>
   propTypes?: React.ValidationMap<FinalProps>
   contextTypes?: React.ValidationMap<any>
   defaultProps?: Partial<FinalProps>
@@ -67,8 +76,8 @@ type ThemeProps<ExtraProps = { [key: string]: any }> = CSSPropertySet | {
 }
 
 // test
-const X = gloss<CSSPropertySet & { poop: string; padding: boolean }>({})
-const Y = gloss<{ isActive: boolean }, typeof X>(X, {
+const X = gloss<{ poop: string; padding: boolean }>({})
+const Y = gloss<{ isActive: boolean }>(X, {
   color: 'red',
   isActive: {
     color: 'red',
@@ -82,11 +91,13 @@ const Y = gloss<{ isActive: boolean }, typeof X>(X, {
 })
 // end test
 
-export function gloss<Props = {}, A extends GlossView = any>(
-  a?: A | ThemeProps<Props> | ((props: GlossProps<Props>) => any) | string,
-  b?: ThemeProps<Props>,
+type InferProps<A> = A extends GlossView<infer P> ? P : unknown
+
+export function gloss<MyProps = {}, A extends GlossView = any>(
+  a?: A | ThemeProps<MyProps> | ((props: GlossProps<MyProps>) => any) | string,
+  b?: ThemeProps<MyProps>,
   compiledInfo?: GlossStaticStyleDescription,
-): GlossView<Props & (A extends GlossView<infer PP> ? PP : {})> {
+): GlossView<MyProps & InferProps<A>> {
   if (process.env.NODE_ENV === 'development') {
     if (a === undefined && !!b) {
       throw new Error(
@@ -95,6 +106,9 @@ export function gloss<Props = {}, A extends GlossView = any>(
     }
   }
 
+  type Props = GlossProps<MyProps & (A extends GlossView<infer PP> ? PP : {})>
+
+  // @ts-ignore
   let target: any = a || 'div'
   let defaultProps = b
   const hasGlossyParent = !!target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
@@ -161,7 +175,7 @@ export function gloss<Props = {}, A extends GlossView = any>(
    *
    *
    */
-  function GlossView(props: GlossProps<Props>) {
+  function GlossView(props: Props) {
     // compile on first run to avoid extra work
     if (!hasCompiled) {
       hasCompiled = true
@@ -335,7 +349,7 @@ export function gloss<Props = {}, A extends GlossView = any>(
     }),
   }
 
-  let ThemedView = createGlossView<Props>(GlossView, internal)
+  let ThemedView = createGlossView(GlossView, internal)
 
   // inherit default props
   if (hasGlossyParent) {
@@ -350,7 +364,7 @@ export function gloss<Props = {}, A extends GlossView = any>(
     if (opts.displayName) {
       // this one is picked up by Profiling
       GlossView['displayName'] = opts.displayName
-      ThemedView = createGlossView<Props>(GlossView, internal)
+      ThemedView = createGlossView(GlossView, internal)
       // this one is picked up for use in classNames
       ThemedView['displayName'] = opts.displayName
     }
@@ -380,10 +394,12 @@ export function gloss<Props = {}, A extends GlossView = any>(
   return ThemedView as any
 }
 
-function createGlossView<Props>(GlossView: any, config) {
+function createGlossView(GlossView, config) {
   const { isEqual, shouldUpdateMap } = createGlossIsEqual()
+  // @ts-ignore
   GlossView.shouldUpdateMap = shouldUpdateMap
-  const res: GlossView<Props> = memo(GlossView, isEqual) as any
+  // @ts-ignore
+  const res = memo(GlossView, isEqual) as any
   res.internal = config
   res[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
   res.theme = (...themeFns) => {

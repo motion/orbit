@@ -11,7 +11,7 @@ type ThemeTrackState = {
   nonCSSVariables: Set<string>
 }
 
-type UseThemeProps = { coat?: string | false }
+type UseThemeProps = { [key: string]: any; coat?: string | false }
 
 export function useTheme(props?: UseThemeProps) {
   const themeObservable = useContext(CurrentThemeContext)

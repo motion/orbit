@@ -121,7 +121,7 @@ function SimpleModal({
   )
 }
 
-const ModalSizedSurface = gloss<SurfaceProps & { open?: boolean }>(Surface, {
+const ModalSizedSurface = gloss<{ open?: boolean }>(Surface, {
   opacity: 0,
   pointerEvents: 'none',
   open: {
@@ -130,7 +130,7 @@ const ModalSizedSurface = gloss<SurfaceProps & { open?: boolean }>(Surface, {
   },
 })
 
-const ModalBackground = gloss<ViewProps & { open?: boolean }>(View, {
+const ModalBackground = gloss<{ open?: boolean }>(View, {
   position: 'absolute',
   left: 0,
   right: 0,

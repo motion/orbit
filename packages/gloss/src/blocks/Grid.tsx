@@ -1,14 +1,9 @@
 import { gloss } from '../gloss'
-import { Base, BaseProps } from './Base'
-
-// TODO
-// we need to have gloss resolve themes *before* passing to `.theme`
-// so we can use the `px()` function from @o/css.
-// also will make types and generally using gloss nicer
+import { Base } from './Base'
 
 const px = (n: number | string | any) => (typeof n === 'number' ? n + 'px' : n)
 
-export type GridProps = BaseProps & {
+export type GridProps = {
   itemMinHeight?: number
   itemMinWidth?: number
   itemMaxWidth?: number

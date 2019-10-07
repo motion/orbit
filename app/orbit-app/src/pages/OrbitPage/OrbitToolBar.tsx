@@ -1,5 +1,5 @@
 import { AppLoadContext, AppMainViewProps } from '@o/kit'
-import { Toolbar, View, ViewProps } from '@o/ui'
+import { Toolbar, View } from '@o/ui'
 import { Block, gloss } from 'gloss'
 import React, { memo, useContext } from 'react'
 
@@ -35,7 +35,7 @@ export const OrbitToolBar = memo((props: AppMainViewProps) => {
   )
 })
 
-const OrbitToolbarChrome = gloss<ViewProps & { transparent?: boolean }>(View, {
+const OrbitToolbarChrome = gloss<{ transparent?: boolean }>(View, {
   flexDirection: 'row',
   position: 'absolute',
   top: 0,
@@ -52,7 +52,7 @@ const OrbitToolbarChrome = gloss<ViewProps & { transparent?: boolean }>(View, {
   background: theme.background,
 }))
 
-const ToolbarInner = gloss<{ isActive: boolean } & ViewProps>(View, {
+const ToolbarInner = gloss<{ isActive: boolean }>(View, {
   flex: 2,
   flexDirection: 'row',
   opacity: 0,

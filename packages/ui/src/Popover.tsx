@@ -14,7 +14,6 @@ import { Portal } from './helpers/portal'
 import { Surface, SurfaceProps } from './Surface'
 import { SurfacePassPropsReset } from './SurfacePropsContext'
 import { getElevation } from './View/elevation'
-import { ViewProps } from './View/types'
 import { View } from './View/View'
 
 const acceptsProps = (x, val) => x.type.acceptsProps && x.type.acceptsProps[val]
@@ -1157,7 +1156,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
 
 const themeBg = theme => theme.background
 
-const PopoverContainer = gloss<ViewProps & { isOpen?: boolean; isTouchable?: boolean }>(View, {
+const PopoverContainer = gloss<{ isOpen?: boolean; isTouchable?: boolean }>(View, {
   position: 'absolute',
   top: 0,
   left: 0,

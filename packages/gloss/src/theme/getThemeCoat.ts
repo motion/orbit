@@ -3,7 +3,10 @@ import { CompiledTheme } from './createTheme'
 // this lets you do simple subsets using syntax:
 // <Button coat="action" />
 
-export function getThemeCoat(name: string | undefined, theme: CompiledTheme): CompiledTheme {
+export function getThemeCoat(
+  name: string | false | undefined,
+  theme: CompiledTheme,
+): CompiledTheme {
   if (!name || typeof name !== 'string') {
     return theme
   }

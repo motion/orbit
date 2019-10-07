@@ -48,7 +48,7 @@ const Section = gloss(View, {
   alignItems: 'center',
 })
 
-export const SectionContentChrome = gloss<ViewProps & { readablePage?: boolean }>(View, {
+export const SectionContentChrome = gloss<{ readablePage?: boolean }>(View, {
   minHeight: '100%',
   maxHeight: '100%',
   // alignItems: 'center',

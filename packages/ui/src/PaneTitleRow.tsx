@@ -27,7 +27,7 @@ export function PaneTitleRow({ after, before, title, ...rest }: PaneTitleRowProp
     <Scale size={0.85}>
       <PanelHeader
         padding="sm"
-        themeSubSelect="panelHeader"
+        subTheme="panelHeader"
         space="xs"
         onDoubleClick={toggle.isCollapsable ? toggle.toggle : undefined}
       >

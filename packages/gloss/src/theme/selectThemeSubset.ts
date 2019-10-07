@@ -12,13 +12,13 @@ type PartialTheme = Partial<CompiledTheme>
 // right now it does not delete as it seems very rare where you have many many themes
 
 export function selectThemeSubset(
-  themeSubSelect: ThemeSelect,
+  subTheme: ThemeSelect,
   theme: CompiledTheme,
 ): CompiledTheme | null {
-  if (!themeSubSelect) {
+  if (!subTheme) {
     return theme
   }
-  if (!theme._isCoat && themeSubSelect === theme._themeSubSelect) {
+  if (!theme._isCoat && subTheme === theme._subTheme) {
     // hasnt changed
     return theme
   }
@@ -26,19 +26,19 @@ export function selectThemeSubset(
   while (theme._isSubTheme && !theme._isCoat) {
     theme = theme.parent
   }
-  if (typeof themeSubSelect === 'function') {
+  if (typeof subTheme === 'function') {
     return createSubSetTheme(
-      `subfn${weakKey(themeSubSelect)}`,
+      `subfn${weakKey(subTheme)}`,
       theme,
-      themeSubSelect(theme),
-      themeSubSelect,
+      subTheme(theme),
+      subTheme,
     )
   }
   // generate new subset theme
-  const len = themeSubSelect.length
+  const len = subTheme.length
   const selectedTheme: PartialTheme = {}
   for (const subKey in theme) {
-    if (subKey.indexOf(themeSubSelect) === 0 && typeof theme[subKey] !== 'undefined') {
+    if (subKey.indexOf(subTheme) === 0 && typeof theme[subKey] !== 'undefined') {
       const newKey = subKey.slice(len)
       const newKeyCamelCase = `${newKey[0].toLowerCase()}${newKey.slice(1)}`
       selectedTheme[newKeyCamelCase] = theme[subKey]
@@ -48,14 +48,14 @@ export function selectThemeSubset(
     // no changes made, dont do any extra work
     return null
   }
-  return createSubSetTheme(themeSubSelect, theme, selectedTheme, themeSubSelect)
+  return createSubSetTheme(subTheme, theme, selectedTheme, subTheme)
 }
 
 const createSubSetTheme = (
   name: string,
   parent: CompiledTheme,
   child: ThemeObject | CompiledTheme,
-  themeSubSelect: ThemeSelect,
+  subTheme: ThemeSelect,
 ) => {
   return {
     ...child,
@@ -63,7 +63,7 @@ const createSubSetTheme = (
     parent,
     name,
     _subThemeName: name,
-    _themeSubSelect: themeSubSelect,
+    _subTheme: subTheme,
     _isSubTheme: true,
   }
 }

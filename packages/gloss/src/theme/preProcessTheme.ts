@@ -6,7 +6,7 @@ import { unwrapTheme, UnwrapThemeSymbol } from './useTheme'
 
 // Default pre process theme is:
 //   1. if coat="" prop, drill down to that theme
-//   2. if themeSubSelect="" prop, select that subset of the theme
+//   2. if subTheme="" prop, select that subset of the theme
 
 const themeAltCache = new WeakMap<CompiledTheme, { [key: string]: CompiledTheme }>()
 
@@ -15,18 +15,18 @@ export const preProcessTheme = (props: GlossProps<any>, theme: CompiledTheme) =>
     return props.theme
   }
   const parent = unwrapTheme(theme)
-  if (props.coat || props.themeSubSelect) {
+  if (props.coat || props.subTheme) {
     const altKey = getAltKey(props)
     const existing = getThemeFromCache(parent, altKey)
     if (existing) {
       return existing
     }
     const coatTheme = getThemeCoat(props.coat, parent)
-    const subSetTheme = selectThemeSubset(props.themeSubSelect, coatTheme)
+    const subSetTheme = selectThemeSubset(props.subTheme, coatTheme)
     const next = subSetTheme || coatTheme
     if (next && next !== parent) {
       let nextTheme = createTheme(next, false)
-      if (props.themeSubSelect && next._isSubTheme) {
+      if (props.subTheme && next._isSubTheme) {
         // proxy back to parent but don't merge,
         // because we want sub-themes to be lighter (ie in CSS variable generation)
         // and generally to only enumerate their unique keys
@@ -51,7 +51,7 @@ export const preProcessTheme = (props: GlossProps<any>, theme: CompiledTheme) =>
 }
 
 function getAltKey(props: GlossProps<any>) {
-  return `coat${props.coat || '_'}-sub${props.themeSubSelect || '_'}`
+  return `coat${props.coat || '_'}-sub${props.subTheme || '_'}`
 }
 
 function getThemeFromCache(parent: CompiledTheme, altKey: string) {

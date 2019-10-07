@@ -253,7 +253,7 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
     size: ogSize,
     sizeLineHeight,
     tagName,
-    themeSubSelect: subTheme,
+    subTheme: subTheme,
     tooltip,
     tooltipProps,
     padding,
@@ -402,7 +402,7 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
               }}
           >
             {glint && !props.chromeless && (
-              <Glint coat={coat} size={size} {...borderProps} themeSubSelect={subTheme} />
+              <Glint coat={coat} size={size} {...borderProps} subTheme={subTheme} />
             )}
             {glintBottom && !props.chromeless && (
               <Glint
@@ -410,7 +410,7 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
                 size={size}
                 bottom={0}
                 {...borderProps}
-                themeSubSelect={subTheme}
+                subTheme={subTheme}
               />
             )}
           </GlintContain>
@@ -503,7 +503,7 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
   // @ts-ignore
   const surfaceFrameProps: SurfaceFrameProps = {
     className: `${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`,
-    themeSubSelect: subTheme,
+    subTheme: subTheme,
     lineHeight,
     padding,
     borderWidth,

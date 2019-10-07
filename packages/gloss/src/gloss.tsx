@@ -1,4 +1,4 @@
-import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
+import { CSSPropertySet, CSSPropertySetLoose, CSSPropertySetStrict, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
@@ -14,92 +14,46 @@ import { useTheme } from './theme/useTheme'
 // so you can reference in postProcessProps
 export { StyleTracker } from './stylesheet/gc'
 
-export const isGlossView = (view: any): boolean => {
-  return view && !!view[GLOSS_SIMPLE_COMPONENT_SYMBOL]
-}
+const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
+export const tracker: StyleTracker = new Map()
+export const sheet = new StyleSheet(true)
+const gc = new GarbageCollector(sheet, tracker)
+const whiteSpaceRegex = /[\s]+/g
+const emptyObject = {}
 
-export const baseIgnoreAttrs = {
-  ...validCSSAttr,
-  width: false,
-  height: false,
-  size: false,
-  src: false,
-}
-
-export type BaseRules = {
-  [key: string]: string | number
-}
-
-export type GlossProps<Props> = Props & {
+export type GlossProps<Props> = CSSPropertySetStrict & Props & {
   className?: string
   tagName?: string
   children?: React.ReactNode
   nodeRef?: any
   style?: any
   coat?: string | false
-  themeSubSelect?: ThemeSelect
+  subTheme?: ThemeSelect
 }
 
-export type ThemeFn<Props = any> = (
-  props: GlossProps<Props>,
+export type ThemeFn<Props = unknown> = (
+  props: Props,
   theme: CompiledTheme,
   previous?: CSSPropertySetLoose | null,
 ) => CSSPropertySetLoose | undefined | null
-
-export type GlossViewOpts<Props> = {
-  displayName?: string
-  ignoreAttrs?: { [key: string]: boolean }
-  defaultProps?: Partial<Props>
-  shouldAvoidProcessingStyles?: (props: Props) => boolean
-  postProcessProps?: (curProps: Props, nextProps: any, getFinalStyles: () => CSSPropertySet) => any
-  getElement?: (props: Props) => any
-  isDOMElement?: boolean
-}
-
-type GlossInternalConfig = {
-  displayName: string
-  targetElement: any
-  styles: any
-  conditionalStyles: Object | undefined
-  config: GlossViewOpts<any> | null
-}
-
-export type GlossStaticStyleDescription = {
-  className: string
-  conditionalClassNames?: {
-    [key: string]: string
-  }
-}
-
-type GlossInternals<Props> = {
-  parent: any
-  themeFns: ThemeFn<Props>[] | null
-  compiledInfo?: GlossStaticStyleDescription
-  staticStyles: {
-    styles: Object
-    conditionalStyles: Object | undefined
-  }
-  getConfig: () => GlossInternalConfig
-}
 
 /**
  * Note: ThemeProps is optional, for the user to define that they are
  * filtering out props before they get to `theme`, which is helpful for keeping
  * their types simple. It's still relatively low level. See our @o/ui/View.tsx
  */
-export interface GlossView<RawProps, ThemeProps = RawProps, Props = GlossProps<RawProps>> {
-  // copied from FunctionComponent
-  (props: Props, context?: any): React.ReactElement<any> | null
+export interface GlossView<Props = unknown, FinalProps = GlossProps<Props>> {
+  (props: FinalProps, context?: any): React.ReactElement<any> | null
   shouldUpdateMap: WeakMap<any, boolean>
-  propTypes?: React.ValidationMap<Props>
+  propTypes?: React.ValidationMap<FinalProps>
   contextTypes?: React.ValidationMap<any>
-  defaultProps?: Partial<Props>
+  defaultProps?: Partial<FinalProps>
   displayName?: string
   // extra:
   ignoreAttrs?: { [key: string]: boolean }
-  theme: (...themeFns: ThemeFn<ThemeProps>[]) => GlossView<RawProps>
-  withConfig: (config: GlossViewOpts<Props>) => GlossView<RawProps>
-  internal: GlossInternals<Props>
+  theme: (...themeFns: ThemeFn<FinalProps>[]) => this
+  withConfig: (config: GlossViewOpts<FinalProps>) => this
+  internal: GlossInternals<FinalProps>
   staticStyleConfig?: {
     cssAttributes?: Object
     deoptProps?: string[]
@@ -107,59 +61,31 @@ export interface GlossView<RawProps, ThemeProps = RawProps, Props = GlossProps<R
   }
 }
 
-const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
-export const tracker: StyleTracker = new Map()
-export const sheet = new StyleSheet(true)
-const gc = new GarbageCollector(sheet, tracker)
-const whiteSpaceRegex = /[\s]+/g
-
-/**
- * Gloss componentShouldUpdate optimization - Gloss styles should never
- * rely on react elements (TODO document that, but weve never used it internally even on accident),
- * which means we can do nice optimization by tracking if only non-elements changed.
- */
-function createGlossIsEqual() {
-  const shouldUpdateMap = new WeakMap<object, boolean>()
-  return {
-    shouldUpdateMap,
-    isEqual(a: any, b: any) {
-      let shouldUpdate = false
-      let shouldUpdateInner = false
-      for (const key in b) {
-        const bVal = b[key]
-        if (isValidElement(bVal)) {
-          shouldUpdate = true
-          continue
-        }
-        if (!isEqual(a[key], bVal)) {
-          shouldUpdate = true
-          shouldUpdateInner = true
-          break
-        }
-      }
-      // ensure we didnt remove/add keys
-      if (!shouldUpdate || !shouldUpdateInner) {
-        for (const key in a) {
-          if (!(key in b)) {
-            shouldUpdate = true
-            shouldUpdateInner = true
-            break
-          }
-        }
-      }
-      shouldUpdateMap.set(b, shouldUpdateInner)
-      return !shouldUpdate
-    },
-  }
+type ThemeProps<ExtraProps = { [key: string]: any }> = CSSPropertySet | {
+  [key in keyof ExtraProps]: CSSPropertySet
 }
 
-const emptyObject = {}
+// test
+const X = gloss<CSSPropertySet & { poop: string; padding: boolean }>({})
+const Y = gloss<{ isActive: boolean }, typeof X>(X, {
+  color: 'red',
+  isActive: {
+    color: 'red',
+  }
+}).theme(props => {
+  props.isActive
+  props.poop
+  props.background
+  props.padding
+  return {}
+})
+// end test
 
-export function gloss<Props = any, ThemeProps = Props>(
-  a?: CSSPropertySet | GlossView<Props, ThemeProps> | ((props: Props) => any) | string,
-  b?: CSSPropertySet,
+export function gloss<Props = {}, A extends GlossView = any>(
+  a?: A | ThemeProps<Props> | ((props: GlossProps<Props>) => any) | string,
+  b?: ThemeProps<Props>,
   compiledInfo?: GlossStaticStyleDescription,
-): GlossView<GlossProps<Props>, ThemeProps> {
+): GlossView<Props & (A extends GlossView<infer PP> ? PP : {})> {
   if (process.env.NODE_ENV === 'development') {
     if (a === undefined && !!b) {
       throw new Error(
@@ -169,7 +95,7 @@ export function gloss<Props = any, ThemeProps = Props>(
   }
 
   let target: any = a || 'div'
-  let rawStyles = b
+  let defaultProps = b
   const hasGlossyParent = !!target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
   const targetConfig: GlossInternalConfig | null = hasGlossyParent
     ? target.internal.getConfig()
@@ -188,11 +114,11 @@ export function gloss<Props = any, ThemeProps = Props>(
     !target['$$typeof']
   ) {
     target = 'div'
-    rawStyles = a
+    defaultProps = a as any
   }
 
   const targetElement = !!targetConfig ? targetConfig.targetElement : target
-  const staticStyles = getAllStyles(targetConfig, rawStyles || null)
+  const staticStyles = getAllStyles(targetConfig, defaultProps || null)
   const conditionalStyles = staticStyles.conditionalStyles
 
   // compiled classNames
@@ -221,11 +147,8 @@ export function gloss<Props = any, ThemeProps = Props>(
 
   let themeFn: ThemeFn | null = null
   let staticClasses: string[] | null = null
-
-  // this elements helpers
   let ogConfig: GlossViewOpts<Props> | null = null
   let config: GlossViewOpts<Props> | null = null
-
   let hasCompiled = false
   let getEl: GlossViewOpts<Props>['getElement'] | null = null
   let shouldUpdateMap: WeakMap<any, boolean>
@@ -755,7 +678,7 @@ export function getAllStyles(config: GlossInternalConfig | null, rawStyles: CSSP
  *   3. stop there, don't keep going higher
  */
 function getCompiledConfig(
-  viewOG: GlossView<any>,
+  viewOG: GlossView,
   config: GlossViewOpts<any> | null,
 ): GlossViewOpts<any> {
   const compiledConf: GlossViewOpts<any> = { ...config }
@@ -788,7 +711,7 @@ function getCompiledConfig(
 }
 
 // compile theme from parents
-function compileTheme(viewOG: GlossView<any>) {
+function compileTheme(viewOG: GlossView) {
   let cur = viewOG
   let all: ThemeFn[][] = []
 
@@ -824,6 +747,9 @@ function compileTheme(viewOG: GlossView<any>) {
 }
 
 // adds rules to stylesheet and returns classname
+export type BaseRules = {
+  [key: string]: string | number
+}
 function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSpecific?: boolean) {
   const [hash, style] = cssStringWithHash(rules)
 
@@ -909,4 +835,92 @@ export function getStylesClassName(namespace: string, styles: CSSPropertySet) {
     css = `${selector} {${style}}`
   }
   return { css, className }
+}
+
+export const isGlossView = (view: any): boolean => {
+  return view && !!view[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+}
+
+export const baseIgnoreAttrs = {
+  ...validCSSAttr,
+  width: false,
+  height: false,
+  size: false,
+  src: false,
+}
+
+/**
+ * Gloss componentShouldUpdate optimization - Gloss styles should never
+ * rely on react elements (TODO document that, but weve never used it internally even on accident),
+ * which means we can do nice optimization by tracking if only non-elements changed.
+ */
+function createGlossIsEqual() {
+  const shouldUpdateMap = new WeakMap<object, boolean>()
+  return {
+    shouldUpdateMap,
+    isEqual(a: any, b: any) {
+      let shouldUpdate = false
+      let shouldUpdateInner = false
+      for (const key in b) {
+        const bVal = b[key]
+        if (isValidElement(bVal)) {
+          shouldUpdate = true
+          continue
+        }
+        if (!isEqual(a[key], bVal)) {
+          shouldUpdate = true
+          shouldUpdateInner = true
+          break
+        }
+      }
+      // ensure we didnt remove/add keys
+      if (!shouldUpdate || !shouldUpdateInner) {
+        for (const key in a) {
+          if (!(key in b)) {
+            shouldUpdate = true
+            shouldUpdateInner = true
+            break
+          }
+        }
+      }
+      shouldUpdateMap.set(b, shouldUpdateInner)
+      return !shouldUpdate
+    },
+  }
+}
+
+export type GlossViewOpts<Props> = {
+  displayName?: string
+  ignoreAttrs?: { [key: string]: boolean }
+  defaultProps?: Partial<Props>
+  shouldAvoidProcessingStyles?: (props: Props) => boolean
+  postProcessProps?: (curProps: Props, nextProps: any, getFinalStyles: () => CSSPropertySet) => any
+  getElement?: (props: Props) => any
+  isDOMElement?: boolean
+}
+
+type GlossInternalConfig = {
+  displayName: string
+  targetElement: any
+  styles: any
+  conditionalStyles: Object | undefined
+  config: GlossViewOpts<any> | null
+}
+
+export type GlossStaticStyleDescription = {
+  className: string
+  conditionalClassNames?: {
+    [key: string]: string
+  }
+}
+
+type GlossInternals<Props> = {
+  parent: any
+  themeFns: ThemeFn<Props>[] | null
+  compiledInfo?: GlossStaticStyleDescription
+  staticStyles: {
+    styles: Object
+    conditionalStyles: Object | undefined
+  }
+  getConfig: () => GlossInternalConfig
 }

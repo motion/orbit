@@ -66,19 +66,19 @@ const ButtonInner = (props: ButtonProps) => {
 
 export const Button = memoIsEqualDeep((buttonProps: ButtonProps) => {
   const props = useSurfaceProps(buttonProps)
-  const { coat, theme, themeSubSelect, ...rest } = props
+  const { coat, theme, subTheme, ...rest } = props
   const controlledProps = useUncontrolled(rest, {
     active: 'onChangeActive',
   })
   return (
-    <Theme themeSubSelect={themeSubSelect} coat={coat} theme={theme}>
+    <Theme subTheme={subTheme} coat={coat} theme={theme}>
       <ButtonInner {...rest} {...controlledProps} />
     </Theme>
   )
 })
 
 Button['defaultProps'] = {
-  themeSubSelect: 'button',
+  subTheme: 'button',
 }
 
 Button['acceptsProps'] = {

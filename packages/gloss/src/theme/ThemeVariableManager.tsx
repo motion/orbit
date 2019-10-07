@@ -104,11 +104,11 @@ class ThemeVariableManager {
 
     let subTheme = subThemeContext.current
     // need to re-run select using new parent theme
-    if (subTheme._themeSubSelect) {
+    if (subTheme._subTheme) {
       subTheme = preProcessTheme(
         {
           coat: subTheme._coatName,
-          themeSubSelect: subTheme._themeSubSelect,
+          subTheme: subTheme._subTheme,
         },
         parent,
       )

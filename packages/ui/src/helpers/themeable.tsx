@@ -3,17 +3,17 @@ import React from 'react'
 
 export type ThemeableProps = {
   theme?: CompiledTheme
-  themeSubSelect?: ThemeSelect
+  subTheme?: ThemeSelect
   coat?: string | false
 }
 
 export function themeable<A extends any>(Component: A): A {
   return function ThemeProp(props: ThemeableProps) {
-    if (!props.themeSubSelect && !props.coat && !props.theme) {
+    if (!props.subTheme && !props.coat && !props.theme) {
       return <Component {...props} />
     }
     return (
-      <Theme themeSubSelect={props.themeSubSelect} coat={props.coat} theme={props.theme}>
+      <Theme subTheme={props.subTheme} coat={props.coat} theme={props.theme}>
         <Component {...props} />
       </Theme>
     )

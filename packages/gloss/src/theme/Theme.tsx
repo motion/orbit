@@ -17,7 +17,7 @@ export type CurrentTheme = {
 
 type ThemeProps = {
   theme?: CompiledTheme
-  themeSubSelect?: ThemeSelect
+  subTheme?: ThemeSelect
   coat?: string | false
   name?: string
   children: React.ReactNode
@@ -48,7 +48,7 @@ export const Theme = (props: ThemeProps) => {
 
   if (
     !themeObservableContext ||
-    (!props.coat && !props.theme && !props.themeSubSelect && !props.name)
+    (!props.coat && !props.theme && !props.subTheme && !props.name)
   ) {
     return props.children as JSX.Element
   }
@@ -63,10 +63,10 @@ export const Theme = (props: ThemeProps) => {
 }
 
 const useNextTheme = (props: ThemeProps) => {
-  const { name, theme, themeSubSelect, coat } = props
+  const { name, theme, subTheme, coat } = props
   const themes = useContext(AllThemesContext)
   const curContext = useContext(CurrentThemeContext)
-  if (!name && !themeSubSelect && !coat && !theme) {
+  if (!name && !subTheme && !coat && !theme) {
     return
   }
   return (name && themes[name]) || preProcessTheme(props, curContext.current)

@@ -160,7 +160,7 @@ const SimpleInput = ({
       maxWidth="100%"
       alignItems="center"
       flexDirection="row"
-      themeSubSelect="input"
+      subTheme="input"
       pointerEvents={visible ? 'inherit' : 'none'}
       sizeFont={0.9}
       sizePadding

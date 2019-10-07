@@ -1097,7 +1097,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
               <SurfacePassPropsReset>
                 <Surface
                   className="popover-inner-surface"
-                  themeSubSelect="popover"
+                  subTheme="popover"
                   sizeRadius
                   flex={1}
                   hoverStyle={null}

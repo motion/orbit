@@ -112,5 +112,4 @@ export type ScrollableViewProps = Omit<ViewProps, 'flexFlow'> & {
   hideScrollbars?: boolean
   scrollable?: boolean | 'x' | 'y'
   parentSpacing?: Size
-  animated?: boolean
 }

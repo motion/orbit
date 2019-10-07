@@ -1,6 +1,6 @@
 import { GlossPropertySet } from '@o/css'
 import { MotionProps, MotionTransform, Transition } from 'framer-motion'
-import { AlphaColorProps, CSSPropertySet, CSSPropertySetStrict, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
+import { AlphaColorProps, CSSPropertySet, CSSPropertySetStrict, PseudoStyleProps, TextSizeProps } from 'gloss'
 import React from 'react'
 
 import { AnimationStore } from '../Geometry'
@@ -63,6 +63,8 @@ type CommonHTMLProps = Omit<
   | 'inputMode'
   | 'color'
   | 'size'
+  | 'padding'
+  | 'margin'
 >
 
 type MotionCompatCommonProps = Omit<
@@ -74,7 +76,7 @@ export type OrbitMotionTransform = {
   [P in keyof MotionTransform]: MotionTransform[P] | AnimationStore
 }
 
-export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
+export type ViewBaseProps = MotionCompatCommonProps &
   PseudoStyleProps &
   TextSizeProps &
   AlphaColorProps &
@@ -82,7 +84,7 @@ export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
   MarginProps &
   PaddingProps &
   /** Accept the motion props */
-  Omit<MotionProps, 'animate' | 'transition'> &
+  Omit<MotionProps, 'animate' | 'transition' | 'padding'> &
   OrbitMotionTransform & {
     // could make this better done in terms of type flow, its for <Input labels...
     label?: React.ReactNode

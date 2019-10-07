@@ -10,6 +10,7 @@ import { CompiledTheme } from './theme/createTheme'
 import { ThemeSelect } from './theme/Theme'
 import { themeVariableManager } from './theme/themeVariableManager'
 import { useTheme } from './theme/useTheme'
+import { Spread } from './types'
 
 // so you can reference in postProcessProps
 export { StyleTracker } from './stylesheet/gc'
@@ -21,7 +22,7 @@ const gc = new GarbageCollector(sheet, tracker)
 const whiteSpaceRegex = /[\s]+/g
 const emptyObject = {}
 
-export type GlossProps<Props> = CSSPropertySetStrict & Props & {
+export type GlossProps<Props> = Spread<CSSPropertySetStrict, Props> & {
   className?: string
   tagName?: string
   children?: React.ReactNode
@@ -31,7 +32,7 @@ export type GlossProps<Props> = CSSPropertySetStrict & Props & {
   subTheme?: ThemeSelect
 }
 
-export type ThemeFn<Props = unknown> = (
+export type ThemeFn<Props = any> = (
   props: Props,
   theme: CompiledTheme,
   previous?: CSSPropertySetLoose | null,
@@ -42,7 +43,7 @@ export type ThemeFn<Props = unknown> = (
  * filtering out props before they get to `theme`, which is helpful for keeping
  * their types simple. It's still relatively low level. See our @o/ui/View.tsx
  */
-export interface GlossView<Props = unknown, FinalProps = GlossProps<Props>> {
+export interface GlossView<Props = any, FinalProps = GlossProps<Props>> {
   (props: FinalProps, context?: any): React.ReactElement<any> | null
   shouldUpdateMap: WeakMap<any, boolean>
   propTypes?: React.ValidationMap<FinalProps>

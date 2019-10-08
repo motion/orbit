@@ -6,7 +6,7 @@
  */
 import { Color } from '@o/color'
 import { useReaction } from '@o/use-store'
-import { Box, CompiledTheme, gloss } from 'gloss'
+import { Box, gloss, ThemeFn } from 'gloss'
 import React, { memo } from 'react'
 
 import { DataValue } from '../DataValue'
@@ -134,36 +134,41 @@ export const TableRow = memo(function TableRow({
   )
 })
 
-const backgroundColor = (props: TableRowProps, theme: CompiledTheme) => {
+const backgroundColor: ThemeFn<TableRowProps> = (props, theme) => {
+  let background
   if (props.background) {
-    return props.background
-  }
-  const isZebra = props.even && props.zebra
-  if (props.highlighted) {
-    if (!props.background && props.row) {
-      const cat = props.row.category
-      if (cat && guesses[cat]) {
-        return guessTheme(cat, theme).background || 'transparent'
-      }
-    }
-    return theme.backgroundHighlight
-  }
-  if (isZebra) {
-    return theme.backgroundZebra
+    background = props.background
   } else {
-    return theme.background.setAlpha(0.35)
+    const isZebra = props.even && props.zebra
+    if (props.highlighted) {
+      if (!props.background && props.row) {
+        const cat = props.row.category
+        if (cat && guesses[cat]) {
+          background = guessTheme(cat, theme).background || 'transparent'
+        }
+      } else {
+        background = theme.backgroundHighlight
+      }
+    } else if (isZebra) {
+      background = theme.backgroundZebra
+    } else {
+      background = theme.background.setAlpha(0.35)
+    }
   }
+  return { background }
 }
 
-const getColor = (props: TableRowProps, theme: CompiledTheme) => {
+const getColor: ThemeFn<TableRowProps> = (props, theme) => {
   let color = props.color
-  if (props.row) {
+  if (props.highlighted) {
+    color = theme.colorHighlight
+  } else if (props.row) {
     const cat = props.row.category
     if (guesses[cat]) {
       color = color || guessTheme(cat, theme).color
     }
   }
-  return color || 'inherit'
+  return { color: color || 'inherit' }
 }
 
 const TableBodyRowContainer = gloss<TableRowProps>(Box, {
@@ -173,11 +178,11 @@ const TableBodyRowContainer = gloss<TableRowProps>(Box, {
   width: '100%',
   userSelect: 'none',
 }).theme((props, theme) => {
-  const background = backgroundColor(props, theme)
+  const { background } = backgroundColor(props, theme)
   return {
     background,
     boxShadow: props.zebra ? 'none' : `inset 0 -1px ${theme.borderColor.setAlpha(0.35)}`,
-    color: props.highlighted ? theme.colorHighlight : getColor(props, theme),
+    ...getColor(props, theme),
     '& *': {
       color: props.highlighted ? `${theme.colorHighlight} !important` : null,
     },

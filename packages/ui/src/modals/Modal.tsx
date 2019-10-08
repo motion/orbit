@@ -3,15 +3,13 @@ import React, { memo } from 'react'
 
 import { Button } from '../buttons/Button'
 import { Portal } from '../helpers/portal'
-import { Section, SectionProps } from '../Section'
+import { Section, SectionSpecificProps } from '../Section'
 import { Surface, SurfaceProps } from '../Surface'
 import { ViewProps } from '../View/types'
 import { View } from '../View/View'
 import { ProvideVisibility } from '../Visibility'
 
-// import { GlobalHotKeys } from 'react-hotkeys'
-
-export type SimpleModalProps = SectionProps &
+export type SimpleModalProps = SectionSpecificProps &
   SurfaceProps & {
     open?: boolean
     onChangeOpen?: (next: boolean) => any
@@ -23,10 +21,6 @@ export type ModalProps = SimpleModalProps & {
   backgroundProps?: ViewProps
   children?: React.ReactNode
   chromeless?: boolean
-}
-
-const modalKeyMap = {
-  esc: 'close',
 }
 
 export const Modal = memo(
@@ -121,7 +115,7 @@ function SimpleModal({
   )
 }
 
-const ModalSizedSurface = gloss<{ open?: boolean }>(Surface, {
+const ModalSizedSurface = gloss<{ open?: boolean }, SurfaceProps>(Surface, {
   opacity: 0,
   pointerEvents: 'none',
   open: {
@@ -130,7 +124,7 @@ const ModalSizedSurface = gloss<{ open?: boolean }>(Surface, {
   },
 })
 
-const ModalBackground = gloss<{ open?: boolean }>(View, {
+const ModalBackground = gloss<{ open?: boolean }, ViewProps>(View, {
   position: 'absolute',
   left: 0,
   right: 0,

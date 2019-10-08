@@ -12,12 +12,6 @@ type ThemeTrackState = {
   nonCSSVariables: Set<string>
 }
 
-type UseThemeProps = {
-  coat?: string | false
-  // accepts all normal props and converts them to ThemeValue/Color etc
-  [key: string]: any
-}
-
 export function useTheme<A = {}>(props?: A): GlossThemeProps<A> {
   const themeObservable = useContext(CurrentThemeContext)
   const [cur, setCur] = useState<CompiledTheme>(getTheme(themeObservable.current, props))

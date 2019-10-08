@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 import React from 'react'
+import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -235,7 +235,7 @@ export function gloss<
     if (shouldAvoidStyleUpdate) {
       // because hooks can run in theme, be sure to run them
       // @ts-ignore
-      theme && themeFn && themeFn(props, theme)
+      theme && themeFn && themeFn(theme)
       return createElement(element, last.current.props, props.children)
     }
 
@@ -248,7 +248,7 @@ export function gloss<
       if (avoidStyles) {
         // because hooks can run in theme, be sure to run them
         // @ts-ignore
-        theme && themeFn && themeFn(props, theme)
+        theme && themeFn && themeFn(theme)
       }
     }
 
@@ -256,9 +256,8 @@ export function gloss<
       ThemedView.displayName,
       conditionalStyles,
       dynClasses.current,
-      props,
-      themeFn,
       theme,
+      themeFn,
       avoidStyles,
     )
     dynClasses.current = curDynClassNames
@@ -495,9 +494,8 @@ function addDynamicStyles(
   displayName: string = 'g',
   conditionalStyles: Object | undefined,
   prevClassNames: Set<string> | null,
-  props: CSSPropertySet,
+  theme: GlossThemeProps,
   themeFn?: ThemeFn | null,
-  theme?: CompiledTheme,
   avoidStyles?: boolean,
 ) {
   const dynStyles = {}
@@ -508,8 +506,8 @@ function addDynamicStyles(
   // note that means the topmost `mergeStyles` will apply as most important
 
   // if passed any classes from a parent gloss view, merge them, ignore classname and track
-  if (props.className) {
-    const propClassNames = props.className.split(whiteSpaceRegex)
+  if (theme.className) {
+    const propClassNames = theme.className.split(whiteSpaceRegex)
     // note this reverse: this is a bit odd
     // right now we have conditionalStyles applied as their own className (so base: .1, conditional: .2)
     // then we pass className="1 2" if we have a parent that the conditional style === true
@@ -534,16 +532,15 @@ function addDynamicStyles(
 
   if (!avoidStyles) {
     if (conditionalStyles) {
-      mergePropStyles(dynStyles, conditionalStyles, props)
+      mergePropStyles(dynStyles, conditionalStyles, theme)
     }
 
     if (theme && themeFn) {
       dynStyles['.'] = dynStyles['.'] || {}
-      // @ts-ignore
-      const themeStyles = themeFn(props, theme)
+      const themeStyles = themeFn(theme)
       const themePropStyles = mergeStyles('.', dynStyles, themeStyles, true)
       if (themePropStyles) {
-        mergePropStyles(dynStyles, themePropStyles, props)
+        mergePropStyles(dynStyles, themePropStyles, theme)
       }
     }
 

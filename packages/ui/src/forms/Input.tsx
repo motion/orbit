@@ -148,17 +148,19 @@ const SimpleInput = ({
   )
 }
 
-const inputSurfaceTheme: ThemeFn<InputProps> = props => ({
-  ...(!props.chromeless && {
-    border: [1, props.borderColor.desaturate(0.1)],
-    '&:focus-within': {
-      boxShadow: [
-        [0, 0, 0, 3, props.borderColor.setAlpha(a => a * 0.5)],
-        getElevation(props).boxShadow,
-      ],
-    },
-  }),
-})
+const inputSurfaceTheme: ThemeFn<InputProps> = props => {
+  return {
+    ...(!props.chromeless && {
+      border: [1, props.borderColor.desaturate(0.1)],
+      '&:focus-within': {
+        boxShadow: [
+          [0, 0, 0, 3, props.borderColor.setAlpha(a => a * 0.5)],
+          getElevation(props).boxShadow,
+        ],
+      },
+    }),
+  }
+}
 
 const inputElementTheme: ThemeFn<InputProps> = props => {
   return {

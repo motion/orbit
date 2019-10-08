@@ -3,7 +3,6 @@ import { CSSPropertySetStrict, ThemeObject } from '@o/css'
 import { ThemeFn } from '../gloss'
 import { mergeStyles } from '../helpers/mergeStyles'
 import { getOriginalProps } from '../theme/useTheme'
-import { styleVal } from './propStyleTheme'
 
 // resolves props into styles for valid css
 // backs up to theme colors if not found
@@ -143,7 +142,7 @@ function getPsuedoStyles(theme: Object, props: Object, keyMap: KeyMap, useTheme:
   let overrides: Object | null = null
   for (const [name, mapName] of keyMap) {
     if (isDefined(props[name])) {
-      const val = styleVal(theme[name], theme)
+      const val = theme[name]
       styles = styles || {}
       styles[mapName] = val
       overrides = overrides || {}

@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
+import React from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -9,7 +9,7 @@ import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
 import { themeVariableManager } from './theme/themeVariableManager'
-import { useTheme } from './theme/useTheme'
+import { UnwrapThemeSymbol, useTheme } from './theme/useTheme'
 import { GlossProps, GlossThemeProps } from './types'
 
 // so you can reference in postProcessProps
@@ -537,6 +537,7 @@ function addDynamicStyles(
 
     if (theme && themeFn) {
       dynStyles['.'] = dynStyles['.'] || {}
+      // set our config
       const themeStyles = themeFn(theme)
       const themePropStyles = mergeStyles('.', dynStyles, themeStyles, true)
       if (themePropStyles) {
@@ -834,6 +835,7 @@ if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
     sheet,
     validCSSAttr,
     themeVariableManager,
+    UnwrapThemeSymbol,
   }
 }
 

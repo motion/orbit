@@ -3,10 +3,6 @@ import { CSSPropertySet, validCSSAttr } from '@o/css'
 import { Config } from '../configureGloss'
 import { ThemeFn } from '../gloss'
 
-export function styleVal(val: any, props?: Object) {
-  return typeof val === 'function' ? val(props) : val
-}
-
 // resolves props into styles for valid css
 
 export const propsToStyles: ThemeFn = props => {
@@ -15,7 +11,7 @@ export const propsToStyles: ThemeFn = props => {
   for (let key in props) {
     if (validCSSAttr[key]) {
       // add valid css attributes
-      const next = styleVal(props[key], props)
+      const next = props[key]
       if (next !== undefined) {
         styles = styles || {}
         styles[key] = next
@@ -33,7 +29,7 @@ export const propsToStyles: ThemeFn = props => {
       // theme functions for sub objects
       for (const subKey in subStyle) {
         val = val || {}
-        val[subKey] = styleVal(subStyle[subKey], props)
+        val[subKey] = subStyle[subKey]
       }
       if (val) {
         styles = styles || {}
@@ -48,7 +44,7 @@ export const propsToStyles: ThemeFn = props => {
     if (key.indexOf('-') > 0) {
       // adding mediaQueries keys
       styles = styles || {}
-      styles[key] = styleVal(props[key], props)
+      styles[key] = props[key]
     }
   }
   return styles

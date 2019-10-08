@@ -99,8 +99,12 @@ function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState, props?: a
         // need to figure out how we know to do that...
         if (props) {
           if (Reflect.has(props, key)) {
-            const next = Reflect.get(props, key)
+            let next = Reflect.get(props, key)
             if (next !== undefined) {
+              if (theme && typeof next === 'function' && Reflect.has(theme, key)) {
+                // resolve functions
+                next = next(theme)
+              }
               return next
             }
           }

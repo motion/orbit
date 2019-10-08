@@ -23,6 +23,8 @@ export { ThemeObject, ThemeValueLike, ThemeSet, ThemeCoats } from './ThemeObject
 export type CSSConfig = {
   errorMessage?: string
   snakeCase?: boolean
+  // if you wanted to resolve at the end, we do it before themes process
+  // resolveFunctionValue?: any
 }
 
 const emptyObject = Object.freeze({})
@@ -106,6 +108,10 @@ export function css(styles: Object, opts?: CSSConfig): Object {
 }
 
 export function cssValue(key: string, value: any, recurse = false, options?: CSSConfig) {
+  // resolve functions first so they can process the value through the rest
+  // if (options?.resolveFunctionValue && typeof value === 'function') {
+  //   value = value(options.resolveFunctionValue!)
+  // }
   // get falsy values
   if (value === false) {
     value === FALSE_VALUES[key]

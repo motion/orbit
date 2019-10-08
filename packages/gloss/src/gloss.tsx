@@ -73,7 +73,8 @@ type GlossInternals<Props = {}> = {
   parent: any
   themeFns: ThemeFn<Props>[] | null
   compiledInfo?: GlossStaticStyleDescription
-  staticStyles: {
+  glossProps: {
+    defaultProps: Partial<Props>
     styles: Object
     conditionalStyles: Object | undefined
   }
@@ -97,7 +98,8 @@ const emptyObject = {}
 export function gloss<
   MyProps = {},
   ParentProps = {},
-  Parent extends GlossView<ParentProps> = any
+  Parent extends GlossView<ParentProps> = any,
+  Props = GlossProps<MyProps & ParentProps>
 >(
   a?: CSSPropertySet | Parent | ((props: MyProps) => any) | string,
   b?: CSSPropertySet,
@@ -111,11 +113,9 @@ export function gloss<
     }
   }
 
-  type Props = GlossProps<MyProps & ParentProps>
-
   // @ts-ignore
   let target: any = a || 'div'
-  let defaultProps = b
+  let glossPropsObject = b
   const hasGlossyParent = !!target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
   const targetConfig: GlossInternalConfig | null = hasGlossyParent
     ? target.internal.getConfig()
@@ -134,12 +134,15 @@ export function gloss<
     !target['$$typeof']
   ) {
     target = 'div'
-    defaultProps = a as any
+    glossPropsObject = a as any
   }
 
   const targetElement = !!targetConfig ? targetConfig.targetElement : target
-  const staticStyles = getAllStyles(targetConfig, defaultProps || null)
-  const conditionalStyles = staticStyles.conditionalStyles
+  const glossProps = getGlossProps(targetConfig, glossPropsObject || null)
+  const conditionalStyles = glossProps.conditionalStyles
+
+  // put the "rest" of non-styles onto defaultProps
+  GlossView.defaultProps = glossProps.defaultProps
 
   // compiled classNames
   let compiledClassName = compiledInfo && compiledInfo.className ? ` ${compiledInfo.className}` : ''
@@ -187,7 +190,7 @@ export function gloss<
       ignoreAttrs =
         ThemedView.ignoreAttrs || (hasGlossyParent && target.ignoreAttrs) || baseIgnoreAttrs
       themeFn = compileTheme(ThemedView)
-      staticClasses = addStyles(staticStyles.styles, ThemedView.displayName)
+      staticClasses = addStyles(glossProps.styles, ThemedView.displayName)
       config = getCompiledConfig(ThemedView, ogConfig)
       getEl = config.getElement
       shouldUpdateMap = GlossView['shouldUpdateMap']
@@ -309,7 +312,7 @@ export function gloss<
     if (postProcessProps) {
       postProcessProps(props, finalProps, () => {
         return {
-          ...staticStyles.styles['.'],
+          ...glossProps.styles['.'],
           ...dynStyles['.'],
         }
       })
@@ -339,15 +342,15 @@ export function gloss<
   const parent = hasGlossyParent ? target : null
   const internal: GlossInternals<Props> = {
     compiledInfo,
-    staticStyles,
+    glossProps,
     themeFns: null,
     parent,
     getConfig: () => ({
       config: ogConfig,
       displayName: ThemedView.displayName || '',
       targetElement,
-      styles: { ...staticStyles.styles },
-      conditionalStyles: { ...staticStyles.conditionalStyles },
+      styles: { ...glossProps.styles },
+      conditionalStyles: { ...glossProps.conditionalStyles },
     }),
   }
 
@@ -582,6 +585,7 @@ function mergeStyles(
   baseStyles: Object,
   nextStyles?: CSSPropertySet | null,
   overwrite?: boolean,
+  rest?: Object
 ): Object | undefined {
   // this is just for the conditional prop styles
   let propStyles
@@ -590,46 +594,14 @@ function mergeStyles(
     if (overwrite !== true && baseStyles[id][key] !== undefined) {
       continue
     }
-    if (validCSSAttr[key]) {
-      // valid regular attr
-      baseStyles[id][key] = nextStyles[key]
-    } else if (isSubStyle(key)) {
-      for (const sKey in nextStyles[key]) {
-        if (overwrite === true || !baseStyles[key] || baseStyles[key][sKey] === undefined) {
-          baseStyles[key] = baseStyles[key] || {}
-          baseStyles[key][sKey] = nextStyles[key][sKey]
-        }
-      }
-    } else {
-      let isMediaQuery = false
-      if (Config.mediaQueries) {
-        // media queries after subStyle, subStyle could have a - in it
-        const index = key.indexOf('-')
-        if (index > 0) {
-          const mediaName = key.slice(0, index)
-          const mediaSelector = Config.mediaQueries[mediaName]
-          if (mediaSelector) {
-            const styleKey = key.slice(index + 1)
-            baseStyles[mediaSelector] = baseStyles[mediaSelector] || {}
-            baseStyles[mediaSelector][styleKey] = nextStyles[key]
-            isMediaQuery = true
-          }
-        }
-      }
-
-      if (!isMediaQuery) {
-        let subStyles = nextStyles[key]
-        // catch invalid/falsy
-        if (!subStyles || typeof subStyles !== 'object') {
-          continue
-        }
-        // propStyles
-        //   definition: gloss({ isTall: { height: '100%' } })
-        //   usage: <Component isTall />
-
+    if (key === 'conditional') {
+      // propStyles
+      //   definition: gloss({ isTall: { height: '100%' } })
+      //   usage: <Component isTall />
+      for (const pKey in nextStyles[key]) {
+        let subStyles = nextStyles[key][pKey]
         propStyles = propStyles || {}
-        propStyles[key] = {}
-
+        propStyles[pKey] = {}
         // they can nest (media queries/psuedoes), split it out, eg:
         //  gloss({
         //    isTall: {
@@ -651,6 +623,37 @@ function mergeStyles(
         }
       }
     }
+    if (validCSSAttr[key]) {
+      // valid regular attr
+      baseStyles[id][key] = nextStyles[key]
+    } else if (isSubStyle(key)) {
+      for (const sKey in nextStyles[key]) {
+        if (overwrite === true || !baseStyles[key] || baseStyles[key][sKey] === undefined) {
+          baseStyles[key] = baseStyles[key] || {}
+          baseStyles[key][sKey] = nextStyles[key][sKey]
+        }
+      }
+    } else {
+      if (Config.mediaQueries) {
+        // media queries after subStyle, subStyle could have a - in it
+        const index = key.indexOf('-')
+        if (index > 0) {
+          const mediaName = key.slice(0, index)
+          const mediaSelector = Config.mediaQueries[mediaName]
+          if (mediaSelector) {
+            const styleKey = key.slice(index + 1)
+            baseStyles[mediaSelector] = baseStyles[mediaSelector] || {}
+            baseStyles[mediaSelector][styleKey] = nextStyles[key]
+            continue
+          }
+        }
+      }
+
+      // not style, assign to rest
+      if (rest) {
+        rest[key] = nextStyles[key]
+      }
+    }
   }
 
   return propStyles
@@ -658,11 +661,13 @@ function mergeStyles(
 
 // happens once at initial gloss() call, so not as perf intense
 // get all parent styles and merge them into a big object
-export function getAllStyles(config: GlossInternalConfig | null, rawStyles: CSSPropertySet | null) {
+export function getGlossProps(config: GlossInternalConfig | null, rawStyles: CSSPropertySet | null) {
   const styles = {
     '.': {},
   }
-  let conditionalStyles = mergeStyles('.', styles, rawStyles)
+  // all the "rest" go onto default props
+  const defaultProps = {}
+  let conditionalStyles = mergeStyles('.', styles, rawStyles, false, defaultProps)
   // merge parent styles
   if (config) {
     const parentPropStyles = config.conditionalStyles
@@ -687,6 +692,7 @@ export function getAllStyles(config: GlossInternalConfig | null, rawStyles: CSSP
   return {
     styles,
     conditionalStyles,
+    defaultProps,
   }
 }
 

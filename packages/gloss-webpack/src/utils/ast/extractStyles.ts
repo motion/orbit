@@ -2,7 +2,7 @@ import generate from '@babel/generator'
 import traverse from '@babel/traverse'
 import t = require('@babel/types')
 import literalToAst from 'babel-literal-to-ast'
-import { getAllStyles, getStylesClassName, GlossStaticStyleDescription, GlossView, validCSSAttr } from 'gloss'
+import { getGlossProps, getStylesClassName, GlossStaticStyleDescription, GlossView, validCSSAttr } from 'gloss'
 import invariant = require('invariant')
 import path = require('path')
 import util = require('util')
@@ -204,10 +204,13 @@ export function extractStyles(
               return arg
             }
             // uses the base styles if necessary, merges just like gloss does
-            const { styles, conditionalStyles } = getAllStyles(
+            const { styles, conditionalStyles, defaultProps } = getGlossProps(
               view ? view.internal.getConfig() : undefined,
               styleObject,
             )
+
+            console.log('TODO!! defaultProps', defaultProps)
+
             // then put them all into an array so gloss later can use that
             const out: GlossStaticStyleDescription = {
               className: '',
@@ -535,7 +538,7 @@ export function extractStyles(
             } else {
               // weird we have to compile twice, need to redo a bit
               const styles = {
-                ...view.internal.staticStyles.styles['.'],
+                ...view.internal.glossProps.styles['.'],
                 // we may have set some default props
                 ...view.defaultProps,
               }

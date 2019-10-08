@@ -69,6 +69,9 @@ export type GlossBaseProps = CommonHTMLProps & {
   nodeRef?: any
   coat?: string | false
   subTheme?: ThemeSelect
+  conditional?: {
+    [key: string]: CSSPropertySetStrict
+  }
 }
 
 // theme types

@@ -49,8 +49,12 @@ export type GlossProps<Props extends object = {}> = O.Merge<O.Merge<CSSPropertyS
   subTheme?: ThemeSelect
 }>
 
-export type ThemeFn<Props = any> = (
-  props: Props,
+type CompileProps<Props> = {
+  [P in keyof Props]?: Exclude<Props[P], Function>
+}
+
+export type ThemeFn<Props = any, CompiledProps = CompileProps<Props>> = (
+  props: CompiledProps,
   theme: CompiledTheme,
   previous?: CSSPropertySetLoose | null,
 ) => CSSPropertySetLoose | undefined | null

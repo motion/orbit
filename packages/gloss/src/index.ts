@@ -35,6 +35,6 @@ export { ThemeResetSubTheme } from './theme/ThemeResetSubTheme'
 export { ThemeProvide } from './theme/ThemeProvide'
 export * from './themes'
 export { propsToStyles } from './themes/propStyleTheme'
-export { Spread, GlossConfig, SimpleStyleObject } from './types'
+export { GlossConfig, SimpleStyleObject } from './types'
 
 process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()

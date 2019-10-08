@@ -45,7 +45,6 @@ export const DocsPageHeader = memo(({ isSmall, inputRef, setTheme, theme }: any)
             after={<Key tooltip="Shortcut: t">t</Key>}
             // borderWidth={0}
             background={theme => {
-              console.log('ok', theme.background)
               return theme.background.setAlpha(0.14)
             }}
             backdropFilter="blur(20px)"

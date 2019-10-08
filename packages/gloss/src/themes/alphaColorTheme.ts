@@ -33,7 +33,7 @@ export const alphaColorTheme = createAlphaColorTheme(true)
 export const alphaColorThemeLoose = createAlphaColorTheme(false)
 
 function createAlphaColorTheme(shouldSetDefault = false) {
-  const themeFn: ThemeFn = (props, theme, previous) => {
+  const themeFn: ThemeFn<AlphaColorProps> = (props, theme, previous) => {
     const color = props.color || theme.color
     const alpha = selectDefined(props.alpha, theme.alpha)
     const next: CSSPropertySet | null = {}

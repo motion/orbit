@@ -4,7 +4,6 @@ import { isDefined, mergeDefined } from '@o/utils'
 import FuzzySearch from 'fuzzy-search'
 import { useTheme } from 'gloss'
 import React, { memo, Suspense, useContext } from 'react'
-import { O } from 'ts-toolbelt'
 
 import { Config } from './helpers/configureUI'
 import { IconPropsContext } from './IconPropsContext'
@@ -13,17 +12,14 @@ import { Tooltip } from './Tooltip'
 import { ViewProps } from './View/types'
 import { View } from './View/View'
 
-export type IconProps = O.Merge<
-  ViewProps,
-  {
-    size?: number
-    name?: string
-    tooltip?: string
-    tooltipProps?: Object
-    svg?: string
-    ignoreColor?: boolean
-  }
->
+export type IconProps = ViewProps & {
+  size?: number
+  name?: string
+  tooltip?: string
+  tooltipProps?: Object
+  svg?: string
+  ignoreColor?: boolean
+}
 
 const x: IconProps = {}
 

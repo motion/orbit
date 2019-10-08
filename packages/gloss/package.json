@@ -28,8 +28,7 @@
     "enhanced-resolve": "^4.1.0",
     "loader-utils": "^1.2.3",
     "mkdirp": "^0.5.1",
-    "normalize-path": "^3.0.0",
-    "ts-toolbelt": "^4.8.6"
+    "normalize-path": "^3.0.0"
   },
   "peerDependencies": {
     "react": "^16.9.0",

@@ -1,7 +1,6 @@
 import { CSSPropertySet, CSSPropertySetLoose, CSSPropertySetStrict, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
-import { O } from 'ts-toolbelt'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -20,7 +19,7 @@ export { StyleTracker } from './stylesheet/gc'
  * filtering out props before they get to `theme`, which is helpful for keeping
  * their types simple. It's still relatively low level. See our @o/ui/View.tsx
  */
-export interface GlossView<P = {}> {
+export interface GlossView<P extends object = {}> {
   (props: P, context?: any): React.ReactElement<any> | null
   shouldUpdateMap: WeakMap<object, boolean>
   propTypes?: React.ValidationMap<P>
@@ -39,7 +38,7 @@ export interface GlossView<P = {}> {
   }
 }
 
-export type GlossProps<Props extends object = {}> = O.Merge<O.Merge<CSSPropertySetStrict, Props>, {
+type GlossBaseProps = {
   className?: string
   tagName?: string
   children?: React.ReactNode
@@ -47,19 +46,21 @@ export type GlossProps<Props extends object = {}> = O.Merge<O.Merge<CSSPropertyS
   style?: any
   coat?: string | false
   subTheme?: ThemeSelect
-}>
+}
 
-type CompileProps<Props> = {
+export type GlossProps<Props extends object = {}> = CSSPropertySetStrict & Omit<Props, keyof GlossBaseProps> & GlossBaseProps
+
+type CompileProps<Props extends object = {}> = {
   [P in keyof Props]?: Exclude<Props[P], Function>
 }
 
-export type ThemeFn<Props = any, CompiledProps = CompileProps<Props>> = (
-  props: CompiledProps,
+export type ThemeFn<Props extends object = {}> = (
+  props: CompileProps<GlossProps & Props>,
   theme: CompiledTheme,
   previous?: CSSPropertySetLoose | null,
 ) => CSSPropertySetLoose | undefined | null
 
-export type GlossViewOpts<Props = {}> = {
+export type GlossViewOpts<Props extends object = {}> = {
   displayName?: string
   ignoreAttrs?: { [key: string]: boolean }
   defaultProps?: Partial<Props>
@@ -84,7 +85,7 @@ export type GlossStaticStyleDescription = {
   }
 }
 
-type GlossInternals<Props> = {
+type GlossInternals<Props extends object = {}> = {
   parent: any
   themeFns: ThemeFn<Props>[] | null
   compiledInfo?: GlossStaticStyleDescription
@@ -102,7 +103,7 @@ const gc = new GarbageCollector(sheet, tracker)
 const whiteSpaceRegex = /[\s]+/g
 const emptyObject = {}
 
-export function gloss<MyProps extends object = {}, ParentProps extends object = {}, Props = GlossProps<MyProps & ParentProps>>(
+export function gloss<MyProps extends object = {}, ParentProps extends object = {}, Props extends object = GlossProps<MyProps & ParentProps>>(
   a?: CSSPropertySet | GlossView<Props> | ((props: Props) => any) | string,
   b?: CSSPropertySet,
   compiledInfo?: GlossStaticStyleDescription,

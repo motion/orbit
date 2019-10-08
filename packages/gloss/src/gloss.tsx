@@ -1,4 +1,4 @@
-import { CSSPropertySet, CSSPropertySetLoose, CSSPropertySetStrict, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
+import { CSSPropertySet, CSSPropertySetLoose, CSSPropertySetStrict, cssString, cssStringWithHash, GlossPropertySet, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
@@ -48,8 +48,11 @@ type GlossBaseProps = {
   subTheme?: ThemeSelect
 }
 
-export type GlossProps<Props = {}> = CSSPropertySetStrict & Omit<Props, keyof GlossBaseProps> & GlossBaseProps
-export type GlossPropsResolved<Props = {}> = CSSPropertySet & Omit<Props, keyof GlossBaseProps> & GlossBaseProps
+type GenerateGlossProps<Props, CSSProps> = Omit<CSSProps, keyof Props> &
+  Omit<Props, keyof GlossBaseProps> &
+  GlossBaseProps
+export type GlossProps<Props = {}> = GenerateGlossProps<Props, CSSPropertySetStrict>
+export type GlossPropsResolved<Props = {}> = GenerateGlossProps<Props, GlossPropertySet>
 
 export type ThemeFn<RawProps = {}> = (
   props: GlossPropsResolved<RawProps>,
@@ -100,7 +103,14 @@ const gc = new GarbageCollector(sheet, tracker)
 const whiteSpaceRegex = /[\s]+/g
 const emptyObject = {}
 
-export function gloss<MyProps = {}, ParentProps = {}, Parent extends GlossView<ParentProps> = any>(
+const x = gloss<{ x: 1 }>()
+const x2 = gloss(x)
+
+export function gloss<
+  MyProps = {},
+  ParentProps = {},
+  Parent extends GlossView<ParentProps> = any
+>(
   a?: CSSPropertySet | Parent | ((props: MyProps) => any) | string,
   b?: CSSPropertySet,
   compiledInfo?: GlossStaticStyleDescription,

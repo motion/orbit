@@ -36,7 +36,7 @@ export function ScrollableView(props: ScrollableViewProps) {
         {...rest}
         nodeRef={composeRefs(props.nodeRef, ref)}
         className={`${hideScrollbars ? 'hide-scrollbars' : ''} ${props.className || ''}`}
-        padding={false}
+        padding={undefined}
         minHeight={hasPadding ? 'auto' : props.minHeight}
       >
         {content}

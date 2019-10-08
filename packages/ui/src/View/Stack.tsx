@@ -86,7 +86,7 @@ export function Stack(colProps: StackProps) {
 
   return (
     // minHeight and padding are handled by paddedView
-    <View {...props} padding={false} minHeight={hasPadding ? 'auto' : props.minHeight}>
+    <View {...props} padding={undefined} minHeight={hasPadding ? 'auto' : props.minHeight}>
       {wrapWithPaddedView(wrapWithSuspense(element, suspense), props)}
     </View>
   )

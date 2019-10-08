@@ -1201,7 +1201,15 @@ const Overlay = gloss<any>(Box, {
   background: overlay === true ? 'rgba(0,0,0,0.2)' : overlay,
 }))
 
-const PopoverWrap = gloss<{ isOpen?: boolean; willReposition?: boolean; noHoverOnChildren?: any }>(Box, {
+const PopoverWrap = gloss<{
+  distance?: number
+  forgiveness?: number
+  isOpen?: boolean
+  noPortal?: boolean
+  willReposition?: boolean
+  noHoverOnChildren?: any
+  showForgiveness?: boolean
+}>(Box, {
   position: 'absolute',
   pointerEvents: 'none',
   zIndex: -1,
@@ -1212,7 +1220,7 @@ const PopoverWrap = gloss<{ isOpen?: boolean; willReposition?: boolean; noHoverO
   }
   const transform = {
     x: p.left,
-    y: (p.isOpen && !p.willReposition ? 0 : -5) + p.top,
+    y: (p.isOpen && !p.willReposition ? 0 : -5) + typeof p.top === 'string' ? +p.top : 0,
   }
   return {
     width: p.width,

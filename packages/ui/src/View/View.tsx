@@ -7,7 +7,7 @@ import { Sizes } from '../Space'
 import { getElevation } from './elevation'
 import { getSizableValue } from './getSizableValue'
 import { usePadding } from './PaddedView'
-import { SizesObject, ViewProps } from './types'
+import { SizesObject, ViewPropsPlain } from './types'
 
 export const motionStyleProps = {
   x: true,
@@ -81,7 +81,7 @@ const shouldRenderToMotion = (props: any) =>
   'animate' in props || 'drag' in props || 'layoutTransition' in props
 
 // regular view
-export const View = gloss<ViewProps>(Base, {
+export const View = gloss<ViewPropsPlain>(Base, {
   display: 'flex',
 })
   .theme(getMargin, usePadding, getElevation)

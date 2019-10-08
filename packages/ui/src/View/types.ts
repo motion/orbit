@@ -67,14 +67,14 @@ export type OrbitCSSPropertyAnimation = {
   [P in ExtraAnimatableProperties]?: OrbitCSSPropertySet[P] | AnimationStore
 }
 
-export type ViewProps = GlossProps<
-  Omit<ViewBaseProps, 'direction'> &
-    // be sure to omit margin/padding
-    Omit<OrbitCSSPropertyAnimation, 'direction'> & {
-      direction?: 'horizontal' | 'vertical' | OrbitCSSPropertySet['direction']
-      transition?: CSSPropertySetStrict['transition'] | Transition
-    }
->
+export type ViewPropsPlain = Omit<ViewBaseProps, 'direction'> &
+  // be sure to omit margin/padding
+  Omit<OrbitCSSPropertyAnimation, 'direction'> & {
+    direction?: 'horizontal' | 'vertical' | OrbitCSSPropertySet['direction']
+    transition?: CSSPropertySetStrict['transition'] | Transition
+  }
+
+export type ViewProps = GlossProps<ViewPropsPlain>
 
 export type ViewThemeProps = ViewBaseProps & GlossPropertySet
 

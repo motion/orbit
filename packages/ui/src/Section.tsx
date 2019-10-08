@@ -83,7 +83,6 @@ export const useSectionProps = useProps
 const defaultTitlePaddingAmount = [1.5, 1, 0]
 
 export function Section(direct: SectionProps) {
-  debugger
   // @ts-ignore deep
   const allProps = useProps(direct)
   const [collapseProps, props] = splitCollapseProps(allProps)
@@ -223,15 +222,14 @@ export function Section(direct: SectionProps) {
       flex={selectDefined(flex, !!scrollable ? 1 : undefined)}
       background={background || 'transparent'}
       // in case they change fast
-      style={{
-        // @ts-ignore
-        height,
-        width: width as any,
-        // @ts-ignore
-        maxHeight,
-        // @ts-ignore
-        maxWidth,
-      }}
+      style={
+        {
+          height,
+          width,
+          maxHeight,
+          maxWidth,
+        } as any
+      }
       minHeight={minHeight}
       borderRadius={borderRadius}
       overflow={selectDefined(

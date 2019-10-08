@@ -25,9 +25,9 @@ export const SectionContent = ({
   ...props
 }: SectionContentProps) => {
   return (
-    <Section
+    <BlogSection
       zIndex={zIndex}
-      background={background}
+      background={background || 'transparent'}
       padding={padding}
       height={height}
       flex={flex}
@@ -38,17 +38,17 @@ export const SectionContent = ({
       <SectionContentChrome flex={flex} readablePage={readablePage} {...props}>
         {children}
       </SectionContentChrome>
-    </Section>
+    </BlogSection>
   )
 }
 
-const Section = gloss(View, {
+const BlogSection = gloss(View, {
   width: '100%',
   position: 'relative',
   alignItems: 'center',
 })
 
-export const SectionContentChrome = gloss<{ readablePage?: boolean }>(View, {
+export const SectionContentChrome = gloss<{ readablePage?: boolean }, ViewProps>(View, {
   minHeight: '100%',
   maxHeight: '100%',
   // alignItems: 'center',

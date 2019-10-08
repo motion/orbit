@@ -571,10 +571,6 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   const propStyles = propsToStyles(props)
   const marginStyle = getMargin(props)
 
-  if (props['background'] === 'transparent') {
-    debugger
-  }
-
   let styles: CSSPropertySet = {}
   let boxShadow = [].concat(props.boxShadow || null)
 

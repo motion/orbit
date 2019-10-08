@@ -143,13 +143,11 @@ function getPsuedoStyles(theme: Object, props: Object, keyMap: KeyMap, useTheme:
   let overrides: Object | null = null
   for (const [name, mapName] of keyMap) {
     if (isDefined(props[name])) {
-      if (useTheme) {
-        const val = styleVal(theme[name], theme)
-        styles = styles || {}
-        styles[mapName] = val
-        overrides = overrides || {}
-        overrides[mapName] = val
-      }
+      const val = styleVal(theme[name], theme)
+      styles = styles || {}
+      styles[mapName] = val
+      overrides = overrides || {}
+      overrides[mapName] = val
     } else if (useTheme && isDefined(theme[name])) {
       styles = styles || {}
       styles[mapName] = theme[name]

@@ -74,6 +74,7 @@ export function FloatingCard({
       defaultHeight={defaultHeight}
       zIndex={+zIndex}
       pointerEvents={visibilityProps.pointerEvents}
+      // @ts-ignore
       usePosition={usePosition}
       attach={attach}
       maxHeight={maxHeight}

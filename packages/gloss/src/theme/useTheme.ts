@@ -18,7 +18,7 @@ type UseThemeProps = {
   [key: string]: any
 }
 
-export function useTheme<A>(props?: A): GlossThemeProps<A> {
+export function useTheme<A = {}>(props?: A): GlossThemeProps<A> {
   const themeObservable = useContext(CurrentThemeContext)
   const [cur, setCur] = useState<CompiledTheme>(getTheme(themeObservable.current, props))
   const state = useRef<ThemeTrackState>()

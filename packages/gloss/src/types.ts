@@ -24,8 +24,10 @@ export type ColorClassLike = { getCSSValue: Function } | { css: Function } | { a
 export type ColorLike = string | ColorClassLike | ColorArray | ColorObject
 
 // overridable theme
-export interface BaseTheme {}
-export type ITheme<A> = A
+export interface ThemeType {}
+export type CreateThemeType<A> = {
+  [K in keyof A]: A[K] extends { cssVariable: any } ? A[K] : ThemeValue<any>
+}
 
 // TODO whitelist instead
 // basic desire is to not overlap with CSS props
@@ -82,8 +84,10 @@ type ColorKeys = 'background' | 'backgroundColor' | 'color' | 'borderColor'
 export type GlossThemeProps<
   Props = {},
   FinalProps = Omit<GenerateGlossProps<Props, GlossPropertySet>, ColorKeys>
-> = FinalProps &
-  {
+> = ThemeType &
+  FinalProps & {
+    name: string
+  } & {
     [K in ColorKeys & Exclude<string, keyof FinalProps>]:
       | (K extends ColorKeys ? Color : ThemeValue<any>)
       | undefined

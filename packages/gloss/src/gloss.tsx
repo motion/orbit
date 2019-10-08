@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
+import React from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -10,7 +10,7 @@ import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
 import { themeVariableManager } from './theme/themeVariableManager'
 import { useTheme } from './theme/useTheme'
-import { BaseTheme, GlossProps, GlossThemeProps } from './types'
+import { GlossProps, GlossThemeProps } from './types'
 
 // so you can reference in postProcessProps
 export { StyleTracker } from './stylesheet/gc'
@@ -40,7 +40,7 @@ export interface GlossView<RawProps = {}, P = GlossProps<RawProps>> {
 }
 
 export type ThemeFn<RawProps = any> = (
-  props: BaseTheme & GlossThemeProps<RawProps>,
+  props: GlossThemeProps<RawProps>,
   previous?: RawProps & CSSPropertySetLoose | null,
 ) => CSSPropertySetLoose | undefined | null
 

@@ -1,5 +1,7 @@
 import { Color } from '@o/color'
-import { ITheme } from 'gloss'
+import { CreateThemeType } from 'gloss'
+
+import { Size } from './Space'
 
 // until next hotkeys patches types
 module.hot && module.hot.accept()
@@ -26,6 +28,7 @@ export type UITheme = {
   backgroundStrongest: Color
   backgroundZebra: Color
   color: Color
+  colorHover?: Color
   colorHighlight: Color
   colorLight: Color
   colorLighter: Color
@@ -33,15 +36,28 @@ export type UITheme = {
   borderColor: Color
   borderColorLight: Color
   borderColorLighter: Color
+  overlayBackground: Color
   glintColor?: Color
   glintColorTop?: Color
   glintColorBottom?: Color
   backgroundSelection?: Color
   tableHeadBackground?: Color
+  iconColor?: Color
+
+  // sizing props
+  size?: Size
+  sizeRadius?: Size
+  sizePadding?: Size
+  sizeHeight?: Size
+  sizeFont?: Size
+  sizeLineHeight?: Size
+
+  // values
+  disableGlint?: boolean
 }
 
 declare module 'gloss' {
-  interface BaseTheme extends ITheme<UITheme> {}
+  interface ThemeType extends CreateThemeType<UITheme> {}
 }
 
 export {

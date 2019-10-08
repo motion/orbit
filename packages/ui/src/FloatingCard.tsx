@@ -84,7 +84,8 @@ export function FloatingCard({
     >
       {outside}
       <Card
-        background={theme.floatingBackground || theme.cardBackground || theme.background}
+        // TODO multiple sub-themes shouldnt be hard actually, couple lines, makes sense
+        subTheme="card floatingCard"
         elevation={elevation}
         flex={1}
         collapsed={collapsed}

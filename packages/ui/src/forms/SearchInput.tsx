@@ -34,10 +34,12 @@ export function SearchInput({
   ...props
 }: SearchInputProps) {
   const clearVisible = typeof clearable === 'boolean' ? clearable : value && !!value.length
-  const theme = useTheme()
+  const theme = useTheme({
+    subSelect: 'searchInput',
+  })
   return (
     <Input
-      sizeRadius={selectDefined(theme.searchInputSizeRadius, 3)}
+      sizeRadius={selectDefined(theme.sizeRadius, 3)}
       flex={1}
       icon="search"
       placeholder="Search..."

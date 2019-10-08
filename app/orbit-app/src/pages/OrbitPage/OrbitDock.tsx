@@ -77,7 +77,7 @@ export const OrbitDock = memo(() => {
   )
 })
 
-const DockBackground = gloss<{ isOpen: boolean }>(View, {
+const DockBackground = gloss<{ isOpen: boolean }, typeof View>(View, {
   position: 'absolute',
   top: 0,
   right: 0,

@@ -7,8 +7,6 @@ export { fromStyles } from './fromStyles'
 
 type Adjuster = (fn: Color) => number
 
-export { ThemeObject } from 'gloss'
-
 export const darken = (color: Color, amt: Adjuster) => {
   return color.darken(amt(color))
 }

@@ -11,9 +11,6 @@ import { unwrapTheme, UnwrapThemeSymbol } from './useTheme'
 const themeAltCache = new WeakMap<CompiledTheme, { [key: string]: CompiledTheme }>()
 
 export const preProcessTheme = (props: GlossProps<any>, theme: CompiledTheme) => {
-  if (props.theme || !theme) {
-    return props.theme
-  }
   const parent = unwrapTheme(theme)
   if (props.coat || props.subTheme) {
     const altKey = getAltKey(props)

@@ -21,6 +21,8 @@ const TableHeaderArrow = gloss(SimpleText, {
 })
 
 const TableHeadColumnText = gloss(SimpleText, {
+  size: 0.85,
+  alpha: 0.8,
   display: 'inline-block',
   flex: 1,
   overflow: 'hidden',
@@ -28,11 +30,6 @@ const TableHeadColumnText = gloss(SimpleText, {
   whiteSpace: 'nowrap',
   fontWeight: 500,
 })
-
-TableHeadColumnText.defaultProps = {
-  size: 0.85,
-  alpha: 0.8,
-}
 
 const TableHeaderColumnInteractive = gloss(Interactive, {
   flex: 1,

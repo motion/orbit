@@ -35,7 +35,7 @@ export const OrbitToolBar = memo((props: AppMainViewProps) => {
   )
 })
 
-const OrbitToolbarChrome = gloss<{ transparent?: boolean }>(View, {
+const OrbitToolbarChrome = gloss<{ transparent?: boolean }, typeof View>(View, {
   flexDirection: 'row',
   position: 'absolute',
   top: 0,
@@ -52,7 +52,7 @@ const OrbitToolbarChrome = gloss<{ transparent?: boolean }>(View, {
   background: theme.background,
 }))
 
-const ToolbarInner = gloss<{ isActive: boolean }>(View, {
+const ToolbarInner = gloss<{ isActive: boolean }, typeof View>(View, {
   flex: 2,
   flexDirection: 'row',
   opacity: 0,

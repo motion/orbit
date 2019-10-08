@@ -11,7 +11,7 @@ type ThemeTrackState = {
   nonCSSVariables: Set<string>
 }
 
-type UseThemeProps = { [key: string]: any; coat?: string | false }
+type UseThemeProps = { coat?: string | false }
 
 export function useTheme(props?: UseThemeProps) {
   const themeObservable = useContext(CurrentThemeContext)
@@ -48,8 +48,7 @@ const getTheme = (theme?: CompiledTheme, props?: UseThemeProps) => {
     // TODO this should not go here, maybe just wrap those themes in <Theme coat={false}> or something
     if (props?.coat === false) {
       return theme.parent || theme
-    }
-    if (props?.coat) {
+    } else if (props?.coat) {
       return preProcessTheme(props, theme)
     }
   }

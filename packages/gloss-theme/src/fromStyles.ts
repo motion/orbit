@@ -1,11 +1,11 @@
 import { Color, toColor } from '@o/color'
-import { SimpleStyleObject, ThemeObject } from 'gloss'
+import { ThemeObject } from 'gloss'
 
 import { colorize, darken, decreaseContrast, increaseContrast, largeAmount, opposite, roundToExtreme, smallAmount } from '.'
 
 // generate some properly contrasted colors based on base colors
 // insert theme into psuedo styles for Blur Active and ActiveHighlight
-export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObject & A => {
+export const fromStyles = <A extends Partial<{ [key: string]: any }>>(s: A): ThemeObject & A => {
   if (!s.background && !s.color) {
     throw new Error('Themes require at least background or color')
   }

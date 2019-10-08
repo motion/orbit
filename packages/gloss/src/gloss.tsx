@@ -1,4 +1,4 @@
-import { CSSPropertySet, CSSPropertySetLoose, CSSPropertySetStrict, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
+import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
@@ -10,9 +10,86 @@ import { CompiledTheme } from './theme/createTheme'
 import { ThemeSelect } from './theme/Theme'
 import { themeVariableManager } from './theme/themeVariableManager'
 import { useTheme } from './theme/useTheme'
+import { Spread } from './types'
 
 // so you can reference in postProcessProps
 export { StyleTracker } from './stylesheet/gc'
+
+/**
+ * Note: ThemeProps is optional, for the user to define that they are
+ * filtering out props before they get to `theme`, which is helpful for keeping
+ * their types simple. It's still relatively low level. See our @o/ui/View.tsx
+ */
+export interface GlossView<P = {}> {
+  (props: P, context?: any): React.ReactElement<any> | null
+  shouldUpdateMap: WeakMap<object, boolean>
+  propTypes?: React.ValidationMap<P>
+  contextTypes?: React.ValidationMap<any>
+  defaultProps?: Partial<P>
+  displayName?: string
+  // extra:
+  ignoreAttrs?: { [key: string]: boolean }
+  theme: (...themeFns: ThemeFn<P>[]) => this
+  withConfig: (config: GlossViewOpts<P>) => this
+  internal: GlossInternals<P>
+  staticStyleConfig?: {
+    cssAttributes?: Object
+    deoptProps?: string[]
+    avoidProps?: string[]
+  }
+}
+
+export type GlossProps<Props = {}> = Spread<CSSPropertySet, Props & {
+  className?: string
+  tagName?: string
+  children?: React.ReactNode
+  nodeRef?: any
+  style?: any
+  coat?: string | false
+  subTheme?: ThemeSelect
+}>
+
+export type ThemeFn<Props = any> = (
+  props: Props,
+  theme: CompiledTheme,
+  previous?: CSSPropertySetLoose | null,
+) => CSSPropertySetLoose | undefined | null
+
+export type GlossViewOpts<Props = {}> = {
+  displayName?: string
+  ignoreAttrs?: { [key: string]: boolean }
+  defaultProps?: Partial<Props>
+  shouldAvoidProcessingStyles?: (props: Props) => boolean
+  postProcessProps?: (curProps: Props, nextProps: any, getFinalStyles: () => CSSPropertySet) => any
+  getElement?: (props: Props) => any
+  isDOMElement?: boolean
+}
+
+type GlossInternalConfig = {
+  displayName: string
+  targetElement: any
+  styles: any
+  conditionalStyles: Object | undefined
+  config: GlossViewOpts | null
+}
+
+export type GlossStaticStyleDescription = {
+  className: string
+  conditionalClassNames?: {
+    [key: string]: string
+  }
+}
+
+type GlossInternals<Props> = {
+  parent: any
+  themeFns: ThemeFn<Props>[] | null
+  compiledInfo?: GlossStaticStyleDescription
+  staticStyles: {
+    styles: Object
+    conditionalStyles: Object | undefined
+  }
+  getConfig: () => GlossInternalConfig
+}
 
 const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
 export const tracker: StyleTracker = new Map()
@@ -21,83 +98,11 @@ const gc = new GarbageCollector(sheet, tracker)
 const whiteSpaceRegex = /[\s]+/g
 const emptyObject = {}
 
-export type GlossProps<Props> = CSSPropertySetStrict & Props & {
-  className?: string
-  tagName?: string
-  children?: React.ReactNode
-  nodeRef?: any
-  style?: any
-  coat?: string | false
-  subTheme?: ThemeSelect
-}
-
-// Spread<CSSPropertySetStrict, Props> & {
-//   className?: string
-//   tagName?: string
-//   children?: React.ReactNode
-//   nodeRef?: any
-//   style?: any
-//   coat?: string | false
-//   subTheme?: ThemeSelect
-// }
-
-export type ThemeFn<Props = any> = (
-  props: Props,
-  theme: CompiledTheme,
-  previous?: CSSPropertySetLoose | null,
-) => CSSPropertySetLoose | undefined | null
-
-/**
- * Note: ThemeProps is optional, for the user to define that they are
- * filtering out props before they get to `theme`, which is helpful for keeping
- * their types simple. It's still relatively low level. See our @o/ui/View.tsx
- */
-export interface GlossView<Props = any, FinalProps = GlossProps<Props>> {
-  (props: FinalProps, context?: any): React.ReactElement<any> | null
-  shouldUpdateMap: WeakMap<object, boolean>
-  propTypes?: React.ValidationMap<FinalProps>
-  contextTypes?: React.ValidationMap<any>
-  defaultProps?: Partial<FinalProps>
-  displayName?: string
-  // extra:
-  ignoreAttrs?: { [key: string]: boolean }
-  theme: (...themeFns: ThemeFn<FinalProps>[]) => this
-  withConfig: (config: GlossViewOpts<FinalProps>) => this
-  internal: GlossInternals<FinalProps>
-  staticStyleConfig?: {
-    cssAttributes?: Object
-    deoptProps?: string[]
-    avoidProps?: string[]
-  }
-}
-
-type ThemeProps<ExtraProps = { [key: string]: any }> = CSSPropertySet | {
-  [key in keyof ExtraProps]: CSSPropertySet
-}
-
-// test
-const X = gloss<{ poop: string; padding: boolean }>({})
-const Y = gloss<{ isActive: boolean }>(X, {
-  color: 'red',
-  isActive: {
-    color: 'red',
-  }
-}).theme(props => {
-  props.isActive
-  props.poop
-  props.background
-  props.padding
-  return {}
-})
-// end test
-
-type InferProps<A> = A extends GlossView<infer P> ? P : unknown
-
-export function gloss<MyProps = {}, A extends GlossView = any>(
-  a?: A | ThemeProps<MyProps> | ((props: GlossProps<MyProps>) => any) | string,
-  b?: ThemeProps<MyProps>,
+export function gloss<MyProps = any, ParentProps = {}, Props = GlossProps<MyProps & ParentProps>>(
+  a?: CSSPropertySet | GlossView<Props> | ((props: Props) => any) | string,
+  b?: CSSPropertySet,
   compiledInfo?: GlossStaticStyleDescription,
-): GlossView<MyProps & InferProps<A>> {
+): GlossView<Props> {
   if (process.env.NODE_ENV === 'development') {
     if (a === undefined && !!b) {
       throw new Error(
@@ -105,8 +110,6 @@ export function gloss<MyProps = {}, A extends GlossView = any>(
       )
     }
   }
-
-  type Props = GlossProps<MyProps & (A extends GlossView<infer PP> ? PP : {})>
 
   // @ts-ignore
   let target: any = a || 'div'
@@ -162,10 +165,10 @@ export function gloss<MyProps = {}, A extends GlossView = any>(
 
   let themeFn: ThemeFn | null = null
   let staticClasses: string[] | null = null
-  let ogConfig: GlossViewOpts<Props> | null = null
-  let config: GlossViewOpts<Props> | null = null
+  let ogConfig: GlossViewOpts | null = null
+  let config: GlossViewOpts | null = null
   let hasCompiled = false
-  let getEl: GlossViewOpts<Props>['getElement'] | null = null
+  let getEl: GlossViewOpts['getElement'] | null = null
   let shouldUpdateMap: WeakMap<any, boolean>
 
   /**
@@ -175,7 +178,7 @@ export function gloss<MyProps = {}, A extends GlossView = any>(
    *
    *
    */
-  function GlossView(props: Props) {
+  function GlossView(props: GlossProps) {
     // compile on first run to avoid extra work
     if (!hasCompiled) {
       hasCompiled = true
@@ -186,10 +189,6 @@ export function gloss<MyProps = {}, A extends GlossView = any>(
       config = getCompiledConfig(ThemedView, ogConfig)
       getEl = config.getElement
       shouldUpdateMap = GlossView['shouldUpdateMap']
-    }
-
-    if (props['className']?.includes('ui-border-top')) {
-      debugger
     }
 
     const theme = useTheme(props)
@@ -696,9 +695,9 @@ export function getAllStyles(config: GlossInternalConfig | null, rawStyles: CSSP
  */
 function getCompiledConfig(
   viewOG: GlossView,
-  config: GlossViewOpts<any> | null,
-): GlossViewOpts<any> {
-  const compiledConf: GlossViewOpts<any> = { ...config }
+  config: GlossViewOpts | null,
+): GlossViewOpts {
+  const compiledConf: GlossViewOpts = { ...config }
   let cur = viewOG
   while (cur) {
     const curConf = cur.internal.getConfig().config
@@ -904,40 +903,4 @@ function createGlossIsEqual() {
       return !shouldUpdate
     },
   }
-}
-
-export type GlossViewOpts<Props> = {
-  displayName?: string
-  ignoreAttrs?: { [key: string]: boolean }
-  defaultProps?: Partial<Props>
-  shouldAvoidProcessingStyles?: (props: Props) => boolean
-  postProcessProps?: (curProps: Props, nextProps: any, getFinalStyles: () => CSSPropertySet) => any
-  getElement?: (props: Props) => any
-  isDOMElement?: boolean
-}
-
-type GlossInternalConfig = {
-  displayName: string
-  targetElement: any
-  styles: any
-  conditionalStyles: Object | undefined
-  config: GlossViewOpts<any> | null
-}
-
-export type GlossStaticStyleDescription = {
-  className: string
-  conditionalClassNames?: {
-    [key: string]: string
-  }
-}
-
-type GlossInternals<Props> = {
-  parent: any
-  themeFns: ThemeFn<Props>[] | null
-  compiledInfo?: GlossStaticStyleDescription
-  staticStyles: {
-    styles: Object
-    conditionalStyles: Object | undefined
-  }
-  getConfig: () => GlossInternalConfig
 }

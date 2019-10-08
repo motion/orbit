@@ -636,7 +636,6 @@ const perfectCenterStyle = props => {
 const applyElementTheme: ThemeFn<any> = (props) =>
   props.elementTheme ? props.elementTheme(props) : null
 
-// @ts-ignore
 const Element = gloss<SurfaceFrameProps & { disabled?: boolean }>({
   display: 'flex', // in case they change tagName
   flex: 1,

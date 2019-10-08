@@ -343,20 +343,23 @@ export function selectableTheme(props) {
   }
 }
 
-const TextEllipse = gloss({
+type TextEllipseProps = TextProps & {
+  doClamp?: boolean
+}
+
+const TextEllipse = gloss<TextEllipseProps>({
   display: 'inline',
   maxWidth: '100%',
-}).theme(propsToStyles, ellipseTheme)
-
-function ellipseTheme({ ellipse, doClamp, maxHeight }) {
-  if (ellipse === 1 || ellipse === true)
+}).theme(propsToStyles, ({ ellipse, doClamp, maxHeight }) => {
+  if (ellipse === 1 || ellipse === true) {
     return {
       display: 'block',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
       overflow: 'hidden',
-    } as const
-  if (ellipse > 1)
+    }
+  }
+  if (ellipse > 1) {
     return {
       WebkitLineClamp: ellipse,
       maxHeight,
@@ -366,5 +369,6 @@ function ellipseTheme({ ellipse, doClamp, maxHeight }) {
       textOverflow: 'ellipsis',
       display: '-webkit-box',
       WebkitBoxOrient: 'vertical',
-    } as const
-}
+    }
+  }
+})

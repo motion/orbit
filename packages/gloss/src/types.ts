@@ -17,6 +17,10 @@ export type ColorObject = { r: NoS; g: NoS; b: NoS; a?: NoS }
 export type ColorClassLike = { getCSSValue: Function } | { css: Function } | { alpha: Function }
 export type ColorLike = string | ColorClassLike | ColorArray | ColorObject
 
+// overridable theme
+export interface BaseTheme {}
+export type ITheme<A> = A
+
 export type SimpleStyleObject = {
   color?: ColorLike
   background?: ColorLike

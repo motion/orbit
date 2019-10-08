@@ -4,7 +4,7 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-import { Box, BoxProps, gloss } from 'gloss'
+import { Box, BoxProps, gloss, ThemeFn } from 'gloss'
 import * as React from 'react'
 
 import { colors } from './helpers/colors'
@@ -158,18 +158,19 @@ export class TreeItemsRow extends React.PureComponent<TreeItemsRowProps> {
   }
 }
 
-const backgroundColor = (props, theme) => {
+const backgroundTheme: ThemeFn = props => {
+  let background
   if (props.selected) {
-    return theme.backgroundHighlight || theme.backgroundActive || theme.background
+    background = props.backgroundHighlight || props.backgroundActive || props.background
   } else if (props.even) {
-    return theme.backgroundZebra
-  } else {
-    return ''
+    background = props.backgroundZebra
   }
+  return { background }
 }
 
 const TreeItemsRowContainer = gloss<
-  BoxProps & { selected?: boolean; level?: number; even?: boolean }
+  { selected?: boolean; level?: number; even?: boolean },
+  BoxProps
 >(Box, {
   flexDirection: 'row',
   alignItems: 'center',
@@ -178,17 +179,15 @@ const TreeItemsRowContainer = gloss<
   minWidth: '100%',
   paddingRight: 20,
   position: 'relative',
-}).theme((props, theme) => {
+}).theme(backgroundTheme, props => {
   return {
-    height: props.height,
-    background: backgroundColor(props, theme),
     color: props.selected ? colors.white : colors.grapeDark3,
     paddingLeft: (props.level - 1) * 12,
     '& *': {
       color: props.selected ? `${colors.white} !important` : '',
     },
     '&:hover': {
-      background: props.selected ? theme.backgroundHighlightHover : theme.backgroundHover,
+      background: props.selected ? props.backgroundHighlightHover : props.backgroundHover,
     },
   }
 })

@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc -b",
-    "watch": "tsc --preserveWatchOutput --watch"
+    "watch": "tsc -b --preserveWatchOutput --watch"
   },
   "dependencies": {
     "@o/icons": "3.10.5",

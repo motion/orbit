@@ -23,6 +23,7 @@ export * from './blocks/InlineBlock'
 export * from './blocks/InlineFlex'
 
 // configureGloss
+export { GlossConfig, SimpleStyleObject, BaseTheme, ITheme } from './types'
 export { GlossDefaultConfig, configureGloss } from './configureGloss'
 export * from './gloss'
 export { colorToString } from './helpers/helpers'
@@ -37,6 +38,5 @@ export { ThemeResetSubTheme } from './theme/ThemeResetSubTheme'
 export { ThemeProvide } from './theme/ThemeProvide'
 export * from './themes'
 export { propsToStyles } from './themes/propStyleTheme'
-export { GlossConfig, SimpleStyleObject } from './types'
 
 process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()

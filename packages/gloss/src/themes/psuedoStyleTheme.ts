@@ -10,11 +10,11 @@ import { styleVal } from './propStyleTheme'
 // TODO make this better (configurable + granular)...
 export type PseudoStyleProps = {
   disablePseudoStyles?: boolean
-  hoverStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
-  activeStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
-  focusStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
-  disabledStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
-  focusWithinStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
+  hoverStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null | ThemeFn<any>
+  activeStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null | ThemeFn<any>
+  focusStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null | ThemeFn<any>
+  disabledStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null | ThemeFn<any>
+  focusWithinStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null | ThemeFn<any>
 }
 
 const isDefined = (x: any) => typeof x !== 'undefined'
@@ -85,7 +85,8 @@ const applyPsuedoTheme: ThemeFn = (props: any, previous?: any) => {
   for (const key in pseudos) {
     const { postfix, pseudoKey, forceOnProp, extraStyleProp } = pseudos[key]
     if (props[forceOnProp] === false) continue // forced off
-    if (props[extraStyleProp] === null || props[extraStyleProp] === false) continue // forced empty
+    const extraStyle = props[extraStyleProp]
+    if (extraStyle === null || extraStyle === false) continue // forced empty
 
     // cache sub-keys like backgroundHover colorHover
     let subKeys = SubThemeKeys[postfix]
@@ -105,9 +106,10 @@ const applyPsuedoTheme: ThemeFn = (props: any, previous?: any) => {
     }
 
     // merge any user-defined psuedo style
-    if (typeof props[extraStyleProp] === 'object') {
+    if (typeof extraStyle === 'object' || typeof extraStyle === 'function') {
+      let styles = typeof extraStyle === 'function' ? extraStyle(props, previous) : extraStyle
       psuedoStyle = psuedoStyle || {}
-      Object.assign(psuedoStyle, props[extraStyleProp])
+      Object.assign(psuedoStyle, styles)
     }
 
     // we conditionally apply it here...

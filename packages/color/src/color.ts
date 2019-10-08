@@ -133,6 +133,7 @@ export class Color {
     'cssVariableSafeKeys',
     'originalInput',
     'isValid',
+    'toCSS',
     '$$typeof',
   ]
   cssVariable = ''
@@ -146,6 +147,13 @@ export class Color {
       })
     } else {
       this.cssVariable = name
+    }
+  }
+  toCSS() {
+    if (this.cssVariable) {
+      return `var(--${this.cssVariable})`
+    } else {
+      return this.toString()
     }
   }
 

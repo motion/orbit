@@ -13,13 +13,10 @@ import { ThemeSelect } from './theme/Theme'
 import { ThemeValue } from './theme/ThemeValue'
 import { themeVariableManager } from './theme/themeVariableManager'
 import { useTheme } from './theme/useTheme'
+import { BaseTheme } from './types'
 
 // so you can reference in postProcessProps
 export { StyleTracker } from './stylesheet/gc'
-
-// overridable theme
-export interface Theme {}
-export type ITheme<A> = A
 
 /**
  * Note: ThemeProps is optional, for the user to define that they are
@@ -96,12 +93,12 @@ export type GlossProps<Props = {}> = GenerateGlossProps<Props, CSSPropertySetStr
 type ColorKeys = 'background' | 'backgroundColor' | 'color' | 'borderColor'
 
 // compiles themeprops from regular props
-export type GlossThemeProps<Props = {}, FinalProps = Omit<GenerateGlossProps<Props, GlossPropertySet>, ColorKeys>> = Theme & FinalProps & {
+export type GlossThemeProps<Props = {}, FinalProps = Omit<GenerateGlossProps<Props, GlossPropertySet>, ColorKeys>> = FinalProps & {
   [K in (ColorKeys & Exclude<string, keyof FinalProps>)]: (K extends ColorKeys ? Color : ThemeValue<any>) | undefined
 }
-export type ThemeFn<RawProps = {}> = (
-  props: GlossThemeProps<RawProps>,
-  previous?: CSSPropertySetLoose | null,
+export type ThemeFn<RawProps = any> = (
+  props: BaseTheme & GlossThemeProps<RawProps>,
+  previous?: RawProps & CSSPropertySetLoose | null,
 ) => CSSPropertySetLoose | undefined | null
 
 export type GlossViewOpts<Props = {}> = {

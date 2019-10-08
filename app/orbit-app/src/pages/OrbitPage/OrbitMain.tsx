@@ -17,7 +17,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   const suspenseBanner = useRef<SuspenseWithBanner | null>(null)
 
   useReaction(
-    () => shareStore.clipboards.main,
+    () => shareStore!.clipboards.main,
     () => {
       if (suspenseBanner.current) {
         suspenseBanner.current.clearError()
@@ -62,14 +62,18 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   )
 })
 
-const OrbitMainContainer = gloss<{ isEditing: boolean; transparent?: boolean }>(Box, {
+const OrbitMainContainer = gloss<{
+  isEditing: boolean
+  transparent?: boolean
+  mainBackground?: Color
+}>(Box, {
   flex: 1,
   // otherwise flex wont work in children
   overflow: 'hidden',
-}).theme((props, theme) => ({
+}).theme(props => ({
   background: props.transparent
     ? 'transparent'
     : props.isEditing
-    ? theme.mainBackground || theme.background
-    : theme.mainBackground || theme.background || 'transparent',
+    ? props.mainBackground
+    : props.mainBackground || 'transparent',
 }))

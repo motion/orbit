@@ -134,7 +134,7 @@ export const TableRow = memo(function TableRow({
   )
 })
 
-const backgroundColor: ThemeFn<TableRowProps> = (props, theme) => {
+const backgroundTheme: ThemeFn<TableRowProps> = props => {
   let background
   if (props.background) {
     background = props.background
@@ -144,28 +144,33 @@ const backgroundColor: ThemeFn<TableRowProps> = (props, theme) => {
       if (!props.background && props.row) {
         const cat = props.row.category
         if (cat && guesses[cat]) {
-          background = guessTheme(cat, theme).background || 'transparent'
+          background = guessTheme(cat, props).background || 'transparent'
         }
       } else {
-        background = theme.backgroundHighlight
+        background = props.backgroundHighlight
       }
     } else if (isZebra) {
-      background = theme.backgroundZebra
+      background = props.backgroundZebra
     } else {
-      background = theme.background.setAlpha(0.35)
+      background = props.background.setAlpha(0.35)
     }
   }
-  return { background }
+  return {
+    background,
+    '&:hover': {
+      background: typeof background === 'string' ? background : background.lighten(0.075, true),
+    },
+  }
 }
 
-const getColor: ThemeFn<TableRowProps> = (props, theme) => {
+const colorTheme: ThemeFn<TableRowProps> = props => {
   let color = props.color
   if (props.highlighted) {
-    color = theme.colorHighlight
+    color = props.colorHighlight
   } else if (props.row) {
     const cat = props.row.category
     if (guesses[cat]) {
-      color = color || guessTheme(cat, theme).color
+      color = color || guessTheme(cat, props).color
     }
   }
   return { color: color || 'inherit' }
@@ -177,24 +182,18 @@ const TableBodyRowContainer = gloss<TableRowProps>(Box, {
   overflow: 'hidden',
   width: '100%',
   userSelect: 'none',
-}).theme((props, theme) => {
-  const { background } = backgroundColor(props, theme)
+}).theme(backgroundTheme, colorTheme, props => {
   return {
-    background,
-    boxShadow: props.zebra ? 'none' : `inset 0 -1px ${theme.borderColor.setAlpha(0.35)}`,
-    ...getColor(props, theme),
+    boxShadow: props.zebra ? 'none' : ['inset', 0, -1, props.borderColorLight],
     '& *': {
-      color: props.highlighted ? `${theme.colorHighlight} !important` : null,
+      color: props.highlighted ? `${props.colorHighlight.toCSS()} !important` : null,
     },
     '& img': {
-      background: props.highlighted ? `${theme.colorHighlight} !important` : 'none',
+      background: props.highlighted ? `${props.colorHighlight.toCSS()} !important` : 'none',
     },
     height: props.multiline ? 'auto' : props.rowLineHeight,
     lineHeight: `${String(props.rowLineHeight)}px`,
     flexShrink: 0,
-    '&:hover': {
-      background: typeof background === 'string' ? background : background.lighten(0.075, true),
-    },
   }
 })
 

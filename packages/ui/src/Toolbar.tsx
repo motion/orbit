@@ -58,6 +58,6 @@ const ToolbarRow = gloss<ToolbarProps>(Stack, {
   alignItems: 'center',
   width: '100%',
   position: 'relative',
-}).theme((props, theme) => ({
-  background: props.background || theme.backgroundStrong,
+}).theme(props => ({
+  background: props.backgroundStrong,
 }))

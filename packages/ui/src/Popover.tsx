@@ -13,7 +13,6 @@ import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { Surface, SurfaceProps } from './Surface'
 import { SurfacePassPropsReset } from './SurfacePropsContext'
-import { getElevation } from './View/elevation'
 import { View } from './View/View'
 
 const acceptsProps = (x, val) => x.type.acceptsProps && x.type.acceptsProps[val]
@@ -1086,9 +1085,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
                   {...backgroundProp}
                   size={arrowSize}
                   towards={INVERSE[direction]}
-                  // TODO this is bad because were allowing setting theme from the property...
-                  // so this wont get the theme set through the property, we should remove the property
-                  {...getElevation({ elevation })}
+                  elevation={elevation}
                 />
               </ArrowContain>
             )}

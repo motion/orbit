@@ -16,19 +16,30 @@ export { animation } from './helpers/animation'
 export { pluralize } from './helpers/pluralize'
 
 // this is what your themes should extend
-export type BaseTheme = {
+export type UITheme = {
   background: Color
+  backgroundHover?: Color
+  backgroundHighlight: Color
+  backgroundHighlightHover?: Color
   backgroundStrong: Color
   backgroundStronger: Color
   backgroundStrongest: Color
+  backgroundZebra: Color
   color: Color
+  colorHighlight: Color
   colorLight: Color
   colorLighter: Color
   colorLightest: Color
+  borderColor: Color
+  borderColorLight: Color
+  glintColor?: Color
+  glintColorTop?: Color
+  glintColorBottom?: Color
+  backgroundSelection?: Color
 }
 
 declare module 'gloss' {
-  interface Theme extends ITheme<BaseTheme> {}
+  interface BaseTheme extends ITheme<UITheme> {}
 }
 
 export {

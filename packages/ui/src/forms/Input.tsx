@@ -1,6 +1,6 @@
 import { isDefined } from '@o/utils'
-import { ThemeFn, useTheme } from 'gloss'
-import React, { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react'
+import { ThemeFn } from 'gloss'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { isWebkit } from '../constants'
 import { composeRefs } from '../helpers/composeRefs'
@@ -90,35 +90,6 @@ export function Input({ onEnter, type = 'text', nodeRef, children, ...props }: I
   )
 }
 
-const inputSurfaceTheme: ThemeFn<InputProps> = props => ({
-  ...(!props.chromeless && {
-    border: [1, props.borderColor.desaturate(0.1)],
-    '&:focus-within': {
-      boxShadow: [
-        [0, 0, 0, 3, props.borderColor.setAlpha(a => a * 0.5)],
-        getElevation(props).boxShadow,
-      ],
-    },
-  }),
-})
-
-const inputElementTheme: ThemeFn<InputProps> = (p, theme) => {
-  return {
-    // apple selection color
-    '&::selection': {
-      color: theme.colorLight,
-      background: theme.backgroundSelection || theme.backgroundStronger,
-    },
-    // autofill keep proper color
-    ...(isWebkit && {
-      '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
-        WebkitTextFillColor: p.color || theme.color,
-        backgroundColor: 'transparent',
-      },
-    }),
-  }
-}
-
 const SimpleInput = ({
   placeholder,
   tagName = 'input',
@@ -172,7 +143,36 @@ const SimpleInput = ({
       borderWidth={1}
       {...props}
       className={`ui-input ${props.className || ''}`}
-      focusWithinStyle={inputSurfaceTheme(useTheme(props))}
+      focusWithinStyle={inputSurfaceTheme}
     />
   )
+}
+
+const inputSurfaceTheme: ThemeFn<InputProps> = props => ({
+  ...(!props.chromeless && {
+    border: [1, props.borderColor.desaturate(0.1)],
+    '&:focus-within': {
+      boxShadow: [
+        [0, 0, 0, 3, props.borderColor.setAlpha(a => a * 0.5)],
+        getElevation(props).boxShadow,
+      ],
+    },
+  }),
+})
+
+const inputElementTheme: ThemeFn<InputProps> = props => {
+  return {
+    // apple selection color
+    '&::selection': {
+      color: props.colorLight,
+      background: props.backgroundSelection || props.backgroundStronger,
+    },
+    // autofill keep proper color
+    ...(isWebkit && {
+      '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
+        WebkitTextFillColor: props.color,
+        backgroundColor: 'transparent',
+      },
+    }),
+  }
 }

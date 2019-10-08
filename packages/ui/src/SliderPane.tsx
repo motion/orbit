@@ -84,11 +84,13 @@ const SliderPaneChrome = gloss<StackProps & { isActive?: boolean }>(Stack, {
   transform: {
     x: 20,
   },
-  isActive: {
-    pointerEvents: 'inherit',
-    opacity: 1,
-    transform: {
-      x: 0,
+  conditional: {
+    isActive: {
+      pointerEvents: 'inherit',
+      opacity: 1,
+      transform: {
+        x: 0,
+      },
     },
   },
 })

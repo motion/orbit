@@ -1,5 +1,5 @@
 import { Color } from '@o/color/src'
-import { CSSPropertySetStrict, GlossPropertySet } from '@o/css'
+import { CSSPropertySet, GlossPropertySet } from '@o/css'
 
 import { ThemeSelect } from './theme/Theme'
 import { ThemeValue } from './theme/ThemeValue'
@@ -64,22 +64,23 @@ export type CommonHTMLProps = Omit<
   | 'color'
 >
 
-export type GlossBaseProps = CommonHTMLProps & {
+export type GlossBaseProps = {
   tagName?: string
   nodeRef?: any
   coat?: string | false
   subTheme?: ThemeSelect
   conditional?: {
-    [key: string]: CSSPropertySetStrict
+    [key: string]: GlossPropertySet
   }
 }
 
 // theme types
-export type GenerateGlossProps<Props, CSSProps> = Omit<CSSProps, keyof Props> &
+export type GenerateGlossProps<Props, CSSProps> = Omit<CommonHTMLProps, keyof Props> &
+  Omit<CSSProps, keyof Props> &
   Omit<Props, keyof GlossBaseProps> &
   GlossBaseProps
 
-export type GlossProps<Props = {}> = GenerateGlossProps<Props, CSSPropertySetStrict>
+export type GlossProps<Props = {}> = GenerateGlossProps<Props, CSSPropertySet>
 
 type ColorKeys = 'background' | 'backgroundColor' | 'color' | 'borderColor'
 

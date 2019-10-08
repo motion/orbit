@@ -242,9 +242,11 @@ const GridWrapper = gloss<StackProps & { mounted?: boolean }>(Stack, {
   opacity: 0,
   transition: 'all ease 300ms',
   overflow: 'auto',
-  mounted: {
-    opacity: 1,
-    background: 'transparent',
+  conditional: {
+    mounted: {
+      opacity: 1,
+      background: 'transparent',
+    },
   },
 })
 

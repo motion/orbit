@@ -9,14 +9,16 @@ export const TableInput = gloss<HTMLProps<HTMLInputElement>>('input', {
   padding: [0, 5],
   height: 28,
   lineHeight: 28,
-  compact: {
-    height: 17,
-    lineHeight: 17,
-  },
   '&:disabled': {
     backgroundColor: '#ddd',
     borderColor: '#ccc',
     cursor: 'not-allowed',
+  },
+  conditional: {
+    compact: {
+      height: 17,
+      lineHeight: 17,
+    },
   },
 }).theme(props => ({
   border: [1, props.borderColor],

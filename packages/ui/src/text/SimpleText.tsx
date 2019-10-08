@@ -13,17 +13,19 @@ export type SimpleTextProps = Partial<Omit<BaseProps, 'size'>> & {
 export const SimpleText = gloss<SimpleTextProps>(Base, {
   display: 'inline-block',
   whiteSpace: 'normal',
-  ellipse: {
-    display: 'block',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-  selectable: {
-    userSelect: 'text',
-  },
-  pointable: {
-    cursor: 'pointer',
+  conditional: {
+    ellipse: {
+      display: 'block',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+    },
+    selectable: {
+      userSelect: 'text',
+    },
+    pointable: {
+      cursor: 'pointer',
+    },
   },
 }).theme(alphaColorTheme, scaledTextSizeTheme)
 

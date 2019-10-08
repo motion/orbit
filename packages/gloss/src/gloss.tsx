@@ -101,8 +101,8 @@ export function gloss<
   Parent extends GlossView<ParentProps> = any,
   Props = GlossProps<MyProps & ParentProps>
 >(
-  a?: CSSPropertySet | Parent | ((props: MyProps) => any) | string,
-  b?: CSSPropertySet,
+  a?: Props | Parent | ((props: MyProps) => any) | string,
+  b?: Props,
   compiledInfo?: GlossStaticStyleDescription,
 ): GlossView<MyProps & ParentProps> {
   if (process.env.NODE_ENV === 'development') {
@@ -259,7 +259,7 @@ export function gloss<
       ThemedView.displayName,
       conditionalStyles,
       dynClasses.current,
-      theme,
+      theme as any,
       themeFn,
       avoidStyles,
     )

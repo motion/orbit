@@ -6,7 +6,7 @@
  */
 import { Color } from '@o/color'
 import { useReaction } from '@o/use-store'
-import { Box, gloss, ThemeFn } from 'gloss'
+import { Box, BoxProps, gloss, ThemeFn } from 'gloss'
 import React, { memo } from 'react'
 
 import { DataValue } from '../DataValue'
@@ -176,7 +176,7 @@ const colorTheme: ThemeFn<TableRowProps> = props => {
   return { color: color || 'inherit' }
 }
 
-const TableBodyRowContainer = gloss<TableRowProps>(Box, {
+const TableBodyRowContainer = gloss<TableRowProps, BoxProps>(Box, {
   flexDirection: 'row',
   fontWeight: 'inherit',
   overflow: 'hidden',

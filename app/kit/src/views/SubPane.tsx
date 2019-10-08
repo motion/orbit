@@ -94,8 +94,10 @@ export const SubPane = memo(function SubPane(props: Props) {
 const SubPaneFrame = gloss<UI.FullScreenProps & { isActive?: boolean }>(UI.FullScreen, {
   pointerEvents: 'none',
   opacity: 0,
-  isActive: {
-    opacity: 1,
+  conditional: {
+    isActive: {
+      opacity: 1,
+    },
   },
 })
 

@@ -10,7 +10,7 @@ import * as React from 'react'
 import { colors } from './helpers/colors'
 import { Icon } from './Icon'
 import { Image } from './Image'
-import { Text } from './text/Text'
+import { Text, TextProps } from './text/Text'
 import { TreeItem, TreeItemID } from './Tree'
 
 type TreeItemsRowProps = {
@@ -259,7 +259,7 @@ const TreeItemsRowDecoration = gloss(Box, {
   top: -1,
 })
 
-const TreeItemsLine = gloss<{ height: number; childrenCount: number }>(Box, {
+const TreeItemsLine = gloss<{ height: number; childrenCount: number }, BoxProps>(Box, {
   position: 'absolute',
   right: 3,
   zIndex: 2,
@@ -277,7 +277,7 @@ const DecorationImage = gloss(Image, {
   width: 12,
 })
 
-const NoShrinkText = gloss(Text, {
+const NoShrinkText = gloss<TextProps>(Text, {
   flexShrink: 0,
   flexWrap: 'nowrap',
   overflow: 'hidden',

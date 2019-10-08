@@ -119,9 +119,11 @@ function SimpleModal({
 const ModalSizedSurface = gloss<{ open?: boolean }, SurfaceProps>(Surface, {
   opacity: 0,
   pointerEvents: 'none',
-  open: {
-    opacity: 1,
-    pointerEvents: 'auto',
+  conditional: {
+    open: {
+      opacity: 1,
+      pointerEvents: 'auto',
+    },
   },
 })
 
@@ -134,8 +136,10 @@ const ModalBackground = gloss<{ open?: boolean }, ViewProps>(View, {
   zIndex: 1000000,
   justifyContent: 'center',
   alignItems: 'center',
-  open: {
-    pointerEvents: 'auto',
+  conditional: {
+    open: {
+      pointerEvents: 'auto',
+    },
   },
 }).theme(({ background, open }) => ({
   background: open ? background || 'rgba(0, 0, 0, 0.3)' : 'transparent',

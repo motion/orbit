@@ -30,6 +30,7 @@ export {
   SimpleStyleObject,
   ThemeType,
   CreateThemeType,
+  CommonHTMLProps,
 } from './types'
 export { GlossDefaultConfig, configureGloss } from './configureGloss'
 export * from './gloss'

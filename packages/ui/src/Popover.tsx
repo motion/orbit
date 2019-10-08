@@ -1164,12 +1164,14 @@ const PopoverContainer = gloss<{ isOpen?: boolean; isTouchable?: boolean }>(View
   '& > *': {
     pointerEvents: 'none !important',
   },
-  isOpen: {
-    opacity: 1,
-  },
-  isTouchable: {
-    '& > *': {
-      pointerEvents: 'all !important',
+  conditional: {
+    isOpen: {
+      opacity: 1,
+    },
+    isTouchable: {
+      '& > *': {
+        pointerEvents: 'all !important',
+      },
     },
   },
 }).withConfig({
@@ -1190,9 +1192,11 @@ const Overlay = gloss<any>(Box, {
   opacity: 0,
   transition: 'all ease-in 100ms',
   zIndex: -2,
-  isShown: {
-    opacity: 1,
-    pointerEvents: 'all',
+  conditional: {
+    isShown: {
+      opacity: 1,
+      pointerEvents: 'all',
+    },
   },
 }).theme(({ overlay }) => ({
   background: overlay === true ? 'rgba(0,0,0,0.2)' : overlay,

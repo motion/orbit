@@ -1,6 +1,6 @@
 import { GlossPropertySet } from '@o/css'
 import { MotionProps, MotionTransform, Transition } from 'framer-motion'
-import { AlphaColorProps, CSSPropertySet, CSSPropertySetStrict, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
+import { AlphaColorProps, CommonHTMLProps, CSSPropertySet, CSSPropertySetStrict, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
 import React from 'react'
 
 import { AnimationStore } from '../Geometry'
@@ -15,8 +15,8 @@ import { MarginProps } from './View'
  */
 
 // these are used to filter out all the "excess" props for docs generation
+// TODO why am i not seeing this in grep?
 export type BaseViewProps = CommonHTMLProps & CommonViewProps
-
 export const BaseViewProps = (props: BaseViewProps) => props.children
 export const BaseCSSProps = (props: CSSPropertySet) => props.children
 
@@ -29,55 +29,11 @@ export type SizesObject = {
   y?: Size
 }
 
-// TODO further simplify and standardize props, instead of using HTML props
-// so we move them more towards native like react-native-web
-// for now adapted from gloss/Base.tsx
-type CommonHTMLProps = Omit<
-  React.HTMLAttributes<HTMLDivElement>,
-  | 'title'
-  | 'about'
-  | 'accessKey'
-  | 'autoCapitalize'
-  | 'autoCorrect'
-  | 'autoSave'
-  | 'vocab'
-  | 'typeof'
-  | 'suppressHydrationWarning'
-  | 'suppressContentEditableWarning'
-  | 'spellCheck'
-  | 'security'
-  | 'slot'
-  | 'results'
-  | 'resource'
-  | 'prefix'
-  | 'property'
-  | 'radioGroup'
-  | 'contextMenu'
-  | 'dir'
-  | 'datatype'
-  | 'inlist'
-  | 'itemID'
-  | 'lang'
-  | 'is'
-  | 'itemScope'
-  | 'inputMode'
-  | 'color'
-  | 'size'
-  | 'padding'
-  | 'margin'
->
-
-type MotionCompatCommonProps = Omit<
-  CommonHTMLProps,
-  'onDrag' | 'onDragStart' | 'onDragEnd' | 'style'
->
-
 export type OrbitMotionTransform = {
   [P in keyof MotionTransform]: MotionTransform[P] | AnimationStore
 }
 
-export type ViewBaseProps = MotionCompatCommonProps &
-  PseudoStyleProps &
+export type ViewBaseProps = PseudoStyleProps &
   TextSizeProps &
   AlphaColorProps &
   ElevatableProps &

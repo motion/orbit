@@ -327,11 +327,13 @@ const TextBlock = gloss({
   position: 'relative',
   minHeight: 'min-content',
   maxWidth: '100%',
-  selectable: {
-    userSelect: 'text',
-  },
-  oneLineEllipse: {
-    overflow: 'hidden',
+  conditional: {
+    selectable: {
+      userSelect: 'text',
+    },
+    oneLineEllipse: {
+      overflow: 'hidden',
+    },
   },
 }).theme(propsToStyles, alphaColorTheme, selectableTheme)
 

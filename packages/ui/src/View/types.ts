@@ -1,6 +1,6 @@
 import { GlossPropertySet } from '@o/css'
 import { MotionProps, MotionTransform, Transition } from 'framer-motion'
-import { AlphaColorProps, CSSPropertySet, CSSPropertySetStrict, PseudoStyleProps, TextSizeProps } from 'gloss'
+import { AlphaColorProps, CSSPropertySet, CSSPropertySetStrict, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
 import React from 'react'
 
 import { AnimationStore } from '../Geometry'
@@ -99,12 +99,14 @@ export type OrbitCSSPropertyAnimation = {
   [P in keyof OrbitCSSPropertySet]: OrbitCSSPropertySet[P] | AnimationStore
 }
 
-export type ViewProps = Omit<ViewBaseProps, 'direction'> &
-  // be sure to omit margin/padding
-  Omit<OrbitCSSPropertyAnimation, 'direction'> & {
-    direction?: 'horizontal' | 'vertical' | OrbitCSSPropertySet['direction']
-    transition?: CSSPropertySetStrict['transition'] | Transition
-  }
+export type ViewProps = GlossProps<
+  Omit<ViewBaseProps, 'direction'> &
+    // be sure to omit margin/padding
+    Omit<OrbitCSSPropertyAnimation, 'direction'> & {
+      direction?: 'horizontal' | 'vertical' | OrbitCSSPropertySet['direction']
+      transition?: CSSPropertySetStrict['transition'] | Transition
+    }
+>
 
 export type ViewThemeProps = ViewBaseProps & GlossPropertySet
 

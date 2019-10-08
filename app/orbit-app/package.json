@@ -55,7 +55,8 @@
   },
   "devDependencies": {
     "@types/jest": "24.0.11",
-    "querystring": "0.2.0"
+    "querystring": "0.2.0",
+    "ts-toolbelt": "^4.8.6"
   },
   "peerDependencies": {
     "electron": "*",

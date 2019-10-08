@@ -2,7 +2,7 @@ import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
 import { Base, Box, CompiledTheme, gloss, propsToStyles, psuedoStyleTheme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
-import React, { HTMLProps, memo, useContext, useEffect, useMemo, useState } from 'react'
+import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
 import { useBreadcrumb, useBreadcrumbReset } from './Breadcrumbs'
@@ -185,7 +185,6 @@ const getBorderRadius = (t, b, l, r, tl, tr, bl, br) => {
 
 type ThroughProps = Pick<
   SurfaceProps,
-  | 'height'
   | 'iconPadding'
   | 'alignItems'
   | 'justifyContent'

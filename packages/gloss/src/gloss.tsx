@@ -1,6 +1,7 @@
-import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
+import { CSSPropertySet, CSSPropertySetLoose, CSSPropertySetStrict, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
+import { O } from 'ts-toolbelt'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -10,7 +11,6 @@ import { CompiledTheme } from './theme/createTheme'
 import { ThemeSelect } from './theme/Theme'
 import { themeVariableManager } from './theme/themeVariableManager'
 import { useTheme } from './theme/useTheme'
-import { Spread } from './types'
 
 // so you can reference in postProcessProps
 export { StyleTracker } from './stylesheet/gc'
@@ -39,7 +39,7 @@ export interface GlossView<P = {}> {
   }
 }
 
-export type GlossProps<Props = {}> = Spread<CSSPropertySet, Props & {
+export type GlossProps<Props extends object = {}> = O.Merge<O.Merge<CSSPropertySetStrict, Props>, {
   className?: string
   tagName?: string
   children?: React.ReactNode
@@ -98,7 +98,7 @@ const gc = new GarbageCollector(sheet, tracker)
 const whiteSpaceRegex = /[\s]+/g
 const emptyObject = {}
 
-export function gloss<MyProps = any, ParentProps = {}, Props = GlossProps<MyProps & ParentProps>>(
+export function gloss<MyProps extends object = {}, ParentProps extends object = {}, Props = GlossProps<MyProps & ParentProps>>(
   a?: CSSPropertySet | GlossView<Props> | ((props: Props) => any) | string,
   b?: CSSPropertySet,
   compiledInfo?: GlossStaticStyleDescription,

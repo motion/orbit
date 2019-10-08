@@ -48,6 +48,13 @@ const getTheme = (theme?: CompiledTheme, props?: any) => {
   return theme
 }
 
+const OriginalPropsSymbol = Symbol('OriginalPropsSymbol') as any
+
+// utility for getting original props
+export const getOriginalProps = (themeProps: any): any => {
+  return themeProps[OriginalPropsSymbol]
+}
+
 export const UnwrapThemeSymbol = Symbol('UnwrapTheme') as any
 export const unwrapTheme = <CompiledTheme>(theme: CompiledTheme): CompiledTheme => {
   let res = theme
@@ -67,6 +74,9 @@ function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState, props?: a
       get(_, key) {
         if (key === UnwrapThemeSymbol) {
           return theme
+        }
+        if (key === OriginalPropsSymbol) {
+          return props
         }
         // props override theme values here
         // TODO we need to do all the css conversions here

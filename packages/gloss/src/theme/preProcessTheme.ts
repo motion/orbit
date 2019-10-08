@@ -10,7 +10,7 @@ import { unwrapTheme, UnwrapThemeSymbol } from './useTheme'
 
 const themeAltCache = new WeakMap<CompiledTheme, { [key: string]: CompiledTheme }>()
 
-export const preProcessTheme = (props: GlossProps<any>, theme: CompiledTheme) => {
+export const preProcessTheme = (props: GlossProps, theme: CompiledTheme) => {
   const parent = unwrapTheme(theme)
   if (props.coat || props.subTheme) {
     const altKey = getAltKey(props)
@@ -47,7 +47,7 @@ export const preProcessTheme = (props: GlossProps<any>, theme: CompiledTheme) =>
   return theme
 }
 
-function getAltKey(props: GlossProps<any>) {
+function getAltKey(props: GlossProps) {
   return `coat${props.coat || '_'}-sub${props.subTheme || '_'}`
 }
 

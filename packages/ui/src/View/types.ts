@@ -95,8 +95,20 @@ export type ViewBaseProps = MotionCompatCommonProps &
 export type OrbitCSSPropertySet = Omit<CSSPropertySetStrict, 'margin' | 'padding' | 'transition'>
 
 // add in the AnimationStores for any prop (motion accepts it)
+// for now lets limit to not all to avoid pain in having to handle AnimationStore in many higher level views
+// for example Section wants to use height/maxHeight etc in style={{}} and not have to check every value
+// and we don't watn to animate height/maxHeight almost ever (layout problems) so dont do that
+// plus in general want to only animate things that aren't too expensive
+type ExtraAnimatableProperties =
+  | 'background'
+  | 'color'
+  | 'border'
+  | 'borderColor'
+  | 'backgroundColor'
+  | 'opacity'
+
 export type OrbitCSSPropertyAnimation = {
-  [P in keyof OrbitCSSPropertySet]: OrbitCSSPropertySet[P] | AnimationStore
+  [P in ExtraAnimatableProperties]: OrbitCSSPropertySet[P] | AnimationStore
 }
 
 export type ViewProps = GlossProps<

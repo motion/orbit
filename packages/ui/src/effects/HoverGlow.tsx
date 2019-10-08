@@ -311,10 +311,11 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
         key="hoverglow"
         nodeRef={this.rootRef}
         style={{
+          // @ts-ignore
           WebkitAppRegion: draggable ? 'drag' : 'no-drag',
           borderLeftRadius: borderLeftRadius || borderRadius,
           borderRightRadius: borderRightRadius || borderRadius,
-          overflow,
+          overflow: overflow === true ? 'inherit' : 'hidden',
           zIndex: behind ? -1 : overlayZIndex,
         }}
         {...props}

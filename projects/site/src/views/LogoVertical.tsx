@@ -1,6 +1,6 @@
 import words from '!raw-loader!../public/images/logomark-solid.svg'
 import { scrollTo, Space, SVG, View, ViewProps } from '@o/ui'
-import { gloss, useTheme } from 'gloss'
+import { useTheme } from 'gloss'
 import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'
 
@@ -80,9 +80,3 @@ export const BrandWords = memo(({ fill, ...props }: any) => {
   const f = fill || theme.color
   return <SVG svg={cleanBrand} cleanup fill={`${f}`} {...props} />
 })
-
-const Image = gloss(View)
-
-Image.defaultProps = {
-  tagName: 'img',
-}

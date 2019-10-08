@@ -371,7 +371,7 @@ export class Orderable extends React.Component<OrderableProps, OrderableState> {
       }
     }
     return (
-      <OrderableContainer className={this.props.className} ref={this.setContainerRef}>
+      <OrderableContainer className={this.props.className} nodeRef={this.setContainerRef}>
         {order.map(key => {
           const item = items[key]
           if (item) {

@@ -1,4 +1,5 @@
 import { useAnimation } from 'framer-motion'
+import { resolveThemeValues } from 'gloss'
 import React from 'react'
 
 import { Card, CardProps } from './Card'
@@ -18,13 +19,16 @@ export const TiltCard = ({ style, ...rest }: CardProps) => {
         })
       }
       onMouseLeave={() => tilt.start({ rotateY: 0, rotateX: 0, scale: 1 })}
-      style={{
-        flex: rest.flex,
-        height: rest.height,
-        width: rest.width,
-        margin: rest.margin,
-        ...style,
-      }}
+      style={
+        // TODO fix types
+        resolveThemeValues({
+          flex: rest.flex,
+          height: rest.height,
+          width: rest.width,
+          margin: rest.margin,
+          ...style,
+        }) as any
+      }
     >
       <Card flex={1} {...rest} />
     </View>

@@ -93,7 +93,7 @@ export class Masonry extends React.PureComponent<MasonryProps> {
     if (!measured) {
       return (
         <MasonryGrid
-          ref={this.handleGridRef}
+          nodeRef={this.handleGridRef}
           {...props}
           style={{
             opacity: 0,

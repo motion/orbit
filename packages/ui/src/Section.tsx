@@ -223,9 +223,12 @@ export function Section(direct: SectionProps) {
       background={background || 'transparent'}
       // in case they change fast
       style={{
+        // @ts-ignore
         height,
         width: width as any,
+        // @ts-ignore
         maxHeight,
+        // @ts-ignore
         maxWidth,
       }}
       minHeight={minHeight}

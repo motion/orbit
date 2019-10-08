@@ -9,7 +9,7 @@ import invariant from 'invariant'
 import * as React from 'react'
 
 import { ContextMenu } from '../ContextMenu'
-import { Interactive } from '../Interactive'
+import { Interactive, InteractiveProps } from '../Interactive'
 import { SimpleText } from '../text/SimpleText'
 import { DataColumns, DataType } from '../types'
 import { DEFAULT_ROW_HEIGHT, SortOrder, TableColumnOrder, TableColumnSizes, TableOnColumnResize, TableOnSort } from './types'
@@ -31,7 +31,7 @@ const TableHeadColumnText = gloss(SimpleText, {
   fontWeight: 500,
 })
 
-const TableHeaderColumnInteractive = gloss(Interactive, {
+const TableHeaderColumnInteractive = gloss<InteractiveProps>(Interactive, {
   flex: 1,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -174,11 +174,7 @@ class TableHeadColumn extends React.PureComponent<{
 
     if (isResizable) {
       children = (
-        <TableHeaderColumnInteractive
-          fill={true}
-          resizable={RIGHT_RESIZABLE}
-          onResize={this.onResize}
-        >
+        <TableHeaderColumnInteractive fill resizable={RIGHT_RESIZABLE} onResize={this.onResize}>
           {children}
         </TableHeaderColumnInteractive>
       )

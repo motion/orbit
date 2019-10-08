@@ -4,14 +4,15 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
-import { gloss, Box, BoxProps } from 'gloss'
+import { Box, BoxProps, gloss } from 'gloss'
 import * as React from 'react'
+
 import { colors } from './helpers/colors'
 import { Icon } from './Icon'
 import { Image } from './Image'
 import { Text } from './text/Text'
 import { TreeItem, TreeItemID } from './Tree'
+
 
 type TreeItemsRowProps = {
   id: TreeItemID
@@ -144,7 +145,7 @@ export class TreeItemsRow extends React.PureComponent<TreeItemsRowProps> {
           {line}
           {arrow}
         </TreeItemsRowDecoration>
-        <NoShrinkText code={true}>
+        <NoShrinkText>
           {decoration}
           <PartialHighlight
             content={element.name}

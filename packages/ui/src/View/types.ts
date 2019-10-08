@@ -108,7 +108,7 @@ type ExtraAnimatableProperties =
   | 'opacity'
 
 export type OrbitCSSPropertyAnimation = {
-  [P in ExtraAnimatableProperties]: OrbitCSSPropertySet[P] | AnimationStore
+  [P in ExtraAnimatableProperties]?: OrbitCSSPropertySet[P] | AnimationStore
 }
 
 export type ViewProps = GlossProps<

@@ -90,7 +90,7 @@ export function Input({ onEnter, type = 'text', nodeRef, children, ...props }: I
   )
 }
 
-const inputSurfaceTheme: ThemeFn = (props, theme) => ({
+const inputSurfaceTheme: ThemeFn<InputProps> = (props, theme) => ({
   ...(!props.chromeless && {
     border: [1, theme.borderColor.desaturate(0.1)],
     '&:focus-within': {
@@ -102,7 +102,7 @@ const inputSurfaceTheme: ThemeFn = (props, theme) => ({
   }),
 })
 
-const inputElementTheme: ThemeFn = (p, theme) => {
+const inputElementTheme: ThemeFn<InputProps> = (p, theme) => {
   return {
     // apple selection color
     '&::selection': {

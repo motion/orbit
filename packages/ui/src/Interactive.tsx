@@ -51,7 +51,7 @@ const ALL_RESIZABLE: ResizableSides = {
 
 export type InteractiveProps = Omit<
   ViewProps,
-  'minHeight' | 'minWidth' | 'visibility' | 'position' | 'right' | 'top' | 'left' | 'flex'
+  'minHeight' | 'minWidth' | 'visibility' | 'position' | 'right' | 'top' | 'left' | 'flex' | 'fill'
 > & {
   position?: string
   disabled?: boolean

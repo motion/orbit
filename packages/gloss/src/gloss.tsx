@@ -1,5 +1,6 @@
 import { CSSPropertySet, CSSPropertySetLoose, CSSPropertySetStrict, cssString, cssStringWithHash, GlossPropertySet, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
+import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
@@ -135,8 +136,12 @@ const gc = new GarbageCollector(sheet, tracker)
 const whiteSpaceRegex = /[\s]+/g
 const emptyObject = {}
 
-const x = gloss<{ x: 1 }>()
-const x2 = gloss(x)
+// const x = gloss<{ x: 1 }>()
+// const x2 = gloss(x)
+// fails cant add it
+// class X extends React.Component<{ c: 1 }> {}
+// const X3 = gloss(X)
+// const y = <X3 c={1} />
 
 export function gloss<
   MyProps = {},

@@ -1,5 +1,6 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
+import { GlossThemeProps } from '../types'
 import { CompiledTheme } from './createTheme'
 import { preProcessTheme } from './preProcessTheme'
 import { CurrentThemeContext } from './Theme'
@@ -17,7 +18,7 @@ type UseThemeProps = {
   [key: string]: any
 }
 
-export function useTheme(props?: UseThemeProps) {
+export function useTheme<A>(props?: A): GlossThemeProps<A> {
   const themeObservable = useContext(CurrentThemeContext)
   const [cur, setCur] = useState<CompiledTheme>(getTheme(themeObservable.current, props))
   const state = useRef<ThemeTrackState>()
@@ -38,10 +39,10 @@ export function useTheme(props?: UseThemeProps) {
     return sub.unsubscribe
   }, [])
 
-  return proxyTheme(cur, state.current)
+  return proxyTheme(cur, state.current, props)
 }
 
-const getTheme = (theme?: CompiledTheme, props?: UseThemeProps) => {
+const getTheme = (theme?: CompiledTheme, props?: any) => {
   if (theme) {
     // TODO this should not go here, maybe just wrap those themes in <Theme coat={false}> or something
     if (props?.coat === false) {
@@ -66,12 +67,21 @@ export const unwrapTheme = <CompiledTheme>(theme: CompiledTheme): CompiledTheme 
   return res
 }
 
-function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
+function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState, props?: any): any {
   return useMemo(() => {
     return new Proxy(theme, {
       get(target, key) {
         if (key === UnwrapThemeSymbol) {
           return theme
+        }
+        // props override theme values here
+        // TODO we need to do all the css conversions here
+        // we can share styleVal probably to do stuff like color => Color
+        // need to figure out how we know to do that...
+        if (props) {
+          if (Reflect.has(props, key)) {
+            return Reflect.get(props, key)
+          }
         }
         if (key[0] === '_' || !Reflect.has(target, key)) {
           return Reflect.get(target, key)

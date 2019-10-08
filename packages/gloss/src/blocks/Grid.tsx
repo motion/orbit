@@ -1,4 +1,5 @@
-import { gloss, GlossProps } from '../gloss'
+import { gloss } from '../gloss'
+import { GlossProps } from '../types'
 import { Base, BaseProps } from './Base'
 
 const px = (n: number | string | any) => (typeof n === 'number' ? n + 'px' : n)

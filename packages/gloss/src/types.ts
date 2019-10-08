@@ -1,3 +1,9 @@
+import { Color } from '@o/color/src'
+import { CSSPropertySetStrict, GlossPropertySet } from '@o/css'
+
+import { ThemeSelect } from './theme/Theme'
+import { ThemeValue } from './theme/ThemeValue'
+
 export type Psuedos = '&:hover' | '&:active' | '&:focus' | '&:disabled'
 
 export type GlossConfig = {
@@ -20,6 +26,68 @@ export type ColorLike = string | ColorClassLike | ColorArray | ColorObject
 // overridable theme
 export interface BaseTheme {}
 export type ITheme<A> = A
+
+// TODO whitelist instead
+// basic desire is to not overlap with CSS props
+// + move more towards react-native-web like props
+export type CommonHTMLProps = Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  | 'title'
+  | 'about'
+  | 'accessKey'
+  | 'autoCapitalize'
+  | 'autoCorrect'
+  | 'autoSave'
+  | 'vocab'
+  | 'typeof'
+  | 'suppressHydrationWarning'
+  | 'suppressContentEditableWarning'
+  | 'spellCheck'
+  | 'security'
+  | 'slot'
+  | 'results'
+  | 'resource'
+  | 'prefix'
+  | 'property'
+  | 'radioGroup'
+  | 'contextMenu'
+  | 'dir'
+  | 'datatype'
+  | 'inlist'
+  | 'itemID'
+  | 'lang'
+  | 'is'
+  | 'itemScope'
+  | 'inputMode'
+  | 'color'
+>
+
+export type GlossBaseProps = CommonHTMLProps & {
+  tagName?: string
+  nodeRef?: any
+  coat?: string | false
+  subTheme?: ThemeSelect
+}
+
+// theme types
+export type GenerateGlossProps<Props, CSSProps> = Omit<CSSProps, keyof Props> &
+  Omit<Props, keyof GlossBaseProps> &
+  GlossBaseProps
+
+export type GlossProps<Props = {}> = GenerateGlossProps<Props, CSSPropertySetStrict>
+
+type ColorKeys = 'background' | 'backgroundColor' | 'color' | 'borderColor'
+
+// compiles themeprops from regular props
+export type GlossThemeProps<
+  Props = {},
+  FinalProps = Omit<GenerateGlossProps<Props, GlossPropertySet>, ColorKeys>
+> = FinalProps &
+  {
+    [K in ColorKeys & Exclude<string, keyof FinalProps>]:
+      | (K extends ColorKeys ? Color : ThemeValue<any>)
+      | undefined
+  }
 
 export type SimpleStyleObject = {
   color?: ColorLike

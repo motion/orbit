@@ -1,6 +1,7 @@
-import { baseIgnoreAttrs, gloss, GlossProps } from '../gloss'
+import { baseIgnoreAttrs, gloss } from '../gloss'
 import { AlphaColorProps, alphaColorThemeLoose, propsToStyles, PseudoStyleProps, psuedoStylePropsTheme } from '../themes'
 import { TextSizeProps } from '../themes/textSizeTheme'
+import { GlossProps } from '../types'
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 

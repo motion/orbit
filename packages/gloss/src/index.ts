@@ -23,7 +23,7 @@ export * from './blocks/InlineBlock'
 export * from './blocks/InlineFlex'
 
 // configureGloss
-export { GlossConfig, SimpleStyleObject, BaseTheme, ITheme } from './types'
+export { GlossProps, GlossConfig, SimpleStyleObject, BaseTheme, ITheme } from './types'
 export { GlossDefaultConfig, configureGloss } from './configureGloss'
 export * from './gloss'
 export { colorToString } from './helpers/helpers'

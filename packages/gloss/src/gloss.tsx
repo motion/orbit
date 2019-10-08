@@ -1,19 +1,16 @@
-import { Color } from '@o/color'
-import { CSSPropertySet, CSSPropertySetLoose, CSSPropertySetStrict, cssString, cssStringWithHash, GlossPropertySet, stringHash, styleToClassName, validCSSAttr } from '@o/css'
+import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 import React from 'react'
+import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
-import { ThemeSelect } from './theme/Theme'
-import { ThemeValue } from './theme/ThemeValue'
 import { themeVariableManager } from './theme/themeVariableManager'
 import { useTheme } from './theme/useTheme'
-import { BaseTheme } from './types'
+import { BaseTheme, GlossProps, GlossThemeProps } from './types'
 
 // so you can reference in postProcessProps
 export { StyleTracker } from './stylesheet/gc'
@@ -42,60 +39,6 @@ export interface GlossView<RawProps = {}, P = GlossProps<RawProps>> {
   }
 }
 
-// TODO whitelist instead
-// basic desire is to not overlap with CSS props
-// + move more towards react-native-web like props
-export type CommonHTMLProps = Omit<
-  React.HTMLAttributes<HTMLDivElement>,
-  | 'title'
-  | 'about'
-  | 'accessKey'
-  | 'autoCapitalize'
-  | 'autoCorrect'
-  | 'autoSave'
-  | 'vocab'
-  | 'typeof'
-  | 'suppressHydrationWarning'
-  | 'suppressContentEditableWarning'
-  | 'spellCheck'
-  | 'security'
-  | 'slot'
-  | 'results'
-  | 'resource'
-  | 'prefix'
-  | 'property'
-  | 'radioGroup'
-  | 'contextMenu'
-  | 'dir'
-  | 'datatype'
-  | 'inlist'
-  | 'itemID'
-  | 'lang'
-  | 'is'
-  | 'itemScope'
-  | 'inputMode'
-  | 'color'
->
-
-type GlossBaseProps = CommonHTMLProps & {
-  tagName?: string
-  nodeRef?: any
-  coat?: string | false
-  subTheme?: ThemeSelect
-}
-
-type GenerateGlossProps<Props, CSSProps> = Omit<CSSProps, keyof Props> &
-  Omit<Props, keyof GlossBaseProps> &
-  GlossBaseProps
-export type GlossProps<Props = {}> = GenerateGlossProps<Props, CSSPropertySetStrict>
-
-// theme types
-type ColorKeys = 'background' | 'backgroundColor' | 'color' | 'borderColor'
-
-// compiles themeprops from regular props
-export type GlossThemeProps<Props = {}, FinalProps = Omit<GenerateGlossProps<Props, GlossPropertySet>, ColorKeys>> = FinalProps & {
-  [K in (ColorKeys & Exclude<string, keyof FinalProps>)]: (K extends ColorKeys ? Color : ThemeValue<any>) | undefined
-}
 export type ThemeFn<RawProps = any> = (
   props: BaseTheme & GlossThemeProps<RawProps>,
   previous?: RawProps & CSSPropertySetLoose | null,

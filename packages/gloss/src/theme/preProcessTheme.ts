@@ -1,4 +1,4 @@
-import { GlossProps } from '../gloss'
+import { GlossProps } from '../types'
 import { CompiledTheme, createTheme } from './createTheme'
 import { getThemeCoat } from './getThemeCoat'
 import { selectThemeSubset } from './selectThemeSubset'

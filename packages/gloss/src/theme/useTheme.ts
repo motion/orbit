@@ -63,8 +63,8 @@ export const unwrapTheme = <CompiledTheme>(theme: CompiledTheme): CompiledTheme 
 
 function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState, props?: any): any {
   return useMemo(() => {
-    return new Proxy(theme, {
-      get(target, key) {
+    return new Proxy(props || theme, {
+      get(_, key) {
         if (key === UnwrapThemeSymbol) {
           return theme
         }
@@ -77,10 +77,10 @@ function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState, props?: a
             return Reflect.get(props, key)
           }
         }
-        if (key[0] === '_' || !Reflect.has(target, key)) {
-          return Reflect.get(target, key)
+        if (key[0] === '_' || !Reflect.has(theme, key)) {
+          return Reflect.get(theme, key)
         }
-        const val = Reflect.get(target, key)
+        const val = Reflect.get(theme, key)
         if (val && val.cssVariable) {
           return new Proxy(val, {
             get(starget, skey) {

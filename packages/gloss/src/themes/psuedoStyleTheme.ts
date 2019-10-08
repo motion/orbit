@@ -7,6 +7,9 @@ import { styleVal } from './propStyleTheme'
 // resolves props into styles for valid css
 // backs up to theme colors if not found
 
+export const psuedoStyleTheme = applyPsuedoTheme(true)
+export const psuedoStylePropsTheme = applyPsuedoTheme(false)
+
 // TODO make this better (configurable + granular)...
 export type PseudoStyleProps = {
   disablePseudoStyles?: boolean
@@ -75,76 +78,81 @@ const themeKeys: KeyMap = [
 
 const SubThemeKeys: { [key: string]: KeyMap } = {}
 
-const applyPsuedoTheme: ThemeFn = (props: any, previous?: any) => {
-  // assigns base theme styles
-  // warning! mutative function
-  const res = getPsuedoStyles(props, themeKeys)
-  const overrides = res.overrides
-  let styles: ThemeObjectWithPseudo | null = res.styles
+function applyPsuedoTheme(useTheme = false) {
+  const themeFn: ThemeFn = (props: any, previous: any, rawProps: any) => {
+    // assigns base theme styles
+    // warning! mutative function
+    const res = getPsuedoStyles(props, themeKeys, rawProps, useTheme)
+    const overrides = res.overrides
+    let styles: ThemeObjectWithPseudo | null = res.styles
 
-  for (const key in pseudos) {
-    const { postfix, pseudoKey, forceOnProp, extraStyleProp } = pseudos[key]
-    if (props[forceOnProp] === false) continue // forced off
-    const extraStyle = props[extraStyleProp]
-    if (extraStyle === null || extraStyle === false) continue // forced empty
+    for (const key in pseudos) {
+      const { postfix, pseudoKey, forceOnProp, extraStyleProp } = pseudos[key]
+      if (props[forceOnProp] === false) continue // forced off
+      const extraStyle = props[extraStyleProp]
+      if (extraStyle === null || extraStyle === false) continue // forced empty
 
-    // cache sub-keys like backgroundHover colorHover
-    let subKeys = SubThemeKeys[postfix]
-    if (!subKeys) {
-      subKeys = themeKeys.map(([k]) => [`${k}${postfix}`, k] as [string, string])
-      SubThemeKeys[postfix] = subKeys
-    }
+      // cache sub-keys like backgroundHover colorHover
+      let subKeys = SubThemeKeys[postfix]
+      if (!subKeys) {
+        subKeys = themeKeys.map(([k]) => [`${k}${postfix}`, k] as [string, string])
+        SubThemeKeys[postfix] = subKeys
+      }
 
-    // now process and get styles, but dont assign them yet
-    let psuedoStyle = getPsuedoStyles(props, subKeys).styles
+      // now process and get styles, but dont assign them yet
+      let psuedoStyle = getPsuedoStyles(props, subKeys, rawProps, useTheme).styles
 
-    // for any prop overrides from base, override them on psuedo too
-    if (props.overridePsuedoStyles) {
-      if (psuedoStyle && overrides) {
-        Object.assign(psuedoStyle, overrides)
+      // for any prop overrides from base, override them on psuedo too
+      if (props.overridePsuedoStyles) {
+        if (psuedoStyle && overrides) {
+          Object.assign(psuedoStyle, overrides)
+        }
+      }
+
+      // merge any user-defined psuedo style
+      if (typeof extraStyle === 'object' || typeof extraStyle === 'function') {
+        let styles = typeof extraStyle === 'function' ? extraStyle(props, previous) : extraStyle
+        psuedoStyle = psuedoStyle || {}
+        Object.assign(psuedoStyle, styles)
+      }
+
+      // we conditionally apply it here...
+      if (psuedoStyle && !props.disablePseudoStyles) {
+        styles = styles || {}
+        styles[pseudoKey] = psuedoStyle
+      }
+
+      // ... but either way, we allow users to "force" it on
+      // (this could also be an optional parameter)
+      const booleanOn = forceOnProp && props[forceOnProp] === true
+
+      if (psuedoStyle && booleanOn) {
+        styles = styles || {}
+        Object.assign(styles, psuedoStyle)
       }
     }
 
-    // merge any user-defined psuedo style
-    if (typeof extraStyle === 'object' || typeof extraStyle === 'function') {
-      let styles = typeof extraStyle === 'function' ? extraStyle(props, previous) : extraStyle
-      psuedoStyle = psuedoStyle || {}
-      Object.assign(psuedoStyle, styles)
-    }
-
-    // we conditionally apply it here...
-    if (psuedoStyle && !props.disablePseudoStyles) {
-      styles = styles || {}
-      styles[pseudoKey] = psuedoStyle
-    }
-
-    // ... but either way, we allow users to "force" it on
-    // (this could also be an optional parameter)
-    const booleanOn = forceOnProp && props[forceOnProp] === true
-
-    if (psuedoStyle && booleanOn) {
-      styles = styles || {}
-      Object.assign(styles, psuedoStyle)
-    }
+    return mergeStyles(previous, styles)
   }
-
-  return mergeStyles(previous, styles)
+  return themeFn
 }
 
-function getPsuedoStyles(props: Object, keyMap: KeyMap) {
+function getPsuedoStyles(themeProps: Object, keyMap: KeyMap, rawProps, useTheme: boolean) {
   let styles: any = null
   let overrides: Object | null = null
   for (const [name, mapName] of keyMap) {
-    if (isDefined(props[name])) {
-      const val = styleVal(props[name], props)
+    if (isDefined(rawProps[name])) {
+      if (useTheme) {
+        const val = styleVal(themeProps[name], themeProps)
+        styles = styles || {}
+        styles[mapName] = val
+        overrides = overrides || {}
+        overrides[mapName] = val
+      }
+    } else if (useTheme && isDefined(themeProps[name])) {
       styles = styles || {}
-      styles[mapName] = val
-      overrides = overrides || {}
-      overrides[mapName] = val
+      styles[mapName] = themeProps[name]
     }
   }
   return { styles, overrides }
 }
-
-export const psuedoStyleTheme: ThemeFn = applyPsuedoTheme
-export const psuedoStylePropsTheme: ThemeFn = applyPsuedoTheme

@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
+import React from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -40,8 +40,9 @@ export interface GlossView<RawProps = {}, P = GlossProps<RawProps>> {
 }
 
 export type ThemeFn<RawProps = any> = (
-  props: GlossThemeProps<RawProps>,
+  themeProps: GlossThemeProps<RawProps>,
   previous?: RawProps & CSSPropertySetLoose | null,
+  rawProps?: RawProps,
 ) => CSSPropertySetLoose | undefined | null
 
 export type GlossViewOpts<Props = {}> = {
@@ -235,7 +236,7 @@ export function gloss<
     if (shouldAvoidStyleUpdate) {
       // because hooks can run in theme, be sure to run them
       // @ts-ignore
-      theme && themeFn && themeFn(theme)
+      theme && themeFn && themeFn(theme, undefined, props)
       return createElement(element, last.current.props, props.children)
     }
 
@@ -248,7 +249,7 @@ export function gloss<
       if (avoidStyles) {
         // because hooks can run in theme, be sure to run them
         // @ts-ignore
-        theme && themeFn && themeFn(theme)
+        theme && themeFn && themeFn(theme, undefined, props)
       }
     }
 
@@ -256,6 +257,7 @@ export function gloss<
       ThemedView.displayName,
       conditionalStyles,
       dynClasses.current,
+      props,
       theme,
       themeFn,
       avoidStyles,
@@ -494,6 +496,7 @@ function addDynamicStyles(
   displayName: string = 'g',
   conditionalStyles: Object | undefined,
   prevClassNames: Set<string> | null,
+  props: any,
   theme: GlossThemeProps,
   themeFn?: ThemeFn | null,
   avoidStyles?: boolean,
@@ -537,7 +540,7 @@ function addDynamicStyles(
 
     if (theme && themeFn) {
       dynStyles['.'] = dynStyles['.'] || {}
-      const themeStyles = themeFn(theme)
+      const themeStyles = themeFn(theme, undefined, props)
       const themePropStyles = mergeStyles('.', dynStyles, themeStyles, true)
       if (themePropStyles) {
         mergePropStyles(dynStyles, themePropStyles, theme)
@@ -751,11 +754,11 @@ function compileTheme(viewOG: GlossView) {
     return null
   }
 
-  return (props: Object) => {
+  return (themeProps: Object, _, props) => {
     let styles: CSSPropertySetLoose | null = null
     for (const themeFn of themes) {
       // @ts-ignore
-      const next = themeFn(props, styles)
+      const next = themeFn(themeProps, styles, props)
       if (next) {
         styles = styles || {}
         Object.assign(styles, next)

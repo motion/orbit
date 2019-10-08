@@ -24,7 +24,7 @@ export const propsToStyles: ThemeFn = props => {
     }
 
     // psuedos
-    const abbrev = Config.pseudoAbbreviations ? Config.pseudoAbbreviations[key] : null
+    const abbrev = Config.pseudoAbbreviations?.[key] || null
     if (abbrev || key[0] === '&') {
       // adding psuedo styles, &:hover, etc
       const psuedoKey = abbrev || key
@@ -50,6 +50,9 @@ export const propsToStyles: ThemeFn = props => {
       styles = styles || {}
       styles[key] = styleVal(props[key], props)
     }
+  }
+  if (props['flexDirection']) {
+    console.log('return', props, styles)
   }
   return styles
 }

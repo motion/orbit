@@ -602,26 +602,22 @@ function mergeStyles(
         let subStyles = nextStyles[key][pKey]
         propStyles = propStyles || {}
         propStyles[pKey] = {}
-        // they can nest (media queries/psuedoes), split it out, eg:
-        //  gloss({
-        //    isTall: {
-        //      '&:before': {}
-        //    }
-        //  })
+        // they can nest (media queries/psuedo), split it out, eg:
         for (const sKey in subStyles) {
           // key = isTall
           // sKey = &:before
           if (isSubStyle(sKey)) {
             // keep all sub-styles on their key
-            propStyles[key] = propStyles[key] || {}
-            propStyles[key][sKey] = subStyles[sKey]
+            propStyles[pKey] = propStyles[pKey] || {}
+            propStyles[pKey][sKey] = subStyles[sKey]
           } else {
             // we put base styles here, see 'base' check above
-            propStyles[key]['.'] = propStyles[key]['.'] || {}
-            propStyles[key]['.'][sKey] = subStyles[sKey]
+            propStyles[pKey]['.'] = propStyles[pKey]['.'] || {}
+            propStyles[pKey]['.'][sKey] = subStyles[sKey]
           }
         }
       }
+      continue
     }
     if (validCSSAttr[key]) {
       // valid regular attr

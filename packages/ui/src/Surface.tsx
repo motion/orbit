@@ -556,15 +556,16 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   position: 'relative',
   whiteSpace: 'pre',
 
-  circular: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 0,
-  },
-
-  disabled: {
-    cursor: 'not-allowed',
-  },
+  conditional: {
+    circular: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 0,
+    },
+    disabled: {
+      cursor: 'not-allowed',
+    },
+  }
 }).theme(props => {
   const { fontSize, lineHeight } = scaledTextSizeTheme(props) || defaultTextTheme
   const themeStyle = psuedoStyleTheme(props)
@@ -652,12 +653,15 @@ const Element = gloss<SurfaceFrameProps & { disabled?: boolean }>({
   background: 'transparent',
   // otherwise it wont be full height so impossible to position things at start/end
   height: 'inherit',
-  ellipse: {
-    display: 'block',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
+
+  conditional: {
+    ellipse: {
+      display: 'block',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+    },
+  }
 }).theme(propsToStyles, perfectCenterStyle, applyElementTheme)
 
 const getIconSize = (props: SurfaceProps) => {

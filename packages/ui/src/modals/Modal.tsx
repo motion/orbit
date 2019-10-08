@@ -5,7 +5,7 @@ import { Button } from '../buttons/Button'
 import { Portal } from '../helpers/portal'
 import { Section, SectionSpecificProps } from '../Section'
 import { Surface, SurfaceProps } from '../Surface'
-import { ViewProps } from '../View/types'
+import { ScrollablePropVal, ViewProps } from '../View/types'
 import { View } from '../View/View'
 import { ProvideVisibility } from '../Visibility'
 
@@ -14,6 +14,7 @@ export type SimpleModalProps = SectionSpecificProps &
     open?: boolean
     onChangeOpen?: (next: boolean) => any
     closable?: boolean
+    scrollable?: ScrollablePropVal
   }
 
 export type ModalProps = SimpleModalProps & {

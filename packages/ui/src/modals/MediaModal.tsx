@@ -49,7 +49,7 @@ export const MediaModal = memo(
               alignItems="center"
               justifyContent="center"
               padding={[10, 0]}
-              {...props}
+              {...props as any}
             />
           </Modal>
         </Theme>

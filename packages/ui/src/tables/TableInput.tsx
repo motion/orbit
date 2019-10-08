@@ -1,6 +1,7 @@
 import { gloss } from 'gloss'
+import { HTMLProps } from 'react'
 
-export const TableInput = gloss('input', {
+export const TableInput = gloss<HTMLProps<HTMLInputElement>>('input', {
   borderRadius: 4,
   font: 'inherit',
   fontSize: 16,

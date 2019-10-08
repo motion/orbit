@@ -124,8 +124,10 @@ export type ViewThemeProps = ViewBaseProps & GlossPropertySet
 
 export type ViewCSSProps = GlossPropertySet
 
+export type ScrollablePropVal = boolean | 'x' | 'y'
+
 export type ScrollableViewProps = Omit<ViewProps, 'flexFlow'> & {
   hideScrollbars?: boolean
-  scrollable?: boolean | 'x' | 'y'
+  scrollable?: ScrollablePropVal
   parentSpacing?: Size
 }

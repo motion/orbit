@@ -13,7 +13,6 @@ import { Image } from './Image'
 import { Text } from './text/Text'
 import { TreeItem, TreeItemID } from './Tree'
 
-
 type TreeItemsRowProps = {
   id: TreeItemID
   level: number
@@ -236,7 +235,7 @@ class TreeItemsRowAttribute extends React.PureComponent<{
   render() {
     const { name, value, matchingSearchQuery, selected } = this.props
     return (
-      <TreeItemsRowAttributeContainer code={true}>
+      <TreeItemsRowAttributeContainer>
         <TreeItemsRowAttributeKey>{name}</TreeItemsRowAttributeKey>=
         <TreeItemsRowAttributeValue>
           <PartialHighlight

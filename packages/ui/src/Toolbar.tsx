@@ -44,7 +44,7 @@ export function Toolbar({
       borderPosition="outside"
     >
       <ToolbarRow elevation={elevation} padding={size} hoverStyle={false} {...props}>
-        {border !== false && borderElement[attach]}
+        {!!border && borderElement[attach]}
         <Stack direction="horizontal" flex={1} space={size}>
           {children}
         </Stack>

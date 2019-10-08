@@ -4,7 +4,7 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-import { Box, BoxProps, gloss, ThemeFn } from 'gloss'
+import { Box, gloss, ThemeFn } from 'gloss'
 import * as React from 'react'
 
 import { colors } from './helpers/colors'
@@ -168,10 +168,7 @@ const backgroundTheme: ThemeFn = props => {
   return { background }
 }
 
-const TreeItemsRowContainer = gloss<
-  { selected?: boolean; level?: number; even?: boolean },
-  BoxProps
->(Box, {
+const TreeItemsRowContainer = gloss<{ selected?: boolean; level?: number; even?: boolean }>(Box, {
   flexDirection: 'row',
   alignItems: 'center',
   flexShrink: 0,
@@ -259,7 +256,7 @@ const TreeItemsRowDecoration = gloss(Box, {
   top: -1,
 })
 
-const TreeItemsLine = gloss<{ height: number; childrenCount: number }, BoxProps>(Box, {
+const TreeItemsLine = gloss<{ height: number; childrenCount: number }>(Box, {
   position: 'absolute',
   right: 3,
   zIndex: 2,

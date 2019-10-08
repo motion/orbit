@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 import React from 'react'
+import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -10,7 +10,7 @@ import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
 import { themeVariableManager } from './theme/themeVariableManager'
 import { UnwrapThemeSymbol, useTheme } from './theme/useTheme'
-import { GlossProps, GlossThemeProps } from './types'
+import { GlossProps, GlossPropsPartial, GlossThemeProps } from './types'
 
 // so you can reference in postProcessProps
 export { StyleTracker } from './stylesheet/gc'
@@ -99,10 +99,11 @@ export function gloss<
   MyProps = {},
   ParentProps = {},
   Parent extends GlossView<ParentProps> = any,
-  Props = GlossProps<MyProps & ParentProps>
+  Props = GlossProps<MyProps & ParentProps>,
+  PartialProps = GlossPropsPartial<MyProps & ParentProps>
 >(
-  a?: Props | Parent | ((props: MyProps) => any) | string,
-  b?: Props,
+  a?: PartialProps | Parent | ((props: MyProps) => any) | string,
+  b?: PartialProps,
   compiledInfo?: GlossStaticStyleDescription,
 ): GlossView<MyProps & ParentProps> {
   if (process.env.NODE_ENV === 'development') {

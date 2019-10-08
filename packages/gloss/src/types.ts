@@ -1,5 +1,5 @@
 import { Color } from '@o/color/src'
-import { CSSPropertySet, GlossPropertySet } from '@o/css'
+import { CSSPropertySetStrict, GlossPropertySet } from '@o/css'
 
 import { ThemeSelect } from './theme/Theme'
 import { ThemeValue } from './theme/ThemeValue'
@@ -33,7 +33,7 @@ export type CreateThemeType<A> = {
 // basic desire is to not overlap with CSS props
 // + move more towards react-native-web like props
 export type CommonHTMLProps = Omit<
-  React.HTMLAttributes<HTMLDivElement>,
+  React.HTMLAttributes<HTMLElement>,
   | 'title'
   | 'about'
   | 'accessKey'
@@ -80,14 +80,22 @@ export type GenerateGlossProps<Props, CSSProps> = Omit<CommonHTMLProps, keyof Pr
   Omit<Props, keyof GlossBaseProps> &
   GlossBaseProps
 
-export type GlossProps<Props = {}> = GenerateGlossProps<Props, CSSPropertySet>
+export type GlossProps<Props = {}> = GenerateGlossProps<Props, CSSPropertySetStrict> & {
+  [key: string]: GlossPropertySet | any
+}
+
+export type GlossPropsPartial<Props = {}> = Partial<
+  GenerateGlossProps<Props, CSSPropertySetStrict>
+> & {
+  [key: string]: GlossPropertySet | any
+}
 
 type ColorKeys = 'background' | 'backgroundColor' | 'color' | 'borderColor'
 
 // compiles themeprops from regular props
 export type GlossThemeProps<
   Props = {},
-  FinalProps = Omit<GenerateGlossProps<Props, GlossPropertySet>, ColorKeys>
+  FinalProps = Omit<GenerateGlossProps<Partial<Props>, GlossPropertySet>, ColorKeys>
 > = ThemeType &
   FinalProps & {
     name: string

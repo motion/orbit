@@ -79,7 +79,8 @@ export function Input({ onEnter, type = 'text', nodeRef, children, ...props }: I
       )}
       onChange={useCallback(
         e => {
-          updateFormContext(e.target.value)
+          console.log('updating context right?', e.target['value'])
+          updateFormContext((e.target as any).value)
           if (props.onChange) {
             props.onChange(e)
           }

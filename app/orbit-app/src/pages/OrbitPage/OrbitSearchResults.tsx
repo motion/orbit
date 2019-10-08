@@ -1,6 +1,6 @@
 import { ensure, HighlightActiveQuery, useReaction, useSearchState } from '@o/kit'
 import { FullScreen, FullScreenProps, List, ProvideVisibility, SelectableStore, Stack, SubTitle, useTheme, View } from '@o/ui'
-import { Box, BoxProps, gloss } from 'gloss'
+import { Box, gloss } from 'gloss'
 import React, { memo, Suspense, useCallback, useMemo, useRef } from 'react'
 
 import { SearchResultsApp } from '../../apps/SearchResultsApp'
@@ -166,7 +166,7 @@ export const OrbitSearchResults = memo(() => {
   )
 })
 
-const OrbitSearchedItem = gloss<BoxProps & { visible: boolean }>(Box, {
+const OrbitSearchedItem = gloss<{ visible: boolean }>(Box, {
   flex: 1,
   opacity: 0,
   transition: 'all ease 180ms',
@@ -176,13 +176,15 @@ const OrbitSearchedItem = gloss<BoxProps & { visible: boolean }>(Box, {
     scale: 0.9,
     x: 15,
   },
-  visible: {
-    pointerEvents: 'auto',
-    opacity: 1,
-    transform: {
-      rotateY: '0deg',
-      scale: 1,
-      x: 0,
+  conditional: {
+    visible: {
+      pointerEvents: 'auto',
+      opacity: 1,
+      transform: {
+        rotateY: '0deg',
+        scale: 1,
+        x: 0,
+      },
     },
   },
 })

@@ -3,9 +3,9 @@ import { BuildStatusModel } from '@o/models'
 import { App } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Stack, StackProps, SurfacePassProps, View } from '@o/ui'
 import { useReaction } from '@o/use-store'
-import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
+import { FullScreen, gloss, useTheme } from 'gloss'
 import { useRef } from 'react'
+import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 
 import { mediaQueries } from '../../constants'
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
@@ -190,7 +190,7 @@ const OrbitDockOpenButton = memo(() => {
   )
 })
 
-const OpenButtonExtraArea = gloss<BoxProps & { isOpen: boolean }>({
+const OpenButtonExtraArea = gloss<{ isOpen: boolean }>({
   position: 'absolute',
   left: 0,
   right: -100,

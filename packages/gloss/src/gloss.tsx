@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 import React from 'react'
+import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -344,8 +344,8 @@ export function gloss<
       config: ogConfig,
       displayName: ThemedView.displayName || '',
       targetElement,
-      styles: { ...glossProps.styles },
-      conditionalStyles: { ...glossProps.conditionalStyles },
+      styles: glossProps.styles,
+      conditionalStyles: glossProps.conditionalStyles,
     }),
   }
 

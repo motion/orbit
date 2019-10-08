@@ -22,6 +22,16 @@ export const ListSeparator = memo((props: ListSeparatorProps) => {
   )
 })
 
+// @ts-ignore
+ListSeparator.defaultProps = {
+  activeStyle: false,
+  hoverStyle: false,
+  subTheme: 'separator',
+  fontWeight: 400,
+  size: 0.85,
+  alpha: 0.6,
+}
+
 const ListSeparatorChrome = gloss({
   position: 'relative',
   overflow: 'hidden',
@@ -41,12 +51,3 @@ const ListSeparatorText = gloss<ListSeparatorProps>(SimpleText, {
   scaledTextSizeTheme,
   alphaColorTheme,
 )
-
-ListSeparator['defaultProps'] = {
-  activeStyle: false,
-  hoverStyle: false,
-  subTheme: 'separator',
-  fontWeight: 400,
-  size: 0.85,
-  alpha: 0.6,
-}

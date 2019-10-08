@@ -327,23 +327,17 @@ const TextBlock = gloss({
   position: 'relative',
   minHeight: 'min-content',
   maxWidth: '100%',
+  cursor: 'default',
   conditional: {
     selectable: {
       userSelect: 'text',
+      cursor: 'inherit',
     },
     oneLineEllipse: {
       overflow: 'hidden',
     },
   },
-}).theme(propsToStyles, alphaColorTheme, selectableTheme)
-
-export function selectableTheme(props) {
-  return {
-    cursor:
-      props.cursor ||
-      (props.selectable === false ? 'default' : props.selectable === true ? 'inherit' : 'inherit'),
-  }
-}
+}).theme(propsToStyles, alphaColorTheme)
 
 type TextEllipseProps = TextProps & {
   doClamp?: boolean

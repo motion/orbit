@@ -29,7 +29,7 @@ export function useTheme<A = {}>(props?: A): GlossThemeProps<A> {
   useEffect(() => {
     const sub = themeObservable.subscribe(theme => {
       if (!state.current!.hasUsedOnlyCSSVariables) {
-        console.warn('re-rendering because used variables', state.current)
+        console.warn('re-rendering because used variables', state.current?.nonCSSVariables, props)
         setCur(getTheme(theme, props))
       }
     })
@@ -133,17 +133,23 @@ function createThemePropsProxy(theme: CompiledTheme, trackState: ThemeTrackState
         if (val && val.cssVariable) {
           return new Proxy(val, {
             get(starget, skey) {
-              if (skey === 'cssVariable') {
-                // unwrap
-                return starget[skey]
-              }
-              if (typeof key === 'string' && typeof skey === 'string') {
-                if (!starget.cssVariableSafeKeys.includes(skey)) {
-                  trackState.nonCSSVariables.add(key)
-                  trackState.hasUsedOnlyCSSVariables = false
+              if (Reflect.has(starget,skey)) {
+                const val = Reflect.get(starget, skey)
+                if (val === undefined) {
+                  return val
                 }
+                if (skey === 'cssVariable') {
+                  // unwrap
+                  return starget[skey]
+                }
+                if (typeof key === 'string' && typeof skey === 'string') {
+                  if (!starget.cssVariableSafeKeys.includes(skey)) {
+                    trackState.nonCSSVariables.add(key)
+                    trackState.hasUsedOnlyCSSVariables = false
+                  }
+                }
+                return val
               }
-              return Reflect.get(starget, skey)
             }
           })
         } else {

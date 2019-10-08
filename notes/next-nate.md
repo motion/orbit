@@ -66,7 +66,17 @@ Button.tsx
 
 <Surface className="something">
 
-5.
+5. eval some simple constants:
+
+config option: {
+  constantFiles: [require.resolve('../constants')],
+}
+
+would optimize for example Paragraph in site
+
++ could allow for media queries in gloss styles
+
+6. allow conditional styles to define a condition fn
 
 
 ---

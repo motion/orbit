@@ -1,3 +1,18 @@
+---
+
+gloss:
+
+1. theme is just defaultProps but all are css variables
+2. gloss(view, { background: 'red' } <- default props)
+3. theme(props => ) <- no theme, theme is just default props
+4. scale is just cssvars: xxs, xs, sm, ....
+5. move surface sizing into theme
+6. move subsets to objects: listItem: {}, etc
+7. <Theme for="button" scale="lg" /> <- theme just acts as a css var setter
+
+---
+
+
 
 gloss:
 

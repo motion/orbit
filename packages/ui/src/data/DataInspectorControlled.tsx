@@ -102,8 +102,7 @@ const BaseContainer = gloss<SimpleTextProps & { disabled?: boolean }>(SimpleText
   paddingLeft: 10,
   userSelect: 'text',
   fontFamily: fontFamilyMonospace,
-}).theme((props, theme) => ({
-  color: props.color || theme.color,
+}).theme(props => ({
   opacity: props.disabled ? 0.5 : 1,
 }))
 

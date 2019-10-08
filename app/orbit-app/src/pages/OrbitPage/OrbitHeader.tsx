@@ -280,8 +280,8 @@ const OrbitHeaderContainer = gloss<any>(View, {
   transition: 'all ease 300ms',
   // above OrbitPageInnerChrome/DockBackground
   zIndex: 5,
-}).theme((props, theme) => ({
-  background: props.background || theme.headerBackground || theme.background,
+}).theme(props => ({
+  background: props.headerBackground,
 }))
 
 const HeaderSide = gloss<StackProps & { slim?: boolean }>(Stack, {
@@ -313,9 +313,10 @@ getMedia(mediaQueries.small).addListener(({ matches }) => {
 const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   zIndex: -1,
   transition: 'all ease-in 300ms',
-}).theme(({ isActive }, theme) => ({
-  // background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
-}))
+})
+// .theme(({ isActive }) => ({
+//   // background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
+// }))
 
 const HeaderContain = gloss<StackProps & { isActive?: boolean; isDeveloping: boolean }>(Stack, {
   flexDirection: 'row',
@@ -331,8 +332,8 @@ const HeaderContain = gloss<StackProps & { isActive?: boolean; isDeveloping: boo
     minWidth: 'auto',
     margin: 'auto',
   },
-}).theme(({ isActive }, theme) => ({
-  background: isActive ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075] : 'none',
+}).theme(theme => ({
+  background: theme.isActive ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075] : 'none',
 }))
 
 const HeaderTop = gloss(View, {

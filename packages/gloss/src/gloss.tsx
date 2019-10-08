@@ -1,7 +1,8 @@
+import { Color } from '@o/color'
 import { CSSPropertySet, CSSPropertySetLoose, CSSPropertySetStrict, cssString, cssStringWithHash, GlossPropertySet, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
+import React from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -9,11 +10,16 @@ import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
 import { ThemeSelect } from './theme/Theme'
+import { ThemeValue } from './theme/ThemeValue'
 import { themeVariableManager } from './theme/themeVariableManager'
 import { useTheme } from './theme/useTheme'
 
 // so you can reference in postProcessProps
 export { StyleTracker } from './stylesheet/gc'
+
+// overridable theme
+export interface Theme {}
+export type ITheme<A> = A
 
 /**
  * Note: ThemeProps is optional, for the user to define that they are
@@ -85,12 +91,16 @@ type GenerateGlossProps<Props, CSSProps> = Omit<CSSProps, keyof Props> &
   Omit<Props, keyof GlossBaseProps> &
   GlossBaseProps
 export type GlossProps<Props = {}> = GenerateGlossProps<Props, CSSPropertySetStrict>
-export type GlossPropsResolved<Props = {}> = GenerateGlossProps<Props, GlossPropertySet>
 
+// theme types
+type ColorKeys = 'background' | 'backgroundColor' | 'color' | 'borderColor'
+
+// compiles themeprops from regular props
+export type GlossThemeProps<Props = {}, FinalProps = Omit<GenerateGlossProps<Props, GlossPropertySet>, ColorKeys>> = Theme & FinalProps & {
+  [K in (ColorKeys & Exclude<string, keyof FinalProps>)]: (K extends ColorKeys ? Color : ThemeValue<any>) | undefined
+}
 export type ThemeFn<RawProps = {}> = (
-  props: GlossPropsResolved<RawProps>,
-  theme: CompiledTheme,
-  //
+  props: GlossThemeProps<RawProps>,
   previous?: CSSPropertySetLoose | null,
 ) => CSSPropertySetLoose | undefined | null
 
@@ -284,6 +294,7 @@ export function gloss<
     // Optimization: only update if non-elements changed
     if (shouldAvoidStyleUpdate) {
       // because hooks can run in theme, be sure to run them
+      // @ts-ignore
       theme && themeFn && themeFn(props, theme)
       return createElement(element, last.current.props, props.children)
     }
@@ -296,6 +307,7 @@ export function gloss<
       avoidStyles = config.shouldAvoidProcessingStyles(props)
       if (avoidStyles) {
         // because hooks can run in theme, be sure to run them
+        // @ts-ignore
         theme && themeFn && themeFn(props, theme)
       }
     }
@@ -587,6 +599,7 @@ function addDynamicStyles(
 
     if (theme && themeFn) {
       dynStyles['.'] = dynStyles['.'] || {}
+      // @ts-ignore
       const themeStyles = themeFn(props, theme)
       const themePropStyles = mergeStyles('.', dynStyles, themeStyles, true)
       if (themePropStyles) {
@@ -801,10 +814,11 @@ function compileTheme(viewOG: GlossView) {
     return null
   }
 
-  return (props: Object, theme: CompiledTheme) => {
+  return (props: Object) => {
     let styles: CSSPropertySetLoose | null = null
     for (const themeFn of themes) {
-      const next = themeFn(props, theme, styles)
+      // @ts-ignore
+      const next = themeFn(props, styles)
       if (next) {
         styles = styles || {}
         Object.assign(styles, next)

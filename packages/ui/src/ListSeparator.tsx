@@ -1,4 +1,4 @@
-import { alphaColorTheme, gloss, psuedoStyleTheme, selectThemeSubset, ThemeSelect } from 'gloss'
+import { alphaColorTheme, gloss, psuedoStyleTheme, ThemeSelect } from 'gloss'
 import React, { memo } from 'react'
 
 import { BorderBottom, BorderTop } from './Border'
@@ -30,10 +30,9 @@ const ListSeparatorChrome = gloss({
 const ListSeparatorText = gloss<ListSeparatorProps>(SimpleText, {
   width: '100%',
 }).theme(
-  (props, themeIn) => {
+  props => {
     const scale = useScale()
-    const theme = selectThemeSubset(props.subTheme, themeIn)
-    const themeStyle = psuedoStyleTheme(props, theme)
+    const themeStyle = psuedoStyleTheme(props)
     return {
       padding: [scale * 5, scale * 8],
       ...themeStyle,

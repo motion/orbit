@@ -11,7 +11,11 @@ type ThemeTrackState = {
   nonCSSVariables: Set<string>
 }
 
-type UseThemeProps = { coat?: string | false }
+type UseThemeProps = {
+  coat?: string | false
+  // accepts all normal props and converts them to ThemeValue/Color etc
+  [key: string]: any
+}
 
 export function useTheme(props?: UseThemeProps) {
   const themeObservable = useContext(CurrentThemeContext)
@@ -33,12 +37,6 @@ export function useTheme(props?: UseThemeProps) {
     })
     return sub.unsubscribe
   }, [])
-
-  if (!cur) {
-    console.warn('no theme??', themeObservable, props)
-    debugger
-    return {}
-  }
 
   return proxyTheme(cur, state.current)
 }

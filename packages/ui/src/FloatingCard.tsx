@@ -28,6 +28,7 @@ type FloatingCardProps = Omit<CardProps, 'maxHeight' | 'maxWidth'> &
   }
 
 export function FloatingCard({
+  // @ts-ignore deep
   usePosition,
   defaultTop = 0,
   defaultLeft = 0,

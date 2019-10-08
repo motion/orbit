@@ -1,3 +1,6 @@
+import { Color } from '@o/color'
+import { ITheme } from 'gloss'
+
 // until next hotkeys patches types
 module.hot && module.hot.accept()
 
@@ -11,6 +14,22 @@ export * from 'framer-motion'
 export { AnimatePresence } from 'framer-motion'
 export { animation } from './helpers/animation'
 export { pluralize } from './helpers/pluralize'
+
+// this is what your themes should extend
+export type BaseTheme = {
+  background: Color
+  backgroundStrong: Color
+  backgroundStronger: Color
+  backgroundStrongest: Color
+  color: Color
+  colorLight: Color
+  colorLighter: Color
+  colorLightest: Color
+}
+
+declare module 'gloss' {
+  interface Theme extends ITheme<BaseTheme> {}
+}
 
 export {
   Absolute,

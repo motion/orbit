@@ -1,6 +1,7 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySetResolved } from '@o/css'
-import { CompiledTheme } from 'gloss'
+import { selectDefined } from '@o/utils'
+import { GlossThemeProps, ThemeFn } from 'gloss'
 
 import { weakKey } from '../helpers/weakKey'
 
@@ -12,6 +13,10 @@ export type ElevatableProps = {
   /** Override the opacity of the elevation shadow */
   elevationShadowOpacity?: number
   boxShadow?: CSSPropertySetResolved['boxShadow']
+  elevatedShadowY?: (elevation: number) => any
+  elevatedShadowSpread?: (elevation: number) => any
+  elevatedShadowColor?: (elevation: number) => any
+  boxShadowOpacity?: number
 }
 
 const round = (x: number) => Math.round(x * 100) / 100
@@ -21,33 +26,34 @@ const smoother = (base: number, amt = 1) =>
 /**
  * Accounts for darkness of background by default, but you can ovverride in Theme
  */
-const elevatedShadow = (props: ElevatableProps, theme: CompiledTheme) => {
+
+const elevatedShadow = (props: GlossThemeProps<ElevatableProps>) => {
   const el = props.elevation
   return [
     // x
     0,
     // y
-    theme.elevatedShadowY ? theme.elevatedShadowY(el) : smoother(el, 1),
+    props.elevatedShadowY ? props.elevatedShadowY(el) : smoother(el, 1),
     // spread
-    theme.elevatedShadowSpread ? theme.elevatedShadowSpread(el) : smoother(el, 2.85),
+    props.elevatedShadowSpread ? props.elevatedShadowSpread(el) : smoother(el, 2.85),
     // color
     props.elevationShadowColor ||
-      (theme.elevatedShadowColor
-        ? theme.elevatedShadowColor(el)
+      (props.elevatedShadowColor
+        ? props.elevatedShadowColor(el)
         : [
             0,
             0,
             0,
             props.elevationShadowOpacity ||
               round(0.05 * smoother((11 - Math.min(10, el)) * 0.2)) +
-                (theme.boxShadowOpacity ? theme.boxShadowOpacity.get() : 0),
+                selectDefined(props.boxShadowOpacity, 0),
           ]),
   ]
 }
 
-export const getElevation = (props: ElevatableProps, theme: CompiledTheme) => {
+export const getElevation: ThemeFn<ElevatableProps> = props => {
   return cacheReturn({
-    keys: [JSON.stringify([props.elevation, props.boxShadow]), theme],
+    keys: [JSON.stringify([props.elevation, props.boxShadow])],
     value: () => {
       if (!props.elevation) {
         return {
@@ -56,7 +62,7 @@ export const getElevation = (props: ElevatableProps, theme: CompiledTheme) => {
       }
       return {
         boxShadow: [
-          elevatedShadow(props, theme),
+          elevatedShadow(props),
           ...(Array.isArray(props.boxShadow) ? props.boxShadow : []),
         ],
       }

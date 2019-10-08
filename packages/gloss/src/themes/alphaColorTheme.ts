@@ -33,12 +33,12 @@ export const alphaColorTheme = createAlphaColorTheme(true)
 export const alphaColorThemeLoose = createAlphaColorTheme(false)
 
 function createAlphaColorTheme(shouldSetDefault = false) {
-  const themeFn: ThemeFn<AlphaColorProps> = (props, theme, previous) => {
-    const color = props.color || theme.color
-    const alpha = selectDefined(props.alpha, theme.alpha)
+  const themeFn: ThemeFn<AlphaColorProps> = (props, previous) => {
+    const color = props.color
+    const alpha = props.alpha
     const next: CSSPropertySet | null = {}
     if (color) {
-      if (color !== 'inherit' && typeof alpha === 'number') {
+      if (color.originalInput !== 'inherit' && typeof alpha === 'number') {
         next.color = toColor(color).setAlpha(alpha)
       } else {
         if (shouldSetDefault) {
@@ -52,10 +52,10 @@ function createAlphaColorTheme(shouldSetDefault = false) {
       (applyPsuedos === 'only-if-defined' &&
         (!!props.hoverStyle || !!props.activeStyle || !!props.focusStyle || !!props.disabledStyle))
     ) {
-      mergeFocus(next, color, props, theme)
-      mergeHover(next, color, props, theme)
-      mergeActive(next, color, props, theme)
-      mergeDisabled(next, color, props, theme)
+      mergeFocus(next, color, props)
+      mergeHover(next, color, props)
+      mergeActive(next, color, props)
+      mergeDisabled(next, color, props)
     }
     if (Object.keys(next).length) {
       const res = mergeStyles(previous, next)
@@ -73,10 +73,9 @@ function merge(
   next: Object,
   parentColor,
   props,
-  theme,
 ) {
-  const color = (props[styleKey] && props[styleKey].color) || theme[colorKey] || parentColor
-  const alpha = (props[styleKey] && props[styleKey].alpha) || theme[alphaKey]
+  const color = (props[styleKey] && props[styleKey].color) || props[colorKey] || parentColor
+  const alpha = (props[styleKey] && props[styleKey].alpha) || props[alphaKey]
   if (color) {
     if (color !== 'inherit' && typeof alpha === 'number') {
       next[key] = {
@@ -88,14 +87,6 @@ function merge(
       next[key] = {
         color: color,
       }
-    }
-  }
-}
-
-function selectDefined(...args: any[]) {
-  for (const arg of args) {
-    if (arg !== undefined) {
-      return arg
     }
   }
 }

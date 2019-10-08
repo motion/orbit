@@ -1088,7 +1088,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
                   towards={INVERSE[direction]}
                   // TODO this is bad because were allowing setting theme from the property...
                   // so this wont get the theme set through the property, we should remove the property
-                  {...getElevation({ elevation }, this.context.current)}
+                  {...getElevation({ elevation })}
                 />
               </ArrowContain>
             )}

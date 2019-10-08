@@ -1,21 +1,21 @@
 import { CSSPropertySet, validCSSAttr } from '@o/css'
 
 import { Config } from '../configureGloss'
-import { CompiledTheme } from '../theme/createTheme'
+import { ThemeFn } from '../gloss'
 
-export function styleVal(val: any, theme: CompiledTheme, props?: Object) {
-  return typeof val === 'function' ? val(theme, props) : val
+export function styleVal(val: any, props?: Object) {
+  return typeof val === 'function' ? val(props) : val
 }
 
 // resolves props into styles for valid css
 
-export function propsToStyles(props: any, theme: CompiledTheme): CSSPropertySet | null {
+export const propsToStyles: ThemeFn = (props): CSSPropertySet | null => {
   let styles: CSSPropertySet | null = null
   // loop over props turning into styles
   for (let key in props) {
     if (validCSSAttr[key]) {
       // add valid css attributes
-      const next = styleVal(props[key], theme, props)
+      const next = styleVal(props[key], props)
       if (next !== undefined) {
         styles = styles || {}
         styles[key] = next
@@ -33,7 +33,7 @@ export function propsToStyles(props: any, theme: CompiledTheme): CSSPropertySet 
       // theme functions for sub objects
       for (const subKey in subStyle) {
         val = val || {}
-        val[subKey] = styleVal(subStyle[subKey], theme, props)
+        val[subKey] = styleVal(subStyle[subKey], props)
       }
       if (val) {
         styles = styles || {}
@@ -48,7 +48,7 @@ export function propsToStyles(props: any, theme: CompiledTheme): CSSPropertySet 
     if (key.indexOf('-') > 0) {
       // adding mediaQueries keys
       styles = styles || {}
-      styles[key] = styleVal(props[key], theme, props)
+      styles[key] = styleVal(props[key], props)
     }
   }
   return styles

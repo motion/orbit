@@ -90,13 +90,13 @@ export function Input({ onEnter, type = 'text', nodeRef, children, ...props }: I
   )
 }
 
-const inputSurfaceTheme: ThemeFn<InputProps> = (props, theme) => ({
+const inputSurfaceTheme: ThemeFn<InputProps> = props => ({
   ...(!props.chromeless && {
-    border: [1, theme.borderColor.desaturate(0.1)],
+    border: [1, props.borderColor.desaturate(0.1)],
     '&:focus-within': {
       boxShadow: [
-        [0, 0, 0, 3, theme.borderColor.setAlpha(a => a * 0.5)],
-        getElevation(props, theme).boxShadow,
+        [0, 0, 0, 3, props.borderColor.setAlpha(a => a * 0.5)],
+        getElevation(props).boxShadow,
       ],
     },
   }),
@@ -135,7 +135,6 @@ const SimpleInput = ({
   ...props
 }: SurfaceProps & InputProps) => {
   const visible = useVisibility()
-  const theme = useTheme()
   return (
     <Surface
       tagName={tagName}
@@ -173,7 +172,7 @@ const SimpleInput = ({
       borderWidth={1}
       {...props}
       className={`ui-input ${props.className || ''}`}
-      focusWithinStyle={inputSurfaceTheme(props, theme)}
+      focusWithinStyle={inputSurfaceTheme(useTheme(props))}
     />
   )
 }

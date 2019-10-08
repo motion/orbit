@@ -565,17 +565,17 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   disabled: {
     cursor: 'not-allowed',
   },
-}).theme((props, theme) => {
+}).theme((props) => {
   const { fontSize, lineHeight } = scaledTextSizeTheme(props) || defaultTextTheme
-  const themeStyle = psuedoStyleTheme(props, theme)
-  const propStyles = propsToStyles(props, theme)
+  const themeStyle = psuedoStyleTheme(props)
+  const propStyles = propsToStyles(props)
   const marginStyle = getMargin(props)
 
   let styles: CSSPropertySet = {}
-  let boxShadow = props.boxShadow || theme.boxShadow || null
+  let boxShadow = [].concat(props.boxShadow || null)
 
   const borderColor = themeStyle?.borderColor
-  const borderWidth = selectDefined(props.borderWidth, theme.borderWidth, 0)
+  const borderWidth = selectDefined(props.borderWidth, 0)
 
   // borderPosition controls putting borders inside vs outside
   // useful for having nice looking buttons (inside) vs container-like views (outside)
@@ -591,15 +591,14 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   }
 
   if (props.elevation) {
-    boxShadow = [...(boxShadow || []), ...getElevation(props, theme).boxShadow]
+    boxShadow = [...(boxShadow || []), ...getElevation(props).boxShadow]
   }
 
   const res = {
-    fontWeight: props.fontWeight || theme.fontWeight,
-    overflow: props.overflow || theme.overflow,
     // note: base theme styles go *above* propsToStyles...
     ...themeStyle,
     // TODO this could be automatically handled in propStyles if we want...
+    // @ts-ignore deep
     ...(!props.chromeless && props.active && { '&:hover': themeStyle['&:active'] }),
     ...(props.chromeless && chromelessStyle),
     ...(props.circular && {
@@ -634,9 +633,10 @@ const perfectCenterStyle = props => {
   }
 }
 
-const applyElementTheme = (props, theme) =>
-  props.elementTheme ? props.elementTheme(props, theme) : null
+const applyElementTheme: ThemeFn<any> = (props) =>
+  props.elementTheme ? props.elementTheme(props) : null
 
+// @ts-ignore
 const Element = gloss<SurfaceFrameProps & { disabled?: boolean }>({
   display: 'flex', // in case they change tagName
   flex: 1,

@@ -2,7 +2,6 @@ import { CSSPropertySetStrict, ThemeObject } from '@o/css'
 
 import { ThemeFn } from '../gloss'
 import { mergeStyles } from '../helpers/mergeStyles'
-import { CompiledTheme } from '../theme/createTheme'
 import { styleVal } from './propStyleTheme'
 
 // resolves props into styles for valid css
@@ -16,14 +15,6 @@ export type PseudoStyleProps = {
   focusStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
   disabledStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
   focusWithinStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
-}
-
-export const psuedoStyleTheme: ThemeFn = (a, b, c) => {
-  return applyPsuedoTheme(a, b, c, true)
-}
-
-export const psuedoStylePropsTheme: ThemeFn = (a, b, c) => {
-  return applyPsuedoTheme(a, b, c, false)
 }
 
 const isDefined = (x: any) => typeof x !== 'undefined'
@@ -84,13 +75,10 @@ const themeKeys: KeyMap = [
 
 const SubThemeKeys: { [key: string]: KeyMap } = {}
 
-const applyPsuedoTheme = (props: any, theme: CompiledTheme, previous: any, useTheme = false) => {
-  if (!theme) {
-    throw new Error('No theme passed to psuedoStyleTheme')
-  }
+const applyPsuedoTheme: ThemeFn = (props: any, previous?: any) => {
   // assigns base theme styles
   // warning! mutative function
-  const res = getPsuedoStyles(props, theme, themeKeys, useTheme)
+  const res = getPsuedoStyles(props, themeKeys)
   const overrides = res.overrides
   let styles: ThemeObjectWithPseudo | null = res.styles
 
@@ -107,7 +95,7 @@ const applyPsuedoTheme = (props: any, theme: CompiledTheme, previous: any, useTh
     }
 
     // now process and get styles, but dont assign them yet
-    let psuedoStyle = getPsuedoStyles(props, theme, subKeys, useTheme).styles
+    let psuedoStyle = getPsuedoStyles(props, subKeys).styles
 
     // for any prop overrides from base, override them on psuedo too
     if (props.overridePsuedoStyles) {
@@ -141,20 +129,20 @@ const applyPsuedoTheme = (props: any, theme: CompiledTheme, previous: any, useTh
   return mergeStyles(previous, styles)
 }
 
-function getPsuedoStyles(props: Object, theme: CompiledTheme, keyMap: KeyMap, useTheme = false) {
+function getPsuedoStyles(props: Object, keyMap: KeyMap) {
   let styles: any = null
   let overrides: Object | null = null
   for (const [name, mapName] of keyMap) {
     if (isDefined(props[name])) {
-      const val = styleVal(props[name], theme, props)
+      const val = styleVal(props[name], props)
       styles = styles || {}
       styles[mapName] = val
       overrides = overrides || {}
       overrides[mapName] = val
-    } else if (useTheme && isDefined(theme[name])) {
-      styles = styles || {}
-      styles[mapName] = theme[name]
     }
   }
   return { styles, overrides }
 }
+
+export const psuedoStyleTheme: ThemeFn = applyPsuedoTheme
+export const psuedoStylePropsTheme: ThemeFn = applyPsuedoTheme

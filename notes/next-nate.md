@@ -98,10 +98,6 @@ const LightTheme: Theme = {
 
 Second, we'd have an idea of the props they accept so we can know if we can compile away.
 
-But back to the question, how does an Icon thats a child of a Button automatically receive the colors and such, even if its set through props?
-
-??????? hard need to think over more
-
 basically you could go all "full optimizing compiler" in a sense, not crazy advanced but pretty damn advanced, you could do this:
 
 <Theme theme={{ buttonGlint: true }}>
@@ -178,18 +174,7 @@ sheets to form to database would be huge.
 
 ---
 
-The plan from jun for Sep:
-
-"Have everything ready for beta"
-
-- Improved demo flow x2 (apps, bugs, etc)
-- Build to production
-
-they have conflicting sub-contraints in cases, resolved to (in order of importance):
-
 - [beta/demo] runthrough + bugfix over and over
-  - no rebuild all node apps
-  - show a window immediately on startup that shows status of builds
   - fix sorting apps
   - handle deleting apps, adding apps better
   - test errors/error recovery
@@ -199,25 +184,14 @@ they have conflicting sub-contraints in cases, resolved to (in order of importan
 - [demo] plug in simple ocr/import menu command
 - [beta] ~tech-blocker webpack 5 for faster from-cache resuming
 - [beta] search UI fixes
-- [beta] HMR/dev fixes and upgrades
 - [beta] search backend (nlp + scan more fixes)
-- [beta] settings upgrades: fix sort, remove, improve flows
 - [demo] ~potentially do a demo of option hold to see context menu
-- [site] cleanup sub-pages
 - [site] run over docs for a few days
 - [beta] query builder finish
 
 ---
 
 Detailed September Plan:
-
-- finish motion/carousel
-
-  - carousel is definitely slower, need to test with more items too
-  - performance opening drawer
-  - fix a lot of correctness bugs (resize window, etc)
-  - check into regressions on keyboard movement in main area/apps (is it moving inside apps when it
-    shouldnt?)
 
 - get Concurrent working with priority on new react
 - fix a ton of bugs:
@@ -241,14 +215,8 @@ Detailed September Plan:
 
   - some sort of easy drag/drop in/out type thing
   - some sort of data browsing/plugin app:
-    - database browser could be useful
+    - database browser could be useful (see flipper)
     - graphQL usage would be helpful
-
-- build to production
-  - !!! we can't do this right now for electron 8 though without some trouble, so no rounded
-    windows..?
-  - get build to prod working
-  - - get build to prod with full flow of app editing working
 
 ---
 
@@ -274,25 +242,12 @@ GO TO PROD / DEV TASKS
 
 ---
 
-- [ ] fix pane resizing bugs
 - [ ] fix issues using different app apis, test
 - [ ] persisting queries
 - [ ] persisting to bits the query information
 - [ ] parameters can add/remove them
 - [ ] parameters can use them in queries
 - [ ] can drag/drop a query into a table
-
-notes from onboarding andrew:
-
-- reloading of apps would be important from the UI in case things dont work
-- return errors from app methods / postgres to UI
-- searchResults app shouldn't insert by default
-- make workers wait for app to finish startup before starting
-- node rebuilding slowly
-- need to refresh searchResults sometimes when youve added bits, dont do too smart just check for
-  saves
-- SelectableStore should export themselves into a global, based on if they are visibile, and then
-  esc can clear selection before doing anything else
 
 ---
 
@@ -353,16 +308,4 @@ need to talk to a few startup people to get some feedback:
 - Zeit/Expo cofounders
 - ... add a few more
 
-Questions:
-
-small:
-
-- gloss could probably memo pretty well, should make adjustments using the benchmarks
-
-  - custom memo function:
-    - if children set, dont memo at all
-    - do a few smart props that we know are usually POJOs
-
 - https://github.com/humandx/slate-automerge
-
-- monobase for the individual docs sites...

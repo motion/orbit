@@ -71,9 +71,6 @@ export type CommonHTMLProps = Omit<
   | 'itemScope'
   | 'inputMode'
   | 'color'
-  | 'className'
-  | 'children'
-  | 'style'
 >
 
 type GlossBaseProps = CommonHTMLProps & {

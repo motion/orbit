@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
+import React from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -87,13 +87,6 @@ export const sheet = new StyleSheet(true)
 const gc = new GarbageCollector(sheet, tracker)
 const whiteSpaceRegex = /[\s]+/g
 const emptyObject = {}
-
-// const x = gloss<{ x: 1 }>()
-// const x2 = gloss(x)
-// fails cant add it
-// class X extends React.Component<{ c: 1 }> {}
-// const X3 = gloss(X)
-// const y = <X3 c={1} />
 
 export function gloss<
   MyProps = {},
@@ -247,7 +240,7 @@ export function gloss<
     let finalProps: any = {}
 
     let avoidStyles = false
-    if (config && config.shouldAvoidProcessingStyles) {
+    if (config?.shouldAvoidProcessingStyles) {
       avoidStyles = config.shouldAvoidProcessingStyles(props)
       if (avoidStyles) {
         // because hooks can run in theme, be sure to run them
@@ -311,6 +304,7 @@ export function gloss<
     // hook: setting your own props
     const postProcessProps = config && config.postProcessProps
     if (postProcessProps) {
+      // TODO could hoist this cb fn
       postProcessProps(props, finalProps, () => {
         return {
           ...glossProps.styles['.'],
@@ -543,6 +537,9 @@ function addDynamicStyles(
       dynStyles['.'] = dynStyles['.'] || {}
       // set our config
       const themeStyles = themeFn(theme)
+      if (theme['debug']) {
+        console.log('debug', dynStyles, themeStyles, theme)
+      }
       const themePropStyles = mergeStyles('.', dynStyles, themeStyles, true)
       if (themePropStyles) {
         mergePropStyles(dynStyles, themePropStyles, theme)
@@ -839,6 +836,7 @@ if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
     validCSSAttr,
     themeVariableManager,
     UnwrapThemeSymbol,
+    getGlossProps
   }
 }
 

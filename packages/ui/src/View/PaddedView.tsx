@@ -6,7 +6,7 @@ import { hasMediaQueries, mediaQueryKeys } from '../mediaQueryKeys'
 import { useScale } from '../Scale'
 import { Sizes } from '../Space'
 import { getSizableValue } from './getSizableValue'
-import { ScrollableViewProps, SizesObject, ViewProps } from './types'
+import { ScrollableViewProps, SizesObject, ViewPropsPlain } from './types'
 import { wrappingSpaceTheme } from './wrappingSpaceTheme'
 
 export type PaddingProps = {
@@ -14,7 +14,7 @@ export type PaddingProps = {
 }
 
 export const PaddedView = gloss<
-  ViewProps &
+  ViewPropsPlain &
     Pick<ScrollableViewProps, 'scrollable' | 'parentSpacing'> & {
       isWrapped?: boolean
     }

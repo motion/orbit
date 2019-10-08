@@ -7,7 +7,7 @@ import { composeRefs } from '../helpers/composeRefs'
 import { useThrottledFn } from '../hooks/useThrottleFn'
 import { Surface, SurfaceProps } from '../Surface'
 import { DataType } from '../types'
-import { getElevation } from '../View/elevation'
+import { elevationTheme } from '../View/elevation'
 import { useVisibility } from '../Visibility'
 import { useParentForm } from './FormContext'
 
@@ -149,14 +149,14 @@ const SimpleInput = ({
   )
 }
 
-const inputSurfaceTheme: ThemeFn<InputProps> = props => {
+const inputSurfaceTheme: ThemeFn<any> = props => {
   return {
     ...(!props.chromeless && {
       border: [1, props.borderColor.desaturate(0.1)],
       '&:focus-within': {
         boxShadow: [
           [0, 0, 0, 3, props.borderColor.setAlpha(a => a * 0.5)],
-          getElevation(props).boxShadow,
+          elevationTheme(props as any).boxShadow,
         ],
       },
     }),

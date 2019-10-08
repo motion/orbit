@@ -51,7 +51,7 @@ const elevatedShadow = (props: GlossThemeProps<ElevatableProps>) => {
   ]
 }
 
-export const getElevation: ThemeFn<ElevatableProps> = props => {
+export const elevationTheme: ThemeFn<ElevatableProps> = props => {
   return cacheReturn({
     keys: [JSON.stringify([props.elevation, props.boxShadow])],
     value: () => {

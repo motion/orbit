@@ -3,7 +3,7 @@ import { IconNamesList } from '@o/icons'
 import { isDefined, mergeDefined } from '@o/utils'
 import FuzzySearch from 'fuzzy-search'
 import { useTheme } from 'gloss'
-import React, { memo, Suspense, useContext } from 'react'
+import React, { CSSProperties, memo, Suspense, useContext } from 'react'
 
 import { Config } from './helpers/configureUI'
 import { IconPropsContext } from './IconPropsContext'
@@ -20,8 +20,6 @@ export type IconProps = ViewProps & {
   svg?: string
   ignoreColor?: boolean
 }
-
-const x: IconProps = {}
 
 const names = IconNamesList
 const searcher = new FuzzySearch(names.map(name => ({ name })), ['name'])
@@ -74,7 +72,7 @@ export const PlainIcon = ({
   tooltipProps,
   name,
   ...props
-}: IconProps) => {
+}: Omit<IconProps, 'style'> & { style: CSSProperties }) => {
   const theme = useTheme()
   const size = snapToSizes(props.size) * useScale()
   let color = props.color || theme.color || '#fff'
@@ -121,8 +119,10 @@ export const PlainIcon = ({
             alignItems: 'center',
             justifyContent: 'center',
             display: 'flex',
-            width: size,
-            height: size,
+            ...((typeof size === 'number' || typeof size === 'string') && {
+              width: size,
+              height: size,
+            }),
             ...style,
           }}
           dangerouslySetInnerHTML={{

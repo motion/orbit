@@ -21,7 +21,7 @@ import { Size, Space } from './Space'
 import { SizedSurfacePropsContext } from './SurfacePropsContext'
 import { scaledTextSizeTheme } from './text/scaledTextSizeTheme'
 import { Tooltip } from './Tooltip'
-import { getElevation } from './View/elevation'
+import { elevationTheme } from './View/elevation'
 import { ViewProps } from './View/types'
 import { getMargin, View } from './View/View'
 
@@ -549,8 +549,7 @@ const defaultTextTheme = {
 }
 
 // fontFamily: inherit on both fixes elements
-type SurfaceFrameProps = SurfaceProps & ThroughProps
-const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
+const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
   display: 'flex', // in case they change tagName
   fontFamily: 'inherit',
   position: 'relative',
@@ -566,11 +565,9 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
       cursor: 'not-allowed',
     },
   }
-}).theme(props => {
-  const { fontSize, lineHeight } = scaledTextSizeTheme(props) || defaultTextTheme
+}).theme(getMargin, scaledTextSizeTheme, props => {
   const themeStyle = psuedoStyleTheme(props)
   const propStyles = propsToStyles(props)
-  const marginStyle = getMargin(props)
 
   let styles: CSSPropertySet = {}
   let boxShadow = [].concat(props.boxShadow || null)
@@ -592,7 +589,7 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   }
 
   if (props.elevation) {
-    boxShadow = [...(boxShadow || []), ...getElevation(props).boxShadow]
+    boxShadow = [...(boxShadow || []), ...elevationTheme(props as any).boxShadow]
   }
 
   const res = {
@@ -605,10 +602,7 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
     ...(props.circular && {
       width: props.height,
     }),
-    fontSize,
-    lineHeight,
     ...propStyles,
-    ...marginStyle,
     ...styles,
     boxShadow,
     '&:hover': props.active
@@ -637,7 +631,7 @@ const perfectCenterStyle = props => {
 const applyElementTheme: ThemeFn<any> = (props) =>
   props.elementTheme ? props.elementTheme(props) : null
 
-const Element = gloss<SurfaceFrameProps & { disabled?: boolean }>({
+const Element = gloss<ThroughProps & { disabled?: boolean }>({
   display: 'flex', // in case they change tagName
   flex: 1,
   overflow: 'hidden',

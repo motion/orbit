@@ -1,5 +1,5 @@
 import { Color } from '@o/color/src'
-import { CSSPropertySetStrict, GlossPropertySet } from '@o/css'
+import { CSSPropertySet, CSSPropertySetStrict, GlossPropertySet } from '@o/css'
 
 import { ThemeSelect } from './theme/Theme'
 import { ThemeValue } from './theme/ThemeValue'
@@ -70,7 +70,7 @@ export type GlossBaseProps = {
   coat?: string | false
   subTheme?: ThemeSelect
   conditional?: {
-    [key: string]: GlossPropertySet
+    [key: string]: CSSPropertySet
   }
 }
 

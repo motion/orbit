@@ -1,10 +1,10 @@
 import { css, GlossPropertySet } from '@o/css'
 import { motion } from 'framer-motion'
-import { Base, gloss } from 'gloss'
+import { Base, gloss, ThemeFn } from 'gloss'
 
 import { AnimationStore } from '../Geometry'
 import { Sizes } from '../Space'
-import { getElevation } from './elevation'
+import { elevationTheme } from './elevation'
 import { getSizableValue } from './getSizableValue'
 import { motionExtraProps, motionStyleProps } from './motionStyleProps'
 import { usePadding } from './PaddedView'
@@ -19,11 +19,21 @@ export const motionProps = {
 const shouldRenderToMotion = (props: any) =>
   'animate' in props || 'drag' in props || 'layoutTransition' in props
 
+export type MarginProps = {
+  margin?: Sizes | SizesObject | GlossPropertySet['margin']
+}
+
+export const getMargin: ThemeFn<MarginProps> = props => {
+  if (props.margin && props.margin !== 0) {
+    return { margin: getSizableValue(props.margin) }
+  }
+}
+
 // regular view
 export const View = gloss<ViewPropsPlain>(Base, {
   display: 'flex',
 })
-  .theme(getMargin, usePadding, getElevation)
+  .theme(getMargin, usePadding, elevationTheme)
   .withConfig({
     // shouldAvoidProcessingStyles: shouldRenderToMotion,
     postProcessProps(inProps, outProps, getStyles) {
@@ -71,14 +81,4 @@ export const View = gloss<ViewPropsPlain>(Base, {
 View.staticStyleConfig = {
   ...View.staticStyleConfig,
   deoptProps: ['animate', 'drag', 'layoutTransition'],
-}
-
-export type MarginProps = {
-  margin?: Sizes | SizesObject | GlossPropertySet['margin']
-}
-
-export function getMargin(props: MarginProps) {
-  if (props.margin && props.margin !== 0) {
-    return { margin: getSizableValue(props.margin) }
-  }
 }

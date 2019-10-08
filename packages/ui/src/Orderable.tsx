@@ -10,7 +10,6 @@ import * as React from 'react'
 
 import { Rect } from './helpers/geometry'
 
-
 export type OrderableOrder = string[]
 
 type OrderableOrientation = 'horizontal' | 'vertical'
@@ -43,9 +42,11 @@ const OrderableContainer = gloss({
   display: 'inline-block',
 })
 
-const OrderableItemContainer = gloss({}).theme(({ orientation }) => ({
-  display: orientation === 'vertical' ? 'block' : 'inline-block',
-}))
+const OrderableItemContainer = gloss<{ orientation?: OrderableOrientation }>().theme(
+  ({ orientation }) => ({
+    display: orientation === 'vertical' ? 'block' : 'inline-block',
+  }),
+)
 
 class OrderableItem extends React.Component<{
   orientation: OrderableOrientation
@@ -67,7 +68,7 @@ class OrderableItem extends React.Component<{
       <OrderableItemContainer
         orientation={this.props.orientation}
         key={this.props.id}
-        ref={this.addRef}
+        nodeRef={this.addRef}
         onMouseDown={this.startMove}
       >
         {this.props.children}

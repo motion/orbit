@@ -38,12 +38,47 @@ export interface GlossView<RawProps = {}, P = GlossProps<RawProps>> {
   }
 }
 
-type GlossBaseProps = {
-  className?: string
+// TODO whitelist instead
+// basic desire is to not overlap with CSS props
+// + move more towards react-native-web like props
+export type CommonHTMLProps = Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  | 'title'
+  | 'about'
+  | 'accessKey'
+  | 'autoCapitalize'
+  | 'autoCorrect'
+  | 'autoSave'
+  | 'vocab'
+  | 'typeof'
+  | 'suppressHydrationWarning'
+  | 'suppressContentEditableWarning'
+  | 'spellCheck'
+  | 'security'
+  | 'slot'
+  | 'results'
+  | 'resource'
+  | 'prefix'
+  | 'property'
+  | 'radioGroup'
+  | 'contextMenu'
+  | 'dir'
+  | 'datatype'
+  | 'inlist'
+  | 'itemID'
+  | 'lang'
+  | 'is'
+  | 'itemScope'
+  | 'inputMode'
+  | 'color'
+  | 'className'
+  | 'children'
+  | 'style'
+>
+
+type GlossBaseProps = CommonHTMLProps & {
   tagName?: string
-  children?: React.ReactNode
   nodeRef?: any
-  style?: any
   coat?: string | false
   subTheme?: ThemeSelect
 }

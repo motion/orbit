@@ -2,14 +2,13 @@
 
 gloss:
 
-1. theme is just defaultProps but all are css variables
-2. gloss(view, { background: 'red' } <- default props)
-3. theme(props => ) <- no theme, theme is just default props
-4. scale is just cssvars: xxs, xs, sm, ....
-5. move surface sizing into theme
-6. move subsets to objects: listItem: {}, etc
-7. <Theme for="button" scale="lg" /> <- theme just acts as a css var setter
-
+1. scale is just cssvars: xxs, xs, sm, ....
+2. move surface sizing into theme
+3. move subsets to objects: listItem: {}, etc
+4. <Theme for="button" scale="lg" /> <- theme just acts as a css var setter
+5. big upgrades to static extraction with new syntax
+   1. can check theme functions runtime and see if they only use css variables
+   2. easier handling of default props
 
 ---
 

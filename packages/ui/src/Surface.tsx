@@ -565,11 +565,15 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   disabled: {
     cursor: 'not-allowed',
   },
-}).theme((props) => {
+}).theme(props => {
   const { fontSize, lineHeight } = scaledTextSizeTheme(props) || defaultTextTheme
   const themeStyle = psuedoStyleTheme(props)
   const propStyles = propsToStyles(props)
   const marginStyle = getMargin(props)
+
+  if (props['background'] === 'transparent') {
+    debugger
+  }
 
   let styles: CSSPropertySet = {}
   let boxShadow = [].concat(props.boxShadow || null)

@@ -83,6 +83,7 @@ export const useSectionProps = useProps
 const defaultTitlePaddingAmount = [1.5, 1, 0]
 
 export function Section(direct: SectionProps) {
+  debugger
   // @ts-ignore deep
   const allProps = useProps(direct)
   const [collapseProps, props] = splitCollapseProps(allProps)

@@ -71,10 +71,6 @@ export function Stack(colProps: StackProps) {
     }
   }
 
-  if (direction === 'horizontal') {
-    console.log('props', props)
-  }
-
   // scrollable
   // use even if === false because we may want the scroll context
   if (isDefined(scrollable)) {

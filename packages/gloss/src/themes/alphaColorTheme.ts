@@ -38,10 +38,10 @@ function createAlphaColorTheme(shouldSetDefault = false) {
     const alpha = props.alpha
     const next: CSSPropertySet | null = {}
     if (color) {
-      if (color.originalInput !== 'inherit' && typeof alpha === 'number') {
-        next.color = toColor(color).setAlpha(alpha)
-      } else {
-        if (shouldSetDefault) {
+      if (shouldSetDefault) {
+        if (color.originalInput !== 'inherit' && typeof alpha === 'number') {
+          next.color = toColor(color).setAlpha(alpha)
+        } else {
           next.color = color
         }
       }

@@ -20,7 +20,7 @@ export const BlogTitle = (props: any) => (
           cursor="pointer"
           {...props}
         >
-          <TitleText cursor="pointer" size="xs" fontWeight={600}>
+          <TitleText debug cursor="pointer" size="xs" fontWeight={600}>
             The Orbit Blog
           </TitleText>
         </Stack>

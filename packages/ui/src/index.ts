@@ -36,6 +36,7 @@ export type UITheme = {
   borderColor: Color
   borderColorLight: Color
   borderColorLighter: Color
+  borderColorActive: Color
   overlayBackground: Color
   glintColor?: Color
   glintColorTop?: Color

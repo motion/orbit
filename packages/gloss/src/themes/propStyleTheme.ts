@@ -15,10 +15,14 @@ export const propsToStyles: ThemeFn = props => {
   for (let key in props) {
     if (validCSSAttr[key]) {
       // add valid css attributes
-      const next = styleVal(props[key], props)
-      if (next !== undefined) {
-        styles = styles || {}
-        styles[key] = next
+      try {
+        const next = styleVal(props[key], props)
+        if (next !== undefined) {
+          styles = styles || {}
+          styles[key] = next
+        }
+      } catch(err) {
+        debugger
       }
       continue
     }
@@ -50,9 +54,6 @@ export const propsToStyles: ThemeFn = props => {
       styles = styles || {}
       styles[key] = styleVal(props[key], props)
     }
-  }
-  if (props['flexDirection']) {
-    console.log('return', props, styles)
   }
   return styles
 }

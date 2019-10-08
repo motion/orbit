@@ -68,9 +68,24 @@ export const unwrapTheme = <CompiledTheme>(theme: CompiledTheme): CompiledTheme 
   return res
 }
 
+const fakeObj = {}
+const proxyThemeDescriptor = { enumerable: true, configurable: true }
+
 function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState, props?: any): any {
   return useMemo(() => {
-    return new Proxy(props || theme, {
+    let keys
+    return new Proxy(fakeObj, {
+      // fake an object but return props keys
+      // because react freezes props we cant fallback to theme if we proxy props directly
+      // but since useTheme() is used in limited ways, this seems to work nicely
+      ownKeys() {
+        keys = keys || Object.keys(props || fakeObj)
+        return keys
+      },
+      getOwnPropertyDescriptor() {
+        return proxyThemeDescriptor
+      },
+
       get(_, key) {
         if (key === UnwrapThemeSymbol) {
           return theme
@@ -84,35 +99,40 @@ function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState, props?: a
         // need to figure out how we know to do that...
         if (props) {
           if (Reflect.has(props, key)) {
-            return Reflect.get(props, key)
-          }
-        }
-        if (key[0] === '_' || !Reflect.has(theme, key)) {
-          return Reflect.get(theme, key)
-        }
-        const val = Reflect.get(theme, key)
-        if (val && val.cssVariable) {
-          return new Proxy(val, {
-            get(starget, skey) {
-              if (skey === 'cssVariable') {
-                // unwrap
-                return starget[skey]
-              }
-              if (typeof key === 'string' && typeof skey === 'string') {
-                if (!starget.cssVariableSafeKeys.includes(skey)) {
-                  trackState.nonCSSVariables.add(key)
-                  trackState.hasUsedOnlyCSSVariables = false
-                }
-              }
-              return Reflect.get(starget, skey)
+            const next = Reflect.get(props, key)
+            if (next !== undefined) {
+              return next
             }
-          })
-        } else {
-          if (typeof key === 'string') {
-            trackState.nonCSSVariables.add(key)
-            trackState.hasUsedOnlyCSSVariables = false
           }
-          return val
+        }
+        if (theme) {
+          if (key[0] === '_' || !Reflect.has(theme, key)) {
+            return Reflect.get(theme, key)
+          }
+          const val = Reflect.get(theme, key)
+          if (val && val.cssVariable) {
+            return new Proxy(val, {
+              get(starget, skey) {
+                if (skey === 'cssVariable') {
+                  // unwrap
+                  return starget[skey]
+                }
+                if (typeof key === 'string' && typeof skey === 'string') {
+                  if (!starget.cssVariableSafeKeys.includes(skey)) {
+                    trackState.nonCSSVariables.add(key)
+                    trackState.hasUsedOnlyCSSVariables = false
+                  }
+                }
+                return Reflect.get(starget, skey)
+              }
+            })
+          } else {
+            if (val !== undefined && typeof key === 'string') {
+              trackState.nonCSSVariables.add(key)
+              trackState.hasUsedOnlyCSSVariables = false
+            }
+            return val
+          }
         }
       },
     })

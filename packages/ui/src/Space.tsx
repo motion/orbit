@@ -1,5 +1,6 @@
 import { selectDefined } from '@o/utils'
 import { Box, gloss } from 'gloss'
+import { ThemeValue } from 'gloss/src/theme/ThemeValue'
 
 import { isBrowser } from './constants'
 import { mediaQueryKeysSize } from './mediaQueryKeys'
@@ -34,7 +35,11 @@ export const spaceSizes = {
   xxxl: 48,
 }
 
-export function getSpaceSize(space: Size, scale: number = 1): number | string {
+export function getSpaceSize(space: Size | ThemeValue<Size>, scale: number = 1): number | string {
+  if (space instanceof ThemeValue) {
+    console.warn('TODO')
+    return 0
+  }
   if (typeof space === 'number') {
     return space * scale
   }

@@ -14,6 +14,7 @@ export {
   CSSPropertySetResolved,
   CSSPropertySetStrict,
   CSSPropertySetLoose,
+  CSSPropertyValThemeFn,
 } from './cssPropertySet'
 export * from './helpers'
 export { camelToSnake, snakeToCamel } from './helpers'

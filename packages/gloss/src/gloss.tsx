@@ -19,7 +19,7 @@ export { StyleTracker } from './stylesheet/gc'
  * filtering out props before they get to `theme`, which is helpful for keeping
  * their types simple. It's still relatively low level. See our @o/ui/View.tsx
  */
-export interface GlossView<P extends object = {}> {
+export interface GlossView<RawProps = {}, P = GlossProps<RawProps>> {
   (props: P, context?: any): React.ReactElement<any> | null
   shouldUpdateMap: WeakMap<object, boolean>
   propTypes?: React.ValidationMap<P>
@@ -28,7 +28,7 @@ export interface GlossView<P extends object = {}> {
   displayName?: string
   // extra:
   ignoreAttrs?: { [key: string]: boolean }
-  theme: (...themeFns: ThemeFn<P>[]) => this
+  theme: (...themeFns: ThemeFn<RawProps>[]) => this
   withConfig: (config: GlossViewOpts<P>) => this
   internal: GlossInternals<P>
   staticStyleConfig?: {
@@ -48,19 +48,16 @@ type GlossBaseProps = {
   subTheme?: ThemeSelect
 }
 
-export type GlossProps<Props extends object = {}> = CSSPropertySetStrict & Omit<Props, keyof GlossBaseProps> & GlossBaseProps
+export type GlossProps<Props = {}> = CSSPropertySetStrict & Omit<Props, keyof GlossBaseProps> & GlossBaseProps
+export type GlossPropsResolved<Props = {}> = CSSPropertySet & Omit<Props, keyof GlossBaseProps> & GlossBaseProps
 
-type CompileProps<Props extends object = {}> = {
-  [P in keyof Props]?: Exclude<Props[P], Function>
-}
-
-export type ThemeFn<Props extends object = {}> = (
-  props: CompileProps<GlossProps & Props>,
+export type ThemeFn<RawProps = {}> = (
+  props: GlossPropsResolved<RawProps>,
   theme: CompiledTheme,
   previous?: CSSPropertySetLoose | null,
 ) => CSSPropertySetLoose | undefined | null
 
-export type GlossViewOpts<Props extends object = {}> = {
+export type GlossViewOpts<Props = {}> = {
   displayName?: string
   ignoreAttrs?: { [key: string]: boolean }
   defaultProps?: Partial<Props>
@@ -85,7 +82,7 @@ export type GlossStaticStyleDescription = {
   }
 }
 
-type GlossInternals<Props extends object = {}> = {
+type GlossInternals<Props = {}> = {
   parent: any
   themeFns: ThemeFn<Props>[] | null
   compiledInfo?: GlossStaticStyleDescription
@@ -103,11 +100,11 @@ const gc = new GarbageCollector(sheet, tracker)
 const whiteSpaceRegex = /[\s]+/g
 const emptyObject = {}
 
-export function gloss<MyProps extends object = {}, ParentProps extends object = {}, Props extends object = GlossProps<MyProps & ParentProps>>(
-  a?: CSSPropertySet | GlossView<Props> | ((props: Props) => any) | string,
+export function gloss<MyProps = {}, ParentProps = {}, Parent extends GlossView<ParentProps> = any>(
+  a?: CSSPropertySet | Parent | ((props: MyProps) => any) | string,
   b?: CSSPropertySet,
   compiledInfo?: GlossStaticStyleDescription,
-): GlossView<Props> {
+): GlossView<MyProps & ParentProps> {
   if (process.env.NODE_ENV === 'development') {
     if (a === undefined && !!b) {
       throw new Error(
@@ -115,6 +112,8 @@ export function gloss<MyProps extends object = {}, ParentProps extends object = 
       )
     }
   }
+
+  type Props = any
 
   // @ts-ignore
   let target: any = a || 'div'

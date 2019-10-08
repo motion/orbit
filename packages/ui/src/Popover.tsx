@@ -1201,7 +1201,7 @@ const Overlay = gloss<any>(Box, {
   background: overlay === true ? 'rgba(0,0,0,0.2)' : overlay,
 }))
 
-const PopoverWrap = gloss<any>(Box, {
+const PopoverWrap = gloss<{ isOpen?: boolean; willReposition?: boolean; noHoverOnChildren?: any }>(Box, {
   position: 'absolute',
   pointerEvents: 'none',
   zIndex: -1,

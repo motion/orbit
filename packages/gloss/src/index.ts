@@ -3,6 +3,7 @@ export {
   css,
   CSSPropertySet,
   CSSPropertySetStrict,
+  CSSPropertyValThemeFn,
   psuedoKeys,
   ThemeObject,
   validCSSAttr,

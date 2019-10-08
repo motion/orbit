@@ -11,7 +11,7 @@ export type GetSortableItem<A> = (
   index: number,
 ) => Partial<SortableElementProps> | undefined | null
 
-export type SortableGridProps<A extends any> = SortableContainerProps &
+export type SortableGridProps<A = any> = SortableContainerProps &
   Omit<GridProps, 'onSelect'> & {
     /** The items to be used for getItem in the grid */
     items?: A[]

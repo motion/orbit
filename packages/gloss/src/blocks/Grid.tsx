@@ -1,9 +1,9 @@
-import { gloss } from '../gloss'
+import { gloss, GlossProps } from '../gloss'
 import { Base, BaseProps } from './Base'
 
 const px = (n: number | string | any) => (typeof n === 'number' ? n + 'px' : n)
 
-export type GridProps = {
+type GridPropsInner = {
   itemMinHeight?: number
   itemMinWidth?: number
   itemMaxWidth?: number
@@ -12,7 +12,9 @@ export type GridProps = {
   autoFitRows?: boolean
 }
 
-export const Grid = gloss<GridProps, BaseProps>(Base, {
+export type GridProps = GlossProps<BaseProps & GridPropsInner>
+
+export const Grid = gloss<GridPropsInner, BaseProps>(Base, {
   display: 'grid',
 }).theme(p => ({
   ...(p.colSpan ? { gridColumn: `span ${p.colSpan}` } : null),

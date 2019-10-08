@@ -1,4 +1,4 @@
-import { Color } from '@o/color/src'
+import { Color } from '@o/color'
 import { CSSPropertySet, CSSPropertySetStrict, GlossPropertySet } from '@o/css'
 
 import { ThemeSelect } from './theme/Theme'

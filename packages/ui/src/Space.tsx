@@ -1,6 +1,5 @@
 import { selectDefined } from '@o/utils'
-import { Box, gloss } from 'gloss'
-import { ThemeValue } from 'gloss/src/theme/ThemeValue'
+import { Box, gloss, ThemeValue } from 'gloss'
 
 import { isBrowser } from './constants'
 import { mediaQueryKeysSize } from './mediaQueryKeys'

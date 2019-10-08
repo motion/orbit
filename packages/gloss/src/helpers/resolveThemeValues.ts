@@ -1,4 +1,4 @@
-import { CSSPropertyValThemeFn, cssValue } from '@o/css/src/css'
+import { CSSPropertyValThemeFn, cssValue } from '@o/css'
 
 export function resolveThemeValues<A = { [key: string]: any }>(
   props: A,

@@ -45,6 +45,7 @@ export { AllThemesContext, AllThemes } from './theme/ThemeContext'
 export { ThemeResetSubTheme } from './theme/ThemeResetSubTheme'
 export { ThemeProvide } from './theme/ThemeProvide'
 export * from './themes'
+export { ThemeValue } from './theme/ThemeValue'
 export { propsToStyles } from './themes/propStyleTheme'
 
 process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()

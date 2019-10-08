@@ -1,4 +1,4 @@
-import { ThemeObject } from '@o/css/src/css'
+import { ThemeObject } from '@o/css'
 
 import { weakKey } from '../helpers/WeakKeys'
 import { CompiledTheme } from './createTheme'
@@ -27,12 +27,7 @@ export function selectThemeSubset(
     theme = theme.parent
   }
   if (typeof subTheme === 'function') {
-    return createSubSetTheme(
-      `subfn${weakKey(subTheme)}`,
-      theme,
-      subTheme(theme),
-      subTheme,
-    )
+    return createSubSetTheme(`subfn${weakKey(subTheme)}`, theme, subTheme(theme), subTheme)
   }
   // generate new subset theme
   const len = subTheme.length

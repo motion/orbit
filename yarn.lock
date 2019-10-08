@@ -22621,11 +22621,6 @@ ts-pnp@^1.1.2:
   resolved "https://registry.npmjs.org/ts-pnp/-/ts-pnp-1.1.4.tgz#ae27126960ebaefb874c6d7fa4729729ab200d90"
   integrity sha512-1J/vefLC+BWSo+qe8OnJQfWTYRS6ingxjwqmHMqaMxXMj7kFtKLgAaYW3JeX3mktjgUL+etlU8/B4VUAUI9QGw==
 
-ts-toolbelt@^4.8.6:
-  version "4.8.6"
-  resolved "https://registry.npmjs.org/ts-toolbelt/-/ts-toolbelt-4.8.6.tgz#2686cdc79672d36f02496cacef017273ae4be88e"
-  integrity sha512-KS7qU5BMhWOWkNpnNfPIkP1DLlZAwCMZU5rcMnH/2Y8qMQLEwpxje8kL1A43Z0MtnmuIBEeevBXAKbFxZ9VvCA==
-
 tsconfig-paths-webpack-plugin@3.2.0:
   version "3.2.0"
   resolved "https://registry.npmjs.org/tsconfig-paths-webpack-plugin/-/tsconfig-paths-webpack-plugin-3.2.0.tgz#6e70bd42915ad0efb64d3385163f0c1270f3e04d"

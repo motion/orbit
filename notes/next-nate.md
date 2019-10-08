@@ -142,6 +142,10 @@ Surface = () => do {
 
 ideas:
 
+- excel/sheet upgrades:
+  - most attractive upgrade
+  - hardest to do well
+
 - mdx mode:
 
   - support a "simple" mode where you can code in just mdx

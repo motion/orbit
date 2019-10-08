@@ -197,7 +197,7 @@ const InlineCode = gloss({
   lineHeight: '1.4rem',
   fontWeight: 400,
   fontSize: '80%',
-}).theme((_, theme) => ({
+}).theme(theme => ({
   background: theme.backgroundStronger,
   color: theme.colorLighter,
 }))

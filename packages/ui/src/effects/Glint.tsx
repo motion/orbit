@@ -28,7 +28,7 @@ export const Glint = gloss<Props>(Box, {
 }).theme(props => {
   let { bottom, opacity, size = 1, y, ...radiusProps } = props
   const isTop = isUndef(bottom)
-  let glintColor = props[isTop ? 'glintColor' : 'glintColorBottom'] || props.color
+  let glintColor = props[isTop ? 'glintColor' : 'glintColorBottom'] || props.glintColor
   if (!isDefined(glintColor)) {
     opacity = 0.1
     if (isTop) {

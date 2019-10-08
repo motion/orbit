@@ -565,9 +565,13 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
       cursor: 'not-allowed',
     },
   }
-}).theme(getMargin, scaledTextSizeTheme, props => {
+}).theme(props => {
   const themeStyle = psuedoStyleTheme(props)
   const propStyles = propsToStyles(props)
+
+  // todo fix types here
+  const marginStyle = getMargin(props as any)
+  const { fontSize, lineHeight } = scaledTextSizeTheme(props)
 
   let styles: CSSPropertySet = {}
   let boxShadow = [].concat(props.boxShadow || null)
@@ -602,6 +606,9 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
     ...(props.circular && {
       width: props.height,
     }),
+    fontSize,
+    lineHeight,
+    ...marginStyle,
     ...propStyles,
     ...styles,
     boxShadow,

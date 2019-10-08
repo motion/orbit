@@ -1174,11 +1174,6 @@ const PopoverContainer = gloss<{ isOpen?: boolean; isTouchable?: boolean }>(View
       },
     },
   },
-}).withConfig({
-  ignoreAttrs: {
-    isOpen: true,
-    isTouchable: true,
-  },
 })
 
 const Overlay = gloss<any>(Box, {

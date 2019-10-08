@@ -359,7 +359,6 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
         focusStyle={props.focusStyle}
         disabledStyle={props.disabledStyle}
         color="inherit"
-        {...perfectCenterStyle(throughProps)}
         {...iconProps}
       >
         {!stringIcon && icon}
@@ -623,18 +622,6 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
   return res
 })
 
-const halfPxDown = {
-  transform: {
-    y: 0.5,
-  },
-}
-
-const perfectCenterStyle = props => {
-  if (props.height && props.height % 2 === 1) {
-    return halfPxDown
-  }
-}
-
 const applyElementTheme: ThemeFn<any> = (props) =>
   props.elementTheme ? props.elementTheme(props) : null
 
@@ -663,7 +650,7 @@ const Element = gloss<ThroughProps & { disabled?: boolean }>({
       whiteSpace: 'nowrap',
     },
   }
-}).theme(propsToStyles, perfectCenterStyle, applyElementTheme)
+}).theme(propsToStyles, applyElementTheme)
 
 const getIconSize = (props: SurfaceProps) => {
   if (isDefined(props.iconSize)) return props.iconSize

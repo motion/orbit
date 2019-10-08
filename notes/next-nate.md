@@ -10,13 +10,73 @@ gloss:
    1. can check theme functions runtime and see if they only use css variables
    2. easier handling of default props
 
+
+compile time optimizations, from least advanced to most:
+
+1. Removing gloss
+
+```
+const X = gloss({
+  background: 'red',
+})
+// =>
+const X = props => <div className="" {...props} />
+```
+
+2. SimpleText.tsx compile to div
+
+Would require some pretty interesting work on scale + size css vars
+
+3. Removing simple themes
+
+Surface.GlintContain:
+
+const GlintContain = gloss(Base, {
+  height: '100%',
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  pointerEvents: 'none',
+  zIndex: 10,
+  overflow: 'hidden',
+})
+
+=>
+
+const GlintContain = props => (
+  <div className={useTheme}>
+    <div className="glint-contain-classes" {...props} />
+  </div>
+)
+
+3. Removing views we know don't do anything except theme:
+
+Arrow.tsx:
+
+actually this is really complex...
+
+4. Remove jsx props
+
+Button.tsx
+
+<Surface outline="0" .... />
+
+=>
+
+<Surface className="something">
+
+5.
+
+
 ---
 
 re: Surface
 
 this could be redone to be more composable:
 
-Surface does a lot right now, and its quite powerful and flexible but hard to optimize and heavy for basic use cases.
+Surface does a lot right now, and its quite powerful and flexible but hard to optimize and heavy for
+basic use cases.
 
 - Glint
 - Hoverglow
@@ -25,18 +85,24 @@ Surface does a lot right now, and its quite powerful and flexible but hard to op
 - Tooltip
 - Badge
 
-we can split this all up, at the cost of the user having to understand a lot more and not "just use props", with benefit of full static compilation abilities and less overhead in non-static cases + a lot more flexibility in styling.
+we can split this all up, at the cost of the user having to understand a lot more and not "just use
+props", with benefit of full static compilation abilities and less overhead in non-static cases + a
+lot more flexibility in styling.
 
-plus, we could then re-build surface if we wanted to anyway. something like RichSurface and Button/Input could use them by default. though i think i'd still write them differently and you'd get better optimization....
+plus, we could then re-build surface if we wanted to anyway. something like RichSurface and
+Button/Input could use them by default. though i think i'd still write them differently and you'd
+get better optimization....
 
-still, its a good exercise because figuring it out means we figure out a good theme system in general soooo away we go:
+still, its a good exercise because figuring it out means we figure out a good theme system in
+general soooo away we go:
 
 <Stack theme="surface" size="lg" space spaceAround direction="horizontal">
   <Icon />
   <Text></Text>
 </Stack>
 
-actually this seems to work.... because themes can handle all the hovering, border radius etc. size/space can go directly into theme variables right?
+actually this seems to work.... because themes can handle all the hovering, border radius etc.
+size/space can go directly into theme variables right?
 
 then we could just abbreviate it as:
 
@@ -62,83 +128,56 @@ so themeSelect would stay?...
   Hi
 </Surface>
 
-where themeSelect basically just puts together a selection of variables from the parent theme, which are *just props*!. So keep in mind we can do stuff like:
+where themeSelect basically just puts together a selection of variables from the parent theme, which
+are _just props_!. So keep in mind we can do stuff like:
 
-const LightTheme: Theme = {
-  background: 'red',
-  backgroundLight: 'pink',
-  buttonBackground: 'green',
-  buttonBorderWidth: 1,
-  buttonHoverStyle: {
-    background: '--backgroundLight'
-  },
-}
+const LightTheme: Theme = { background: 'red', backgroundLight: 'pink', buttonBackground: 'green',
+buttonBorderWidth: 1, buttonHoverStyle: { background: '--backgroundLight' }, }
 
-How does this help in the case where you have grouping? It seems it really can't
-account for that. Wait, nm, it can. We can deopt on group which we already basically do.
+How does this help in the case where you have grouping? It seems it really can't account for that.
+Wait, nm, it can. We can deopt on group which we already basically do.
 
 What about all the weird transforms we do for icons/children in Surface render function right now?
 
-That basically is all passing down stuff we'd capture in props or theme. It seems the commong pattern is we need:
+That basically is all passing down stuff we'd capture in props or theme. It seems the commong
+pattern is we need:
 
-- Theme === Props, theme should just be a default representation of props that simplifies so much in terms of rules.
+- Theme === Props, theme should just be a default representation of props that simplifies so much in
+  terms of rules.
 - Actually in that way we could probably have the following themes:
 
-const LightTheme: Theme = {
-  background: 'green',
+const LightTheme: Theme = { background: 'green',
 
-  Button: {
-    background: 'red',
-  },
+Button: { background: 'red', },
 
-  Input: {
-    ...
-  }
-}
+Input: { ... } }
 
 Second, we'd have an idea of the props they accept so we can know if we can compile away.
 
-basically you could go all "full optimizing compiler" in a sense, not crazy advanced but pretty damn advanced, you could do this:
+basically you could go all "full optimizing compiler" in a sense, not crazy advanced but pretty damn
+advanced, you could do this:
 
-<Theme theme={{ buttonGlint: true }}>
-  <Surface size="lg" tooltip="hi" glint={false} />
-</Theme>
+<Theme theme={{ buttonGlint: true }}> <Surface size="lg" tooltip="hi" glint={false} /> </Theme>
 
 wait........ contextual themes :/
 
-function Surface(props) {
-  return (
-    <Stack id="id">
-      {props.glint && (
-        <Glint />
-      )}
-      {props.tooltip && (
-        <Tooltip>id</Tooltip>
-      )}
-      {props.badge && (
-        <Badge>123</Badge>
-      )}
-    </Stack>
-  )
-}
+function Surface(props) { return ( <Stack id="id"> {props.glint && ( <Glint /> )} {props.tooltip &&
+( <Tooltip>id</Tooltip> )} {props.badge && ( <Badge>123</Badge> )} </Stack> ) }
 
 What about glints?
 
-as long as we can optimize them all down to "div"s then I see no reason why we dont just render the divs on every surface. i think thats the way to get it to optimize, lets say:
+as long as we can optimize them all down to "div"s then I see no reason why we dont just render the
+divs on every surface. i think thats the way to get it to optimize, lets say:
 
-Surface = () => do {
-  const theme = useTheme()
-  <Stack ...>
-    {theme.glint && props.glint !== false && <Glints  />}
-  </Stack>
-}
-
+Surface = () => do { const theme = useTheme() <Stack ...> {theme.glint && props.glint !== false &&
+<Glints  />} </Stack> }
 
 ---
 
 ideas:
 
 - excel/sheet upgrades:
+
   - most attractive upgrade
   - hardest to do well
 

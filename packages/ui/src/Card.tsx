@@ -1,5 +1,5 @@
 import { isDefined, selectDefined } from '@o/utils'
-import { Theme, useTheme } from 'gloss'
+import { Theme, ThemeResetSubTheme } from 'gloss'
 import React, { useCallback } from 'react'
 
 import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
@@ -55,8 +55,6 @@ export function Card(props: CardProps) {
     innerColProps,
     ...sizedSurfaceProps
   } = rest
-  // end
-  const activeThemeName = useTheme().name
   const isSelected = useIsSelected(props)
   const showChildren = typeof children !== 'undefined' && !props.hideBody
   const toggle = useCollapse(collapseProps)
@@ -119,30 +117,30 @@ export function Card(props: CardProps) {
           />
         )}
         {/* reset inner contents to be original theme */}
-        {/* <Theme name={activeThemeName}> */}
-        <Stack
-          className="ui-card-inner"
-          scrollable={scrollable}
-          flexDirection={flexDirection}
-          space={!!space && getSpaceSizeNum(space) * getSize(size)}
-          padding={padding}
-          flex={1}
-          // using this caused a bug with animations inside, they would not position properly
-          // specifically the OrbitAppsDrawer would show apps not aligned, not setting hidden fixed it
-          // overflow="hidden"
-          // but.... if you dont use flex + overflow hidden, scrollables inside wont work...
-          overflow="hidden"
-          maxHeight={maxHeight}
-          useCollapse={toggle}
-          // this fixed a super super chrome bug where doing any transform/animation
-          // caused this inner node to not size as it should, this fixes it!
-          transform="translate3d(0, 0, 0)"
-          suspense
-          {...innerColProps}
-        >
-          {showChildren && children}
-        </Stack>
-        {/* </Theme> */}
+        <ThemeResetSubTheme>
+          <Stack
+            className="ui-card-inner"
+            scrollable={scrollable}
+            flexDirection={flexDirection}
+            space={!!space && getSpaceSizeNum(space) * getSize(size)}
+            padding={padding}
+            flex={1}
+            // using this caused a bug with animations inside, they would not position properly
+            // specifically the OrbitAppsDrawer would show apps not aligned, not setting hidden fixed it
+            // overflow="hidden"
+            // but.... if you dont use flex + overflow hidden, scrollables inside wont work...
+            overflow="hidden"
+            maxHeight={maxHeight}
+            useCollapse={toggle}
+            // this fixed a super super chrome bug where doing any transform/animation
+            // caused this inner node to not size as it should, this fixes it!
+            transform="translate3d(0, 0, 0)"
+            suspense
+            {...innerColProps}
+          >
+            {showChildren && children}
+          </Stack>
+        </ThemeResetSubTheme>
       </Surface>
     </Theme>
   )
@@ -152,8 +150,3 @@ export function Card(props: CardProps) {
 Card.accepts = {
   surfaceProps: true,
 }
-
-// const resetColors: any = {
-//   background: theme => theme.background,
-//   color: theme => theme.color,
-// }

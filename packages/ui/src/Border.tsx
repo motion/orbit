@@ -7,6 +7,13 @@ type BorderProps = AbsoluteProps & {
   hoverable?: boolean
 }
 
+// best i can think to compile down to:
+// const BorderTop = props => (
+//   <div className={useThemeProps(props)}>
+//     <div className="123 123" />
+//   </div>
+// )
+
 const borderTheme: ThemeFn = props => {
   return {
     background: props.borderColor,

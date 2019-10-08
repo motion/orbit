@@ -5,6 +5,8 @@ import { Image } from './Image'
 import { useScale } from './Scale'
 
 export const Avatar = gloss(Image, {
+  size: 64,
+  tagName: 'img',
   display: 'inline-flex',
   borderRadius: 100,
   userSelect: 'none',
@@ -15,8 +17,3 @@ export const Avatar = gloss(Image, {
     height: scale * selectDefined(height, size),
   }
 })
-
-Avatar.defaultProps = {
-  size: 64,
-  tagName: 'img',
-}

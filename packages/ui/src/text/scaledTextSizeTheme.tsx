@@ -31,9 +31,5 @@ export function getMediaQueryTextSizeTheme(props: any, sizing: { scale: number; 
     }
   }
 
-  if (res['fontSize'] === '35px' && res['sm-fontSize'] === '24px') {
-    debugger
-  }
-
   return res
 }

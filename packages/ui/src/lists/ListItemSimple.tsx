@@ -27,7 +27,6 @@ import { useIsSelected } from './useIsSelected'
 export function ListItemSimple({
   style,
   nodeRef,
-  // @ts-ignore
   draggableItem,
   ...listProps
 }: ListItemSimpleProps) {

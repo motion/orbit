@@ -152,12 +152,9 @@ const SimpleInput = ({
 const inputSurfaceTheme: ThemeFn<any> = props => {
   return {
     ...(!props.chromeless && {
-      border: [1, props.borderColor.desaturate(0.1)],
+      border: [1, props.borderColor],
       '&:focus-within': {
-        boxShadow: [
-          [0, 0, 0, 3, props.borderColor.setAlpha(a => a * 0.5)],
-          elevationTheme(props as any).boxShadow,
-        ],
+        boxShadow: [[0, 0, 0, 3, props.borderColorLight], elevationTheme(props as any).boxShadow],
       },
     }),
   }

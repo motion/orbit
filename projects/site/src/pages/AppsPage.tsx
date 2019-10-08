@@ -288,8 +288,8 @@ const AppItem = gloss(Box, {
   width: dim,
   height: dim,
   borderRadius: 10,
-}).theme(({ isActive }, theme) => ({
-  boxShadow: isActive ? [[0, 0, 0, 2, theme.backgroundStrongest]] : null,
+}).theme(props => ({
+  boxShadow: props.isActive ? [[0, 0, 0, 2, props.backgroundStrongest]] : null,
 }))
 
 const allApps = [

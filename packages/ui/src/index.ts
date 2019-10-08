@@ -32,10 +32,12 @@ export type UITheme = {
   colorLightest: Color
   borderColor: Color
   borderColorLight: Color
+  borderColorLighter: Color
   glintColor?: Color
   glintColorTop?: Color
   glintColorBottom?: Color
   backgroundSelection?: Color
+  tableHeadBackground?: Color
 }
 
 declare module 'gloss' {

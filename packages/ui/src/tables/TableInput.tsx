@@ -18,8 +18,8 @@ export const TableInput = gloss<HTMLProps<HTMLInputElement>>('input', {
     borderColor: '#ccc',
     cursor: 'not-allowed',
   },
-}).theme((_, theme) => ({
-  border: [1, theme.borderColor],
+}).theme(props => ({
+  border: [1, props.borderColor],
 }))
 
 TableInput.defaultProps = {

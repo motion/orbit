@@ -7,8 +7,8 @@ import { View } from './View/View'
 export const BarInner = gloss(View, {
   flex: 1,
   borderRadius: 100,
-}).theme((_, theme) => ({
-  background: theme.borderColor.setAlpha(a => a * 0.35),
+}).theme(props => ({
+  background: props.borderColorLighter,
 }))
 
 export type DividerProps = Partial<StackProps>

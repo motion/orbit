@@ -30,16 +30,15 @@ const Outer = gloss(Box, {
   margin: ['auto', 5],
   borderRadius: 100,
   justifyContent: 'center',
-}).theme(({ width, background }, theme) => ({
-  minWidth: width,
-  width,
-  background: background || theme.background ? theme.background.darken(0.5) : '#eee',
+}).theme(props => ({
+  minWidth: props.width,
+  background: props.backgroundStronger,
 }))
 
 const Inner = gloss<any>(Box, {
   height: '100%',
   borderRadius: 100,
-}).theme(({ percent, color }, theme) => ({
-  width: `${percent}%`,
-  background: color || theme.highlightColor,
+}).theme(props => ({
+  width: `${props.percent}%`,
+  background: props.colorHighlight,
 }))

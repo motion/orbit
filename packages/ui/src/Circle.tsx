@@ -4,18 +4,18 @@ import { getSize } from './Sizes'
 import { Size } from './Space'
 import { scaledTextSizeTheme } from './text/scaledTextSizeTheme'
 
-export const Circle = gloss<{ size?: Size; background?: any }>(Base, {
+export const Circle = gloss<{ size?: Size }>(Base, {
   position: 'relative',
   borderRadius: 100000,
   alignItems: 'center',
   justifyContent: 'center',
   userSelect: 'none',
 }).theme(
-  (p, theme) => ({
-    width: getSize(p.size) * 36,
-    height: getSize(p.size) * 36,
-    background: p.background || theme.backgroundStrong,
-    borderRadius: p.size,
+  props => ({
+    width: getSize(props.size) * 36,
+    height: getSize(props.size) * 36,
+    background: props.backgroundStrong,
+    borderRadius: props.size,
   }),
   propsToStyles,
   scaledTextSizeTheme,

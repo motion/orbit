@@ -7,12 +7,12 @@ type BorderProps = AbsoluteProps & {
   hoverable?: boolean
 }
 
-const borderTheme: ThemeFn = (_, theme) => {
+const borderTheme: ThemeFn = props => {
   return {
-    background: theme.borderColor,
+    background: props.borderColor,
     hoverable: {
       '&:hover': {
-        background: theme.backgroundStronger,
+        background: props.backgroundStronger,
       },
     },
   }

@@ -265,10 +265,10 @@ const TreeItemsLine = gloss<{ height: number; childrenCount: number }>(Box, {
   zIndex: 2,
   width: 2,
   borderRadius: '999em',
-}).theme(({ height, childrenCount }, theme) => ({
-  top: height - 3,
-  height: childrenCount * height - 4,
-  background: theme.borderColor,
+}).theme(props => ({
+  top: props.height - 3,
+  height: props.childrenCount * props.height - 4,
+  background: props.borderColor,
 }))
 
 const DecorationImage = gloss(Image, {
@@ -299,7 +299,7 @@ const TreeItemsRowAttributeValue = gloss(Box, {
   color: colors.slateDark3,
 })
 
-const HighlightedText = gloss<any>(Box).theme(({ selected }, theme) => ({
-  backgroundColor: theme.backgroundZebra,
-  color: selected ? `${colors.grapeDark3} !important` : 'auto',
+const HighlightedText = gloss<{ selected?: boolean }>(Box).theme(props => ({
+  backgroundColor: props.backgroundZebra,
+  color: props.selected ? `${props.colorHighlight.toCSS()} !important` : 'auto',
 }))

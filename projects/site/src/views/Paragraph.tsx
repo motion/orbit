@@ -1,3 +1,5 @@
+import React from 'react'
+
 import { fontProps } from '../constants'
 import { Text } from './Text'
 

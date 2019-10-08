@@ -61,6 +61,10 @@ body {
   -webkit-font-smoothing: subpixel-antialiased;
 }
 
+body * {
+  outline: 0;
+}
+
 .main-contents {
   display: flex;
   flex-flow: column;

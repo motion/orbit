@@ -22,15 +22,6 @@ main a:hover {
   display: block;
 }
 
-.theme-dark .body-text,
-.theme-home .body-text {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.theme-light .body-text {
-  color: rgba(0, 0, 0, 0.9);
-}
-
 .orbit-example-section > * {
   max-width: 720px;
 }

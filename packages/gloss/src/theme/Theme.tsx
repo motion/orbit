@@ -34,7 +34,7 @@ export const Theme = (props: ThemeProps) => {
     const setClassName = () => {
       const classNames = themeVariableManager.getClassNames(themeObservableContext.current)
       if (nodeRef.current) {
-        nodeRef.current.className = classNames
+        nodeRef.current.className = `display-contents ${classNames}`
       }
     }
     setClassName()
@@ -52,7 +52,7 @@ export const Theme = (props: ThemeProps) => {
 
   return (
     <CurrentThemeContext.Provider value={themeObservableContext}>
-      <div ref={nodeRef} style={{ display: 'contents' }}>
+      <div ref={nodeRef} className="display-contents" style={{ display: 'contents' }}>
         {props.children}
       </div>
     </CurrentThemeContext.Provider>
@@ -75,7 +75,7 @@ export const ThemeByName = (props: { name?: string; children: React.ReactNode })
   return (
     <div
       style={{ display: 'contents' }}
-      className={`theme-${props.name || getNonSubThemeName(curContext)}`}
+      className={`display-contents theme-${props.name || getNonSubThemeName(curContext)}`}
     >
       {props.children}
     </div>

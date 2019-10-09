@@ -8,7 +8,7 @@ export function wrappingSpaceTheme(props) {
     const space = getSpaceSize(props.parentSpacing)
     return {
       marginBottom: -space,
-      '& > *': {
+      '& > *, & > .display-contents > *': {
         marginBottom: `${space}px !important`,
       },
     }

@@ -26,7 +26,7 @@ export function ThemeResetSubTheme({ children }: { children: any }) {
 
   if (themeContext.parentContext) {
     return (
-      <div ref={nodeRef} style={{ display: 'contents' }}>
+      <div ref={nodeRef} className="display-contents" style={{ display: 'contents' }}>
         {children}
       </div>
     )

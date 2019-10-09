@@ -67,9 +67,6 @@ class ThemeVariableManager {
       const rules = this.getThemeVariables(theme)
       if (rules.length) {
         const rule = `${selector} { ${rules} }`
-        if (selector === 'theme-docsPageTheme' && rules.includes('background: linear')) {
-          debugger
-        }
         this.sheet.insertRule(rule)
       }
       if (theme.coats) {

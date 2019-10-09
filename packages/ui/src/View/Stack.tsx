@@ -1,13 +1,15 @@
 import { isDefined } from '@o/utils'
-import { Base, validCSSAttr } from 'gloss'
+import { Base, gloss, validCSSAttr } from 'gloss'
 import React, { Suspense } from 'react'
 
 import { Breadcrumbs } from '../Breadcrumbs'
 import { CollapsableProps, createCollapsableChildren, splitCollapseProps } from '../Collapsable'
 import { createSpacedChildren, SpaceGroupProps } from '../SpaceGroup'
-import { isPadded, ScrollableView, wrapWithPaddedView } from './ScrollableView'
+import { PaddedView } from './PaddedView'
+import { isPadded, ScrollableView } from './ScrollableView'
 import { ScrollableViewProps } from './types'
 import { View } from './View'
+import { wrappingSpaceTheme } from './wrappingSpaceTheme'
 
 type GroupProps = {
   group?: boolean
@@ -83,14 +85,26 @@ export function Stack(colProps: StackProps) {
   }
 
   const hasPadding = isPadded(props)
+  const isWrapped = props.flexWrap === 'wrap'
 
   return (
     // minHeight and padding are handled by paddedView
-    <View {...props} padding={undefined} minHeight={hasPadding ? 'auto' : props.minHeight}>
-      {wrapWithPaddedView(wrapWithSuspense(element, suspense), props)}
-    </View>
+    <WrappingView {...props} padding={undefined} minHeight={hasPadding ? 'auto' : props.minHeight}>
+      <PaddedView
+        {...props}
+        flex={undefined}
+        className={undefined}
+        style={undefined}
+        isWrapped={isWrapped}
+        parentSpacing={space}
+      >
+        {wrapWithSuspense(element, suspense)}
+      </PaddedView>
+    </WrappingView>
   )
 }
+
+const WrappingView = gloss(View, wrappingSpaceTheme)
 
 // for gloss parents
 Stack.ignoreAttrs = Base.ignoreAttrs

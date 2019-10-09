@@ -74,6 +74,7 @@ export function wrapWithPaddedView(
         className={undefined}
         style={undefined}
         isWrapped={isWrapped}
+        parentSpacing={props.parentSpacing}
       >
         {element}
       </PaddedView>

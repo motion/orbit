@@ -31,7 +31,7 @@ export {
   CreateThemeType,
   CommonHTMLProps,
 } from './types'
-export { GlossDefaultConfig, configureGloss } from './configureGloss'
+export { GlossDefaultConfig, configureGloss, Config as glossConfiguration } from './configureGloss'
 export * from './gloss'
 export { colorToString } from './helpers/helpers'
 export { resolveThemeValues } from './helpers/resolveThemeValues'
@@ -45,6 +45,6 @@ export { ThemeResetSubTheme } from './theme/ThemeResetSubTheme'
 export { ThemeProvide } from './theme/ThemeProvide'
 export * from './themes'
 export { ThemeValue } from './theme/ThemeValue'
-export { propsToStyles } from './themes/propStyleTheme'
+export { propToStyle, propsToStyles } from './themes/propStyleTheme'
 
 process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()

@@ -83,6 +83,9 @@ export function usePadding(props: PaddingSpecificProps) {
 
   const res: any = {}
 
+  // TODO only iterate props here because assuming static compiled optimizations
+  // we will have way less props on average
+
   // base padding
   const base = getPaddingBaseValue(props.padding, scale)
   for (const key of paddingSides) {

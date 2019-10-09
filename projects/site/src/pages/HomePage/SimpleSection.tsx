@@ -89,7 +89,7 @@ const Badge = gloss(View, {
   alignItems: 'center',
   justifyContent: 'center',
   fontSize: 20,
-}).theme((_, theme) => ({
+}).theme(theme => ({
   color: theme.color.setAlpha(0.5),
   // border: [1, theme.color.setAlpha(0.1)],
 }))

@@ -1,6 +1,6 @@
 import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, getAppDefinition, RenderAppProps, useActiveUser, useReaction, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { Divider, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, memoizeWeak, Stack, useDebounceValue, usePosition, useWindowSize, View } from '@o/ui'
+import { Divider, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, memoizeWeak, Stack, useDebounceValue, usePosition, useWindowSize, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { partition } from 'lodash'
 import React, { memo, useContext, useMemo, useRef } from 'react'
@@ -77,7 +77,7 @@ export const OrbitDock = memo(() => {
   )
 })
 
-const DockBackground = gloss<{ isOpen: boolean }, typeof View>(View, {
+const DockBackground = gloss<{ isOpen: boolean }, ViewProps>(View, {
   position: 'absolute',
   top: 0,
   right: 0,
@@ -91,14 +91,16 @@ const DockBackground = gloss<{ isOpen: boolean }, typeof View>(View, {
     x: '100%',
   },
 
-  isOpen: {
-    transition: `all ease 300ms`,
-    opacity: 1,
-    transform: {
-      x: 0,
+  conditional: {
+    isOpen: {
+      transition: `all ease 300ms`,
+      opacity: 1,
+      transform: {
+        x: 0,
+      },
     },
   },
-}).theme((_, theme) => ({
+}).theme(theme => ({
   background: theme.background.setAlpha(0.75),
 }))
 
@@ -413,10 +415,12 @@ const FloatingLabel = gloss<{ visible?: boolean }>(Box, {
   transform: {
     y: -10,
   },
-  visible: {
-    opacity: 1,
-    transform: {
-      y: 0,
+  conditional: {
+    visible: {
+      opacity: 1,
+      transform: {
+        y: 0,
+      },
     },
   },
 })

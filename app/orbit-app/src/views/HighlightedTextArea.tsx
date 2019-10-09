@@ -23,7 +23,7 @@ const Block = gloss(UI.Block, {
 type TextArea = React.HTMLProps<HTMLTextAreaElement>
 
 const SelectableBlock = gloss<UI.BlockProps & Pick<TextArea, 'value' | 'rows'>>(Block).theme(
-  (_, theme) => ({
+  theme => ({
     '&::selection': {
       color: theme.color.lighten(0.1),
       background: theme.background.darken(0.1),
@@ -118,7 +118,7 @@ export class HighlightedTextArea extends React.Component<Props> {
   handleObjectHighlight(input, markWords) {
     if (!this.props.openMark) return ''
     const markWithClass = className => {
-      const openMark = this.props.openMark.replace('>', ` class="${className}">`)
+      const openMark = this.props.openMark?.replace('>', ` class="${className}">`)
       return inner => `${openMark}${inner}${this.props.closeMark}`
     }
     return input
@@ -160,7 +160,7 @@ export class HighlightedTextArea extends React.Component<Props> {
       }
     }
     // this keeps scrolling aligned when input ends with a newline
-    highlightMarks = highlightMarks.replace(
+    highlightMarks = highlightMarks?.replace(
       new RegExp('\\n(' + this.props.closeMark + ')?$'),
       '\n\n$1',
     )

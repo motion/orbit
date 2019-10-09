@@ -213,7 +213,7 @@ const InlineCode = gloss({
 
 const LinkedInlineCode = gloss(InlineCode, {
   cursor: 'pointer',
-}).theme((_, theme) => ({
+}).theme(theme => ({
   '&:hover': {
     color: theme.background.isDark() ? '#fff' : '#000',
   },

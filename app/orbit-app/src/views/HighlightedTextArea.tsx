@@ -25,8 +25,8 @@ type TextArea = React.HTMLProps<HTMLTextAreaElement>
 const SelectableBlock = gloss<UI.BlockProps & Pick<TextArea, 'value' | 'rows'>>(Block).theme(
   theme => ({
     '&::selection': {
-      color: theme.color.lighten(0.1),
-      background: theme.background.darken(0.1),
+      color: theme.colorLight,
+      background: theme.backgroundStrong,
     },
     '&::placeholder': {
       color: theme.color.setAlpha(0.6),

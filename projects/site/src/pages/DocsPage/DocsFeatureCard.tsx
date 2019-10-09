@@ -33,7 +33,6 @@ export function DocsFeatureCard({
         justifyContent="center"
         padding
         flex={1}
-        debug
       >
         <Icon color={color} size={52} name={icon} />
       </Stack>

@@ -79,8 +79,6 @@ const DocsList = memo((props: { shouldRenderAll?: boolean }) => {
     return items
   }, [docsStore.search, results])
 
-  console.log('re-render me')
-
   return (
     <List
       selectable
@@ -169,11 +167,6 @@ const DocsPage = memo((props: { children?: any }) => {
 
   return (
     <DocsStoreContext.Provider>
-      {/* this is expensive so we use react-reverse-portal to only render once and move it around */}
-      {/* this caused themes to re-render wholesale :( */}
-      {/* <portals.InPortal node={portalNode}>
-        <DocsList />
-      </portals.InPortal> */}
       <Fade.FadeProvide>
         <Portal
           prepend

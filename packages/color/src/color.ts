@@ -230,6 +230,9 @@ export class Color {
    * @param alpha - The new alpha value. The accepted range is 0-1.
    */
   setAlpha(alpha?: string | number | ((current: number) => number)): Color {
+    if (alpha === 0.8555) {
+      debugger
+    }
     if (alpha === this.alpha) {
       return this
     }

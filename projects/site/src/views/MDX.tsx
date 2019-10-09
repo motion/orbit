@@ -91,12 +91,10 @@ const components = {
     return (
       <>
         <Paragraph
-          tagName="p"
           className="body-text"
           margin={0}
           fontSize="inherit"
           lineHeight="inherit"
-          color="inherit"
           {...props}
         />
         {contentSpace}

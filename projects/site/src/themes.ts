@@ -97,6 +97,7 @@ export const themes = createThemes({
 
   docsPageTheme: {
     ...light,
+    color: toColor('#111'),
     bodyBackground: toColor('#000'),
   },
 })

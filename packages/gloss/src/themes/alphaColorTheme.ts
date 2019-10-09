@@ -34,12 +34,16 @@ export const alphaColorThemeLoose = createAlphaColorTheme(false)
 
 function createAlphaColorTheme(shouldSetDefault = false) {
   const themeFn: ThemeFn<AlphaColorProps> = (props, previous) => {
-    const color = props.color
+    let color = props.color as any
     const alpha = props.alpha
     const next: CSSPropertySet | null = {}
     if (color) {
       if (shouldSetDefault) {
-        if (color.originalInput !== 'inherit' && typeof alpha === 'number') {
+        if (
+          typeof color !== 'string' &&
+          color.originalInput !== 'inherit' &&
+          typeof alpha === 'number'
+        ) {
           next.color = toColor(color).setAlpha(alpha)
         } else {
           next.color = color

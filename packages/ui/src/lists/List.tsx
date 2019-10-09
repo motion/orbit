@@ -30,12 +30,14 @@ type BitLike = {
 }
 
 export type ListProps = SectionSpecificProps &
-  Pick<SectionProps, 'padding'> &
   /** Override the onOpen/onSelect */
   Omit<VirtualListProps<BitLike | ListItemProps>, 'onOpen' | 'onSelect'> &
   Omit<Partial<UseFilterProps<any>>, 'items'> & {
     /** Make list expand to parent height */
     flex?: number
+
+    /** Padding */
+    padding?: SectionProps['padding']
 
     /** Callback on selection change with an array of rows */
     onSelect?: (rows: any[], indices: number[]) => any

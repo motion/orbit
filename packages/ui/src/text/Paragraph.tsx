@@ -3,6 +3,7 @@ import { gloss } from 'gloss'
 import { SimpleText } from './SimpleText'
 
 export const Paragraph = gloss(SimpleText, {
+  tagName: 'p',
   userSelect: 'text',
   display: 'block',
   alpha: 0.85,

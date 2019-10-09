@@ -1,5 +1,5 @@
 import { isDefined, selectDefined } from '@o/utils'
-import { Base, Theme } from 'gloss'
+import { Base } from 'gloss'
 import React, { useRef } from 'react'
 
 import { BorderBottom } from './Border'
@@ -174,27 +174,25 @@ export function Section(direct: SectionProps) {
 
     titleEl = (
       <Scale size={titleScale}>
-        <Theme coat="flat">
-          <TitleRow
-            backgrounded={selectDefined(backgrounded, bordered)}
-            title={title}
-            subTitle={subTitle}
-            after={afterTitle}
-            above={above}
-            before={beforeTitle}
-            below={belowTitle || <Space size={defaultTitlePaddingAmount[2] || spaceSizePx} />}
-            icon={icon}
-            userSelect="none"
-            space={spaceSizePx / 2}
-            padding={titlePaddingFinal}
-            // avoid double pad between content/title padding
-            paddingBottom={padding === true && titlePadding === undefined ? 0 : undefined}
-            size={selectDefined(titleSize, size)}
-            titleProps={titleProps}
-            useCollapse={collapse}
-            {...adjustPadProps}
-          />
-        </Theme>
+        <TitleRow
+          backgrounded={selectDefined(backgrounded, bordered)}
+          title={title}
+          subTitle={subTitle}
+          after={afterTitle}
+          above={above}
+          before={beforeTitle}
+          below={belowTitle || <Space size={defaultTitlePaddingAmount[2] || spaceSizePx} />}
+          icon={icon}
+          userSelect="none"
+          space={spaceSizePx / 2}
+          padding={titlePaddingFinal}
+          // avoid double pad between content/title padding
+          paddingBottom={padding === true && titlePadding === undefined ? 0 : undefined}
+          size={selectDefined(titleSize, size)}
+          titleProps={titleProps}
+          useCollapse={collapse}
+          {...adjustPadProps}
+        />
       </Scale>
     )
 

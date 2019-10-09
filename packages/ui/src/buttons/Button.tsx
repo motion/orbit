@@ -1,4 +1,4 @@
-import { isDefined, selectDefined } from '@o/utils'
+import { isDefined } from '@o/utils'
 import { Theme } from 'gloss'
 import React, { memo, useCallback, useMemo } from 'react'
 
@@ -22,7 +22,7 @@ export const Button = memoIsEqualDeep((direct: ButtonProps) => {
     active: 'onChangeActive',
   })
   return (
-    <Theme debug subTheme={subTheme} coat={coat} theme={theme}>
+    <Theme subTheme={subTheme} coat={coat} theme={theme}>
       <Surface
         data-is="Button"
         borderPosition="inside"
@@ -41,7 +41,7 @@ export const Button = memoIsEqualDeep((direct: ButtonProps) => {
         sizeHeight
         sizeLineHeight
         justifyContent="center"
-        borderWidth={useCallback(theme => selectDefined(theme.borderWidth, 1), [])}
+        borderWidth={borderWidthTheme}
         glint
         glintBottom
         pointerEvents={props.disabled ? 'none' : undefined}
@@ -62,6 +62,8 @@ export const Button = memoIsEqualDeep((direct: ButtonProps) => {
 Button['acceptsProps'] = {
   hover: true,
 }
+
+const borderWidthTheme = theme => theme.borderWidth ?? 1
 
 const glowProps = {
   scale: 1.8,

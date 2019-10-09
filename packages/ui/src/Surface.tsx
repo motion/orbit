@@ -526,7 +526,7 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
   return useBreadcrumbReset(
     SizedSurfacePropsContext.useReset(
     <IconPropsContext.Provider value={iconContext}>
-        <SurfaceFrame {...surfaceFrameProps} />
+      <SurfaceFrame {...surfaceFrameProps} />
     </IconPropsContext.Provider>
   ))
 })

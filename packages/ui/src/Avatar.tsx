@@ -1,4 +1,3 @@
-import { selectDefined } from '@o/utils'
 import { gloss } from 'gloss'
 
 import { Image } from './Image'
@@ -13,7 +12,7 @@ export const Avatar = gloss(Image, {
 }).theme(({ size, width, height }) => {
   const scale = useScale()
   return {
-    width: scale * selectDefined(width, size),
-    height: scale * selectDefined(height, size),
+    width: scale * width ?? size,
+    height: scale * height ?? size,
   }
 })

@@ -1,4 +1,3 @@
-import { selectDefined } from '@o/utils'
 import Observable from 'zen-observable'
 
 import { TransportRequestType, TransportRequestValues, TransportResponse } from '../common'
@@ -116,7 +115,7 @@ export class WebSocketClientTransport implements ClientTransport {
       // to be executed later on when websocket connection will be established
       const callback = () => {
         try {
-          this.websocket.send(JSON.stringify(selectDefined(data, null)))
+          this.websocket.send(JSON.stringify(data ?? null))
         } catch (err) {
           subject.error(err)
           console.warn(`Failed to execute websocket operation ${err} ${err.message} ${err.stack}`)

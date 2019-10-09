@@ -1,5 +1,4 @@
 import { Logger } from '@o/logger'
-import { selectDefined } from '@o/utils'
 import ReactRefreshPlugin from '@o/webpack-fast-refresh'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
 import IgnoreNotFoundExportPlugin from 'ignore-not-found-export-webpack-plugin'
@@ -198,10 +197,7 @@ export function makeWebpackConfig(
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
     },
-    devtool: selectDefined(
-      devtool,
-      mode === 'production' || target === 'node' ? undefined : 'cheap-module-source-map',
-    ),
+    devtool: devtool ?? (mode === 'production' || target === 'node' ? undefined : 'cheap-module-source-map'),
     externals: [
       // having this on in development mode for node made exports fail
       target === 'web' && {

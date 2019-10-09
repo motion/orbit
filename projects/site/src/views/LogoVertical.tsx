@@ -75,8 +75,9 @@ const wordsLines = `${words}`.split('\n')
 wordsLines.splice(15, 4)
 const cleanBrand = wordsLines.join('')
 
-export const BrandWords = memo(({ fill, ...props }: any) => {
+const BrandWords = memo(({ fill, ...props }: any) => {
   const theme = useTheme()
   const f = fill || theme.color
+  console.log('what now', f, theme.name)
   return <SVG svg={cleanBrand} cleanup fill={`${f}`} {...props} />
 })

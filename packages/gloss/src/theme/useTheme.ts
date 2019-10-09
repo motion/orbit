@@ -8,33 +8,47 @@ import { CurrentThemeContext } from './Theme'
 // can optionally pass in props accepted by theme
 
 type ThemeTrackState = {
+  theme: CompiledTheme
   hasUsedOnlyCSSVariables: boolean
   nonCSSVariables: Set<string>
 }
 
 export function useTheme<A = {}>(props?: A): GlossThemeProps<A> {
   const themeObservable = useContext(CurrentThemeContext)
-  const [cur, setCur] = useState<CompiledTheme>(getTheme(themeObservable.current, props))
+  const forceUpdate = useState(0)[1]
   const state = useRef<ThemeTrackState>()
   if (!state.current) {
     state.current = {
+      theme: getTheme(themeObservable.current, props),
       hasUsedOnlyCSSVariables: true,
       nonCSSVariables: new Set(),
     }
   }
+  const curTheme = state.current.theme
 
-  const proxy = useMemo(() => createThemePropsProxy(cur, state.current!, props), [])
-  proxy[UpdateProxySymbol] = [props, cur]
+  const proxy = useMemo(() => {
+    return createThemePropsProxy(curTheme, state.current!, props)
+  }, [curTheme, themeObservable])
+
+  // update fast -- may be better to put in layoutEffect
+  proxy[UpdateProxySymbol] = [props, curTheme]
 
   useEffect(() => {
+    const next = getTheme(themeObservable.current, props)
+    if (next !== state.current!.theme) {
+      state.current!.theme = next
+      forceUpdate(Math.random())
+    }
+
     const sub = themeObservable.subscribe(theme => {
       if (!state.current!.hasUsedOnlyCSSVariables) {
         console.warn('re-rendering because used variables', state.current?.nonCSSVariables, props)
-        setCur(getTheme(theme, props))
+        state.current!.theme = getTheme(theme, props)
+        forceUpdate(Math.random())
       }
     })
     return sub.unsubscribe
-  }, [])
+  }, [themeObservable])
 
   return proxy
 }

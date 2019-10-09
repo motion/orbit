@@ -14,6 +14,7 @@ export function parse(code: string | Buffer): any {
       'decorators-legacy',
       'typescript',
       'optionalChaining',
+      'nullishCoalescingOperator',
     ],
     sourceType: 'module',
   })

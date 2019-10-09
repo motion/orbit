@@ -22,12 +22,14 @@ export type InputType =
   | 'number'
   | DataType
 
-export type InputProps = React.HTMLAttributes<HTMLInputElement> &
+export type InputProps = Omit<
+  React.HTMLAttributes<HTMLInputElement>,
+  'onDrag' | 'onDragEnd' | 'onDragStart'
+> &
   Omit<SurfaceProps, 'type'> & {
     onEnter?: Function
     type?: InputType
     form?: Object
-    value?: string
     step?: any
   }
 
@@ -105,9 +107,10 @@ const SimpleInput = ({
   defaultValue,
   nodeRef,
   ...props
-}: SurfaceProps & InputProps) => {
+}: InputProps) => {
   const visible = useVisibility()
   return (
+    // @ts-ignore
     <Surface
       tagName={tagName}
       elementProps={useMemo(

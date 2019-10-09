@@ -112,8 +112,8 @@ const wrapWithWrappingView = (element: React.ReactNode, props: WrappedProps) => 
 }
 
 const WrappingView = gloss<WrappedProps, ViewProps>(View, {
-  flex: 1,
   flexDirection: 'inherit',
+  maxWidth: '100%',
   alignItems: 'inherit',
   justifyContent: 'inherit',
 }).theme(wrappingSpaceTheme)

@@ -1,5 +1,5 @@
 /* Site theme stuff  */
-main a {
+p a {
   color: #8c60f8;
   text-decoration: none;
   font-weight: 600;
@@ -14,7 +14,7 @@ svg {
   transform: translateZ(0);
 }
 
-main a:hover {
+p a:hover {
   color: #a07ff7;
 }
 

@@ -22,7 +22,7 @@ import { SizedSurfacePropsContext } from './SurfacePropsContext'
 import { scaledTextSizeTheme } from './text/scaledTextSizeTheme'
 import { Tooltip } from './Tooltip'
 import { elevationTheme } from './View/elevation'
-import { ViewProps } from './View/types'
+import { ViewProps, ViewPropsPlain } from './View/types'
 import { getMargin, View } from './View/View'
 
 // an element for creating surfaces that look like buttons
@@ -172,7 +172,7 @@ export type SurfaceSpecificProps = SizedSurfaceSpecificProps & {
   elementTheme?: ThemeFn
 }
 
-export type SurfaceProps = ViewProps & SurfaceSpecificProps
+export type SurfaceProps = GlossProps<Omit<ViewPropsPlain, 'size'> & SurfaceSpecificProps>
 
 const getBorderRadius = (t, b, l, r, tl, tr, bl, br) => {
   return {
@@ -295,7 +295,7 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
 
   let lineHeight = props.lineHeight
   if (!props.lineHeight && sizeLineHeight && +height == +height) {
-    lineHeight = `${height}px`
+    lineHeight = typeof height === 'number' ? `${height * 0.92}px` : height
   }
 
   const childrenProps: HTMLProps<HTMLDivElement> = {}

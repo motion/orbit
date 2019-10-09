@@ -172,7 +172,7 @@ export type SurfaceSpecificProps = SizedSurfaceSpecificProps & {
   elementTheme?: ThemeFn
 }
 
-export type SurfaceProps = Omit<ViewProps, 'size'> & SurfaceSpecificProps
+export type SurfaceProps = ViewProps & SurfaceSpecificProps
 
 const getBorderRadius = (t, b, l, r, tl, tr, bl, br) => {
   return {

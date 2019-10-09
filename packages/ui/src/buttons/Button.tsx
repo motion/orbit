@@ -9,12 +9,9 @@ import { useSurfaceProps } from '../SurfacePropsContext'
 
 export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> &
   SurfaceProps & {
-    /** force button not to apply hover styles */
-    ignoreHover?: boolean
-
     /** use defaultActive/onChangeActive for easy active on/off */
     onChangeActive?: (next: boolean) => any
-
+    /** uncontrolled active state */
     defaultActive?: boolean
   }
 

@@ -34,7 +34,10 @@ export const View = gloss<ViewPropsPlain>(Base, {
   display: 'flex',
 
   // we handle this with usePadding/getMargin
-  ignorePropsToStyle: new Set(['padding', 'margin']),
+  ignorePropsToStyle: {
+    padding: true,
+    margin: true,
+  },
 })
   .theme(getMargin, usePadding, elevationTheme)
   .withConfig({

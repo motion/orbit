@@ -9,7 +9,7 @@ export const propsToStyles: ThemeFn = (props) => {
   let styles: CSSPropertySet | null = null
   // loop over props turning into styles
   for (let key in props) {
-    if (props?.ignorePropsToStyle?.has(key)) continue
+    if (props?.ignorePropsToStyle?.[key]) continue
     const next = propToStyle(key, props[key])
     if (next !== undefined)  {
       key = Config.pseudoAbbreviations?.[key] || key

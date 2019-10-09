@@ -1,25 +1,22 @@
 import { Color } from './color'
 import { getColorLikeLibraryValue, isColorLikeLibrary } from './isColorLike'
+import { LinearGradient } from './linearGradient'
 import { memoizeOne } from './memoizeOne'
 import { ColorLike } from './types'
 
 export const toColorString = memoizeOne<string>(
   (color: ColorLike): string => {
-    if (typeof color === 'string') {
-      return color
-    }
     if (!color) {
       return 'transparent'
     }
+    if (typeof color === 'string') {
+      return color
+    }
     if (color instanceof Color) {
-      if (color.cssVariable) {
-        if (color.cssUseRgb) {
-          if (color.cssUseAlpha) {
-            return `rgba(var(--${color.cssVariable}-rgb), ${color.alpha})`
-          }
-        }
-        return `var(--${color.cssVariable})`
-      }
+      return color.toString()
+    }
+    if (color instanceof LinearGradient) {
+      return color.toString()
     }
     if (isColorLikeLibrary(color)) {
       return `${getColorLikeLibraryValue(color)}`

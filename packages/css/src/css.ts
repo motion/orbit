@@ -58,10 +58,6 @@ export function cssStringWithHash(styles: Object, opts?: CSSConfig): [number, st
   for (let key in styles) {
     const rawVal = styles[key]
     let value = cssValue(key, rawVal, false, opts)
-    if (value === ', inset 0px 0px 0px 1 var(--colorHighlight)') {
-      window['x'] = rawVal
-      window['y'] = cssValue
-    }
     // shorthands
     if (value !== undefined) {
       if (hash === 0) hash = 5381
@@ -120,8 +116,8 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
     return
   }
   if (value && value.cssVariable && (!options || !options.ignoreCSSVariables)) {
-    if (value.hasColorVariable) {
-      return Config.toColor(value)
+    if (value.toCSS) {
+      return value.toCSS()
     }
     return `var(--${value.cssVariable})`
   }

@@ -22,6 +22,13 @@ export class LinearGradient {
     this.cssVariable = name
   }
 
+  toCSS() {
+    if (this.cssVariable) {
+      return `var(--${this.cssVariable})`
+    }
+    return this.toString()
+  }
+
   getColors() {
     return this.items.filter(isColorLike).map(convertToColor)
   }

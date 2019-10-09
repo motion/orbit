@@ -44,6 +44,7 @@ export const DocsPageHeader = memo(({ isSmall, inputRef, setTheme, theme }: any)
             placeholder={isSmall ? 'Search...' : 'Search the docs...'}
             after={<Key tooltip="Shortcut: t">t</Key>}
             // borderWidth={0}
+            debug
             background={theme => {
               return theme.background.setAlpha(0.14)
             }}

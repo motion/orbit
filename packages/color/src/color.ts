@@ -110,33 +110,7 @@ export class Color {
     }
   }
 
-  cssVariableSafeKeys = [
-    'toRgbValue',
-    'toRgbString',
-    'getCSSValue',
-    'cssVariable',
-    'getCSSColorVariables',
-    'cssUseRgb',
-    'cssUseAlpha',
-    'setAlpha',
-    'alpha',
-    'clone',
-    'r',
-    'g',
-    'b',
-    'toRgb',
-    'roundA',
-    'format',
-    'cacheToString',
-    'hash',
-    'valueOf',
-    'cssVariableSafeKeys',
-    'originalInput',
-    'cssIsColor',
-    'isValid',
-    'toCSS',
-    '$$typeof',
-  ]
+  cssVariableSafeKeys = cssVariableSafeKeys
   cssVariable = ''
   cssUseAlpha = false
   cssUseRgb = true
@@ -151,12 +125,17 @@ export class Color {
       this.cssVariable = name
     }
   }
+
   toCSS() {
     if (this.cssVariable) {
+      if (this.cssUseRgb) {
+        if (this.cssUseAlpha) {
+          return `rgba(var(--${this.cssVariable}-rgb), ${this.alpha})`
+        }
+      }
       return `var(--${this.cssVariable})`
-    } else {
-      return this.toString()
     }
+    return this.toString()
   }
 
   isDark() {
@@ -232,9 +211,6 @@ export class Color {
    * @param alpha - The new alpha value. The accepted range is 0-1.
    */
   setAlpha(alpha?: string | number | ((current: number) => number)): Color {
-    if (alpha === 0.8555) {
-      debugger
-    }
     if (alpha === this.alpha) {
       return this
     }
@@ -615,3 +591,31 @@ export class Color {
 export function tinycolor(color: ColorInput = '', opts: Partial<ColorOptions> = {}) {
   return new Color(color, opts)
 }
+
+const cssVariableSafeKeys = [
+  'toRgbValue',
+  'toRgbString',
+  'getCSSValue',
+  'cssVariable',
+  'getCSSColorVariables',
+  'cssUseRgb',
+  'cssUseAlpha',
+  'setAlpha',
+  'alpha',
+  'clone',
+  'r',
+  'g',
+  'b',
+  'toRgb',
+  'roundA',
+  'format',
+  'cacheToString',
+  'hash',
+  'valueOf',
+  'cssVariableSafeKeys',
+  'originalInput',
+  'cssIsColor',
+  'isValid',
+  'toCSS',
+  '$$typeof',
+]

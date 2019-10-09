@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
+import React from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -772,6 +772,10 @@ export type BaseRules = {
 }
 function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSpecific?: boolean) {
   const [hash, style] = cssStringWithHash(rules)
+  if (style === `line-height:38.64px;padding:0px 13px;border-width:1px;height:42px;align-items:center;max-width:calc(55% - 20px);flex-direction:row;pointer-events:inherit;flex:1;box-shadow:0px 5px 8px rgba(0, 0, 0, 0.05);background:var(--inputBackground);backdrop-filter:blur(20px);font-family:-apple-system, "SF Pro Text", BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Droid Sans', sans-serif;font-size:17px;border-radius:21px;border-top-right-radius:21px;border-bottom-right-radius:21px;border-top-left-radius:21px;border-bottom-left-radius:21px;padding-top:0px;padding-right:13px;padding-bottom:0px;padding-left:13px;color:var(--inputColor);border-color:var(--borderColor);border:1px solid var(--borderColor);`) {
+    console.log('got what', rules, style, cssStringWithHash)
+    debugger
+  }
 
   if (!hash) {
     return

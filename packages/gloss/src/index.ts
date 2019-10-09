@@ -4,7 +4,6 @@ export {
   CSSPropertySet,
   CSSPropertySetStrict,
   CSSPropertyValThemeFn,
-  psuedoKeys,
   ThemeObject,
   validCSSAttr,
 } from '@o/css'

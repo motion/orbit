@@ -106,7 +106,7 @@ export class Color {
     const { r, g, b, a } = this.toRgb()
     return {
       rgb: `${r}, ${g}, ${b}`,
-      rgba: `${r}, ${g}, ${b}, ${a}`,
+      rgba: `rgba(${r}, ${g}, ${b}, ${a})`,
     }
   }
 
@@ -132,6 +132,7 @@ export class Color {
     'valueOf',
     'cssVariableSafeKeys',
     'originalInput',
+    'cssIsColor',
     'isValid',
     'toCSS',
     '$$typeof',
@@ -139,6 +140,7 @@ export class Color {
   cssVariable = ''
   cssUseAlpha = false
   cssUseRgb = true
+  cssIsColor = true
   setCSSVariable(name: string) {
     // dont overwrite
     if (this.cssVariable && this.cssVariable !== name) {

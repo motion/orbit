@@ -35,7 +35,7 @@ export function SearchInput({
 }: SearchInputProps) {
   const clearVisible = typeof clearable === 'boolean' ? clearable : value && !!value.length
   const theme = useTheme({
-    subSelect: 'searchInput',
+    subTheme: 'searchInput',
   })
   return (
     <Input

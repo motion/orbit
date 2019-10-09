@@ -172,6 +172,7 @@ export const coats: ThemeSet = Object.freeze({
   bordered: {
     disableGlint: true,
     borderWidth: 1,
+    borderColor: 'var(--colorHighlight)' as any,
     ...colorThemes.transparent,
   },
   titlebar: fromStyles({

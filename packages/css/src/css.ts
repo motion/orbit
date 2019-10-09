@@ -8,7 +8,7 @@ import { px, stringHash } from './helpers'
 
 export { GlossPropertySet } from './cssPropertySet'
 export { configureCSS } from './config'
-export { psuedoKeys, validCSSAttr } from './constants'
+export { validCSSAttr } from './constants'
 export {
   CSSPropertySet,
   CSSPropertySetResolved,
@@ -23,8 +23,6 @@ export { ThemeObject, ThemeValueLike, ThemeSet, ThemeCoats } from './ThemeObject
 export type CSSConfig = {
   errorMessage?: string
   snakeCase?: boolean
-  // if you wanted to resolve at the end, we do it before themes process
-  // resolveFunctionValue?: any
 }
 
 const emptyObject = Object.freeze({})
@@ -59,6 +57,10 @@ export function cssStringWithHash(styles: Object, opts?: CSSConfig): [number, st
   for (let key in styles) {
     const rawVal = styles[key]
     let value = cssValue(key, rawVal, false, opts)
+    if (value === ', inset 0px 0px 0px 1 var(--colorHighlight)') {
+      window['x'] = rawVal
+      window['y'] = cssValue
+    }
     // shorthands
     if (value !== undefined) {
       if (hash === 0) hash = 5381
@@ -108,10 +110,6 @@ export function css(styles: Object, opts?: CSSConfig): Object {
 }
 
 export function cssValue(key: string, value: any, recurse = false, options?: CSSConfig) {
-  // resolve functions first so they can process the value through the rest
-  // if (options?.resolveFunctionValue && typeof value === 'function') {
-  //   value = value(options.resolveFunctionValue!)
-  // }
   // get falsy values
   if (value === false) {
     value === FALSE_VALUES[key]
@@ -127,15 +125,14 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
     }
     return value
   } else if (value.cssVariable) {
-    return Config.toColor(value)
+    if (value.hasColorVariable) {
+      return Config.toColor(value)
+    }
+    return `var(--${value.cssVariable})`
   } else if (COLOR_KEYS.has(key)) {
     return Config.toColor(value)
   } else if (Array.isArray(value)) {
-    if (key === 'fontFamily') {
-      return value.map(x => (x.includes(' ') ? `"${x}"` : x)).join(', ')
-    } else {
-      return processArray(key, value)
-    }
+    return processArray(key, value)
   } else if (valueType === 'object') {
     if (value.getCSSValue) {
       return value.getCSSValue()
@@ -193,21 +190,19 @@ function processArrayItem(key: string, val: any, level: number = 0) {
 }
 
 export function processArray(key: string, value: any[], level: number = 0): string {
-  if (key === 'background') {
-    if (Config.isColor(value)) {
-      return Config.toColor(value)
-    }
-  }
   // solid default option for borders
-  if (BORDER_KEY[key] && value.length === 2) {
+  if (BORDER_KEY.has(key) && value.length === 2) {
     value.push('solid')
+  }
+  if (key === 'fontFamily') {
+    return value.map(x => (x.includes(' ') ? `"${x}"` : x)).join(', ')
   }
   if (key === 'boxShadow') {
     value = value.map(processBoxShadow)
   } else {
     value = value.map(val => processArrayItem(key, val))
   }
-  return value.join(level === 0 && COMMA_JOINED[key] ? ', ' : ' ')
+  return value.join(level === 0 && COMMA_JOINED.has(key) ? ', ' : ' ')
 }
 
 function processBoxShadow(val: boxShadowItem) {
@@ -215,7 +210,7 @@ function processBoxShadow(val: boxShadowItem) {
     return val
       .map(x => {
         if (Config.isColor(x)) return Config.toColor(x)
-        return px(x as any)
+        return cssValue('', x)
       })
       .join(' ')
   }

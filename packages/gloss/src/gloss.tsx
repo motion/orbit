@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 import React from 'react'
+import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -9,7 +9,7 @@ import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
 import { themeVariableManager } from './theme/themeVariableManager'
-import { UnwrapThemeSymbol, useTheme } from './theme/useTheme'
+import { getOriginalProps, UnwrapThemeSymbol, useTheme } from './theme/useTheme'
 import { GlossProps, GlossPropsPartial, GlossThemeProps } from './types'
 
 // so you can reference in postProcessProps
@@ -87,6 +87,8 @@ export const sheet = new StyleSheet(true)
 const gc = new GarbageCollector(sheet, tracker)
 const whiteSpaceRegex = /[\s]+/g
 const emptyObject = {}
+
+let curTheme
 
 export function gloss<
   MyProps = {},
@@ -191,6 +193,7 @@ export function gloss<
     }
 
     const theme = useTheme(props)
+    curTheme = theme
     const dynClasses = useRef<Set<string> | null>(null)
 
     // for smarter update tracking
@@ -767,8 +770,11 @@ function compileTheme(viewOG: GlossView) {
 export type BaseRules = {
   [key: string]: string | number
 }
+const cssOpts = {
+  resolveFunctionValue: val => val(curTheme)
+}
 function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSpecific?: boolean) {
-  const [hash, style] = cssStringWithHash(rules)
+  const [hash, style] = cssStringWithHash(rules, cssOpts)
 
   if (!hash) {
     return
@@ -833,7 +839,7 @@ if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
     validCSSAttr,
     themeVariableManager,
     UnwrapThemeSymbol,
-    getGlossProps
+    getOriginalProps
   }
 }
 

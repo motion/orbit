@@ -100,7 +100,7 @@
     "mobx": "^5.14.0",
     "overmind-devtools": "^20.3.0",
     "patch-package": "6.1.2",
-    "prettier": "1.17.0",
+    "prettier": "^1.18.2",
     "sb-promisify": "^2.0.2",
     "sqlite": "^3.0.3",
     "ts-jest": "24.0.0",

@@ -24,6 +24,7 @@ export type CSSConfig = {
   errorMessage?: string
   snakeCase?: boolean
   ignoreCSSVariables?: boolean
+  resolveFunctionValue?: ((val: any) => any)
 }
 
 const emptyObject = Object.freeze({})
@@ -107,6 +108,10 @@ export function css(styles: Object, opts?: CSSConfig): Object {
 }
 
 export function cssValue(key: string, value: any, recurse = false, options?: CSSConfig) {
+  // function first so it can go through other transforms
+  if (options?.resolveFunctionValue && typeof value === 'function') {
+    value = options?.resolveFunctionValue(value)
+  }
   // get falsy values
   if (value === false) {
     value === FALSE_VALUES[key]
@@ -130,12 +135,12 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
   } else if (COLOR_KEYS.has(key) && Config.isColor(value)) {
     return Config.toColor(value)
   } else if (Array.isArray(value)) {
-    return processArray(key, value)
+    return processArray(key, value, 0, options)
   } else if (valueType === 'object') {
     if (value.getCSSValue) {
       return value.getCSSValue()
     }
-    const res = processObject(key, value)
+    const res = processObject(key, value, options)
     if (res !== undefined) {
       return res
     }
@@ -179,15 +184,15 @@ const objectToCSS = {
           : v.position) || ''} ${v.repeat || ''}`,
 }
 
-function processArrayItem(key: string, val: any, level: number = 0) {
+function processArrayItem(key: string, val: any, level: number = 0, options?: CSSConfig) {
   // recurse
   if (Array.isArray(val)) {
-    return processArray(key, val, level + 1)
+    return processArray(key, val, level + 1, options)
   }
-  return cssValue(key, val)
+  return cssValue(key, val, false, options)
 }
 
-export function processArray(key: string, value: any[], level: number = 0): string {
+export function processArray(key: string, value: any[], level: number = 0, options?: CSSConfig): string {
   // solid default option for borders
   if (BORDER_KEY.has(key) && value.length === 2) {
     value.push('solid')
@@ -196,19 +201,19 @@ export function processArray(key: string, value: any[], level: number = 0): stri
     return value.map(x => (x.includes(' ') ? `"${x}"` : x)).join(', ')
   }
   if (key === 'boxShadow') {
-    value = value.filter(Boolean).map(processBoxShadow)
+    value = value.filter(Boolean).map(x => processBoxShadow(x, options))
   } else {
-    value = value.map(val => processArrayItem(key, val))
+    value = value.map(val => processArrayItem(key, val, level, options))
   }
   return value.join(level === 0 && COMMA_JOINED.has(key) ? ', ' : ' ')
 }
 
-function processBoxShadow(val: boxShadowItem) {
+function processBoxShadow(val: boxShadowItem, options?: CSSConfig) {
   if (Array.isArray(val)) {
     return val
       .map(x => {
         if (Config.isColor(x)) return Config.toColor(x)
-        return cssValue('', x)
+        return cssValue('', x, false, options)
       })
       .join(' ')
   }
@@ -237,30 +242,8 @@ function objectValue(key: string, value: any) {
   return value
 }
 
-const arrayOrObject = (arr, obj) => val => (Array.isArray(val) ? arr(val) : obj(val))
-
-const gradients = {
-  linearGradient: (key, object) =>
-    `linear-gradient(${arrayOrObject(
-      all => processArray(key, all),
-      ({ deg, from, to }) => `${deg || 0}deg, ${from || 'transparent'}, ${to || 'transparent'}`,
-    )(object)})`,
-  radialGradient: processArray,
-}
-
-export function processObject(key: string, object: any): string | undefined {
-  if (
-    key === 'background' ||
-    key === 'color' ||
-    key === 'borderColor' ||
-    key === 'backgroundColor'
-  ) {
-    if (object.linearGradient) {
-      return gradients.linearGradient(key, object.linearGradient)
-    }
-    if (object.radialGradient) {
-      return gradients.radialGradient(key, object.radialGradient)
-    }
+export function processObject(key: string, object: any, options?: CSSConfig): string | undefined {
+  if (COLOR_KEYS.has(key)) {
     if (Config.isColor(object)) {
       return Config.toColor(object)
     }
@@ -274,7 +257,7 @@ export function processObject(key: string, object: any): string | undefined {
       }
       let value = object[subKey]
       if (Array.isArray(value)) {
-        value = processArray(key, value)
+        value = processArray(key, value, 0, options)
       } else {
         value = objectValue(subKey, value)
       }

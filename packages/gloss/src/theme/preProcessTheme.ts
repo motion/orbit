@@ -18,9 +18,9 @@ export const preProcessTheme = (props: GlossProps, theme: CompiledTheme) => {
     if (existing) {
       return existing
     }
-    const coatTheme = getThemeCoat(props.coat, parent)
-    const subSetTheme = selectThemeSubset(props.subTheme, coatTheme)
-    const next = subSetTheme || coatTheme
+    const subSetTheme = selectThemeSubset(props.subTheme, parent)
+    const coatTheme = getThemeCoat(props.coat, subSetTheme ? { ...parent, ...subSetTheme } : parent)
+    const next: CompiledTheme = { ...subSetTheme, ...coatTheme }
     if (next && next !== parent) {
       let nextTheme = createTheme(next, false)
       if (props.subTheme && next._isSubTheme) {

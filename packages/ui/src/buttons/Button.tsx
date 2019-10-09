@@ -22,7 +22,7 @@ export const Button = memoIsEqualDeep((direct: ButtonProps) => {
     active: 'onChangeActive',
   })
   return (
-    <Theme subTheme={subTheme} coat={coat} theme={theme}>
+    <Theme debug subTheme={subTheme} coat={coat} theme={theme}>
       <Surface
         data-is="Button"
         borderPosition="inside"

@@ -23,7 +23,7 @@ export function selectThemeSubset(
     return theme
   }
   // allow only subsetting coats or original themes, not subsets
-  while (theme._isSubTheme && !theme._isCoat) {
+  while (theme._isSubTheme || theme._isCoat) {
     theme = theme.parent
   }
   if (typeof subTheme === 'function') {

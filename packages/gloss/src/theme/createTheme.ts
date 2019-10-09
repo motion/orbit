@@ -37,7 +37,9 @@ export function createTheme<A extends Partial<ThemeObject>>(
       }
     } else {
       if (key !== 'parent' && key !== 'name' && key !== 'coats' && key[0] !== '_') {
-        val = new ThemeValue(cssVariableName, val)
+        if (!(val instanceof ThemeValue)) {
+          val = new ThemeValue(cssVariableName, val)
+        }
       }
     }
     acc[key] = val

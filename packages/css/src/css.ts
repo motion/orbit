@@ -23,6 +23,7 @@ export { ThemeObject, ThemeValueLike, ThemeSet, ThemeCoats } from './ThemeObject
 export type CSSConfig = {
   errorMessage?: string
   snakeCase?: boolean
+  ignoreCSSVariables?: boolean
 }
 
 const emptyObject = Object.freeze({})
@@ -118,17 +119,18 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
   if (value === undefined || value === null || value === false) {
     return
   }
+  if (value && value.cssVariable && (!options || !options.ignoreCSSVariables)) {
+    if (value.hasColorVariable) {
+      return Config.toColor(value)
+    }
+    return `var(--${value.cssVariable})`
+  }
   const valueType = typeof value
   if (valueType === 'string' || valueType === 'number') {
     if (valueType === 'number' && !unitlessNumberProperties.has(key)) {
       value += 'px'
     }
     return value
-  } else if (value.cssVariable) {
-    if (value.hasColorVariable) {
-      return Config.toColor(value)
-    }
-    return `var(--${value.cssVariable})`
   } else if (COLOR_KEYS.has(key)) {
     return Config.toColor(value)
   } else if (Array.isArray(value)) {
@@ -198,7 +200,7 @@ export function processArray(key: string, value: any[], level: number = 0): stri
     return value.map(x => (x.includes(' ') ? `"${x}"` : x)).join(', ')
   }
   if (key === 'boxShadow') {
-    value = value.map(processBoxShadow)
+    value = value.filter(Boolean).map(processBoxShadow)
   } else {
     value = value.map(val => processArrayItem(key, val))
   }

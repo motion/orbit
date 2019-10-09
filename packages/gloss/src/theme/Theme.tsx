@@ -46,10 +46,7 @@ export const Theme = (props: ThemeProps) => {
     }
   }, [theme])
 
-  if (
-    !themeObservableContext ||
-    (!props.coat && !props.theme && !props.subTheme && !props.name)
-  ) {
+  if (!themeObservableContext || (!props.coat && !props.theme && !props.subTheme && !props.name)) {
     return props.children as JSX.Element
   }
 

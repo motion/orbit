@@ -1,3 +1,5 @@
+import { cssValue } from '@o/css'
+
 import { makeStyleTag } from '../stylesheet/makeStyleTag'
 import { CompiledTheme } from './createTheme'
 import { preProcessTheme } from './preProcessTheme'
@@ -24,10 +26,15 @@ class ThemeVariableManager {
           rules += `--${val.cssVariable}: ${rgba};`
           rules += `--${val.cssVariable}-rgb: ${rgb};`
         } else if (val.getCSSValue) {
-          const next = val.getCSSValue()
-          if (typeof next === 'string') {
-            rules += `--${val.cssVariable}: ${next};`
+          const next = cssValue(key, val.getCSSValue(), true, {
+            ignoreCSSVariables: true
+          })
+          if (key === 'borderWidth') {
+            console.log('it is', next, val.getCSSValue())
           }
+          // if (typeof next !== 'object' && typeof next !== 'function') {
+          rules += `--${val.cssVariable}: ${next};`
+          // }
         }
       }
     }

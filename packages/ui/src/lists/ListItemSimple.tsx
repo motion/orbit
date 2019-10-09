@@ -184,7 +184,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
           <>
             {before}
             {!!before && <Space size={space} />}
-            {!hideBorder && <BorderBottom right={5} left={5} opacity={0.2} />}
+            {!hideBorder && <BorderBottom right={5} left={5} opacity={0.5} />}
           </>
         }
         space={space}

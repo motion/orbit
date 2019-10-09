@@ -1,14 +1,18 @@
 import { Button, Divider, Grid, Section, Space, Stack } from '@o/ui'
 import React from 'react'
 
-import { themes } from '../../themes'
 import { linkProps } from '../../useLink'
 import { DocsFeatureCard } from './DocsFeatureCard'
 
-const examples = [
-  { title: 'Building an App', subTitle: 'Something', colors: themes.lightOrange, icon: 'home' },
-  { title: 'Templates', colors: themes.lightBlue, icon: 'layout' },
-  { title: 'Flows', colors: themes.lightGreen, icon: 'i' },
+const examples: {
+  title: string
+  subTitle?: string
+  theme: string
+  icon: string
+}[] = [
+  { title: 'Building an App', subTitle: 'Something', theme: 'lightOrange', icon: 'home' },
+  { title: 'Templates', theme: 'lightBlue', icon: 'layout' },
+  { title: 'Flows', theme: 'lightGreen', icon: 'i' },
 ]
 
 export const LatestUpdates = () => (
@@ -18,8 +22,7 @@ export const LatestUpdates = () => (
         key={example.title}
         subTitle={example.subTitle}
         title={example.title}
-        background={example.colors.background}
-        color={example.colors.color}
+        themeInner={example.theme}
         icon={example.icon}
       />
     ))}
@@ -33,8 +36,7 @@ export const Tutorials = () => (
         key={example.title}
         subTitle={example.subTitle}
         title={example.title}
-        background={example.colors.background}
-        color={example.colors.color}
+        themeInner={example.theme}
         icon={example.icon}
       />
     ))}

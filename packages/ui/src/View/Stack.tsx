@@ -1,15 +1,14 @@
 import { isDefined } from '@o/utils'
-import { Base, gloss, validCSSAttr } from 'gloss'
+import { Base, validCSSAttr } from 'gloss'
 import React, { Suspense } from 'react'
 
 import { Breadcrumbs } from '../Breadcrumbs'
 import { CollapsableProps, createCollapsableChildren, splitCollapseProps } from '../Collapsable'
-import { Size } from '../Space'
 import { createSpacedChildren, SpaceGroupProps } from '../SpaceGroup'
 import { isPadded, ScrollableView, wrapWithPaddedView } from './ScrollableView'
-import { ScrollableViewProps, ViewProps } from './types'
+import { ScrollableViewProps } from './types'
 import { View } from './View'
-import { wrappingSpaceTheme } from './wrappingSpaceTheme'
+import { wrapWithWrappingView } from './WrappingView'
 
 type GroupProps = {
   group?: boolean
@@ -89,34 +88,14 @@ export function Stack(colProps: StackProps) {
 
   return (
     // minHeight and padding are handled by paddedView
-    <WrappingView {...props} padding={undefined} minHeight={hasPadding ? 'auto' : props.minHeight}>
+    <View {...props} padding={undefined} minHeight={hasPadding ? 'auto' : props.minHeight}>
       {wrapWithWrappingView(wrapWithPaddedView(wrapWithSuspense(element, suspense), props), {
         flexWrap,
         parentSpacing: space,
       })}
-    </WrappingView>
+    </View>
   )
 }
-
-type WrappedProps = { flexWrap?: ViewProps['flexWrap']; parentSpacing?: Size }
-
-const wrapWithWrappingView = (element: React.ReactNode, props: WrappedProps) => {
-  if (props.flexWrap === 'wrap' && props.parentSpacing) {
-    return (
-      <WrappingView flexWrap={props.flexWrap} isWrapped parentSpacing={props.parentSpacing}>
-        {element}
-      </WrappingView>
-    )
-  }
-  return element
-}
-
-const WrappingView = gloss<WrappedProps, ViewProps>(View, {
-  flexDirection: 'inherit',
-  maxWidth: '100%',
-  alignItems: 'inherit',
-  justifyContent: 'inherit',
-}).theme(wrappingSpaceTheme)
 
 // for gloss parents
 Stack.ignoreAttrs = Base.ignoreAttrs

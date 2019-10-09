@@ -1,4 +1,4 @@
-import { linearGradient, Stack, useTheme } from '@o/ui'
+import { Stack } from '@o/ui'
 import React from 'react'
 import { Link } from 'react-navi'
 
@@ -6,12 +6,8 @@ import { SectionContent } from '../views/SectionContent'
 import { TitleText } from '../views/TitleText'
 
 export const BlogTitle = (props: any) => {
-  const theme = useTheme()
   return (
-    <Stack
-      position="relative"
-      background={linearGradient(theme.background, theme.background.lighten(0.2))}
-    >
+    <Stack position="relative" background={theme => theme.background}>
       <SectionContent zIndex={2}>
         <Link href="/blog" style={{ textDecoration: 'none', cursor: 'pointer' }}>
           <Stack

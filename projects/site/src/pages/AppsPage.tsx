@@ -67,7 +67,7 @@ export function AppsPage() {
           right={-200}
           left={-200}
           opacity={0.5}
-          backgroundImage={makeWavePattern('#333')}
+          backgroundImage={makeWavePattern('#080808')}
           pointerEvents="none"
         />
 

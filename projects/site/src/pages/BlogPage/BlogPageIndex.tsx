@@ -25,7 +25,7 @@ export function BlogPageIndex() {
             padding="md"
             {...linkProps(`/blog/${all[index].id}`)}
             hoverStyle={{
-              background: '#f9f9f9',
+              background: [0, 0, 0, 0.05],
             }}
           >
             <TitleText

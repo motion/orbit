@@ -163,4 +163,4 @@ export function AboutPage() {
   )
 }
 
-AboutPage.theme = 'dark'
+AboutPage.theme = 'home'

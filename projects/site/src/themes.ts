@@ -74,18 +74,24 @@ export const themes = createThemes({
   }),
 
   light,
-  dark,
+
+  dark: {
+    ...dark,
+    background: toColor('#080808'),
+  },
+
   home,
 
   brown: {
     ...dark,
-    background: toColor('#2A251F'),
+    background: toColor('#12100E'),
   },
 
-  blogHeaderTheme: {
-    ...dark,
-    background: toColor('#1b1917'),
-  },
+  blogHeaderTheme: home,
+  // {
+  //   ...dark,
+  //   background: toColor('#1b1917'),
+  // },
 
   darkAlt: {
     ...dark,

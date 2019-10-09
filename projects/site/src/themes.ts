@@ -77,9 +77,14 @@ export const themes = createThemes({
   dark,
   home,
 
+  brown: {
+    ...dark,
+    background: toColor('#2A251F'),
+  },
+
   blogHeaderTheme: {
     ...dark,
-    background: colors.purple,
+    background: toColor('#1b1917'),
   },
 
   darkAlt: {

@@ -57,7 +57,7 @@ export function BlogPage(props: { title?: string; children?: any }) {
           <Header slim noBorder />
           <BlogTitle />
         </Theme>
-        <Theme name="light">
+        <Theme name="brown">
           <main className="main-contents">{props.children}</main>
         </Theme>
       </MDX>
@@ -65,11 +65,11 @@ export function BlogPage(props: { title?: string; children?: any }) {
   )
 }
 
-BlogPage.theme = 'light'
+BlogPage.theme = 'brown'
 
 function PostPage(props: { post: PostEntry; children?: any }) {
   return (
-    <Theme name="light">
+    <Theme name="brown">
       <Space size="xxxl" />
       <SectionContent readablePage>
         <ContentSection>

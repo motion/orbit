@@ -20,6 +20,7 @@ export const UNDEFINED = 'undefined'
 // not the best tradeoff here for understanding where you can pass in colors
 export const COLOR_KEYS = new Set<string>([
   'color',
+  'background',
   'backgroundColor',
   'borderColor',
   'borderBottomColor',

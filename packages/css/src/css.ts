@@ -127,7 +127,7 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
       value += 'px'
     }
     return value
-  } else if (COLOR_KEYS.has(key)) {
+  } else if (COLOR_KEYS.has(key) && Config.isColor(value)) {
     return Config.toColor(value)
   } else if (Array.isArray(value)) {
     return processArray(key, value)

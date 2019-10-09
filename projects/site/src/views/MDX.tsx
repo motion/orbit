@@ -34,7 +34,7 @@ const components = {
 
   LargeImage: ({ alt, ...rest }) => (
     <>
-      <View width="140%" margin="20px -20%" md-margin={[20, -20]} md-width="calc(100% + 40px)">
+      <View width="110%" margin="20px -5%" md-margin={[20, -20]} md-width="calc(100% + 40px)">
         <Image width="100%" height="auto" alt={alt} {...rest} />
       </View>
       {!!alt && <Alt>{alt}</Alt>}

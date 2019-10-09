@@ -15,7 +15,7 @@ export const HeaderLink = memo(({ delay, children, ...props }: any) => {
       coat={false}
       width="33%"
       fontWeight={400}
-      fontSize={theme === 'home' ? 18 : 16}
+      fontSize={window.location.pathname === '/' ? 18 : 16}
       lineHeight="1.25rem"
       {...props}
     >

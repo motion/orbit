@@ -280,6 +280,7 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
 
   // goes to BOTH the outer element and inner element
   let throughProps: ThroughProps = {
+    elementTheme,
     iconPadding: typeof iconPadding === 'number' ? iconPadding : size * 8,
     alignItems,
     justifyContent,

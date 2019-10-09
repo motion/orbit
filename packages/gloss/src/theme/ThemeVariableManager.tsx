@@ -29,12 +29,7 @@ class ThemeVariableManager {
           const next = cssValue(key, val.getCSSValue(), true, {
             ignoreCSSVariables: true
           })
-          if (key === 'borderWidth') {
-            console.log('it is', next, val.getCSSValue())
-          }
-          // if (typeof next !== 'object' && typeof next !== 'function') {
           rules += `--${val.cssVariable}: ${next};`
-          // }
         }
       }
     }

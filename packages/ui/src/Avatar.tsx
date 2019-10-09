@@ -12,7 +12,7 @@ export const Avatar = gloss(Image, {
 }).theme(({ size, width, height }) => {
   const scale = useScale()
   return {
-    width: scale * width ?? size,
-    height: scale * height ?? size,
+    width: scale * (width ?? size),
+    height: scale * (height ?? size),
   }
 })

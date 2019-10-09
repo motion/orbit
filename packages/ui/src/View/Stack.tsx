@@ -4,10 +4,10 @@ import React, { Suspense } from 'react'
 
 import { Breadcrumbs } from '../Breadcrumbs'
 import { CollapsableProps, createCollapsableChildren, splitCollapseProps } from '../Collapsable'
+import { Size } from '../Space'
 import { createSpacedChildren, SpaceGroupProps } from '../SpaceGroup'
-import { PaddedView } from './PaddedView'
-import { isPadded, ScrollableView } from './ScrollableView'
-import { ScrollableViewProps } from './types'
+import { isPadded, ScrollableView, wrapWithPaddedView } from './ScrollableView'
+import { ScrollableViewProps, ViewProps } from './types'
 import { View } from './View'
 import { wrappingSpaceTheme } from './wrappingSpaceTheme'
 
@@ -38,6 +38,7 @@ export function Stack(colProps: StackProps) {
       suspense,
       scrollable,
       direction,
+      flexWrap,
       ...props
     },
   ] = splitCollapseProps(colProps)
@@ -85,26 +86,37 @@ export function Stack(colProps: StackProps) {
   }
 
   const hasPadding = isPadded(props)
-  const isWrapped = props.flexWrap === 'wrap'
 
   return (
     // minHeight and padding are handled by paddedView
     <WrappingView {...props} padding={undefined} minHeight={hasPadding ? 'auto' : props.minHeight}>
-      <PaddedView
-        {...props}
-        flex={undefined}
-        className={undefined}
-        style={undefined}
-        isWrapped={isWrapped}
-        parentSpacing={space}
-      >
-        {wrapWithSuspense(element, suspense)}
-      </PaddedView>
+      {wrapWithWrappingView(wrapWithPaddedView(wrapWithSuspense(element, suspense), props), {
+        flexWrap,
+        parentSpacing: space,
+      })}
     </WrappingView>
   )
 }
 
-const WrappingView = gloss(View, wrappingSpaceTheme)
+type WrappedProps = { flexWrap?: ViewProps['flexWrap']; parentSpacing?: Size }
+
+const wrapWithWrappingView = (element: React.ReactNode, props: WrappedProps) => {
+  if (props.flexWrap === 'wrap' && props.parentSpacing) {
+    return (
+      <WrappingView flexWrap={props.flexWrap} isWrapped parentSpacing={props.parentSpacing}>
+        {element}
+      </WrappingView>
+    )
+  }
+  return element
+}
+
+const WrappingView = gloss<WrappedProps, ViewProps>(View, {
+  flex: 1,
+  flexDirection: 'inherit',
+  alignItems: 'inherit',
+  justifyContent: 'inherit',
+}).theme(wrappingSpaceTheme)
 
 // for gloss parents
 Stack.ignoreAttrs = Base.ignoreAttrs

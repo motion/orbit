@@ -96,7 +96,7 @@ const shouldExtractCSS = target !== 'node' && (isProd || flags.extractCSS) && !I
 //   cheap-source-map (no line numbers...)
 //   cheap-module-eval-source-map (seems alright in both...)
 //   cheap-module-source-map (works well in electron, no line numbers in browser...)
-const devtool = flags.devtool || isProd ? 'source-map' : 'cheap-module-source-map'
+const devtool = flags.devtool || (isProd ? 'source-map' : 'cheap-module-source-map')
 
 // const appSrc = Path.join(entry, '..')
 const tsConfig = Path.join(cwd, 'tsconfig.json')
@@ -139,33 +139,35 @@ const optimization = {
     usedExports: true,
     sideEffects: true,
     minimize: true,
-    minimizer: [
-      new TerserPlugin({
-        sourceMap: true,
-        parallel: true,
-        cache: true,
-        terserOptions: {
-          parse: {
-            ecma: 8,
-          },
-          compress: {
-            ecma: 6,
-            warnings: false,
-          },
-          mangle: {
-            safari10: true,
-          },
-          keep_classnames: true,
-          output: {
-            ecma: 6,
-            comments: false,
-            beautify: false,
-            ascii_only: true,
-          },
-        },
-      }),
-    ],
     concatenateModules: true,
+    // minimizer: [
+    //   new TerserPlugin({
+    //     sourceMap: true,
+    //     parallel: true,
+    //     cache: true,
+    //     terserOptions: {
+    //       toplevel: false,
+    //       module: true,
+    //       parse: {
+    //         ecma: 8,
+    //       },
+    //       compress: {
+    //         ecma: 7,
+    //         warnings: true,
+    //       },
+    //       mangle: {
+    //         safari10: true,
+    //       },
+    //       keep_classnames: true,
+    //       output: {
+    //         ecma: 7,
+    //         comments: false,
+    //         beautify: false,
+    //         ascii_only: true,
+    //       },
+    //     },
+    //   }),
+    // ],
     ...(target === 'node'
       ? {
           splitChunks: false,

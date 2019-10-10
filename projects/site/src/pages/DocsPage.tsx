@@ -1,7 +1,7 @@
-import { BorderRight, Button, configureHotKeys, gloss, List, ListItemProps, Portal, ProvideBanner, Sidebar, sleep, Space, Stack, Theme, useFilter, useOnMount, View, whenIdle } from '@o/ui'
+import { Button, configureHotKeys, gloss, Portal, ProvideBanner, Sidebar, Space, Stack, Theme, View } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { compose, mount, route, withView } from 'navi'
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View as NaviView } from 'react-navi'
 
 import { Header } from '../Header'
@@ -16,90 +16,115 @@ import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { DocsContents } from './DocsContents'
 import { docsItems, docsViews } from './docsItems'
+import { DocsList } from './DocsList'
 import DocsStart from './DocsPage/DocsStart.mdx'
 import { Example } from './DocsPage/Example'
 import { ResizeSensor } from './DocsPage/ResizeSensor'
 import { DocsPageHeader } from './DocsPageHeader'
-import { docsNavigate, loadDocsPage, preloadItem } from './docsPageHelpers'
+import { loadDocsPage } from './docsPageHelpers'
+import { DocsPageSidebar } from './DocsPageSidebar'
 import { DocsStoreContext } from './DocsStore'
 import { NotFoundPage } from './NotFoundPage'
-import { useStickySidebar } from './useStickySidebar'
 
 window['ResizeSensor'] = ResizeSensor
 
-const itemProps = {
-  hideBorder: true,
-  iconProps: {
-    opacity: 0.65,
-  },
-}
+export default compose(
+  withView(async () => {
+    if (window.location.pathname.indexOf('/isolate') >= 0) {
+      return (
+        <DocsChromeSimple>
+          <NaviView />
+        </DocsChromeSimple>
+      )
+    }
+    return (
+      <ProvideBanner>
+        <DocsPage>
+          <NaviView disableScrolling={window['recentHMR']} />
+        </DocsPage>
+      </ProvideBanner>
+    )
+  }),
+
+  mount({
+    '/': route({
+      title: 'Orbit Documentation',
+      view: (
+        <DocsContents title="Introduction">
+          <DocsStart />
+        </DocsContents>
+      ),
+    }),
+    '/:id': route(async req => {
+      let id = req.params.id
+      const view = docsViews[id]
+
+      if (!view) {
+        return {
+          view: () => <div>not found</div>,
+        }
+      }
+
+      const [ChildView, source, examples, examplesSource, types] = await loadDocsPage(view)
+      const item = docsItems.all.find(x => x['id'] === id)
+
+      return {
+        view: (
+          <DocsContents
+            id={id}
+            title={item ? item['title'] : ''}
+            source={source}
+            types={types}
+            examples={examples}
+            examplesSource={examplesSource}
+            beta={item.beta}
+          >
+            <ChildView />
+          </DocsContents>
+        ),
+      }
+    }),
+    '/:id/isolate/:subid': route(async req => {
+      let id = req.params.id
+      const view = docsViews[id]
+      if (!view) {
+        return {
+          view: () => <div>not found</div>,
+        }
+      }
+      const [_, _2, examples, examplesSource] = await loadDocsPage(view)
+      return {
+        view: (
+          <Example
+            chromeless
+            examples={examples}
+            source={examplesSource}
+            id={req.params.subid}
+            sourceBelow
+            pad
+          />
+        ),
+      }
+    }),
+  }),
+)
 
 configureHotKeys({
   ignoreTags: [],
 })
 
-const DocsList = memo((props: { shouldRenderAll?: boolean }) => {
-  const docsStore = DocsStoreContext.useStore()
-  const [mounted, setMounted] = useState(false)
+const FixedLayout = gloss({
+  position: 'fixed',
+  top: 120,
+  left: 0,
+  bottom: 0,
+  width: '100%',
+  zIndex: 100000,
 
-  useOnMount(async () => {
-    if (props.shouldRenderAll) {
-      await sleep(1400) // wait for intro animation
-      await whenIdle()
-      await sleep(50)
-      await whenIdle()
-      await sleep(50)
-      await whenIdle()
-      await sleep(50)
-      await whenIdle()
-      setMounted(true)
-    }
-  })
-
-  const curRow = useRef(docsItems[docsStore.section][0])
-  const { results } = useFilter({
-    query: docsStore.search,
-    items: docsItems[docsStore.section],
-  })
-
-  const items = useMemo(() => {
-    let items: ListItemProps[] = []
-    if (docsStore.search) {
-      items = [
-        ...items,
-        {
-          key: docsStore.search,
-          groupName: `Current Page`,
-          ...curRow.current,
-        },
-        { separator: `Results for "${docsStore.search}"`, selectable: false },
-      ]
-    }
-    items = [...items, ...results]
-    return items
-  }, [docsStore.search, results])
-
-  return (
-    <List
-      selectable
-      alwaysSelected
-      defaultSelected={docsStore.search ? 0 : docsStore.initialIndex}
-      overscanCount={mounted ? 500 : 0}
-      items={items}
-      itemProps={itemProps}
-      getItemProps={preloadItem}
-      onSelect={useCallback(rows => {
-        if (!rows[0]) {
-          console.warn('no row on select!', rows)
-        } else {
-          console.debug('nav to', rows[0].id)
-          curRow.current = rows[0]
-          docsNavigate(rows[0].id)
-        }
-      }, [])}
-      {...props}
-    />
-  )
+  isSmall: {
+    top: 0,
+    zIndex: 100000000,
+  },
 })
 
 const DocsPage = memo((props: { children?: any }) => {
@@ -286,124 +311,8 @@ const DocsPage = memo((props: { children?: any }) => {
   )
 })
 
-const DocsPageSidebar = memo(({ children, ...rest }: any) => {
-  const screen = useScreenSize()
-
-  useStickySidebar({
-    condition: screen !== 'small',
-    id: '#sidebar',
-    containerSelector: '#main',
-  })
-
-  return (
-    <Stack id="sidebar" width={230} pointerEvents="auto" height="100vh" {...rest}>
-      <Stack position="relative" className="sidebar__inner" flex={1}>
-        <Stack margin={[25, 0, 0]} flex={1} position="relative">
-          {children}
-          <BorderRight top={10} />
-        </Stack>
-      </Stack>
-    </Stack>
-  )
-})
-
 // @ts-ignore
 DocsPage.theme = 'docsPageTheme'
-
-const FixedLayout = gloss({
-  position: 'fixed',
-  top: 120,
-  left: 0,
-  bottom: 0,
-  width: '100%',
-  zIndex: 100000,
-
-  isSmall: {
-    top: 0,
-    zIndex: 100000000,
-  },
-})
-
-export default compose(
-  withView(async () => {
-    if (window.location.pathname.indexOf('/isolate') >= 0) {
-      return (
-        <DocsChromeSimple>
-          <NaviView />
-        </DocsChromeSimple>
-      )
-    }
-    return (
-      <ProvideBanner>
-        <DocsPage>
-          <NaviView disableScrolling={window['recentHMR']} />
-        </DocsPage>
-      </ProvideBanner>
-    )
-  }),
-
-  mount({
-    '/': route({
-      title: 'Orbit Documentation',
-      view: (
-        <DocsContents title="Introduction">
-          <DocsStart />
-        </DocsContents>
-      ),
-    }),
-    '/:id': route(async req => {
-      let id = req.params.id
-      const view = docsViews[id]
-
-      if (!view) {
-        return {
-          view: () => <div>not found</div>,
-        }
-      }
-
-      const [ChildView, source, examples, examplesSource, types] = await loadDocsPage(view)
-      const item = docsItems.all.find(x => x['id'] === id)
-
-      return {
-        view: (
-          <DocsContents
-            id={id}
-            title={item ? item['title'] : ''}
-            source={source}
-            types={types}
-            examples={examples}
-            examplesSource={examplesSource}
-            beta={item.beta}
-          >
-            <ChildView />
-          </DocsContents>
-        ),
-      }
-    }),
-    '/:id/isolate/:subid': route(async req => {
-      let id = req.params.id
-      const view = docsViews[id]
-      if (!view) {
-        return {
-          view: () => <div>not found</div>,
-        }
-      }
-      const [_, _2, examples, examplesSource] = await loadDocsPage(view)
-      return {
-        view: (
-          <Example
-            chromeless
-            examples={examples}
-            source={examplesSource}
-            id={req.params.subid}
-            sourceBelow
-            pad
-          />
-        ),
-      }
-    }),
-  }),
-)
 
 function DocsChromeSimple({ children }) {
   return (

@@ -16,6 +16,8 @@ export type AlphaColorProps = {
   activeStyle?: PseudoStyleProps['activeStyle']
   focusStyle?: PseudoStyleProps['focusStyle']
   disabledStyle?: PseudoStyleProps['disabledStyle']
+  focusWithinStyle?: PseudoStyleProps['focusWithinStyle']
+  selectedStyle?: PseudoStyleProps['selectedStyle']
 }
 
 const mergeFocus = merge.bind(null, '&:focus', 'focusStyle', 'colorFocus', 'alphaFocus')

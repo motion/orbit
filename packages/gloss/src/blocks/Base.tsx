@@ -1,5 +1,5 @@
 import { baseIgnoreAttrs, gloss } from '../gloss'
-import { AlphaColorProps, alphaColorThemeLoose, propsToStyles, PseudoStyleProps, psuedoStylePropsTheme } from '../themes'
+import { AlphaColorProps, alphaColorThemeLoose, propsToStyles } from '../themes'
 import { TextSizeProps } from '../themes/textSizeTheme'
 import { GlossProps } from '../types'
 
@@ -13,14 +13,12 @@ export const Box = gloss({
   minWidth: 0,
 })
 
-export type BasePropsBase = PseudoStyleProps & TextSizeProps & AlphaColorProps
+export type BasePropsBase = TextSizeProps & AlphaColorProps
 export type BaseProps = GlossProps<BasePropsBase>
 
 export const Base = gloss<BasePropsBase>(Box).theme(
   // <Base color="red" /> css props
   propsToStyles,
-  // <Base hoverStyle={{ color: 'red' }} />, focusStyle, activeStyle
-  psuedoStylePropsTheme,
   // <Base alpha={0.5} /> for text opacity
   alphaColorThemeLoose,
 )

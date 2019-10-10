@@ -87,6 +87,9 @@ const whiteSpaceRegex = /[\s]+/g
 const emptyObject = {}
 
 let curTheme
+// helpful global to let us add debugging in dev mode anywhere in here
+let shouldDebug = false
+const isDeveloping = process.env.NODE_ENV === 'development'
 
 export function gloss<
   MyProps = {},
@@ -99,7 +102,7 @@ export function gloss<
   b?: PartialProps,
   compiledInfo?: GlossStaticStyleDescription,
 ): GlossView<MyProps & ParentProps> {
-  if (process.env.NODE_ENV === 'development') {
+  if (isDeveloping) {
     if (a === undefined && !!b) {
       throw new Error(
         `Passed in undefined as first argument to gloss(), you may have a circular import`,
@@ -152,6 +155,10 @@ export function gloss<
    *
    */
   function GlossView(props: GlossProps) {
+    if (isDeveloping && props['debug']) {
+      shouldDebug = true
+    }
+
     // compile on first run to avoid extra work
     if (!hasCompiled) {
       hasCompiled = true
@@ -271,7 +278,7 @@ export function gloss<
     }
     finalProps.className = className
 
-    if (process.env.NODE_ENV === 'development') {
+    if (isDeveloping) {
       finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
     }
 
@@ -287,27 +294,22 @@ export function gloss<
       })
     }
 
-    if (process.env.NODE_ENV === 'development') {
-      // @ts-ignore
-      if (props.debug) {
-        console.log(
-          'styles\n',
-          finalProps.className
-            .split(' ')
-            .map(x => tracker.get(x.replace(/^s/, '')))
-            .filter(Boolean),
-          '\nprops\n',
-          props,
-          '\nfinalProps\n',
-          finalProps,
-        )
-      }
+    if (isDeveloping && props['debug']) {
+      shouldDebug = false
+      const styles = finalProps.className
+        .split(' ')
+        .map(x => tracker.get(x.replace(/^s/, '')))
+        .filter(Boolean)
+      console.log('styles\n', styles, '\nprops\n', props, '\noutProps\n', finalProps)
     }
 
     last.current.props = finalProps
     return createElement(element, finalProps, props.children)
   }
 
+  /**
+   * Finish creating gloss view
+   */
   const parent = hasGlossyParent ? target : null
   const internal: GlossInternals<Props> = {
     compiledInfo,
@@ -385,11 +387,17 @@ function createGlossView(GlossView, config) {
 let mediaQueriesImportance = {}
 let hasSetupMediaQueryKeys = false
 const styleKeyScore = (x: string) => {
-  const hasFocus = x.indexOf('&:focus') > -1 ? 1 : 0
-  const hasHover = x.indexOf('&:hover') > -1 ? 2 : 0
-  const hasActive = x.indexOf('&:active') > -1 ? 3 : 0
-  const psuedoScore = hasActive + hasHover + hasFocus
-  if (psuedoScore) return psuedoScore
+  let psuedoScore = 0
+  if (x[0] === '&') {
+    const hasFocus = x === '&:focus' ? 1 : 0
+    const hasHover = x === '&:hover' ? 2 : 0
+    const hasActive = x === '&:active' ? 3 : 0
+    const hasDisabled = x === '&:disabled' ? 4 : 0
+    psuedoScore += hasActive + hasHover + hasFocus + hasDisabled
+  }
+  if (psuedoScore) {
+    return psuedoScore
+  }
   // media query sort by the order they gave us in object
   if (Config.mediaQueries) {
     if (!hasSetupMediaQueryKeys) {
@@ -418,6 +426,9 @@ function addStyles(
   const keys = Object.keys(styles)
   if (keys.length > 1) {
     keys.sort(styleKeysSort)
+  }
+  if (isDeveloping && shouldDebug) {
+    console.log('addStyles sorted', keys, styles)
   }
   let classNames: string[] | null = null
   for (const key of keys) {
@@ -452,10 +463,10 @@ function mergePropStyles(styles: Object, propStyles: Object, props: Object) {
   }
 }
 
-const SPECIFIC_PREFIX = 's'
+const SPECIFIC = 's'
 
 function deregisterClassName(name: string) {
-  const nonSpecificClassName = name[0] === SPECIFIC_PREFIX ? name.slice(1) : name
+  const nonSpecificClassName = name[0] === SPECIFIC ? name.slice(1) : name
   gc.deregisterClassUse(nonSpecificClassName)
 }
 
@@ -486,7 +497,7 @@ function addDynamicStyles(
     const len = propClassNames.length
     for (let i = len - 1; i >= 0; i--) {
       const className = propClassNames[i]
-      const cn = className[0] === SPECIFIC_PREFIX ? className.slice(1) : className
+      const cn = className[0] === SPECIFIC ? className.slice(1) : className
       const info = tracker.get(cn)
       if (info) {
         // curId is looking if info.namespace was &:hover (sub-select) or "." (base) and then applying
@@ -750,6 +761,15 @@ export type BaseRules = {
 const cssOpts = {
   resolveFunctionValue: val => val(curTheme)
 }
+
+const nicePostfix = {
+  '&:hover': 'hover',
+  '&:active': 'active',
+  '&:disabled': 'disabled',
+  '&:focus': 'focus',
+  '&:focus-within': 'focus-within',
+}
+
 function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSpecific?: boolean) {
   const [hash, style] = cssStringWithHash(rules, cssOpts)
 
@@ -757,11 +777,13 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSp
     return
   }
 
-  let className = `g${hash}`
+  // slightly shorter hashes
+  let className = `g${Math.floor(hash / 1000)}`
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
   // ensure we are unique for unique namespaces
   if (namespace !== '.') {
-    className += `-${stringHash(namespace)}`
+    const postfix = nicePostfix[namespace] || stringHash(namespace)
+    className += `-${postfix}`
   }
 
   // this is the first time we've found this className
@@ -785,30 +807,30 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSp
     }
   }
 
-  return moreSpecific ? `${SPECIFIC_PREFIX}${className}` : className
+  return moreSpecific ? `${SPECIFIC}${className}` : className
 }
 
 // has to return a .s-id and .id selector for use in parents passing down styles
 function getSelector(className: string, namespace: string, parentSelector = 'html body') {
   if (namespace[0] === '@') {
     // double specificity hack
-    return `.${className}.${className}, ${parentSelector} .${SPECIFIC_PREFIX}${className}.${SPECIFIC_PREFIX}${className}`
+    return `.${className}.${className}, ${parentSelector} .${SPECIFIC}${className}.${SPECIFIC}${className}`
   }
-  if (namespace.indexOf('&') !== -1) {
+  if (namespace[0] === '&' || namespace.indexOf('&') !== -1) {
     // namespace === '&:hover, &:focus, & > div'
     const namespacedSelectors = namespace
       .split(',')
       .flatMap(part => {
         const selector = part.replace('&', className).trim()
-        return [`${parentSelector} .${SPECIFIC_PREFIX}${selector}`, `.${selector}`]
+        return [`${parentSelector} .${SPECIFIC}${selector}`, `.${selector}`]
       })
       .join(',')
     return namespacedSelectors
   }
-  return `${parentSelector} .${SPECIFIC_PREFIX}${className}, .${className}`
+  return `${parentSelector} .${SPECIFIC}${className}, .${className}`
 }
 
-if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
+if (isDeveloping && typeof window !== 'undefined') {
   window['gloss'] = window['gloss'] || {
     tracker,
     gc,
@@ -829,7 +851,7 @@ export function getStylesClassName(namespace: string, styles: CSSPropertySet) {
   // selector less specific than the default one in getSelector,
   // since we want dynamic styles at runtime to be more specific
   const selector = getSelector(className, namespace, 'body')
-  className = `${SPECIFIC_PREFIX}${className}`
+  className = `${SPECIFIC}${className}`
   let css: string
   if (namespace[0] === '@') {
     css = `${namespace} {${selector} {${style}}}`

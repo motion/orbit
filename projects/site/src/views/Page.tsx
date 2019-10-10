@@ -2,7 +2,6 @@ import { createContextualProps, Parallax, ParallaxViewProps } from '@o/ui'
 import { selectDefined } from '@o/utils'
 import React, { memo, useEffect, useState } from 'react'
 
-import { mediaStyles } from '../constants'
 import { SectionContent, SectionContentProps } from './SectionContent'
 
 const { PassProps, useProps } = createContextualProps<SectionContentProps>({
@@ -43,8 +42,8 @@ export function Page(props: SectionContentProps) {
 Page.ParallaxView = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) => {
   const parallax = useProps()
   return (
+    // <View display="contents" {...mediaStyles.hiddenWhen.xs}>
     <Parallax.View
-      {...mediaStyles.hiddenWhen.xs}
       speed={0.2}
       style={{
         zIndex: +parallax.zIndex + (+zIndex || 0) + 1,
@@ -53,6 +52,7 @@ Page.ParallaxView = ({ overflow, zIndex, style, ...props }: ParallaxViewProps) =
       }}
       {...props}
     />
+    // </View>
   )
 }
 

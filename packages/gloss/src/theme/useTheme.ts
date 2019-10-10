@@ -68,7 +68,7 @@ const getTheme = (theme?: CompiledTheme, props?: any) => {
 const OriginalPropsSymbol = Symbol('OriginalPropsSymbol') as any
 
 // utility for getting original props
-export const getOriginalProps = (themeProps: any): any => {
+export const getOriginalProps = <A>(themeProps: A): A => {
   return themeProps[OriginalPropsSymbol]
 }
 

@@ -30,17 +30,8 @@ export function selectThemeSubset(
     return createSubSetTheme(`subfn${weakKey(subTheme)}`, theme, subTheme(theme), subTheme)
   }
   // generate new subset theme
-  const len = subTheme.length
-  const selectedTheme: PartialTheme = {}
-  for (const subKey in theme) {
-    if (subKey.indexOf(subTheme) === 0 && typeof theme[subKey] !== 'undefined') {
-      const newKey = subKey.slice(len)
-      const newKeyCamelCase = `${newKey[0].toLowerCase()}${newKey.slice(1)}`
-      selectedTheme[newKeyCamelCase] = theme[subKey]
-    }
-  }
-  if (!Object.keys(selectedTheme).length) {
-    // no changes made, dont do any extra work
+  const selectedTheme: PartialTheme = theme[subTheme]
+  if (!selectedTheme) {
     return null
   }
   return createSubSetTheme(subTheme, theme, selectedTheme, subTheme)

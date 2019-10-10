@@ -18,13 +18,10 @@ const backgroundStrongest = lightBackground.darken(0.075)
 
 export const light: ThemeObject = {
   coats: coats,
-  cardShadow: [0, 6, 14, [0, 0, 0, 0.058]],
-  cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
   boxShadowOpacity: 0.01,
   colorLight,
   colorLighter,
   colorLightest,
-  listItemBackground: transparent,
   ...fromStyles({
     iconFillColor: '#000',
     glintColor: [255, 255, 255, 0.85],
@@ -42,38 +39,60 @@ export const light: ThemeObject = {
     color,
     colorHighlight: '#fff',
     colorHighlightActive: '#fff',
-    buttonBackground: lightButtonBg,
-    buttonBackgroundActive: linearGradient('#eee', '#e9e9e9'),
-    // buttonBackgroundFocus: lightButtonBg,
-    buttonBackgroundHover: lightButtonBg.adjust(x => toColor(x).lighten(0.025)),
-    buttonGlintColorBottom: [0, 0, 0, 0.08],
     borderColor: [215, 215, 215],
     borderColorActive: [215, 215, 215],
     borderColorHover: [215, 215, 215],
     borderColorLight: [215, 215, 215, 0.5],
     headerBackground: linearGradient([255, 255, 255, 0.3], [255, 255, 255, 0.25]),
-    sidebarBackground: '#f5f7f9',
-    sidebarBackgroundTransparent: [255, 255, 255, 0.7],
     appCardBackground: '#f5f7f9',
     appCardBackgroundTransparent: [255, 255, 255, 0],
     'orbitLauncherBackground-none': [255, 255, 255],
     'orbitLauncherBackground-some': [255, 255, 255, 0.15],
     'orbitLauncherBackground-more': [255, 255, 255, 0.15],
     orbitLauncherSideBackground: [255, 255, 255, 0.4],
-    tabBackgroundHover: [0, 0, 0, 0.1],
-    tabBackgroundActive: [0, 0, 0, 0.15],
-    tabBackgroundSelected: lightBackground,
-    inputBackground: '#fff',
-    inputBackgroundHover: '#fff',
-    inputBackgroundActive: '#fff',
-    inputBorderColorActive: [215, 215, 215],
-    inputBackgroundSelection: '#ddd',
-    cardBackground: [255, 255, 255],
-    cardBackgroundHover: [255, 255, 255],
-    cardBackgroundActive: [255, 255, 255],
-    cardBorderColor: [0, 0, 0, 0.1],
     orbitHeaderBackgroundEditing: linearGradient('#163278', '#192B5C'),
     orbitInputBackgroundEditing: [0, 0, 0, 0.2],
     separatorBackground: backgroundStrong.setAlpha(0.5),
+
+    lightItem: {
+      background: transparent,
+    },
+
+    button: {
+      background: lightButtonBg,
+      backgroundActive: linearGradient('#e9e9e9', '#eee'),
+      // buttonBackgroundFocus: lightButtonBg,
+      boxShadowFocus: '2px 2px red',
+      backgroundHover: lightButtonBg.adjust(x => toColor(x).lighten(0.025)),
+      glintColorBottom: [0, 0, 0, 0.08],
+    },
+
+    tab: {
+      backgroundHover: [0, 0, 0, 0.1],
+      backgroundActive: [0, 0, 0, 0.15],
+      backgroundSelected: lightBackground,
+    },
+
+    sidebar: {
+      background: '#f5f7f9',
+      backgroundTransparent: [255, 255, 255, 0.7],
+    },
+
+    card: {
+      background: [255, 255, 255],
+      backgroundHover: [255, 255, 255],
+      backgroundActive: [255, 255, 255],
+      borderColor: [0, 0, 0, 0.1],
+      boxShadow: [0, 6, 14, [0, 0, 0, 0.058]],
+      hoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
+    },
+
+    input: {
+      background: '#fff',
+      backgroundHover: '#fff',
+      backgroundActive: '#fff',
+      borderColorActive: [215, 215, 215],
+      backgroundSelection: '#ddd',
+    },
   }),
 }

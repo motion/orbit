@@ -1,6 +1,6 @@
 import { createStoreContext } from '@o/kit'
 import { MotionProps, useIntersectionObserver, useParallaxContainer, View, ViewProps } from '@o/ui'
-import React, { memo, useCallback, useRef, useState } from 'react'
+import React, { memo, useCallback, useRef } from 'react'
 
 import { ParallaxProp, ParallaxStageItem } from './ParallaxStage'
 

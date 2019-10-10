@@ -45,7 +45,6 @@ export const Button = memoIsEqualDeep((direct: ButtonProps) => {
         glint
         glintBottom
         pointerEvents={props.disabled ? 'none' : undefined}
-        activeStyle={activeStyle}
         glowProps={glowProps}
         onClick={useCallback(() => {
           if (isDefined(props.active) && props.onChangeActive) {
@@ -68,8 +67,4 @@ const borderWidthTheme = theme => (typeof theme.borderWidth === 'number' ? theme
 const glowProps = {
   scale: 1.8,
   opacity: 0.15,
-}
-
-const activeStyle = {
-  opacity: 0.8,
 }

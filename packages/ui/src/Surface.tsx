@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
-import { Base, Box, CompiledTheme, gloss, GlossProps, propsToStyles, psuedoStyleTheme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
+import { Base, Box, CompiledTheme, gloss, GlossProps, propsToStyles, ThemeFn, ThemeSelect, useTheme } from 'gloss'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
@@ -392,25 +392,19 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
           <GlintContain
             className="ui-glint-contain"
             {...borderProps}
-            {...borderPosition === 'inside' &&
+            {...(borderPosition === 'inside' &&
               borderWidth > 0 && {
                 height: roundHalf(+height - size / 2) - 1,
                 transform: {
                   y: roundHalf(size),
                 },
-              }}
+              })}
           >
             {glint && !props.chromeless && (
               <Glint coat={coat} size={size} {...borderProps} subTheme={subTheme} />
             )}
             {glintBottom && !props.chromeless && (
-              <Glint
-                coat={coat}
-                size={size}
-                bottom={0}
-                {...borderProps}
-                subTheme={subTheme}
-              />
+              <Glint coat={coat} size={size} bottom={0} {...borderProps} subTheme={subTheme} />
             )}
           </GlintContain>
         )}
@@ -525,11 +519,17 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
 
   return useBreadcrumbReset(
     SizedSurfacePropsContext.useReset(
-    <IconPropsContext.Provider value={iconContext}>
-      <SurfaceFrame {...surfaceFrameProps} />
-    </IconPropsContext.Provider>
-  ))
+      <IconPropsContext.Provider value={iconContext}>
+        <SurfaceFrame {...surfaceFrameProps} />
+      </IconPropsContext.Provider>,
+    ),
+  )
 })
+
+Surface['defaultProps'] = {
+  // todo better pattern here
+  baseOverridesPsuedo: true,
+}
 
 const hasChildren = (children: React.ReactNode) => {
   if (Array.isArray(children)) {
@@ -541,11 +541,6 @@ const hasChildren = (children: React.ReactNode) => {
 const chromelessStyle = {
   borderColor: 'transparent',
   background: 'transparent',
-}
-
-const defaultTextTheme = {
-  fontSize: undefined,
-  lineHeight: undefined,
 }
 
 // fontFamily: inherit on both fixes elements
@@ -564,9 +559,8 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
     disabled: {
       cursor: 'not-allowed',
     },
-  }
+  },
 }).theme(props => {
-  const themeStyle = psuedoStyleTheme(props)
   const propStyles = propsToStyles(props)
 
   // todo fix types here
@@ -576,19 +570,18 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
   let styles: CSSPropertySet = {}
   let boxShadow = [].concat(props.boxShadow || null)
 
-  const borderColor = themeStyle?.borderColor
   const borderWidth = selectDefined(props.borderWidth, 0)
 
   // borderPosition controls putting borders inside vs outside
   // useful for having nice looking buttons (inside) vs container-like views (outside)
-  if (borderColor && !props.chromeless) {
+  if (props.borderColor && !props.chromeless) {
     if (props.borderPosition === 'inside') {
       // inside
-      boxShadow = [...(boxShadow || []), ['inset', 0, 0, 0, borderWidth, borderColor]]
+      boxShadow = [...(boxShadow || []), ['inset', 0, 0, 0, borderWidth, props.borderColor]]
       styles.borderWidth = 0
     } else {
       // outside
-      styles.border = [borderWidth, props.borderStyle || 'solid', borderColor]
+      styles.border = [borderWidth, props.borderStyle || 'solid', props.borderColor]
     }
   }
 
@@ -597,11 +590,6 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
   }
 
   const res = {
-    // note: base theme styles go *above* propsToStyles...
-    ...themeStyle,
-    // TODO this could be automatically handled in propStyles if we want...
-    // @ts-ignore deep
-    ...(!props.chromeless && props.active && { '&:hover': themeStyle['&:active'] }),
     ...(props.chromeless && chromelessStyle),
     ...(props.circular && {
       width: props.height,
@@ -612,10 +600,9 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
     ...propStyles,
     ...styles,
     boxShadow,
-    '&:hover': props.active
+    hoverStyle: props.active
       ? null
       : {
-          ...(!props.chromeless && themeStyle?.['&:hover']),
           ...propStyles['&:hover'],
         },
   }
@@ -623,7 +610,7 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
   return res
 })
 
-const applyElementTheme: ThemeFn<any> = (props) =>
+const applyElementTheme: ThemeFn<any> = props =>
   props.elementTheme ? props.elementTheme(props) : null
 
 const Element = gloss<ThroughProps & { disabled?: boolean }>({
@@ -650,13 +637,16 @@ const Element = gloss<ThroughProps & { disabled?: boolean }>({
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
     },
-  }
+  },
 }).theme(propsToStyles, applyElementTheme)
 
 const getIconSize = (props: SurfaceProps) => {
   if (isDefined(props.iconSize)) return props.iconSize
   const iconSize = props.height ? +props.height * 0.1 + 8 : 12
-  const size = getSize(props.size) * iconSize * (props.sizeIcon === true ? 1 : selectDefined(props.sizeIcon, 1))
+  const size =
+    getSize(props.size) *
+    iconSize *
+    (props.sizeIcon === true ? 1 : selectDefined(props.sizeIcon, 1))
   return Math.floor(size)
 }
 

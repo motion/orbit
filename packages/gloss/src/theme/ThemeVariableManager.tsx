@@ -2,7 +2,7 @@ import { cssValue, validCSSAttr } from '@o/css'
 
 import { makeStyleTag } from '../stylesheet/makeStyleTag'
 import { CompiledTheme } from './createTheme'
-import { preProcessTheme } from './preProcessTheme'
+import { preProcessTheme, pseudoProps } from './preProcessTheme'
 import { CurrentTheme } from './Theme'
 import { ThemeValue } from './ThemeValue'
 import { unwrapTheme } from './useTheme'
@@ -16,10 +16,13 @@ class ThemeVariableManager {
     return this.tag!.sheet! as CSSStyleSheet
   }
 
-  getThemeVariables(theme: CompiledTheme) {
-    let rules = ``
+  getThemeVariables(theme: CompiledTheme, rules = '') {
     for (const key in theme) {
       const val = theme[key]
+      if (pseudoProps[key]) {
+        rules += this.getThemeVariables(val)
+        continue
+      }
       if (val && val.cssVariable) {
         if (val.getCSSColorVariables) {
           // allows for nicer handling of alpha changes

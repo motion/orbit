@@ -262,15 +262,17 @@ select:-webkit-autofill:focus {
   text-shadow: none;
 }
 
-*::selection {
-  background: ##8c60f8;
+.theme-home *::selection,
+.theme-dark *::selection {
+  background: rgba(100, 100, 100, 0.45);
   color: #fff;
   text-shadow: none;
 }
 
-.theme-home *::selection,
-.theme-dark *::selection {
-  background: rgba(100, 100, 100, 0.45);
+*::selection,
+.theme-docsPageTheme *::selection,
+.theme-light *::selection {
+  background: #8c60f8;
   color: #fff;
   text-shadow: none;
 }

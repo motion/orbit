@@ -205,7 +205,7 @@ export function extractStyles(
             }
             // uses the base styles if necessary, merges just like gloss does
             const { styles, conditionalStyles, defaultProps } = getGlossProps(
-              view ? view.internal.getConfig() : undefined,
+              view?.internal,
               styleObject,
             )
 

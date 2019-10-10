@@ -29,7 +29,6 @@ export const OrbitHeader = memo(() => {
   const containerRef = useRef()
   const { focusedApp, zoomedIn } = headerStore.useStore().paneState
   const orbitStore = useOrbitStore()
-  const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()
   const appRole = useReaction(() => App.appRole)
 
@@ -99,7 +98,7 @@ export const OrbitHeader = memo(() => {
               direction="horizontal"
               space
               alignItems="center"
-              {...!isOnTearablePane && zoomedIn && { pointerEvents: 'none', opacity: 0.3 }}
+              {...(!isOnTearablePane && zoomedIn && { pointerEvents: 'none', opacity: 0.3 })}
             >
               {/* <a
                 href="#"
@@ -146,7 +145,7 @@ export const OrbitHeader = memo(() => {
       </HeaderTop>
       {/* this stays slightly below the active tab and looks nice */}
       <BorderBottom
-        borderColor={(isDeveloping && theme.headerBorderBottom) || theme.borderColor}
+        borderColor={theme => theme.headerBorderBottom || theme.borderColor}
         zIndex={0}
         opacity={0.5}
       />
@@ -175,9 +174,9 @@ const OrbitDockOpenButton = memo(() => {
           onMouseEnter={orbitDock.hoverEnter}
           onMouseLeave={orbitDock.hoverLeave}
           onClick={orbitDock.onClickDockOpen}
-          {...orbitDock.state === 'pinned' && {
+          {...(orbitDock.state === 'pinned' && {
             background: [0, 0, 0, 0.3],
-          }}
+          })}
           zIndex={2}
         />
       </HeaderButtonPassProps>
@@ -298,9 +297,6 @@ const HeaderSide = gloss<StackProps & { slim?: boolean }>(Stack, {
     minWidth: 'auto',
   },
 })
-HeaderSide.defaultProps = {
-  flexDirection: 'row',
-}
 
 const getMedia = q => window.matchMedia(q.slice(q.indexOf('(') - 1))
 
@@ -341,6 +337,8 @@ const HeaderTop = gloss(View, {
   flexDirection: 'row',
   position: 'relative',
 })
+
+console.log('ok', View, HeaderTop)
 
 const BackButton = memo(({ isTorn }: { isTorn: boolean }) => {
   const { state, actions } = useOm()

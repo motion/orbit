@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
+import React from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -54,23 +54,9 @@ export type GlossViewOpts<Props = {}> = {
   isDOMElement?: boolean
 }
 
-type GlossInternalConfig = {
-  displayName: string
-  targetElement: any
-  styles: any
-  conditionalStyles: Object | undefined
-  config: GlossViewOpts | null
-}
-
-export type GlossStaticStyleDescription = {
-  className: string
-  conditionalClassNames?: {
-    [key: string]: string
-  }
-}
-
 type GlossInternals<Props = {}> = {
   parent: any
+  targetElement: any
   themeFns: ThemeFn<Props>[] | null
   compiledInfo?: GlossStaticStyleDescription
   glossProps: {
@@ -79,6 +65,18 @@ type GlossInternals<Props = {}> = {
     conditionalStyles: Object | undefined
   }
   getConfig: () => GlossInternalConfig
+}
+
+type GlossInternalConfig = {
+  displayName: string
+  config: GlossViewOpts | null
+}
+
+export type GlossStaticStyleDescription = {
+  className: string
+  conditionalClassNames?: {
+    [key: string]: string
+  }
 }
 
 const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
@@ -109,13 +107,9 @@ export function gloss<
     }
   }
 
-  // @ts-ignore
   let target: any = a || 'div'
   let glossPropsObject = b
   const hasGlossyParent = !!target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
-  const targetConfig: GlossInternalConfig | null = hasGlossyParent
-    ? target.internal.getConfig()
-    : null
   let ignoreAttrs = emptyObject
 
   // shorthand: gloss({ ... })
@@ -133,8 +127,8 @@ export function gloss<
     glossPropsObject = a as any
   }
 
-  const targetElement = !!targetConfig ? targetConfig.targetElement : target
-  const glossProps = getGlossProps(targetConfig, glossPropsObject || null)
+  const targetElement = hasGlossyParent ? target.internal.targetElement : target
+  const glossProps = getGlossProps(hasGlossyParent ? target.internal : null, glossPropsObject || null)
   const conditionalStyles = glossProps.conditionalStyles
 
   // put the "rest" of non-styles onto defaultProps
@@ -343,12 +337,10 @@ export function gloss<
     glossProps,
     themeFns: null,
     parent,
+    targetElement,
     getConfig: () => ({
       config: ogConfig,
       displayName: ThemedView.displayName || '',
-      targetElement,
-      styles: glossProps.styles,
-      conditionalStyles: glossProps.conditionalStyles,
     }),
   }
 
@@ -655,16 +647,26 @@ function mergeStyles(
 
 // happens once at initial gloss() call, so not as perf intense
 // get all parent styles and merge them into a big object
-export function getGlossProps(config: GlossInternalConfig | null, rawStyles: CSSPropertySet | null) {
+export function getGlossProps(parent: GlossInternals | null, rawStyles: CSSPropertySet | null) {
   const styles = {
     '.': {},
   }
   // all the "rest" go onto default props
-  const defaultProps = {}
+  let defaultProps = {}
   let conditionalStyles = mergeStyles('.', styles, rawStyles, false, defaultProps)
-  // merge parent styles
-  if (config) {
-    const parentPropStyles = config.conditionalStyles
+
+  // merge parent config
+  if (parent) {
+    if (!parent.glossProps) {
+      debugger
+    }
+    if (parent.glossProps.defaultProps) {
+      defaultProps = {
+        ...parent.glossProps.defaultProps,
+        ...defaultProps,
+      }
+    }
+    const parentPropStyles = parent.glossProps.conditionalStyles
     if (parentPropStyles) {
       for (const key in parentPropStyles) {
         conditionalStyles = conditionalStyles || {}
@@ -675,7 +677,7 @@ export function getGlossProps(config: GlossInternalConfig | null, rawStyles: CSS
         }
       }
     }
-    const parentStyles = config.styles
+    const parentStyles = parent.glossProps.styles
     for (const key in parentStyles) {
       styles[key] = {
         ...parentStyles[key],
@@ -683,6 +685,7 @@ export function getGlossProps(config: GlossInternalConfig | null, rawStyles: CSS
       }
     }
   }
+
   return {
     styles,
     conditionalStyles,

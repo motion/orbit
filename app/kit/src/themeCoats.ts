@@ -149,20 +149,6 @@ export const coats: ThemeSet = Object.freeze({
       colorThemes.blue.background.darken(0.1),
     ),
   },
-  // looks bad...
-  inverseAction: parent => {
-    const isDark = parent.background.isDark()
-    const background = isDark ? '#fff' : '#050505'
-    const backgroundHover = isDark ? '#fff' : '#080808'
-    return {
-      ...colorize({
-        background,
-        backgroundHover: backgroundHover,
-        backgroundActive: backgroundHover,
-      }),
-      color: colorThemes.blue.background,
-    }
-  },
   selected: {
     ...colorThemes.blue,
     // dont make selected things hover/active, they're active already

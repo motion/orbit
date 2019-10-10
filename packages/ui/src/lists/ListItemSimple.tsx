@@ -169,13 +169,14 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
       )}
       <Surface
         className="list-item-surface"
+        subTheme="listItem"
         flexDirection="row"
         alignItems="stretch"
         coat={coat}
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && handleClick) || undefined}
-        background={coat ? undefined : 'transparent'}
         baseOverridesPsuedo={false}
+        debug={coat === 'selected'}
         {...listItemAdjustedPadding}
         paddingLeft={
           (indent || 1) * (listItemAdjustedPadding ? listItemAdjustedPadding.paddingLeft : 0)

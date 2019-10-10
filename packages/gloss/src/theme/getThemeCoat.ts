@@ -12,7 +12,7 @@ export function getThemeCoat(
   if (!name) return null
   const coat = getCoat(theme, name)
   if (!coat) return null
-  return createCoatTheme(theme, coat)
+  return createCoatTheme(theme, coat, name)
 }
 
 function getCoat(theme: CompiledTheme, name: string | false | undefined) {
@@ -31,14 +31,15 @@ function getCoat(theme: CompiledTheme, name: string | false | undefined) {
 function createCoatTheme(
   theme: CompiledTheme,
   coat: CompiledTheme | ((parent: CompiledTheme) => CompiledTheme),
+  name: string,
 ): CompiledTheme {
   // coats can take parent theme as argument and return their theme:
   const nextTheme = typeof coat === 'function' ? coat(theme) : coat
   return {
     ...nextTheme,
     parent: theme,
-    name: coat,
-    _coatName: coat,
+    name,
+    _coatName: name,
     _isCoat: true,
   }
 }

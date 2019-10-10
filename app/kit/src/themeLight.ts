@@ -55,8 +55,9 @@ export const light: ThemeObject = fromStyles({
   orbitInputBackgroundEditing: c([0, 0, 0, 0.2]),
   separatorBackground: backgroundStrong.setAlpha(0.5),
 
-  lightItem: {
+  listItem: {
     background: transparent,
+    backgroundHover: c('#eee'),
   },
 
   button: {

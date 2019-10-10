@@ -29,8 +29,10 @@ export const preProcessTheme = (props: GlossProps, theme: CompiledTheme) => {
       next = processPostFixStates(next)
       let nextTheme = createTheme(next, false)
 
-      console.log('creating theme', nextTheme.name, props.coat, props.subTheme, {
+      console.log('creating theme', {
         nextTheme,
+        coatTheme,
+        subSetTheme,
         props,
         parent,
       })
@@ -60,7 +62,7 @@ export const preProcessTheme = (props: GlossProps, theme: CompiledTheme) => {
 }
 
 function getAltKey(props: GlossProps) {
-  return `coat${props.coat || '_'}-sub${props.subTheme || '_'}`
+  return `coat${props.coat || ''}-sub${props.subTheme || ''}`
 }
 
 function getThemeFromCache(parent: CompiledTheme, altKey: string) {
@@ -91,10 +93,14 @@ function setThemeInCache(parent: CompiledTheme, key: string, theme: CompiledThem
 function processPostFixStates(theme: CompiledTheme) {
   let finalTheme: CompiledTheme = {}
   for (const key in theme) {
-    if (key === 'parent' || key === 'coats' || key === 'name' || key[0] === '_') {
-      continue
-    }
-    if (isPlainObj(theme[key])) {
+    if (
+      key === 'parent' ||
+      key === 'coats' ||
+      key === 'name' ||
+      key[0] === '_' ||
+      isPlainObj(theme[key])
+    ) {
+      finalTheme[key] = theme[key]
       continue
     }
     let found = false

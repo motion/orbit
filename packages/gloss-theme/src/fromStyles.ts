@@ -4,12 +4,19 @@ import { isPlainObj } from 'gloss/_/helpers/helpers'
 
 import { colorize, darken, decreaseContrast, increaseContrast, largeAmount, opposite, roundToExtreme, smallAmount } from '.'
 
+const FromStylesSymbol = Symbol('FromStylesSymbol') as any
+
 // generate some properly contrasted colors based on base colors
 // insert theme into psuedo styles for Blur Active and ActiveHighlight
 export const fromStyles = <A extends Partial<{ [key: string]: any }>>(
   original: A,
   parent?: ThemeObject
 ): ThemeObject & A => {
+  // avoid re-processing if they take control
+  if (original[FromStylesSymbol]) {
+    return original as any
+  }
+
   const color = original.color || parent?.color
   const background = original.background || parent?.background
 
@@ -73,5 +80,8 @@ export const fromStyles = <A extends Partial<{ [key: string]: any }>>(
     res[key] = original[key]
   }
 
-  return res as any
+  return {
+    [FromStylesSymbol]: true,
+    ...res,
+   } as any
 }

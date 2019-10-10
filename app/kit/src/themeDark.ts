@@ -84,7 +84,6 @@ export const dark: ThemeObject = fromStyles({
   colorLight,
   colorLighter,
   colorLightest,
-  listItemBackground: transparent,
   background,
   backgroundHover: c([20, 20, 20, 0.2]),
   backgroundActive: c([30, 30, 30, 0.5]),
@@ -147,9 +146,12 @@ export const dark: ThemeObject = fromStyles({
   },
 
   listItem: {
+    ...fromStyles({
+      background,
+      backgroundSelected: c([60, 60, 60, 0.2]),
+      backgroundHover: c([20, 20, 20, 0.13]),
+    }),
     background: transparent,
-    backgroundSelected: c([60, 60, 60, 0.2]),
-    backgroundHover: c([20, 20, 20, 0.13]),
   },
 
   tab: {

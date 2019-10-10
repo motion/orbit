@@ -6,11 +6,6 @@ import { ThemeSelect } from './Theme'
 
 type PartialTheme = Partial<CompiledTheme>
 
-// this selects a subset theme given a string
-// because it's manipulating strings and objects we cache it
-// because context provides the same theme object each time it can use weakmap for cache
-// right now it does not delete as it seems very rare where you have many many themes
-
 export function selectThemeSubset(
   subTheme: ThemeSelect,
   theme: CompiledTheme,
@@ -20,7 +15,7 @@ export function selectThemeSubset(
   }
   if (!theme._isCoat && subTheme === theme._subTheme) {
     // hasnt changed
-    return theme
+    return null
   }
   // allow only subsetting coats or original themes, not subsets
   while (theme._isSubTheme || theme._isCoat) {

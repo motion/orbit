@@ -11,6 +11,7 @@
   - fix alt card inner text is white
   - fix list item / flat buttons arent styled right
   - theme change join input not changing
+  - fix header left side not left enough
 - site
   - home
     - speed up fade ins

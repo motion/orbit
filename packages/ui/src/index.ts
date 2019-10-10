@@ -6,7 +6,7 @@ import { Size } from './Space'
 // until next hotkeys patches types
 module.hot && module.hot.accept()
 
-if (typeof CSS['px'] === 'undefined') {
+if (typeof window !== 'undefined' && typeof CSS['px'] === 'undefined') {
   require('css-typed-om').polyfill(window)
 }
 

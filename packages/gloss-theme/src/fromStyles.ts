@@ -64,9 +64,11 @@ export const fromStyles = <A extends Partial<{ [key: string]: any }>>(
   // recurse and apply fromStyles to sub themes
   for (const key in original) {
     if (res[key]) continue
-    if (isPlainObj(original[key])) {
-      res[key] = fromStyles(original[key], res)
-      continue
+    if (key !== 'coats') {
+      if (isPlainObj(original[key])) {
+        res[key] = fromStyles(original[key], res)
+        continue
+      }
     }
     res[key] = original[key]
   }

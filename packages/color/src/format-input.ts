@@ -1,6 +1,5 @@
 import { convertHexToDecimal, hslToRgb, hsvToRgb, parseIntFromHex, rgbToRgb } from './conversion'
 import { names } from './css-color-names'
-import { HSL, HSLA, HSV, HSVA, RGB, RGBA, RGBArray } from './interfaces'
 import { boundAlpha, convertToPercentage } from './util'
 
 /**
@@ -21,7 +20,7 @@ import { boundAlpha, convertToPercentage } from './util'
  * "hsv(0, 100%, 100%)" or "hsv 0 100% 100%"
  * ```
  */
-export function inputToRGB(color: string | RGB | RGBA | HSL | HSLA | HSV | HSVA | RGBArray | any) {
+export function inputToRGB(color: any) {
   let rgb = { r: 0, g: 0, b: 0 }
   let a = 1
   let s: string | number | null = null
@@ -71,7 +70,7 @@ export function inputToRGB(color: string | RGB | RGBA | HSL | HSLA | HSV | HSVA 
 
   return {
     ok,
-    format: color.format || format,
+    format: color['format'] || format,
     r: Math.min(255, Math.max(rgb.r, 0)),
     g: Math.min(255, Math.max(rgb.g, 0)),
     b: Math.min(255, Math.max(rgb.b, 0)),

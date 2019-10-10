@@ -5,6 +5,7 @@ import { colorize, fromStyles } from 'gloss-theme'
 import { coats } from './themeCoats'
 import { transparent } from './themeColors'
 
+const c = toColor
 const color = [255, 255, 255]
 const colorLight = toColor([255, 255, 255, 0.9])
 const colorLighter = toColor([255, 255, 255, 0.8])
@@ -25,7 +26,7 @@ const darkenedCoats: ThemeSet = Object.keys(coats).reduce((acc, key) => {
     acc[key] = fromStyles({
       background: coats[key].background!.darken(0.5).desaturate(0.2),
       borderColor: coats[key].borderColor!.darken(0.6).desaturate(0.2),
-      color: '#fff',
+      color: c('#fff'),
     })
   }
   return acc
@@ -44,10 +45,10 @@ const darkCoats: ThemeSet = {
   action: fromStyles({
     background: selectedColor.lighten(0.2),
     buttonBackground: linearGradient(selectedColor.lighten(0.2), selectedColor),
-    color: '#fff',
+    color: c('#fff'),
   }),
   selected: colorize({
-    color: '#fff',
+    color: c('#fff'),
     borderColor,
     background: selectedColor,
     backgroundHover: selectedColor,
@@ -85,42 +86,43 @@ export const dark: ThemeObject = fromStyles({
   colorLightest,
   listItemBackground: transparent,
   background,
-  backgroundHover: [20, 20, 20, 0.2],
-  backgroundActive: [30, 30, 30, 0.5],
+  backgroundHover: c([20, 20, 20, 0.2]),
+  backgroundActive: c([30, 30, 30, 0.5]),
   backgroundHighlightActive: selectedColor,
   backgroundHighlight: selectedColor,
   color: color,
-  colorHighlight: '#fff',
-  colorHighlightActive: '#fff',
+  colorHighlight: c('#fff'),
+  colorHighlightActive: c('#fff'),
   borderColor,
   borderColorActive: borderColor,
-  borderColorLight: [180, 180, 180, 0.15],
-  appCardBackground: [15, 15, 15],
-  appCardBackgroundTransparent: [15, 15, 15, 0],
-  'orbitLauncherBackground-none': [30, 30, 30],
-  'orbitLauncherBackground-some': [10, 10, 13, 0.2], // we use thicker vibrancy here
-  'orbitLauncherBackground-more': [25, 25, 30, 0.4],
+  borderColorLight: c([180, 180, 180, 0.15]),
+  appCardBackground: c([15, 15, 15]),
+  appCardBackgroundTransparent: c([15, 15, 15, 0]),
+  'orbitLauncherBackground-none': c([30, 30, 30]),
+  // we use thicker vibrancy here
+  'orbitLauncherBackground-some': c([10, 10, 13, 0.2]),
+  'orbitLauncherBackground-more': c([25, 25, 30, 0.4]),
   orbitHeaderBackgroundEditing: linearGradient(
     selectedColor.lighten(0.1).setAlpha(0.5),
     selectedColor.setAlpha(0.5),
   ),
-  orbitbackgroundEditing: [0, 0, 0, 0.2],
-  colorBlur: '#bbb',
-  colorActive: '#fff',
-  glintColor: [255, 255, 255, 0.135],
-  floatingBackground: [70, 70, 70],
+  orbitbackgroundEditing: c([0, 0, 0, 0.2]),
+  colorBlur: c('#bbb'),
+  colorActive: c('#fff'),
+  glintColor: c([255, 255, 255, 0.135]),
+  floatingBackground: c([70, 70, 70]),
   panelHeaderBackground: background.lighten(0.15),
-  redTint: '#ff000011',
-  yellowTint: '#FFCA0011',
+  redTint: c('#ff000011'),
+  yellowTint: c('#FFCA0011'),
 
   sidebar: {
-    background: [15, 15, 15],
-    backgroundTransparent: [15, 15, 15, 0.4],
-    borderColor: '#444',
+    background: c([15, 15, 15]),
+    backgroundTransparent: c([15, 15, 15, 0.4]),
+    borderColor: c('#444'),
   },
 
   header: {
-    borderBottom: '#151515',
+    borderBottom: c('#151515'),
     background: linearGradient([0, 0, 0, 0.4], [0, 0, 0, 0.3]),
     backgroundOpaque: linearGradient('#222', '#252525'),
     fadeBackground: linearGradient('to right', darkFadeBackground, transparent, darkFadeBackground),
@@ -128,12 +130,12 @@ export const dark: ThemeObject = fromStyles({
 
   button: {
     background: darkButtonBg,
-    backgroundActive: [45, 45, 45, 0.8],
+    backgroundActive: c([45, 45, 45, 0.8]),
     backgroundHover: darkButtonBg.adjust(c => toColor(c).lighten(0.1)),
-    borderColor: [45, 45, 45],
-    borderColorActive: [45, 45, 45],
-    borderColorHover: [40, 40, 40],
-    glintColorBottom: [0, 0, 0, 0.3],
+    borderColor: c([45, 45, 45]),
+    borderColorActive: c([45, 45, 45]),
+    borderColorHover: c([40, 40, 40]),
+    glintColorBottom: c([0, 0, 0, 0.3]),
   },
 
   input: {
@@ -141,27 +143,27 @@ export const dark: ThemeObject = fromStyles({
     backgroundHover: transparent,
     backgroundActive: transparent,
     backgroundFocus: transparent,
-    backgroundSelection: '#444',
+    backgroundSelection: c('#444'),
   },
 
   listItem: {
     background: transparent,
-    backgroundSelected: [60, 60, 60, 0.2],
-    backgroundHover: [20, 20, 20, 0.13],
+    backgroundSelected: c([60, 60, 60, 0.2]),
+    backgroundHover: c([20, 20, 20, 0.13]),
   },
 
   tab: {
     colorActive: darkCoats.selected.background!.lighten(0.5),
-    backgroundHover: [255, 255, 255, 0.1],
-    backgroundActive: [255, 255, 255, 0.125],
+    backgroundHover: c([255, 255, 255, 0.1]),
+    backgroundActive: c([255, 255, 255, 0.125]),
     backgroundSelected: backgroundStronger,
   },
 
   card: {
-    background: [110, 110, 110],
-    backgroundHover: [110, 110, 110],
-    backgroundActive: [110, 110, 110],
-    borderColor: [255, 255, 255, 0.07],
-    borderColorHover: [255, 255, 255, 0.15],
+    background: c([110, 110, 110]),
+    backgroundHover: c([110, 110, 110]),
+    backgroundActive: c([110, 110, 110]),
+    borderColor: c([255, 255, 255, 0.07]),
+    borderColorHover: c([255, 255, 255, 0.15]),
   },
 })

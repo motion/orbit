@@ -48,7 +48,10 @@ const home = {
   ...colorize({
     background: '#000',
     backgroundHover: '#111',
-    popoverBackground: '#111',
+
+    popover: {
+      background: '#111',
+    },
   }),
 }
 

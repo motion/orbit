@@ -1,9 +1,10 @@
-import { cssValue } from '@o/css'
+import { cssValue, validCSSAttr } from '@o/css'
 
 import { makeStyleTag } from '../stylesheet/makeStyleTag'
 import { CompiledTheme } from './createTheme'
 import { preProcessTheme } from './preProcessTheme'
 import { CurrentTheme } from './Theme'
+import { ThemeValue } from './ThemeValue'
 import { unwrapTheme } from './useTheme'
 
 class ThemeVariableManager {
@@ -26,10 +27,19 @@ class ThemeVariableManager {
           rules += `--${val.cssVariable}: ${rgba};`
           rules += `--${val.cssVariable}-rgb: ${rgb};`
         } else if (val.getCSSValue) {
-          const next = cssValue(key, val.getCSSValue(), true, {
-            ignoreCSSVariables: true
-          })
-          rules += `--${val.cssVariable}: ${next};`
+          let next: any
+          if (validCSSAttr[val]) {
+            next = cssValue(key, val.getCSSValue(), true, {
+              ignoreCSSVariables: true
+            })
+          } else {
+            if (val instanceof ThemeValue) {
+              next = val.get()
+            }
+          }
+          if (next) {
+            rules += `--${val.cssVariable}: ${next};`
+          }
         }
       }
     }

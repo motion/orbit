@@ -21,12 +21,12 @@ export const preProcessTheme = (props: GlossProps, theme: CompiledTheme) => {
     }
     const subSetTheme = selectThemeSubset(props.subTheme, parent)
     const coatTheme = getThemeCoat(props.coat, subSetTheme ? { ...parent, ...subSetTheme } : parent)
-    let next: CompiledTheme = { ...subSetTheme, ...coatTheme }
-
-    // now lets process the postfixes into objects
-    next = processPostFixStates(next)
+    let next: CompiledTheme | null =
+      subSetTheme || coatTheme ? { ...subSetTheme, ...coatTheme } : null
 
     if (next && next !== parent) {
+      // now lets process the postfixes into objects
+      next = processPostFixStates(next)
       let nextTheme = createTheme(next, false)
 
       console.log('creating theme', nextTheme, props, parent)

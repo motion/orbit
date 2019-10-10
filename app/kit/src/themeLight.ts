@@ -5,6 +5,7 @@ import { fromStyles } from 'gloss-theme'
 import { coats } from './themeCoats'
 import { colors, transparent } from './themeColors'
 
+const c = toColor
 const color = toColor('#444')
 const colorLight = color.lighten(0.1)
 const colorLighter = color.lighten(0.2)
@@ -23,35 +24,35 @@ export const light: ThemeObject = fromStyles({
   colorLighter,
   colorLightest,
 
-  iconFillColor: '#000',
-  glintColor: [255, 255, 255, 0.85],
   background: lightBackground,
   backgroundStrong,
   backgroundStronger,
   backgroundStrongest,
-  backgroundZebra: '#f6f7f9aa',
+  iconFillColor: c('#000'),
+  backgroundZebra: c('#f6f7f9aa'),
   backgroundHighlightActive: colors.blue.lighten(0.1),
   backgroundHighlight: colors.blue,
-  boxShadowColor: [0, 0, 0],
+  boxShadowColor: c([0, 0, 0]),
   mainBackground: lightBackground,
-  backgroundActive: '#eee',
-  backgroundHover: '#eee',
+  backgroundActive: c('#eee'),
+  backgroundHover: c('#eee'),
   color,
-  colorHighlight: '#fff',
-  colorHighlightActive: '#fff',
-  borderColor: [215, 215, 215],
-  borderColorActive: [215, 215, 215],
-  borderColorHover: [215, 215, 215],
-  borderColorLight: [215, 215, 215, 0.5],
+  glintColor: c([255, 255, 255, 0.85]),
+  colorHighlight: c('#fff'),
+  colorHighlightActive: c('#fff'),
+  borderColor: c([215, 215, 215]),
+  borderColorActive: c([215, 215, 215]),
+  borderColorHover: c([215, 215, 215]),
+  borderColorLight: c([215, 215, 215, 0.5]),
   headerBackground: linearGradient([255, 255, 255, 0.3], [255, 255, 255, 0.25]),
-  appCardBackground: '#f5f7f9',
-  appCardBackgroundTransparent: [255, 255, 255, 0],
-  'orbitLauncherBackground-none': [255, 255, 255],
-  'orbitLauncherBackground-some': [255, 255, 255, 0.15],
-  'orbitLauncherBackground-more': [255, 255, 255, 0.15],
-  orbitLauncherSideBackground: [255, 255, 255, 0.4],
+  appCardBackground: c('#f5f7f9'),
+  appCardBackgroundTransparent: c([255, 255, 255, 0]),
+  'orbitLauncherBackground-none': c([255, 255, 255]),
+  'orbitLauncherBackground-some': c([255, 255, 255, 0.15]),
+  'orbitLauncherBackground-more': c([255, 255, 255, 0.15]),
+  orbitLauncherSideBackground: c([255, 255, 255, 0.4]),
   orbitHeaderBackgroundEditing: linearGradient('#163278', '#192B5C'),
-  orbitInputBackgroundEditing: [0, 0, 0, 0.2],
+  orbitInputBackgroundEditing: c([0, 0, 0, 0.2]),
   separatorBackground: backgroundStrong.setAlpha(0.5),
 
   lightItem: {
@@ -64,34 +65,34 @@ export const light: ThemeObject = fromStyles({
     // buttonBackgroundFocus: lightButtonBg,
     boxShadowFocus: '2px 2px red',
     backgroundHover: lightButtonBg.adjust(x => toColor(x).lighten(0.025)),
-    glintColorBottom: [0, 0, 0, 0.08],
+    glintColorBottom: c([0, 0, 0, 0.08]),
   },
 
   tab: {
-    backgroundHover: [0, 0, 0, 0.1],
-    backgroundActive: [0, 0, 0, 0.15],
+    backgroundHover: c([0, 0, 0, 0.1]),
+    backgroundActive: c([0, 0, 0, 0.15]),
     backgroundSelected: lightBackground,
   },
 
   sidebar: {
-    background: '#f5f7f9',
-    backgroundTransparent: [255, 255, 255, 0.7],
+    background: c('#f5f7f9'),
+    backgroundTransparent: c([255, 255, 255, 0.7]),
   },
 
   card: {
-    background: [255, 255, 255],
-    backgroundHover: [255, 255, 255],
-    backgroundActive: [255, 255, 255],
-    borderColor: [0, 0, 0, 0.1],
+    background: c([255, 255, 255]),
+    backgroundHover: c([255, 255, 255]),
+    backgroundActive: c([255, 255, 255]),
+    borderColor: c([0, 0, 0, 0.1]),
     boxShadow: [0, 6, 14, [0, 0, 0, 0.058]],
     hoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
   },
 
   input: {
-    background: '#fff',
-    backgroundHover: '#fff',
-    backgroundActive: '#fff',
-    borderColorActive: [215, 215, 215],
-    backgroundSelection: '#ddd',
+    background: c('#fff'),
+    backgroundHover: c('#fff'),
+    backgroundActive: c('#fff'),
+    borderColorActive: c([215, 215, 215]),
+    backgroundSelection: c('#ddd'),
   },
 })

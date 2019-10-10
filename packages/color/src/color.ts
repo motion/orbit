@@ -9,7 +9,7 @@ export interface ColorOptions {
   gradientType?: string
 }
 
-export type ColorInput = string | RGB | RGBA | HSL | HSLA | HSV | HSVA | Color
+export type ColorInput = string | RGB | RGBA | HSL | HSLA | HSV | HSVA | Color | number[]
 
 const emptyKey = ''
 

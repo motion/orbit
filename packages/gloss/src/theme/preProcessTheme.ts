@@ -1,3 +1,4 @@
+import { isPlainObj } from '../helpers/helpers'
 import { GlossProps } from '../types'
 import { CompiledTheme, createTheme } from './createTheme'
 import { getThemeCoat } from './getThemeCoat'
@@ -24,6 +25,10 @@ export const preProcessTheme = (props: GlossProps, theme: CompiledTheme) => {
 
     // now lets process the postfixes into objects
     next = processPostFixStates(next)
+
+    if (props.subTheme) {
+      console.log('subSetTheme', props.subTheme, { subSetTheme, coatTheme, next, parent })
+    }
 
     if (next && next !== parent) {
       let nextTheme = createTheme(next, false)
@@ -83,16 +88,27 @@ function setThemeInCache(parent: CompiledTheme, key: string, theme: CompiledThem
 function processPostFixStates(theme: CompiledTheme) {
   let finalTheme: CompiledTheme = {}
   for (const key in theme) {
+    if (key === 'parent' || key === 'coats' || key === 'name' || key[0] === '_') {
+      continue
+    }
+    if (isPlainObj(theme[key])) {
+      continue
+    }
+    let found = false
     for (const pseudoKey in pseudos) {
-      const { postfix, extraStyleProp } = pseudos[pseudoKey]
+      const { postfix, prop } = pseudos[pseudoKey]
       const indexOfPostfix = key.indexOf(postfix)
-      if (indexOfPostfix === key.length - 1) {
-        finalTheme[extraStyleProp] = finalTheme[extraStyleProp] || {}
-        finalTheme[extraStyleProp][key.slice(0, indexOfPostfix)] = theme[key]
-        continue
+      if (indexOfPostfix > -1 && indexOfPostfix === key.length - postfix.length) {
+        const postKey = key.slice(0, indexOfPostfix)
+        finalTheme[prop] = finalTheme[prop] || {}
+        finalTheme[prop][postKey] = theme[key]
+        found = true
+        break
       }
     }
-    finalTheme[key] = theme[key]
+    if (!found) {
+      finalTheme[key] = theme[key]
+    }
   }
   return finalTheme
 }
@@ -102,36 +118,42 @@ export const pseudos = {
     pseudoKey: '&:hover',
     postfix: 'Hover',
     forceOnProp: 'hover',
-    extraStyleProp: 'hoverStyle',
+    prop: 'hoverStyle',
   },
   focus: {
     pseudoKey: '&:focus',
     postfix: 'Focus',
     forceOnProp: 'focus',
-    extraStyleProp: 'focusStyle',
+    prop: 'focusStyle',
   },
   focusWithin: {
     pseudoKey: '&:focus-within',
     postfix: 'FocusWithin',
     forceOnProp: 'focusWithin',
-    extraStyleProp: 'focusWithinStyle',
+    prop: 'focusWithinStyle',
   },
   active: {
     pseudoKey: '&:active',
     postfix: 'Active',
     forceOnProp: 'active',
-    extraStyleProp: 'activeStyle',
+    prop: 'activeStyle',
   },
   disabled: {
     pseudoKey: '&:disabled',
     postfix: 'Disabled',
     forceOnProp: 'disabled',
-    extraStyleProp: 'disabledStyle',
+    prop: 'disabledStyle',
   },
   selected: {
     pseudoKey: undefined,
     postfix: 'Selected',
     forceOnProp: 'selected',
-    extraStyleProp: 'selectedStyle',
+    prop: 'selectedStyle',
   },
 } as const
+
+// activeStyle: '&:active'
+export const pseudoProps = Object.keys(pseudos).reduce((acc, key) => {
+  acc[pseudos[key].prop] = pseudos[key].pseudoKey
+  return acc
+}, {})

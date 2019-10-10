@@ -40,9 +40,9 @@ function applyPseudoTheme(useTheme = false) {
     let styles: ThemeObjectWithPseudo | null = res.styles
 
     for (const key in pseudos) {
-      const { pseudoKey, forceOnProp, extraStyleProp } = pseudos[key]
+      const { pseudoKey, forceOnProp, prop } = pseudos[key]
       if (theme[forceOnProp] === false) continue // forced off
-      const extraStyle = theme[extraStyleProp]
+      const extraStyle = theme[prop]
       if (extraStyle === null || extraStyle === false) continue // forced empty
 
       // now process and get styles, but dont assign them yet
@@ -78,7 +78,7 @@ function applyPseudoTheme(useTheme = false) {
       }
     }
 
-    return mergeStyles(previous, styles)
+    return mergeStyles(styles, previous)
   }
   return themeFn
 }

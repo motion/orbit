@@ -64,7 +64,7 @@ function createAlphaColorTheme(shouldSetDefault = false) {
       mergeDisabled(next, color, props)
     }
     if (Object.keys(next).length) {
-      const res = mergeStyles(previous, next)
+      const res = mergeStyles(next, previous)
       return res
     }
   }

@@ -19,3 +19,5 @@ export const colorToString = (obj: any) => {
   }
   return obj.toString()
 }
+
+export const isPlainObj = o => typeof o == 'object' && o.constructor == Object

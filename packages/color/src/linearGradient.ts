@@ -51,6 +51,10 @@ export class LinearGradient {
     return this.getColors()[1].darken(amt)
   }
 
+  lighten(amt: number) {
+    return this.getColors()[1].lighten(amt)
+  }
+
   isDark() {
     return this.getColors()[1].isDark()
   }

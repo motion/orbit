@@ -69,7 +69,7 @@ const darkCoats: ThemeSet = {
   },
 }
 
-export const dark: ThemeObject = {
+export const dark: ThemeObject = fromStyles({
   coats: darkCoats,
   backgroundZebra: background.lighten(0.2).setAlpha(0.35),
   backgroundStrongest,
@@ -84,99 +84,84 @@ export const dark: ThemeObject = {
   colorLighter,
   colorLightest,
   listItemBackground: transparent,
-  ...fromStyles({
-    background,
-    backgroundHover: [20, 20, 20, 0.2],
-    backgroundActive: [30, 30, 30, 0.5],
-    backgroundHighlightActive: selectedColor,
-    backgroundHighlight: selectedColor,
-    color: color,
-    colorHighlight: '#fff',
-    colorHighlightActive: '#fff',
-    borderColor,
-    borderColorActive: borderColor,
-    borderColorLight: [180, 180, 180, 0.15],
-  }),
-}
+  background,
+  backgroundHover: [20, 20, 20, 0.2],
+  backgroundActive: [30, 30, 30, 0.5],
+  backgroundHighlightActive: selectedColor,
+  backgroundHighlight: selectedColor,
+  color: color,
+  colorHighlight: '#fff',
+  colorHighlightActive: '#fff',
+  borderColor,
+  borderColorActive: borderColor,
+  borderColorLight: [180, 180, 180, 0.15],
+  appCardBackground: [15, 15, 15],
+  appCardBackgroundTransparent: [15, 15, 15, 0],
+  'orbitLauncherBackground-none': [30, 30, 30],
+  'orbitLauncherBackground-some': [10, 10, 13, 0.2], // we use thicker vibrancy here
+  'orbitLauncherBackground-more': [25, 25, 30, 0.4],
+  orbitHeaderBackgroundEditing: linearGradient(
+    selectedColor.lighten(0.1).setAlpha(0.5),
+    selectedColor.setAlpha(0.5),
+  ),
+  orbitbackgroundEditing: [0, 0, 0, 0.2],
+  colorBlur: '#bbb',
+  colorActive: '#fff',
+  glintColor: [255, 255, 255, 0.135],
+  floatingBackground: [70, 70, 70],
+  panelHeaderBackground: background.lighten(0.15),
+  redTint: '#ff000011',
+  yellowTint: '#FFCA0011',
 
-// makes it so we can reference the above base styles for the rest
+  sidebar: {
+    background: [15, 15, 15],
+    backgroundTransparent: [15, 15, 15, 0.4],
+    borderColor: '#444',
+  },
 
-Object.assign(
-  dark,
-  colorize({
-    appCardBackground: [15, 15, 15],
-    appCardBackgroundTransparent: [15, 15, 15, 0],
-    'orbitLauncherBackground-none': [30, 30, 30],
-    'orbitLauncherBackground-some': [10, 10, 13, 0.2], // we use thicker vibrancy here
-    'orbitLauncherBackground-more': [25, 25, 30, 0.4],
-    orbitHeaderBackgroundEditing: linearGradient(
-      selectedColor.lighten(0.1).setAlpha(0.5),
-      selectedColor.setAlpha(0.5),
-    ),
-    orbitbackgroundEditing: [0, 0, 0, 0.2],
-    colorBlur: '#bbb',
-    colorActive: '#fff',
-    glintColor: [255, 255, 255, 0.135],
-    floatingBackground: [70, 70, 70],
-    panelHeaderBackground: background.lighten(0.15),
-    redTint: '#ff000011',
-    yellowTint: '#FFCA0011',
+  header: {
+    borderBottom: '#151515',
+    background: linearGradient([0, 0, 0, 0.4], [0, 0, 0, 0.3]),
+    backgroundOpaque: linearGradient('#222', '#252525'),
+    fadeBackground: linearGradient('to right', darkFadeBackground, transparent, darkFadeBackground),
+  },
 
-    sidebar: {
-      background: [15, 15, 15],
-      backgroundTransparent: [15, 15, 15, 0.4],
-      borderColor: '#444',
-    },
+  button: {
+    background: darkButtonBg,
+    backgroundActive: [45, 45, 45, 0.8],
+    backgroundHover: darkButtonBg.adjust(c => toColor(c).lighten(0.1)),
+    borderColor: [45, 45, 45],
+    borderColorActive: [45, 45, 45],
+    borderColorHover: [40, 40, 40],
+    glintColorBottom: [0, 0, 0, 0.3],
+  },
 
-    header: {
-      borderBottom: '#151515',
-      background: linearGradient([0, 0, 0, 0.4], [0, 0, 0, 0.3]),
-      backgroundOpaque: linearGradient('#222', '#252525'),
-      fadeBackground: linearGradient(
-        'to right',
-        darkFadeBackground,
-        transparent,
-        darkFadeBackground,
-      ),
-    },
+  input: {
+    background: transparent,
+    backgroundHover: transparent,
+    backgroundActive: transparent,
+    backgroundFocus: transparent,
+    backgroundSelection: '#444',
+  },
 
-    button: {
-      background: darkButtonBg,
-      backgroundActive: [45, 45, 45, 0.8],
-      backgroundHover: darkButtonBg.adjust(c => toColor(c).lighten(0.1)),
-      borderColor: [45, 45, 45],
-      borderColorActive: [45, 45, 45],
-      borderColorHover: [40, 40, 40],
-      glintColorBottom: [0, 0, 0, 0.3],
-    },
+  listItem: {
+    background: transparent,
+    backgroundSelected: [60, 60, 60, 0.2],
+    backgroundHover: [20, 20, 20, 0.13],
+  },
 
-    input: {
-      background: transparent,
-      backgroundHover: transparent,
-      backgroundActive: transparent,
-      backgroundFocus: transparent,
-      backgroundSelection: '#444',
-    },
+  tab: {
+    colorActive: darkCoats.selected.background!.lighten(0.5),
+    backgroundHover: [255, 255, 255, 0.1],
+    backgroundActive: [255, 255, 255, 0.125],
+    backgroundSelected: backgroundStronger,
+  },
 
-    listItem: {
-      background: transparent,
-      backgroundSelected: [60, 60, 60, 0.2],
-      backgroundHover: [20, 20, 20, 0.13],
-    },
-
-    tab: {
-      colorActive: darkCoats.selected.background!.lighten(0.5),
-      backgroundHover: [255, 255, 255, 0.1],
-      backgroundActive: [255, 255, 255, 0.125],
-      backgroundSelected: dark.backgroundStronger,
-    },
-
-    card: {
-      background: [110, 110, 110],
-      backgroundHover: [110, 110, 110],
-      backgroundActive: [110, 110, 110],
-      borderColor: [255, 255, 255, 0.07],
-      borderColorHover: [255, 255, 255, 0.15],
-    },
-  }),
-)
+  card: {
+    background: [110, 110, 110],
+    backgroundHover: [110, 110, 110],
+    backgroundActive: [110, 110, 110],
+    borderColor: [255, 255, 255, 0.07],
+    borderColorHover: [255, 255, 255, 0.15],
+  },
+})

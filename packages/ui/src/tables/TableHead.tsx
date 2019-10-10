@@ -299,8 +299,6 @@ const TableHeaderColumnContainer = gloss(Box, {
   padding: '0 8px',
   margin: ['auto', 0],
   alignItems: 'center',
-  debug: true,
-  background: 'red',
 })
 
 const TableHeadContainer = gloss(Box, {
@@ -313,8 +311,6 @@ const TableHeadContainer = gloss(Box, {
   textAlign: 'left',
   top: 0,
   zIndex: 2,
-  debug: true,
-  background: 'red',
 }).theme(props => ({
   borderBottom: [1, props.borderColorLight],
 }))

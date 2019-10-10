@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
-import { Base, Box, CompiledTheme, gloss, GlossProps, propsToStyles, ThemeFn, ThemeSelect, useTheme } from 'gloss'
+import { Base, Box, CompiledTheme, gloss, GlossProps, mergeStyles, propsToStyles, ThemeFn, ThemeSelect, useTheme } from 'gloss'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
@@ -560,9 +560,8 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
       cursor: 'not-allowed',
     },
   },
-}).theme(props => {
-  const propStyles = propsToStyles(props)
-
+}).theme(mergeStyles, (props, prev) => {
+  console.log('prev', prev)
   // todo fix types here
   const marginStyle = getMargin(props as any)
   const { fontSize, lineHeight } = scaledTextSizeTheme(props)
@@ -597,14 +596,8 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
     fontSize,
     lineHeight,
     ...marginStyle,
-    ...propStyles,
     ...styles,
     boxShadow,
-    hoverStyle: props.active
-      ? null
-      : {
-          ...propStyles['&:hover'],
-        },
   }
 
   return res

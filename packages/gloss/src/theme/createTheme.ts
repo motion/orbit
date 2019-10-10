@@ -1,5 +1,6 @@
 import { ThemeCoats, ThemeObject, ThemeValueLike } from '@o/css'
 
+import { isPlainObj } from '../helpers/helpers'
 import { ThemeValue } from './ThemeValue'
 
 export type CompiledTheme<A extends Partial<ThemeObject> = any> = {
@@ -37,7 +38,7 @@ export function createTheme<A extends Partial<ThemeObject>>(
       }
     } else {
       if (key !== 'parent' && key !== 'name' && key !== 'coats' && key[0] !== '_') {
-        if (!(val instanceof ThemeValue)) {
+        if (!isPlainObj(val) && !(val instanceof ThemeValue)) {
           val = new ThemeValue(cssVariableName, val)
         }
       }

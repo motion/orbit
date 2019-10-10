@@ -1,15 +1,16 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
+import React from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
+import { pseudoProps } from './theme/preProcessTheme'
 import { themeVariableManager } from './theme/themeVariableManager'
-import { getOriginalProps, UnwrapThemeSymbol, useTheme } from './theme/useTheme'
+import { getOriginalProps, unwrapTheme, UnwrapThemeSymbol, useTheme } from './theme/useTheme'
 import { GlossProps, GlossPropsPartial, GlossThemeProps } from './types'
 
 // so you can reference in postProcessProps
@@ -608,6 +609,12 @@ function mergeStyles(
         }
       }
     } else {
+      const pseudoKey = pseudoProps[key]
+      if (pseudoKey) {
+        baseStyles[pseudoKey] = nextStyles[key]
+        continue
+      }
+
       if (Config.mediaQueries) {
         // media queries after subStyle, subStyle could have a - in it
         const index = key.indexOf('-')
@@ -838,7 +845,8 @@ if (isDeveloping && typeof window !== 'undefined') {
     validCSSAttr,
     themeVariableManager,
     UnwrapThemeSymbol,
-    getOriginalProps
+    getOriginalProps,
+    unwrapTheme,
   }
 }
 

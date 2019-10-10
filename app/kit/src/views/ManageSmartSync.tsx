@@ -6,12 +6,13 @@ import { WhiteList } from '../hooks/useWhiteList'
 export function ManageSmartSync({ whitelist }: { whitelist: WhiteList }) {
   return (
     <Surface
-      coat={whitelist.isWhitelisting ? 'selected' : null}
+      coat={whitelist.isWhitelisting ? 'selected' : undefined}
       sizeRadius
       sizePadding
-      sizeHeight={1}
+      sizeHeight
       alignItems="center"
       tooltip="Turning this on will let Orbit manage space"
+      noInnerElement
     >
       <Label>
         <Stack direction="horizontal" space>

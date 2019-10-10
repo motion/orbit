@@ -1,6 +1,6 @@
 import { GlossPropertySet } from '@o/css'
 import { MotionProps, MotionTransform, Transition } from 'framer-motion'
-import { AlphaColorProps, CommonHTMLProps, CSSPropertySet, CSSPropertySetStrict, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
+import { AlphaColorProps, CommonHTMLProps, CSSPropertySet, CSSPropertySetStrict, GlossProps, TextSizeProps } from 'gloss'
 import React from 'react'
 
 import { AnimationStore } from '../Geometry'
@@ -33,8 +33,7 @@ export type OrbitMotionTransform = {
   [P in keyof MotionTransform]: MotionTransform[P] | AnimationStore
 }
 
-export type ViewBaseProps = PseudoStyleProps &
-  TextSizeProps &
+export type ViewBaseProps = TextSizeProps &
   AlphaColorProps &
   ElevatableProps &
   MarginProps &

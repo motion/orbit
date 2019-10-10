@@ -1,12 +1,12 @@
-import FuzzySearch from '@o/fuzzy-search'
+import { FuzzySearch } from '@o/fuzzy-search'
 
-export const fuzzyFilter = <A extends { [key: string]: any }[]>(
+export const fuzzyFilter = <A = any>(
   query: string,
-  results: A,
+  results: A[],
   extraOpts?: {
     keys: string[]
   },
-): A => {
+): A[] => {
   if (!query) {
     return results
   }

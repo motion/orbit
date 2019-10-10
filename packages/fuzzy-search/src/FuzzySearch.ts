@@ -3,10 +3,10 @@ type FuzzySearchOptions = {
   sort?: boolean
 }
 
-export class FuzzySearch {
+export class FuzzySearch<A = any> {
   options: FuzzySearchOptions
 
-  constructor(public haystack = [], public keys = [], options = {}) {
+  constructor(public haystack: A[] = [], public keys = [], options = {}) {
     if (!Array.isArray(keys)) {
       options = keys
       keys = []
@@ -22,7 +22,7 @@ export class FuzzySearch {
     )
   }
 
-  search(query = '') {
+  search(query = ''): A[] {
     if (query === '') {
       return this.haystack
     }
@@ -32,7 +32,8 @@ export class FuzzySearch {
     for (let i = 0; i < this.haystack.length; i++) {
       const item = this.haystack[i]
       if (this.keys.length === 0) {
-        const score = isMatch(item, query, this.options.caseSensitive)
+        // TODO check string
+        const score = isMatch(item as any as string, query, this.options.caseSensitive)
         if (score) {
           results.push({ item, score })
         }
@@ -70,23 +71,17 @@ export function searchSingle(
   options?: FuzzySearchOptions,
 ) {
   if (!keys) {
-    if (
-      isMatch(
-        typeof item === 'string' ? item : item['title'],
-        query,
-        options?.caseSensitive,
-      )
-    ) {
-      return item
-    }
+    const score = isMatch(
+      typeof item === 'string' ? item : item['title'],
+      query,
+      options?.caseSensitive,
+    )
+    return score
   } else {
     for (let y = 0; y < keys.length; y++) {
       const propertyValues = getDescendantProperty(item, keys[y])
       for (let z = 0; z < propertyValues.length; z++) {
-        const score = isMatch(propertyValues[z], query, options?.caseSensitive)
-        if (score) {
-          return item
-        }
+        return isMatch(propertyValues[z], query, options?.caseSensitive)
       }
     }
   }
@@ -151,10 +146,10 @@ function getDescendantProperty(object: any, path: string, list = []) {
         list.push(value)
       } else if (Object.prototype.toString.call(value) === '[object Array]') {
         for (index = 0, length = value.length; index < length; index++) {
-          Helper.getDescendantProperty(value[index], remaining, list)
+          getDescendantProperty(value[index], remaining, list)
         }
       } else if (remaining) {
-        Helper.getDescendantProperty(value, remaining, list)
+        getDescendantProperty(value, remaining, list)
       }
     }
   } else {

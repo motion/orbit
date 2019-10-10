@@ -87,6 +87,8 @@ export function useFilter(props: UseFilterProps<ListItemProps>) {
   // THEN FILTER
 
   // memo per-query
+  // TODO we could have the sort option by score done here,
+  // just a conditional in this memo and have it use FuzzyFilter.search(,,{ sort: true })
   const filteredItems = useMemo(() => {
     if (!searchQuery) {
       return sortedItems

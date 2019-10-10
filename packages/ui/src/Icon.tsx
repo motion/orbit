@@ -1,4 +1,4 @@
-import FuzzySearch from '@o/fuzzy-search'
+import { FuzzySearch } from '@o/fuzzy-search'
 import { IconNamesList } from '@o/icons'
 import { isDefined, mergeDefined } from '@o/utils'
 import React, { CSSProperties, memo, Suspense, useCallback, useContext } from 'react'

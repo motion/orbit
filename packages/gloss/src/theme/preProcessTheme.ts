@@ -26,12 +26,11 @@ export const preProcessTheme = (props: GlossProps, theme: CompiledTheme) => {
     // now lets process the postfixes into objects
     next = processPostFixStates(next)
 
-    if (props.subTheme) {
-      console.log('subSetTheme', props.subTheme, { subSetTheme, coatTheme, next, parent })
-    }
-
     if (next && next !== parent) {
       let nextTheme = createTheme(next, false)
+
+      console.log('creating theme', nextTheme, props, parent)
+
       if (props.subTheme && next._isSubTheme) {
         // proxy back to parent but don't merge,
         // because we want sub-themes to be lighter (ie in CSS variable generation)

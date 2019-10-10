@@ -10190,11 +10190,6 @@ functional-red-black-tree@^1.0.1:
   resolved "https://registry.npmjs.org/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
-fuzzy-search@3.0.1:
-  version "3.0.1"
-  resolved "https://registry.npmjs.org/fuzzy-search/-/fuzzy-search-3.0.1.tgz#14a4964508a9607d6e9a88818e7ff634108260b6"
-  integrity sha512-rjUvzdsMlOyarm0oD5k6zVQwgvt4Tb5Xe3YdIGU+Vogw54+ueAGPUTMU2B9jfPQEie5cD11i/S9J9d+MNBSQ3Q==
-
 gapi-to-graphql@^2.0.5:
   version "2.0.7"
   resolved "https://registry.npmjs.org/gapi-to-graphql/-/gapi-to-graphql-2.0.7.tgz#a7ec855712faf6f5ab852c97257408d627bbf0c7"

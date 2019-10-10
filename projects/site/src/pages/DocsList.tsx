@@ -29,7 +29,6 @@ export const DocsList = memo((props: { shouldRenderAll?: boolean }) => {
     }
   })
   const curRow = useRef(docsItems[docsStore.section][0])
-  console.log('using filter', docsStore.search, docsItems[docsStore.section])
   const { results } = useFilter({
     query: docsStore.search,
     items: docsItems[docsStore.section],

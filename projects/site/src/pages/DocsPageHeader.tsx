@@ -36,6 +36,8 @@ export const DocsPageHeader = memo(({ isSmall, inputRef, setTheme, theme }: any)
         >
           {/* <Theme coat="translucent"> */}
           <SearchInput
+            coat="translucent"
+            borderColor={theme => theme.color?.setAlpha(0.2)}
             nodeRef={inputRef}
             onChange={e => docsStore.setSearch(e.target.value)}
             maxWidth="calc(55% - 20px)"
@@ -44,12 +46,6 @@ export const DocsPageHeader = memo(({ isSmall, inputRef, setTheme, theme }: any)
             placeholder={isSmall ? 'Search...' : 'Search the docs...'}
             after={<Key tooltip="Shortcut: t">t</Key>}
             // borderWidth={0}
-            background={theme => {
-              if (!theme.background.setAlpha) {
-                debugger
-              }
-              return theme.background.setAlpha(0.14)
-            }}
             backdropFilter="blur(20px)"
             {...fontProps.SystemFont}
           />

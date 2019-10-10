@@ -32,9 +32,11 @@ export default compose(
   withView(async () => {
     if (window.location.pathname.indexOf('/isolate') >= 0) {
       return (
-        <DocsChromeSimple>
-          <NaviView />
-        </DocsChromeSimple>
+        <Theme name="light">
+          <DocsChromeSimple>
+            <NaviView />
+          </DocsChromeSimple>
+        </Theme>
       )
     }
     return (
@@ -316,7 +318,7 @@ DocsPage.theme = 'docsPageTheme'
 
 function DocsChromeSimple({ children }) {
   return (
-    <>
+    <View minHeight="100vh" background={theme => theme.background}>
       <Header slim noBorder />
       <Stack direction="horizontal" padding>
         <Button
@@ -331,6 +333,6 @@ function DocsChromeSimple({ children }) {
         </Button>
       </Stack>
       <Stack padding>{children}</Stack>
-    </>
+    </View>
   )
 }

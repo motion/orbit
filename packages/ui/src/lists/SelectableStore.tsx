@@ -82,7 +82,6 @@ export class SelectableStore {
     // i was seeing it when i typed "andrey" into search with a lot of items in search
     () => always(this.props.items),
     () => {
-      console.log('reset reset reset')
       this.rows = this.props.items
       this.keyToIndex = {}
       this.updateActiveAndKeyToIndex()

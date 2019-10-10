@@ -1,7 +1,7 @@
 //!
 import { themes } from '@o/kit'
-import { BorderTop, ProvideUI, View } from '@o/ui/test'
-import { gloss } from 'gloss'
+import { ProvideUI, View } from '@o/ui/test'
+import { Box, gloss } from 'gloss'
 import * as React from 'react'
 import { render } from 'react-dom'
 
@@ -12,10 +12,11 @@ function Main() {
   return (
     <ProvideUI themes={themes} activeTheme="light">
       <View sm-marginBottom={20}>
+        <HeaderContainer />
+        {/* <BorderTop /> */}
         {/* <Text selectable>hello world</Text>
         <ListItemSimple title="First" icon="ok" />
         <ListItemSimple isSelected title="ok" icon="ok" /> */}
-        <BorderTop />
         {/* <Stack direction="horizontal" space="lg">
         <Surface>hello world</Surface>
           <View
@@ -44,6 +45,22 @@ function Main() {
     </ProvideUI>
   )
 }
+
+const HeaderContainer = gloss(Box, {
+  flexDirection: 'row',
+  flexShrink: 0,
+  left: 0,
+  overflow: 'hidden',
+  position: 'sticky',
+  right: 0,
+  textAlign: 'left',
+  top: 0,
+  zIndex: 2,
+  debug: true,
+  background: 'red',
+}).theme(props => ({
+  borderBottom: [1, props.borderColorLight],
+}))
 
 const MySimpleView = gloss({
   color: 'yellow',

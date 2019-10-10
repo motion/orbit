@@ -146,7 +146,7 @@ export function extractStyles(
    * Step 1: Compiled the gloss() style views and remember if they are able to be compiled
    * in step 2
    */
-  const localViews: { [key: string]: GlossStaticStyleDescription } = {}
+  const localStaticViews: { [key: string]: GlossStaticStyleDescription } = {}
   if (importsGloss) {
     traverse(ast, {
       VariableDeclaration(path) {
@@ -201,6 +201,7 @@ export function extractStyles(
               styleObject = evaluateAstNode(arg)
             } catch (err) {
               console.log('Cant parse style object', name, '>', extendsViewIdentifier)
+              console.log('err', err)
               return arg
             }
             // uses the base styles if necessary, merges just like gloss does
@@ -217,6 +218,7 @@ export function extractStyles(
             }
             for (const key in styles) {
               const info = getStylesClassName(key, styles[key])
+              console.log('set it', name, info.css)
               cssMap.set(info.className, { css: info.css, commentTexts: [] })
               out.className += ` ${info.className}`
             }
@@ -233,7 +235,7 @@ export function extractStyles(
               }
             }
             staticStyleConfig = out
-            localViews[name] = out
+            localStaticViews[name] = out
             return t.nullLiteral()
           }
           return arg
@@ -517,8 +519,9 @@ export function extractStyles(
           //  because View may add more styles on top
           // add static styles base
 
-          const localView = localViews[node.name.name]
+          const localView = localStaticViews[node.name.name]
           if (localView) {
+            console.log('get rid of it den', node.name.name, localView.className)
             for (const className of localView.className.trim().split(' ')) {
               // empty object because we already parsed it out and added to map
               stylesByClassName[className] = {}
@@ -529,7 +532,7 @@ export function extractStyles(
           // if view + doesn't extend a theme fn, optimize
           if (view?.internal && !view.internal.themeFns) {
             // local views we already parsed the css out
-            const localView = localViews[node.name.name]
+            const localView = localStaticViews[node.name.name]
             if (localView) {
               for (const className of localView.className.trim().split(' ')) {
                 // empty object because we already parsed it out and added to map

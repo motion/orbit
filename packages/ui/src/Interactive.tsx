@@ -668,8 +668,6 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
     const useFloatingGrabbers = !disabled && resizable && !disableFloatingGrabbers
 
-    console.log('render', props)
-
     return (
       <InteractiveNesting.Provider value={nesting + 1}>
         <View
@@ -698,30 +696,30 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
                   key={side}
                   position="absolute"
                   zIndex={10000000}
-                  {...(side === 'top' || side === 'bottom') && {
+                  {...((side === 'top' || side === 'bottom') && {
                     height: 10,
                     width: '100%',
-                  }}
-                  {...(side === 'left' || side === 'right') && {
+                  })}
+                  {...((side === 'left' || side === 'right') && {
                     width: 10,
                     height: '100%',
-                  }}
+                  })}
                   left={0}
                   top={0}
-                  {...side === 'right' && {
+                  {...(side === 'right' && {
                     left: 'auto',
                     right: -5,
-                  }}
-                  {...side === 'bottom' && {
+                  })}
+                  {...(side === 'bottom' && {
                     right: 'auto',
                     left: -5,
-                  }}
+                  })}
                   opacity={0.5}
-                  {...resizable && {
+                  {...(resizable && {
                     hoverStyle: {
                       opacity: 1,
                     },
-                  }}
+                  })}
                 >
                   {bordered && bordersByPosition[side]}
                 </View>

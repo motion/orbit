@@ -153,7 +153,8 @@ const NavButtonChrome = gloss<TabProps>(View, {
   borderRadius: borderSize,
   height: tabHeight,
   marginRight: 2,
-}).theme(({ isActive }, theme) => {
+}).theme(theme => {
+  const { isActive } = theme
   const { tabBackgroundHover, tabBackgroundActive, tabBackgroundSelected } = theme
   const background = isActive ? tabBackgroundSelected : 'transparent'
   const backgroundHover = isActive ? tabBackgroundSelected : tabBackgroundHover

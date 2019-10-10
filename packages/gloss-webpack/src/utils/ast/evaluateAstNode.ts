@@ -72,7 +72,7 @@ export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any
     })
   }
 
-  if (t.isNumericLiteral(exprNode) || t.isStringLiteral(exprNode)) {
+  if (t.isNumericLiteral(exprNode) || t.isStringLiteral(exprNode) || t.isBooleanLiteral(exprNode)) {
     // In the interest of representing the "evaluated" prop
     // as the user intended, we support negative null. Why not.
     return exprNode.value
@@ -94,6 +94,7 @@ export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any
 
   // if we've made it this far, the value has to be evaluated
   if (typeof evalFn !== 'function') {
+    // console.log('failed on node', exprNode)
     throw new Error(
       'evaluateAstNode does not support non-literal values unless an eval function is provided',
     )

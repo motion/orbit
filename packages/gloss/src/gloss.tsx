@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 import React from 'react'
+import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -261,7 +261,6 @@ export function gloss<
       }
     }
 
-    // we control className, dynClassNames includes any user-passed
     if (staticClasses || curDynClassNames.size) {
       className += staticClasses
         ? [...staticClasses, ...curDynClassNames].join(' ')
@@ -635,9 +634,6 @@ export function getGlossProps(parent: GlossInternals | null, rawStyles: CSSPrope
 
   // merge parent config
   if (parent) {
-    if (!parent.glossProps) {
-      debugger
-    }
     if (parent.glossProps.defaultProps) {
       defaultProps = {
         ...parent.glossProps.defaultProps,

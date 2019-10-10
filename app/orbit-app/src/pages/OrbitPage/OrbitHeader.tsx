@@ -4,8 +4,8 @@ import { App } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Stack, StackProps, SurfacePassProps, View } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 import { useRef } from 'react'
+import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 
 import { mediaQueries } from '../../constants'
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
@@ -336,10 +336,7 @@ const HeaderTop = gloss(View, {
   height: '100%',
   flexDirection: 'row',
   position: 'relative',
-  debug: true,
 })
-
-console.log('ok', View, HeaderTop)
 
 const BackButton = memo(({ isTorn }: { isTorn: boolean }) => {
   const { state, actions } = useOm()

@@ -1,5 +1,5 @@
+import { searchSingle } from '@o/fuzzy-search'
 import { isDefined, selectDefined } from '@o/utils'
-import FuzzySearch from 'fuzzy-search'
 import { sortBy } from 'lodash'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
@@ -98,8 +98,7 @@ export function useFilter(props: UseFilterProps<ListItemProps>) {
         next.push(item)
         continue
       }
-      const searcher = new FuzzySearch([sortedItems[index]], filterKeys)
-      if (searcher.search(searchQuery).lenght) {
+      if (searchSingle(sortedItems[index], searchQuery, filterKeys)) {
         next.push(item)
       }
     }

@@ -1,4 +1,4 @@
-import FuzzySearch from 'fuzzy-search'
+import FuzzySearch from '@o/fuzzy-search'
 
 export const fuzzyFilter = <A extends { [key: string]: any }[]>(
   query: string,

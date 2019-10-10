@@ -1,6 +1,6 @@
+import FuzzySearch from '@o/fuzzy-search'
 import { IconNamesList } from '@o/icons'
 import { isDefined, mergeDefined } from '@o/utils'
-import FuzzySearch from 'fuzzy-search'
 import React, { CSSProperties, memo, Suspense, useCallback, useContext } from 'react'
 
 import { Config } from './helpers/configureUI'

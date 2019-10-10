@@ -29,7 +29,11 @@ export const preProcessTheme = (props: GlossProps, theme: CompiledTheme) => {
       next = processPostFixStates(next)
       let nextTheme = createTheme(next, false)
 
-      console.log('creating theme', nextTheme, props, parent)
+      console.log('creating theme', nextTheme.name, props.coat, props.subTheme, {
+        nextTheme,
+        props,
+        parent,
+      })
 
       if (props.subTheme && next._isSubTheme) {
         // proxy back to parent but don't merge,

@@ -560,8 +560,7 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
       cursor: 'not-allowed',
     },
   },
-}).theme(mergeStyles, (props, prev) => {
-  console.log('prev', prev)
+}).theme(mergeStyles, props => {
   // todo fix types here
   const marginStyle = getMargin(props as any)
   const { fontSize, lineHeight } = scaledTextSizeTheme(props)

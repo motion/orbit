@@ -50,7 +50,8 @@
     "@svgdotjs/svg.js": "3.0.13",
     "framer-motion": "1.6.7",
     "@popmotion/popcorn": "^0.4.2",
-    "laxy": "^1.0.0"
+    "laxy": "^1.0.0",
+    "css-typed-om": "^0.4.0"
   },
   "devDependencies": {
     "@types/react-select": "3.0.0",

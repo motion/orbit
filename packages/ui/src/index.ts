@@ -6,6 +6,10 @@ import { Size } from './Space'
 // until next hotkeys patches types
 module.hot && module.hot.accept()
 
+if (typeof CSS['px'] === 'undefined') {
+  require('css-typed-om').polyfill(window)
+}
+
 export * from './helpers/configureHotKeys'
 export { allIcons } from './icons'
 

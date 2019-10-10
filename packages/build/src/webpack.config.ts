@@ -70,7 +70,10 @@ const flags = {
 }
 
 if (flags.prod) {
-  process.env.NODE_ENV = 'production'
+  process.env.NODE_ENV = process.env.NODE_ENV || 'production'
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`\n\n warning! prod build in dev mode ⚠️\n\n`)
+  }
 }
 
 if (flags.disableHMR) {

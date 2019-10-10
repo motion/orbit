@@ -130,33 +130,11 @@ export function gloss<
   const targetElement = hasGlossyParent ? target.internal.targetElement : target
   const glossProps = getGlossProps(hasGlossyParent ? target.internal : null, glossPropsObject || null)
   const conditionalStyles = glossProps.conditionalStyles
+  // static compilation information
+  const { compiledClassName, conditionalClassNames } = getCompiledClassname(target, compiledInfo)
 
   // put the "rest" of non-styles onto defaultProps
   GlossView.defaultProps = glossProps.defaultProps
-
-  // compiled classNames
-  let compiledClassName = compiledInfo && compiledInfo.className ? ` ${compiledInfo.className}` : ''
-  // conditional classNames
-  let conditionalClassNames = emptyObject
-  if (compiledInfo?.conditionalClassNames) {
-    conditionalClassNames = compiledInfo.conditionalClassNames
-  }
-  // compiled classNames inheritance
-  if (hasGlossyParent) {
-    const parentCompiledInfo = target.internal.compiledInfo
-    if (parentCompiledInfo) {
-      // merge in parents conditionals (lesser priority)
-      if (parentCompiledInfo.conditionalClassNames) {
-        conditionalClassNames = {
-          ...target.internal.conditionalClassNames,
-          ...conditionalClassNames,
-        }
-      }
-      if (parentCompiledInfo.className) {
-        compiledClassName += ` ${parentCompiledInfo.className}`
-      }
-    }
-  }
 
   let themeFn: ThemeFn | null = null
   let staticClasses: string[] | null = null
@@ -915,4 +893,30 @@ function createGlossIsEqual() {
       return !shouldUpdate
     },
   }
+}
+
+function getCompiledClassname(parent: GlossView | any, compiledInfo?: GlossStaticStyleDescription) {
+  let compiledClassName = compiledInfo && compiledInfo.className ? ` ${compiledInfo.className}` : ''
+  // conditional classNames
+  let conditionalClassNames = emptyObject
+  if (compiledInfo?.conditionalClassNames) {
+    conditionalClassNames = compiledInfo.conditionalClassNames
+  }
+  // compiled classNames inheritance
+  if (parent?.internal) {
+    const parentCompiledInfo = parent.internal.compiledInfo
+    if (parentCompiledInfo) {
+      // merge in parents conditionals (lesser priority)
+      if (parentCompiledInfo.conditionalClassNames) {
+        conditionalClassNames = {
+          ...parent.internal.conditionalClassNames,
+          ...conditionalClassNames,
+        }
+      }
+      if (parentCompiledInfo.className) {
+        compiledClassName += ` ${parentCompiledInfo.className}`
+      }
+    }
+  }
+  return { compiledClassName, conditionalClassNames }
 }

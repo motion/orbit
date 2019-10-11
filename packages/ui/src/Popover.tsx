@@ -588,7 +588,6 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
         nextState.popoverBounds,
         nextState.targetBounds,
       )
-
       this.setState({
         ...nextState,
         measureState: 'done',
@@ -1071,6 +1070,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
           left={left}
           top={top}
           noHoverOnChildren={noHoverOnChildren}
+          debug
         >
           <PopoverInner transform={transform}>
             {!noArrow && (
@@ -1205,7 +1205,7 @@ const PopoverWrap = gloss<{
   willReposition?: boolean
   noHoverOnChildren?: any
   showForgiveness?: boolean
-}>(Box, {
+}>(View, {
   position: 'absolute',
   pointerEvents: 'none',
   zIndex: -1,
@@ -1215,13 +1215,9 @@ const PopoverWrap = gloss<{
     pointerEvents = p.noPortal ? 'inherit' : 'auto'
   }
   const transform = {
-    x: p.left,
     y: (p.isOpen && !p.willReposition ? 0 : -5) + typeof p.top === 'string' ? +p.top : 0,
   }
   return {
-    width: p.width,
-    height: p.height,
-    maxHeight: p.maxHeight,
     transition: p.willReposition ? 'none' : p.transition,
     opacity: p.isOpen && !p.willReposition ? 1 : 0,
     pointerEvents,

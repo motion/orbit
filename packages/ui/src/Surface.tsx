@@ -564,7 +564,6 @@ const pseudoThemes /* : ThemeFn<PseudoThemeProps> */ = (props, prev) => {
       if (val) {
         prev[key] = prev[key] || {}
         Object.assign(prev[key], val)
-        console.log('now it is', prev)
       }
     }
   }

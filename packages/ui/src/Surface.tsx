@@ -586,10 +586,15 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
       cursor: 'not-allowed',
     },
   },
-}).theme(pseudoThemes, mergeStyles, props => {
+}).theme(pseudoThemes, mergeStyles, (props, prev) => {
   // todo fix types here
   const marginStyle = getMargin(props as any)
   const { fontSize, lineHeight } = scaledTextSizeTheme(props)
+
+  if (props.chromeless) {
+    delete prev.hoverStyle
+    delete prev.activeStyle
+  }
 
   let styles: CSSPropertySet = {}
   let boxShadow = [].concat(props.boxShadow || null)

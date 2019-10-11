@@ -97,7 +97,7 @@ const tabButtonProps: any = {
 const tabButtonPropsActive: any = {
   // color: theme => theme.color,
   borderBottom: theme => [3, theme.backgroundHighlight || theme.color],
-  hoverStyle: false,
+  hoverStyle: null,
   opacity: 1,
 }
 
@@ -121,7 +121,7 @@ export const FlowLayoutSlider = (props: FlowLayoutProps) => {
                 key={stp.key}
                 onClick={() => stepProps.setStepIndex(stepIndex)}
                 {...tabButtonProps}
-                {...isActive && tabButtonPropsActive}
+                {...(isActive && tabButtonPropsActive)}
               >
                 {stepIndex + 1}. {stp.buttonTitle || stp.title || 'No title'}
               </Button>

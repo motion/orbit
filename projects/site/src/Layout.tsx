@@ -103,6 +103,7 @@ export const Layout = memo((props: any) => {
           right={10}
           zIndex={1000000000}
           icon="menu"
+          color="#999"
           iconSize={16}
           size={2}
           chromeless

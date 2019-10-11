@@ -25,7 +25,7 @@ export function mergeStyles(next?: Object | null, previous?: Object | null) {
       continue
     }
     if (typeof theme[key] === 'object') {
-      if (props?.[key] === false) continue
+      if (props?.[key] === null) continue
       if (!previous[key]) {
         previous[key] = theme[key]
       } else {

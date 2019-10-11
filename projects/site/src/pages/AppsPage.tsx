@@ -187,8 +187,8 @@ const AppDescription = () => {
           elevation={100}
           width="50%"
           minWidth={340}
-          hoverStyle={false}
-          activeStyle={false}
+          hoverStyle={null}
+          activeStyle={null}
         >
           <Stack flex={1} space="sm">
             <SubTitle alpha={1} fontWeight={600} margin={[0, 'auto']} size="lg">

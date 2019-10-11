@@ -109,8 +109,8 @@ export function Card(props: CardProps) {
       sizeRadius={sizeRadius}
       noInnerElement
       size={size}
-      hoverStyle={false}
-      activeStyle={false}
+      hoverStyle={null}
+      activeStyle={null}
       {...sizedSurfaceProps}
     >
       {hasTitle && (

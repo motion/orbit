@@ -482,11 +482,9 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
     childrenProps.children = <InvertScale>{ogChildren}</InvertScale>
   }
 
-  const iconOpacity = typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any)
-  const iconColor = (props.iconProps && props.iconProps.color) || props.color || theme.color
-  const iconColorHover =
-    (!!props.hoverStyle && typeof props.hoverStyle === 'object' && props.hoverStyle.color) ||
-    theme.colorHover
+  const iconOpacity = props.alpha ?? props.opacity
+  const iconColor = props.iconProps?.color ?? props.color ?? theme.color
+  const iconColorHover = props?.hoverStyle?.color ?? theme.colorHover
   const iconContext = useMemo<Partial<IconProps>>(() => {
     return {
       coat,

@@ -36,8 +36,8 @@ const MessageChrome = gloss(Surface, {
 MessageChrome.defaultProps = {
   sizeLineHeight: 1.35,
   className: 'ui-message',
-  hoverStyle: false,
-  activeStyle: false,
+  hoverStyle: null,
+  activeStyle: null,
   flexDirection: 'row',
   padding: 'sm',
   space: 'lg',

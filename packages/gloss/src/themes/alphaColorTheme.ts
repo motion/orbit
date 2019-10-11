@@ -7,7 +7,7 @@ import { mergeStyles } from '../helpers/mergeStyles'
 
 // mutate styles to have alpha if defined in props
 
-export type PseudoStyle = CSSPropertySetStrict & { alpha?: number } | boolean | null
+export type PseudoStyle = CSSPropertySetStrict & { alpha?: number } | null
 
 export type PseudoStyleProps = {
   hoverStyle?: PseudoStyle

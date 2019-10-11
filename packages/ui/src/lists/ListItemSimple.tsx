@@ -86,8 +86,8 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
   const iconBefore = iconBeforeProp || !showTitle
   const hasMouseDownEvent = !!surfaceProps.onMouseDown
   const disablePsuedoProps = selectable === false && {
-    hoverStyle: false,
-    activeStyle: false,
+    hoverStyle: null,
+    activeStyle: null,
   }
 
   const iconElement = showIcon && getIcon(props)

@@ -8,7 +8,7 @@ import { ColorLike } from '../types'
 
 // mutate styles to have alpha if defined in props
 
-export type PseudoStyle = CSSPropertySetStrict & { alpha?: number } | null
+export type PseudoStyle = CSSPropertySetStrict & { alpha?: number } | null | false
 
 export type PseudoStyleProps = {
   hoverStyle?: PseudoStyle

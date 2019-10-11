@@ -581,11 +581,6 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
     },
   },
 }).theme(pseudoThemes, mergeStyles, (props, prev) => {
-
-  if (props.debug && props.hoverStyle?.color) {
-    console.log(props.hoverStyle?.color, prev, props)
-  }
-
   // todo fix types here
   const marginStyle = getMargin(props as any)
   const { fontSize, lineHeight } = scaledTextSizeTheme(props)

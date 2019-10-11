@@ -19,15 +19,17 @@ export function mergeStyles(next?: Object | null, previous?: Object | null) {
   const theme = unwrapTheme(next) || next
   const props = unwrapProps(next)
   for (const key in theme) {
-    if (theme[key] === undefined) continue
+    const themeVal = theme[key]
+    if (!themeVal) continue
+    const propVal = props?.[key]
     if (validCSSAttr[key]) {
-      previous[key] = props?.[key] ?? theme[key]
+      previous[key] = propVal ?? themeVal
       continue
     }
-    if (typeof theme[key] === 'object') {
-      if (props && props[key] === null) continue
+    if (typeof themeVal === 'object') {
+      if (propVal === null) continue
       if (!previous[key]) {
-        previous[key] = props?.[key] ?? theme[key]
+        previous[key] = propVal ?? themeVal
       } else {
         for (const skey in theme) {
           previous[skey] = props?.[skey] ?? theme[skey]

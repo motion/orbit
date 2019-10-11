@@ -121,8 +121,6 @@ class ThemeVariableManager {
       }
     }
 
-    console.log('mounting now', parentChain, selectors)
-
     let subTheme = subThemeContext.current
     // need to re-run select using new parent theme
     if (subTheme._subTheme) {

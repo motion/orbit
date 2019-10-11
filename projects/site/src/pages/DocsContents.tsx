@@ -30,6 +30,7 @@ export const DocsContents = memo(
           cursor="pointer"
           elementProps={{ tagName: 'a' }}
           textDecoration="none"
+          textAlign="center"
         >
           <Stack direction="horizontal" marginTop={80} width="100%" space>
             {!!prevItem && (

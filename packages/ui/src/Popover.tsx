@@ -461,7 +461,8 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
     } else {
       if (!this.target && !isManuallyPositioned) {
         // potentially we can just get it directly
-        throw new Error('Couldnt pass className down to target to do measurements...')
+        console.error('Couldnt pass className down to target to do measurements...', this)
+        return
       }
     }
 

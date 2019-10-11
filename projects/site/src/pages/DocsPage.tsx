@@ -164,9 +164,9 @@ const DocsPage = memo((props: { children?: any }) => {
 
   useEffect(() => {
     const keyPress = e => {
-      // console.log('e', e.keyCode)
+      console.log('e', e.keyCode)
       switch (e.keyCode) {
-        case 84: // t
+        case 191: {
           if (
             document.activeElement.tagName === 'INPUT' ||
             document.activeElement.tagName === 'TEXTAREA'
@@ -174,12 +174,17 @@ const DocsPage = memo((props: { children?: any }) => {
             // dont steal focus, meanie
             return
           }
-          if (document.activeElement !== inputRef.current) {
+          if (document.activeElement === inputRef.current) {
             // dont focus if already focused
             return
           }
-          inputRef.current.focus()
+          setTimeout(() => {
+            const el = inputRef.current
+            el.focus()
+            el.setSelectionRange(0, el.value.length)
+          })
           break
+        }
       }
     }
     window.addEventListener('keydown', keyPress)

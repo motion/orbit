@@ -44,7 +44,7 @@ export const DocsPageHeader = memo(({ isSmall, inputRef, setTheme, theme }: any)
             flex={1}
             size="xl"
             placeholder={isSmall ? 'Search...' : 'Search the docs...'}
-            after={<Key tooltip="Shortcut: t">t</Key>}
+            after={<Key tooltip="Focus shortcut: /">/</Key>}
             // borderWidth={0}
             backdropFilter="blur(20px)"
             {...fontProps.SystemFont}

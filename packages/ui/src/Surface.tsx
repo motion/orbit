@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
-import { Base, Box, CompiledTheme, gloss, GlossProps, mergeStyles, propsToStyles, pseudoProps, PseudoStyleProps, ThemeFn, ThemeSelect, useTheme } from 'gloss'
+import { Base, Box, CompiledTheme, gloss, GlossProps, mergeStyles, propsToStyles, pseudoProps, PseudoStyle, PseudoStyleProps, ThemeFn, ThemeSelect, useTheme } from 'gloss'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
@@ -173,7 +173,12 @@ export type SurfaceSpecificProps = SizedSurfaceSpecificProps & {
 }
 
 export type SurfaceProps = GlossProps<
-  Omit<ViewPropsPlain, 'size'> & SurfaceSpecificProps & PseudoThemeProps
+  Omit<
+    ViewPropsPlain,
+    'size' | 'activeStyle' | 'focusStyle' | 'focusWithinStyle' | 'disabledStyle' | 'selectedStyle'
+  > &
+    SurfaceSpecificProps &
+    PseudoThemeProps
 >
 
 const getBorderRadius = (t, b, l, r, tl, tr, bl, br) => {
@@ -546,7 +551,7 @@ const chromelessStyle = {
 }
 
 type PseudoThemeProps = {
-  [K in keyof PseudoStyleProps]: ThemeFn
+  [K in keyof PseudoStyleProps]: ThemeFn | PseudoStyle
 }
 
 /**

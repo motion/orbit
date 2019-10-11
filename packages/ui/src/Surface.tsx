@@ -557,7 +557,7 @@ type PseudoThemeProps = {
 /**
  * Allows you to pass theme functions as props
  */
-const pseudoThemes: ThemeFn<PseudoThemeProps> = (props, prev) => {
+const pseudoThemes /* : ThemeFn<PseudoThemeProps> */ = (props, prev) => {
   for (const key in pseudoProps) {
     if (typeof props[key] === 'function') {
       const val = props[key](props, prev)

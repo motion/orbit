@@ -176,7 +176,6 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && handleClick) || undefined}
         baseOverridesPsuedo={false}
-        debug={coat === 'selected'}
         {...listItemAdjustedPadding}
         paddingLeft={
           (indent || 1) * (listItemAdjustedPadding ? listItemAdjustedPadding.paddingLeft : 0)

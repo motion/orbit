@@ -24,17 +24,18 @@ export const fromStyles = <A extends Partial<{ [key: string]: any }>>(
     throw new Error('Themes require at least background or color')
   }
 
-  let backgroundColored = background
+  let backgroundColor = background
   if (background instanceof LinearGradient) {
-    backgroundColored = background.getColors()[0]
+    backgroundColor = background.getColors()[0]
   } else {
-    backgroundColored = background ? toColor(background) : opposite(toColor(color))
+    backgroundColor = background ? toColor(background) : opposite(toColor(color))
   }
+
   // some handy basic styles
   const base = colorize({
-    background: backgroundColored,
-    color: color || roundToExtreme(decreaseContrast(opposite(backgroundColored), largeAmount)),
-    borderColor: original.borderColor || increaseContrast(backgroundColored, smallAmount),
+    background: backgroundColor,
+    color: color || roundToExtreme(decreaseContrast(opposite(backgroundColor), largeAmount)),
+    borderColor: original.borderColor || increaseContrast(backgroundColor, smallAmount),
   }) as {
     // TODO bad typing
     background: Color
@@ -62,7 +63,7 @@ export const fromStyles = <A extends Partial<{ [key: string]: any }>>(
     // backgroundFocus: s.backgroundFocus || decreaseContrast(base.background, largeAmount),
     // borderColorFocus: s.borderColorFocus || decreaseContrast(base.borderColor, largeAmount),
     // ensure rest is last so they can override anything
-    backgroundDisabled: backgroundColored.desaturate(0.85).setAlpha(0.2),
+    backgroundDisabled: backgroundColor.desaturate(0.85).setAlpha(0.2),
     colorDisabled: baseColor.setAlpha(baseColor.getAlpha() * 0.25),
     // except for base which is already using the right order
     ...base,

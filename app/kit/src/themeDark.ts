@@ -7,11 +7,11 @@ import { transparent } from './themeColors'
 
 const c = toColor
 const color = [255, 255, 255]
-const colorLight = toColor([255, 255, 255, 0.9])
-const colorLighter = toColor([255, 255, 255, 0.8])
-const colorLightest = toColor([255, 255, 255, 0.7])
-const background = toColor([25, 25, 25])
-const borderColor = [180, 180, 180, 0.25]
+const colorLight = c([255, 255, 255, 0.9])
+const colorLighter = c([255, 255, 255, 0.8])
+const colorLightest = c([255, 255, 255, 0.7])
+const background = c([25, 25, 25])
+const borderColor = c([180, 180, 180, 0.25])
 
 const backgroundStrong = background.lighten(0.15)
 const backgroundStronger = background.lighten(0.3)
@@ -32,7 +32,7 @@ const darkenedCoats: ThemeSet = Object.keys(coats).reduce((acc, key) => {
   return acc
 }, {})
 
-const selectedColor = toColor('#363165')
+const selectedColor = c('#363165')
 
 const darkCoats: ThemeSet = {
   ...coats,
@@ -47,7 +47,7 @@ const darkCoats: ThemeSet = {
     buttonBackground: linearGradient(selectedColor.lighten(0.2), selectedColor),
     color: c('#fff'),
   }),
-  selected: colorize({
+  selected: {
     color: c('#fff'),
     borderColor,
     background: selectedColor,
@@ -56,14 +56,14 @@ const darkCoats: ThemeSet = {
     backgroundStrong: selectedColor.darken(0.1),
     backgroundStronger: selectedColor.darken(0.2),
     backgroundStrongest: selectedColor.darken(0.3),
-  }),
+  },
   bordered: {
     ...coats.bordered,
     ...colorize({
       background: transparent,
       backgroundHover: transparent,
       backgroundActive: transparent,
-      color,
+      color: c(color),
       borderColor: [...color, 0.2],
       borderColorHover: [...color, 0.3],
     }),
@@ -81,6 +81,7 @@ export const dark: ThemeObject = fromStyles({
   cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
   separatorBackground: backgroundStrong,
+  color,
   colorLight,
   colorLighter,
   colorLightest,
@@ -89,7 +90,6 @@ export const dark: ThemeObject = fromStyles({
   backgroundActive: c([30, 30, 30, 0.5]),
   backgroundHighlightActive: selectedColor,
   backgroundHighlight: selectedColor,
-  color: color,
   colorHighlight: c('#fff'),
   colorHighlightActive: c('#fff'),
   borderColor,

@@ -14,7 +14,7 @@ const themeAltCache = new WeakMap<CompiledTheme, { [key: string]: CompiledTheme 
 export const preProcessTheme = (props: GlossProps, theme: CompiledTheme) => {
   const parent = unwrapTheme(theme)
   if (props.coat || props.subTheme) {
-    const altKey = getAltKey(props)
+    const altKey = getAltKey(props, theme)
     const existing = getThemeFromCache(parent, altKey)
     if (existing) {
       return existing
@@ -27,7 +27,7 @@ export const preProcessTheme = (props: GlossProps, theme: CompiledTheme) => {
     if (next && next !== parent) {
       // now lets process the postfixes into objects
       next = processPostFixStates(next)
-      let nextTheme = createTheme(next, false)
+      let nextTheme = createTheme(next)
 
       if (props.subTheme && next._isSubTheme) {
         // proxy back to parent but don't merge,
@@ -53,8 +53,8 @@ export const preProcessTheme = (props: GlossProps, theme: CompiledTheme) => {
   return theme
 }
 
-function getAltKey(props: GlossProps) {
-  return `coat${props.coat || ''}-sub${props.subTheme || ''}`
+function getAltKey(props: GlossProps, parentTheme: CompiledTheme) {
+  return `${parentTheme?.name ?? ''}-coat${props.coat || ''}-sub${props.subTheme || ''}`
 }
 
 function getThemeFromCache(parent: CompiledTheme, altKey: string) {

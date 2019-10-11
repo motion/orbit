@@ -1,6 +1,7 @@
+import { toColor } from '@o/ui'
 import { colorize } from 'gloss-theme'
 
-export const transparent = [0, 0, 0, 0]
+export const transparent = toColor([0, 0, 0, 0])
 
 export const colors = colorize({
   orange: '#E97902',

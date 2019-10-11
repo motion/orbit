@@ -10,7 +10,7 @@ import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
 import { pseudoProps } from './theme/preProcessTheme'
 import { themeVariableManager } from './theme/themeVariableManager'
-import { getOriginalProps, unwrapTheme, UnwrapThemeSymbol, useTheme } from './theme/useTheme'
+import { useTheme } from './theme/useTheme'
 import { GlossProps, GlossPropsPartial, GlossThemeProps } from './types'
 
 // so you can reference in postProcessProps
@@ -785,7 +785,7 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSp
   }
 
   // slightly shorter hashes
-  let className = `g${Math.floor(hash / 1000)}`
+  let className = `g${hash}`
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
   // ensure we are unique for unique namespaces
   if (namespace !== '.') {
@@ -837,6 +837,7 @@ function getSelector(className: string, namespace: string, parentSelector = 'htm
   return `${parentSelector} .${SPECIFIC}${className}, .${className}`
 }
 
+// some internals we can export
 if (isDeveloping && typeof window !== 'undefined') {
   window['gloss'] = window['gloss'] || {
     tracker,
@@ -844,9 +845,6 @@ if (isDeveloping && typeof window !== 'undefined') {
     sheet,
     validCSSAttr,
     themeVariableManager,
-    UnwrapThemeSymbol,
-    getOriginalProps,
-    unwrapTheme,
   }
 }
 

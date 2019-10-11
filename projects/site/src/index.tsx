@@ -2,6 +2,10 @@ import './assets/font-gteesti/stylesheet.css'
 import './assets/siteBase.css'
 import 'requestidlecallback-polyfill'
 
+if (process.env.NODE_ENV === 'development') {
+  require('./installDevHelpers')
+}
+
 // import './assets/font-colfax/stylesheet.css'
 async function start() {
   let polyfills = []

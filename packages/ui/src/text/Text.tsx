@@ -346,7 +346,7 @@ type TextEllipseProps = TextProps & {
 const TextEllipse = gloss<TextEllipseProps>({
   display: 'inline',
   maxWidth: '100%',
-}).theme(propsToStyles, ({ ellipse, doClamp, maxHeight }) => {
+}).theme(({ ellipse, doClamp, maxHeight }) => {
   if (ellipse === 1 || ellipse === true) {
     return {
       display: 'block',

@@ -33,12 +33,10 @@ class ThemeVariableManager {
           let next: any
           if (validCSSAttr[val]) {
             next = cssValue(key, val.getCSSValue(), true, {
-              ignoreCSSVariables: true
+              ignoreCSSVariables: true,
             })
-          } else {
-            if (val instanceof ThemeValue) {
-              next = val.get()
-            }
+          } else if (val instanceof ThemeValue) {
+            next = val.get()
           }
           if (next) {
             rules += `--${val.cssVariable}: ${next};`
@@ -106,13 +104,24 @@ class ThemeVariableManager {
   }
 
   mountSubThemeFromParent(parent: CompiledTheme, subThemeContext: CurrentTheme) {
-    let selectors = `.theme-${parent.name} .${this.getClassNames(subThemeContext.current)}`
+    const baseSelector = `.theme-${parent.name} .${this.getClassNames(subThemeContext.current)}`
+    let selectors = baseSelector
 
     // making sure css selectors bind strongly
-    const parentParent = subThemeContext.parentContext?.parentContext?.current
-    if (parentParent && parentParent.name !== parent.name) {
-      selectors += `, .theme-${parentParent.name} ${selectors}`
+    let parentParent = subThemeContext.parentContext
+    const parentChain: string[] = []
+    let last = parent.name
+    while (parentParent) {
+      const parentTheme = parentParent.current
+      parentParent = parentParent?.parentContext
+      if (parentTheme && parentTheme.name !== last) {
+        parentChain.unshift(`.theme-${parentTheme.name}`)
+        last = parentTheme.name
+        selectors += `, ${parentChain.join(' ')} ${baseSelector}`
+      }
     }
+
+    console.log('mounting now', parentChain, selectors)
 
     let subTheme = subThemeContext.current
     // need to re-run select using new parent theme
@@ -125,7 +134,13 @@ class ThemeVariableManager {
         parent,
       )
     }
+
+    if (this.mounted.has(subTheme)) {
+      return
+    }
+
     const subRules = this.getThemeVariables(subTheme)
+
     if (subRules.length) {
       const rule = `${selectors} { ${subRules} }`
       this.sheet.insertRule(rule)

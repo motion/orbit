@@ -25,12 +25,12 @@ export const decreaseContrast = (color: Color, amt: Adjuster) => {
   return color
 }
 
-export const roundToExtreme = (color: Color, pct = 20) => {
+export const roundToExtreme = (color: Color, pct = 0.2) => {
   const lightness = color.getLuminance()
   if (lightness <= pct) {
     return '#000'
   }
-  if (lightness >= 100 - pct) {
+  if (lightness >= 1 - pct) {
     return '#fff'
   }
   return color

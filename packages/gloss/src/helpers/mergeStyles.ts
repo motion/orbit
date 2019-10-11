@@ -38,7 +38,7 @@ export function mergeStyles(props?: any, next?: Object | null, cur?: Object | nu
       continue
     }
     // apply pseudo/media style sub-objects
-    if (isPlainObj(val)) {
+    if (isPlainObj(val) && isPlainObj(curVal)) {
       if (propVal === false || propVal === null) continue
       if (!curVal) {
         cur[key] = propVal ?? val

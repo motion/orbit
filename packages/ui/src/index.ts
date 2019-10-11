@@ -7,7 +7,7 @@ import { Size } from './Space'
 module.hot && module.hot.accept()
 
 if (typeof window !== 'undefined' && typeof CSS['px'] === 'undefined') {
-  require('css-typed-om').default.polyfill(window)
+  require('css-typed-om').default(window)
 }
 
 export * from './helpers/configureHotKeys'

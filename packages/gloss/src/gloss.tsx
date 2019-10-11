@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 import React from 'react'
+import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -223,7 +223,7 @@ export function gloss<
     if (shouldAvoidStyleUpdate) {
       // because hooks can run in theme, be sure to run them
       // @ts-ignore
-      theme && themeFn && themeFn(theme, props)
+      theme && themeFn && themeFn(theme)
       return createElement(element, last.current.props, props.children)
     }
 
@@ -236,7 +236,7 @@ export function gloss<
       if (avoidStyles) {
         // because hooks can run in theme, be sure to run them
         // @ts-ignore
-        theme && themeFn && themeFn(theme, props)
+        theme && themeFn && themeFn(theme)
       }
     }
 

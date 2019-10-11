@@ -32,13 +32,14 @@ export function mergeStyles(props?: any, next?: Object | null, cur?: Object | nu
     const val = next[key]
     if (!val) continue
     const propVal = props?.[key]
+    if (cur[key] === true) cur[key] = {}
     const curVal = cur[key]
     if (validCSSAttr[key]) {
       cur[key] = (overwrite ? null : curVal) ?? propVal ?? val
       continue
     }
     // apply pseudo/media style sub-objects
-    if (isPlainObj(val) && isPlainObj(curVal)) {
+    if (isPlainObj(val)) {
       if (propVal === false || propVal === null) continue
       if (!curVal) {
         cur[key] = propVal ?? val

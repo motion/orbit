@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 import React from 'react'
+import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -562,7 +562,7 @@ const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
 function mergeStyles(
   id: string,
   baseStyles: Object,
-  nextStyles?: CSSPropertySet | null,
+  nextStyles?: CSSPropertySet | null | void,
   overwrite?: boolean,
   rest?: Object
 ): Object | undefined {

@@ -1095,8 +1095,8 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
                   subTheme="popover"
                   sizeRadius
                   flex={1}
-                  hoverStyle={null}
-                  activeStyle={null}
+                  hoverStyle={false}
+                  activeStyle={false}
                   overflow="hidden"
                   elevation={elevation}
                   noInnerElement

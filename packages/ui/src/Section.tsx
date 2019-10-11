@@ -209,8 +209,8 @@ export function Section(direct: SectionProps) {
   return (
     <Surface
       className={`ui-section ${className}`}
-      hoverStyle={null}
-      activeStyle={null}
+      hoverStyle={false}
+      activeStyle={false}
       sizeRadius={bordered ? 1 : 0}
       elevation={selectDefined(elevation, bordered ? 1 : 0)}
       borderWidth={bordered ? 1 : 0}

@@ -6,7 +6,7 @@ export const Key = gloss(Button, {
   glint: false,
   fontWeight: 600,
   // background: 'red', //theme => theme.background,
-  hoverStyle: null,
-  activeStyle: null,
+  hoverStyle: false,
+  activeStyle: false,
   noInnerElement: true,
 })

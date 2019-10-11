@@ -142,7 +142,7 @@ const SimpleInput = ({
       sizeLineHeight
       sizeRadius={0.75}
       label={name}
-      activeStyle={null}
+      activeStyle={false}
       glint={false}
       borderWidth={1}
       {...props}

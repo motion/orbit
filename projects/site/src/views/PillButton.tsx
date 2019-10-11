@@ -8,7 +8,7 @@ export function PillButton({ children, ...props }: ButtonProps) {
     <Surface
       sizeRadius={100}
       background="linear-gradient(to right, #B65138, #BE0DBE)"
-      hoverStyle={null}
+      hoverStyle={false}
       color="#000"
       {...fontProps.TitleFont}
       fontWeight={600}

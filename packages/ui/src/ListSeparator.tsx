@@ -24,8 +24,8 @@ export const ListSeparator = memo((props: ListSeparatorProps) => {
 
 // @ts-ignore
 ListSeparator.defaultProps = {
-  activeStyle: null,
-  hoverStyle: null,
+  activeStyle: false,
+  hoverStyle: false,
   subTheme: 'separator',
   fontWeight: 400,
   size: 0.85,

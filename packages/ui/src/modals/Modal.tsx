@@ -83,8 +83,8 @@ function SimpleModal({
     <ProvideVisibility visible={!!open}>
       <ModalSizedSurface
         sizeRadius={1}
-        hoverStyle={null}
-        activeStyle={null}
+        hoverStyle={false}
+        activeStyle={false}
         overflow="hidden"
         elevation={10}
         noInnerElement

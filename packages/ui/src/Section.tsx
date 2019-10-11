@@ -211,6 +211,7 @@ export function Section(direct: SectionProps) {
       className={`ui-section ${className}`}
       hoverStyle={false}
       activeStyle={false}
+      debug
       sizeRadius={bordered ? 1 : 0}
       elevation={selectDefined(elevation, bordered ? 1 : 0)}
       borderWidth={bordered ? 1 : 0}

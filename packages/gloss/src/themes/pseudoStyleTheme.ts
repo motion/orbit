@@ -1,6 +1,7 @@
-import { CSSPropertySet, validCSSAttr } from '@o/css'
+import { CSSPropertySet } from '@o/css'
 
 import { isPlainObj } from '../helpers/helpers'
+import { mergeStyles } from '../helpers/mergeStyles'
 import { CompiledTheme } from '../theme/createTheme'
 import { pseudos } from '../theme/pseudos'
 import { unwrapProps, unwrapTheme } from '../theme/useTheme'
@@ -18,34 +19,10 @@ import { unwrapProps, unwrapTheme } from '../theme/useTheme'
 const PseudoThemeMap = new WeakMap()
 
 export function pseudoStyleTheme(next?: Object | null, previous?: Object | null) {
-  if (!previous) return next
-  // we only need return "new" styles
   if (!next) return
   const theme = unwrapTheme(next) || next
   const pseudoStyles = PseudoThemeMap.get(theme) || createPseudoTheme(theme)
-  const props = unwrapProps(next)
-
-  for (const key in pseudoStyles) {
-    const themeVal = pseudoStyles[key]
-    if (!themeVal) continue
-    const propVal = props?.[key]
-    if (validCSSAttr[key]) {
-      previous[key] = previous[key] ?? propVal ?? themeVal
-      continue
-    }
-    if (typeof themeVal === 'object') {
-      if (propVal === false || propVal === null) continue
-      if (!previous[key]) {
-        previous[key] = propVal ?? themeVal
-      } else {
-        for (const skey in theme) {
-          previous[key][skey] = previous[key][skey] ?? props?.[key]?.[skey] ?? themeVal?.[skey]
-        }
-      }
-    }
-  }
-
-  return previous
+  mergeStyles(unwrapProps(next), pseudoStyles, previous)
 }
 
 function createPseudoTheme(theme: CompiledTheme): CSSPropertySet {
@@ -95,5 +72,3 @@ function themeToCSSPropertySet(theme: CompiledTheme) {
   }
   return finalTheme
 }
-
-

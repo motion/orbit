@@ -152,11 +152,18 @@ export function gloss<
   // we use staticClasses at compile time to we compile them right away
   // plus, its faster generally to do things at startup because doing
   // work on mount is usually during a render/has a frame budget
-  setTimeout(() => {
+  function compile() {
+    if (hasCompiled) return
+    hasCompiled = true
+    ignoreAttrs = ThemedView.ignoreAttrs ?? (hasGlossyParent && target.ignoreAttrs) ?? baseIgnoreAttrs
+    shouldUpdateMap = GlossView['shouldUpdateMap']
     staticClasses = addStyles(glossProps.styles, ThemedView.displayName)
     themeFn = compileTheme(ThemedView)
     config = getCompiledConfig(ThemedView, ogConfig)
-  })
+    getEl = config!.getElement
+  }
+
+  setTimeout(compile, 0)
 
   /**
    *
@@ -171,13 +178,7 @@ export function gloss<
     }
 
     // compile on first run to avoid extra work
-    if (!hasCompiled) {
-      hasCompiled = true
-      ignoreAttrs =
-        ThemedView.ignoreAttrs || (hasGlossyParent && target.ignoreAttrs) || baseIgnoreAttrs
-      getEl = config!.getElement
-      shouldUpdateMap = GlossView['shouldUpdateMap']
-    }
+    if (!hasCompiled) compile()
 
     const theme = useTheme(props)
     curTheme = theme

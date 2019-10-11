@@ -610,6 +610,7 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
   }
 
   if (props.elevation) {
+    // @ts-ignore
     boxShadow = [...(boxShadow || []), ...elevationTheme(props as any).boxShadow]
   }
 

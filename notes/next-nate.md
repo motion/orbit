@@ -26,6 +26,13 @@
   - fix search
   - fix filter
 
+then:
+
+- concurrent mode on site to prep for app
+- fix app styles using new gloss
+- release site with new gloss:
+  - cleanup blog post quite a bit
+
 ---
 
 gloss:

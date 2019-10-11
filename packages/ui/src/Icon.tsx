@@ -44,7 +44,6 @@ export const findIconName = (name: string): string => {
 // lets users wrap around icons
 export const Icon = memo((rawProps: IconProps) => {
   const extraProps = useContext(IconPropsContext)
-  console.log('extraProps', extraProps)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const ResolvedIcon = Config.useIcon || PlainIcon
   return (

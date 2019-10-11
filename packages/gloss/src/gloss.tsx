@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
+import React from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -566,6 +566,7 @@ function mergeStyles(
   overwrite?: boolean,
   rest?: Object
 ): Object | undefined {
+  if (!nextStyles) return
   // this is just for the conditional prop styles
   let propStyles
   for (const key in nextStyles) {

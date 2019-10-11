@@ -68,11 +68,7 @@ export default memo(function FeaturesSection() {
             <ParallaxStageItem stagger={1}>
               <Stack direction="horizontal" space="lg" margin={['4%', 'auto', '8%', 0]}>
                 {sectionNames.map(section => (
-                  <PillButtonDark
-                    debug={section === 'Integrate'}
-                    key={section}
-                    {...btnProps(section)}
-                  >
+                  <PillButtonDark key={section} {...btnProps(section)}>
                     {section}
                   </PillButtonDark>
                 ))}

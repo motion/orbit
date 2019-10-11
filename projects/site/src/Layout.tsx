@@ -29,6 +29,7 @@ export const usePageTheme = () => {
       next => {
         setNext(prev => {
           if (prev !== next) {
+            console.log('setting theme', next, prev)
             updateLayout()
             return next
           }
@@ -87,6 +88,8 @@ export const Layout = memo((props: any) => {
     const background = (themes[theme].bodyBackground || themes[theme].background).toString()
     document.body.style.background = background
   }, [theme])
+
+  console.log('render layout')
 
   return (
     <Theme name={theme}>

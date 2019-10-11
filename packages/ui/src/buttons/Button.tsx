@@ -31,7 +31,6 @@ export const Button = memoIsEqualDeep((direct: ButtonProps) => {
         alignItems="center"
         flexDirection="row"
         WebkitAppRegion="no-drag"
-        // glow
         outline="0"
         borderStyle="solid"
         cursor="default"

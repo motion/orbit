@@ -88,7 +88,6 @@ export const PlainIcon = (iconProps: Omit<IconProps, 'style'> & { style: CSSProp
         className={`ui-icon-svg ${props.className || ''}`}
         color={color}
         opacity={opacity}
-        debug={svg.includes('Capa_1')}
       >
         <div
           style={{

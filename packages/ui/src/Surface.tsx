@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined } from '@o/utils'
-import { Base, Box, CompiledTheme, gloss, GlossProps, mergeStyles, propsToStyles, pseudoProps, PseudoStyle, PseudoStyleProps, ThemeFn, ThemeSelect, useTheme } from 'gloss'
+import { Base, Box, CompiledTheme, gloss, GlossProps, propsToStyles, pseudoProps, PseudoStyle, PseudoStyleProps, pseudoStyleTheme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
@@ -496,7 +496,7 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
 
   // @ts-ignore
   const surfaceFrameProps: SurfaceFrameProps = {
-    className: `${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`,
+    className: `${tooltipState.id ?? ''} ${(crumb && crumb.selector) ?? ''} ${className ?? ''}`.trim(),
     subTheme: subTheme,
     lineHeight,
     padding,
@@ -551,7 +551,7 @@ type PseudoThemeProps = {
 /**
  * Allows you to pass theme functions as props
  */
-const pseudoThemes /* : ThemeFn<PseudoThemeProps> */ = (props, prev) => {
+const pseudoFunctionThemes /* : ThemeFn<PseudoThemeProps> */ = (props, prev) => {
   for (const key in pseudoProps) {
     if (typeof props[key] === 'function') {
       const val = props[key](props, prev)
@@ -580,7 +580,7 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
       cursor: 'not-allowed',
     },
   },
-}).theme(pseudoThemes, mergeStyles, (props, prev) => {
+}).theme(pseudoFunctionThemes, pseudoStyleTheme, (props, prev) => {
   // todo fix types here
   const marginStyle = getMargin(props as any)
   const { fontSize, lineHeight } = scaledTextSizeTheme(props)

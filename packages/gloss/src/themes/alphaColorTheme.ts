@@ -3,7 +3,6 @@ import { CSSPropertySet, CSSPropertySetStrict } from '@o/css'
 
 import { Config } from '../configureGloss'
 import { ThemeFn } from '../gloss'
-import { mergeStyles } from '../helpers/mergeStyles'
 import { ColorLike } from '../types'
 
 // mutate styles to have alpha if defined in props
@@ -71,9 +70,7 @@ function createAlphaColorTheme(shouldSetDefault = false) {
       mergeActive(next, color, props)
       mergeDisabled(next, color, props)
     }
-    if (next) {
-      mergeStyles(next, previous)
-    }
+    return next
   }
   return themeFn
 }

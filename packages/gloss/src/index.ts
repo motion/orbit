@@ -34,7 +34,6 @@ export {
 export { GlossDefaultConfig, configureGloss, Config as glossConfiguration } from './configureGloss'
 export * from './gloss'
 export { colorToString } from './helpers/helpers'
-export { mergeStyles } from './helpers/mergeStyles'
 export { resolveThemeValues } from './helpers/resolveThemeValues'
 export { preProcessTheme } from './theme/preProcessTheme'
 export { selectThemeSubset } from './theme/selectThemeSubset'

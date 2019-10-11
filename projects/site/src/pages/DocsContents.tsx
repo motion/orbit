@@ -111,7 +111,6 @@ export const DocsContents = memo(
                       e.stopPropagation()
                       scrollTo('#component-props')
                     }}
-                    debug
                   >
                     Props
                   </Button>

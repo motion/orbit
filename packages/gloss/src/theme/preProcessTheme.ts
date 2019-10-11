@@ -1,8 +1,6 @@
-import { isPlainObj } from '../helpers/helpers'
 import { GlossProps } from '../types'
 import { CompiledTheme, createTheme } from './createTheme'
 import { getThemeCoat } from './getThemeCoat'
-import { pseudos } from './pseudos'
 import { selectThemeSubset } from './selectThemeSubset'
 import { unwrapTheme, UnwrapThemeSymbol } from './useTheme'
 
@@ -29,10 +27,6 @@ export const preProcessTheme = (props: GlossProps, theme: CompiledTheme) => {
     }
     let next = processThemeSubset(props, theme)
     if (next && next !== parent) {
-      // now lets process the postfixes into objects
-      if (props.subTheme) {
-        next = processPostFixStates(next)
-      }
       let nextTheme = createTheme(next)
 
       if (props.subTheme && next._isSubTheme) {
@@ -77,47 +71,3 @@ function setThemeInCache(parent: CompiledTheme, key: string, theme: CompiledThem
   const altCache = themeAltCache.get(parent)!
   altCache[key] = theme
 }
-
-/**
- * Converts flat style themes into object style ones:
- *
- *   backgroundHover: 'red',
- *      =>
- *   hoverStyle: { background: 'red' }
- *
- * We do this in preProcess because it leads to a nicer pattern that matches what you output.
- * While writing themes using postfix is a lot less work.
- */
-function processPostFixStates(theme: CompiledTheme) {
-  let finalTheme: CompiledTheme = {}
-  for (const key in theme) {
-    if (
-      key === 'parent' ||
-      key === 'coats' ||
-      key === 'name' ||
-      key[0] === '_' ||
-      isPlainObj(theme[key])
-    ) {
-      finalTheme[key] = theme[key]
-      continue
-    }
-    let found = false
-    for (const pseudoKey in pseudos) {
-      const { postfix, prop } = pseudos[pseudoKey]
-      const indexOfPostfix = key.indexOf(postfix)
-      if (indexOfPostfix > -1 && indexOfPostfix === key.length - postfix.length) {
-        const postKey = key.slice(0, indexOfPostfix)
-        finalTheme[prop] = finalTheme[prop] || {}
-        finalTheme[prop][postKey] = theme[key]
-        found = true
-        break
-      }
-    }
-    if (!found) {
-      finalTheme[key] = theme[key]
-    }
-  }
-  return finalTheme
-}
-
-

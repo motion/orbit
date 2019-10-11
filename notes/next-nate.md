@@ -1,10 +1,6 @@
 ---
 
 - gloss
-  - fix props/source/page sub buttons hover
-  - fix github button theme change
-  - fix tabs and next/prev buttons centering
-  - fix filter/popovers centering
   - fix modal backgrounds
   - fix alt card inner text is white
   - fix list item / flat buttons arent styled right

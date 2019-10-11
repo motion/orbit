@@ -1,5 +1,7 @@
 import { cssString } from '@o/css'
+import { ThemeByName } from 'gloss'
 import { Component } from 'react'
+import React from 'react'
 import { createPortal } from 'react-dom'
 
 type Props = {
@@ -30,7 +32,7 @@ export class Portal extends Component<Props> {
 
   render() {
     if (this.popup) {
-      return createPortal(this.props.children, this.popup)
+      return createPortal(<ThemeByName>{this.props.children}</ThemeByName>, this.popup)
     }
     return null
   }

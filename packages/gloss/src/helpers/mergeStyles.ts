@@ -1,6 +1,6 @@
 import { validCSSAttr } from '@o/css'
 
-import { unwrapTheme } from '../theme/useTheme'
+import { unwrapProps, unwrapTheme } from '../theme/useTheme'
 
 // a helper that merges styles one level deep
 // useful for theme function chains
@@ -13,26 +13,24 @@ import { unwrapTheme } from '../theme/useTheme'
 // each time you'll start with a fresh style object
 
 export function mergeStyles(next?: Object | null, previous?: Object | null) {
-  if (!previous) {
-    return next
-  }
+  if (!previous) return next
   // we only need return "new" styles
-  if (!next) {
-    return
-  }
-  next = unwrapTheme(next)
-  for (const key in next) {
-    if (next[key] === undefined) continue
+  if (!next) return
+  const theme = unwrapTheme(next)
+  const props = unwrapProps(next)
+  for (const key in theme) {
+    if (theme[key] === undefined) continue
     if (validCSSAttr[key]) {
-      previous[key] = next[key]
+      previous[key] = theme[key]
       continue
     }
-    if (typeof next[key] === 'object') {
+    if (typeof theme[key] === 'object') {
+      if (props?.[key] === false) continue
       if (!previous[key]) {
-        previous[key] = next[key]
+        previous[key] = theme[key]
       } else {
-        for (const skey in next) {
-          previous[skey] = next[skey]
+        for (const skey in theme) {
+          previous[skey] = theme[skey]
         }
       }
     }

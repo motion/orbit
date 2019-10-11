@@ -158,8 +158,7 @@ function createThemePropsProxy(theme: CompiledTheme, trackState: ThemeTrackState
                 }
                 if (typeof key === 'string' && typeof skey === 'string') {
                   if (!starget.cssVariableSafeKeys.includes(skey)) {
-                    trackState.nonCSSVariables.add(key)
-                    trackState.hasUsedOnlyCSSVariables = false
+                    markNonCSS(trackState, key)
                   }
                 }
                 return val
@@ -168,12 +167,16 @@ function createThemePropsProxy(theme: CompiledTheme, trackState: ThemeTrackState
           })
         } else {
           if (val !== undefined && typeof key === 'string') {
-            trackState.nonCSSVariables.add(key)
-            trackState.hasUsedOnlyCSSVariables = false
+            markNonCSS(trackState, key)
           }
           return val
         }
       }
     },
   })
+}
+
+function markNonCSS(trackState: ThemeTrackState, key: string) {
+  trackState.nonCSSVariables.add(key)
+  trackState.hasUsedOnlyCSSVariables = false
 }

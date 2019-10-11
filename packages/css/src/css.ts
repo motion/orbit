@@ -212,8 +212,7 @@ function processBoxShadow(val: boxShadowItem, options?: CSSConfig) {
   if (Array.isArray(val)) {
     return val
       .map(x => {
-        if (Config.isColor(x)) return Config.toColor(x)
-        return cssValue('', x, false, options)
+        return cssValue(Config.isColor(x) ? 'color' : '', x, false, options)
       })
       .join(' ')
   }

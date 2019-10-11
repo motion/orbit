@@ -591,7 +591,7 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
   }
 
   let styles: CSSPropertySet = {}
-  let boxShadow = [].concat(props.boxShadow || null)
+  let boxShadow = [].concat(props.boxShadow || null).filter(Boolean)
 
   const borderWidth = selectDefined(props.borderWidth, 0)
 

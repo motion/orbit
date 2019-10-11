@@ -578,8 +578,6 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
         height: Math.min(window.innerHeight, popoverBounds.height),
       },
     }
-    console.log('nextState', nextState)
-
     // if changed, update
     const prevState = pick(this.state, Object.keys(nextState))
     if (!isEqual(nextState, prevState)) {

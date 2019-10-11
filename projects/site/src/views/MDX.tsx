@@ -184,6 +184,6 @@ const LinkedInlineCode = gloss(InlineCode, {
   cursor: 'pointer',
 }).theme(theme => ({
   hoverStyle: {
-    color: theme.background.isDark() ? '#fff' : '#000',
+    color: theme.color,
   },
 }))

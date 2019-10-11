@@ -14,6 +14,7 @@ type SimpleTextPropsBase = Omit<TextSizeProps, 'size'> &
 export type SimpleTextProps = GlossProps<SimpleTextPropsBase>
 
 export const SimpleText = gloss<SimpleTextPropsBase>(Box, {
+  applyPsuedoColors: 'only-if-defined',
   display: 'inline-block',
   whiteSpace: 'normal',
   conditional: {
@@ -32,7 +33,7 @@ export const SimpleText = gloss<SimpleTextPropsBase>(Box, {
   },
 }).theme(propsToStyles, alphaColorTheme, scaledTextSizeTheme)
 
+// TODO move this into a theme
 SimpleText.defaultProps = {
   ...Config.defaultProps.text,
-  applyPsuedoColors: 'only-if-defined',
 }

@@ -1070,7 +1070,6 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
           left={left}
           top={top}
           noHoverOnChildren={noHoverOnChildren}
-          debug
         >
           <PopoverInner transform={transform}>
             {!noArrow && (

@@ -1,9 +1,3 @@
-/**
- * Copyright 2018-present Facebook.
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- * @format
- */
 import { Color } from '@o/color'
 import { useReaction } from '@o/use-store'
 import { Box, gloss, ThemeFn } from 'gloss'
@@ -20,6 +14,12 @@ import { guesses, guessTheme } from './guessTheme'
 import { DEFAULT_ROW_HEIGHT, TableColumnKeys, TableColumnSizes, TableOnAddFilter } from './types'
 import { normaliseColumnWidth } from './utils'
 
+/**
+ * Copyright 2018-present Facebook.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ * @format
+ */
 type TableRowProps = {
   color?: Color
   even?: boolean
@@ -157,7 +157,7 @@ const backgroundTheme: ThemeFn<TableRowProps> = props => {
   }
   return {
     background,
-    '&:hover': {
+    hoverStyle: {
       background: typeof background === 'string' ? background : background.lighten(0.075, true),
     },
   }

@@ -155,26 +155,6 @@ const components = {
   },
 }
 
-// const ContentItem = gloss({
-//   display: 'inherit',
-//   // maxWidth: 820,
-// })
-// wrap with media query helper thing
-// for (const key of Object.keys(components)) {
-//   // ignore inline elements
-//   if (key === 'a' || key === 'code' || key === 'pre') {
-//     continue
-//   }
-//   const OGComponent = components[key]
-//   components[key] = props => (
-//     <ContentItem>
-//       <OGComponent {...props} />
-//     </ContentItem>
-//   )
-// }
-// dont wrap example
-// components['Example'] = Example
-
 export function MDX({ children, ...props }: any) {
   return (
     <MDXProvider
@@ -200,21 +180,10 @@ const InlineCode = gloss({
   color: theme.colorLighter,
 }))
 
-//   theme.background.isDark()
-//     ? {
-//         background: '#1A71E399',
-//         color: [255, 255, 255, 0.8],
-//       }
-//     : {
-//         background: '#efefef',
-//         color: [0, 0, 0, 0.8],
-//       },
-// )
-
 const LinkedInlineCode = gloss(InlineCode, {
   cursor: 'pointer',
 }).theme(theme => ({
-  '&:hover': {
+  hoverStyle: {
     color: theme.background.isDark() ? '#fff' : '#000',
   },
 }))

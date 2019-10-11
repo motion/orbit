@@ -9,7 +9,7 @@ export const TableInput = gloss<HTMLProps<HTMLInputElement>>('input', {
   padding: [0, 5],
   height: 28,
   lineHeight: 28,
-  '&:disabled': {
+  disabledStyle: {
     backgroundColor: '#ddd',
     borderColor: '#ccc',
     cursor: 'not-allowed',

@@ -3,8 +3,6 @@ import { CSSPropertySetResolved } from '@o/css'
 import { selectDefined } from '@o/utils'
 import { GlossThemeProps, ThemeFn } from 'gloss'
 
-import { weakKey } from '../helpers/weakKey'
-
 export type ElevatableProps = {
   /** Height of the shadow */
   elevation?: number
@@ -52,33 +50,12 @@ const elevatedShadow = (props: GlossThemeProps<ElevatableProps>) => {
 }
 
 export const elevationTheme: ThemeFn<ElevatableProps> = props => {
-  return cacheReturn({
-    keys: [JSON.stringify([props.elevation, props.boxShadow])],
-    value: () => {
-      if (!props.elevation) {
-        return {
-          boxShadow: props.boxShadow,
-        }
-      }
-      return {
-        boxShadow: [
-          elevatedShadow(props),
-          ...(Array.isArray(props.boxShadow) ? props.boxShadow : []),
-        ],
-      }
-    },
-  })
-}
-
-// this may be a bit stupid (leaks memory)
-// im trying this because <Arrow /> via <Popover /> was showing huge render cost
-// and getElevation was causing new props to return every render
-const cache = {}
-const cacheReturn = ({ keys, value }: { keys: any[]; value: Function }) => {
-  const keyStr = keys.map(key => `${weakKey(key)}`).join('')
-  if (cache[keyStr]) {
-    return cache[keyStr]
+  if (!props.elevation) {
+    return {
+      boxShadow: props.boxShadow,
+    }
   }
-  cache[keyStr] = value()
-  return cache[keyStr]
+  return {
+    boxShadow: [elevatedShadow(props), ...(Array.isArray(props.boxShadow) ? props.boxShadow : [])],
+  }
 }

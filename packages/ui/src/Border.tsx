@@ -1,6 +1,6 @@
-//!
 import { Absolute, AbsoluteProps, CSSPropertySet, gloss, ThemeFn } from 'gloss'
 
+//!
 type BorderProps = AbsoluteProps & {
   borderColor?: CSSPropertySet['borderColor']
   borderColorHover?: CSSPropertySet['borderColor']
@@ -18,7 +18,7 @@ const borderTheme: ThemeFn = props => {
   return {
     background: props.borderColor,
     hoverable: {
-      '&:hover': {
+      hoverStyle: {
         background: props.backgroundStronger,
       },
     },

@@ -553,14 +553,16 @@ type PseudoThemeProps = {
  * Allows you to pass theme functions as props
  */
 const pseudoThemes: ThemeFn<PseudoThemeProps> = (props, prev) => {
-  let styles
   for (const key in pseudoProps) {
     if (typeof props[key] === 'function') {
-      styles = styles || {}
-      Object.assign(styles, props[key](props, prev))
+      const val = props[key](props, prev)
+      if (val) {
+        prev[key] = prev[key] || {}
+        Object.assign(prev[key], val)
+        console.log('now it is', prev)
+      }
     }
   }
-  return styles
 }
 
 // fontFamily: inherit on both fixes elements

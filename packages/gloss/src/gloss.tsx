@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
+import React from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -43,7 +43,7 @@ export interface GlossView<RawProps = {}, P = GlossProps<RawProps>> {
 export type ThemeFn<RawProps = any> = (
   themeProps: GlossThemeProps<RawProps>,
   previous?: RawProps & CSSPropertySetLoose | null,
-) => CSSPropertySetLoose | undefined | null
+) => CSSPropertySetLoose | void | null
 
 export type GlossViewOpts<Props = {}> = {
   displayName?: string

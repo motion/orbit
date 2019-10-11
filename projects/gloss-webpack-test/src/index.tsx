@@ -73,7 +73,7 @@ const MySubView = gloss(View, {
   boolProp: {
     color: 'blue',
 
-    '&:hover': {
+    hoverStyle: {
       color: 'green',
     },
   },

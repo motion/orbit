@@ -58,7 +58,7 @@ export const AppIconContainer = gloss<any>(Box, {
 }).theme(theme => ({
   background: theme.isSelected ? theme.background : 'transparent',
   opacity: 2,
-  '&:hover': {
+  hoverStyle: {
     background: theme.isSelected || !theme.isDraggable ? theme.background : theme.backgroundStrong,
   },
 }))

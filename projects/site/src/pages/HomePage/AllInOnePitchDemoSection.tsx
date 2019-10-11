@@ -31,12 +31,12 @@ const Dot = gloss(Box, {
   cursor: 'pointer',
   transition: 'all ease 300ms',
 
-  active: {
-    opacity: 1,
+  hoverStyle: {
+    opacity: 0.8,
   },
 
-  '&:hover': {
-    opacity: 0.8,
+  activeStyle: {
+    opacity: 1,
   },
 })
 

@@ -14,7 +14,7 @@ export default createApp({
 const defaultItemProps = {
   itemProps: {
     padding: [1, 8],
-    '&:hover': {
+    hoverStyle: {
       background: [0, 0, 0, 0.02],
     },
   },

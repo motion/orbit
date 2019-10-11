@@ -4,7 +4,7 @@ import { CSSPropertySet, CSSPropertySetStrict, GlossPropertySet } from '@o/css'
 import { ThemeSelect } from './theme/Theme'
 import { ThemeValue } from './theme/ThemeValue'
 
-export type Psuedos = '&:hover' | '&:active' | '&:focus' | '&:disabled'
+export type Psuedos = '&:hover' | '&:active' | '&:focus' | '&:focus-within' | '&:disabled'
 
 export type GlossConfig = {
   toColor: Function

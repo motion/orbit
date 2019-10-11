@@ -18,6 +18,7 @@ export const GlossDefaultConfig: GlossConfig = {
     activeStyle: '&:active',
     focusStyle: '&:focus',
     disabledStyle: '&:disabled',
+    focusWithinStyle: '&:focus-within',
   },
 }
 

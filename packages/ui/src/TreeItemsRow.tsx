@@ -1,9 +1,3 @@
-/**
- * Copyright 2018-present Facebook.
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- * @format
- */
 import { Box, gloss, ThemeFn } from 'gloss'
 import * as React from 'react'
 
@@ -13,6 +7,12 @@ import { Image } from './Image'
 import { Text, TextProps } from './text/Text'
 import { TreeItem, TreeItemID } from './Tree'
 
+/**
+ * Copyright 2018-present Facebook.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ * @format
+ */
 type TreeItemsRowProps = {
   id: TreeItemID
   level: number
@@ -183,7 +183,7 @@ const TreeItemsRowContainer = gloss<{ selected?: boolean; level?: number; even?:
     '& *': {
       color: props.selected ? `${colors.white} !important` : '',
     },
-    '&:hover': {
+    hoverStyle: {
       background: props.selected ? props.backgroundHighlightHover : props.backgroundHover,
     },
   }

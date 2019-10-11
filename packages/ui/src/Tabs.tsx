@@ -145,7 +145,7 @@ function TabsControlled({
           {...tabPropsExtra}
           {...tabProps}
           width={width || tabWidth}
-          {...isActive && tabPropsActive}
+          {...(isActive && tabPropsActive)}
           active={isActive}
           onClick={
             !isActive && onChange
@@ -260,7 +260,7 @@ const CloseButton = gloss(Box, {
   height: 16,
   lineHeight: '16px',
   borderRadius: '50%',
-  '&:hover': {
+  hoverStyle: {
     background: colors.cherry,
     color: '#fff',
   },

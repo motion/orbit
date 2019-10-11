@@ -174,6 +174,7 @@ export const FadeInView = memo(
     }
 
     if (reverse) {
+      // @ts-ignore
       ;[style, animate] = [animate, style]
     }
 
@@ -201,6 +202,7 @@ export const FadeInView = memo(
             flexDirection="inherit"
             flexFlow="inherit"
             alignSelf="inherit"
+            {...rest}
           >
             {children}
           </View>

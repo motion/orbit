@@ -73,7 +73,11 @@ function createAlphaColorTheme(shouldSetDefault = false) {
       mergeDisabled(next, color, props)
     }
     if (next) {
-      mergeStyles(unwrapProps(props), next, previous)
+      if (previous) {
+        mergeStyles(unwrapProps(props), next, previous)
+      } else {
+        return next
+      }
     }
   }
   return themeFn

@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
+import React from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -762,8 +762,7 @@ function compileTheme(viewOG: GlossView) {
   return (themeProps: Object) => {
     let styles: CSSPropertySetLoose | null = null
     for (const themeFn of themes) {
-      // @ts-ignore
-      const next = themeFn(themeProps, styles)
+      const next = themeFn(themeProps as any, styles)
       if (next) {
         styles = styles || {}
         Object.assign(styles, next)

@@ -277,7 +277,7 @@ export default memo(() => {
                 parallax
                 {...fadeAnimations.up}
                 delayIndex={5}
-                marginBottom={-250}
+                marginBottom={-100}
                 zIndex={10}
               >
                 <TiltSquircle

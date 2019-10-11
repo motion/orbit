@@ -581,10 +581,6 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
     },
   },
 }).theme(pseudoFunctionThemes, pseudoStyleTheme, (props, prev) => {
-  if (props?.['debug']) {
-    debugger
-  }
-
   // todo fix types here
   const marginStyle = getMargin(props as any)
   const { fontSize, lineHeight } = scaledTextSizeTheme(props)

@@ -539,14 +539,13 @@ export function extractStyles(
                 stylesByClassName[className] = {}
               }
             } else {
-              // weird we have to compile twice, need to redo a bit
-              const styles = {
-                ...view.internal.glossProps.styles['.'],
-                // we may have set some default props
-                ...view.defaultProps,
+              // internal classes
+              for (const className of view.internal.getConfig().staticClasses) {
+                stylesByClassName[className] = {}
               }
-              const info = getStylesClassName('.', styles)
-              stylesByClassName[info.className] = styles
+              // default prop classes
+              const info = getStylesClassName('.', view.defaultProps)
+              stylesByClassName[info.className] = view.defaultProps
             }
             node.name.name = (view.defaultProps && view.defaultProps.tagName) || 'div'
           }

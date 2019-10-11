@@ -4,8 +4,8 @@ import { App } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Stack, StackProps, SurfacePassProps, View } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
-import { useRef } from 'react'
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
+import { useRef } from 'react'
 
 import { mediaQueries } from '../../constants'
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
@@ -316,7 +316,7 @@ const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
 
 const HeaderContain = gloss<StackProps & { isActive?: boolean; isDeveloping: boolean }>(Stack, {
   flexDirection: 'row',
-  margin: ['auto', 0],
+  margin: 'auto',
   alignItems: 'center',
   width: '67%',
   minWidth: 650,

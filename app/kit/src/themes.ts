@@ -11,14 +11,14 @@ export const themes: { [key: string]: CompiledTheme } = createThemes({
   dark,
   light,
   tooltip: fromStyles({
-    background: 'rgba(20,20,20,0.94)',
-    backgroundHover: 'rgba(28,28,28,0.94)',
-    backgroundStronger: 'rgba(30,30,30)',
-    backgroundStrongest: 'rgba(40,40,40)',
-    borderColor: 'rgba(40,40,40)',
-    color: '#fff',
+    background: toColor('rgba(20,20,20,0.94)'),
+    backgroundHover: toColor('rgba(28,28,28,0.94)'),
+    backgroundStronger: toColor('rgba(30,30,30)'),
+    backgroundStrongest: toColor('rgba(40,40,40)'),
+    borderColor: toColor('rgba(40,40,40)'),
+    color: toColor('#fff'),
     backgroundHighlight: toColor('#363165'),
-    separatorBackground: 'rgba(30,30,30)',
+    separatorBackground: toColor('rgba(30,30,30)'),
   }),
 })
 

@@ -71,6 +71,7 @@ type GlossInternals<Props = {}> = {
 type GlossInternalConfig = {
   displayName: string
   config: GlossViewOpts | null
+  staticClasses: string[]
 }
 
 export type GlossStaticStyleDescription = {
@@ -148,6 +149,15 @@ export function gloss<
   let getEl: GlossViewOpts['getElement'] | null = null
   let shouldUpdateMap: WeakMap<any, boolean>
 
+  // we use staticClasses at compile time to we compile them right away
+  // plus, its faster generally to do things at startup because doing
+  // work on mount is usually during a render/has a frame budget
+  setTimeout(() => {
+    staticClasses = addStyles(glossProps.styles, ThemedView.displayName)
+    themeFn = compileTheme(ThemedView)
+    config = getCompiledConfig(ThemedView, ogConfig)
+  })
+
   /**
    *
    *
@@ -165,10 +175,7 @@ export function gloss<
       hasCompiled = true
       ignoreAttrs =
         ThemedView.ignoreAttrs || (hasGlossyParent && target.ignoreAttrs) || baseIgnoreAttrs
-      themeFn = compileTheme(ThemedView)
-      staticClasses = addStyles(glossProps.styles, ThemedView.displayName)
-      config = getCompiledConfig(ThemedView, ogConfig)
-      getEl = config.getElement
+      getEl = config!.getElement
       shouldUpdateMap = GlossView['shouldUpdateMap']
     }
 
@@ -321,6 +328,7 @@ export function gloss<
     getConfig: () => ({
       config: ogConfig,
       displayName: ThemedView.displayName || '',
+      staticClasses: staticClasses || [],
     }),
   }
 

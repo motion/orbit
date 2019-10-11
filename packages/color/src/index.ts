@@ -1,4 +1,5 @@
 import { Color, ColorInput } from './color'
+import { LinearGradient } from './linearGradient'
 import { ColorLike } from './types'
 
 export { Color } from './color'
@@ -16,5 +17,6 @@ export * from './random'
 export * from './interfaces'
 
 export function toColor(obj: ColorInput | ColorLike) {
+  if (obj instanceof LinearGradient) return obj.getColors()[0]
   return obj instanceof Color ? obj : new Color(obj as any)
 }

@@ -621,7 +621,9 @@ function mergeStyles(
     } else {
       const pseudoKey = pseudoProps[key]
       if (pseudoKey) {
-        baseStyles[pseudoKey] = nextStyles[key]
+        // merge in case they defined it two different ways
+        baseStyles[pseudoKey] = baseStyles[pseudoKey] || {}
+        Object.assign(baseStyles[pseudoKey], nextStyles[key])
         continue
       }
 

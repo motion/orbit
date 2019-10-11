@@ -1,6 +1,5 @@
 import { CSSPropertySet, validCSSAttr } from '@o/css'
 
-import { Config } from '../configureGloss'
 import { ThemeFn } from '../gloss'
 
 // resolves props into styles for valid css
@@ -12,7 +11,6 @@ export const propsToStyles: ThemeFn = (props) => {
     if (props?.ignorePropsToStyle?.[key]) continue
     const next = propToStyle(key, props[key])
     if (next !== undefined)  {
-      key = Config.pseudoAbbreviations?.[key] || key
       styles = styles || {}
       styles[key] = next
     }
@@ -26,8 +24,7 @@ export const propToStyle = (key: string, value: any) => {
   }
 
   // psuedos
-  const abbrev = Config.pseudoAbbreviations?.[key] || null
-  if (abbrev || key[0] === '&') {
+  if (key[0] === '&') {
     // adding psuedo styles, &:hover, etc
     const subStyle = value
     let val: CSSPropertySet | undefined

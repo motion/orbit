@@ -73,7 +73,6 @@ function getParallax(props: ParallaxStageItemProps): ParallaxViewProps['parallax
       }
       if (clamp) {
         cur = cur.transform(x => {
-          console.log('final is', x, props)
           return Math.max(clamp[0], Math.min(x, clamp[1]))
         })
       }

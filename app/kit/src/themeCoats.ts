@@ -1,5 +1,5 @@
 import { ThemeSet } from '@o/css'
-import { linearGradient } from '@o/ui'
+import { linearGradient, toColor } from '@o/ui'
 import { colorize, fromStyles } from 'gloss-theme'
 
 import { colors, transparent } from './themeColors'
@@ -202,7 +202,7 @@ export const coats: ThemeSet = Object.freeze({
     ...fromStyles({
       color: parent.color,
       background: parent.background.setAlpha(0.33),
-      borderColor: parent.background.setAlpha(0.5),
+      borderColor: toColor(parent.background).setAlpha(0.5),
     }),
   }),
   clear: parent => ({

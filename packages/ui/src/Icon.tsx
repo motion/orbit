@@ -44,6 +44,7 @@ export const findIconName = (name: string): string => {
 // lets users wrap around icons
 export const Icon = memo((rawProps: IconProps) => {
   const extraProps = useContext(IconPropsContext)
+  console.log('extraProps', extraProps)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const ResolvedIcon = Config.useIcon || PlainIcon
   return (
@@ -62,16 +63,8 @@ Icon.acceptsProps = {
 const SIZE_STANDARD = 16
 const SIZE_LARGE = 20
 
-export const PlainIcon = ({
-  style,
-  ignoreColor,
-  svg,
-  tooltip,
-  tooltipProps,
-  name,
-  opacity,
-  ...props
-}: Omit<IconProps, 'style'> & { style: CSSProperties }) => {
+export const PlainIcon = (iconProps: Omit<IconProps, 'style'> & { style: CSSProperties }) => {
+  let { style, ignoreColor, svg, tooltip, tooltipProps, name, opacity, ...props } = iconProps
   const size = snapToSizes(props.size) * useScale()
 
   if (typeof name === 'string') {
@@ -92,10 +85,11 @@ export const PlainIcon = ({
         width={size}
         height={size}
         data-name={name}
-        className={`ui-icon ${props.className || ''}`}
         {...props}
+        className={`ui-icon-svg ${props.className || ''}`}
         color={color}
         opacity={opacity}
+        debug={svg.includes('Capa_1')}
       >
         <div
           style={{
@@ -124,7 +118,13 @@ export const PlainIcon = ({
     const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
 
     contents = (
-      <View width={size} height={size} {...props} color={color}>
+      <View
+        width={size}
+        height={size}
+        {...props}
+        className={`ui-icon ${props.className || ''}`}
+        color={color}
+      >
         <svg
           style={{ fill: 'currentColor', ...style }}
           data-icon={iconName}

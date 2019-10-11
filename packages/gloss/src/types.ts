@@ -9,7 +9,6 @@ export type Psuedos = '&:hover' | '&:active' | '&:focus' | '&:focus-within' | '&
 export type GlossConfig = {
   toColor: Function
   isColor: Function
-  pseudoAbbreviations?: { [key: string]: Psuedos }
   mediaQueries?: null | {
     [key: string]: string
   }

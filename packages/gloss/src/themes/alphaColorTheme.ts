@@ -4,6 +4,7 @@ import { CSSPropertySet, CSSPropertySetStrict } from '@o/css'
 import { Config } from '../configureGloss'
 import { ThemeFn } from '../gloss'
 import { mergeStyles } from '../helpers/mergeStyles'
+import { ColorLike } from '../types'
 
 // mutate styles to have alpha if defined in props
 
@@ -30,16 +31,10 @@ export type AlphaColorProps = {
   selectedStyle?: PseudoStyleProps['selectedStyle']
 }
 
-const mergeFocus = merge.bind(null, '&:focus', 'focusStyle', 'colorFocus', 'alphaFocus')
-const mergeHover = merge.bind(null, '&:hover', 'hoverStyle', 'colorHover', 'alphaHover')
-const mergeActive = merge.bind(null, '&:active', 'activeStyle', 'colorActive', 'alphaActive')
-const mergeDisabled = merge.bind(
-  null,
-  '&:disabled',
-  'disabledStyle',
-  'colorDisabled',
-  'alphaDisabled',
-)
+const mergeFocus = merge.bind(null, 'focusStyle', 'colorFocus', 'alphaFocus')
+const mergeHover = merge.bind(null, 'hoverStyle', 'colorHover', 'alphaHover')
+const mergeActive = merge.bind(null, 'activeStyle', 'colorActive', 'alphaActive')
+const mergeDisabled = merge.bind(null, 'disabledStyle', 'colorDisabled', 'alphaDisabled',)
 
 export const alphaColorTheme = createAlphaColorTheme(true)
 export const alphaColorThemeLoose = createAlphaColorTheme(false)
@@ -48,7 +43,7 @@ function createAlphaColorTheme(shouldSetDefault = false) {
   const themeFn: ThemeFn<AlphaColorProps> = (props, previous) => {
     let color = props.color as any
     const alpha = props.alpha
-    const next: CSSPropertySet | null = {}
+    let next: CSSPropertySet | null = null
     if (color) {
       if (shouldSetDefault) {
         if (
@@ -56,8 +51,10 @@ function createAlphaColorTheme(shouldSetDefault = false) {
           color.originalInput !== 'inherit' &&
           typeof alpha === 'number'
         ) {
+          next = next || {}
           next.color = toColor(color).setAlpha(alpha)
         } else {
+          next = next || {}
           next.color = color
         }
       }
@@ -68,14 +65,14 @@ function createAlphaColorTheme(shouldSetDefault = false) {
       (applyPsuedos === 'only-if-defined' &&
         (!!props.hoverStyle || !!props.activeStyle || !!props.focusStyle || !!props.disabledStyle))
     ) {
+      next = next || {}
       mergeFocus(next, color, props)
       mergeHover(next, color, props)
       mergeActive(next, color, props)
       mergeDisabled(next, color, props)
     }
-    if (Object.keys(next).length) {
-      const res = mergeStyles(next, previous)
-      return res
+    if (next) {
+      mergeStyles(next, previous)
     }
   }
   return themeFn
@@ -83,15 +80,14 @@ function createAlphaColorTheme(shouldSetDefault = false) {
 
 function merge(
   key: string,
-  styleKey: string,
   colorKey: string,
   alphaKey: string,
   next: Object,
-  parentColor,
-  props,
+  baseColor: ColorLike,
+  props: AlphaColorProps,
 ) {
-  const color = (props[styleKey] && props[styleKey].color) || props[colorKey] || parentColor
-  const alpha = (props[styleKey] && props[styleKey].alpha) || props[alphaKey]
+  const color = props[key]?.color ?? props[colorKey] ?? baseColor
+  const alpha = props[key]?.alpha ?? props[alphaKey]
   if (color) {
     if (color !== 'inherit' && typeof alpha === 'number') {
       next[key] = {
@@ -99,7 +95,7 @@ function merge(
           .setAlpha(alpha)
           .toRgbString(),
       }
-    } else if (parentColor !== color) {
+    } else if (baseColor !== color) {
       next[key] = {
         color: color,
       }

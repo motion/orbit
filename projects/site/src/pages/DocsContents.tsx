@@ -110,6 +110,7 @@ export const DocsContents = memo(
                       e.stopPropagation()
                       scrollTo('#component-props')
                     }}
+                    debug
                   >
                     Props
                   </Button>
@@ -151,7 +152,7 @@ export const DocsContents = memo(
                   tooltip="Source in Github"
                   size="lg"
                   {...linkProps(`https://github.com/motion/orbit`)}
-                  icon={<Icon size={16} svg={GithubIcon} />}
+                  icon={<Icon size={16} svg={GithubIcon.replace('fill="#fff', '')} />}
                   onClick={e => e.stopPropagation()}
                 />
               )}

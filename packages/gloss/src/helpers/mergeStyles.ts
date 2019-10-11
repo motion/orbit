@@ -16,21 +16,21 @@ export function mergeStyles(next?: Object | null, previous?: Object | null) {
   if (!previous) return next
   // we only need return "new" styles
   if (!next) return
-  const theme = unwrapTheme(next)
+  const theme = unwrapTheme(next) || next
   const props = unwrapProps(next)
   for (const key in theme) {
     if (theme[key] === undefined) continue
     if (validCSSAttr[key]) {
-      previous[key] = theme[key]
+      previous[key] = props?.[key] ?? theme[key]
       continue
     }
     if (typeof theme[key] === 'object') {
-      if (props?.[key] === null) continue
+      if (props && props[key] === null) continue
       if (!previous[key]) {
-        previous[key] = theme[key]
+        previous[key] = props?.[key] ?? theme[key]
       } else {
         for (const skey in theme) {
-          previous[skey] = theme[skey]
+          previous[skey] = props?.[skey] ?? theme[skey]
         }
       }
     }

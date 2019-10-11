@@ -1,6 +1,6 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
-import { isDefined, selectDefined, selectObject } from '@o/utils'
+import { isDefined, selectDefined } from '@o/utils'
 import { Base, Box, CompiledTheme, gloss, GlossProps, mergeStyles, propsToStyles, pseudoProps, PseudoStyle, PseudoStyleProps, ThemeFn, ThemeSelect, useTheme } from 'gloss'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
@@ -366,7 +366,6 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
         activeStyle={props.activeStyle}
         focusStyle={props.focusStyle}
         disabledStyle={props.disabledStyle}
-        color="inherit"
         {...iconProps}
       >
         {!stringIcon && icon}
@@ -483,20 +482,17 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
   }
 
   const iconOpacity = props.alpha ?? props.opacity
-  const iconColor = props.iconProps?.color ?? props.color ?? theme.color
-  const iconColorHover = props?.hoverStyle?.color ?? theme.colorHover
+  const iconColor = props.iconProps?.color ?? props.color
+  const iconColorHover = props?.iconProps?.colorHover ?? props?.colorHover
   const iconContext = useMemo<Partial<IconProps>>(() => {
     return {
       coat,
       opacity: iconOpacity,
-      color: iconColor,
+      color: iconColor ?? (theme => theme.color),
+      colorHover: iconColorHover ?? (theme => theme.colorHover),
       justifyContent: 'center',
-      hoverStyle: {
-        ...selectObject(props.hoverStyle),
-        color: iconColorHover,
-      },
     }
-  }, [coat, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
+  }, [coat, iconOpacity, iconColor, iconColorHover])
 
   // @ts-ignore
   const surfaceFrameProps: SurfaceFrameProps = {
@@ -585,6 +581,11 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
     },
   },
 }).theme(pseudoThemes, mergeStyles, (props, prev) => {
+
+  if (props.debug && props.hoverStyle?.color) {
+    console.log(props.hoverStyle?.color, prev, props)
+  }
+
   // todo fix types here
   const marginStyle = getMargin(props as any)
   const { fontSize, lineHeight } = scaledTextSizeTheme(props)

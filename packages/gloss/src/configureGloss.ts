@@ -13,13 +13,6 @@ export const GlossDefaultConfig: GlossConfig = {
   isColor: color => color && !!color.rgb,
   toColor: colorToString,
   mediaQueries: defaultMediaQueries,
-  pseudoAbbreviations: {
-    hoverStyle: '&:hover',
-    activeStyle: '&:active',
-    focusStyle: '&:focus',
-    disabledStyle: '&:disabled',
-    focusWithinStyle: '&:focus-within',
-  },
 }
 
 export let Config = { ...GlossDefaultConfig }

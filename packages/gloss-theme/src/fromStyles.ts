@@ -33,7 +33,7 @@ export const fromStyles = <A extends Partial<{ [key: string]: any }>>(
 
   // some handy basic styles
   const base = colorize({
-    background: backgroundColor,
+    background: background || backgroundColor,
     color: color || roundToExtreme(decreaseContrast(opposite(backgroundColor), largeAmount)),
     borderColor: original.borderColor || increaseContrast(backgroundColor, smallAmount),
   }) as {
@@ -44,7 +44,7 @@ export const fromStyles = <A extends Partial<{ [key: string]: any }>>(
   }
 
   const baseColor = toColor(base.color)
-  const backgroundHover = base.background.lighten(base.background.isLight() ? 0.1 : 0.15)
+  const backgroundHover = backgroundColor.lighten(backgroundColor.isLight() ? 0.1 : 0.15)
 
   const res: ThemeObject = colorize({
     // for buttons/surfaces, we generate a nice set of themes
@@ -52,15 +52,15 @@ export const fromStyles = <A extends Partial<{ [key: string]: any }>>(
     backgroundHover: original.backgroundHover || backgroundHover,
     borderColorHover: original.borderColorHover || increaseContrast(base.borderColor, smallAmount),
     backgroundActiveHover:
-      original.backgroundActiveHover || increaseContrast(base.background, largeAmount),
-    backgroundActive: original.backgroundActive || decreaseContrast(base.background, largeAmount),
+      original.backgroundActiveHover || increaseContrast(backgroundColor, largeAmount),
+    backgroundActive: original.backgroundActive || decreaseContrast(backgroundColor, largeAmount),
     borderColorActive:
       original.borderColorActive || decreaseContrast(base.borderColor, smallAmount),
-    backgroundBlur: original.backgroundBlur || darken(base.background, largeAmount),
+    backgroundBlur: original.backgroundBlur || darken(backgroundColor, largeAmount),
     colorBlur: original.colorBlur || darken(base.color, largeAmount),
     borderColorBlur: original.borderColorBlur || darken(base.borderColor, largeAmount),
     // focus is not desirable for many things...
-    // backgroundFocus: s.backgroundFocus || decreaseContrast(base.background, largeAmount),
+    // backgroundFocus: s.backgroundFocus || decreaseContrast(backgroundColor, largeAmount),
     // borderColorFocus: s.borderColorFocus || decreaseContrast(base.borderColor, largeAmount),
     // ensure rest is last so they can override anything
     backgroundDisabled: backgroundColor.desaturate(0.85).setAlpha(0.2),

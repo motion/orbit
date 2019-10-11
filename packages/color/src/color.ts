@@ -116,13 +116,10 @@ export class Color {
   cssUseRgb = true
   cssIsColor = true
   setCSSVariable(name: string) {
-    // dont overwrite
-    if (this.cssVariable && this.cssVariable !== name) {
+    if (!this.cssVariable || this.cssVariable !== name) {
       return this.clone(next => {
         next.cssVariable = name
       })
-    } else {
-      this.cssVariable = name
     }
   }
 

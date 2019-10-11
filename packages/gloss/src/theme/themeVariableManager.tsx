@@ -5,7 +5,6 @@ import { CompiledTheme } from './createTheme'
 import { preProcessTheme } from './preProcessTheme'
 import { pseudoProps } from './pseudos'
 import { CurrentTheme } from './Theme'
-import { ThemeValue } from './ThemeValue'
 import { unwrapTheme } from './useTheme'
 
 class ThemeVariableManager {
@@ -31,13 +30,12 @@ class ThemeVariableManager {
           rules += `--${val.cssVariable}: ${rgba};`
           rules += `--${val.cssVariable}-rgb: ${rgb};`
         } else if (val.getCSSValue) {
-          let next: any
-          if (validCSSAttr[val]) {
-            next = cssValue(key, val.getCSSValue(), true, {
+          let next = val.getCSSValue()
+          // parse using same gloss cssValue if valid
+          if (validCSSAttr[val] && typeof next !== 'string') {
+            next = cssValue(key, next, true, {
               ignoreCSSVariables: true,
             })
-          } else if (val instanceof ThemeValue) {
-            next = val.get()
           }
           if (next) {
             rules += `--${val.cssVariable}: ${next};`

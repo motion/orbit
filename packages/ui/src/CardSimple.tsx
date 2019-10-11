@@ -24,7 +24,7 @@ export const CardSimple = ({
   scrollable,
   ...props
 }: CardSimpleProps) => {
-  const hasClick = !!props.onClick
+  const hasClick = !!props.onClick ? undefined : null
   return (
     <Surface
       className="ui-cardsimple-surface"

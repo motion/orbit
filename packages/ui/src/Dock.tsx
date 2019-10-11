@@ -83,9 +83,9 @@ export const DockButton = (props: DockButtonProps) => {
         zIndex={100000000}
         opacity={1}
         pointerEvents="auto"
-        {...!show && { marginRight: -(50 + 15), opacity: 0 }}
+        {...(!show && { marginRight: -(50 + 15), opacity: 0 })}
         {...buttonProps}
-        {...showLabelOnHover && {
+        {...(showLabelOnHover && {
           onMouseEnter(e) {
             setHovering(true)
             props.onMouseEnter && props.onMouseEnter(e)
@@ -94,15 +94,16 @@ export const DockButton = (props: DockButtonProps) => {
             setHovering(false)
             props.onMouseLeave && props.onMouseLeave(e)
           },
-        }}
+        })}
       />
       {!!props.label && (
         <Theme name="tooltip">
           <TagLabel
             pointerEvents="none"
             size="xxs"
+            // @ts-ignore
             {...labelProps}
-            {...showLabelOnHover && hovering && labelProps.hoverStyle}
+            hoverStyle={showLabelOnHover && hovering && labelProps.hoverStyle}
           >
             {props.label}
           </TagLabel>

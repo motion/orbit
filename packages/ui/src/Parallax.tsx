@@ -1,8 +1,8 @@
 import { createStoreContext, useReaction } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { MotionValue, useMotionValue } from 'framer-motion'
-import { RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import React from 'react'
+import { RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { AnimationStore, GeometryRenderer, GeometryStore, useGeometry } from './Geometry'
 import { composeRefs } from './helpers/composeRefs'
@@ -122,50 +122,51 @@ class ParallaxGeometryStore extends GeometryStore<ParallaxGeometryProps> {
       ...this.props,
       ...props,
     }
-    let chain = this.useViewportScroll(direction === 'x' ? 'xProgress' : 'yProgress')
-      // just use version to trigger update
-      .mergeTransform([version], pagePct => {
-        if (speed === 0) return 0
-        const {
-          frameSizePct,
-          parentEndPct,
-          parentStartPct,
-          nodeStartPct,
-          nodeSizePct,
-          parentSizePct,
-        } = measurements.current
+    return (
+      this.useViewportScroll(direction === 'x' ? 'xProgress' : 'yProgress')
+        // just use version to trigger update
+        .mergeTransform([version], pagePct => {
+          if (speed === 0) return 0
+          const {
+            frameSizePct,
+            parentEndPct,
+            parentStartPct,
+            nodeStartPct,
+            nodeSizePct,
+            parentSizePct,
+          } = measurements.current
 
-        // early called (not sure why)
-        if (frameSizePct === undefined) return 0
+          // early called (not sure why)
+          if (frameSizePct === undefined) return -1
 
-        let intersection = 0
-        const parentCenter = parentEndPct - parentSizePct / 2
-        const scrollCenter = pagePct + frameSizePct / 2
+          let intersection = 0
+          const parentCenter = parentEndPct - parentSizePct / 2
+          const scrollCenter = pagePct + frameSizePct / 2
 
-        const divisor = relativeTo === 'frame' ? frameSizePct : parentSizePct
+          const divisor = relativeTo === 'frame' ? frameSizePct : parentSizePct
 
-        if (relativeTo === 'node') {
-          intersection = 1 + (scrollCenter - nodeStartPct) / nodeSizePct
-        } else {
-          let subtractor =
-            align === 'start' ? parentStartPct : align === 'center' ? parentCenter : parentEndPct
-          intersection = 1 + (pagePct - subtractor) / divisor
-        }
-        intersection *= speed
-        intersection += offset
-        if (stagger) {
-          intersection += 0.3 * stagger * nodeStartPct
-        }
-        if (isDefined(min)) intersection = Math.max(min, intersection)
-        if (isDefined(max)) intersection = Math.max(max, intersection)
-        if (clamp) {
-          const [min, max] = clamp === true ? [0, 1] : clamp
-          intersection = Math.max(min, Math.min(intersection, max))
-        }
-        return intersection
-      })
+          if (relativeTo === 'node') {
+            intersection = 1 + (scrollCenter - nodeStartPct) / nodeSizePct
+          } else {
+            let subtractor =
+              align === 'start' ? parentStartPct : align === 'center' ? parentCenter : parentEndPct
+            intersection = 1 + (pagePct - subtractor) / divisor
+          }
+          intersection *= speed
+          intersection += offset
+          if (stagger) {
+            intersection += 0.3 * stagger * nodeStartPct
+          }
+          if (isDefined(min)) intersection = Math.max(min, intersection)
+          if (isDefined(max)) intersection = Math.max(max, intersection)
+          if (clamp) {
+            const [min, max] = clamp === true ? [0, 1] : clamp
+            intersection = Math.max(min, Math.min(intersection, max))
+          }
 
-    return chain
+          return intersection
+        })
+    )
   }
 
   transforms = {

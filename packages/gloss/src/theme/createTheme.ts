@@ -8,12 +8,17 @@ export type CompiledTheme<A extends Partial<ThemeObject> = any> = {
 }
 
 let id = 0
+const ThemeMap = new WeakMap()
 
 export function createTheme<A extends Partial<ThemeObject>>(
   theme: A,
+  parentName: string = '',
   renameKeys = true,
 ): CompiledTheme<A> {
-  const name = `${theme.name || `theme-${id++}`}`
+  if (ThemeMap.has(theme)) {
+    return theme
+  }
+  const name = `${parentName ? parentName + '-' : ''}${theme.name || ''}` || `theme-${id++}`
   const res = Object.keys(theme).reduce((acc, key) => {
     let val = theme[key]
     const cssVariableName = `${key}`
@@ -23,10 +28,13 @@ export function createTheme<A extends Partial<ThemeObject>>(
         acc[ckey] =
           typeof val[ckey] === 'function'
             ? val[ckey]
-            : createTheme({
-                ...val[ckey],
-                coats: undefined,
-              })
+            : createTheme(
+                {
+                  ...val[ckey],
+                  coats: undefined,
+                },
+                `${name}-coat`,
+              )
         return acc
       }, {})
     } else if (val && typeof val.setCSSVariable === 'function') {
@@ -37,8 +45,11 @@ export function createTheme<A extends Partial<ThemeObject>>(
         }
       }
     } else {
-      if (key !== 'parent' && key !== 'name' && key !== 'coats' && key[0] !== '_') {
-        if (!isPlainObj(val) && !(val instanceof ThemeValue)) {
+      if (key !== 'parent' && key !== 'name' && key[0] !== '_') {
+        // recurse into sub-themes
+        if (isPlainObj(val)) {
+          val = createTheme(val, `${name}-sub-${key}`)
+        } else if (!(val instanceof ThemeValue)) {
           val = new ThemeValue(cssVariableName, val)
         }
       }
@@ -47,6 +58,7 @@ export function createTheme<A extends Partial<ThemeObject>>(
     return acc
   }, {}) as any
   res.name = name
+  ThemeMap.set(res, true)
   return res
 }
 
@@ -61,11 +73,8 @@ export function createThemes<A extends Partial<ThemeObject>>(themes: {
       let theme = themes[key]
       if (typeof theme !== 'function') {
         if (duplicates.has(theme)) {
-          // clone duplicate themes
-          theme = {
-            ...theme,
-            name: key,
-          }
+          acc[key] = theme!
+          return acc
         } else {
           theme.name = key
         }

@@ -2,7 +2,7 @@ import { cssValue, validCSSAttr } from '@o/css'
 
 import { makeStyleTag } from '../stylesheet/makeStyleTag'
 import { CompiledTheme } from './createTheme'
-import { preProcessTheme } from './preProcessTheme'
+import { preProcessTheme, processThemeSubset } from './preProcessTheme'
 import { pseudoProps } from './pseudos'
 import { CurrentTheme } from './Theme'
 import { unwrapTheme } from './useTheme'
@@ -123,13 +123,13 @@ class ThemeVariableManager {
     let subTheme = subThemeContext.current
     // need to re-run select using new parent theme
     if (subTheme._subTheme) {
-      subTheme = preProcessTheme(
+      subTheme = processThemeSubset(
         {
           coat: subTheme._coatName,
           subTheme: subTheme._subTheme,
         },
         parent,
-      )
+      )!
     }
 
     if (this.mounted.has(subTheme)) {

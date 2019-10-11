@@ -120,6 +120,9 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
   if (value === undefined || value === null || value === false) {
     return
   }
+  if (key === 'background' && value.cssVariable === '') {
+    debugger
+  }
   if (value && value.cssVariable && (!options || !options.ignoreCSSVariables)) {
     if (value.toCSS) {
       return value.toCSS()

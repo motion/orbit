@@ -12,6 +12,13 @@ import { unwrapTheme, UnwrapThemeSymbol } from './useTheme'
 
 const themeAltCache = new WeakMap<CompiledTheme, { [key: string]: CompiledTheme }>()
 
+export function processThemeSubset(props: GlossProps, theme: CompiledTheme): CompiledTheme | null {
+  const parent = unwrapTheme(theme)
+  const subSetTheme = selectThemeSubset(props.subTheme, parent)
+  const coatTheme = getThemeCoat(props.coat, subSetTheme ? { ...parent, ...subSetTheme } : parent)
+  return subSetTheme || coatTheme ? { ...subSetTheme, ...coatTheme } : null
+}
+
 export const preProcessTheme = (props: GlossProps, theme: CompiledTheme) => {
   const parent = unwrapTheme(theme)
   if (props.coat || props.subTheme) {
@@ -20,14 +27,12 @@ export const preProcessTheme = (props: GlossProps, theme: CompiledTheme) => {
     if (existing) {
       return existing
     }
-    const subSetTheme = selectThemeSubset(props.subTheme, parent)
-    const coatTheme = getThemeCoat(props.coat, subSetTheme ? { ...parent, ...subSetTheme } : parent)
-    let next: CompiledTheme | null =
-      subSetTheme || coatTheme ? { ...subSetTheme, ...coatTheme } : null
-
+    let next = processThemeSubset(props, theme)
     if (next && next !== parent) {
       // now lets process the postfixes into objects
-      next = processPostFixStates(next)
+      if (props.subTheme) {
+        next = processPostFixStates(next)
+      }
       let nextTheme = createTheme(next)
 
       if (props.subTheme && next._isSubTheme) {

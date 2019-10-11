@@ -10,6 +10,7 @@ const FromStylesSymbol = Symbol('FromStylesSymbol') as any
 // insert theme into psuedo styles for Blur Active and ActiveHighlight
 export const fromStyles = <A extends Partial<{ [key: string]: any }>>(
   original: A,
+  recurse = true,
   parent?: ThemeObject
 ): ThemeObject & A => {
   // avoid re-processing if they take control
@@ -73,8 +74,9 @@ export const fromStyles = <A extends Partial<{ [key: string]: any }>>(
   for (const key in original) {
     if (res[key]) continue
     if (key !== 'coats') {
-      if (isPlainObj(original[key])) {
-        res[key] = fromStyles(original[key], res)
+      if (recurse && isPlainObj(original[key])) {
+        // dont recurse more than one
+        res[key] = fromStyles(original[key], false, res)
         continue
       }
     }

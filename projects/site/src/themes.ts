@@ -85,23 +85,6 @@ export const themes = createThemes({
   },
 
   blogHeaderTheme: home,
-  // {
-  //   ...dark,
-  //   background: toColor('#1b1917'),
-  // },
-
-  darkAlt: {
-    ...dark,
-    ...fromStyles({
-      color: '#fff',
-      background: '#2C2B40',
-      backgroundStrong: toColor('#2C2B40').lighten(0.1),
-      buttonBackground: linearGradient('#2C2B40', toColor('#2C2B40').darken(0.1)),
-      buttonBackgroundHover: linearGradient(toColor('#2C2B40').lighten(0.1), toColor('#2C2B40')),
-      inputBackground: toColor('#2C2B40').darken(0.1),
-      inputBackgroundHover: toColor('#2C2B40').darken(0.1),
-    }),
-  },
 
   docsPageTheme: {
     ...light,

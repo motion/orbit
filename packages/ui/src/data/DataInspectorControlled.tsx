@@ -98,7 +98,7 @@ const { clipboard } = Electron
 // TODO
 type ElectronMenuItemOptions = any
 
-const BaseContainer = gloss<SimpleTextProps & { disabled?: boolean }>(SimpleText, {
+const BaseContainer = gloss<{ disabled?: boolean }, SimpleTextProps>(SimpleText, {
   paddingLeft: 10,
   userSelect: 'text',
   fontFamily: fontFamilyMonospace,
@@ -109,6 +109,7 @@ const BaseContainer = gloss<SimpleTextProps & { disabled?: boolean }>(SimpleText
 const Added = gloss({
   backgroundColor: colors.tealTint70,
 })
+
 const Removed = gloss({
   backgroundColor: colors.cherryTint70,
 })

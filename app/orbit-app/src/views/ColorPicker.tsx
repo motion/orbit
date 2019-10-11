@@ -81,7 +81,6 @@ export const ColorPicker = memo(
   },
 )
 
-const SVG = gloss(View)
-SVG.defaultProps = {
+const SVG = gloss(View, {
   tagName: 'svg',
-}
+})

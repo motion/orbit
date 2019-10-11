@@ -19,6 +19,7 @@ type Props = {
 }
 
 export const Glint = gloss<Props>(Box, {
+  className: 'ui-glint',
   pointerEvents: 'none',
   position: 'absolute',
   left: 0,
@@ -48,7 +49,3 @@ export const Glint = gloss<Props>(Box, {
     ...radiusProps,
   }
 })
-
-Glint.defaultProps = {
-  className: 'ui-glint',
-}

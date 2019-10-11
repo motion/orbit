@@ -2,6 +2,7 @@ import { gloss } from 'gloss'
 import { HTMLProps } from 'react'
 
 export const TableInput = gloss<HTMLProps<HTMLInputElement>>('input', {
+  type: 'text',
   borderRadius: 4,
   font: 'inherit',
   fontSize: 16,
@@ -23,7 +24,3 @@ export const TableInput = gloss<HTMLProps<HTMLInputElement>>('input', {
 }).theme(props => ({
   border: [1, props.borderColor],
 }))
-
-TableInput.defaultProps = {
-  type: 'text',
-}

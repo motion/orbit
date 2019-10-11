@@ -5,6 +5,7 @@ import { Size } from './Space'
 import { scaledTextSizeTheme } from './text/scaledTextSizeTheme'
 
 export const Circle = gloss<{ size?: Size }>(Base, {
+  size: 'md',
   position: 'relative',
   borderRadius: 100000,
   alignItems: 'center',
@@ -20,7 +21,3 @@ export const Circle = gloss<{ size?: Size }>(Base, {
   propsToStyles,
   scaledTextSizeTheme,
 )
-
-Circle.defaultProps = {
-  size: 'md',
-}

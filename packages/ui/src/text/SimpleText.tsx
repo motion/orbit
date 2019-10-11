@@ -1,16 +1,19 @@
-import { alphaColorTheme, Base, BaseProps, gloss } from 'gloss'
+import { AlphaColorProps, alphaColorTheme, Box, gloss, GlossProps, propsToStyles, TextSizeProps } from 'gloss'
 
 import { Config } from '../helpers/configureUI'
 import { Size } from '../Space'
 import { scaledTextSizeTheme } from './scaledTextSizeTheme'
 
-export type SimpleTextProps = Partial<Omit<BaseProps, 'size'>> & {
-  size?: Size
-  ellipse?: boolean
-  selectable?: boolean
-}
+type SimpleTextPropsBase = Omit<TextSizeProps, 'size'> &
+  AlphaColorProps & {
+    size?: Size
+    ellipse?: boolean
+    selectable?: boolean
+  }
 
-export const SimpleText = gloss<SimpleTextProps>(Base, {
+export type SimpleTextProps = GlossProps<SimpleTextPropsBase>
+
+export const SimpleText = gloss<SimpleTextPropsBase>(Box, {
   display: 'inline-block',
   whiteSpace: 'normal',
   conditional: {
@@ -27,7 +30,7 @@ export const SimpleText = gloss<SimpleTextProps>(Base, {
       cursor: 'pointer',
     },
   },
-}).theme(alphaColorTheme, scaledTextSizeTheme)
+}).theme(propsToStyles, alphaColorTheme, scaledTextSizeTheme)
 
 SimpleText.defaultProps = {
   ...Config.defaultProps.text,

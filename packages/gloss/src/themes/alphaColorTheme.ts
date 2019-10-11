@@ -1,12 +1,20 @@
 import { toColor } from '@o/color'
-import { CSSPropertySet } from '@o/css'
+import { CSSPropertySet, CSSPropertySetStrict } from '@o/css'
 
 import { Config } from '../configureGloss'
 import { ThemeFn } from '../gloss'
 import { mergeStyles } from '../helpers/mergeStyles'
-import { PseudoStyleProps } from './psuedoStyleTheme'
 
 // mutate styles to have alpha if defined in props
+
+export type PseudoStyleProps = {
+  hoverStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
+  activeStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
+  focusStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
+  disabledStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
+  focusWithinStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
+  selectedStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
+}
 
 export type AlphaColorProps = {
   applyPsuedoColors?: boolean | 'only-if-defined'

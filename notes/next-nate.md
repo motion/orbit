@@ -1,8 +1,6 @@
 ---
 
 - gloss
-  - fix psuedos (homepage buttons, button active)
-  - fix coat bordered color
   - fix props/source/page sub buttons hover
   - fix github button theme change
   - fix tabs and next/prev buttons centering
@@ -10,7 +8,6 @@
   - fix modal backgrounds
   - fix alt card inner text is white
   - fix list item / flat buttons arent styled right
-  - theme change join input not changing
   - fix header left side not left enough
 - site
   - home

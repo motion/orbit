@@ -110,7 +110,6 @@ const SimpleInput = ({
 }: InputProps) => {
   const visible = useVisibility()
   return (
-    // @ts-ignore
     <Surface
       tagName={tagName}
       elementProps={useMemo(

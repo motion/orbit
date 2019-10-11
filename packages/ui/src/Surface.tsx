@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
-import { Base, Box, CompiledTheme, gloss, GlossProps, mergeStyles, propsToStyles, ThemeFn, ThemeSelect, useTheme } from 'gloss'
+import { Base, Box, CompiledTheme, gloss, GlossProps, mergeStyles, propsToStyles, pseudoProps, PseudoStyleProps, ThemeFn, ThemeSelect, useTheme } from 'gloss'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
@@ -172,7 +172,9 @@ export type SurfaceSpecificProps = SizedSurfaceSpecificProps & {
   elementTheme?: ThemeFn
 }
 
-export type SurfaceProps = GlossProps<Omit<ViewPropsPlain, 'size'> & SurfaceSpecificProps>
+export type SurfaceProps = GlossProps<
+  Omit<ViewPropsPlain, 'size'> & SurfaceSpecificProps & PseudoThemeProps
+>
 
 const getBorderRadius = (t, b, l, r, tl, tr, bl, br) => {
   return {
@@ -543,6 +545,24 @@ const chromelessStyle = {
   background: 'transparent',
 }
 
+type PseudoThemeProps = {
+  [K in keyof PseudoStyleProps]: ThemeFn
+}
+
+/**
+ * Allows you to pass theme functions as props
+ */
+const pseudoThemes: ThemeFn<PseudoThemeProps> = (props, prev) => {
+  let styles
+  for (const key in pseudoProps) {
+    if (typeof props[key] === 'function') {
+      styles = styles || {}
+      Object.assign(styles, props[key](props, prev))
+    }
+  }
+  return styles
+}
+
 // fontFamily: inherit on both fixes elements
 const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
   display: 'flex', // in case they change tagName
@@ -560,7 +580,7 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
       cursor: 'not-allowed',
     },
   },
-}).theme(mergeStyles, props => {
+}).theme(pseudoThemes, mergeStyles, props => {
   // todo fix types here
   const marginStyle = getMargin(props as any)
   const { fontSize, lineHeight } = scaledTextSizeTheme(props)

@@ -1,7 +1,6 @@
 //!
 import { themes } from '@o/kit'
-import { ProvideUI, View } from '@o/ui/test'
-import { Box, gloss } from 'gloss'
+import { ProvideUI, SimpleText } from '@o/ui/test'
 import * as React from 'react'
 import { render } from 'react-dom'
 
@@ -11,13 +10,14 @@ function Main() {
   const bg = '#000'
   return (
     <ProvideUI themes={themes} activeTheme="light">
-      <View sm-marginBottom={20}>
-        <HeaderContainer />
-        {/* <BorderTop /> */}
-        {/* <Text selectable>hello world</Text>
+      <SimpleText color="red">Hello world</SimpleText>
+      {/* <View sm-marginBottom={20}>
+        <HeaderContainer /> */}
+      {/* <BorderTop /> */}
+      {/* <Text selectable>hello world</Text>
         <ListItemSimple title="First" icon="ok" />
         <ListItemSimple isSelected title="ok" icon="ok" /> */}
-        {/* <Stack direction="horizontal" space="lg">
+      {/* <Stack direction="horizontal" space="lg">
         <Surface>hello world</Surface>
           <View
             nodeRef={ref}
@@ -41,46 +41,46 @@ function Main() {
           <MySimpleView>hihi</MySimpleView>
           <MySubView>hello world</MySubView>
         </Stack> */}
-      </View>
+      {/* </View> */}
     </ProvideUI>
   )
 }
 
-const HeaderContainer = gloss(Box, {
-  flexDirection: 'row',
-  flexShrink: 0,
-  left: 0,
-  overflow: 'hidden',
-  position: 'sticky',
-  right: 0,
-  textAlign: 'left',
-  top: 0,
-  zIndex: 2,
-  debug: true,
-  background: 'red',
-}).theme(props => ({
-  borderBottom: [1, props.borderColorLight],
-}))
+// const HeaderContainer = gloss(Box, {
+//   flexDirection: 'row',
+//   flexShrink: 0,
+//   left: 0,
+//   overflow: 'hidden',
+//   position: 'sticky',
+//   right: 0,
+//   textAlign: 'left',
+//   top: 0,
+//   zIndex: 2,
+//   debug: true,
+//   background: 'red',
+// }).theme(props => ({
+//   borderBottom: [1, props.borderColorLight],
+// }))
 
-const MySimpleView = gloss({
-  color: 'yellow',
-})
+// const MySimpleView = gloss({
+//   color: 'yellow',
+// })
 
-const MySubView = gloss(View, {
-  background: 'red',
-  color: [255, 255, 255],
+// const MySubView = gloss(View, {
+//   background: 'red',
+//   color: [255, 255, 255],
 
-  boolProp: {
-    color: 'blue',
+//   boolProp: {
+//     color: 'blue',
 
-    hoverStyle: {
-      color: 'green',
-    },
-  },
+//     hoverStyle: {
+//       color: 'green',
+//     },
+//   },
 
-  '@media screen and (max-width: 100px)': {
-    background: 'red',
-  },
-})
+//   '@media screen and (max-width: 100px)': {
+//     background: 'red',
+//   },
+// })
 
 render(<Main />, document.querySelector('#app'))

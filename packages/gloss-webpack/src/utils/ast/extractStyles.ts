@@ -2,7 +2,7 @@ import generate from '@babel/generator'
 import traverse from '@babel/traverse'
 import t = require('@babel/types')
 import literalToAst from 'babel-literal-to-ast'
-import { getGlossProps, getStylesClassName, GlossStaticStyleDescription, GlossView, validCSSAttr } from 'gloss'
+import { getGlossProps, getStylesClassName, GlossStaticStyleDescription, GlossView, isGlossView, validCSSAttr } from 'gloss'
 import invariant = require('invariant')
 import path = require('path')
 import util = require('util')
@@ -530,7 +530,7 @@ export function extractStyles(
           }
 
           // if view + doesn't extend a theme fn, optimize
-          if (view?.internal && !view.internal.themeFns) {
+          if (isGlossView(view)) {
             // local views we already parsed the css out
             const localView = localStaticViews[node.name.name]
             if (localView) {

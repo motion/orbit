@@ -1,6 +1,5 @@
 import { AlphaColorProps, alphaColorTheme, Box, gloss, GlossProps, propsToStyles, TextSizeProps } from 'gloss'
 
-import { Config } from '../helpers/configureUI'
 import { Size } from '../Space'
 import { scaledTextSizeTheme } from './scaledTextSizeTheme'
 
@@ -32,8 +31,3 @@ export const SimpleText = gloss<SimpleTextPropsBase>(Box, {
     },
   },
 }).theme(propsToStyles, alphaColorTheme, scaledTextSizeTheme)
-
-// TODO move this into a theme
-SimpleText.defaultProps = {
-  ...Config.defaultProps.text,
-}

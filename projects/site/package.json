@@ -8,7 +8,7 @@
     "start:extract-static": "mcro-build --extract-static-styles --port 5005 --target web",
     "next:start": "cross-env NODE_ENV=production node .next/production-server/server/index.js",
     "next:dev": "nodemon server.ts",
-    "build": "OPTIMIZE_REACT=1 ANALYZE_BUNDLE=1 mcro-build --prod --build --target web",
+    "build": "OPTIMIZE_REACT=1 ANALYZE_BUNDLE=1 mcro-build --extract-static-styles --prod --build --target web",
     "build:no-min": "NO_OPTIMIZE=1 mcro-build --prod --build --target web",
     "build:debug": "NODE_ENV=development mcro-build --prod --build --target web",
     "start:prod": " OPTIMIZE_REACT=1 mcro-build --prod --port 5000 --report --target web",

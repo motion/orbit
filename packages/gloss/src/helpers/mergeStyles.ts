@@ -1,4 +1,4 @@
-import { validCSSAttr } from '@o/css/src/css'
+import { validCSSAttr } from '@o/css'
 
 import { isPlainObj } from './helpers'
 

@@ -84,7 +84,7 @@ export const themes = createThemes({
     background: toColor('#12100E'),
   },
 
-  blogHeaderTheme: home,
+  blogHeaderTheme: purple,
 
   docsPageTheme: {
     ...light,

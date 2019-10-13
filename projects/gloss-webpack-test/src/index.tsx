@@ -1,6 +1,6 @@
 //!
 import { themes } from '@o/kit'
-import { ProvideUI, SimpleText } from '@o/ui/test'
+import { Image, ProvideUI } from '@o/ui/test'
 import * as React from 'react'
 import { render } from 'react-dom'
 
@@ -10,7 +10,8 @@ function Main() {
   const bg = '#000'
   return (
     <ProvideUI themes={themes} activeTheme="light">
-      <SimpleText color="red">Hello world</SimpleText>
+      <Image src="home.jpg" />
+      {/* <SimpleText color="red">Hello world</SimpleText> */}
       {/* <View sm-marginBottom={20}>
         <HeaderContainer /> */}
       {/* <BorderTop /> */}

@@ -12,6 +12,7 @@ import { getStylesByClassName } from '../getStylesByClassName'
 import { evaluateAstNode } from './evaluateAstNode'
 import { extractStaticTernaries, Ternary } from './extractStaticTernaries'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
+import { htmlAttributes } from './htmlAttributes'
 import { parse } from './parse'
 
 export interface ExtractStylesOptions {
@@ -61,10 +62,6 @@ export function extractStyles(
   ast: t.File
   map: any // RawSourceMap from 'source-map'
 } {
-  const JSX_VALID_NAMES = Object.keys(options.views).filter(x => {
-    return options.views[x] && !!options.views[x].staticStyleConfig
-  })
-
   if (typeof src !== 'string') {
     throw new Error('`src` must be a string of javascript')
   }
@@ -99,6 +96,9 @@ export function extractStyles(
   const shouldPrintDebug = src[0] === '/' && src[1] === '/' && src[2] === '!'
 
   const views: { [key: string]: GlossView<any> } = {}
+  const JSX_VALID_NAMES = Object.keys(options.views).filter(x => {
+    return options.views[x] && !!options.views[x].staticStyleConfig
+  })
 
   // we allow things within the ui kit to avoid the more tedious config
   const isInternal =
@@ -285,10 +285,18 @@ export function extractStyles(
         // Remember the source component
         const originalNodeName = node.name.name
         const view = views[originalNodeName]
+
+        let domNode = 'div'
+
         let staticStyleConfig: GlossView<any>['staticStyleConfig'] | null = null
         if (view) {
           staticStyleConfig = view.staticStyleConfig
+          domNode = view.staticStyleConfig?.tagName
+            ?? view.internal?.glossProps.defaultProps.tagName
+            ?? 'div'
         }
+
+        console.log('domNode', originalNodeName, domNode)
 
         // Get valid css props
         const cssAttributes = staticStyleConfig?.cssAttributes || validCSSAttr
@@ -433,6 +441,9 @@ export function extractStyles(
             return true
           }
           if (!cssAttributes[name]) {
+            if (htmlAttributes[name]) {
+              return true
+            }
             inlinePropCount++
             return true
           }
@@ -512,6 +523,7 @@ export function extractStyles(
 
         // if all style props have been extracted, jsxstyle component can be
         // converted to a div or the specified component
+
         if (inlinePropCount === 0) {
           // TODO we can do this but we'd need a slightly different strategy:
           //  Config needs to know how to parse the components.... so we'd need like a way to
@@ -547,7 +559,8 @@ export function extractStyles(
               const info = getStylesClassName('.', view.defaultProps)
               stylesByClassName[info.className] = view.defaultProps
             }
-            node.name.name = (view.defaultProps && view.defaultProps.tagName) || 'div'
+
+            node.name.name = domNode
           }
         } else {
           if (lastSpreadIndex > -1) {

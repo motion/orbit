@@ -1,6 +1,6 @@
 import generate from '@babel/generator'
 import * as t from '@babel/types'
-import { getStylesClassName } from 'gloss'
+import { getStyles } from 'gloss'
 import invariant from 'invariant'
 
 import { CacheObject } from '../../types'
@@ -10,12 +10,6 @@ export interface Ternary {
   test: t.Expression
   consequent: string | null
   alternate: string | null
-}
-
-// if you know theres no media queries
-const getClassName = (styles: Object) => {
-  const all = getStylesClassName(styles)
-  return Object.keys(all)[0]
 }
 
 export function extractStaticTernaries(
@@ -83,13 +77,13 @@ export function extractStaticTernaries(
     ternariesByKey[key].alternateStyles[name] = shouldSwap ? consequent : alternate
   }
 
-  const stylesByClassName: StylesByClassName = {}
+  const stylesByClassName: { [key: string]: string } = {}
 
   const ternaryExpression = Object.keys(ternariesByKey)
     .map((key, idx) => {
       const { test, consequentStyles, alternateStyles } = ternariesByKey[key]
-      const consequentClassName = getClassName(consequentStyles) || ''
-      const alternateClassName = getClassName(alternateStyles) || ''
+      const consequentClassName = getStyles(consequentStyles)?.className ?? ''
+      const alternateClassName = getStyles(alternateStyles)?.className ?? ''
 
       if (!consequentClassName && !alternateClassName) {
         return null

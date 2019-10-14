@@ -2,7 +2,7 @@ import generate from '@babel/generator'
 import traverse from '@babel/traverse'
 import t = require('@babel/types')
 import literalToAst from 'babel-literal-to-ast'
-import { getGlossProps, getStylesClassName, GlossStaticStyleDescription, GlossView, isGlossView, validCSSAttr } from 'gloss'
+import { getAllStyles, getGlossProps, getStyles, GlossStaticStyleDescription, GlossView, isGlossView, validCSSAttr } from 'gloss'
 import invariant = require('invariant')
 import path = require('path')
 import util = require('util')
@@ -217,8 +217,9 @@ export function extractStyles(
             const out: GlossStaticStyleDescription = {
               className: '',
             }
-            for (const key in styles) {
-              const info = getStylesClassName(key, styles[key])
+
+            const allStyles = getAllStyles(styles)
+            for (const info of allStyles) {
               console.log('set it', name, info.css)
               cssMap.set(info.className, { css: info.css, commentTexts: [] })
               out.className += ` ${info.className}`
@@ -229,7 +230,7 @@ export function extractStyles(
                 out.conditionalClassNames[prop] = ''
                 for (const key in conditionalStyles[prop]) {
                   const val = conditionalStyles[prop][key]
-                  const info = getStylesClassName(prop, val)
+                  const info = getStyles(val)
                   cssMap.set(info.className, { css: info.css, commentTexts: [] })
                   out.conditionalClassNames[prop] += ` ${info.className}`
                 }
@@ -530,7 +531,7 @@ export function extractStyles(
           node.attributes.splice(classNamePropIndex, 1)
         }
 
-        const stylesByClassName = getStylesClassName(staticAttributes)
+        const stylesByClassName = getAllStyles(staticAttributes)
 
         // if all style props have been extracted, jsxstyle component can be
         // converted to a div or the specified component
@@ -567,9 +568,9 @@ export function extractStyles(
                 stylesByClassName[className] = {}
               }
               // default prop classes
-              const info = getStylesClassName(view.defaultProps)
-              if (info.className) {
-                stylesByClassName[info.className] = {}
+              const styles = getAllStyles(view.defaultProps)
+              for (const info of styles) {
+                stylesByClassName[info.className] = info.css
               }
             }
 
@@ -713,9 +714,7 @@ export function extractStyles(
               cssMap.set(className, val)
             }
           } else {
-            const styleProps = stylesByClassName[className]
-            // get object of style objects
-            const { css } = getStylesClassName('.', styleProps as any)
+            const css = stylesByClassName[className]
             cssMap.set(className, { css, commentTexts: [comment] })
           }
         }

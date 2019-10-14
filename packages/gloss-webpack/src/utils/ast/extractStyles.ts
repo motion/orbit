@@ -534,7 +534,9 @@ export function extractStyles(
         const stylesByClassName: { [key: string]: string | null } = {}
 
         for (const info of getAllStyles(staticAttributes)) {
-          stylesByClassName[info.className] = info.css
+          if (info.css) {
+            stylesByClassName[info.className] = info.css
+          }
         }
 
         // if all style props have been extracted, jsxstyle component can be
@@ -569,12 +571,15 @@ export function extractStyles(
             } else {
               // internal classes
               for (const className of view.internal.getConfig().staticClasses) {
+                // empty object because we already parsed it out and added to map
                 stylesByClassName[className] = null
               }
               // default prop classes
               const styles = getAllStyles(view.defaultProps)
               for (const info of styles) {
-                stylesByClassName[info.className] = info.css
+                if (info.css) {
+                  stylesByClassName[info.className] = info.css
+                }
               }
             }
 
@@ -720,6 +725,9 @@ export function extractStyles(
           } else {
             const css = stylesByClassName[className]
             if (css) {
+              if (typeof css === 'string') {
+                throw new Error(`CSS is not a string for ${className}: ${JSON.stringify(stylesByClassName)}`)
+              }
               cssMap.set(className, { css, commentTexts: [comment] })
             }
           }

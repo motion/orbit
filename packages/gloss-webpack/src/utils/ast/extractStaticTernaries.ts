@@ -12,6 +12,11 @@ export interface Ternary {
   alternate: string | null
 }
 
+const empty = {
+  css: '',
+  className: ''
+}
+
 export function extractStaticTernaries(
   ternaries: Ternary[],
   cacheObject: CacheObject,
@@ -82,19 +87,19 @@ export function extractStaticTernaries(
   const ternaryExpression = Object.keys(ternariesByKey)
     .map((key, idx) => {
       const { test, consequentStyles, alternateStyles } = ternariesByKey[key]
-      const consequentClassName = getStyles(consequentStyles)?.className ?? ''
-      const alternateClassName = getStyles(alternateStyles)?.className ?? ''
+      const { className: consequentClassName, css: consequentCSS } = getStyles(consequentStyles) ?? empty
+      const { className: alternateClassName, css: alternateCSS } = getStyles(alternateStyles) ?? empty
 
       if (!consequentClassName && !alternateClassName) {
         return null
       }
 
       if (consequentClassName) {
-        stylesByClassName[consequentClassName] = consequentStyles
+        stylesByClassName[consequentClassName] = consequentCSS
       }
 
       if (alternateClassName) {
-        stylesByClassName[alternateClassName] = alternateStyles
+        stylesByClassName[alternateClassName] = alternateCSS
       }
 
       if (consequentClassName && alternateClassName) {

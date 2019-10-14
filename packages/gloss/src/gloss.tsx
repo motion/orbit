@@ -959,7 +959,7 @@ export function getAllStyles(props: any) {
     if (info) {
       allClassNames.push(info)
     } else {
-      console.log('no info for', ns, allStyles[ns])
+      throw new Error(`No styles for ${ns}`)
     }
   }
   return allClassNames

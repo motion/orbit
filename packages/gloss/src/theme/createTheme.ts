@@ -62,13 +62,17 @@ export function createTheme<A extends Partial<ThemeObject>>(
   return res
 }
 
+const ThemesMap = new WeakMap()
 export function createThemes<A extends Partial<ThemeObject>>(themes: {
   [key: string]: A
 }): { [key: string]: CompiledTheme<A> } {
+  if (ThemesMap.has(themes)) {
+    return ThemesMap.get(themes)
+  }
   // ensure we don't have name collisions
   const existing = new Set<string>()
   const duplicates = new Set<Partial<ThemeObject>>()
-  return Object.freeze(
+  const next = Object.freeze(
     Object.keys(themes).reduce((acc, key) => {
       let theme = themes[key]
       if (typeof theme !== 'function') {
@@ -100,4 +104,6 @@ export function createThemes<A extends Partial<ThemeObject>>(themes: {
       return acc
     }, {}),
   )
+  ThemesMap.set(themes, next)
+  return next
 }

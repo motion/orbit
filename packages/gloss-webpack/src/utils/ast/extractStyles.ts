@@ -719,7 +719,9 @@ export function extractStyles(
             }
           } else {
             const css = stylesByClassName[className]
-            cssMap.set(className, { css, commentTexts: [comment] })
+            if (css) {
+              cssMap.set(className, { css, commentTexts: [comment] })
+            }
           }
         }
       },

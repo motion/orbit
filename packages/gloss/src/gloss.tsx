@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssStringWithHash, stringHash, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
+import React from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -955,8 +955,12 @@ export function getAllStyles(props: any) {
   const allClassNames: { css: string, className: string }[] = []
   for (const ns in allStyles) {
     const styleObj = allStyles[ns]
-    const { css, className } = addRules('', styleObj, ns, true, false)!
-    allClassNames.push({ css, className })
+    const info = addRules('', styleObj, ns, true, false)
+    if (info) {
+      allClassNames.push(info)
+    } else {
+      console.log('no info for', ns, allStyles[ns])
+    }
   }
   return allClassNames
 }

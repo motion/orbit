@@ -1,6 +1,7 @@
 import { ThemeSet } from '@o/css'
-import React, { useContext, useMemo } from 'react'
+import React from 'react'
 
+import { createThemes } from './createTheme'
 import { Theme } from './Theme'
 import { AllThemesContext } from './ThemeContext'
 
@@ -16,7 +17,7 @@ export function ThemeProvide({ activeTheme, children, themes }: ThemeProvideProp
     return null
   }
   return (
-    <AllThemesContext.Provider value={themes}>
+    <AllThemesContext.Provider value={createThemes(themes)}>
       <Theme name={activeTheme}>{children}</Theme>
     </AllThemesContext.Provider>
   )

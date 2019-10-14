@@ -1,16 +1,16 @@
 //!
-import { themes } from '@o/kit'
 import { Image, ProvideUI } from '@o/ui/test'
+import { fromStyles } from 'gloss-theme'
 import * as React from 'react'
 import { render } from 'react-dom'
 
 function Main() {
-  const ref = React.useRef(null)
-  const sidebarWidth = 100
-  const bg = '#000'
   return (
-    <ProvideUI themes={themes} activeTheme="light">
-      <Image src="home.jpg" />
+    <ProvideUI
+      themes={{ light: fromStyles({ background: 'red', color: 'white' }) }}
+      activeTheme="light"
+    >
+      <Image background="red" width={200} height={200} src="home.jpg" />
       {/* <SimpleText color="red">Hello world</SimpleText> */}
       {/* <View sm-marginBottom={20}>
         <HeaderContainer /> */}

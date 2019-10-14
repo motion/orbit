@@ -1,5 +1,6 @@
 //!
-import { Image, ProvideUI } from '@o/ui/test'
+import { Box, Image, ProvideUI, SimpleText, View } from '@o/ui'
+import { gloss } from 'gloss'
 import { fromStyles } from 'gloss-theme'
 import * as React from 'react'
 import { render } from 'react-dom'
@@ -11,14 +12,14 @@ function Main() {
       activeTheme="light"
     >
       <Image background="red" width={200} height={200} src="home.jpg" />
-      {/* <SimpleText color="red">Hello world</SimpleText> */}
-      {/* <View sm-marginBottom={20}>
-        <HeaderContainer /> */}
-      {/* <BorderTop /> */}
-      {/* <Text selectable>hello world</Text>
+      <SimpleText color="red">Hello world</SimpleText>
+      <View sm-marginBottom={20}>
+        <HeaderContainer>test me out</HeaderContainer>
+        {/* <BorderTop /> */}
+        {/* <Text selectable>hello world</Text>
         <ListItemSimple title="First" icon="ok" />
         <ListItemSimple isSelected title="ok" icon="ok" /> */}
-      {/* <Stack direction="horizontal" space="lg">
+        {/* <Stack direction="horizontal" space="lg">
         <Surface>hello world</Surface>
           <View
             nodeRef={ref}
@@ -42,26 +43,26 @@ function Main() {
           <MySimpleView>hihi</MySimpleView>
           <MySubView>hello world</MySubView>
         </Stack> */}
-      {/* </View> */}
+      </View>
     </ProvideUI>
   )
 }
 
-// const HeaderContainer = gloss(Box, {
-//   flexDirection: 'row',
-//   flexShrink: 0,
-//   left: 0,
-//   overflow: 'hidden',
-//   position: 'sticky',
-//   right: 0,
-//   textAlign: 'left',
-//   top: 0,
-//   zIndex: 2,
-//   debug: true,
-//   background: 'red',
-// }).theme(props => ({
-//   borderBottom: [1, props.borderColorLight],
-// }))
+const HeaderContainer = gloss(Box, {
+  flexDirection: 'row',
+  flexShrink: 0,
+  left: 0,
+  overflow: 'hidden',
+  position: 'sticky',
+  right: 0,
+  textAlign: 'left',
+  top: 0,
+  zIndex: 2,
+  debug: true,
+  background: 'red',
+}).theme(props => ({
+  borderBottom: [1, props.borderColorLight],
+}))
 
 // const MySimpleView = gloss({
 //   color: 'yellow',

@@ -2,7 +2,7 @@ import generate from '@babel/generator'
 import traverse from '@babel/traverse'
 import t = require('@babel/types')
 import literalToAst from 'babel-literal-to-ast'
-import { getAllStyles, getGlossProps, getStyles, GlossStaticStyleDescription, GlossView, isGlossView, validCSSAttr } from 'gloss'
+import { EmptyExtractError, getAllStyles, getGlossProps, getStyles, GlossStaticStyleDescription, GlossView, isGlossView, validCSSAttr } from 'gloss'
 import invariant = require('invariant')
 import path = require('path')
 import util = require('util')
@@ -575,10 +575,18 @@ export function extractStyles(
                 stylesByClassName[className] = null
               }
               // default prop classes
-              const styles = getAllStyles(view.defaultProps)
-              for (const info of styles) {
-                if (info.css) {
-                  stylesByClassName[info.className] = info.css
+              try {
+                const styles = getAllStyles(view.defaultProps)
+                for (const info of styles) {
+                  if (info.css) {
+                    stylesByClassName[info.className] = info.css
+                  }
+                }
+              } catch(err) {
+                if (err instanceof EmptyExtractError) {
+                  // ok
+                } else {
+                  throw err
                 }
               }
             }

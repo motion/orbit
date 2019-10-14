@@ -4,7 +4,6 @@ import { getStylesClassName } from 'gloss'
 import invariant from 'invariant'
 
 import { CacheObject } from '../../types'
-import { StylesByClassName } from '../getStylesByClassName'
 
 export interface Ternary {
   name: string
@@ -24,7 +23,7 @@ export function extractStaticTernaries(
   cacheObject: CacheObject,
 ): {
   /** styles to be extracted */
-  stylesByClassName: StylesByClassName
+  stylesByClassName: { [key: string]: string }
   /** ternaries grouped into one binary expression */
   ternaryExpression: t.BinaryExpression | t.ConditionalExpression
 } | null {

@@ -8,7 +8,6 @@ import path = require('path')
 import util = require('util')
 
 import { CacheObject } from '../../types'
-import { getStylesByClassName } from '../getStylesByClassName'
 import { evaluateAstNode } from './evaluateAstNode'
 import { extractStaticTernaries, Ternary } from './extractStaticTernaries'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
@@ -81,6 +80,7 @@ export function extractStyles(
     logWarning = warnCallback
   }
 
+  const mediaQueryPrefixes = options.mediaQueryKeys.map(x => `${x}-`)
   const sourceDir = path.dirname(sourceFileName)
 
   // Using a map for (officially supported) guaranteed insertion order
@@ -211,6 +211,7 @@ export function extractStyles(
             )
 
             console.log('TODO!! defaultProps', defaultProps)
+            console.log('what is', styles)
 
             // then put them all into an array so gloss later can use that
             const out: GlossStaticStyleDescription = {
@@ -300,6 +301,12 @@ export function extractStyles(
 
         // Get valid css props
         const cssAttributes = staticStyleConfig?.cssAttributes || validCSSAttr
+
+        function isCSSAttribute(name: string) {
+          if (cssAttributes[name]) return true
+          if (mediaQueryPrefixes.some(x => name.indexOf(x) === 0)) return true
+          return false
+        }
 
         // evaluateVars = false
         const attemptEval = evaluateAstNode
@@ -436,11 +443,15 @@ export function extractStyles(
           if (UNTOUCHED_PROPS.hasOwnProperty(name)) {
             return true
           }
+
           if (name === 'ref') {
             inlinePropCount++
             return true
           }
-          if (!cssAttributes[name]) {
+
+          if (!isCSSAttribute(name)) {
+            // we can safely leave html attributes
+            // TODO make this more customizable / per-tagname
             if (htmlAttributes[name]) {
               return true
             }
@@ -519,7 +530,7 @@ export function extractStyles(
           node.attributes.splice(classNamePropIndex, 1)
         }
 
-        const stylesByClassName = getStylesByClassName(staticAttributes, cacheObject, cssAttributes)
+        const stylesByClassName = getStylesClassName(staticAttributes)
 
         // if all style props have been extracted, jsxstyle component can be
         // converted to a div or the specified component
@@ -556,8 +567,10 @@ export function extractStyles(
                 stylesByClassName[className] = {}
               }
               // default prop classes
-              const info = getStylesClassName('.', view.defaultProps)
-              stylesByClassName[info.className] = view.defaultProps
+              const info = getStylesClassName(view.defaultProps)
+              if (info.className) {
+                stylesByClassName[info.className] = {}
+              }
             }
 
             node.name.name = domNode
@@ -772,7 +785,7 @@ export function extractStyles(
   )
 
   if (shouldPrintDebug) {
-    console.log('output >>', result.code)
+    process.stdout.write('output >> ' + result.code)
   }
 
   return {

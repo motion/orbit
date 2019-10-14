@@ -1,4 +1,4 @@
-import { CSSPropertySet, CSSPropertySetLoose, cssString, cssStringWithHash, stringHash, styleToClassName, validCSSAttr } from '@o/css'
+import { CSSPropertySet, CSSPropertySetLoose, cssStringWithHash, stringHash, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
@@ -450,7 +450,7 @@ function addStyles(
     // add the stylesheets and classNames
     // TODO could do a simple "diff" so that fast-changing styles only change the "changing" props
     // it would likely help things like when you animate based on mousemove, may be slower in default case
-    const className = addRules(displayName, style, key, moreSpecific)
+    const className = addRules(displayName, style, key, moreSpecific || false, true)
 
     if (className) {
       classNames = classNames || []
@@ -786,17 +786,22 @@ const nicePostfix = {
   '&:active': 'active',
   '&:disabled': 'disabled',
   '&:focus': 'focus',
-  '&:focus-within': 'focus-within',
+  '&:focus-within': 'focuswithin',
 }
 
-function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSpecific?: boolean) {
+function addRules<A extends boolean>(
+  displayName = '_',
+  rules: BaseRules,
+  namespace: string,
+  moreSpecific: boolean,
+  insert: A
+): (A extends true ? string : {
+  css: string,
+  className: string
+}) | null {
   const [hash, style] = cssStringWithHash(rules, cssOpts)
+  if (!hash) return null
 
-  if (!hash) {
-    return
-  }
-
-  // slightly shorter hashes
   let className = `g${hash}`
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
   // ensure we are unique for unique namespaces
@@ -805,28 +810,31 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, moreSp
     className += `-${postfix}`
   }
 
-  // this is the first time we've found this className
-  if (!tracker.has(className)) {
-    // build up the correct selector, explode on commas to allow multiple selectors
-    const selector = getSelector(className, namespace)
-    // insert the new style text
-    tracker.set(className, {
-      displayName,
-      namespace,
-      rules,
-      selector,
-      style,
-      className,
-    })
+  const isMediaQuery = namespace[0] === '@'
+  const selector = getSelector(className, namespace)
+  const css = isMediaQuery ? `${namespace} {${selector} {${style}}}` : `${selector} {${style}}`
+  const finalClassName = moreSpecific ? `${SPECIFIC}${className}` : className
+  // build up the correct selector, explode on commas to allow multiple selectors
 
-    if (namespace[0] === '@') {
-      sheet.insert(namespace, `${namespace} {${selector} {${style}}}`)
-    } else {
-      sheet.insert(className, `${selector} {${style}}`)
+  if (insert === true) {
+    // this is the first time we've found this className
+    if (!tracker.has(className)) {
+      // insert the new style text
+      tracker.set(className, {
+        displayName,
+        namespace,
+        rules,
+        selector,
+        style,
+        className,
+      })
+      sheet.insert(isMediaQuery ? namespace : selector, css)
     }
+    // @ts-ignore
+    return finalClassName
   }
-
-  return moreSpecific ? `${SPECIFIC}${className}` : className
+  // @ts-ignore
+  return { css, className: finalClassName }
 }
 
 // has to return a .s-id and .id selector for use in parents passing down styles
@@ -858,25 +866,6 @@ if (isDeveloping && typeof window !== 'undefined') {
     validCSSAttr,
     themeVariableManager,
   }
-}
-
-/**
- * For use externally only (static style extract)
- */
-export function getStylesClassName(namespace: string, styles: CSSPropertySet) {
-  const style = cssString(styles)
-  let className = styleToClassName(style + (isSubStyle(namespace) ? namespace : ''))
-  // selector less specific than the default one in getSelector,
-  // since we want dynamic styles at runtime to be more specific
-  const selector = getSelector(className, namespace, 'body')
-  className = `${SPECIFIC}${className}`
-  let css: string
-  if (namespace[0] === '@') {
-    css = `${namespace} {${selector} {${style}}}`
-  } else {
-    css = `${selector} {${style}}`
-  }
-  return { css, className }
 }
 
 export const isGlossView = (view: any): boolean => {
@@ -955,4 +944,19 @@ function getCompiledClassname(parent: GlossView | any, compiledInfo?: GlossStati
     }
   }
   return { compiledClassName, conditionalClassNames }
+}
+
+/**
+ * For use externally only (static style extract)
+ */
+export function getStylesClassName(props: any) {
+  const allStyles = { '.': {} }
+  mergeStyles('.', allStyles, props)
+  const allClassNames: { [key: string]: string } = {}
+  for (const ns in allStyles) {
+    const styleObj = allStyles[ns]
+    const { css, className } = addRules('', styleObj, ns, true, false)!
+    allClassNames[className] = css
+  }
+  return allClassNames
 }

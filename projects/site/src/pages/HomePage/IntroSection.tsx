@@ -1,3 +1,4 @@
+//!
 import { gloss, Image, Stack, View } from '@o/ui'
 import React from 'react'
 

@@ -531,7 +531,11 @@ export function extractStyles(
           node.attributes.splice(classNamePropIndex, 1)
         }
 
-        const stylesByClassName = getAllStyles(staticAttributes)
+        const stylesByClassName: { [key: string]: string | null } = {}
+
+        for (const info of getAllStyles(staticAttributes)) {
+          stylesByClassName[info.className] = info.css
+        }
 
         // if all style props have been extracted, jsxstyle component can be
         // converted to a div or the specified component
@@ -548,7 +552,7 @@ export function extractStyles(
             console.log('get rid of it den', node.name.name, localView.className)
             for (const className of localView.className.trim().split(' ')) {
               // empty object because we already parsed it out and added to map
-              stylesByClassName[className] = {}
+              stylesByClassName[className] = null
             }
             node.name.name = 'div'
           }
@@ -560,12 +564,12 @@ export function extractStyles(
             if (localView) {
               for (const className of localView.className.trim().split(' ')) {
                 // empty object because we already parsed it out and added to map
-                stylesByClassName[className] = {}
+                stylesByClassName[className] = null
               }
             } else {
               // internal classes
               for (const className of view.internal.getConfig().staticClasses) {
-                stylesByClassName[className] = {}
+                stylesByClassName[className] = null
               }
               // default prop classes
               const styles = getAllStyles(view.defaultProps)

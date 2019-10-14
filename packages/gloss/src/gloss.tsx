@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssStringWithHash, stringHash, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
+import React from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -949,7 +949,6 @@ function getCompiledClassname(parent: GlossView | any, compiledInfo?: GlossStati
 /**
  * For use externally only (static style extract)
  */
-export class EmptyExtractError extends Error {}
 export function getAllStyles(props: any) {
   if (!props) {
     return []
@@ -963,7 +962,7 @@ export function getAllStyles(props: any) {
     if (info) {
       allClassNames.push(info)
     } else {
-      throw new EmptyExtractError(`No styles for ${ns}, props ${JSON.stringify(props)}, info ${JSON.stringify(info)}`)
+      console.warn(`No styles for ${ns}, props ${JSON.stringify(props)}, info ${JSON.stringify(info)}`)
     }
   }
   return allClassNames

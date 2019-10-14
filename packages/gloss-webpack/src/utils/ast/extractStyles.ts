@@ -2,7 +2,7 @@ import generate from '@babel/generator'
 import traverse from '@babel/traverse'
 import t = require('@babel/types')
 import literalToAst from 'babel-literal-to-ast'
-import { EmptyExtractError, getAllStyles, getGlossProps, getStyles, GlossStaticStyleDescription, GlossView, isGlossView, validCSSAttr } from 'gloss'
+import { getAllStyles, getGlossProps, getStyles, GlossStaticStyleDescription, GlossView, isGlossView, validCSSAttr } from 'gloss'
 import invariant = require('invariant')
 import path = require('path')
 import util = require('util')
@@ -220,9 +220,13 @@ export function extractStyles(
 
             for (const ns in styles) {
               const info = getStyles(styles[ns])
-              console.log('set it', name, info.css)
-              cssMap.set(info.className, { css: info.css, commentTexts: [] })
-              out.className += ` ${info.className}`
+              if (info) {
+                console.log('set it', name, info.css)
+                cssMap.set(info.className, { css: info.css, commentTexts: [] })
+                out.className += ` ${info.className}`
+              } else {
+                console.log('no info for ns', ns)
+              }
             }
             if (conditionalStyles) {
               out.conditionalClassNames = {}
@@ -531,9 +535,11 @@ export function extractStyles(
           node.attributes.splice(classNamePropIndex, 1)
         }
 
-        const stylesByClassName: { [key: string]: string | null } = {}
+        const stylesByClassName: { [key: string]: string } = {}
 
-        for (const info of getAllStyles(staticAttributes)) {
+        const allStyles = getAllStyles(staticAttributes)
+        console.log(JSON.stringify({ staticAttributes,  allStyles }))
+        for (const info of allStyles) {
           if (info.css) {
             stylesByClassName[info.className] = info.css
           }
@@ -575,18 +581,10 @@ export function extractStyles(
                 stylesByClassName[className] = null
               }
               // default prop classes
-              try {
-                const styles = getAllStyles(view.defaultProps)
-                for (const info of styles) {
-                  if (info.css) {
-                    stylesByClassName[info.className] = info.css
-                  }
-                }
-              } catch(err) {
-                if (err instanceof EmptyExtractError) {
-                  // ok
-                } else {
-                  throw err
+              const styles = getAllStyles(view.defaultProps)
+              for (const info of styles) {
+                if (info.css) {
+                  stylesByClassName[info.className] = info.css
                 }
               }
             }

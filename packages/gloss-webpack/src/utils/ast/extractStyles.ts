@@ -218,8 +218,8 @@ export function extractStyles(
               className: '',
             }
 
-            const allStyles = getAllStyles(styles)
-            for (const info of allStyles) {
+            for (const ns in styles) {
+              const info = getStyles(styles[ns])
               console.log('set it', name, info.css)
               cssMap.set(info.className, { css: info.css, commentTexts: [] })
               out.className += ` ${info.className}`
@@ -725,8 +725,8 @@ export function extractStyles(
           } else {
             const css = stylesByClassName[className]
             if (css) {
-              if (typeof css === 'string') {
-                throw new Error(`CSS is not a string for ${className}: ${JSON.stringify(stylesByClassName)}`)
+              if (typeof css !== 'string') {
+                throw new Error(`CSS is not a string, for ${className}: ${JSON.stringify(stylesByClassName, null, 2)}, ${typeof css}`)
               }
               cssMap.set(className, { css, commentTexts: [comment] })
             }

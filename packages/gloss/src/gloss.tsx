@@ -950,6 +950,9 @@ function getCompiledClassname(parent: GlossView | any, compiledInfo?: GlossStati
  * For use externally only (static style extract)
  */
 export function getAllStyles(props: any) {
+  if (!props) {
+    return []
+  }
   const allStyles = { '.': {} }
   mergeStyles('.', allStyles, props)
   const allClassNames: { css: string, className: string }[] = []
@@ -959,7 +962,7 @@ export function getAllStyles(props: any) {
     if (info) {
       allClassNames.push(info)
     } else {
-      throw new Error(`No styles for ${ns}`)
+      throw new Error(`No styles for ${ns}, props ${JSON.stringify(props)}, info ${JSON.stringify(info)}`)
     }
   }
   return allClassNames

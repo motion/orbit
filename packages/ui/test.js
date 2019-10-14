@@ -5,5 +5,5 @@ export const ProvideUI = require('./src/ProvideUI').ProvideUI
 // export const Surface = require('./src/Surface').Surface
 // export const Text = require('./src/text/Text').Text
 // export const Border = require('./src/Border').Border
-// export const SimpleText = require('./src/text/SimpleText').SimpleText
+export const SimpleText = require('./src/text/SimpleText').SimpleText
 export const Image = require('./src/Image').Image

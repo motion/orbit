@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssStringWithHash, stringHash, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 import React from 'react'
+import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -73,6 +73,7 @@ type GlossInternalConfig = {
   displayName: string
   config: GlossViewOpts | null
   staticClasses: string[]
+  themeFn: ThemeFn | null
 }
 
 export type GlossStaticStyleDescription = {
@@ -331,6 +332,7 @@ export function gloss<
       config: ogConfig,
       displayName: ThemedView.displayName || '',
       staticClasses: staticClasses || [],
+      themeFn,
     }),
   }
 
@@ -794,7 +796,8 @@ function addRules<A extends boolean>(
   rules: BaseRules,
   namespace: string,
   moreSpecific: boolean,
-  insert: A
+  insert: A,
+  parentSelector?: string
 ): (A extends true ? string : {
   css: string,
   className: string
@@ -811,7 +814,7 @@ function addRules<A extends boolean>(
   }
 
   const isMediaQuery = namespace[0] === '@'
-  const selector = getSelector(className, namespace)
+  const selector = getSelector(className, namespace, parentSelector)
   const css = isMediaQuery ? `${namespace} {${selector} {${style}}}` : `${selector} {${style}}`
   const finalClassName = moreSpecific ? `${SPECIFIC}${className}` : className
   // build up the correct selector, explode on commas to allow multiple selectors
@@ -833,6 +836,7 @@ function addRules<A extends boolean>(
     // @ts-ignore
     return finalClassName
   }
+
   // @ts-ignore
   return { css, className: finalClassName }
 }
@@ -958,7 +962,7 @@ export function getAllStyles(props: any) {
   const allClassNames: { css: string, className: string }[] = []
   for (const ns in allStyles) {
     const styleObj = allStyles[ns]
-    const info = addRules('', styleObj, ns, true, false)
+    const info = addRules('', styleObj, ns, true, false, 'body')
     if (info) {
       allClassNames.push(info)
     } else {

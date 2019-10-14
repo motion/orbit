@@ -537,13 +537,31 @@ export function extractStyles(
 
         const stylesByClassName: { [key: string]: string } = {}
 
-        const allStyles = getAllStyles(staticAttributes)
-        console.log(JSON.stringify({ staticAttributes,  allStyles }))
-        for (const info of allStyles) {
-          if (info.css) {
-            stylesByClassName[info.className] = info.css
+        const addStyles = (styleObj: any) => {
+          const allStyles = getAllStyles(styleObj)
+          for (const info of allStyles) {
+            if (info.css) {
+              stylesByClassName[info.className] = info.css
+            }
           }
         }
+
+        const themeFn = view?.internal?.getConfig()?.themeFn
+        if (themeFn) {
+          // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss
+          const themeStyles = themeFn({
+            ...view.defaultProps,
+            ...staticAttributes,
+          } as any)
+          console.log('themeStyles', themeStyles)
+          addStyles(themeStyles)
+        } else {
+          addStyles(staticAttributes)
+          if (view?.defaultProps) {
+            addStyles(view.defaultProps)
+          }
+        }
+
 
         // if all style props have been extracted, jsxstyle component can be
         // converted to a div or the specified component
@@ -565,7 +583,7 @@ export function extractStyles(
             node.name.name = 'div'
           }
 
-          // if view + doesn't extend a theme fn, optimize
+          // if gloss view we may be able to optimize
           if (isGlossView(view)) {
             // local views we already parsed the css out
             const localView = localStaticViews[node.name.name]
@@ -575,17 +593,11 @@ export function extractStyles(
                 stylesByClassName[className] = null
               }
             } else {
+              const { staticClasses } = view.internal.getConfig()
               // internal classes
-              for (const className of view.internal.getConfig().staticClasses) {
+              for (const className of staticClasses) {
                 // empty object because we already parsed it out and added to map
                 stylesByClassName[className] = null
-              }
-              // default prop classes
-              const styles = getAllStyles(view.defaultProps)
-              for (const info of styles) {
-                if (info.css) {
-                  stylesByClassName[info.className] = info.css
-                }
               }
             }
 

@@ -53,13 +53,17 @@ export const SectionContentChrome = gloss<{ readablePage?: boolean }, ViewProps>
   maxHeight: '100%',
   // alignItems: 'center',
   width: '100%',
-  maxWidth: Constants.widths.lg,
+  maxWidth: '100vw',
   paddingLeft: Constants.sidePad,
   paddingRight: Constants.sidePad,
   position: 'relative',
 
   readablePage: {
     maxWidth: Constants.widths.md,
+  },
+
+  [Constants.mediaQueries.lg]: {
+    maxWidth: Constants.widths.lg,
   },
 
   [Constants.mediaQueries.sm]: {

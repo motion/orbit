@@ -6,8 +6,7 @@ import { useScale } from '../Scale'
 import { getTextSize } from '../Sizes'
 import { Size } from '../Space'
 
-export function scaledTextSizeTheme(props: any) {
-  // scaling
+export const scaledTextSizeTheme /* : ThemeFn<{ size: Size }> */ = props => {
   const scale = useScale()
   return getMediaQueryTextSizeTheme(props, { size: props.size, scale })
 }

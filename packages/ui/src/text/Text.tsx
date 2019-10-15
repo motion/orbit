@@ -1,5 +1,5 @@
 import { HighlightOptions, highlightText, on } from '@o/utils'
-import { alphaColorTheme, CSSPropertySet, gloss, propsToStyles } from 'gloss'
+import { alphaColorTheme, CSSPropertySet, gloss, GlossProps, propsToStyles } from 'gloss'
 import keycode from 'keycode'
 import * as React from 'react'
 

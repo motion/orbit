@@ -89,8 +89,6 @@ export const Layout = memo((props: any) => {
     document.body.style.background = background
   }, [theme])
 
-  console.log('render layout')
-
   return (
     <Theme name={theme}>
       <PageLoading />

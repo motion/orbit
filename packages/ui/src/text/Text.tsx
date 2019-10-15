@@ -300,7 +300,6 @@ export class Text extends React.PureComponent<TextProps> {
         ignoreColor={ignoreColor}
         color={color}
         ellipse={ellipse}
-        {...textStyles}
         onDoubleClick={this.handleDoubleClick}
         {...props}
         {...finalProps}

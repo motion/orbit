@@ -13,7 +13,7 @@ export function themeable<A extends any>(Component: A): A {
       return <Component {...props} />
     }
     return (
-      <Theme subTheme={props.subTheme} coat={props.coat} theme={props.theme}>
+      <Theme subTheme={props.subTheme} coat={props.coat}>
         <Component {...props} />
       </Theme>
     )

@@ -17,12 +17,12 @@ export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> &
 
 export const Button = memoIsEqualDeep((direct: ButtonProps) => {
   const props = useSurfaceProps(direct)
-  const { coat, theme, subTheme = 'button', ...rest } = props
+  const { coat, subTheme = 'button', ...rest } = props
   const controlledProps = useUncontrolled(rest, {
     active: 'onChangeActive',
   })
   return (
-    <Theme subTheme={subTheme} coat={coat} theme={theme}>
+    <Theme subTheme={subTheme} coat={coat}>
       <Surface
         data-is="Button"
         borderPosition="inside"

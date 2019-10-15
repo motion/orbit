@@ -78,6 +78,5 @@ const cleanBrand = wordsLines.join('')
 const BrandWords = memo(({ fill, ...props }: any) => {
   const theme = useTheme()
   const f = fill || theme.color
-  console.log('what now', f, theme.name)
   return <SVG svg={cleanBrand} cleanup fill={`${f}`} {...props} />
 })

@@ -212,7 +212,7 @@ export class Text extends React.PureComponent<TextProps> {
     const { doClamp, textHeight } = this.state
     const scale = this.context ? this.context.size : 1
 
-    const numLinesToShow = doClamp && Math.floor(textHeight / lineHeightNum)
+    // const numLinesToShow = doClamp && Math.floor(textHeight / lineHeightNum)
     const maxHeight = 'auto'
     // typeof ellipse === 'number' && lineHeightNum ? `${ellipse * lineHeightNum}px` : 'auto'
     const oneLineEllipse = typeof ellipse === 'number' && ellipse === 1
@@ -278,7 +278,7 @@ export class Text extends React.PureComponent<TextProps> {
           <TextEllipse
             className={className}
             ellipse={ellipse}
-            numLinesToShow={numLinesToShow}
+            numLinesToShow={ellipse}
             maxHeight={maxHeight}
             doClamp={doClamp}
             color={color}

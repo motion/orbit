@@ -1,10 +1,11 @@
 import { GlossPropertySet } from '@o/css'
 import { MotionProps, MotionTransform, Transition } from 'framer-motion'
-import { AlphaColorProps, CommonHTMLProps, CSSPropertySet, CSSPropertySetStrict, GlossProps, TextSizeProps } from 'gloss'
+import { AlphaColorProps, CommonHTMLProps, CSSPropertySet, CSSPropertySetStrict, GlossProps } from 'gloss'
 import React from 'react'
 
 import { AnimationStore } from '../Geometry'
 import { Size } from '../Space'
+import { TextSizeProps } from '../text/textSizeTheme'
 import { CommonViewProps } from './CommonViewProps'
 import { ElevatableProps } from './elevation'
 import { PaddingProps } from './PaddedView'

@@ -1,4 +1,3 @@
-import { CSSPropertySetStrict } from '@o/css'
 import { HighlightOptions, highlightText, on } from '@o/utils'
 import { alphaColorTheme, CSSPropertySet, gloss, propsToStyles } from 'gloss'
 import keycode from 'keycode'
@@ -7,11 +6,12 @@ import * as React from 'react'
 import { Config } from '../helpers/configureUI'
 import { ScaleContext } from '../Scale'
 import { Size } from '../Space'
+import { SimpleTextPropsBase } from './SimpleText'
 import { textSizeTheme } from './textSizeTheme'
 
 type ChildrenHlFn = (Highlights) => JSX.Element | null
 
-export type TextProps = CSSPropertySetStrict &
+export type TextProps = SimpleTextPropsBase &
   React.HTMLAttributes<HTMLParagraphElement> & {
     color?: CSSPropertySet['color'] | false
     editable?: boolean

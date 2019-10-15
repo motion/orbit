@@ -1,9 +1,9 @@
-import { AlphaColorProps, alphaColorTheme, Box, gloss, GlossProps, propsToStyles, TextSizeProps } from 'gloss'
+import { AlphaColorProps, alphaColorTheme, Box, gloss, GlossProps, propsToStyles } from 'gloss'
 
 import { Size } from '../Space'
-import { textSizeTheme } from './textSizeTheme'
+import { TextSizeProps, textSizeTheme } from './textSizeTheme'
 
-type SimpleTextPropsBase = Omit<TextSizeProps, 'size'> &
+export type SimpleTextPropsBase = Omit<TextSizeProps, 'size'> &
   AlphaColorProps & {
     size?: Size
     ellipse?: boolean

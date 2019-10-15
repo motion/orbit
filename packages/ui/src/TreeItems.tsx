@@ -15,7 +15,7 @@ type FlatTreeItems = FlatTreeItem[]
 
 export class TreeItems extends React.PureComponent<
   TreeProps & {
-    rowHeight: number
+    rowHeight: number | string
     width: number
     height: number
   }

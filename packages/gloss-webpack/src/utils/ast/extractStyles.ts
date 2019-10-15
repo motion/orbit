@@ -49,6 +49,8 @@ const JSXSTYLE_SOURCES = {
   '@o/ui/test': true,
 }
 
+type CSSExtracted = { filename: string, content: string }
+
 export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
@@ -56,8 +58,7 @@ export function extractStyles(
   options: ExtractStylesOptions,
 ): {
   js: string | Buffer
-  css: string
-  cssFileName: string | null
+  css: CSSExtracted[]
   ast: t.File
   map: any // RawSourceMap from 'source-map'
 } {
@@ -262,8 +263,7 @@ export function extractStyles(
   if (!jsxstyleSrc || !Object.keys(validComponents).length) {
     return {
       ast,
-      css: '',
-      cssFileName: null,
+      css: [],
       js: src,
       map: null,
     }
@@ -782,25 +782,25 @@ export function extractStyles(
     },
   })
 
-  const resultCSS = Array.from(cssMap.values())
-    .map(n => n.commentTexts.map(txt => `${txt}\n`).join('') + n.css)
-    .join('')
-  // path.parse doesn't exist in the webpack'd bundle but path.dirname and path.basename do.
-  const extName = path.extname(sourceFileName)
-  const baseName = path.basename(sourceFileName, extName)
-  const cssRelativeFileName = `./${baseName}__jsxstyle.css`
-  const cssFileName = path.join(sourceDir, cssRelativeFileName)
+  const css: CSSExtracted[] = []
 
-  // append require/import statement to the document
-  if (resultCSS !== '') {
-    if (useImportSyntax) {
-      ast.program.body.unshift(t.importDeclaration([], t.stringLiteral(cssRelativeFileName)))
-    } else {
-      ast.program.body.unshift(
-        t.expressionStatement(
-          t.callExpression(t.identifier('require'), [t.stringLiteral(cssRelativeFileName)]),
-        ),
-      )
+  // Write out CSS using it's className, this gives us de-duping for shared classnames
+  for (const [className, entry] of cssMap.entries()) {
+    const content = `${entry.commentTexts.map(txt => `${txt}\n`).join('')}${entry.css}`
+    const relFileName = `./${className}__jsxstyle.css`
+    const filename = path.join(sourceDir, relFileName)
+    // append require/import statement to the document
+    if (content !== '') {
+      css.push({ filename, content })
+      if (useImportSyntax) {
+        ast.program.body.unshift(t.importDeclaration([], t.stringLiteral(relFileName)))
+      } else {
+        ast.program.body.unshift(
+          t.expressionStatement(
+            t.callExpression(t.identifier('require'), [t.stringLiteral(relFileName)]),
+          ),
+        )
+      }
     }
   }
 
@@ -825,8 +825,7 @@ export function extractStyles(
 
   return {
     ast,
-    css: resultCSS,
-    cssFileName,
+    css,
     js: result.code,
     map: result.map,
   }

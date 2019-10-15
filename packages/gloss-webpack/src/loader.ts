@@ -69,12 +69,15 @@ const jsxstyleLoader: webpack.loader.Loader = function(this: any, content) {
     options,
   )
 
-  if (!rv.cssFileName || rv.css.length === 0) {
+  if (rv.css.length === 0) {
     return content
   }
 
-  memoryFS.mkdirpSync(path.dirname(rv.cssFileName))
-  memoryFS.writeFileSync(rv.cssFileName, rv.css)
+  for (const { filename, content } of rv.css) {
+    memoryFS.mkdirpSync(path.dirname(filename))
+    memoryFS.writeFileSync(filename, content)
+  }
+
   this.callback(null, rv.js, rv.map)
 
   return

@@ -45,13 +45,13 @@ const booleanToNumber = (val: boolean | number): number => {
 
 function getTextSizeTheme(props: TextSizeProps) {
   const sizeVal = getTextSize(props.size) ?? 1
-  const baseFontSize = CSS.px(14)
-  const baseLineHeight = CSS.px(14 * 1.2)
-  const extraLineHeight = CSS.px(4)
+  const baseFontSize = 14
+  const baseLineHeight = 14 * 1.2
+  const extraLineHeight = 4
   const size = CSS.px(sizeVal)
   const scale = 'var(--scale)'
-  const sizeFont = CSS.px(booleanToNumber(props.sizeFont ?? 1))
-  const sizeLineHeight = CSS.px(booleanToNumber(props.sizeLineHeight ?? 1))
+  const sizeFont = booleanToNumber(props.sizeFont ?? 1)
+  const sizeLineHeight = booleanToNumber(props.sizeLineHeight ?? 1)
   const fontSizeInner = `${size} * ${scale} * ${baseFontSize} * ${sizeFont}`
   const fontSize = `calc(${fontSizeInner})`
   const lineHeight = `calc(${size} * ${scale} * ${baseLineHeight} * ${sizeLineHeight} + ${extraLineHeight})`

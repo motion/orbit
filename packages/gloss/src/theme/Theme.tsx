@@ -82,7 +82,7 @@ If you'd like to do both, just nest another Theme. For props: `,
     return children as JSX.Element
   }
 
-  if (!themeObservableContext || !willChangeTheme) {
+  if (!themeObservableContext || !(willChangeTheme || hasThemeVariables)) {
     return children as JSX.Element
   }
 

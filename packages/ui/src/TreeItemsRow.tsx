@@ -256,15 +256,18 @@ const TreeItemsRowDecoration = gloss(Box, {
   top: -1,
 })
 
-const TreeItemsLine = gloss<{ height: number; childrenCount: number }>(Box, {
+const TreeItemsLine = gloss<{ height: number | string; childrenCount: number }>(Box, {
   position: 'absolute',
   right: 3,
   zIndex: 2,
   width: 2,
   borderRadius: '999em',
 }).theme(props => ({
-  top: props.height - 3,
-  height: props.childrenCount * props.height - 4,
+  // TODO can we make this work with calculated values?
+  top: 0,
+  height: props.height,
+  // top: props.height - 3,
+  // height: props.childrenCount * props.height - 4,
   background: props.borderColor,
 }))
 

@@ -17,16 +17,53 @@ export type TextSizeConfig = {
 }
 
 declare const CSS: any
+declare const CSSVariableReferenceValue: any
+declare const CSSUnparsedValue: any
+declare const CSSMathProduct: any
+declare const CSSMathSum: any
+declare const CSSMathMin: any
+declare const CSSMathMax: any
+declare const CSSMathNegate: any
+
+class CSSValue {
+  current: any = null
+  constructor(initial: any, ...fallbacks: any) {
+    this.current =
+      initial[0] === '-' && initial[1] === '-'
+        ? new CSSVariableReferenceValue(initial, new CSSUnparsedValue(fallbacks))
+        : new CSSUnparsedValue(initial)
+  }
+  mult(...vals: any) {
+    return new CSSMathProduct(this.current, ...vals)
+  }
+  sum(...vals: any) {
+    return new CSSMathSum(this.current, ...vals)
+  }
+  negate() {
+    return new CSSMathNegate(this.current)
+  }
+  min(val: any) {
+    return new CSSMathMin(this.current, val)
+  }
+  max(val: any) {
+    return new CSSMathMax(this.current, val)
+  }
+}
+
+const val = (initial: any, ...values: any[]) => {
+  return new CSSValue(initial, ...values)
+}
 
 export function getTextSizeTheme(props: TextSizeProps) {
-  const scale = CSS.var(props.scale, 1)
-  const size = CSS.var(props.size, 1)
-  const sizeFont = CSS.var(props.sizeFont === true ? 1 : props.sizeFont || 1)
-  const sizeLineHeight = CSS.var(props.sizeLineHeight === true ? 1 : props.sizeLineHeight || 1)
-  const lineHeight = CSS.add(CSS.mult(size, scale, sizeLineHeight, 14), 4)
-  const marginV = CSS.px(CSS.mult(lineHeight, -0.15))
+  const scale = val(props.scale, 1)
+  const size = val(props.size, 1)
+  const sizeFont = val(props.sizeFont === true ? 1 : props.sizeFont || 1)
+  const sizeLineHeight = val(props.sizeLineHeight === true ? 1 : props.sizeLineHeight || 1)
+  const fontSize = size.mult(scale, size, sizeFont, 14)
+  const lineHeight = size.mult(scale, size, sizeLineHeight, 14 * 1.2).add(4)
+  const marginV = lineHeight.negate().mult(0.1)
   return {
-    fontSize: CSS.px(CSS.calc(CSS.mult(size, scale, sizeFont, 14))),
+    fontSize: CSS.px(fontSize),
     lineHeight: CSS.px(lineHeight),
     marginTop: marginV,
     marginBottom: marginV,

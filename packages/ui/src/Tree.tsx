@@ -2,7 +2,6 @@ import { gloss } from 'gloss'
 import React from 'react'
 
 import { useNodeSize } from './hooks/useNodeSize'
-import { useScale } from './Scale'
 import { DEFAULT_ROW_HEIGHT } from './tables/types'
 import { TreeItems } from './TreeItems'
 import { View } from './View/View'
@@ -21,7 +20,7 @@ export type TreeProps = {
     matches: Set<TreeItemID>
   }
   zebra?: boolean
-  rowHeight?: number
+  rowHeight?: number | string
 }
 
 export type TreeItemID = number
@@ -56,13 +55,12 @@ export function Tree(props: TreeProps) {
     disable: !visibility,
     throttle: 200,
   })
-  const scale = useScale()
   return (
     <TreeChrome nodeRef={ref}>
       <TreeItems
         width={width}
         height={height}
-        rowHeight={scale * DEFAULT_ROW_HEIGHT}
+        rowHeight={`calc(${DEFAULT_ROW_HEIGHT}px * var(--scale))`}
         zebra
         {...props}
       />

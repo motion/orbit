@@ -20,7 +20,5 @@ export const TitleText = ({
   const mdSize =
     props['md-size'] ||
     (typeof size === 'string' ? getSizeRelative(size as any, -1 + sizeRelative) : size)
-  return (
-    <Title selectable {...titleProps} {...props} size={size} sm-size={smSize} md-size={mdSize} />
-  )
+  return <Title {...titleProps} {...props} size={size} sm-size={smSize} md-size={mdSize} />
 }

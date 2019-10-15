@@ -8,5 +8,4 @@ export const Title = gloss<TextProps>(Text as any, {
   className: 'ui-title',
   fontWeight: 700,
   sizeFont: 2,
-  sizeLineHeight: 1.25,
 })

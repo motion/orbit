@@ -11,36 +11,38 @@ import { textSizeTheme } from './textSizeTheme'
 
 type ChildrenHlFn = (Highlights) => JSX.Element | null
 
-export type TextProps = SimpleTextPropsBase &
-  React.HTMLAttributes<HTMLParagraphElement> & {
-    color?: CSSPropertySet['color'] | false
-    editable?: boolean
-    autoselect?: boolean
-    selectable?: boolean
-    onStartEdit?: () => any
-    onFinishEdit?: (value: string, event: any) => any
-    onCancelEdit?: (value: string, event: any) => any
-    nodeRef?: React.RefObject<HTMLElement>
-    ellipse?: boolean | number
-    tagName?: string
-    lines?: number
-    alpha?: number
-    onKeyDown?: Function
-    opacity?: number
-    size?: Size
-    placeholder?: string
-    lineHeight?: number
-    sizeLineHeight?: number | boolean
-    sizeFont?: number | boolean
-    measure?: boolean
-    onMeasure?: Function
-    sizeMethod?: string
-    highlight?: HighlightOptions
-    wordBreak?: string
-    children: React.ReactNode | ChildrenHlFn
-    ignoreColor?: boolean
-    renderAsHtml?: boolean
-  }
+export type TextProps = GlossProps<
+  SimpleTextPropsBase &
+    React.HTMLAttributes<HTMLParagraphElement> & {
+      color?: CSSPropertySet['color'] | false
+      editable?: boolean
+      autoselect?: boolean
+      selectable?: boolean
+      onStartEdit?: () => any
+      onFinishEdit?: (value: string, event: any) => any
+      onCancelEdit?: (value: string, event: any) => any
+      nodeRef?: React.RefObject<HTMLElement>
+      ellipse?: boolean | number
+      tagName?: string
+      lines?: number
+      alpha?: number
+      onKeyDown?: Function
+      opacity?: number
+      size?: Size
+      placeholder?: string
+      lineHeight?: number
+      sizeLineHeight?: number | boolean
+      sizeFont?: number | boolean
+      measure?: boolean
+      onMeasure?: Function
+      sizeMethod?: string
+      highlight?: HighlightOptions
+      wordBreak?: string
+      children: React.ReactNode | ChildrenHlFn
+      ignoreColor?: boolean
+      renderAsHtml?: boolean
+    }
+>
 
 export type Highlights = {
   highlights: string[]

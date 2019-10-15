@@ -3,7 +3,7 @@ import React, { createContext, useContext, useEffect, useLayoutEffect, useMemo, 
 import { CompiledTheme } from './createTheme'
 import { preProcessTheme } from './preProcessTheme'
 import { AllThemesContext } from './ThemeContext'
-import { themeVariableManager } from './themeVariableManager'
+import { themeVariableManager } from './ThemeVariableManager'
 
 export type ThemeSelect = ((theme: CompiledTheme) => CompiledTheme) | string | false | undefined
 export type ThemeObserver = (theme: CompiledTheme) => any
@@ -15,55 +15,104 @@ export type CurrentTheme = {
   parentContext?: CurrentTheme
 }
 
-type ThemeProps = {
-  theme?: CompiledTheme
+type ThemeChangeProps = {
   subTheme?: ThemeSelect
   coat?: string | false
   name?: string
-  children: React.ReactNode
 }
 
-export const Theme = (props: ThemeProps) => {
-  const theme = useNextTheme(props)
+type ThemeProps = ThemeChangeProps & {
+  children: React.ReactNode
+  [key: string]: any
+}
+
+export const Theme = ({
+  coat,
+  subTheme,
+  name,
+  children,
+  ...themeVariables
+}: ThemeProps): JSX.Element => {
+  const willChangeTheme = !!(coat || subTheme || name)
+  const hasThemeVariables = Object.keys(themeVariables).length
+  const theme = useNextTheme({ coat, subTheme, name })
   const themeObservableContext = useCreateThemeObservable({ theme })
   const nodeRef = useRef<HTMLDivElement>(null)
 
+  // change theme by name, coat, subTheme
   useLayoutEffect(() => {
-    // hasnt changed
-    if (!themeObservableContext) return
-    const setClassName = () => {
-      const classNames = themeVariableManager.getClassNames(themeObservableContext.current)
-      if (nodeRef.current) {
-        nodeRef.current.className = `display-contents ${classNames}`
+    if (willChangeTheme) {
+      // hasnt changed
+      if (!themeObservableContext) return
+      const setClassName = () => {
+        if (nodeRef.current) {
+          const classNames = themeVariableManager.getClassNames(themeObservableContext.current)
+          nodeRef.current.className = `display-contents ${classNames}`
+        }
+      }
+      setClassName()
+      const themeListen = themeObservableContext.subscribe(setClassName)
+      themeVariableManager.mount(themeObservableContext)
+      return () => {
+        themeVariableManager.unmount(themeObservableContext)
+        themeListen.unsubscribe()
       }
     }
-    setClassName()
-    const themeListen = themeObservableContext.subscribe(setClassName)
-    themeVariableManager.mount(themeObservableContext)
-    return () => {
-      themeVariableManager.unmount(themeObservableContext)
-      themeListen.unsubscribe()
+    if (hasThemeVariables) {
+      if (nodeRef.current) {
+        const classNames = themeVariableManager.mountVariables(themeVariables)
+        nodeRef.current.className = `display-contents ${classNames}`
+        return () => {
+          themeVariableManager.unmountVariables(themeVariables)
+        }
+      }
     }
-  }, [theme])
+  }, [
+    theme,
+    hasThemeVariables ? Object.keys(themeVariables).map(x => themeVariables[x]) : undefined,
+  ])
 
-  if (!themeObservableContext || (!props.coat && !props.theme && !props.subTheme && !props.name)) {
-    return props.children as JSX.Element
+  if (willChangeTheme && hasThemeVariables) {
+    console.warn(`Warning: You should either change your theme using name/coat/subTheme, or set variables\n
+If you'd like to do both, just nest another Theme like so:\n
+  <Theme name="dark" coat="flat">
+    <Theme scale={2}>
+      {...}
+    </Theme>
+  </Theme>`)
+    return children as JSX.Element
   }
 
-  return (
-    <CurrentThemeContext.Provider value={themeObservableContext}>
+  if (!themeObservableContext || !willChangeTheme) {
+    return children as JSX.Element
+  }
+
+  if (willChangeTheme) {
+    return (
+      <CurrentThemeContext.Provider value={themeObservableContext}>
+        <div ref={nodeRef} className="display-contents" style={{ display: 'contents' }}>
+          {children}
+        </div>
+      </CurrentThemeContext.Provider>
+    )
+  }
+
+  if (hasThemeVariables) {
+    return (
       <div ref={nodeRef} className="display-contents" style={{ display: 'contents' }}>
-        {props.children}
+        {children}
       </div>
-    </CurrentThemeContext.Provider>
-  )
+    )
+  }
+
+  return null as any
 }
 
-const useNextTheme = (props: ThemeProps) => {
-  const { name, theme, subTheme, coat } = props
+const useNextTheme = (props: ThemeChangeProps) => {
+  const { name, subTheme, coat } = props
   const themes = useContext(AllThemesContext)
   const curContext = useContext(CurrentThemeContext)
-  if (!name && !subTheme && !coat && !theme) {
+  if (!name && !subTheme && !coat) {
     return
   }
   return (name && themes[name]) || preProcessTheme(props, curContext.current)

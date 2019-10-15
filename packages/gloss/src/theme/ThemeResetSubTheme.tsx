@@ -2,7 +2,7 @@ import { useContext, useLayoutEffect, useRef } from 'react'
 import React from 'react'
 
 import { CurrentThemeContext } from './Theme'
-import { themeVariableManager } from './themeVariableManager'
+import { themeVariableManager } from './ThemeVariableManager'
 
 export function ThemeResetSubTheme({ children }: { children: any }) {
   const themeContext = useContext(CurrentThemeContext)

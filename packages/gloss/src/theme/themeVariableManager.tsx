@@ -1,4 +1,4 @@
-import { cssValue, validCSSAttr } from '@o/css'
+import { cssValue, stringHash, validCSSAttr } from '@o/css'
 
 import { makeStyleTag } from '../stylesheet/makeStyleTag'
 import { CompiledTheme } from './createTheme'
@@ -139,7 +139,7 @@ class ThemeVariableManager {
     const subRules = this.getThemeVariables(subTheme)
 
     if (subRules.length) {
-      const rule = `${selectors} { ${subRules} }`
+      const rule = `${selectors} {${subRules}}`
       this.sheet.insertRule(rule)
     }
   }
@@ -166,6 +166,25 @@ class ThemeVariableManager {
       res.push(`sub-${theme._subThemeName}`)
     }
     return res.join('-')
+  }
+
+  mountVariables(variables: Object) {
+    try {
+      const className = `v${stringHash(JSON.stringify(variables))}`
+      let rules = ''
+      for (const key in variables) {
+        rules += `--${key}: ${variables[key]};`
+      }
+      this.sheet.insertRule(`.${className} {${rules}}`)
+      return className
+    } catch(err) {
+      console.error(`Error mounting variables: ${err.message}, variables:`, variables)
+      return ''
+    }
+  }
+
+  unmountVariables(_variables: Object) {
+    // todo, similar gc to gloss
   }
 }
 

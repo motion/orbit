@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssStringWithHash, stringHash, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
+import React from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -9,7 +9,7 @@ import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
 import { pseudoProps } from './theme/pseudos'
-import { themeVariableManager } from './theme/themeVariableManager'
+import { themeVariableManager } from './theme/ThemeVariableManager'
 import { useTheme } from './theme/useTheme'
 import { GlossProps, GlossPropsPartial, GlossThemeProps } from './types'
 

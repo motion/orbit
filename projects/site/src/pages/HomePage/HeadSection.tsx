@@ -1,4 +1,4 @@
-import { gloss, Icon, Image, Parallax, Scale, SimpleText, SimpleTextProps, Space, Stack, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
+import { gloss, Icon, Image, Parallax, SimpleText, SimpleTextProps, Space, Stack, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import { Base } from 'gloss'
 import React, { memo } from 'react'
@@ -10,7 +10,6 @@ import { fadeAnimations, FadeChildProps, FadeInView, transitions, useFadePage } 
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContentChrome } from '../../views/SectionContent'
-import { TitleText } from '../../views/TitleText'
 import { Join } from './Join'
 import { useScreenVal } from './SpacedPageContent'
 
@@ -340,7 +339,7 @@ const HeadJoin = memo(() => {
       <FadeInView {...fadeAnimations.up} delay={500}>
         <SurfacePassProps elevation={5} {...fontProps.TitleFont}>
           <Theme name="orbitOneDark">
-            <Scale size={useScreenVal(1, 1.1, 1.2)}>
+            <Theme scale={1.2} sm-scale={1}>
               <Join
                 inputProps={{
                   minWidth: useScreenVal('auto', 300, 300),
@@ -352,7 +351,7 @@ const HeadJoin = memo(() => {
                 group
                 space={false}
               />
-            </Scale>
+            </Theme>
           </Theme>
         </SurfacePassProps>
       </FadeInView>
@@ -364,7 +363,7 @@ const titleSize = 9
 
 const TextFitTitle = (props: TitleProps) => {
   return (
-    <TitleText
+    <SimpleText
       userSelect="text"
       // @ts-ignore
       lineHeight="95%"

@@ -3,6 +3,8 @@
 - will need to move all text sizing / useScale over to theme
 - <Theme scale={1.2}> should work as well as <Theme scale="lg">
 - part of that will be getting CSS.calc() and so on working, have polyfill already
+- <Theme sm-scale={1} /> support media queries here
+  - see HeadSection for real world usage
 
 - gloss
   - fix modal backgrounds

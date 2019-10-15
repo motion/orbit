@@ -25,7 +25,7 @@ type TreeItemsRowProps = {
   onTreeItemHovered?: (key: TreeItemID | null) => void
   childrenCount: number
   style?: Object
-  height: number
+  height: number | string
 }
 
 export class TreeItemsRow extends React.PureComponent<TreeItemsRowProps> {

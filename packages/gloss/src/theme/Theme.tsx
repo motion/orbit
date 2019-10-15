@@ -26,13 +26,8 @@ type ThemeProps = ThemeChangeProps & {
   [key: string]: any
 }
 
-export const Theme = ({
-  coat,
-  subTheme,
-  name,
-  children,
-  ...themeVariables
-}: ThemeProps): JSX.Element => {
+export const Theme = (props: ThemeProps): JSX.Element => {
+  const { coat, subTheme, name, children, ...themeVariables } = props
   const willChangeTheme = !!(coat || subTheme || name)
   const hasThemeVariables = Object.keys(themeVariables).length
   const theme = useNextTheme({ coat, subTheme, name })
@@ -73,13 +68,17 @@ export const Theme = ({
   ])
 
   if (willChangeTheme && hasThemeVariables) {
-    console.warn(`Warning: You should either change your theme using name/coat/subTheme, or set variables\n
-If you'd like to do both, just nest another Theme like so:\n
+    console.warn(
+      `Warning: You should either change your theme using name/coat/subTheme, or set variables\n
+If you'd like to do both, just nest another Theme. For props: `,
+      props,
+      `Can do this like so:\n
   <Theme name="dark" coat="flat">
     <Theme scale={2}>
       {...}
     </Theme>
-  </Theme>`)
+  </Theme>`,
+    )
     return children as JSX.Element
   }
 

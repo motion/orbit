@@ -7,7 +7,7 @@ import * as React from 'react'
 import { Config } from '../helpers/configureUI'
 import { ScaleContext } from '../Scale'
 import { Size } from '../Space'
-import { getMediaQueryTextSizeTheme } from './scaledTextSizeTheme'
+import { textSizeTheme } from './textSizeTheme'
 
 type ChildrenHlFn = (Highlights) => JSX.Element | null
 
@@ -209,13 +209,6 @@ export class Text extends React.PureComponent<TextProps> {
     } = this.props
     const { doClamp, textHeight } = this.state
     const scale = this.context ? this.context.size : 1
-    const { fontSizeNum: _fontSizeNum, lineHeightNum, ...textStyles } = getMediaQueryTextSizeTheme(
-      this.props,
-      {
-        scale,
-        size: props.size,
-      },
-    )
 
     const numLinesToShow = doClamp && Math.floor(textHeight / lineHeightNum)
     const maxHeight = 'auto'
@@ -337,7 +330,7 @@ const TextBlock = gloss({
       overflow: 'hidden',
     },
   },
-}).theme(propsToStyles, alphaColorTheme)
+}).theme(textSizeTheme, propsToStyles, alphaColorTheme)
 
 type TextEllipseProps = TextProps & {
   doClamp?: boolean

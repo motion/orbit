@@ -3,8 +3,8 @@ import React, { memo } from 'react'
 
 import { BorderBottom, BorderTop } from './Border'
 import { useScale } from './Scale'
-import { scaledTextSizeTheme } from './text/scaledTextSizeTheme'
 import { SimpleText, SimpleTextProps } from './text/SimpleText'
+import { textSizeTheme } from './text/textSizeTheme'
 
 export type ListSeparatorProps = SimpleTextProps & {
   subTheme?: ThemeSelect
@@ -46,6 +46,6 @@ const ListSeparatorText = gloss<ListSeparatorProps>(SimpleText, {
       padding: [scale * 5, scale * 8],
     }
   },
-  scaledTextSizeTheme,
+  textSizeTheme,
   alphaColorTheme,
 )

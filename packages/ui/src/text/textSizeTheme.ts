@@ -1,70 +1,64 @@
+import { isDefined } from '@o/utils'
+
+import { hasMediaQueries, mediaQueryKeysSize } from '../mediaQueryKeys'
+import { getTextSize } from '../Sizes'
+import { Size } from '../Space'
+
 export type TextSizeProps = {
   sizeFont?: boolean | number
   sizeLineHeight?: boolean | number
-  lineHeight?: number | string | any
-  fontSize?: number | string | any
-  size?: number
-  scale?: number
+  lineHeight?: Size
+  fontSize?: Size
+  size?: Size
+  scale?: Size
   marginTop?: number
   marginBottom?: number
 }
 
-// dont return undefined
+export function textSizeTheme(props: TextSizeProps) {
+  const res = getTextSizeTheme(props)
 
-export type TextSizeConfig = {
-  scale?: number
-  size?: number
+  // media query size
+  if (hasMediaQueries) {
+    for (const key in mediaQueryKeysSize) {
+      if (isDefined(props[key])) {
+        const mediaKey = key.replace('-size', '')
+        const mediaSizeVal = props[key]
+        const mediaSize = getTextSize(mediaSizeVal)
+        const mediaStyles = getTextSizeTheme({
+          scale: props.scale,
+          size: mediaSize
+        })
+        for (const textKey in mediaStyles) {
+          res[`${mediaKey}-${textKey}`] = mediaStyles[textKey]
+        }
+      }
+    }
+  }
+
+  return res
 }
 
-declare const CSS: any
-declare const CSSVariableReferenceValue: any
-declare const CSSUnparsedValue: any
-declare const CSSMathProduct: any
-declare const CSSMathSum: any
-declare const CSSMathMin: any
-declare const CSSMathMax: any
-declare const CSSMathNegate: any
-
-class CSSValue {
-  current: any = null
-  constructor(initial: any, ...fallbacks: any) {
-    this.current =
-      initial[0] === '-' && initial[1] === '-'
-        ? new CSSVariableReferenceValue(initial, new CSSUnparsedValue(fallbacks))
-        : new CSSUnparsedValue(initial)
-  }
-  mult(...vals: any) {
-    return new CSSMathProduct(this.current, ...vals)
-  }
-  sum(...vals: any) {
-    return new CSSMathSum(this.current, ...vals)
-  }
-  negate() {
-    return new CSSMathNegate(this.current)
-  }
-  min(val: any) {
-    return new CSSMathMin(this.current, val)
-  }
-  max(val: any) {
-    return new CSSMathMax(this.current, val)
-  }
+const booleanToNumber = (val: boolean | number): number => {
+  return val === true ? 1 : val === false ? 0 : val
 }
 
-const val = (initial: any, ...values: any[]) => {
-  return new CSSValue(initial, ...values)
-}
-
-export function getTextSizeTheme(props: TextSizeProps) {
-  const scale = val(props.scale, 1)
-  const size = val(props.size, 1)
-  const sizeFont = val(props.sizeFont === true ? 1 : props.sizeFont || 1)
-  const sizeLineHeight = val(props.sizeLineHeight === true ? 1 : props.sizeLineHeight || 1)
-  const fontSize = size.mult(scale, size, sizeFont, 14)
-  const lineHeight = size.mult(scale, size, sizeLineHeight, 14 * 1.2).add(4)
-  const marginV = lineHeight.negate().mult(0.1)
+function getTextSizeTheme(props: TextSizeProps) {
+  const sizeVal = getTextSize(props.size) ?? 1
+  const baseFontSize = CSS.px(14)
+  const baseLineHeight = CSS.px(14 * 1.2)
+  const extraLineHeight = CSS.px(4)
+  const size = CSS.px(sizeVal)
+  const scale = 'var(--scale)'
+  const sizeFont = CSS.px(booleanToNumber(props.sizeFont ?? 1))
+  const sizeLineHeight = CSS.px(booleanToNumber(props.sizeLineHeight ?? 1))
+  const fontSizeInner = `${size} * ${scale} * ${baseFontSize} * ${sizeFont}`
+  const fontSize = `calc(${fontSizeInner})`
+  const lineHeight = `calc(${size} * ${scale} * ${baseLineHeight} * ${sizeLineHeight} + ${extraLineHeight})`
+  const marginV = `calc(${fontSizeInner} * -0.14px)`
   return {
-    fontSize: CSS.px(fontSize),
-    lineHeight: CSS.px(lineHeight),
+    fontSize: fontSize,
+    lineHeight: lineHeight,
     marginTop: marginV,
     marginBottom: marginV,
   }

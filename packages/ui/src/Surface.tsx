@@ -19,7 +19,7 @@ import { getSegmentedStyle } from './SegmentedRow'
 import { getSize } from './Sizes'
 import { Size, Space } from './Space'
 import { SizedSurfacePropsContext } from './SurfacePropsContext'
-import { scaledTextSizeTheme } from './text/scaledTextSizeTheme'
+import { textSizeTheme } from './text/textSizeTheme'
 import { Tooltip } from './Tooltip'
 import { elevationTheme } from './View/elevation'
 import { ViewProps, ViewPropsPlain } from './View/types'
@@ -583,7 +583,7 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
 }).theme(pseudoFunctionThemes, pseudoStyleTheme, (props, prev) => {
   // todo fix types here
   const marginStyle = getMargin(props as any)
-  const { fontSize, lineHeight } = scaledTextSizeTheme(props)
+  const { fontSize, lineHeight } = textSizeTheme(props)
 
   if (props.chromeless) {
     delete prev.hoverStyle

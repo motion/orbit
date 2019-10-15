@@ -1,6 +1,5 @@
 import { baseIgnoreAttrs, gloss } from '../gloss'
 import { AlphaColorProps, alphaColorThemeLoose, propsToStyles } from '../themes'
-import { TextSizeProps } from '../themes/textSizeTheme'
 import { GlossProps } from '../types'
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
@@ -13,7 +12,7 @@ export const Box = gloss({
   minWidth: 0,
 })
 
-export type BasePropsBase = TextSizeProps & AlphaColorProps
+export type BasePropsBase = AlphaColorProps
 export type BaseProps = GlossProps<BasePropsBase>
 
 export const Base = gloss<BasePropsBase>(Box).theme(

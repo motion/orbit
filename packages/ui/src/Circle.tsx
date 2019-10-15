@@ -2,7 +2,7 @@ import { Base, gloss, propsToStyles } from 'gloss'
 
 import { getSize } from './Sizes'
 import { Size } from './Space'
-import { scaledTextSizeTheme } from './text/scaledTextSizeTheme'
+import { textSizeTheme } from './text/textSizeTheme'
 
 export const Circle = gloss<{ size?: Size }>(Base, {
   size: 'md',
@@ -19,5 +19,5 @@ export const Circle = gloss<{ size?: Size }>(Base, {
     borderRadius: props.size,
   }),
   propsToStyles,
-  scaledTextSizeTheme,
+  textSizeTheme,
 )

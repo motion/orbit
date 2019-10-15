@@ -82,6 +82,7 @@
     "@types/webpack-env": "1.14.0",
     "@types/ws": "5.1.2",
     "@types/zen-observable": "0.8.0",
+    "@types/w3c-css-typed-object-model-level-1": "20180410.0.1",
     "@typescript-eslint/eslint-plugin": "1.5.0",
     "@typescript-eslint/parser": "1.5.0",
     "babel-eslint": "^8.2.3",

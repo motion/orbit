@@ -5,6 +5,7 @@ import { WhiteList } from '../hooks/useWhiteList'
 
 export function ManageSmartSync({ whitelist }: { whitelist: WhiteList }) {
   return (
+    // @ts-ignore
     <Surface
       coat={whitelist.isWhitelisting ? 'selected' : undefined}
       sizeRadius

@@ -303,6 +303,7 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
 
   let lineHeight = props.lineHeight
   if (!props.lineHeight && sizeLineHeight && +height == +height) {
+    // @ts-ignore
     lineHeight = typeof height === 'number' ? `${height * 0.92}px` : height
   }
 

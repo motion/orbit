@@ -12,7 +12,7 @@ import { textSizeTheme } from './textSizeTheme'
 type ChildrenHlFn = (Highlights) => JSX.Element | null
 
 export type TextProps = GlossProps<
-  SimpleTextPropsBase &
+  Omit<SimpleTextPropsBase, 'ellipse'> &
     React.HTMLAttributes<HTMLParagraphElement> & {
       color?: CSSPropertySet['color'] | false
       editable?: boolean
@@ -97,7 +97,7 @@ export class Text extends React.PureComponent<TextProps> {
   }
 
   measure() {
-    if (this.props.ellipse > 1) {
+    if (typeof this.props.ellipse === 'number' && this.props.ellipse > 1) {
       this.setState(
         {
           doClamp: true,
@@ -215,7 +215,7 @@ export class Text extends React.PureComponent<TextProps> {
     const numLinesToShow = doClamp && Math.floor(textHeight / lineHeightNum)
     const maxHeight = 'auto'
     // typeof ellipse === 'number' && lineHeightNum ? `${ellipse * lineHeightNum}px` : 'auto'
-    const oneLineEllipse = ellipse === 1
+    const oneLineEllipse = typeof ellipse === 'number' && ellipse === 1
 
     // so we can toggle between html or text
     let finalProps: any = {

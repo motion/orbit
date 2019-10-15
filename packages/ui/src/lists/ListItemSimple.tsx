@@ -16,7 +16,7 @@ import { Surface } from '../Surface'
 import { DateFormat } from '../text/DateFormat'
 import { SimpleText } from '../text/SimpleText'
 import { Text } from '../text/Text'
-import { usePadding } from '../View/PaddedView'
+import { paddingTheme } from '../View/PaddedView'
 import { Stack } from '../View/Stack'
 import { View } from '../View/View'
 import { ListItemSimpleProps } from './ListItemViewProps'
@@ -91,7 +91,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
   }
 
   const iconElement = showIcon && getIcon(props)
-  const listItemAdjustedPadding = usePadding({ padding: selectDefined(padding, 12) })
+  const listItemAdjustedPadding = paddingTheme({ padding: selectDefined(padding, 12) })
   const space = listItemAdjustedPadding ? listItemAdjustedPadding.paddingTop : undefined
 
   const hasChildren = showChildren && !!children

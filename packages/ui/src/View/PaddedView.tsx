@@ -41,7 +41,7 @@ export const PaddedView = gloss<
     maxWidth: props.scrollable === 'y' || !props.scrollable ? '100%' : undefined,
     maxHeight: props.scrollable === 'x' ? '100%' : undefined,
   }),
-  usePadding,
+  paddingTheme,
   wrappingSpaceTheme,
 )
 
@@ -73,7 +73,7 @@ type PaddingSpecificProps = PaddingProps & {
   paddingBottom?: any
 }
 
-export function usePadding(props: PaddingSpecificProps) {
+export function paddingTheme(props: PaddingSpecificProps) {
   if (props.padding === false) {
     return null
   }

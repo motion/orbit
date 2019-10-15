@@ -7,7 +7,7 @@ import { Sizes } from '../Space'
 import { elevationTheme } from './elevation'
 import { getSizableValue } from './getSizableValue'
 import { motionExtraProps, motionStyleProps } from './motionStyleProps'
-import { usePadding } from './PaddedView'
+import { paddingTheme } from './PaddedView'
 import { SizesObject, ViewPropsPlain } from './types'
 
 // includes motion styles too
@@ -39,7 +39,7 @@ export const View = gloss<ViewPropsPlain>(Base, {
     margin: true,
   },
 })
-  .theme(getMargin, usePadding, elevationTheme)
+  .theme(getMargin, paddingTheme, elevationTheme)
   .withConfig({
     // shouldAvoidProcessingStyles: shouldRenderToMotion,
     postProcessProps(inProps, outProps, getStyles) {

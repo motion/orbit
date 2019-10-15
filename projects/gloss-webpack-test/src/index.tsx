@@ -1,6 +1,7 @@
 //!
-import { Image, ProvideUI, SimpleText } from '@o/ui/test'
+import { ProvideUI, SimpleText } from '@o/ui/test'
 import { fromStyles } from 'gloss-theme'
+import { Theme } from 'gloss/src'
 import * as React from 'react'
 import { render } from 'react-dom'
 
@@ -10,8 +11,10 @@ function Main() {
       themes={{ light: fromStyles({ background: 'red', color: 'white' }) }}
       activeTheme="light"
     >
-      <Image background="red" width={200} height={200} src="home.jpg" />
-      <SimpleText>Hello world</SimpleText>
+      <Theme scale={2}>
+        <SimpleText>Hello world</SimpleText>
+      </Theme>
+      {/* <Image background="red" width={200} height={200} src="home.jpg" /> */}
       {/* <View sm-marginBottom={20}>
         <HeaderContainer /> */}
       {/* <BorderTop /> */}

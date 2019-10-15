@@ -218,8 +218,8 @@ export class Text extends React.PureComponent<TextProps> {
     )
 
     const numLinesToShow = doClamp && Math.floor(textHeight / lineHeightNum)
-    const maxHeight =
-      typeof ellipse === 'number' && lineHeightNum ? `${ellipse * lineHeightNum}px` : 'auto'
+    const maxHeight = 'auto'
+    // typeof ellipse === 'number' && lineHeightNum ? `${ellipse * lineHeightNum}px` : 'auto'
     const oneLineEllipse = ellipse === 1
 
     // so we can toggle between html or text

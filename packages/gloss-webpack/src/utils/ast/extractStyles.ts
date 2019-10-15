@@ -549,12 +549,16 @@ export function extractStyles(
         const themeFn = view?.internal?.getConfig()?.themeFn
         if (themeFn) {
           // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss
-          const themeStyles = themeFn({
-            ...view.defaultProps,
-            ...staticAttributes,
-          } as any)
-          console.log('themeStyles', themeStyles)
-          addStyles(themeStyles)
+          try {
+            const themeStyles = themeFn({
+              ...view.defaultProps,
+              ...staticAttributes,
+            } as any)
+            console.log('themeStyles', themeStyles)
+            addStyles(themeStyles)
+          } catch(err) {
+            console.log('error', err.message)
+          }
         } else {
           addStyles(staticAttributes)
           if (view?.defaultProps) {

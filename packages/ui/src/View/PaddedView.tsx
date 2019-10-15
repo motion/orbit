@@ -127,9 +127,11 @@ export function paddingTheme(props: PaddingSpecificProps) {
 function getPaddingBaseValue(value: any) {
   const res = getSizableValue(value)
   return Array.isArray(res)
-    ? res.map(x => (typeof x === 'number' ? `calc(${x}px * var(--scale))` : x))
+    ? res.map(x => (typeof x === 'number' && x > 0 ? `calc(${x}px * var(--scale))` : x))
     : typeof res === 'number'
-    ? `calc(${res}px * var(--scale))`
+    ? res > 0
+      ? `calc(${res}px * var(--scale))`
+      : res
     : res
 }
 

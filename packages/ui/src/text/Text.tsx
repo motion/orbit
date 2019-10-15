@@ -277,7 +277,7 @@ export class Text extends React.PureComponent<TextProps> {
         children: (
           <TextEllipse
             className={className}
-            ellipse={ellipse}
+            ellipse={ellipse === 1 || ellipse === true ? true : ellipse}
             numLinesToShow={ellipse}
             maxHeight={maxHeight}
             doClamp={doClamp}
@@ -340,15 +340,15 @@ type TextEllipseProps = TextProps & {
 const TextEllipse = gloss<TextEllipseProps>({
   display: 'inline',
   maxWidth: '100%',
-}).theme(({ ellipse, doClamp, maxHeight }) => {
-  if (ellipse === 1 || ellipse === true) {
-    return {
+  conditional: {
+    ellipse: {
       display: 'block',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
       overflow: 'hidden',
     }
   }
+}).theme(({ ellipse, doClamp, maxHeight }) => {
   if (ellipse > 1) {
     return {
       WebkitLineClamp: ellipse,

@@ -4,7 +4,6 @@ import { Image } from './Image'
 
 export const Avatar = gloss(Image, {
   size: 64,
-  tagName: 'img',
   display: 'inline-flex',
   borderRadius: 100,
   userSelect: 'none',

@@ -106,6 +106,7 @@ Stack.defaultProps = {
 
 // static config
 Stack.staticStyleConfig = {
+  parentView: View,
   deoptProps: ['animate', 'drag', 'layoutTransition'],
   avoidProps: ['padding', 'minHeight'],
   cssAttributes: {

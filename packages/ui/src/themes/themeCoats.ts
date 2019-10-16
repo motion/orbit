@@ -1,5 +1,5 @@
+import { linearGradient, toColor } from '@o/color'
 import { ThemeSet } from '@o/css'
-import { linearGradient, toColor } from '@o/ui'
 import { colorize, fromStyles } from 'gloss-theme'
 
 import { colors, transparent } from './themeColors'

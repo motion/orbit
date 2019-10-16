@@ -1,4 +1,4 @@
-import { toColor } from '@o/ui'
+import { toColor } from '@o/color'
 import { colorize } from 'gloss-theme'
 
 export const transparent = toColor([0, 0, 0, 0])

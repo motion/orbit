@@ -28,7 +28,7 @@ export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any
         throw new Error('Unsupported key type: ' + value.key.type)
       }
 
-      ret[key] = evaluateAstNode(value.value)
+      ret[key] = evaluateAstNode(value.value, evalFn)
     }
     return ret
   }
@@ -43,6 +43,7 @@ export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any
 
   if (t.isTemplateLiteral(exprNode)) {
     if (typeof evalFn !== 'function') {
+      console.log('evalFn', evalFn)
       throw new Error(
         'evaluateAstNode does not support template literals unless an eval function is provided',
       )

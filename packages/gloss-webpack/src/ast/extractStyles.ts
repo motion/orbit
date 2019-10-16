@@ -6,11 +6,13 @@ import { CompiledTheme, createThemeProxy, getAllStyles, getGlossProps, getStyles
 import invariant from 'invariant'
 import path from 'path'
 import util from 'util'
+import vm from 'vm'
 
 import { CacheObject } from '../types'
 import { evaluateAstNode } from './evaluateAstNode'
 import { extractStaticTernaries, Ternary } from './extractStaticTernaries'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
+import { getStaticBindingsForScope } from './getStaticBindingsForScope'
 import { htmlAttributes } from './htmlAttributes'
 import { parse } from './parse'
 
@@ -150,6 +152,11 @@ export function extractStyles(
    */
   const localStaticViews: { [key: string]: GlossStaticStyleDescription } = {}
 
+  // this stuff is used by step 2 (theme functions)
+  // any props leftover after parsing gloss style props
+  let restDefaultProps = {}
+  let styleObject = {}
+
   if (importsGloss) {
     traverse(ast, {
       VariableDeclaration(path) {
@@ -197,19 +204,42 @@ export function extractStyles(
         // parse style objects out and return them as array of [{ ['namespace']: 'className' }]
         let staticStyleConfig: GlossStaticStyleDescription | null = null
 
-        // any props leftover after parsing gloss style props
-        let restDefaultProps = {}
+        const evaluateGlossPropArg = (() => {
+          // Generate scope object at this level
+          const staticNamespace = getStaticBindingsForScope(
+            path.scope,
+            sourceFileName,
+            {},
+          )
+          const evalContext = vm.createContext(staticNamespace)
+          // called when evaluateAstNode encounters a dynamic-looking prop
+          const evalFn = (n: t.Node) => {
+            // variable
+            if (t.isIdentifier(n)) {
+              invariant(
+                staticNamespace.hasOwnProperty(n.name),
+                'identifier not in staticNamespace',
+              )
+              return staticNamespace[n.name]
+            }
+            return vm.runInContext(`(${generate(n).code})`, evalContext)
+          }
+          return (n: t.Node) => evaluateAstNode(n, evalFn)
+        })()
 
         glossCall.arguments = glossCall.arguments.map((arg, index) => {
           if ((index === 0 || index === 1) && t.isObjectExpression(arg)) {
-            let styleObject = null
             try {
-              styleObject = evaluateAstNode(arg)
+              styleObject = evaluateGlossPropArg(arg)
+              if (shouldPrintDebug) {
+                console.log('styleObject', styleObject)
+              }
             } catch (err) {
               console.log('Cant parse style object', name, '>', extendsViewIdentifier)
               console.log('err', err)
               return arg
             }
+
             // uses the base styles if necessary, merges just like gloss does
             const { styles, conditionalStyles, defaultProps } = getGlossProps(
               view?.internal,
@@ -328,35 +358,28 @@ export function extractStyles(
           return false
         }
 
-        // evaluateVars = false
-        const attemptEval = evaluateAstNode
-        // evaluateVars
-        //   ? evaluateAstNode
-        //   : (() => {
-        //       // Generate scope object at this level
-        //       const staticNamespace = getStaticBindingsForScope(
-        //         traversePath.scope,
-        //         sourceFileName,
-        //         bindingCache,
-        //       )
-
-        //       const evalContext = vm.createContext(staticNamespace)
-
-        //       // called when evaluateAstNode encounters a dynamic-looking prop
-        //       const evalFn = (n: t.Node) => {
-        //         // variable
-        //         if (t.isIdentifier(n)) {
-        //           invariant(
-        //             staticNamespace.hasOwnProperty(n.name),
-        //             'identifier not in staticNamespace',
-        //           )
-        //           return staticNamespace[n.name]
-        //         }
-        //         return vm.runInContext(`(${generate(n).code})`, evalContext)
-        //       }
-
-        //       return (n: t.Node) => evaluateAstNode(n, evalFn)
-        //     })()
+        const attemptEval = (() => {
+          // Generate scope object at this level
+          const staticNamespace = getStaticBindingsForScope(
+            traversePath.scope,
+            sourceFileName,
+            {},
+          )
+          const evalContext = vm.createContext(staticNamespace)
+          // called when evaluateAstNode encounters a dynamic-looking prop
+          const evalFn = (n: t.Node) => {
+            // variable
+            if (t.isIdentifier(n)) {
+              invariant(
+                staticNamespace.hasOwnProperty(n.name),
+                'identifier not in staticNamespace',
+              )
+              return staticNamespace[n.name]
+            }
+            return vm.runInContext(`(${generate(n).code})`, evalContext)
+          }
+          return (n: t.Node) => evaluateAstNode(n, evalFn)
+        })()
 
         let lastSpreadIndex: number = -1
         const flattenedAttributes: (t.JSXAttribute | t.JSXSpreadAttribute)[] = []
@@ -405,7 +428,6 @@ export function extractStyles(
 
         node.attributes = flattenedAttributes
 
-        // let propsAttributes: (t.JSXSpreadAttribute | t.JSXAttribute)[] = []
         const staticAttributes: Record<string, any> = {}
         const htmlExtractedAttributes = {}
         let inlinePropCount = 0
@@ -589,9 +611,14 @@ domNode: ${domNode}
               nonCSSVariables: new Set<string>(),
             }
             const props = {
+              ...restDefaultProps,
+              ...styleObject,
               ...view.defaultProps,
               ...htmlExtractedAttributes,
               ...staticAttributes,
+            }
+            if (shouldPrintDebug) {
+              console.log('props', props, view?.internal?.getConfig())
             }
             const theme = createThemeProxy(options.defaultTheme, trackState, props)
             const themeStyles = themeFn(theme)
@@ -606,6 +633,8 @@ domNode: ${domNode}
           }
         } else {
           addStyles({
+            ...restDefaultProps,
+            ...styleObject,
             ...htmlExtractedAttributes,
             ...staticAttributes,
           })

@@ -361,17 +361,12 @@ const HeadJoin = memo(() => {
 
 const titleSize = 9
 
-const TextFitTitle = (props: SimpleTextProps) => {
-  return (
-    <SimpleText
-      userSelect="text"
-      lineHeight="95%"
-      fontSize={`${titleSize}vw`}
-      lg-fontSize={titleSize * 11.5}
-      {...props}
-    />
-  )
-}
+const TextFitTitle = gloss(SimpleText, {
+  userSelect: 'text',
+  lineHeight: '95%',
+  fontSize: `${titleSize}vw`,
+  'lg-fontSize': titleSize * 11.5,
+})
 
 const TitleParagraph = (props: SimpleTextProps) => {
   return <Paragraph alpha={0.7} xs-display="inline" {...props} />

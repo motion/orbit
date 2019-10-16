@@ -591,6 +591,14 @@ export function extractStyles(
           //  because View may add more styles on top
           // add static styles base
 
+          // add a data-is="Name" so we can debug it more easily
+          node.attributes.push(
+            t.jsxAttribute(
+              t.jsxIdentifier('data-is'),
+              t.stringLiteral(node.name.name)
+            )
+          )
+
           const localView = localStaticViews[node.name.name]
           if (localView) {
             for (const className of localView.className.trim().split(' ')) {

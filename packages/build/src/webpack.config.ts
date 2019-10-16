@@ -1,12 +1,12 @@
 import * as LernaProject from '@lerna/project'
-import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 import * as Fs from 'fs'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-import IgnoreNotFoundExportPlugin from 'ignore-not-found-export-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
 
+// require so it doesnt get removed on save
+const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin')
+const IgnoreNotFoundExportPlugin = require('ignore-not-found-export-webpack-plugin')
 const ReactRefreshPlugin = require('@o/webpack-fast-refresh')
 // reduced a 5mb bundle by 0.01mb...
 const ShakePlugin = require('webpack-common-shake').Plugin
@@ -16,6 +16,7 @@ const { BundleStatsWebpackPlugin } = require('bundle-stats')
 // const WebpackDeepScopeAnalysisPlugin = require('webpack-deep-scope-plugin').default
 const GlossWebpackPlugin = require('@o/gloss-webpack')
 const LodashWebpackPlugin = require('lodash-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 // const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
 // const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
@@ -205,14 +206,16 @@ const alias = {
   // path: false,
 }
 
+const babelpath = Path.resolve(cwd, '.babelrc')
 const babelrcOptions = {
-  ...JSON.parse(Fs.readFileSync(Path.resolve(cwd, '.babelrc'), 'utf-8')),
+  ...JSON.parse(Fs.readFileSync(babelpath, 'utf-8')),
   // this caused some errors with HMR where gloss-displaynames wouldnt pick up changed view names
   // im presuming because it cached the output and gloss-displaynames needs a redo somehow
+  compact: false,
   cacheDirectory: false,
 }
 
-console.log('babelrcOptions', babelrcOptions)
+console.log('babel', babelpath, babelrcOptions)
 
 async function makeConfig() {
   // get the list of paths to all monorepo packages to apply ts-loader too
@@ -221,7 +224,7 @@ async function makeConfig() {
   // console.log('tsEntries', tsEntries)
 
   const config = {
-    cache: { type: 'filesystem' },
+    cache: false,
     target,
     mode,
     entry,
@@ -270,7 +273,7 @@ async function makeConfig() {
     },
     devtool,
     resolve: {
-      extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx'],
+      extensions: ['.js', '.ts', '.tsx', '.jsx', '.wasm', '.mjs'],
       mainFields: ['ts:main', 'module', 'source', 'browser', 'main'],
       alias,
     },
@@ -293,6 +296,21 @@ async function makeConfig() {
         target !== 'electron-renderer' && {
           test: /\.electron.[jt]sx?/,
           use: 'ignore-loader',
+        },
+        {
+          test: /.*/,
+          loader: require.resolve('./test'),
+          include: function(x) {
+            console.log('x is ', x)
+            return false
+          },
+        },
+        {
+          test: /\.(j|t)sx?$/,
+          use: {
+            loader: 'babel-loader',
+            options: babelrcOptions,
+          },
         },
         {
           test: /\.(j|t)sx?$/,
@@ -386,13 +404,12 @@ async function makeConfig() {
       ].filter(Boolean),
     },
     plugins: [
+      new DuplicatePackageCheckerPlugin(),
       new LodashWebpackPlugin(),
-
       new IgnoreNotFoundExportPlugin(),
-
       new WebpackNotifierPlugin({ excludeWarnings: true }),
-
       new webpack.DefinePlugin(defines),
+      flags.extractStaticStyles && new GlossWebpackPlugin(),
 
       target !== 'node' &&
         new webpack.IgnorePlugin({
@@ -401,17 +418,6 @@ async function makeConfig() {
 
       mode === 'development' && hot && new webpack.HotModuleReplacementPlugin(),
       mode === 'development' && hot && new ReactRefreshPlugin(),
-
-      flags.extractStaticStyles && new GlossWebpackPlugin(),
-
-      // didnt improve
-      // mode === 'production' && new WebpackDeepScopeAnalysisPlugin(),
-
-      // tsConfigExists &&
-      //   !isProd &&
-      //   new ForkTsCheckerWebpackPlugin({
-      //     useTypescriptIncrementalApi: true,
-      //   }),
 
       !process.env['IGNORE_HTML'] &&
         target !== 'node' &&
@@ -437,13 +443,11 @@ async function makeConfig() {
             }),
         }),
 
-      // WARNING: this may or may not work wiht code splitting
-      // i was seeing all the chunks loaded inline in HTML
-      // this was causing bad perf metrics in testing, and also slower rendering as you first
-      // start browsing the page because its loading so much
-      // new PreloadWebpackPlugin({
-      //   rel: 'preload',
-      // }),
+      // tsConfigExists &&
+      //   !isProd &&
+      //   new ForkTsCheckerWebpackPlugin({
+      //     useTypescriptIncrementalApi: true,
+      //   }),
 
       // target !== 'node' &&
       //   isProd &&
@@ -492,8 +496,6 @@ async function makeConfig() {
         }),
 
       // !isProd && new webpack.NamedModulesPlugin(),
-
-      new DuplicatePackageCheckerPlugin(),
 
       !!process.env['SHAKE_COMMONJS'] && new ShakePlugin(),
 

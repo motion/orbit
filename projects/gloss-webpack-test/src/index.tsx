@@ -1,9 +1,27 @@
 //!
-import { ProvideUI, SimpleText } from '@o/ui/test'
+import { getSizeRelative, ProvideUI, SimpleText, Title, View } from '@o/ui'
 import { fromStyles } from 'gloss-theme'
 import { Theme } from 'gloss/src'
 import * as React from 'react'
 import { render } from 'react-dom'
+
+export const TitleText = ({ sizeRelative = 0, ...props }: any) => {
+  // automatically do a small size
+  const size = props.size || 'lg'
+  const smSize =
+    props['sm-size'] ||
+    (typeof size === 'string' ? getSizeRelative(size as any, -2 + sizeRelative) : size)
+  const mdSize =
+    props['md-size'] ||
+    (typeof size === 'string' ? getSizeRelative(size as any, -1 + sizeRelative) : size)
+  return <Title {...props} size={size} sm-size={smSize} md-size={mdSize} />
+}
+
+export const H2 = props => (
+  <View>
+    <TitleText tagName="h2" fontWeight={400} size="sm" {...props} />
+  </View>
+)
 
 function Main() {
   return (
@@ -12,6 +30,7 @@ function Main() {
       activeTheme="light"
     >
       <Theme scale={2}>
+        <H2>Test header</H2>
         <SimpleText>Hello world</SimpleText>
       </Theme>
       {/* <Image background="red" width={200} height={200} src="home.jpg" /> */}

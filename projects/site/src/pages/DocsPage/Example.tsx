@@ -6,7 +6,7 @@ import React, { createElement, isValidElement, memo, Suspense, useRef, useState 
 import { fontProps, mediaQueries } from '../../constants'
 import { linkProps } from '../../useLink'
 import { CodeBlock } from '../../views/CodeBlock'
-import { H5 } from '../../views/H1'
+import { H5 } from '../../views/Headings'
 
 export type ExampleProps = {
   source: string

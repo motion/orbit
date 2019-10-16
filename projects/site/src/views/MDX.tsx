@@ -9,7 +9,7 @@ import { Example } from '../pages/DocsPage/Example'
 import { linkProps } from '../useLink'
 import { CodeBlock } from './CodeBlock'
 import { contentSpace, contentSpaceLg } from './contentSpaceSm'
-import { H1, H2, H3, H4, H5 } from './H1'
+import { H1, H2, H3, H4, H5 } from './Headings'
 import { IntroText } from './IntroText'
 import { Key } from './Key'
 

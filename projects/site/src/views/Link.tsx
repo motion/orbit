@@ -21,7 +21,6 @@ export function Link({ children, href, width, margin, ...props }: LinkProps) {
         hoverStyle={{ alpha: 1 }}
         activeStyle={{ alpha: isActive ? 1 : 0.7 }}
         transition="all ease 300ms"
-        debug
         {...linkProps}
         {...fontProps.BodyFont}
         {...props}

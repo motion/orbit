@@ -224,7 +224,7 @@ async function makeConfig() {
   // console.log('tsEntries', tsEntries)
 
   const config = {
-    cache: false,
+    cache: { type: 'memory' },
     watch: !!IS_RUNNING,
     target,
     mode,

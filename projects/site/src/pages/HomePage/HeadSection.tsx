@@ -1,4 +1,4 @@
-import { gloss, Icon, Image, Parallax, SimpleText, SimpleTextProps, Space, Stack, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
+import { gloss, Icon, Image, Parallax, SimpleText, SimpleTextProps, Space, Stack, SurfacePassProps, Tag, Theme, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import { Base } from 'gloss'
 import React, { memo } from 'react'
@@ -244,7 +244,7 @@ const para = {
   'sm-fontSize': 22 * scale,
   'sm-lineHeight': `${2.8 * scale}rem`,
   'sm-display': 'inline',
-  fontWeight: 400,
+  fontWeight: 300,
   'abovemd-fontWeight': 300,
 } as const
 
@@ -361,11 +361,10 @@ const HeadJoin = memo(() => {
 
 const titleSize = 9
 
-const TextFitTitle = (props: TitleProps) => {
+const TextFitTitle = (props: SimpleTextProps) => {
   return (
     <SimpleText
       userSelect="text"
-      // @ts-ignore
       lineHeight="95%"
       fontSize={`${titleSize}vw`}
       lg-fontSize={titleSize * 11.5}

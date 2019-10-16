@@ -46,6 +46,6 @@ export { ThemeProvide } from './theme/ThemeProvide'
 export * from './themes'
 export * from './theme/pseudos'
 export { ThemeValue } from './theme/ThemeValue'
-export { propToStyle, propsToStyles } from './themes/propStyleTheme'
+export { propToStyle, propsToStyles } from './themes/propsToStylesTheme'
 
 process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()

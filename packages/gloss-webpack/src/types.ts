@@ -1,4 +1,4 @@
-import { ExtractStylesOptions } from './utils/ast/extractStyles'
+import { ExtractStylesOptions } from './ast/extractStyles'
 
 export interface CacheObject {
   [key: string]: any

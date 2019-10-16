@@ -3,7 +3,7 @@ import * as t from '@babel/types'
 import { getStyles } from 'gloss'
 import invariant from 'invariant'
 
-import { CacheObject } from '../../types'
+import { CacheObject } from '../types'
 
 export interface Ternary {
   name: string

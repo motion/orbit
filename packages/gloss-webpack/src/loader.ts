@@ -5,8 +5,8 @@ import path from 'path'
 import util from 'util'
 import webpack from 'webpack'
 
+import { extractStyles } from './ast/extractStyles'
 import { CacheObject, LoaderOptions, PluginContext } from './types'
-import { extractStyles } from './utils/ast/extractStyles'
 
 const counter: any = Symbol.for('counter')
 

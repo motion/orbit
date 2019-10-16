@@ -1,13 +1,13 @@
 import generate from '@babel/generator'
 import traverse from '@babel/traverse'
-import t = require('@babel/types')
+import * as t from '@babel/types'
 import literalToAst from 'babel-literal-to-ast'
 import { getAllStyles, getGlossProps, getStyles, GlossStaticStyleDescription, GlossView, isGlossView, validCSSAttr } from 'gloss'
-import invariant = require('invariant')
-import path = require('path')
-import util = require('util')
+import invariant from 'invariant'
+import path from 'path'
+import util from 'util'
 
-import { CacheObject } from '../../types'
+import { CacheObject } from '../types'
 import { evaluateAstNode } from './evaluateAstNode'
 import { extractStaticTernaries, Ternary } from './extractStaticTernaries'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'

@@ -4,7 +4,7 @@ import MemoryFileSystem from 'webpack/lib/MemoryOutputFileSystem'
 import NodeWatchFileSystem from 'webpack/lib/node/NodeWatchFileSystem'
 
 import { CacheObject, PluginContext } from './types'
-import { wrapFileSystem } from './utils/wrapFileSystem'
+import { wrapFileSystem } from './wrapFileSystem'
 
 import Compiler = webpack.Compiler
 import Compilation = webpack.compilation.Compilation

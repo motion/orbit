@@ -1,4 +1,4 @@
-import t = require('@babel/types')
+import * as t from '@babel/types'
 
 export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any): any {
   // loop through ObjectExpression keys

@@ -177,9 +177,10 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
         onClick={(!hasMouseDownEvent && handleClick) || undefined}
         baseOverridesPsuedo={false}
         {...listItemAdjustedPadding}
-        paddingLeft={
-          (indent || 1) * (listItemAdjustedPadding ? listItemAdjustedPadding.paddingLeft : 0)
-        }
+        // TODO we'd need to indent using an inner element or similar
+        // paddingLeft={
+        //   (indent ?? 1) * (listItemAdjustedPadding ? listItemAdjustedPadding.paddingLeft : 0)
+        // }
         width="100%"
         before={
           <>

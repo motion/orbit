@@ -1,6 +1,6 @@
+//!
 import { Absolute, AbsoluteProps, CSSPropertySet, gloss, ThemeFn } from 'gloss'
 
-//!
 type BorderProps = AbsoluteProps & {
   borderColor?: CSSPropertySet['borderColor']
   borderColorHover?: CSSPropertySet['borderColor']

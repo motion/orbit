@@ -10,7 +10,6 @@ console.log('building for prod... process.env.NODE_ENV', process.env.NODE_ENV)
 
 async function main() {
   const finalConfig = {
-    mode: 'production',
     ...(await makeConfig()),
   }
 

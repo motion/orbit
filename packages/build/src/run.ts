@@ -10,12 +10,14 @@ const root = Path.join(__dirname, '..')
 const argsIndex = process.argv.findIndex(x => /mcro-build$/.test(x))
 const extraArgs = argsIndex >= 0 ? process.argv.slice(argsIndex + 1) : []
 
-const cmd = `${root}/node_modules/.bin/webpack-dev-server`
+const cmd = `${root}/node_modules/.bin/webpack`
 let args = ['--config', configPath, ...extraArgs]
 
 console.log(`Running ${cmd} ${args.join(' ')}`)
 
-const proc = execa(cmd, args)
+const proc = execa(cmd, args, {
+  maxBuffer: 250_000_000,
+})
 
 proc.stdout.pipe(process.stdout)
 proc.stderr.pipe(process.stderr)

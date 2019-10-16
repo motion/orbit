@@ -7,7 +7,7 @@
   },
   "license": "MIT",
   "resolutions": {
-    "execa": "2.0.3"
+    "execa": "3.1.0"
   },
   "scripts": {
     "build": "tsc -b || true",
@@ -29,7 +29,7 @@
     "ci-info": "^2.0.0",
     "common-tags": "^1.8.0",
     "convert-hrtime": "^3.0.0",
-    "execa": "2.0.3",
+    "execa": "3.1.0",
     "fs-extra": "^7.0.0",
     "hosted-git-info": "2.7.1",
     "is-valid-path": "0.1.1",

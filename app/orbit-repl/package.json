@@ -10,6 +10,6 @@
   },
   "devDependencies": {
     "@o/debug-apps": "^2.6.0",
-    "execa": "2.0.3"
+    "execa": "3.1.0"
   }
 }

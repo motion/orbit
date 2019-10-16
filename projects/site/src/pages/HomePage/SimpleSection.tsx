@@ -1,4 +1,3 @@
-//!
 import { gloss, Icon, Space, Stack, View } from '@o/ui'
 import { isDefined } from '@o/utils'
 import { Box } from 'gloss'

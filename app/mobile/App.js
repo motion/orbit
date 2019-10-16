@@ -5,7 +5,6 @@
  * @format
  * @flow
  */
-import { themes } from '@o/kit'
 import { ProvideUI } from '@o/ui'
 import React, { Component } from 'react'
 import { Platform, StyleSheet, Text, View } from 'react-native'
@@ -18,7 +17,7 @@ const instructions = Platform.select({
 export default class App extends Component {
   render() {
     return (
-      <ProvideUI themes={themes} activeTheme="light">
+      <ProvideUI>
         <View style={styles.container}>
           <Text style={styles.welcome}>Welcome to React Native!</Text>
           <Text style={styles.instructions}>To get started, edit App.js</Text>

@@ -1,5 +1,4 @@
-import { themes as KitThemes } from '@o/kit'
-import { linearGradient, toColor } from '@o/ui'
+import { linearGradient, themes as UIThemes, toColor } from '@o/ui'
 import { createThemes } from 'gloss'
 import { colorize, fromStyles } from 'gloss-theme'
 
@@ -20,20 +19,20 @@ const selected = {
 }
 
 const light = {
-  ...KitThemes.light,
+  ...UIThemes.light,
   backgroundHighlightActive: colors.purple.lighten(0.1),
   backgroundHighlight: colors.purple,
   coats: {
-    ...KitThemes.light.coats,
+    ...UIThemes.light.coats,
     selected,
     purple,
   },
 }
 
 const dark = {
-  ...KitThemes.dark,
+  ...UIThemes.dark,
   coats: {
-    ...KitThemes.dark.coats,
+    ...UIThemes.dark.coats,
     selected,
     purple,
   },
@@ -56,7 +55,7 @@ const home = {
 }
 
 export const themes = createThemes({
-  ...KitThemes,
+  ...UIThemes,
 
   orbitOneDark: fromStyles({
     background: '#111',

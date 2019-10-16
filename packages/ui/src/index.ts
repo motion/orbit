@@ -67,6 +67,8 @@ declare module 'gloss' {
   interface ThemeType extends CreateThemeType<UITheme> {}
 }
 
+export * from './themes'
+
 export {
   Absolute,
   Box,

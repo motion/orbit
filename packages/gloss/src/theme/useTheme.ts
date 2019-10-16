@@ -27,7 +27,7 @@ export function useTheme<A = {}>(props?: A): GlossThemeProps<A> {
   const curTheme = state.current.theme
 
   const proxy = useMemo(() => {
-    return createThemePropsProxy(curTheme, state.current!, props)
+    return createThemeProxy(curTheme, state.current!, props)
   }, [curTheme, themeObservable])
 
   // update fast -- may be better to put in layoutEffect
@@ -89,8 +89,8 @@ const fakeObj = {}
 const proxyThemeDescriptor = { enumerable: true, configurable: true }
 const UpdateProxySymbol = Symbol('UpdateProxySymbol')
 
-function createThemePropsProxy(theme: CompiledTheme, trackState: ThemeTrackState, props?: any): any {
-  let keys
+export function createThemeProxy(theme: CompiledTheme, trackState: ThemeTrackState, props?: any): any {
+  let keys: any
   return new Proxy(fakeObj, {
     // fake an object but return props keys
     // because react freezes props we cant fallback to theme if we proxy props directly

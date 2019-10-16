@@ -311,20 +311,7 @@ async function makeConfig() {
 
             flags.extractStaticStyles && {
               loader: GlossWebpackPlugin.loader,
-              options: {
-                views: require('@o/ui'),
-                mediaQueryKeys: [
-                  'xs',
-                  'sm',
-                  'abovesm',
-                  'md',
-                  'abovemd',
-                  'lg',
-                  'belowlg',
-                  'abovelg',
-                ],
-                internalViewsPath: Path.join(require.resolve('@o/ui'), '..', '..'),
-              },
+              options: require('@o/ui/glossLoaderConfig'),
             },
           ].filter(Boolean),
         },

@@ -1,8 +1,8 @@
 import { command, observeOne } from '@o/bridge'
-import { OrbitHot, ProvideStores, showConfirmDialog, themes, useReaction, useStore } from '@o/kit'
+import { OrbitHot, ProvideStores, showConfirmDialog, useReaction, useStore } from '@o/kit'
 import { AppCloseWindowCommand, AppDevCloseCommand, WindowMessageModel } from '@o/models'
 import { App } from '@o/stores'
-import { BannerHandle, ListPassProps, useBanner, View, ViewProps } from '@o/ui'
+import { BannerHandle, ListPassProps, themes, useBanner, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 

@@ -2,7 +2,7 @@ import generate from '@babel/generator'
 import traverse from '@babel/traverse'
 import * as t from '@babel/types'
 import literalToAst from 'babel-literal-to-ast'
-import { getAllStyles, getGlossProps, getStyles, GlossStaticStyleDescription, GlossView, isGlossView, validCSSAttr } from 'gloss'
+import { CompiledTheme, createThemeProxy, getAllStyles, getGlossProps, getStyles, GlossStaticStyleDescription, GlossView, isGlossView, validCSSAttr } from 'gloss'
 import invariant from 'invariant'
 import path from 'path'
 import util from 'util'
@@ -21,6 +21,7 @@ export interface ExtractStylesOptions {
   mediaQueryKeys?: string[]
   internalViewsPath?: string
   deoptKeys?: string[]
+  defaultTheme: CompiledTheme
 }
 
 export interface Options {
@@ -479,7 +480,7 @@ export function extractStyles(
             return true
           }
 
-          // allow them to have alternate names for things
+          // allow statically defining a change from one prop to another (see Stack)
           if (typeof cssAttributes[name] === 'object') {
             const definition = cssAttributes[name]
             name = definition.name
@@ -536,6 +537,15 @@ export function extractStyles(
           return true
         })
 
+        if (shouldPrintDebug) {
+          console.log(`ok we parsed a JSX:
+name: ${node.name.name}
+inlinePropCount: ${inlinePropCount}
+shouldDeopt: ${shouldDeopt}
+domNode: ${domNode}
+          `)
+        }
+
         if (shouldDeopt) {
           return
         }
@@ -565,13 +575,24 @@ export function extractStyles(
         if (themeFn) {
           // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss
           try {
-            const themeStyles = themeFn({
+            const trackState = {
+              theme: options.defaultTheme,
+              hasUsedOnlyCSSVariables: true,
+              nonCSSVariables: new Set<string>(),
+            }
+            const theme = createThemeProxy(options.defaultTheme, trackState, {
               ...view.defaultProps,
               ...staticAttributes,
-            } as any)
+            })
+            const themeStyles = themeFn(theme)
+            if (shouldPrintDebug) {
+              console.log('hasUsedOnlyCSSVariables', trackState.hasUsedOnlyCSSVariables)
+              console.log('got theme styles', themeStyles)
+            }
             addStyles(themeStyles)
           } catch(err) {
             console.log('error running theme', sourceFileName, err.message)
+            return
           }
         } else {
           addStyles(staticAttributes)
@@ -612,6 +633,11 @@ export function extractStyles(
           if (isGlossView(view)) {
             // local views we already parsed the css out
             const localView = localStaticViews[node.name.name]
+
+            if (shouldPrintDebug) {
+              console.log('localView', node.name.name, localView)
+            }
+
             if (localView) {
               for (const className of localView.className.trim().split(' ')) {
                 // empty object because we already parsed it out and added to map
@@ -627,7 +653,13 @@ export function extractStyles(
             }
 
             node.name.name = domNode
+          } else {
+            if (view.staticStyleConfig) {
+              // not gloss view but still extractable (see Stack)
+              node.name.name = domNode
+            }
           }
+
         } else {
           if (lastSpreadIndex > -1) {
             // if only some style props were extracted AND additional props are spread onto the component,

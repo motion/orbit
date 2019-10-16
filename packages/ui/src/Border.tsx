@@ -1,4 +1,3 @@
-//!
 import { Absolute, AbsoluteProps, CSSPropertySet, gloss, ThemeFn } from 'gloss'
 
 type BorderProps = AbsoluteProps & {

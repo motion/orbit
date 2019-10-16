@@ -1,3 +1,4 @@
+const Path = require('path')
 const views = require('./_/index')
 
 module.exports = {

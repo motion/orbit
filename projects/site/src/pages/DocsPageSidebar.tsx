@@ -1,4 +1,3 @@
-//!
 import { BorderRight, Stack } from '@o/ui'
 import React, { memo } from 'react'
 

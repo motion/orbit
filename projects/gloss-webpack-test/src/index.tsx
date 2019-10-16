@@ -11,22 +11,19 @@ export const TitleText = ({ sizeRelative = 0, ...props }: any) => {
   const smSize =
     props['sm-size'] ||
     (typeof size === 'string' ? getSizeRelative(size as any, -2 + sizeRelative) : size)
-  const mdSize =
-    props['md-size'] ||
-    (typeof size === 'string' ? getSizeRelative(size as any, -1 + sizeRelative) : size)
-  return <Title {...props} size={size} sm-size={smSize} md-size={mdSize} />
+  return <Title {...props} size={size} sm-size={smSize} />
 }
 
 export const H2 = props => (
   <View>
-    <TitleText tagName="h2" fontWeight={400} size="sm" {...props} />
+    <TitleText tagName="h2" size="md" {...props} />
   </View>
 )
 
 function Main() {
   return (
     <ProvideUI
-      themes={{ light: fromStyles({ background: 'red', color: 'white' }) }}
+      themes={{ light: fromStyles({ background: 'white', color: 'black' }) }}
       activeTheme="light"
     >
       <Theme scale={2}>

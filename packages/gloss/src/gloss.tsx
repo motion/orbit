@@ -1,7 +1,7 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssStringWithHash, stringHash, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 import React from 'react'
+import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
@@ -965,8 +965,6 @@ export function getAllStyles(props: any) {
     const info = addRules('', styleObj, ns, true, false, 'body')
     if (info) {
       allClassNames.push(info)
-    } else {
-      console.warn(`No styles for ${ns}, props ${JSON.stringify(props)}, info ${JSON.stringify(info)}`)
     }
   }
   return allClassNames

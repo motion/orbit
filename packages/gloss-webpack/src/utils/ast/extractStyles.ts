@@ -14,6 +14,8 @@ import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { htmlAttributes } from './htmlAttributes'
 import { parse } from './parse'
 
+const log = console.log.bind(console)
+
 export interface ExtractStylesOptions {
   views: {
     [key: string]: GlossView<any>
@@ -148,6 +150,9 @@ export function extractStyles(
    * in step 2
    */
   const localStaticViews: { [key: string]: GlossStaticStyleDescription } = {}
+
+  log(importsGloss, sourceFileName)
+
   if (importsGloss) {
     traverse(ast, {
       VariableDeclaration(path) {
@@ -201,8 +206,8 @@ export function extractStyles(
             try {
               styleObject = evaluateAstNode(arg)
             } catch (err) {
-              console.log('Cant parse style object', name, '>', extendsViewIdentifier)
-              console.log('err', err)
+              log('Cant parse style object', name, '>', extendsViewIdentifier)
+              log('err', err)
               return arg
             }
             // uses the base styles if necessary, merges just like gloss does
@@ -211,8 +216,8 @@ export function extractStyles(
               styleObject,
             )
 
-            console.log('TODO!! defaultProps', defaultProps)
-            console.log('what is', styles)
+            log('TODO!! defaultProps', defaultProps)
+            log('what is', styles)
 
             // then put them all into an array so gloss later can use that
             const out: GlossStaticStyleDescription = {
@@ -222,11 +227,11 @@ export function extractStyles(
             for (const ns in styles) {
               const info = getStyles(styles[ns])
               if (info) {
-                console.log('set it', name, info.css)
+                log('set it', name, info.css)
                 cssMap.set(info.className, { css: info.css, commentTexts: [] })
                 out.className += ` ${info.className}`
               } else {
-                console.log('no info for ns', ns)
+                log('no info for ns', ns)
               }
             }
             if (conditionalStyles) {
@@ -302,7 +307,7 @@ export function extractStyles(
             ?? 'div'
         }
 
-        console.log('domNode', originalNodeName, domNode)
+        log('domNode', originalNodeName, domNode)
 
         // Get valid css props
         const cssAttributes = staticStyleConfig?.cssAttributes || validCSSAttr
@@ -554,10 +559,10 @@ export function extractStyles(
               ...view.defaultProps,
               ...staticAttributes,
             } as any)
-            console.log('themeStyles', themeStyles)
+            log('themeStyles', themeStyles)
             addStyles(themeStyles)
           } catch(err) {
-            console.log('error', err.message)
+            log('error', err.message)
           }
         } else {
           addStyles(staticAttributes)
@@ -579,7 +584,7 @@ export function extractStyles(
 
           const localView = localStaticViews[node.name.name]
           if (localView) {
-            console.log('get rid of it den', node.name.name, localView.className)
+            log('get rid of it den', node.name.name, localView.className)
             for (const className of localView.className.trim().split(' ')) {
               // empty object because we already parsed it out and added to map
               stylesByClassName[className] = null

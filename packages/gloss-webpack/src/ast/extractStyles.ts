@@ -308,8 +308,7 @@ export function extractStyles(
 
         // Remember the source component
         const originalNodeName = node.name.name
-        const view = views[originalNodeName]
-
+        let view = views[originalNodeName]
         let domNode = 'div'
 
         let staticStyleConfig: GlossView<any>['staticStyleConfig'] | null = null
@@ -631,15 +630,19 @@ domNode: ${domNode}
             node.name.name = 'div'
           }
 
+          // if they set a staticStyleConfig.parentView (see Stack)
+          if (!isGlossView(view)) {
+            if (view?.staticStyleConfig) {
+              view = view.staticStyleConfig.parentView
+            } else {
+              node.name.name = domNode
+            }
+          }
+
           // if gloss view we may be able to optimize
           if (isGlossView(view)) {
             // local views we already parsed the css out
             const localView = localStaticViews[node.name.name]
-
-            if (shouldPrintDebug) {
-              console.log('localView', node.name.name, localView)
-            }
-
             if (localView) {
               for (const className of localView.className.trim().split(' ')) {
                 // empty object because we already parsed it out and added to map
@@ -653,13 +656,7 @@ domNode: ${domNode}
                 stylesByClassName[className] = null
               }
             }
-
             node.name.name = domNode
-          } else {
-            if (view.staticStyleConfig) {
-              // not gloss view but still extractable (see Stack)
-              node.name.name = domNode
-            }
           }
 
         } else {

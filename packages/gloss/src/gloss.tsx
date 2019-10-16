@@ -34,6 +34,7 @@ export interface GlossView<RawProps = {}, P = GlossProps<RawProps>> {
   withConfig: (config: GlossViewOpts<P>) => this
   internal: GlossInternals<P>
   staticStyleConfig?: {
+    parentView?: GlossView<any>
     cssAttributes?: Object
     deoptProps?: string[]
     avoidProps?: string[]

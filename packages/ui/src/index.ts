@@ -6,8 +6,10 @@ import { Size } from './Space'
 // until next hotkeys patches types
 module.hot && module.hot.accept()
 
-if (typeof window !== 'undefined' && typeof CSS['px'] === 'undefined') {
-  require('css-typed-om').default(window)
+if (typeof window !== 'undefined') {
+  if (typeof CSS['px'] === 'undefined') {
+    require('css-typed-om').default(window)
+  }
 }
 
 export * from './helpers/configureHotKeys'

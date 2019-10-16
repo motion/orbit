@@ -1,7 +1,7 @@
 import React, { memo, useRef } from 'react'
 
 import { BorderLeft } from '../Border'
-import { useScaledSize, useSizedSurfaceProps, useSurfaceHeight } from '../hooks/useSizedSurface'
+import { useSizedSurfaceProps, useSurfaceHeight } from '../hooks/useSizedSurface'
 import { Icon, IconProps } from '../Icon'
 import { Menu, MenuProps } from '../Menu'
 import { getSize } from '../Sizes'
@@ -20,8 +20,6 @@ export const MenuButton = memo((props: MenuButtonProps) => {
   const { items, scrollable, children, openIconProps, open, openOnHover, size, ...rest } = props
   const sizedSurfaceProps = useSizedSurfaceProps(props)
   const sizePx = getSize(size)
-  const spaceSizePx = +getSize('sm') * sizePx
-  const scaledSize = useScaledSize(size)
   const height = useSurfaceHeight(size)
   // using the same group ensures the tooltip closes when the menu opens
   const group = useRef(`${Math.random()}`).current
@@ -55,7 +53,7 @@ export const MenuButton = memo((props: MenuButtonProps) => {
           >
             {spaceElement}
             {!!children && <BorderLeft top={4} bottom={4} />}
-            <Icon size={12 * scaledSize} name="caret-down" color={rest.color} {...openIconProps} />
+            <Icon size={12} name="caret-down" color={rest.color} {...openIconProps} />
             {spaceElement}
           </View>
         }

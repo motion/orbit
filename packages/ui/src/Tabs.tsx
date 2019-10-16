@@ -2,7 +2,6 @@ import { selectDefined } from '@o/utils'
 import { Box, gloss } from 'gloss'
 import React, { Children, cloneElement, Suspense } from 'react'
 
-import { colors } from './helpers/colors'
 import { useUncontrolled } from './helpers/useUncontrolled'
 import { Orderable } from './Orderable'
 import { Loading } from './progress/Loading'
@@ -260,10 +259,6 @@ const CloseButton = gloss(Box, {
   height: 16,
   lineHeight: '16px',
   borderRadius: '50%',
-  hoverStyle: {
-    background: colors.cherry,
-    color: '#fff',
-  },
 })
 
 const OrderableContainer = gloss(Box, {

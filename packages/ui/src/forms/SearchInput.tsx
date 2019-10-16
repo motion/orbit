@@ -77,23 +77,21 @@ export function SearchInput({
 }
 
 export const ClearButton = gloss<ButtonProps & { invisible?: boolean }>(Button, {
+  icon: 'cross',
+  circular: true,
+  size: 0.75,
+  sizeIcon: 1.5,
+  coat: 'flat',
+  glint: false,
+  glintBottom: false,
   opacity: 1,
   pointerEvents: 'none',
+
   conditional: {
     invisible: {
       opacity: 0,
       pointerEvents: 'auto',
     },
-  },
-}).withConfig({
-  defaultProps: {
-    icon: 'cross',
-    circular: true,
-    size: 0.75,
-    sizeIcon: 1.5,
-    coat: 'flat',
-    glint: false,
-    glintBottom: false,
   },
 })
 

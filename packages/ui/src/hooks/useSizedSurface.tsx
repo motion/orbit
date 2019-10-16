@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { LINE_HEIGHT } from '../constants'
-import { useScale } from '../Scale'
 import { getSize } from '../Sizes'
 import { Size } from '../Space'
 import { SurfaceProps } from '../Surface'
@@ -14,12 +13,8 @@ export const getSizedRadius = (size: number, sizeRadius: number | true) => {
   return clampRound(num(sizeRadius) * 6 * size)
 }
 
-export const useScaledSize = (size: Size) => {
-  return useScale() * getSize(size)
-}
-
 export const useSurfaceHeight = (size: Size) => {
-  return getHeight(useScaledSize(size), 1)
+  return `calc(${getHeight(+size, 1)}px * var(--scale))`
 }
 
 const getHeight = (size: number, sizeHeight: number | boolean) => {
@@ -30,7 +25,6 @@ const getHeight = (size: number, sizeHeight: number | boolean) => {
 
 export function useSizedSurfaceProps(direct?: SurfaceProps): SurfaceProps {
   const props = useSurfaceProps(direct)
-  const scale = useScale()
   const {
     size: ogSize,
     sizeHeight,
@@ -42,7 +36,7 @@ export function useSizedSurfaceProps(direct?: SurfaceProps): SurfaceProps {
     circular,
     ...rest
   } = props
-  const size = scale * getSize(ogSize)
+  const size = getSize(ogSize)
   // sizes
   let height =
     typeof props.height === 'number'

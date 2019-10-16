@@ -286,17 +286,16 @@ const NoShrinkText = gloss<TextProps>(Text, {
 })
 
 const TreeItemsRowAttributeContainer = gloss(NoShrinkText, {
-  color: colors.dark80,
   fontWeight: 300,
   marginLeft: 5,
 })
 
 const TreeItemsRowAttributeKey = gloss(Box, {
-  color: colors.tomato,
+  color: 'red',
 })
 
 const TreeItemsRowAttributeValue = gloss(Box, {
-  color: colors.slateDark3,
+  color: 'yellow',
 })
 
 const HighlightedText = gloss<{ selected?: boolean }>(Box).theme(props => ({

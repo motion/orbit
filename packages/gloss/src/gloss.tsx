@@ -49,7 +49,6 @@ export type ThemeFn<RawProps = any> = (
 export type GlossViewOpts<Props = {}> = {
   displayName?: string
   ignoreAttrs?: { [key: string]: boolean }
-  defaultProps?: Partial<Props>
   shouldAvoidProcessingStyles?: (props: Props) => boolean
   postProcessProps?: (curProps: Props, nextProps: any, getFinalStyles: () => CSSPropertySet) => any
   getElement?: (props: Props) => any
@@ -362,10 +361,6 @@ export function gloss<
         ...baseIgnoreAttrs,
         ...opts.ignoreAttrs,
       }
-    }
-
-    if (opts.defaultProps) {
-      ThemedView.defaultProps = opts.defaultProps
     }
 
     return ThemedView

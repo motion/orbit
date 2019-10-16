@@ -7,13 +7,6 @@ type BorderProps = AbsoluteProps & {
   hoverable?: boolean
 }
 
-// best i can think to compile down to:
-// const BorderTop = props => (
-//   <div className={useThemeProps(props)}>
-//     <div className="123 123" />
-//   </div>
-// )
-
 const borderTheme: ThemeFn = props => {
   return {
     background: props.borderColor,
@@ -26,6 +19,7 @@ const borderTheme: ThemeFn = props => {
 }
 
 export const BorderTop = gloss<BorderProps>(Absolute, {
+  className: 'ui-border-top',
   height: 1,
   zIndex: 100000,
   top: 0,
@@ -34,15 +28,10 @@ export const BorderTop = gloss<BorderProps>(Absolute, {
   transform: {
     y: -0.5,
   },
-})
-  .theme(borderTheme)
-  .withConfig({
-    defaultProps: {
-      className: 'ui-border-top',
-    },
-  })
+}).theme(borderTheme)
 
 export const BorderBottom = gloss<BorderProps>(Absolute, {
+  className: 'ui-border-bottom',
   height: 1,
   zIndex: 100000,
   bottom: 0,
@@ -51,15 +40,10 @@ export const BorderBottom = gloss<BorderProps>(Absolute, {
   transform: {
     y: 0.5,
   },
-})
-  .theme(borderTheme)
-  .withConfig({
-    defaultProps: {
-      className: 'ui-border-bottom',
-    },
-  })
+}).theme(borderTheme)
 
 export const BorderLeft = gloss<BorderProps>(Absolute, {
+  className: 'ui-border-left',
   width: 1,
   zIndex: 100000,
   top: 0,
@@ -68,15 +52,10 @@ export const BorderLeft = gloss<BorderProps>(Absolute, {
   transform: {
     x: -0.5,
   },
-})
-  .theme(borderTheme)
-  .withConfig({
-    defaultProps: {
-      className: 'ui-border-left',
-    },
-  })
+}).theme(borderTheme)
 
 export const BorderRight = gloss<BorderProps>(Absolute, {
+  className: 'ui-border-right',
   width: 1,
   zIndex: 100000,
   top: 0,
@@ -85,10 +64,4 @@ export const BorderRight = gloss<BorderProps>(Absolute, {
   transform: {
     x: 0.5,
   },
-})
-  .theme(borderTheme)
-  .withConfig({
-    defaultProps: {
-      className: 'ui-border-right',
-    },
-  })
+}).theme(borderTheme)

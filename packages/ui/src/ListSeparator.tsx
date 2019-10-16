@@ -2,7 +2,6 @@ import { alphaColorTheme, gloss, ThemeSelect } from 'gloss'
 import React, { memo } from 'react'
 
 import { BorderBottom, BorderTop } from './Border'
-import { useScale } from './Scale'
 import { SimpleText, SimpleTextProps } from './text/SimpleText'
 import { textSizeTheme } from './text/textSizeTheme'
 
@@ -39,13 +38,5 @@ const ListSeparatorChrome = gloss({
 
 const ListSeparatorText = gloss<ListSeparatorProps>(SimpleText, {
   width: '100%',
-}).theme(
-  () => {
-    const scale = useScale()
-    return {
-      padding: [scale * 5, scale * 8],
-    }
-  },
-  textSizeTheme,
-  alphaColorTheme,
-)
+  padding: [`calc(5px * var(--scale))`, `calc(8px * var(--scale))`],
+}).theme(textSizeTheme, alphaColorTheme)

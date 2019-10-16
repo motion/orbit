@@ -225,6 +225,7 @@ async function makeConfig() {
 
   const config = {
     cache: false,
+    watch: !!IS_RUNNING,
     target,
     mode,
     entry,
@@ -296,21 +297,6 @@ async function makeConfig() {
         target !== 'electron-renderer' && {
           test: /\.electron.[jt]sx?/,
           use: 'ignore-loader',
-        },
-        {
-          test: /.*/,
-          loader: require.resolve('./test'),
-          include: function(x) {
-            console.log('x is ', x)
-            return false
-          },
-        },
-        {
-          test: /\.(j|t)sx?$/,
-          use: {
-            loader: 'babel-loader',
-            options: babelrcOptions,
-          },
         },
         {
           test: /\.(j|t)sx?$/,

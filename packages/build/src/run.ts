@@ -10,8 +10,8 @@ const root = Path.join(__dirname, '..')
 const argsIndex = process.argv.findIndex(x => /mcro-build$/.test(x))
 const extraArgs = argsIndex >= 0 ? process.argv.slice(argsIndex + 1) : []
 
-const cmd = `${root}/node_modules/.bin/webpack`
-let args = ['--config', configPath, ...extraArgs]
+const cmd = `${root}/node_modules/.bin/webpack-dev-server`
+let args = ['--color', '--config', configPath, ...extraArgs]
 
 console.log(`Running ${cmd} ${args.join(' ')}`)
 

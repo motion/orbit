@@ -407,6 +407,7 @@ export function extractStyles(
 
         // let propsAttributes: (t.JSXSpreadAttribute | t.JSXAttribute)[] = []
         const staticAttributes: Record<string, any> = {}
+        const htmlExtractedAttributes = {}
         let inlinePropCount = 0
         const staticTernaries: Ternary[] = []
 
@@ -473,6 +474,7 @@ export function extractStyles(
             // we can safely leave html attributes
             // TODO make this more customizable / per-tagname
             if (htmlAttributes[name]) {
+              htmlExtractedAttributes[name] = value
               return true
             }
             inlinePropCount++
@@ -579,24 +581,30 @@ domNode: ${domNode}
               hasUsedOnlyCSSVariables: true,
               nonCSSVariables: new Set<string>(),
             }
-            const theme = createThemeProxy(options.defaultTheme, trackState, {
+            const props = {
               ...view.defaultProps,
+              ...htmlExtractedAttributes,
               ...staticAttributes,
-            })
+            }
+            const theme = createThemeProxy(options.defaultTheme, trackState, props)
             const themeStyles = themeFn(theme)
+            if (trackState.hasUsedOnlyCSSVariables === false) {
+              console.log('This theme function uses non-CSS variables, so we are bailing from optimization')
+              return
+            }
             addStyles(themeStyles)
             if (shouldPrintDebug) {
-              if (trackState.hasUsedOnlyCSSVariables === false) {
-                console.log('This theme function uses non-CSS variables, so we are bailing from optimization')
-                return
-              }
+              console.log(`Theme out:`, themeStyles)
             }
           } catch(err) {
             console.log('error running theme', sourceFileName, err.message)
             return
           }
         } else {
-          addStyles(staticAttributes)
+          addStyles({
+            ...htmlExtractedAttributes,
+            ...staticAttributes,
+          })
           if (view?.defaultProps) {
             addStyles(view.defaultProps)
           }

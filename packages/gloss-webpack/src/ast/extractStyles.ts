@@ -664,7 +664,9 @@ domNode: ${domNode}
               const { staticClasses } = view.internal.getConfig()
               // internal classes
               for (const className of staticClasses) {
-                stylesByClassName[className] = tracker.get(className).style
+                const item = tracker.get(className)
+                const css = `${item.selector} { ${item.style} }`
+                stylesByClassName[className] = css
               }
             }
             node.name.name = domNode

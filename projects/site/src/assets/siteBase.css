@@ -35,6 +35,10 @@ p a:hover {
   box-sizing: border-box;
 }
 
+.ui-title {
+  font-family: 'GTEesti', Helvetica, Arial, sans-serif;
+}
+
 /* HTML */
 
 #app {

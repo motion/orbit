@@ -20,6 +20,7 @@ const borderTheme: ThemeFn = props => {
 
 export const BorderTop = gloss<BorderProps>(Absolute, {
   className: 'ui-border-top',
+  extraProp: 'green',
   height: 1,
   zIndex: 100000,
   top: 0,

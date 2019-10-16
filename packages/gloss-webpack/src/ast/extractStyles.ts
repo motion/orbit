@@ -196,6 +196,9 @@ export function extractStyles(
         // parse style objects out and return them as array of [{ ['namespace']: 'className' }]
         let staticStyleConfig: GlossStaticStyleDescription | null = null
 
+        // any props leftover after parsing gloss style props
+        let restDefaultProps = {}
+
         glossCall.arguments = glossCall.arguments.map((arg, index) => {
           if ((index === 0 || index === 1) && t.isObjectExpression(arg)) {
             let styleObject = null
@@ -219,7 +222,10 @@ export function extractStyles(
 
             if (defaultProps.className) {
               out.className = defaultProps.className
+              delete defaultProps.className
             }
+
+            restDefaultProps = defaultProps
 
             for (const ns in styles) {
               const info = getStyles(styles[ns])
@@ -242,8 +248,13 @@ export function extractStyles(
                 }
               }
             }
-            staticStyleConfig = out
+
             localStaticViews[name] = out
+
+            if (out.className || out.conditionalClassNames) {
+              staticStyleConfig = out
+            }
+
             return t.nullLiteral()
           }
           return arg
@@ -255,6 +266,11 @@ export function extractStyles(
             glossCall.arguments.push(t.nullLiteral())
           }
           glossCall.arguments.push(literalToAst(staticStyleConfig))
+        }
+
+        if (Object.keys(restDefaultProps).length) {
+          const argIndex = t.isNullLiteral(glossCall.arguments[0]) ? 0 : 1
+          glossCall.arguments[argIndex] = literalToAst(restDefaultProps)
         }
       },
     })

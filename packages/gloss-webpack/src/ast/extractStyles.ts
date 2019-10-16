@@ -586,8 +586,11 @@ domNode: ${domNode}
             })
             const themeStyles = themeFn(theme)
             if (shouldPrintDebug) {
-              console.log('hasUsedOnlyCSSVariables', trackState.hasUsedOnlyCSSVariables)
               console.log('got theme styles', themeStyles)
+              if (trackState.hasUsedOnlyCSSVariables === false) {
+                console.log('This theme function uses non-CSS variables, so we are bailing from optimization')
+                return
+              }
             }
             addStyles(themeStyles)
           } catch(err) {

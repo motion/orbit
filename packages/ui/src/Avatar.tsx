@@ -9,7 +9,7 @@ export const Avatar = gloss(Image, {
   userSelect: 'none',
 }).theme(({ size, width, height }) => {
   return {
-    width: `calc(${(width ?? size)} * var(--scale))`,
-    height: `calc(${(height ?? size)} * var(--scale))`,
+    width: `calc(${(width ?? size)}px * var(--scale))`,
+    height: `calc(${(height ?? size)}px * var(--scale))`,
   }
 })

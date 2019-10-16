@@ -474,7 +474,11 @@ export function extractStyles(
             // we can safely leave html attributes
             // TODO make this more customizable / per-tagname
             if (htmlAttributes[name]) {
-              htmlExtractedAttributes[name] = value
+              try {
+                htmlExtractedAttributes[name] = attemptEval(value)
+              } catch {
+                // ok
+              }
               return true
             }
             inlinePropCount++
@@ -492,8 +496,8 @@ export function extractStyles(
           try {
             staticAttributes[name] = attemptEval(value)
             return false
-          } catch (e) {
-            //
+          } catch {
+            // ok
           }
 
           if (t.isConditionalExpression(value)) {
@@ -594,7 +598,7 @@ domNode: ${domNode}
             }
             addStyles(themeStyles)
             if (shouldPrintDebug) {
-              console.log(`Theme out:`, themeStyles)
+              console.log(`Theme out:`, htmlExtractedAttributes, themeStyles)
             }
           } catch(err) {
             console.log('error running theme', sourceFileName, err.message)

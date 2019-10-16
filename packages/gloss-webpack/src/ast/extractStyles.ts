@@ -14,8 +14,7 @@ import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { htmlAttributes } from './htmlAttributes'
 import { parse } from './parse'
 
-const out = process.stdout.write.bind(process.stdout)
-const log = (...args) => out(args.join(', ') + '\n')
+const out = console.log.bind(console)
 
 export interface ExtractStylesOptions {
   views: {

@@ -35,18 +35,18 @@ export function mergeStyles(props?: any, next?: Object | null, cur?: Object | nu
     if (cur[key] === true) cur[key] = {}
     const curVal = cur[key]
     if (validCSSAttr[key]) {
-      cur[key] = (overwrite ? null : curVal) ?? propVal ?? val
+      cur[key] = (overwrite ? null : curVal) ?? val ?? propVal
       continue
     }
     // apply pseudo/media style sub-objects
     if (isPlainObj(val)) {
       if (propVal === false || propVal === null) continue
       if (!curVal) {
-        cur[key] = propVal ?? val
+        cur[key] = val ?? propVal
       } else {
         for (const skey in next[key]) {
           if (validCSSAttr[skey]) {
-            cur[key][skey] = (overwrite ? null : curVal[skey]) ?? propVal?.[skey] ?? val?.[skey]
+            cur[key][skey] = (overwrite ? null : curVal[skey]) ?? val?.[skey] ?? propVal?.[skey]
           }
         }
       }

@@ -54,7 +54,6 @@ function getTextSizeTheme(props: TextSizeProps) {
   const fontSize = `calc(${fontSizeInner})`
   const lineHeight = `calc(1.4em * ${scale} * ${sizeLineHeight})`
   const marginV = `calc(-0.175em * ${scale} * ${sizeLineHeight})`
-  if (props.fontSize) console.log('got em', props.fontSize)
   return {
     fontSize: props.fontSize || fontSize,
     lineHeight: props.lineHeight || lineHeight,

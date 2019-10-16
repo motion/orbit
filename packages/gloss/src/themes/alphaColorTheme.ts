@@ -84,24 +84,22 @@ function createAlphaColorTheme(shouldSetDefault = false) {
 }
 
 function merge(
-  key: string,
+  pseudoKey: string,
   colorKey: string,
   alphaKey: string,
   next: Object,
   baseColor: ColorLike,
   props: AlphaColorProps,
 ) {
-  const color = props[key]?.color ?? props[colorKey] ?? baseColor
-  const alpha = props[key]?.alpha ?? props[alphaKey]
+  const color = props[pseudoKey]?.color ?? props[colorKey] ?? baseColor
+  const alpha = props[pseudoKey]?.alpha ?? props[alphaKey]
   if (color) {
     if (color !== 'inherit' && typeof alpha === 'number') {
-      next[key] = {
-        color: Config.toColor(color)
-          .setAlpha(alpha)
-          .toRgbString(),
+      next[pseudoKey] = {
+        color: Config.toColor(color).setAlpha(alpha),
       }
     } else if (baseColor !== color) {
-      next[key] = {
+      next[pseudoKey] = {
         color: color,
       }
     }

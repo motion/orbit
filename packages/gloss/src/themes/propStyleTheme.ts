@@ -4,18 +4,24 @@ import { ThemeFn } from '../gloss'
 
 // resolves props into styles for valid css
 
-export const propsToStyles: ThemeFn = (props) => {
+export const propsToStyles: ThemeFn = (props, previous) => {
   let styles: CSSPropertySet | null = null
   // loop over props turning into styles
   for (let key in props) {
     if (props?.ignorePropsToStyle?.[key]) continue
     const next = propToStyle(key, props[key])
     if (next !== undefined)  {
-      styles = styles || {}
-      styles[key] = next
+      if (typeof previous?.[key] === 'object') {
+        Object.assign(previous[key], next)
+      } else {
+        styles = styles || {}
+        styles[key] = next
+      }
     }
   }
-  return styles
+  if (!previous) {
+    return styles
+  }
 }
 
 export const propToStyle = (key: string, value: any) => {

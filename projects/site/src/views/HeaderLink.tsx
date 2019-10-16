@@ -1,18 +1,15 @@
 import React, { memo } from 'react'
 
-import { usePageTheme } from '../Layout'
 import { LinkState } from '../LinkState'
 import { fadeAnimations, FadeInView, transitions } from './FadeInView'
 import { HeaderContext } from './HeaderContext'
 import { Link } from './Link'
 
 export const HeaderLink = memo(({ delay, children, ...props }: any) => {
-  const [theme] = usePageTheme()
   const header = HeaderContext.useStore()
   const leaving = header && header.shown === false
   return (
     <Link
-      coat={false}
       width="33%"
       fontWeight={400}
       fontSize={window.location.pathname === '/' ? 18 : 16}

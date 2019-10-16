@@ -26,7 +26,9 @@ export const LinkSection = gloss<{ alignRight?: boolean }>(View, {
   maxWidth: 380,
   alignItems: 'center',
   padding: [0, '0%', 0, '2%'],
-  alignRight: {
-    padding: [0, '2%', 0, '0%'],
+  conditional: {
+    alignRight: {
+      padding: [0, '2%', 0, '0%'],
+    },
   },
 })

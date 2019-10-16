@@ -183,7 +183,7 @@ export const FadeInView = memo(
         ? { duration: 0 }
         : {
             ...(transition as any),
-            delay: delayIndex ? delayIndex / 6 : (delay || 1) / 1000,
+            delay: delayIndex ? delayIndex / 10 : (delay || 1) / 1000,
           }
 
     if (parallax) {
@@ -235,8 +235,8 @@ const fullscreenStyle = {
 export type UseFadePageProps = FadeInProps & { off?: boolean }
 
 export const useFadePage = ({
-  delay = 200,
-  threshold = 0.3,
+  delay = 0,
+  threshold = 0.1,
   off,
   ...props
 }: UseFadePageProps = {}) => {

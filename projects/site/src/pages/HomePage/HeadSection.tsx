@@ -277,7 +277,7 @@ const HeadTextSection = memo(() => {
           >
             <FadeInView {...animation.blog} disable={!measured}>
               <Tag
-                xs-display="none"
+                sm-display="none"
                 size={0.85}
                 sizeHeight={1.01}
                 sizePadding={1.4}

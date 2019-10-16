@@ -150,12 +150,10 @@ export function extractStyles(
    * Step 1: Compiled the gloss() style views and remember if they are able to be compiled
    * in step 2
    */
-  const localStaticViews: { [key: string]: GlossStaticStyleDescription } = {}
-
-  // this stuff is used by step 2 (theme functions)
-  // any props leftover after parsing gloss style props
-  let restDefaultProps = {}
-  let styleObject = {}
+  const localStaticViews: { [key: string]: {
+    staticConfig: GlossStaticStyleDescription,
+    propObject: any
+   } } = {}
 
   if (importsGloss) {
     traverse(ast, {
@@ -204,7 +202,7 @@ export function extractStyles(
         // parse style objects out and return them as array of [{ ['namespace']: 'className' }]
         let staticStyleConfig: GlossStaticStyleDescription | null = null
 
-        const evaluateGlossPropArg = (() => {
+        const attemptEval = (() => {
           // Generate scope object at this level
           const staticNamespace = getStaticBindingsForScope(
             path.scope,
@@ -227,12 +225,17 @@ export function extractStyles(
           return (n: t.Node) => evaluateAstNode(n, evalFn)
         })()
 
+        // this stuff is used by step 2 (theme functions)
+        // any props leftover after parsing gloss style props
+        let restDefaultProps = {}
+
         glossCall.arguments = glossCall.arguments.map((arg, index) => {
           if ((index === 0 || index === 1) && t.isObjectExpression(arg)) {
+            let propObject = {}
             try {
-              styleObject = evaluateGlossPropArg(arg)
+              propObject = attemptEval(arg)
               if (shouldPrintDebug) {
-                console.log('styleObject', styleObject)
+                console.log('propObject', propObject)
               }
             } catch (err) {
               console.log('Cant parse style object', name, '>', extendsViewIdentifier)
@@ -243,7 +246,7 @@ export function extractStyles(
             // uses the base styles if necessary, merges just like gloss does
             const { styles, conditionalStyles, defaultProps } = getGlossProps(
               view?.internal,
-              styleObject,
+              propObject,
             )
 
             // then put them all into an array so gloss later can use that
@@ -280,7 +283,10 @@ export function extractStyles(
               }
             }
 
-            localStaticViews[name] = out
+            localStaticViews[name] = {
+              staticConfig: out,
+              propObject
+            }
 
             if (out.className || out.conditionalClassNames) {
               staticStyleConfig = out
@@ -358,28 +364,29 @@ export function extractStyles(
           return false
         }
 
-        const attemptEval = (() => {
-          // Generate scope object at this level
-          const staticNamespace = getStaticBindingsForScope(
-            traversePath.scope,
-            sourceFileName,
-            {},
-          )
-          const evalContext = vm.createContext(staticNamespace)
-          // called when evaluateAstNode encounters a dynamic-looking prop
-          const evalFn = (n: t.Node) => {
-            // variable
-            if (t.isIdentifier(n)) {
-              invariant(
-                staticNamespace.hasOwnProperty(n.name),
-                'identifier not in staticNamespace',
-              )
-              return staticNamespace[n.name]
-            }
-            return vm.runInContext(`(${generate(n).code})`, evalContext)
-          }
-          return (n: t.Node) => evaluateAstNode(n, evalFn)
-        })()
+        const attemptEval = evaluateAstNode
+        // (() => {
+        //   // Generate scope object at this level
+        //   const staticNamespace = getStaticBindingsForScope(
+        //     traversePath.scope,
+        //     sourceFileName,
+        //     {},
+        //   )
+        //   const evalContext = vm.createContext(staticNamespace)
+        //   // called when evaluateAstNode encounters a dynamic-looking prop
+        //   const evalFn = (n: t.Node) => {
+        //     // variable
+        //     if (t.isIdentifier(n)) {
+        //       invariant(
+        //         staticNamespace.hasOwnProperty(n.name),
+        //         'identifier not in staticNamespace',
+        //       )
+        //       return staticNamespace[n.name]
+        //     }
+        //     return vm.runInContext(`(${generate(n).code})`, evalContext)
+        //   }
+        //   return (n: t.Node) => evaluateAstNode(n, evalFn)
+        // })()
 
         let lastSpreadIndex: number = -1
         const flattenedAttributes: (t.JSXAttribute | t.JSXSpreadAttribute)[] = []
@@ -601,7 +608,9 @@ domNode: ${domNode}
           }
         }
 
+        const localView = localStaticViews[node.name.name]
         const themeFn = view?.internal?.getConfig()?.themeFn
+
         if (themeFn) {
           // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss
           try {
@@ -611,8 +620,7 @@ domNode: ${domNode}
               nonCSSVariables: new Set<string>(),
             }
             const props = {
-              ...restDefaultProps,
-              ...styleObject,
+              ...localView?.propObject,
               ...view.defaultProps,
               ...htmlExtractedAttributes,
               ...staticAttributes,
@@ -633,8 +641,7 @@ domNode: ${domNode}
           }
         } else {
           addStyles({
-            ...restDefaultProps,
-            ...styleObject,
+            ...localView?.propObject,
             ...htmlExtractedAttributes,
             ...staticAttributes,
           })
@@ -662,13 +669,12 @@ domNode: ${domNode}
             )
           )
 
-          const localView = localStaticViews[node.name.name]
           if (localView) {
-            for (const className of localView.className.trim().split(' ')) {
+            for (const className of localView.staticConfig.className.trim().split(' ')) {
               // empty object because we already parsed it out and added to map
               stylesByClassName[className] = null
             }
-            node.name.name = 'div'
+            node.name.name = domNode
           }
 
           // if they set a staticStyleConfig.parentView (see Stack)
@@ -685,10 +691,7 @@ domNode: ${domNode}
             // local views we already parsed the css out
             const localView = localStaticViews[node.name.name]
             if (localView) {
-              for (const className of localView.className.trim().split(' ')) {
-                // see above we already set this into cssMap
-                stylesByClassName[className] = null
-              }
+              // already did above
             } else {
               const { staticClasses } = view.internal.getConfig()
               // internal classes

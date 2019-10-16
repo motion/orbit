@@ -34,7 +34,7 @@ export function wrapFileSystem(
 
       if (handledMethods.hasOwnProperty(key)) {
         return function(this: any, filePath: string, ...args: string[]) {
-          if (filePath.endsWith('__jsxstyle.css')) {
+          if (filePath.endsWith('__gloss.css')) {
             return memoryFS[key](filePath, ...args)
           }
           return value.call(this, filePath, ...args)

@@ -13,15 +13,15 @@ const counter: any = Symbol.for('counter')
 // for orbit stack support
 global['__DEV__'] = false
 
-const jsxstyleLoader: webpack.loader.Loader = function(this: any, content) {
+const glossLoader: webpack.loader.Loader = function(this: any, content) {
   if (this.cacheable) {
     this.cacheable()
   }
 
-  const pluginContext: PluginContext = this[Symbol.for('jsxstyle-webpack-plugin')]
+  const pluginContext: PluginContext = this[Symbol.for('gloss-webpack-plugin')]
   invariant(
     pluginContext,
-    'jsxstyle-webpack-plugin must be added to the plugins array in your webpack config',
+    'gloss-webpack-plugin must be added to the plugins array in your webpack config',
   )
 
   const options: LoaderOptions = loaderUtils.getOptions(this) || {}
@@ -83,4 +83,4 @@ const jsxstyleLoader: webpack.loader.Loader = function(this: any, content) {
   return
 }
 
-export default jsxstyleLoader
+export default glossLoader

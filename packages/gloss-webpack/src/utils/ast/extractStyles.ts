@@ -14,7 +14,8 @@ import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { htmlAttributes } from './htmlAttributes'
 import { parse } from './parse'
 
-const log = console.log.bind(console)
+const out = process.stdout.write.bind(process.stdout)
+const log = (...args) => out(args.join(', ') + '\n')
 
 export interface ExtractStylesOptions {
   views: {
@@ -46,7 +47,7 @@ const UNTOUCHED_PROPS = {
   className: true,
 }
 
-const JSXSTYLE_SOURCES = {
+const GLOSS_SOURCES = {
   '@o/ui': true,
   '@o/ui/test': true,
 }
@@ -91,7 +92,7 @@ export function extractStyles(
 
   const ast = parse(src)
 
-  let jsxstyleSrc = false
+  let glossSrc = false
   const validComponents = {}
   // default to using require syntax
   let useImportSyntax = false
@@ -109,17 +110,17 @@ export function extractStyles(
 
   let importsGloss = false
 
-  // Find jsxstyle require in program root
+  // Find gloss require in program root
   ast.program.body = ast.program.body.filter((item: t.Node) => {
     if (t.isImportDeclaration(item)) {
-      // not imported from jsxstyle? byeeee
+      // not imported from gloss? byeeee
       if (item.source.value === 'gloss') {
         importsGloss = true
       }
-      if (!isInternal && !JSXSTYLE_SOURCES.hasOwnProperty(item.source.value)) {
+      if (!isInternal && !GLOSS_SOURCES.hasOwnProperty(item.source.value)) {
         return true
       }
-      jsxstyleSrc = true
+      glossSrc = true
       useImportSyntax = true
       item.specifiers = item.specifiers.filter(specifier => {
         // keep the weird stuff
@@ -264,8 +265,8 @@ export function extractStyles(
     })
   }
 
-  // jsxstyle isn't included anywhere, so let's bail
-  if (!jsxstyleSrc || !Object.keys(validComponents).length) {
+  // gloss isn't included anywhere, so let's bail
+  if (!glossSrc || !Object.keys(validComponents).length) {
     return {
       ast,
       css: [],
@@ -287,7 +288,7 @@ export function extractStyles(
         if (
           // skip non-identifier opening elements (member expressions, etc.)
           !t.isJSXIdentifier(node.name) ||
-          // skip non-jsxstyle components
+          // skip non-gloss components
           !validComponents.hasOwnProperty(node.name.name)
         ) {
           return
@@ -572,7 +573,7 @@ export function extractStyles(
         }
 
 
-        // if all style props have been extracted, jsxstyle component can be
+        // if all style props have been extracted, gloss component can be
         // converted to a div or the specified component
 
         if (inlinePropCount === 0) {
@@ -792,7 +793,7 @@ export function extractStyles(
   // Write out CSS using it's className, this gives us de-duping for shared classnames
   for (const [className, entry] of cssMap.entries()) {
     const content = `${entry.commentTexts.map(txt => `${txt}\n`).join('')}${entry.css}`
-    const relFileName = `./${className}__jsxstyle.css`
+    const relFileName = `./${className}__gloss.css`
     const filename = path.join(sourceDir, relFileName)
     // append require/import statement to the document
     if (content !== '') {

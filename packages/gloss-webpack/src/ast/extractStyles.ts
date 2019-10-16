@@ -2,7 +2,7 @@ import generate from '@babel/generator'
 import traverse from '@babel/traverse'
 import * as t from '@babel/types'
 import literalToAst from 'babel-literal-to-ast'
-import { CompiledTheme, createThemeProxy, getAllStyles, getGlossProps, getStyles, GlossStaticStyleDescription, GlossView, isGlossView, validCSSAttr } from 'gloss'
+import { CompiledTheme, createThemeProxy, getAllStyles, getGlossProps, getStyles, GlossStaticStyleDescription, GlossView, isGlossView, tracker, validCSSAttr } from 'gloss'
 import invariant from 'invariant'
 import path from 'path'
 import util from 'util'
@@ -572,6 +572,9 @@ domNode: ${domNode}
           for (const info of allStyles) {
             if (info.css) {
               stylesByClassName[info.className] = info.css
+              if (shouldPrintDebug) {
+                console.log(`adding style`, info.className, info.css)
+              }
             }
           }
         }
@@ -597,9 +600,6 @@ domNode: ${domNode}
               return
             }
             addStyles(themeStyles)
-            if (shouldPrintDebug) {
-              console.log(`Theme out:`, htmlExtractedAttributes, themeStyles)
-            }
           } catch(err) {
             console.log('error running theme', sourceFileName, err.message)
             return
@@ -644,7 +644,7 @@ domNode: ${domNode}
 
           // if they set a staticStyleConfig.parentView (see Stack)
           if (!isGlossView(view)) {
-            if (view?.staticStyleConfig) {
+            if (view?.staticStyleConfig.parentView) {
               view = view.staticStyleConfig.parentView
             } else {
               node.name.name = domNode
@@ -664,7 +664,7 @@ domNode: ${domNode}
               const { staticClasses } = view.internal.getConfig()
               // internal classes
               for (const className of staticClasses) {
-                // empty object because we already parsed it out and added to map
+                cssMap.set(className, { css: tracker.get(className).style, commentTexts: [] })
                 stylesByClassName[className] = null
               }
             }

@@ -657,15 +657,14 @@ domNode: ${domNode}
             const localView = localStaticViews[node.name.name]
             if (localView) {
               for (const className of localView.className.trim().split(' ')) {
-                // empty object because we already parsed it out and added to map
+                // see above we already set this into cssMap
                 stylesByClassName[className] = null
               }
             } else {
               const { staticClasses } = view.internal.getConfig()
               // internal classes
               for (const className of staticClasses) {
-                cssMap.set(className, { css: tracker.get(className).style, commentTexts: [] })
-                stylesByClassName[className] = null
+                stylesByClassName[className] = tracker.get(className).style
               }
             }
             node.name.name = domNode
@@ -884,7 +883,8 @@ domNode: ${domNode}
   )
 
   if (shouldPrintDebug) {
-    process.stdout.write('output >> ' + result.code)
+    console.log('output >> ', result.code)
+    console.log('css output >>', css)
   }
 
   return {

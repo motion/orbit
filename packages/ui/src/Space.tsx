@@ -81,9 +81,10 @@ export const Space = gloss<SpaceProps>(Box, {
       delete rest[key]
     }
   }
+  const final = typeof dim === 'string' ? dim : `calc(${dim}px * var(--scale))`
   return {
-    width: `calc(${dim}px * var(--scale))`,
-    height: `calc(${dim}px * var(--scale))`,
+    width: final,
+    height: final,
     ...rest,
     ...mediaQueryStyles,
   }

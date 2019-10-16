@@ -55,7 +55,7 @@ export type GlossViewOpts<Props = {}> = {
   isDOMElement?: boolean
 }
 
-type GlossInternals<Props = {}> = {
+type GlossInternals<Props = any> = {
   parent: any
   targetElement: any
   themeFns: ThemeFn<Props>[] | null
@@ -657,7 +657,7 @@ export function getGlossProps(parent: GlossInternals | null, rawStyles: CSSPrope
     '.': {},
   }
   // all the "rest" go onto default props
-  let defaultProps = {}
+  let defaultProps: any = {}
   let conditionalStyles = mergeStyles('.', styles, rawStyles, false, defaultProps)
 
   // merge parent config

@@ -217,6 +217,10 @@ export function extractStyles(
               className: '',
             }
 
+            if (defaultProps.className) {
+              out.className = defaultProps.className
+            }
+
             for (const ns in styles) {
               const info = getStyles(styles[ns])
               if (info) {

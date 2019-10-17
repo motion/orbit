@@ -458,17 +458,14 @@ function addDynamicStyles(
         // TODO is this bad perf? now that we always create an object for themes
         // this was going to always run, but there are plenty of times that themes do nothing
         // not sure its worth checking but it avoids more object creation at expense of Object.keys()
+        // i really wish js added shit like themeStyles.keysLength or something
         if (Object.keys(themeStyles).length) {
           dynStyles['.'] = dynStyles['.'] || {}
           // make an object for each level of theme
           const curThemeObj = { ['.']: {} }
-          const themePropStyles = mergeStyles('.', curThemeObj, themeStyles, true)
+          mergeStyles('.', curThemeObj, themeStyles, true)
           // TODO console.log this see if we can optimize
           Object.assign(dynStyles['.'], curThemeObj['.'])
-          if (themePropStyles) {
-            mergePropStyles(curThemeObj, themePropStyles, theme)
-          }
-          // console.log('themeDepth',depth, index, len, themeDepth, curThemeObj, themeFnList)
           const dynClassNames = addStyles(curThemeObj, themeDepth, displayName, prevClassNames)
           if (dynClassNames) {
             for (const cn of dynClassNames) {

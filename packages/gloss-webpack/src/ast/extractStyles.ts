@@ -575,12 +575,6 @@ domNode: ${domNode}
         const localView = localStaticViews[node.name.name]
         const themeFn = view?.internal?.getConfig()?.themeFn
 
-        if (localView) {
-          for (const className of localView.staticDesc.className.split(' ')) {
-            stylesByClassName[className] = null
-          }
-        }
-
         if (themeFn) {
           // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss
           try {
@@ -591,7 +585,7 @@ domNode: ${domNode}
             }
             const props = {
               ...view.defaultProps,
-              ...localView?.propObject,
+              // ...localView?.propObject,
               ...htmlExtractedAttributes,
               ...staticAttributes,
             }
@@ -655,13 +649,16 @@ domNode: ${domNode}
             // local views we already parsed the css out
             const localView = localStaticViews[node.name.name]
             if (localView) {
-              // already did above
+              //
             } else {
               const { staticClasses } = view.internal.getConfig()
               // internal classes
               for (const className of staticClasses) {
                 const item = tracker.get(className)
                 const css = `${item.selector} { ${item.style} }`
+                if (className === 'sg1344154273') {
+                  throw new Error('found 1')
+                }
                 stylesByClassName[className] = css
               }
             }

@@ -83,7 +83,8 @@ export type GlossStaticStyleDescription = {
   }
 }
 
-const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
+const GLOSS_SIMPLE_COMPONENT_SYMBOL = Symbol('__GLOSS_SIMPLE_COMPONENT__') as any
+const SPECIFIC = 's'
 export const tracker: StyleTracker = new Map()
 export const sheet = new StyleSheet(true)
 const gc = new GarbageCollector(sheet, tracker)
@@ -473,8 +474,6 @@ function mergePropStyles(styles: Object, propStyles: Object, props: Object) {
   }
 }
 
-const SPECIFIC = 's'
-
 function deregisterClassName(name: string) {
   const nonSpecificClassName = name[0] === SPECIFIC ? name.slice(1) : name
   gc.deregisterClassUse(nonSpecificClassName)
@@ -524,10 +523,13 @@ function addDynamicStyles(
         }
         const css = StaticStyles.get(cn)
         if (css) {
+          if (cn === 'g1344154273') {
+            debugger
+          }
           curDynClassNames.add('_gs1')
           if (!SpecificStyles.has(cn)) {
             SpecificStyles.set(cn, true)
-            const rule = `body ._gs1.${className} {${css}}`
+            const rule = `body ._gs1._gs1.${className} {${css}}`
             sheet.insert(`${Math.random()}`, rule)
           }
         }
@@ -864,12 +866,12 @@ function getSelector(className: string, namespace: string, parentSelector = 'htm
       .split(',')
       .flatMap(part => {
         const selector = part.replace('&', className).trim()
-        return [`${parentSelector} .${SPECIFIC}${selector}`, `.${selector}`]
+        return [`${parentSelector} .${SPECIFIC}${selector}.${SPECIFIC}${selector}`, `.${selector}`]
       })
       .join(',')
     return namespacedSelectors
   }
-  return `${parentSelector} .${SPECIFIC}${className}, .${className}`
+  return `${parentSelector} .${SPECIFIC}${className}.${SPECIFIC}${className}, .${className}`
 }
 
 // some internals we can export

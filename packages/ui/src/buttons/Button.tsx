@@ -61,7 +61,7 @@ Button['acceptsProps'] = {
   hover: true,
 }
 
-const borderWidthTheme = theme => (typeof theme.borderWidth === 'number' ? theme.borderWidth : 1)
+const borderWidthTheme = theme => theme.borderWidth ?? 1
 
 const glowProps = {
   scale: 1.8,

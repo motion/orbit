@@ -94,6 +94,7 @@ let curTheme
 // helpful global to let us add debugging in dev mode anywhere in here
 let shouldDebug = false
 const isDeveloping = process.env.NODE_ENV === 'development'
+let hasLoadedStatics = false
 
 export function gloss<
   MyProps = {},
@@ -516,6 +517,20 @@ function addDynamicStyles(
         mergeStyles(ns, dynStyles, info.rules)
       } else if (className) {
         curDynClassNames.add(className)
+        // we need to make a more specific selector
+        if (!hasLoadedStatics) {
+          hasLoadedStatics = true
+          loadStaticStyles()
+        }
+        const css = StaticStyles.get(cn)
+        if (css) {
+          curDynClassNames.add('_gs1')
+          if (!SpecificStyles.has(cn)) {
+            SpecificStyles.set(cn, true)
+            const rule = `body ._gs1.${className} {${css}}`
+            sheet.insert(`${Math.random()}`, rule)
+          }
+        }
       }
     }
   }
@@ -971,4 +986,22 @@ export function getAllStyles(props: any, ns = '.') {
  */
 export function getStyles(props: any, ns = '.') {
   return getAllStyles(props, ns).find(x => x.ns === ns) ?? null
+}
+
+const SpecificStyles = new Map()
+const StaticStyles = new Map()
+function loadStaticStyles() {
+  const styleTags = Array.from(document.querySelectorAll('style'))
+  for (const tag of styleTags) {
+    if (!tag.innerText) continue
+    const lines = tag.innerText.split('\n')
+    for (const line of lines) {
+      if (line.indexOf('body .s') === 0) {
+        const [_, selector, css] = line.match(/\.([a-z][0-9]+) {(.*)}/) || []
+        if (selector && css) {
+          StaticStyles.set(selector, css)
+        }
+      }
+    }
+  }
 }

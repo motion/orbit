@@ -1,4 +1,4 @@
-import { AlphaColorProps, Base, gloss, GlossProps } from 'gloss'
+import { AlphaColorProps, Flex, gloss, GlossProps } from 'gloss'
 
 import { Size } from '../Space'
 import { TextSizeProps, textSizeTheme } from './textSizeTheme'
@@ -12,7 +12,7 @@ export type SimpleTextPropsBase = Omit<TextSizeProps, 'size'> &
 
 export type SimpleTextProps = GlossProps<SimpleTextPropsBase>
 
-export const SimpleText = gloss<SimpleTextPropsBase>(Base, {
+export const SimpleText = gloss<SimpleTextPropsBase>(Flex, {
   applyThemeColor: true,
   applyPsuedoColors: 'only-if-defined',
   display: 'inline-block',

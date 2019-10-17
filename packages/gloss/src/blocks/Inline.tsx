@@ -1,9 +1,9 @@
 import { gloss } from '../gloss'
-import { Base, BaseProps } from './Base'
+import { Flex, FlexProps } from './Flex'
 
-export type InlineProps = BaseProps
+export type InlineProps = FlexProps
 
-export const Inline = gloss(Base, {
+export const Inline = gloss(Flex, {
   tagName: 'span',
   display: 'inline',
 })

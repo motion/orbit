@@ -1,10 +1,10 @@
-import { Base, gloss, propsToStyles } from 'gloss'
+import { Flex, gloss, propsToStyles } from 'gloss'
 
 import { getSize } from './Sizes'
 import { Size } from './Space'
 import { textSizeTheme } from './text/textSizeTheme'
 
-export const Circle = gloss<{ size?: Size }>(Base, {
+export const Circle = gloss<{ size?: Size }>(Flex, {
   size: 'md',
   position: 'relative',
   borderRadius: 100000,

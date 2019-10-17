@@ -1,6 +1,6 @@
 import { css, GlossPropertySet } from '@o/css'
 import { motion } from 'framer-motion'
-import { Base, gloss, ThemeFn } from 'gloss'
+import { Flex, gloss, ThemeFn } from 'gloss'
 
 import { AnimationStore } from '../Geometry'
 import { Sizes } from '../Space'
@@ -30,7 +30,7 @@ export const getMargin: ThemeFn<MarginProps> = props => {
 }
 
 // regular view
-export const View = gloss<ViewPropsPlain>(Base, {
+export const View = gloss<ViewPropsPlain>(Flex, {
   display: 'flex',
 
   // we handle this with usePadding/getMargin

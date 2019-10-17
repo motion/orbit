@@ -1,6 +1,6 @@
 import { gloss, Icon, Image, Parallax, SimpleText, SimpleTextProps, Space, Stack, SurfacePassProps, Theme, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
-import { Base } from 'gloss'
+import { Flex } from 'gloss'
 import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
@@ -48,7 +48,7 @@ const animation: {
   },
 }
 
-const Star = gloss(Base, {
+const Star = gloss(Flex, {
   borderRadius: 100,
   width: 2,
   height: 2,

@@ -8,7 +8,7 @@ export {
   validCSSAttr,
 } from '@o/css'
 export * from './blocks/Absolute'
-export * from './blocks/Base'
+export * from './blocks/Box'
 
 // blocks
 export * from './blocks/Block'
@@ -16,7 +16,6 @@ export * from './blocks/Flex'
 export * from './blocks/Contents'
 export * from './blocks/FullScreen'
 export * from './blocks/Grid'
-export * from './blocks/Inherit'
 export * from './blocks/Inline'
 export * from './blocks/InlineBlock'
 export * from './blocks/InlineFlex'

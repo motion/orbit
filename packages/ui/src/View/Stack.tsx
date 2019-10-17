@@ -1,5 +1,5 @@
 import { isDefined } from '@o/utils'
-import { Base, validCSSAttr } from 'gloss'
+import { Flex, validCSSAttr } from 'gloss'
 import React, { Suspense } from 'react'
 
 import { Breadcrumbs } from '../Breadcrumbs'
@@ -98,7 +98,7 @@ export function Stack(colProps: StackProps) {
 }
 
 // for gloss parents
-Stack.ignoreAttrs = Base.ignoreAttrs
+Stack.ignoreAttrs = Flex.ignoreAttrs
 Stack.acceptsSpacing = true
 Stack.defaultProps = {
   'data-is': 'Stack',

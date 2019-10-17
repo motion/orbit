@@ -1,8 +1,8 @@
 import { gloss } from '../gloss'
-import { Base, BaseProps } from './Base'
+import { Flex, FlexProps } from './Flex'
 
-export type ContentsProps = BaseProps
+export type ContentsProps = FlexProps
 
-export const Contents = gloss(Base, {
+export const Contents = gloss(Flex, {
   display: 'contents',
 })

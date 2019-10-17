@@ -2,7 +2,7 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined } from '@o/utils'
-import { Base, Box, CompiledTheme, gloss, GlossProps, propsToStyles, pseudoProps, PseudoStyle, PseudoStyleProps, pseudoStyleTheme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
+import { Flex, Box, CompiledTheme, gloss, GlossProps, propsToStyles, pseudoProps, PseudoStyle, PseudoStyleProps, pseudoStyleTheme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
@@ -670,7 +670,7 @@ const getIconSize = (props: SurfaceProps) => {
   return Math.floor(size)
 }
 
-const GlintContain = gloss(Base, {
+const GlintContain = gloss(Flex, {
   height: '100%',
   position: 'absolute',
   top: 0,

@@ -1,6 +1,6 @@
 import { px } from '@o/css'
 import { isDefined } from '@o/utils'
-import { Base } from 'gloss'
+import { Flex } from 'gloss'
 import React from 'react'
 
 import { getSpaceSize, Size } from '../Space'
@@ -21,7 +21,7 @@ export const Grid = (props: GridProps) => (
 )
 
 // for gloss parents
-Grid.ignoreAttrs = Base.ignoreAttrs
+Grid.ignoreAttrs = Flex.ignoreAttrs
 Grid.acceptsSpacing = true
 
 // Transforms gap sizing props to numbers

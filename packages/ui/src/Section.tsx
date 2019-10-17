@@ -1,5 +1,5 @@
 import { isDefined, selectDefined } from '@o/utils'
-import { Base } from 'gloss'
+import { Flex } from 'gloss'
 import React, { useRef } from 'react'
 
 import { BorderBottom } from './Border'
@@ -198,10 +198,10 @@ export function Section(direct: SectionProps) {
 
     if (bordered || titleBorder) {
       titleEl = (
-        <Base position="relative">
+        <Flex position="relative">
           {titleEl}
           {!!(bordered || titleBorder) && <BorderBottom />}
-        </Base>
+        </Flex>
       )
     }
   }

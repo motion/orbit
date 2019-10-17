@@ -59,12 +59,14 @@ export function cssStringWithHash(styles: Object, opts?: CSSConfig): [number, st
   if (!styles) return [0, '']
   const shouldSnake = !opts || opts.snakeCase !== false
   let style = ''
-  let hash = 5381
+  let hash = 0
   for (let key in styles) {
     const rawVal = styles[key]
     let value = cssValue(key, rawVal, false, opts)
     // shorthands
     if (value !== undefined) {
+      // we want to return 0 if object is empty so we can check later by !hash
+      if (hash == 0) hash = 5381
       // start key hash: keys are always the keys from css, cacheable
       let keyHash = keyHashes[key]
       if (!keyHash) {

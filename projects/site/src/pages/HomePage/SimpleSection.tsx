@@ -65,9 +65,10 @@ const SectionBody = gloss(Box, {
   // flexFlow: 'row',
 })
 
-export const SectionIcon = gloss(props => <Icon size={32} {...props} />, {
+export const SectionIcon = gloss(Icon, {
+  size: 32,
   margin: [12, 20, 20, 0],
-  // opacity: 0.2,
+  debug: true,
 })
 
 const SectionTitle = gloss(View, {

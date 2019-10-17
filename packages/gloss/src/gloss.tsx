@@ -394,20 +394,21 @@ function addStyles(
   displayName?: string,
   prevClassNames?: Set<string> | null,
 ) {
-  const keys = Object.keys(styles)
-  if (keys.length > 1) {
-    keys.sort(styleKeysSort)
+  const namespaces = Object.keys(styles)
+  if (namespaces.length > 1) {
+    // sort pseudos into priority
+    namespaces.sort(styleKeysSort)
   }
   let classNames: string[] | null = null
-  for (const key of keys) {
-    const style = styles[key]
+  for (const ns of namespaces) {
+    const style = styles[ns]
     // they may return falsy, conditional '&:hover': active ? hoverStyle : null
     if (!style) continue
 
     // add the stylesheets and classNames
     // TODO could do a simple "diff" so that fast-changing styles only change the "changing" props
     // it would likely help things like when you animate based on mousemove, may be slower in default case
-    const className = addRules(displayName, style, key, depth || 0, true)
+    const className = addRules(displayName, style, ns, depth || 0, true)
 
     if (className) {
       classNames = classNames || []
@@ -419,7 +420,7 @@ function addStyles(
     }
   }
   if (isDeveloping && shouldDebug) {
-    console.log('addStyles sorted', classNames, keys, styles)
+    console.log('addStyles sorted', classNames, namespaces, styles)
   }
   return classNames
 }
@@ -487,7 +488,10 @@ function addDynamicStyles(
       for (const [index, themeFnList] of themeFns.entries()) {
         const themeDepth = depth - (len - index)
         const themeStyles = getStylesFromThemeFns(themeFnList, theme)
-        if (themeStyles) {
+        // TODO is this bad perf? now that we always create an object for themes
+        // this was going to always run, but there are plenty of times that themes do nothing
+        // not sure its worth checking but it avoids more object creation at expense of Object.keys()
+        if (Object.keys(themeStyles).length) {
           dynStyles['.'] = dynStyles['.'] || {}
           // make an object for each level of theme
           const curThemeObj = { ['.']: {} }
@@ -790,7 +794,11 @@ function addRules<A extends boolean>(
   className: string
 }) | null {
   const [hash, style] = cssStringWithHash(rules, cssOpts)
-  if (!hash) return null
+
+  // empty object, no need to add anything
+  if (!hash) {
+    return null
+  }
 
   let className = `${hash}`
   // build the class name with the display name of the styled component and a unique id based on the css and namespace

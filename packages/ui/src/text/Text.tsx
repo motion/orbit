@@ -315,6 +315,7 @@ export class Text extends React.PureComponent<TextProps> {
 const HTMLBlock = props => <span dangerouslySetInnerHTML={{ __html: `${props.children}` }} />
 
 const TextBlock = gloss({
+  applyThemeColor: true,
   display: 'block',
   userSelect: 'none',
   wordBreak: 'break-word',
@@ -346,8 +347,8 @@ const TextEllipse = gloss<TextEllipseProps>({
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
       overflow: 'hidden',
-    }
-  }
+    },
+  },
 }).theme(({ ellipse, doClamp, maxHeight }) => {
   if (ellipse > 1) {
     return {

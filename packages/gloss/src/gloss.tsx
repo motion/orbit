@@ -491,9 +491,6 @@ function addDynamicStyles(
           dynStyles['.'] = dynStyles['.'] || {}
           // make an object for each level of theme
           const curThemeObj = { ['.']: {} }
-          if (theme['debug']) {
-            debugger
-          }
           const themePropStyles = mergeStyles('.', curThemeObj, themeStyles, true)
           // TODO console.log this see if we can optimize
           Object.assign(dynStyles['.'], curThemeObj['.'])

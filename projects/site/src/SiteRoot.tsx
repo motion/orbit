@@ -12,8 +12,8 @@
 // }).theme(() => {})
 // export const SiteRoot = () => {
 //   return (
-//     <ProvideUI themes={themes} activeTheme="light">
-//       <TextFitTitle
+//     <ProvideUI themes={themes} activeTheme="dark">
+//       {/* <TextFitTitle
 //         fontWeight={100}
 //         alignSelf="center"
 //         selectable
@@ -22,7 +22,7 @@
 //         maxHeight={160}
 //       >
 //         hello world
-//       </TextFitTitle>
+//       </TextFitTitle> */}
 //       {/* <Absolute
 //         background="red"
 //         top={0}

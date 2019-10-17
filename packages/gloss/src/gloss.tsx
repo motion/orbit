@@ -949,12 +949,12 @@ function getCompiledClassname(parent: GlossView | any, compiledInfo?: GlossStati
 /**
  * For use externally only (static style extract)
  */
-export function getAllStyles(props: any) {
+export function getAllStyles(props: any, ns = '.') {
   if (!props) {
     return []
   }
-  const allStyles = { '.': {} }
-  mergeStyles('.', allStyles, props)
+  const allStyles = { [ns]: {} }
+  mergeStyles(ns, allStyles, props)
   const allClassNames: { css: string, className: string; ns: string }[] = []
   for (const ns in allStyles) {
     const styleObj = allStyles[ns]
@@ -970,5 +970,5 @@ export function getAllStyles(props: any) {
  * For use externally only (static style extract)
  */
 export function getStyles(props: any, ns = '.') {
-  return getAllStyles(props).find(x => x.ns === ns) ?? null
+  return getAllStyles(props, ns).find(x => x.ns === ns) ?? null
 }

@@ -167,7 +167,7 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
     }
   }
   if (__DEV__) {
-    console.error(`Invalid style value for ${key}`, value)
+    console.error(`Invalid style value for ${key}`, value, options)
   }
 }
 

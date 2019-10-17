@@ -11,7 +11,7 @@ import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
 import { pseudoProps } from './theme/pseudos'
 import { themeVariableManager } from './theme/ThemeVariableManager'
-import { useTheme } from './theme/useTheme'
+import { UnwrapThemeSymbol, useTheme } from './theme/useTheme'
 import { GlossProps, GlossPropsPartial, GlossThemeProps, GlossViewConfig } from './types'
 
 // so you can reference in postProcessProps
@@ -175,7 +175,7 @@ export function gloss<
     if (!hasCompiled) compile()
 
     const theme = useTheme(props)
-    curTheme = theme
+    curTheme = theme[UnwrapThemeSymbol]
     const dynClasses = useRef<Set<string> | null>(null)
 
     // for smarter update tracking

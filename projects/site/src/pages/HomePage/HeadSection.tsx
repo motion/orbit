@@ -274,6 +274,7 @@ const HeadTextSection = memo(() => {
             textAlign="center"
             whiteSpace="nowrap"
             maxHeight={160}
+            debug
           >
             <FadeInView {...animation.blog} disable={!measured}>
               <WelcomeBlogPostButton />

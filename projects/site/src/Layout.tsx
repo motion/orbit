@@ -109,7 +109,6 @@ export const Layout = memo((props: any) => {
           size={2}
           chromeless
           onClick={siteStore.toggleSidebar}
-          debug
         />
       </Theme>
       <View

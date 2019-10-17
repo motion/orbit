@@ -39,10 +39,13 @@ export interface GlossView<RawProps = {}, P = GlossProps<RawProps>> {
   }
 }
 
-export type ThemeFn<RawProps = any> = (
-  themeProps: GlossThemeProps<RawProps>,
-  previous?: RawProps & CSSPropertySetLoose | null,
-) => CSSPropertySetLoose | void | null
+export interface ThemeFn<RawProps = any> {
+  (
+    themeProps: GlossThemeProps<RawProps>,
+    previous?: RawProps & CSSPropertySetLoose | null,
+  ): CSSPropertySetLoose | void | null
+  hoistTheme?: boolean
+}
 
 type GlossInternals<Props = any> = {
   depth: number
@@ -139,6 +142,7 @@ export function gloss<
   let themeFns: ThemeFn[][] | null = null
   let hasCompiled = false
   let shouldUpdateMap: WeakMap<any, boolean>
+  let themeDepth = depth
 
   // this compiles later to capture theme/displayname
   function compile() {
@@ -146,6 +150,8 @@ export function gloss<
     hasCompiled = true
     shouldUpdateMap = GlossView['shouldUpdateMap']
     themeFns = compileThemes(ThemedView)
+    const definesOwnTheme = !!ThemedView.internal.themeFns
+    themeDepth = depth + (definesOwnTheme ? 0 : -1)
   }
 
   setTimeout(compile, 0)
@@ -221,7 +227,7 @@ export function gloss<
       ThemedView.displayName,
       conditionalStyles,
       dynClasses.current,
-      depth,
+      themeDepth,
       theme as any,
       themeFns,
       avoidStyles,
@@ -470,7 +476,7 @@ function addDynamicStyles(
     }
 
     if (theme && themeFns) {
-      const len = themeFns.length
+      const len = themeFns.length - 1
       for (const [index, themeFnList] of themeFns.entries()) {
         const themeDepth = depth - (len - index)
         const themeStyles = getStylesFromThemeFns(themeFnList, theme)
@@ -478,12 +484,16 @@ function addDynamicStyles(
           dynStyles['.'] = dynStyles['.'] || {}
           // make an object for each level of theme
           const curThemeObj = { ['.']: {} }
+          if (theme['debug']) {
+            debugger
+          }
           const themePropStyles = mergeStyles('.', curThemeObj, themeStyles, true)
           // TODO console.log this see if we can optimize
           Object.assign(dynStyles['.'], curThemeObj['.'])
           if (themePropStyles) {
             mergePropStyles(curThemeObj, themePropStyles, theme)
           }
+          // console.log('themeDepth',depth, index, len, themeDepth, curThemeObj, themeFnList)
           const dynClassNames = addStyles(curThemeObj, themeDepth, displayName, prevClassNames)
           if (dynClassNames) {
             for (const cn of dynClassNames) {
@@ -692,19 +702,42 @@ function compileThemes(viewOG: GlossView) {
   // this is a list of a list of theme functions
   // we run theme functions from parents before, working down to ours
   // the parent ones have a lower priority, so we want them first
+  const added = new Set()
   let all: ThemeFn[][] = []
+  const hoisted: ThemeFn[] = []
 
   // get themes in order from most important (current) to least important (grandparent)
   while (cur) {
     const conf = cur.internal
     if (conf.themeFns) {
-      all.push(conf.themeFns)
+      let curThemes: ThemeFn[] = []
+      for (const fn of conf.themeFns) {
+        if (added.has(fn)) {
+          continue // prevent duplicates in parents
+        }
+        added.add(fn)
+        if (fn.hoistTheme) {
+          hoisted.push(fn)
+        } else {
+          curThemes.push(fn)
+        }
+      }
+      if (curThemes.length) all.push(curThemes)
     }
     cur = conf.parent
   }
 
   // reverse so we have [grandparent, parent, cur]
   all.reverse()
+
+  // hoisted always go onto starting of the cur theme
+  if (hoisted.length) {
+    all[all.length - 1] = [
+      ...hoisted,
+      ...all[all.length - 1]
+    ]
+  }
+
   const themes = all.filter(Boolean)
 
   if (!themes.length) {

@@ -8,13 +8,22 @@
 //   userSelect: 'text',
 //   lineHeight: '95%',
 //   fontSize: `${titleSize}vw`,
-//   // TODO
 //   'sm-fontSize': titleSize * 11.5,
-// })
+// }).theme(() => {})
 // export const SiteRoot = () => {
 //   return (
 //     <ProvideUI themes={themes} activeTheme="light">
-//       <Absolute
+//       <TextFitTitle
+//         fontWeight={100}
+//         alignSelf="center"
+//         selectable
+//         textAlign="center"
+//         whiteSpace="nowrap"
+//         maxHeight={160}
+//       >
+//         hello world
+//       </TextFitTitle>
+//       {/* <Absolute
 //         background="red"
 //         top={0}
 //         left={0}
@@ -22,11 +31,22 @@
 //         right={0}
 //         alignItems="center"
 //         justifyContent="center"
-//         debug
 //       >
-//         <TextFitTitle>hello world</TextFitTitle>
-//         <Button debug>hello world</Button>
-//       </Absolute>
+//         <Button
+//           className="sidebar-open-button"
+//           abovemd-display="none"
+//           pointerEvents="auto"
+//           position="fixed"
+//           top={-3}
+//           right={10}
+//           zIndex={1000000000}
+//           icon="menu"
+//           color="#999"
+//           iconSize={16}
+//           size={2}
+//           chromeless
+//         />
+//       </Absolute> */}
 //     </ProvideUI>
 //   )
 // }

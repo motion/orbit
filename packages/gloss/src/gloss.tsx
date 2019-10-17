@@ -142,6 +142,13 @@ export function gloss<
   let themeFns: ThemeFn[][] | null = null
   let hasCompiled = false
   let shouldUpdateMap: WeakMap<any, boolean>
+  // we need to make sure theme priority is either above or below the static styles set
+  // so if:
+  //   const Parent = gloss({ background: 'red' }).theme(changeBg)
+  //       depth will be equal to static depth, so changeBg will override background
+  // likewise, if:
+  //   const Child = gloss(Parent, { background: 'green' })
+  //       has no theme, the themeDepth will be "one below", so bg always is green
   let themeDepth = depth
 
   // this compiles later to capture theme/displayname

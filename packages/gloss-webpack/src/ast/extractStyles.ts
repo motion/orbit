@@ -146,15 +146,12 @@ export function extractStyles(
     return true
   })
 
-  // used later to generate classname for item
-  const stylesByClassName: { [key: string]: string } = {}
-
   /**
    * Step 1: Compiled the gloss() style views and remember if they are able to be compiled
    * in step 2
    */
   const localStaticViews: { [key: string]: {
-    staticConfig: GlossStaticStyleDescription,
+    staticDesc: GlossStaticStyleDescription,
     propObject: any
    } } = {}
 
@@ -251,7 +248,6 @@ export function extractStyles(
               if (info) {
                 cssMap.set(info.className, { css: info.css, commentTexts: [] })
                 out.className += ` ${info.className}`
-                stylesByClassName[info.className] = null
                 if (shouldPrintDebug) {
                   console.log('adding className', ns, info.className, info.css)
                 }
@@ -273,7 +269,7 @@ export function extractStyles(
             }
 
             localStaticViews[name] = {
-              staticConfig: out,
+              staticDesc: out,
               propObject
             }
 
@@ -561,6 +557,9 @@ domNode: ${domNode}
           node.attributes.splice(classNamePropIndex, 1)
         }
 
+        // used later to generate classname for item
+        const stylesByClassName: { [key: string]: string } = {}
+
         const addStyles = (styleObj: any) => {
           const allStyles = getAllStyles(styleObj)
           for (const info of allStyles) {
@@ -575,6 +574,12 @@ domNode: ${domNode}
 
         const localView = localStaticViews[node.name.name]
         const themeFn = view?.internal?.getConfig()?.themeFn
+
+        if (localView) {
+          for (const className of localView.staticDesc.className.split(' ')) {
+            stylesByClassName[className] = null
+          }
+        }
 
         if (themeFn) {
           // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss

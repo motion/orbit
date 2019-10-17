@@ -1,15 +1,15 @@
 // //!
-// import { ProvideUI, SimpleText } from '@o/ui'
-// import { gloss } from 'gloss'
-// import React from 'react'
-// import { themes } from './themes'
+// const { ProvideUI, SimpleText } = require('@o/ui')
+// const { gloss } = require('gloss')
+// const React = require('react')
+// const { themes } = require('./themes')
 // const titleSize = 9
 // const TextFitTitle = gloss(SimpleText, {
 //   userSelect: 'text',
 //   lineHeight: '95%',
 //   fontSize: `${titleSize}vw`,
 //   // TODO
-//   'lg-fontSize': titleSize * 11.5,
+//   'sm-fontSize': titleSize * 11.5,
 // })
 // export const SiteRoot = () => {
 //   return (

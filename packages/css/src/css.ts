@@ -50,26 +50,30 @@ export function cssString(styles: Object, opts?: CSSConfig): string {
   return style
 }
 
+/**
+ * Because css objects are somewhat predictable, we can hash while looping them
+ * which saves us a full extra loop + some work of hashing the keys
+ */
 const keyHashes = {}
 export function cssStringWithHash(styles: Object, opts?: CSSConfig): [number, string] {
   if (!styles) return [0, '']
   const shouldSnake = !opts || opts.snakeCase !== false
   let style = ''
-  let hash = 0
+  let hash = 5381
   for (let key in styles) {
     const rawVal = styles[key]
     let value = cssValue(key, rawVal, false, opts)
     // shorthands
     if (value !== undefined) {
-      if (hash === 0) hash = 5381
-      // cache keys hashes, keys are always the same
+      // start key hash: keys are always the keys from css, cacheable
       let keyHash = keyHashes[key]
       if (!keyHash) {
         keyHash = keyHashes[key] = stringHash(key)
       }
       hash = (hash * 33) ^ keyHash
+      // end key hash
       if (typeof rawVal === 'number') {
-        hash = (hash * 33) ^ (Math.abs(rawVal + 250) + (rawVal < 0 ? 100 : 0))
+        hash = (hash * 33) ^ ((Math.abs(rawVal) + 250) + (rawVal < 0 ? 100 : 0))
       } else {
         hash = (hash * 33) ^ stringHash(value)
       }
@@ -83,7 +87,7 @@ export function cssStringWithHash(styles: Object, opts?: CSSConfig): [number, st
       }
     }
   }
-  return [hash, style]
+  return [Math.abs(hash), style]
 }
 
 export function css(styles: Object, opts?: CSSConfig): Object {

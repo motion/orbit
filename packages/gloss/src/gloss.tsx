@@ -444,6 +444,7 @@ function addDynamicStyles(
   // note that means the topmost `mergeStyles` will apply as most important
 
   // if passed any classes from a parent gloss view, merge them, ignore classname and track
+  // TODO we can remove this altogether
   if (theme.className) {
     const propClassNames = theme.className.split(whiteSpaceRegex)
     // note this reverse: this is a bit odd
@@ -457,15 +458,7 @@ function addDynamicStyles(
       if (maybeClassName[0] !== 'g') continue
       const className = maybeClassName.slice(2)
       const info = tracker.get(className)
-      if (info) {
-        // refactor: we dont need to do this hack anymore with our other hack of having real specificity but only 6 levels deep
-        // TODO just be sure specificity is one below our current dynamic?
-        // curId is looking if info.namespace was &:hover (sub-select) or "." (base) and then applying
-        // otherwise it would apply hover styles to the base styles here
-        // const ns = info.namespace
-        // dynStyles[ns] = dynStyles[ns] || {}
-        // mergeStyles(ns, dynStyles, info.rules)
-      } else if (maybeClassName) {
+      if (maybeClassName && !info) {
         curDynClassNames.add(maybeClassName)
       }
     }
@@ -486,6 +479,7 @@ function addDynamicStyles(
           // make an object for each level of theme
           const curThemeObj = { ['.']: {} }
           const themePropStyles = mergeStyles('.', curThemeObj, themeStyles, true)
+          // TODO console.log this see if we can optimize
           Object.assign(dynStyles['.'], curThemeObj['.'])
           if (themePropStyles) {
             mergePropStyles(curThemeObj, themePropStyles, theme)
@@ -721,7 +715,7 @@ function compileThemes(viewOG: GlossView) {
 }
 
 function getStylesFromThemeFns(themeFns: ThemeFn[], themeProps: Object) {
-  let styles: CSSPropertySetLoose | null = null
+  let styles: CSSPropertySetLoose = {}
   for (const themeFn of themeFns) {
     const next = themeFn(themeProps as any, styles)
     if (next) {

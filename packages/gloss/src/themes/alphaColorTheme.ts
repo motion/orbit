@@ -70,11 +70,7 @@ export const alphaColorTheme: ThemeFn<AlphaColorProps> = (props, previous) => {
     mergeDisabled(next, color, props)
   }
   if (next) {
-    if (previous) {
-      mergeStyles(unwrapProps(props), next, previous)
-    } else {
-      return next
-    }
+    mergeStyles(unwrapProps(props), next, previous)
   }
 }
 

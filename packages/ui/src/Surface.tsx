@@ -2,7 +2,7 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined } from '@o/utils'
-import { Flex, Box, CompiledTheme, gloss, GlossProps, propsToStyles, pseudoProps, PseudoStyle, PseudoStyleProps, pseudoStyleTheme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
+import { Box, CompiledTheme, Flex, gloss, GlossProps, propsToStyles, pseudoProps, PseudoStyle, PseudoStyleProps, pseudoStyleTheme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
@@ -567,7 +567,6 @@ const pseudoFunctionThemes /* : ThemeFn<PseudoThemeProps> */ = (props, prev) => 
 
 // fontFamily: inherit on both fixes elements
 const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
-  display: 'flex', // in case they change tagName
   fontFamily: 'inherit',
   position: 'relative',
   whiteSpace: 'pre',
@@ -587,7 +586,7 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
   const marginStyle = getMargin(props as any)
   const { fontSize, lineHeight } = textSizeTheme(props)
 
-  if (props.chromeless) {
+  if (prev && props.chromeless) {
     delete prev.hoverStyle
     delete prev.activeStyle
   }

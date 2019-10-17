@@ -38,7 +38,7 @@ export const SimpleSection = ({ delay = 100, index = undefined, title, children,
           </TitleText>
         </SectionTitle>
         <Space />
-        <SectionBody>{children}</SectionBody>
+        <Box>{children}</Box>
       </FadeInView>
     </SectionChrome>
   )
@@ -61,14 +61,9 @@ export const SectionP = gloss(props => (
   />
 ))
 
-const SectionBody = gloss(Box, {
-  // flexFlow: 'row',
-})
-
 export const SectionIcon = gloss(Icon, {
   size: 32,
   margin: [12, 20, 20, 0],
-  debug: true,
 })
 
 const SectionTitle = gloss(View, {

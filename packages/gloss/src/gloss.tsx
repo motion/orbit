@@ -5,6 +5,7 @@ import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
 import { validPropLoose, ValidProps } from './helpers/validProp'
+import { styleKeysSort } from './styleKeysSort'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
@@ -142,14 +143,6 @@ export function gloss<
   let themeFns: ThemeFn[][] | null = null
   let hasCompiled = false
   let shouldUpdateMap: WeakMap<any, boolean>
-  // we need to make sure theme priority is either above or below the static styles set
-  // so if:
-  //   const Parent = gloss({ background: 'red' }).theme(changeBg)
-  //       depth will be equal to static depth, so changeBg will override background
-  // likewise, if:
-  //   const Child = gloss(Parent, { background: 'green' })
-  //       has no theme, the themeDepth will be "one below", so bg always is green
-  let themeDepth = depth
 
   // this compiles later to capture theme/displayname
   function compile() {
@@ -157,11 +150,14 @@ export function gloss<
     hasCompiled = true
     shouldUpdateMap = GlossView['shouldUpdateMap']
     themeFns = compileThemes(ThemedView)
-    const definesOwnTheme = !!ThemedView.internal.themeFns
-    themeDepth = depth + (definesOwnTheme ? 0 : -1)
   }
 
   setTimeout(compile, 0)
+
+  // debug
+  if (isDeveloping && glossPropsObject?.['debug']) {
+    console.warn('gloss info', { glossProps, depth })
+  }
 
   /**
    *
@@ -219,6 +215,7 @@ export function gloss<
 
     // Optimization: only update if non-elements changed
     if (shouldAvoidStyleUpdate) {
+      shouldDebug = false
       return createElement(element, last.current.props, props.children)
     }
 
@@ -234,7 +231,7 @@ export function gloss<
       ThemedView.displayName,
       conditionalStyles,
       dynClasses.current,
-      themeDepth,
+      depth,
       theme as any,
       themeFns,
       avoidStyles,
@@ -244,6 +241,9 @@ export function gloss<
     const isDOMElement = typeof element === 'string' || (config ? config.isDOMElement : false)
 
     let className = staticClassNames
+    if (props.className) {
+      className += ` ${props.className}`
+    }
     if (curDynClassNames.size) {
       className += ' ' + [...curDynClassNames].join(' ')
     }
@@ -292,13 +292,13 @@ export function gloss<
       })
     }
 
-    if (isDeveloping && props['debug']) {
-      shouldDebug = false
+    if (isDeveloping && shouldDebug) {
       const styles = finalProps.className
         .split(' ')
         .map(x => tracker.get(x.slice(2)))
         .filter(Boolean)
       console.log('styles\n', styles, '\nprops\n', props, '\noutProps\n', finalProps)
+      shouldDebug = false
     }
 
     last.current.props = finalProps
@@ -353,39 +353,6 @@ function createGlossView(GlossView, config) {
   }
   return res
 }
-
-// keeps priority of hover/active/focus as expected
-let mediaQueriesImportance = {}
-let hasSetupMediaQueryKeys = false
-const styleKeyScore = (x: string) => {
-  let psuedoScore = 0
-  if (x[0] === '&') {
-    const hasFocus = x === '&:focus' ? 1 : 0
-    const hasHover = x === '&:hover' ? 2 : 0
-    const hasActive = x === '&:active' ? 3 : 0
-    const hasDisabled = x === '&:disabled' ? 4 : 0
-    psuedoScore += hasActive + hasHover + hasFocus + hasDisabled
-  }
-  if (psuedoScore) {
-    return psuedoScore
-  }
-  // media query sort by the order they gave us in object
-  if (Config.mediaQueries) {
-    if (!hasSetupMediaQueryKeys) {
-      hasSetupMediaQueryKeys = true
-      for (const [index, key] of Object.keys(Config.mediaQueries).entries()) {
-        // most important to least important
-        mediaQueriesImportance[Config.mediaQueries[key]] = 10000 - index
-      }
-    }
-    if (x in mediaQueriesImportance) {
-      return mediaQueriesImportance[x]
-    }
-  }
-  return 0
-}
-
-const styleKeysSort = (a: string, b: string) => (styleKeyScore(a) > styleKeyScore(b) ? 1 : -1)
 
 // takes a style object, adds it to stylesheet, returns classnames
 function addStyles(
@@ -706,6 +673,7 @@ function compileConfig(
 // compile theme from parents
 function compileThemes(viewOG: GlossView) {
   let cur = viewOG
+  const hasOwnTheme = cur.internal.themeFns
 
   // this is a list of a list of theme functions
   // we run theme functions from parents before, working down to ours
@@ -730,13 +698,30 @@ function compileThemes(viewOG: GlossView) {
           curThemes.push(fn)
         }
       }
-      if (curThemes.length) all.push(curThemes)
+      if (curThemes.length) {
+        all.push(curThemes)
+      }
     }
     cur = conf.parent
   }
 
   // reverse so we have [grandparent, parent, cur]
   all.reverse()
+
+  // we need to make sure theme priority is either above or below the static styles, depending.
+  // so if:
+  //   const Parent = gloss({ background: 'red' }).theme(changeBg)
+  //       changeBg *should* override background
+  // but if:
+  //   const Child = gloss(Parent, { background: 'green' })
+  //       background will *always* be green
+  // ALSO if changeBg.hoisted = true, we need to be sure its hoisted all the way up
+  // by putting an empty theme at the front if there are child themes, but no current theme,
+  // we ensure that the hoisted will always go at the top, as well as ensuring the depth/priority
+  // is kept as it should be
+  if (all.length && !hasOwnTheme) {
+    all.push([])
+  }
 
   // hoisted always go onto starting of the cur theme
   if (hoisted.length) {

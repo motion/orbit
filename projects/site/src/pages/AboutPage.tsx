@@ -21,7 +21,7 @@ export default mount({
 })
 
 const BigParagraph = (props: TextProps) => (
-  <Title debug selectable size="xs" alpha={0.6} fontWeight={100} sizeLineHeight={1.35} {...props} />
+  <Title selectable size="xs" alpha={0.6} fontWeight={100} sizeLineHeight={1.35} {...props} />
 )
 
 const BigTitle = (props: TextProps) => <Title selectable size={1.5} fontWeight={100} {...props} />

@@ -1,4 +1,3 @@
-//!
 import { Avatar, SimpleText, Space, Stack, View } from '@o/ui'
 import React from 'react'
 

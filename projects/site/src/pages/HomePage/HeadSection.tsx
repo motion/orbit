@@ -1,18 +1,17 @@
-//!
-import { gloss, Icon, Image, Parallax, SimpleText, SimpleTextProps, Space, Stack, SurfacePassProps, Tag, Theme, View } from '@o/ui'
+import { gloss, Icon, Image, Parallax, SimpleText, SimpleTextProps, Space, Stack, SurfacePassProps, Theme, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import { Base } from 'gloss'
 import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
 import { useSiteStore } from '../../SiteStore'
-import { linkProps } from '../../useLink'
 import { fadeAnimations, FadeChildProps, FadeInView, transitions, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContentChrome } from '../../views/SectionContent'
 import { Join } from './Join'
 import { useScreenVal } from './SpacedPageContent'
+import { WelcomeBlogPostButton } from './WelcomeBlogPostButton'
 
 const allDelay = 2
 
@@ -277,27 +276,7 @@ const HeadTextSection = memo(() => {
             maxHeight={160}
           >
             <FadeInView {...animation.blog} disable={!measured}>
-              <Tag
-                sm-display="none"
-                size={0.85}
-                sizeHeight={1.01}
-                sizePadding={1.4}
-                sizeRadius={4}
-                coat="lightBlue"
-                zIndex={1000}
-                position="absolute"
-                top={-60}
-                right={-10}
-                borderWidth={2}
-                hoverStyle
-                iconAfter
-                icon="chevron-right"
-                // safari ellipse bugfix...
-                minWidth={205}
-                {...linkProps('/blog/update-two')}
-              >
-                Orbit enters private beta!
-              </Tag>
+              <WelcomeBlogPostButton />
             </FadeInView>
             <FadeInView disable={!measured} {...animation.title} {...fontProps.TitleFont}>
               Amazing internal tools

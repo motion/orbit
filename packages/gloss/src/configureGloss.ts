@@ -1,5 +1,5 @@
 import { colorToString } from './helpers/helpers'
-import { GlossConfig } from './types'
+import { GlossConfiguration } from './types'
 
 export const defaultMediaQueries = {
   sm: '@media screen and (max-width: 500px)',
@@ -9,7 +9,7 @@ export const defaultMediaQueries = {
   xl: '@media screen and (min-width: 1100px)',
 }
 
-export const GlossDefaultConfig: GlossConfig = {
+export const GlossDefaultConfig: GlossConfiguration = {
   isColor: color => color && !!color.rgb,
   toColor: colorToString,
   mediaQueries: defaultMediaQueries,
@@ -17,7 +17,7 @@ export const GlossDefaultConfig: GlossConfig = {
 
 export let Config = { ...GlossDefaultConfig }
 
-export function configureGloss(options: Partial<GlossConfig>) {
+export function configureGloss(options: Partial<GlossConfiguration>) {
   Object.assign(Config, options)
   Object.freeze(Config) // only allow once
 }

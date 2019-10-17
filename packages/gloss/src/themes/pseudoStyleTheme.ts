@@ -51,7 +51,8 @@ function themeToCSSPropertySet(theme: CompiledTheme) {
       key[0] === '_' ||
       isPlainObj(theme[key])
     ) {
-      finalTheme[key] = theme[key]
+      // dont set this its a subtheme or non css type
+      // finalTheme[key] = theme[key]
       continue
     }
     let found = false

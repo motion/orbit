@@ -1,4 +1,4 @@
-import { AlphaColorProps, alphaColorTheme, Box, gloss, GlossProps, propsToStyles } from 'gloss'
+import { AlphaColorProps, Base, gloss, GlossProps } from 'gloss'
 
 import { Size } from '../Space'
 import { TextSizeProps, textSizeTheme } from './textSizeTheme'
@@ -12,7 +12,8 @@ export type SimpleTextPropsBase = Omit<TextSizeProps, 'size'> &
 
 export type SimpleTextProps = GlossProps<SimpleTextPropsBase>
 
-export const SimpleText = gloss<SimpleTextPropsBase>(Box, {
+export const SimpleText = gloss<SimpleTextPropsBase>(Base, {
+  applyThemeColor: true,
   applyPsuedoColors: 'only-if-defined',
   display: 'inline-block',
   whiteSpace: 'normal',
@@ -30,4 +31,4 @@ export const SimpleText = gloss<SimpleTextPropsBase>(Box, {
       cursor: 'pointer',
     },
   },
-}).theme(propsToStyles, alphaColorTheme, textSizeTheme)
+}).theme(textSizeTheme)

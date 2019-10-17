@@ -21,7 +21,7 @@ export interface ExtractStylesOptions {
     [key: string]: GlossView<any>
   }
   mediaQueryKeys?: string[]
-  internalViewsPath?: string
+  internalViewsPaths?: string[]
   deoptKeys?: string[]
   defaultTheme: CompiledTheme
 }
@@ -105,8 +105,7 @@ export function extractStyles(
   })
 
   // we allow things within the ui kit to avoid the more tedious config
-  const isInternal =
-    options.internalViewsPath && sourceFileName.indexOf(options.internalViewsPath) === 0
+  const isInternal = options.internalViewsPaths?.some(x => sourceFileName.indexOf(x) === 0) ?? false
 
   let importsGloss = false
 
@@ -139,6 +138,9 @@ export function extractStyles(
         }
         views[specifier.local.name] = options.views[specifier.local.name]
         validComponents[specifier.local.name] = true
+        if (shouldPrintDebug) {
+          console.log('found valid component', specifier.local.name)
+        }
         // dont remove the import
         return true
       })
@@ -155,7 +157,7 @@ export function extractStyles(
     propObject: any
    } } = {}
 
-  if (importsGloss) {
+  if (importsGloss || isInternal) {
     traverse(ast, {
       VariableDeclaration(path) {
         const dec = path.node.declarations[0]
@@ -224,8 +226,8 @@ export function extractStyles(
 
             // uses the base styles if necessary, merges just like gloss does
             const { styles, conditionalStyles, defaultProps } = getGlossProps(
-              view?.internal,
               propObject,
+              view,
             )
             if (shouldPrintDebug) {
               console.log('glossProps', styles, conditionalStyles, defaultProps)
@@ -651,7 +653,7 @@ domNode: ${domNode}
             if (localView) {
               //
             } else {
-              const { staticClasses } = view.internal.getConfig()
+              const { staticClasses } = view.internal.glossProps
               // internal classes
               for (const className of staticClasses) {
                 const item = tracker.get(className)

@@ -1,4 +1,3 @@
-//!
 import React, { memo } from 'react'
 
 import { memoIsEqualDeep } from './helpers/memoHelpers'

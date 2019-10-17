@@ -25,7 +25,7 @@ export * from './blocks/InlineFlex'
 export {
   GlossThemeProps,
   GlossProps,
-  GlossConfig,
+  GlossConfiguration as GlossConfig,
   SimpleStyleObject,
   ThemeType,
   CreateThemeType,

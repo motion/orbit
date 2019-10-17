@@ -30,7 +30,7 @@ export const transitions: { [key: string]: MotionProps['transition'] } = {
   },
   bouncy: {
     type: 'spring',
-    damping: 5,
+    damping: 8,
     stiffness: 75,
   },
   normal: {

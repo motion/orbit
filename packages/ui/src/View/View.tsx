@@ -38,9 +38,8 @@ export const View = gloss<ViewPropsPlain>(Base, {
     padding: true,
     margin: true,
   },
-})
-  .theme(getMargin, paddingTheme, elevationTheme)
-  .withConfig({
+
+  config: {
     // shouldAvoidProcessingStyles: shouldRenderToMotion,
     postProcessProps(inProps, outProps, getStyles) {
       if (shouldRenderToMotion(inProps)) {
@@ -82,7 +81,8 @@ export const View = gloss<ViewPropsPlain>(Base, {
         ? motion[props.tagName] || motion.div
         : props.tagName || 'div'
     },
-  })
+  },
+}).theme(getMargin, paddingTheme, elevationTheme)
 
 View.staticStyleConfig = {
   ...View.staticStyleConfig,

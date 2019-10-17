@@ -13,7 +13,7 @@ export const propsToStyles: ThemeFn = (theme, previous) => {
   const ignores = props?.ignorePropsToStyle
   for (let key in props) {
     if (ignores?.[key]) continue
-    if (!pseudoProps[key] && !validCSSAttr[key]) continue
+    // WARNING don't check for validCSSAttr here because we have media queries defined weirdly
     const next = propToStyle(key, props[key])
     if (next !== undefined)  {
       if (pseudoProps[key]) {

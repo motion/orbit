@@ -6,7 +6,7 @@ import { ThemeValue } from './theme/ThemeValue'
 
 export type Psuedos = '&:hover' | '&:active' | '&:focus' | '&:focus-within' | '&:disabled'
 
-export type GlossConfig = {
+export type GlossConfiguration = {
   toColor: Function
   isColor: Function
   mediaQueries?: null | {
@@ -64,7 +64,7 @@ export type CommonHTMLProps = Omit<
   | 'size'
 >
 
-export type GlossBaseProps = {
+export type GlossBaseProps<Props = {}> = {
   tagName?: string
   nodeRef?: any
   coat?: string | false
@@ -72,13 +72,31 @@ export type GlossBaseProps = {
   conditional?: {
     [key: string]: CSSPropertySet
   }
+  config?: GlossViewConfig<
+    Props & {
+      // a little duplication with above ^
+      tagName?: string
+      nodeRef?: any
+      coat?: string | false
+      subTheme?: ThemeSelect
+    }
+  >
+}
+
+export type GlossViewConfig<Props = {}> = {
+  displayName?: string
+  ignoreAttrs?: { [key: string]: boolean }
+  shouldAvoidProcessingStyles?: (props: Props) => boolean
+  postProcessProps?: (curProps: Props, nextProps: any, getFinalStyles: () => CSSPropertySet) => any
+  getElement?: (props: Props) => any
+  isDOMElement?: boolean
 }
 
 // theme types
 export type GenerateGlossProps<Props, CSSProps> = Omit<CommonHTMLProps, keyof Props> &
   Omit<CSSProps, keyof Props> &
-  Omit<Props, keyof GlossBaseProps> &
-  GlossBaseProps
+  Omit<Props, keyof GlossBaseProps<Props>> &
+  GlossBaseProps<Props>
 
 export type GlossProps<Props = {}> = GenerateGlossProps<Props, CSSPropertySetStrict> & {
   [key: string]: GlossPropertySet | any

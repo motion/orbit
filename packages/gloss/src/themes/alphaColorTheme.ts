@@ -22,6 +22,7 @@ export type PseudoStyleProps = {
 
 export type AlphaColorProps = {
   applyPsuedoColors?: boolean | 'only-if-defined'
+  applyThemeColor?: boolean
   alpha?: number
   alphaHover?: number
   hoverStyle?: PseudoStyleProps['hoverStyle']
@@ -37,50 +38,44 @@ const mergeHover = merge.bind(null, 'hoverStyle', 'colorHover', 'alphaHover')
 const mergeActive = merge.bind(null, 'activeStyle', 'colorActive', 'alphaActive')
 const mergeDisabled = merge.bind(null, 'disabledStyle', 'colorDisabled', 'alphaDisabled',)
 
-export const alphaColorTheme = createAlphaColorTheme(true)
-export const alphaColorThemeLoose = createAlphaColorTheme(false)
-
-function createAlphaColorTheme(shouldSetDefault = false) {
-  const themeFn: ThemeFn<AlphaColorProps> = (props, previous) => {
-    let color = props.color as any
-    const alpha = props.alpha
-    let next: CSSPropertySet | null = null
-    if (color) {
-      if (shouldSetDefault) {
-        if (
-          typeof color !== 'string' &&
-          color.originalInput !== 'inherit' &&
-          typeof alpha === 'number'
-        ) {
-          next = next || {}
-          next.color = toColor(color).setAlpha(alpha)
-        } else {
-          next = next || {}
-          next.color = color
-        }
-      }
-    }
-    const applyPsuedos = props.applyPsuedoColors
-    if (
-      applyPsuedos === true ||
-      (applyPsuedos === 'only-if-defined' &&
-        (!!props.hoverStyle || !!props.activeStyle || !!props.focusStyle || !!props.disabledStyle))
-    ) {
-      next = next || {}
-      mergeFocus(next, color, props)
-      mergeHover(next, color, props)
-      mergeActive(next, color, props)
-      mergeDisabled(next, color, props)
-    }
-    if (next) {
-      if (previous) {
-        mergeStyles(unwrapProps(props), next, previous)
+export const alphaColorTheme: ThemeFn<AlphaColorProps> = (props, previous) => {
+  let color = props.color as any
+  const alpha = props.alpha
+  let next: CSSPropertySet | null = null
+  if (color) {
+    if (props.applyThemeColor) {
+      if (
+        typeof color !== 'string' &&
+        color.originalInput !== 'inherit' &&
+        typeof alpha === 'number'
+      ) {
+        next = next || {}
+        next.color = toColor(color).setAlpha(alpha)
       } else {
-        return next
+        next = next || {}
+        next.color = color
       }
     }
   }
-  return themeFn
+  const applyPsuedos = props.applyPsuedoColors
+  if (
+    applyPsuedos === true ||
+    (applyPsuedos === 'only-if-defined' &&
+      (!!props.hoverStyle || !!props.activeStyle || !!props.focusStyle || !!props.disabledStyle))
+  ) {
+    next = next || {}
+    mergeFocus(next, color, props)
+    mergeHover(next, color, props)
+    mergeActive(next, color, props)
+    mergeDisabled(next, color, props)
+  }
+  if (next) {
+    if (previous) {
+      mergeStyles(unwrapProps(props), next, previous)
+    } else {
+      return next
+    }
+  }
 }
 
 function merge(

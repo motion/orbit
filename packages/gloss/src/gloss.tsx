@@ -955,12 +955,12 @@ export function getAllStyles(props: any) {
   }
   const allStyles = { '.': {} }
   mergeStyles('.', allStyles, props)
-  const allClassNames: { css: string, className: string }[] = []
+  const allClassNames: { css: string, className: string; ns: string }[] = []
   for (const ns in allStyles) {
     const styleObj = allStyles[ns]
     const info = addRules('', styleObj, ns, true, false, 'body')
     if (info) {
-      allClassNames.push(info)
+      allClassNames.push({ ns, ...info, })
     }
   }
   return allClassNames
@@ -969,6 +969,6 @@ export function getAllStyles(props: any) {
 /**
  * For use externally only (static style extract)
  */
-export function getStyles(props: any) {
-  return getAllStyles(props)?.[0] ?? null
+export function getStyles(props: any, ns = '.') {
+  return getAllStyles(props).find(x => x.ns === ns) ?? null
 }

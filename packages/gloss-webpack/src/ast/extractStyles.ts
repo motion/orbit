@@ -652,9 +652,6 @@ domNode: ${domNode}
               for (const className of staticClasses) {
                 const item = tracker.get(className.slice(2))
                 const css = `${item.selector} { ${item.style} }`
-                if (className === 'sg1344154273') {
-                  throw new Error('found 1')
-                }
                 stylesByClassName[className] = css
               }
             }

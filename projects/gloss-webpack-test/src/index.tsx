@@ -1,22 +1,13 @@
 //!
-import { getSizeRelative, ProvideUI, SimpleText, Title, View } from '@o/ui'
+import { ProvideUI, SimpleText, View } from '@o/ui/test'
+import { Theme } from 'gloss'
 import { fromStyles } from 'gloss-theme'
-import { Theme } from 'gloss/src'
 import * as React from 'react'
 import { render } from 'react-dom'
 
-export const TitleText = ({ sizeRelative = 0, ...props }: any) => {
-  // automatically do a small size
-  const size = props.size || 'lg'
-  const smSize =
-    props['sm-size'] ||
-    (typeof size === 'string' ? getSizeRelative(size as any, -2 + sizeRelative) : size)
-  return <Title {...props} size={size} sm-size={smSize} />
-}
-
 export const H2 = props => (
   <View>
-    <TitleText tagName="h2" size="md" {...props} />
+    <SimpleText tagName="h2" size="md" {...props} />
   </View>
 )
 
@@ -26,9 +17,20 @@ function Main() {
       themes={{ light: fromStyles({ background: 'white', color: 'black' }) }}
       activeTheme="light"
     >
-      <Theme scale={2}>
-        <H2>Test header</H2>
-        <SimpleText>Hello world</SimpleText>
+      <Theme scale={1.5}>
+        <View
+          background="red"
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          alignItems="center"
+          justifyContent="center"
+        >
+          <H2>Test header</H2>
+          <SimpleText>Hello world</SimpleText>
+        </View>
       </Theme>
       {/* <Image background="red" width={200} height={200} src="home.jpg" /> */}
       {/* <View sm-marginBottom={20}>

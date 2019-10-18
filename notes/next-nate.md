@@ -300,11 +300,6 @@ Either select items or define query
 
 GO TO PROD / DEV TASKS
 
-- [ ] React Window is being re-written again by bvaughn, there are bugs in it currently, an
-      afternoon to revisit and see if we can upgrade to that version
-
----
-
 - [ ] fix issues using different app apis, test
 - [ ] persisting queries
 - [ ] persisting to bits the query information
@@ -337,30 +332,6 @@ First: working, non-buggy demos of everything. Visually impressive.
 - make a generic app for search + display data that you can drag a query into make user manager app
   use grid layout probably make slack app search something large and put it into layout demo app or
   similar
-
----
-
-next
-
-Oct
-
-"Launch in private beta"
-
-- Improve demo apps
-- Upgrade build/release process (auto updates etc)
-- Get builds in hands of friends for initial debugging
-
-Nov
-
-"Public beta launch"
-
-- Upgrade docs, website, etc
-- Really improve apps/demos
-- Start on dockerizing things for cloud stuff
-
-Dec
-
-"Sell it / Launch"
 
 ---
 

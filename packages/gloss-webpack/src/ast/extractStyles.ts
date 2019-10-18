@@ -148,10 +148,13 @@ export function extractStyles(
    * Step 1: Compiled the gloss() style views and remember if they are able to be compiled
    * in step 2
    */
-  const localStaticViews: { [key: string]: {
-    staticDesc: GlossStaticStyleDescription,
-    propObject: any
-   } } = {}
+  const localStaticViews: {
+    [key: string]: {
+      staticDesc: GlossStaticStyleDescription,
+      propObject: any
+      defaultProps?: Object
+    }
+  } = {}
 
   if (importsGloss || isInternal) {
     traverse(ast, {
@@ -186,14 +189,14 @@ export function extractStyles(
 
         validComponents[name] = true
 
-        const extendsViewIdentifier = t.isIdentifier(glossCall.arguments[0]) && glossCall.arguments[0].name
+        const localViewName = t.isIdentifier(glossCall.arguments[0]) && glossCall.arguments[0].name
         let view: GlossView<any> | null = null
 
-        if (extendsViewIdentifier) {
+        if (localViewName) {
           // extends one of our optimizable views
-          if (views[extendsViewIdentifier]) {
+          if (views[localViewName]) {
+            views[name] = options.views[localViewName]
             view = views[name]
-            views[name] = options.views[extendsViewIdentifier]
           }
         }
 
@@ -215,7 +218,7 @@ export function extractStyles(
                 console.log('propObject', propObject)
               }
             } catch (err) {
-              console.log('Cant parse style object', name, '>', extendsViewIdentifier)
+              console.log('Cant parse style object', name, '>', localViewName)
               console.log('err', err)
               return arg
             }
@@ -226,7 +229,7 @@ export function extractStyles(
               view,
             )
             if (shouldPrintDebug) {
-              console.log('glossCall.arguments parse gloss props', name, styles, conditionalStyles, defaultProps)
+              console.log('glossCall.arguments parse gloss props', name, styles, conditionalStyles)
             }
 
             // then put them all into an array so gloss later can use that
@@ -239,10 +242,10 @@ export function extractStyles(
               delete defaultProps.className
             }
 
-            restDefaultProps = defaultProps
+            const depth = (view?.internal?.depth ?? 0) + 1
 
             for (const ns in styles) {
-              const info = StaticUtils.getStyles(styles[ns], 1)
+              const info = StaticUtils.getStyles(styles[ns], depth)
               if (shouldPrintDebug) {
                 console.log('got static extract', name, ns, info, styles[ns])
               }
@@ -259,7 +262,7 @@ export function extractStyles(
                 out.conditionalClassNames[prop] = ''
                 for (const key in conditionalStyles[prop]) {
                   const val = conditionalStyles[prop][key]
-                  const info = StaticUtils.getStyles(val, 1)
+                  const info = StaticUtils.getStyles(val, depth)
                   if (info) {
                     cssMap.set(info.className, { css: info.css, commentTexts: [] })
                     out.conditionalClassNames[prop] += ` ${info.className}`
@@ -270,7 +273,8 @@ export function extractStyles(
 
             localStaticViews[name] = {
               staticDesc: out,
-              propObject
+              propObject,
+              defaultProps,
             }
 
             if (out.className || out.conditionalClassNames) {
@@ -292,6 +296,7 @@ export function extractStyles(
 
         if (Object.keys(restDefaultProps).length) {
           const argIndex = t.isNullLiteral(glossCall.arguments[0]) ? 0 : 1
+          console.log('restDefaultProps', restDefaultProps)
           glossCall.arguments[argIndex] = literalToAst(restDefaultProps)
         }
       },
@@ -565,12 +570,6 @@ domNode: ${domNode}
           for (const info of allStyles) {
             if (info.css) {
               stylesByClassName[info.className] = info.css
-              if (info.className === 'g1162872573') {
-                throw new Error('why u adding this bro')
-              }
-              if (shouldPrintDebug) {
-                console.log(`adding style`, info.className, info.css)
-              }
             }
           }
         }

@@ -600,7 +600,7 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
   let defaultProps: any = {}
   let conditionalStyles = mergeStyles('.', styles, rest, false, defaultProps) ?? null
   // merge parent config
-  if (parent) {
+  if (parent?.internal) {
     const parentGlossProps = parent.internal.glossProps
     if (parentGlossProps.defaultProps) {
       defaultProps = {
@@ -622,7 +622,7 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
   }
   // merge together the parent chain of static classes
   const curStaticClasses = addStyles(styles, (parent?.internal?.depth ?? -1) + 1) || []
-  const parentStaticClasses = parent?.internal.glossProps.staticClasses || []
+  const parentStaticClasses = parent?.internal?.glossProps.staticClasses || []
   return {
     staticClasses: [...parentStaticClasses, ...curStaticClasses],
     config: config ? compileConfig(config, parent) : null,

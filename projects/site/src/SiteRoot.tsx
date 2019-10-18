@@ -1,42 +1,31 @@
 // //!
-// import { Box, isDefined, ProvideUI, View } from '@o/ui'
+// import { ProvideUI, SimpleText } from '@o/ui'
 // import { gloss } from 'gloss'
-// const LinkRow = gloss(Box, {
-//   flexDirection: 'row',
-//   flex: 1,
-//   alignItems: 'center',
-//   justifyContent: 'center',
-//   zIndex: 1000000000,
-//   position: 'relative',
-// })
-//
 // const React = require('react')
 // const { themes } = require('./themes')
-// const transition = {}
-// const maxHeight = 10
-// gloss
+// const TextFitTitle = gloss(SimpleText, {
+//   userSelect: 'text',
+//   lineHeight: '95%',
+//   fontSize: `${6}vw`,
+//   'lg-fontSize': 6 * 11.5,
+// })
 // export const SiteRoot = () => {
 //   return (
 //     <ProvideUI themes={themes} activeTheme="dark">
-//       <LinkRow>hi</LinkRow>
-//       <View
-//         className={`view-layout layout-theme-${1}`}
-//         minHeight="100vh"
-//         minWidth="100vw"
-//         background="red"
-//         overflow={isDefined(maxHeight) ? 'hidden' : 'visible'}
-//         transition={transition}
-//         style={{
-//           maxHeight,
-//           // WARNING dont have translate here it ruins sticky sidebar
-//           transform: isDefined(maxHeight) ? `translateX(${-100}px)` : ``,
-//         }}
+//       <TextFitTitle
+//         fontWeight={100}
+//         alignSelf="center"
+//         selectable
+//         textAlign="center"
+//         whiteSpace="nowrap"
+//         maxHeight={160}
 //       >
 //         something
-//       </View>
+//       </TextFitTitle>
 //     </ProvideUI>
 //   )
 // }
+//
 import { ErrorBoundary, ProvideUI } from '@o/ui'
 import React, { StrictMode, Suspense } from 'react'
 import { Router, View } from 'react-navi'

@@ -1,6 +1,5 @@
 import { Color, LinearGradient, toColor } from '@o/color'
-import { ThemeObject } from 'gloss'
-import { isPlainObj } from 'gloss/_/helpers/helpers'
+import { isPlainObj, ThemeObject } from 'gloss'
 
 import { colorize, darken, decreaseContrast, increaseContrast, largeAmount, opposite, roundToExtreme, smallAmount } from '.'
 

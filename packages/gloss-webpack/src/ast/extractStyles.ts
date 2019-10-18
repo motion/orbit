@@ -589,6 +589,11 @@ domNode: ${domNode}
         // if all style props have been extracted, gloss component can be
         // converted to a div or the specified component
         if (inlinePropCount === 0) {
+          // add in any local static classes
+          if (localView) {
+            stylesByClassName[localView.staticDesc.className] = null
+          }
+
           const themeFns = view?.internal?.themeFns
           if (themeFns) {
             // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss

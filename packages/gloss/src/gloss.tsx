@@ -1,9 +1,9 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssStringWithHash, stringHash, validCSSAttr } from '@o/css'
-import { isEqual } from '@o/fast-compare'
 import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
+import { createGlossIsEqual } from './createGlossIsEqual'
 import { validPropLoose, ValidProps } from './helpers/validProp'
 import { styleKeysSort } from './styleKeysSort'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
@@ -826,7 +826,7 @@ function addRules<A extends boolean>(
 function getSelector(className: string, namespace: string) {
   if (namespace[0] === '@') {
     // media queries need stronger binding, we'll do html selector
-    return getSpecificSelectors(className, 'body ')
+    return getSpecificSelectors(className, 'body')
   }
   if (namespace[0] === '&' || namespace.indexOf('&') !== -1) {
     // namespace === '&:hover, &:focus, & > div'
@@ -842,8 +842,14 @@ function getSelector(className: string, namespace: string) {
 }
 
 // for now, assume now more than 6 levels nesting (css = 🤮)
+const depths = [0, 1, 2, 3, 4, 5]
+const dSelectors = depths.map(i => `._g${i}`.repeat(i + 1))
 function getSpecificSelectors(base: string, parent = '', after = '') {
-  return `${parent}.g0${base}${after},${parent}${`.g1${base}`.repeat(2)}${after},${parent}${`.g2${base}`.repeat(3)}${after},${parent}${`.g3${base}`.repeat(4)}${after},${parent}${`.g4${base}`.repeat(5)}${after},${parent}${`.g5${base}`.repeat(6)}${after}`
+  let s: string[] = []
+  for (const i of depths) {
+    s.push(`${parent}${dSelectors[i]} .g${i}${base}${after}`)
+  }
+  return s.join(',')
 }
 
 // some internals we can export
@@ -867,46 +873,6 @@ export const baseIgnoreAttrs = {
   height: false,
   size: false,
   src: false,
-}
-
-/**
- * Gloss componentShouldUpdate optimization - Gloss styles should never
- * rely on react elements (TODO document that, but weve never used it internally even on accident),
- * which means we can do nice optimization by tracking if only non-elements changed.
- */
-function createGlossIsEqual() {
-  const shouldUpdateMap = new WeakMap<object, boolean>()
-  return {
-    shouldUpdateMap,
-    isEqual(a: any, b: any) {
-      let shouldUpdate = false
-      let shouldUpdateInner = false
-      for (const key in b) {
-        const bVal = b[key]
-        if (isValidElement(bVal)) {
-          shouldUpdate = true
-          continue
-        }
-        if (!isEqual(a[key], bVal)) {
-          shouldUpdate = true
-          shouldUpdateInner = true
-          break
-        }
-      }
-      // ensure we didnt remove/add keys
-      if (!shouldUpdate || !shouldUpdateInner) {
-        for (const key in a) {
-          if (!(key in b)) {
-            shouldUpdate = true
-            shouldUpdateInner = true
-            break
-          }
-        }
-      }
-      shouldUpdateMap.set(b, shouldUpdateInner)
-      return !shouldUpdate
-    },
-  }
 }
 
 function getCompiledClasses(parent: GlossView | any, compiledInfo: GlossStaticStyleDescription | null, depth: number) {

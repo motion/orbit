@@ -22,8 +22,9 @@ import { SizedSurfacePropsContext } from './SurfacePropsContext'
 import { textSizeTheme } from './text/textSizeTheme'
 import { Tooltip } from './Tooltip'
 import { elevationTheme } from './View/elevation'
+import { marginTheme } from './View/marginTheme'
 import { ViewProps, ViewPropsPlain } from './View/types'
-import { getMargin, View } from './View/View'
+import { View } from './View/View'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
@@ -395,6 +396,7 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
             {`.${tooltipState.id}`}
           </Tooltip>
         )}
+        {/* TODO: this can be one element i think */}
         {hasAnyGlint && (
           <GlintContain
             className="ui-glint-contain"
@@ -408,10 +410,10 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
               })}
           >
             {glint && !props.chromeless && (
-              <Glint coat={coat} size={size} {...borderProps} subTheme={subTheme} />
+              <Glint className="ui-glint-top" coat={coat} size={size} {...borderProps} subTheme={subTheme} />
             )}
             {glintBottom && !props.chromeless && (
-              <Glint coat={coat} size={size} bottom={0} {...borderProps} subTheme={subTheme} />
+              <Glint className="ui-glint-bottom" coat={coat} size={size} bottom={0} {...borderProps} subTheme={subTheme} />
             )}
           </GlintContain>
         )}
@@ -582,7 +584,7 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
   },
 }).theme(pseudoFunctionThemes, pseudoStyleTheme, (props, prev) => {
   // todo fix types here
-  const marginStyle = getMargin(props as any)
+  const marginStyle = marginTheme(props as any)
   const { fontSize, lineHeight } = textSizeTheme(props)
 
   if (prev && props.chromeless) {

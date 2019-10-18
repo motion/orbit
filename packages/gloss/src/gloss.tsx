@@ -81,7 +81,6 @@ export const tracker: StyleTracker = new Map()
 export const sheet = new StyleSheet(true)
 const gc = new GarbageCollector(sheet, tracker)
 const whiteSpaceRegex = /[\s]+/g
-const emptyObject = {}
 
 let curTheme
 // helpful global to let us add debugging in dev mode anywhere in here

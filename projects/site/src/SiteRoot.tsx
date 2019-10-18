@@ -1,52 +1,15 @@
 // //!
-// const { ProvideUI, Absolute, SimpleText, Button } = require('@o/ui')
-// const { gloss } = require('gloss')
+// import { Glint, ProvideUI } from '@o/ui'
+// import { gloss } from 'gloss'
+//
 // const React = require('react')
 // const { themes } = require('./themes')
-// const titleSize = 9
-// const TextFitTitle = gloss(SimpleText, {
-//   userSelect: 'text',
-//   lineHeight: '95%',
-//   fontSize: `${titleSize}vw`,
-//   'sm-fontSize': titleSize * 11.5,
-// }).theme(() => {})
-// export const SiteRoot = () => {
+// const others = {}
+// gloss
+// export const SiteRoot = props => {
 //   return (
 //     <ProvideUI themes={themes} activeTheme="dark">
-//       {/* <TextFitTitle
-//         fontWeight={100}
-//         alignSelf="center"
-//         selectable
-//         textAlign="center"
-//         whiteSpace="nowrap"
-//         maxHeight={160}
-//       >
-//         hello world
-//       </TextFitTitle> */}
-//       {/* <Absolute
-//         background="red"
-//         top={0}
-//         left={0}
-//         bottom={0}
-//         right={0}
-//         alignItems="center"
-//         justifyContent="center"
-//       >
-//         <Button
-//           className="sidebar-open-button"
-//           abovemd-display="none"
-//           pointerEvents="auto"
-//           position="fixed"
-//           top={-3}
-//           right={10}
-//           zIndex={1000000000}
-//           icon="menu"
-//           color="#999"
-//           iconSize={16}
-//           size={2}
-//           chromeless
-//         />
-//       </Absolute> */}
+//       <Glint className="ui-glint-top" coat={props.something} {...others} />
 //     </ProvideUI>
 //   )
 // }

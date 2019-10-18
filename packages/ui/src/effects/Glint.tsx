@@ -24,7 +24,7 @@ export const Glint = gloss<Props>(Box, {
   position: 'absolute',
   left: 0,
   right: 0,
-  height: 10,
+  height: '100%',
   zIndex: 10000,
 }).theme(props => {
   let { bottom, opacity, size = 1, y, ...radiusProps } = props
@@ -42,7 +42,6 @@ export const Glint = gloss<Props>(Box, {
   return {
     opacity: props.glintColor !== undefined ? 1 : opacity,
     [isTop ? 'top' : 'bottom']: 0,
-    height: '100%',
     transform: { y: typeof y === 'number' ? y : autoHalf },
     borderTop: isTop && [size, glintColor],
     borderBottom: !isTop && [size, glintColor],

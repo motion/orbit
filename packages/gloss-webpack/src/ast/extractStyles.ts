@@ -89,16 +89,12 @@ export function extractStyles(
 
   // Using a map for (officially supported) guaranteed insertion order
   const cssMap = new Map<string, { css: string; commentTexts: string[] }>()
-
   const ast = parse(src)
-
   let glossSrc = false
   const validComponents = {}
   // default to using require syntax
   let useImportSyntax = false
-
   const shouldPrintDebug = src[0] === '/' && src[1] === '/' && src[2] === '!'
-
   const views: { [key: string]: GlossView<any> } = {}
   const JSX_VALID_NAMES = Object.keys(options.views).filter(x => {
     return options.views[x] && !!options.views[x].staticStyleConfig
@@ -569,6 +565,9 @@ domNode: ${domNode}
           for (const info of allStyles) {
             if (info.css) {
               stylesByClassName[info.className] = info.css
+              if (info.className === 'g1162872573') {
+                throw new Error('why u adding this bro')
+              }
               if (shouldPrintDebug) {
                 console.log(`adding style`, info.className, info.css)
               }
@@ -576,48 +575,40 @@ domNode: ${domNode}
           }
         }
 
-        const localView = localStaticViews[node.name.name]
-        const themeFns = view?.internal?.themeFns
-
-        if (themeFns) {
-          // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss
-          try {
-            const props = {
-              ...view.defaultProps,
-              // ...localView?.propObject,
-              ...htmlExtractedAttributes,
-              ...staticAttributes,
-            }
-            const extracted = StaticUtils.getThemeStyles(view, options.defaultTheme, props)
-            if (shouldPrintDebug) {
-              console.log('extracting from theme', { props, extracted })
-            }
-            for (const x of extracted) {
-              stylesByClassName[x.className] = x.css
-            }
-          } catch(err) {
-            console.log('error running theme', sourceFileName, err.message)
-            return
-          }
-        } else {
-          addStyles({
-            ...view?.defaultProps,
-            ...localView?.propObject,
-            ...htmlExtractedAttributes,
-            ...staticAttributes,
-          })
-        }
-
-
         // if all style props have been extracted, gloss component can be
         // converted to a div or the specified component
 
         if (inlinePropCount === 0) {
-          // TODO we can do this but we'd need a slightly different strategy:
-          //  Config needs to know how to parse the components.... so we'd need like a way to
-          //  take View and run it, get the classnames, and return the div here
-          //  because View may add more styles on top
-          // add static styles base
+          const localView = localStaticViews[node.name.name]
+          const themeFns = view?.internal?.themeFns
+          if (themeFns) {
+            // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss
+            try {
+              const props = {
+                ...view.defaultProps,
+                // ...localView?.propObject,
+                ...htmlExtractedAttributes,
+                ...staticAttributes,
+              }
+              const extracted = StaticUtils.getThemeStyles(view, options.defaultTheme, props)
+              if (shouldPrintDebug) {
+                console.log('extracting from theme', { props, extracted })
+              }
+              for (const x of extracted) {
+                stylesByClassName[x.className] = x.css
+              }
+            } catch(err) {
+              console.log('error running theme', sourceFileName, err.message)
+              return
+            }
+          } else {
+            addStyles({
+              ...view?.defaultProps,
+              ...localView?.propObject,
+              ...htmlExtractedAttributes,
+              ...staticAttributes,
+            })
+          }
 
           // add a data-is="Name" so we can debug it more easily
           node.attributes.push(
@@ -702,6 +693,10 @@ domNode: ${domNode}
           classNameObjects.push(t.stringLiteral(extractedStyleClassNames))
         }
 
+        if (shouldPrintDebug) {
+          console.log('className info', extractedStyleClassNames, Object.keys(stylesByClassName))
+        }
+
         const classNamePropValueForReals = classNameObjects.reduce<t.Expression | null>(
           (acc, val) => {
             if (acc == null) {
@@ -757,6 +752,10 @@ domNode: ${domNode}
           },
           null,
         )
+
+        if (shouldPrintDebug) {
+          console.log('classNamePropValueForReals', classNamePropValueForReals)
+        }
 
         if (classNamePropValueForReals) {
           if (t.isStringLiteral(classNamePropValueForReals)) {

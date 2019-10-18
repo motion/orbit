@@ -1,39 +1,21 @@
-import { css, GlossPropertySet } from '@o/css'
+import { css } from '@o/css'
 import { motion } from 'framer-motion'
-import { Flex, gloss, ThemeFn } from 'gloss'
+import { Flex, gloss } from 'gloss'
 
 import { AnimationStore } from '../Geometry'
-import { Sizes } from '../Space'
 import { elevationTheme } from './elevation'
-import { getSizableValue } from './getSizableValue'
+import { marginTheme } from './marginTheme'
 import { motionExtraProps, motionStyleProps } from './motionStyleProps'
 import { paddingTheme } from './PaddedView'
-import { SizesObject, ViewPropsPlain } from './types'
-
-// includes motion styles too
-export const motionProps = {
-  ...motionStyleProps,
-  ...motionExtraProps,
-}
+import { ViewPropsPlain } from './types'
 
 const shouldRenderToMotion = (props: any) =>
   'animate' in props || 'drag' in props || 'layoutTransition' in props
 
-export type MarginProps = {
-  margin?: Sizes | SizesObject | GlossPropertySet['margin']
-}
-
-export const getMargin: ThemeFn<MarginProps> = props => {
-  if (props.margin && props.margin !== 0) {
-    return { margin: getSizableValue(props.margin) }
-  }
-}
-
-// regular view
 export const View = gloss<ViewPropsPlain>(Flex, {
   display: 'flex',
 
-  // we handle this with usePadding/getMargin
+  // we handle this with paddingTheme/marginTheme
   ignorePropsToStyle: {
     padding: true,
     margin: true,
@@ -82,7 +64,7 @@ export const View = gloss<ViewPropsPlain>(Flex, {
         : props.tagName || 'div'
     },
   },
-}).theme(getMargin, paddingTheme, elevationTheme)
+}).theme(marginTheme, paddingTheme, elevationTheme)
 
 View.staticStyleConfig = {
   ...View.staticStyleConfig,

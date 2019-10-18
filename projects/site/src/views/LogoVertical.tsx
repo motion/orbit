@@ -1,4 +1,3 @@
-//!
 import words from '!raw-loader!../public/images/logomark-solid.svg'
 import { scrollTo, Space, SVG, View, ViewProps } from '@o/ui'
 import { useTheme } from 'gloss'

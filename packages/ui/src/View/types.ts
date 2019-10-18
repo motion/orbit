@@ -8,8 +8,8 @@ import { Size } from '../Space'
 import { TextSizeProps } from '../text/textSizeTheme'
 import { CommonViewProps } from './CommonViewProps'
 import { ElevatableProps } from './elevation'
+import { MarginProps } from './marginTheme'
 import { PaddingProps } from './PaddedView'
-import { MarginProps } from './View'
 
 /**
  * The types here prevent cycles, we have a few between PaddedView/ScrollbaleView/View if not

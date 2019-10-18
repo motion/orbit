@@ -1,3 +1,4 @@
+//!
 import words from '!raw-loader!../public/images/logomark-solid.svg'
 import { scrollTo, Space, SVG, View, ViewProps } from '@o/ui'
 import { useTheme } from 'gloss'
@@ -11,6 +12,7 @@ export const LogoVertical = memo(
     const nav = useNavigation()
     return (
       <View
+        className="logo-vertical"
         position="relative"
         zIndex={100000}
         cursor="pointer"

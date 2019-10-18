@@ -135,7 +135,7 @@ export function gloss<
   const conditionalStyles = glossProps.conditionalStyles
   const ignoreAttrs = glossProps.defaultProps?.ignoreAttrs ?? (hasGlossyParent && target.ignoreAttrs) ?? baseIgnoreAttrs
   // static compilation information
-  const { compiledClassName, conditionalClassNames } = getCompiledClasses(target, compiledInfo)
+  const { compiledClassName, conditionalClassNames } = getCompiledClasses(target, compiledInfo || null, depth)
 
   // put the "rest" of non-styles onto defaultProps
   GlossView.defaultProps = glossProps.defaultProps
@@ -909,31 +909,36 @@ function createGlossIsEqual() {
   }
 }
 
-function getCompiledClasses(parent: GlossView | any, compiledInfo?: GlossStaticStyleDescription) {
-  let compiledClassName = compiledInfo && compiledInfo.className ? ` ${compiledInfo.className}` : ''
-  // conditional classNames
-  let conditionalClassNames = emptyObject
-  if (compiledInfo?.conditionalClassNames) {
-    conditionalClassNames = compiledInfo.conditionalClassNames
-  }
+function getCompiledClasses(parent: GlossView | any, compiledInfo: GlossStaticStyleDescription | null, depth: number) {
+  const conditionalClassNames = compiledInfo?.conditionalClassNames ?? {}
+  let compiledClassName = ' ' + (compiledInfo?.className ?? '')
+  // go up parents and add compiled info
+  // depth starts at highest (strongest) and goes down as it goes to grandparents
+  let p = parent
+  let d = depth - 1
   // compiled classNames inheritance
-  if (parent?.internal) {
-    const parentCompiledInfo = parent.internal.compiledInfo
-    if (parentCompiledInfo) {
-      // merge in parents conditionals (lesser priority)
-      if (parentCompiledInfo.conditionalClassNames) {
-        conditionalClassNames = {
-          ...parent.internal.conditionalClassNames,
-          ...conditionalClassNames,
-        }
-      }
-      if (parentCompiledInfo.className) {
-        compiledClassName += ` ${parentCompiledInfo.className.trim().split(' ').map(x => x.slice(1)).join(' ')}`
-        console.log('compiledClassName', parentCompiledInfo.className, '=>', compiledClassName)
+  while(p?.internal) {
+    const info = p.internal.compiledInfo
+    if (info?.conditionalClassNames) {
+      // merge in parents conditionals (if not defined)
+      for (const key in info?.conditionalClassNames) {
+        if (conditionalClassNames[key]) continue
+        conditionalClassNames[key] = replaceDepth(info.conditionalClassNames[key], d)
       }
     }
+    if (info?.className) {
+      const pClassName = info.className.trim().split(' ').map(x => replaceDepth(x, d)).join(' ')
+      compiledClassName += ` ${pClassName}`
+    }
+    p = p.internal.parent
+    d--
   }
+  console.log('compiledClassName', { compiledClassName, conditionalClassNames })
   return { compiledClassName, conditionalClassNames }
+}
+
+const replaceDepth = (className: string, depth: number) => {
+  return `g${depth}${className.slice(2)}`
 }
 
 /**

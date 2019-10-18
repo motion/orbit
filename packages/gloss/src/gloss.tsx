@@ -960,7 +960,7 @@ function getAllStyles(props: any, ns = '.') {
   mergeStyles(ns, allStyles, props)
   const styles: StaticStyleDesc[] = []
   const namespaces = getSortedNamespaces(allStyles)
-  for (const ns in namespaces) {
+  for (const ns of namespaces) {
     const styleObj = allStyles[ns]
     if (!styleObj) continue
     const info = addRules('', styleObj, ns, 0, false)
@@ -974,8 +974,8 @@ function getAllStyles(props: any, ns = '.') {
 /**
  * For use externally only (static style extract)
  */
-function getStyles(props: any, ns = '.') {
-  return getAllStyles(props, ns).find(x => x.ns === ns) ?? null
+function getStyles(props: any) {
+  return getAllStyles(props)[0] ?? null
 }
 
 /**

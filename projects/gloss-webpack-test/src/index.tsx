@@ -31,6 +31,11 @@ function Main() {
           <H2>Test header</H2>
           <SimpleText>Hello world</SimpleText>
 
+          <LinkRow>
+            <View width={20} height={20} background="blue" />
+            <View width={20} height={20} background="blue" />
+          </LinkRow>
+
           <HeaderContainer>
             <View width={20} height={20} background="blue" />
             <View width={20} height={20} background="blue" />
@@ -50,6 +55,15 @@ function Main() {
     </ProvideUI>
   )
 }
+
+const LinkRow = gloss(Box, {
+  flexDirection: 'row',
+  flex: 1,
+  alignItems: 'center',
+  justifyContent: 'center',
+  zIndex: 1000000000,
+  position: 'relative',
+})
 
 const HeaderContainer = gloss(Box, {
   flexDirection: 'row',

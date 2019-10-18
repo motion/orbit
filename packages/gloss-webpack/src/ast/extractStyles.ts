@@ -230,7 +230,7 @@ export function extractStyles(
               view,
             )
             if (shouldPrintDebug) {
-              console.log('glossProps', styles, conditionalStyles, defaultProps)
+              console.log('glossCall.arguments parse gloss props', name, styles, conditionalStyles, defaultProps)
             }
 
             // then put them all into an array so gloss later can use that
@@ -246,15 +246,15 @@ export function extractStyles(
             restDefaultProps = defaultProps
 
             for (const ns in styles) {
-              const info = StaticUtils.getStyles(styles[ns], ns)
+              const info = StaticUtils.getStyles(styles[ns])
+              if (shouldPrintDebug) {
+                console.log('got static extract', name, ns, info, styles[ns])
+              }
               if (info) {
                 cssMap.set(info.className, { css: info.css, commentTexts: [] })
                 out.className += ` ${info.className}`
-                if (shouldPrintDebug) {
-                  console.log('adding className', ns, info.className, info.css)
-                }
               } else {
-                console.log('no info for ns', ns)
+                console.log('no info', ns, styles)
               }
             }
             if (conditionalStyles) {

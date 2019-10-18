@@ -651,6 +651,9 @@ domNode: ${domNode}
               // internal classes
               for (const className of staticClasses) {
                 const item = tracker.get(className)
+                if (!item) {
+                  console.log('what the fuck????????????', className, staticClasses, node.name.name)
+                }
                 const css = `${item.selector} { ${item.style} }`
                 if (className === 'sg1344154273') {
                   throw new Error('found 1')

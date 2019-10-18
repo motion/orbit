@@ -1,6 +1,6 @@
 import generate from '@babel/generator'
 import * as t from '@babel/types'
-import { getStyles } from 'gloss'
+import { StaticUtils } from 'gloss'
 import invariant from 'invariant'
 
 import { CacheObject } from '../types'
@@ -87,8 +87,8 @@ export function extractStaticTernaries(
   const ternaryExpression = Object.keys(ternariesByKey)
     .map((key, idx) => {
       const { test, consequentStyles, alternateStyles } = ternariesByKey[key]
-      const { className: consequentClassName, css: consequentCSS } = getStyles(consequentStyles) ?? empty
-      const { className: alternateClassName, css: alternateCSS } = getStyles(alternateStyles) ?? empty
+      const { className: consequentClassName, css: consequentCSS } = StaticUtils.getStyles(consequentStyles) ?? empty
+      const { className: alternateClassName, css: alternateCSS } = StaticUtils.getStyles(alternateStyles) ?? empty
 
       if (!consequentClassName && !alternateClassName) {
         return null

@@ -246,7 +246,7 @@ export function extractStyles(
             restDefaultProps = defaultProps
 
             for (const ns in styles) {
-              const info = getStyles(styles[ns], ns)
+              const info = StaticUtils.getStyles(styles[ns], ns)
               if (info) {
                 cssMap.set(info.className, { css: info.css, commentTexts: [] })
                 out.className += ` ${info.className}`
@@ -263,7 +263,7 @@ export function extractStyles(
                 out.conditionalClassNames[prop] = ''
                 for (const key in conditionalStyles[prop]) {
                   const val = conditionalStyles[prop][key]
-                  const info = getStyles(val)
+                  const info = StaticUtils.getStyles(val)
                   cssMap.set(info.className, { css: info.css, commentTexts: [] })
                   out.conditionalClassNames[prop] += ` ${info.className}`
                 }

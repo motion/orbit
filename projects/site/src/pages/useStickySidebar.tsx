@@ -8,7 +8,17 @@ export function useStickySidebar({ condition = true, id, ...rest }) {
   const forceUpdateSlow = useDebounce(forceUpdate, 100)
 
   useEffect(() => {
-    window.addEventListener('resize', forceUpdateSlow)
+    let last
+    window.addEventListener(
+      'resize',
+      () => {
+        if (window.innerHeight !== last) {
+          forceUpdateSlow()
+        }
+        last = window.innerHeight
+      },
+      { passive: true },
+    )
     return () => window.removeEventListener('resize', forceUpdateSlow)
   })
 

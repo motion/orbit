@@ -1,52 +1,29 @@
 ---
 
-- will need to move all text sizing / useScale over to theme
-- <Theme scale={1.2}> should work as well as <Theme scale="lg">
-- part of that will be getting CSS.calc() and so on working, have polyfill already
 - <Theme sm-scale={1} /> support media queries here
   - see HeadSection for real world usage
 
 - gloss
   - fix modal backgrounds
   - fix alt card inner text is white
-  - fix list item / flat buttons arent styled right
-  - fix header left side not left enough
 - site
   - home
-    - speed up fade ins
-    - fix flicker on initial fade in features section
-    - fix no image on allinone, fix widths of flexes as u chang sections
-    - make intro fade in like features (not so abrupt)
     - make y parallax a little for each section
     - fix no need for fixed height sections
     - bug footer isnt wide enough
-  - apps
-    - better background
-  - blog
-    - fix widths / images
-- docs
-  - fix search
-  - fix filter
 
 then:
 
 - concurrent mode on site to prep for app
 - fix app styles using new gloss
 - release site with new gloss:
-  - cleanup blog post quite a bit
+- rewrite blog post
 
 ---
 
 gloss:
 
-1. scale is just cssvars: xxs, xs, sm, ....
-2. move surface sizing into theme
-3. move subsets to objects: listItem: {}, etc
 4. <Theme for="button" scale="lg" /> <- theme just acts as a css var setter
-5. big upgrades to static extraction with new syntax
-   1. can check theme functions runtime and see if they only use css variables
-   2. easier handling of default props
-
 
 compile time optimizations, from least advanced to most:
 

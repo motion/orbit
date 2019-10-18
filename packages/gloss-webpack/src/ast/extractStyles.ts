@@ -601,7 +601,9 @@ domNode: ${domNode}
             ...staticAttributes,
           }
           if (shouldPrintDebug) {
-            console.log('adding static style props', staticStyleProps)
+            // ignoreAttrs is usually huge
+            const { ignoreAttrs, ...rest } = staticStyleProps
+            console.log('adding static style props', rest)
           }
           addStyles(staticStyleProps)
         }
@@ -626,7 +628,7 @@ domNode: ${domNode}
               }
               const extracted = StaticUtils.getThemeStyles(view, options.defaultTheme, props)
               if (shouldPrintDebug) {
-                console.log('extracting from theme', { props, extracted })
+                console.log('extracting from theme', extracted)
               }
               for (const x of extracted) {
                 stylesByClassName[x.className] = x.css

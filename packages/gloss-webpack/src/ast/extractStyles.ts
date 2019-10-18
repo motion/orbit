@@ -57,7 +57,7 @@ type CSSExtracted = { filename: string, content: string }
 export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
-  { cacheObject, warnCallback }: Options,
+  { cacheObject }: Options,
   options: ExtractStylesOptions,
 ): {
   js: string | Buffer
@@ -65,7 +65,6 @@ export function extractStyles(
   ast: t.File
   map: any // RawSourceMap from 'source-map'
 } {
-  console.log('sourceFileName', sourceFileName)
   if (typeof src !== 'string') {
     throw new Error('`src` must be a string of javascript')
   }
@@ -219,7 +218,7 @@ export function extractStyles(
             }
 
             // uses the base styles if necessary, merges just like gloss does
-            const { styles, conditionalStyles, defaultProps } = getGlossProps(
+            const { styles, conditionalStyles, defaultProps, internalDefaultProps } = getGlossProps(
               propObject,
               view,
             )
@@ -276,10 +275,10 @@ export function extractStyles(
               staticStyleDesc = out
             }
 
-            // if (defaultProps && Object.keys(defaultProps).length) {
-            //   console.log('hm')
-            //   // return literalToAst(defaultProps)
-            // }
+            // keep any non-style props on the glossProps
+            if (internalDefaultProps && Object.keys(internalDefaultProps).length) {
+              return literalToAst(internalDefaultProps)
+            }
 
             return t.nullLiteral()
           }

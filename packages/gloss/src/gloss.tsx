@@ -65,6 +65,7 @@ type GlossParsedProps<Props = any> = {
   staticClasses: string[] | null
   config: GlossViewConfig<Props> | null
   defaultProps: Partial<Props> | null
+  internalDefaultProps: any
   styles: Object | null
   conditionalStyles: Object | null
 }
@@ -573,6 +574,7 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
   // all the "rest" go onto default props
   let defaultProps: any = {}
   let conditionalStyles = mergeStyles('.', styles, rest, false, defaultProps) ?? null
+  const internalDefaultProps = defaultProps
   // merge parent config
   if (parent?.internal) {
     const parentGlossProps = parent.internal.glossProps
@@ -603,6 +605,7 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
     styles,
     conditionalStyles,
     defaultProps,
+    internalDefaultProps,
   }
 }
 

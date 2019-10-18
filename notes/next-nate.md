@@ -1,3 +1,13 @@
+current best bet for a viable product:
+
+theres three paths:
+
+1. workflow / automated flows (Zapier)
+2. more journal-like default app, documents + sheets (ObservableHQ, Jupyter)
+3. devtools: dx, introspection, maybe visual app building (Retool)
+4. data T-SNE + other stats/ml plugins, biggish data focus + viz (downstream palantir)
+
+
 ---
 
 - <Theme sm-scale={1} /> support media queries here
@@ -226,14 +236,6 @@ ideas:
   - ❌ not insignificant amount of work
 
 -
-
----
-
-google sheets:
-
-this is a huge use case, and should be in the demo.
-
-sheets to form to database would be huge.
 
 ---
 

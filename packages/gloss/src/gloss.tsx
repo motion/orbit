@@ -11,7 +11,7 @@ import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
 import { pseudoProps } from './theme/pseudos'
 import { themeVariableManager } from './theme/ThemeVariableManager'
-import { UnwrapThemeSymbol, useTheme } from './theme/useTheme'
+import { createThemeProxy, UnwrapThemeSymbol, useTheme } from './theme/useTheme'
 import { GlossProps, GlossPropsPartial, GlossThemeProps, GlossViewConfig } from './types'
 
 // so you can reference in postProcessProps
@@ -988,7 +988,8 @@ function getThemeStyles(view: GlossView, userTheme: CompiledTheme, props: any) {
     hasUsedOnlyCSSVariables: true,
     nonCSSVariables: new Set<string>(),
   }
-  const themeFns = view.internal.themeFns || []
+  const themeFns = compileThemes(view)
+  if (!themeFns) return []
   const depth = view.internal.depth
   const styles: StaticStyleDesc[] = []
   const len = themeFns.length - 1

@@ -580,15 +580,16 @@ domNode: ${domNode}
         if (themeFns) {
           // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss
           try {
-            if (shouldPrintDebug) {
-              console.log('props', props, view?.internal)
-            }
-            const extracted = StaticUtils.getThemeStyles(view, options.defaultTheme, {
+            const props = {
               ...view.defaultProps,
               // ...localView?.propObject,
               ...htmlExtractedAttributes,
               ...staticAttributes,
-            })
+            }
+            const extracted = StaticUtils.getThemeStyles(view, options.defaultTheme, props)
+            if (shouldPrintDebug) {
+              console.log('extracting from theme', { props, extracted })
+            }
             for (const x of extracted) {
               stylesByClassName[x.className] = x.css
             }

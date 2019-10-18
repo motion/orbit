@@ -1,15 +1,30 @@
-// //!
-// import { Glint, ProvideUI } from '@o/ui'
+//!
+// import { isDefined, ProvideUI, View } from '@o/ui'
 // import { gloss } from 'gloss'
 //
 // const React = require('react')
 // const { themes } = require('./themes')
-// const others = {}
+// const transition = {}
+// const maxHeight = 10
 // gloss
-// export const SiteRoot = props => {
+// export const SiteRoot = () => {
 //   return (
 //     <ProvideUI themes={themes} activeTheme="dark">
-//       <Glint className="ui-glint-top" coat={props.something} {...others} />
+//       <View
+//         className={`view-layout layout-theme-${1}`}
+//         minHeight="100vh"
+//         minWidth="100vw"
+//         background="red"
+//         overflow={isDefined(maxHeight) ? 'hidden' : 'visible'}
+//         transition={transition}
+//         style={{
+//           maxHeight,
+//           // WARNING dont have translate here it ruins sticky sidebar
+//           transform: isDefined(maxHeight) ? `translateX(${-100}px)` : ``,
+//         }}
+//       >
+//         something
+//       </View>
 //     </ProvideUI>
 //   )
 // }

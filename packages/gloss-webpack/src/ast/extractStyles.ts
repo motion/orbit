@@ -497,7 +497,6 @@ export function extractStyles(
             try {
               const consequent = attemptEval(value.consequent)
               const alternate = attemptEval(value.alternate)
-
               staticTernaries.push({
                 alternate,
                 consequent,
@@ -549,10 +548,11 @@ domNode: ${domNode}
 
         let classNamePropValue: t.Expression | null = null
 
+        const extractedStaticAtrs = Object.keys(staticAttributes).length > 0
         const classNamePropIndex = node.attributes.findIndex(
           attr => !t.isJSXSpreadAttribute(attr) && attr.name && attr.name.name === 'className',
         )
-        if (classNamePropIndex > -1 && Object.keys(staticAttributes).length > 0) {
+        if (classNamePropIndex > -1 && extractedStaticAtrs) {
           classNamePropValue = getPropValueFromAttributes('className', node.attributes)
           node.attributes.splice(classNamePropIndex, 1)
         }
@@ -575,11 +575,20 @@ domNode: ${domNode}
           }
         }
 
+        const localView = localStaticViews[node.name.name]
+
+        if (extractedStaticAtrs) {
+          addStyles({
+            ...view?.defaultProps,
+            ...localView?.propObject,
+            ...htmlExtractedAttributes,
+            ...staticAttributes,
+          })
+        }
+
         // if all style props have been extracted, gloss component can be
         // converted to a div or the specified component
-
         if (inlinePropCount === 0) {
-          const localView = localStaticViews[node.name.name]
           const themeFns = view?.internal?.themeFns
           if (themeFns) {
             // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss
@@ -601,13 +610,6 @@ domNode: ${domNode}
               console.log('error running theme', sourceFileName, err.message)
               return
             }
-          } else {
-            addStyles({
-              ...view?.defaultProps,
-              ...localView?.propObject,
-              ...htmlExtractedAttributes,
-              ...staticAttributes,
-            })
           }
 
           // add a data-is="Name" so we can debug it more easily
@@ -667,6 +669,9 @@ domNode: ${domNode}
           traversePath.node.closingElement.name.name = node.name.name
         }
 
+        if (shouldPrintDebug) {
+          console.log('stylesByClassName pre ternaries', stylesByClassName)
+        }
         const extractedStyleClassNames = Object.keys(stylesByClassName).join(' ')
         const classNameObjects: (t.StringLiteral | t.Expression)[] = []
 
@@ -681,6 +686,9 @@ domNode: ${domNode}
 
         if (staticTernaries.length > 0) {
           const ternaryObj = extractStaticTernaries(staticTernaries, cacheObject)
+          if (shouldPrintDebug) {
+            console.log('staticTernaries', staticTernaries, '\nternaryObj', ternaryObj)
+          }
           // ternaryObj is null if all of the extracted ternaries have falsey consequents and alternates
           if (ternaryObj !== null) {
             // add extracted styles by className to existing object
@@ -691,10 +699,9 @@ domNode: ${domNode}
 
         if (extractedStyleClassNames) {
           classNameObjects.push(t.stringLiteral(extractedStyleClassNames))
-        }
-
-        if (shouldPrintDebug) {
-          console.log('className info', extractedStyleClassNames, Object.keys(stylesByClassName))
+          if (shouldPrintDebug) {
+            console.log('extractedStyleClassNames', extractedStyleClassNames)
+          }
         }
 
         const classNamePropValueForReals = classNameObjects.reduce<t.Expression | null>(

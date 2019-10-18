@@ -16,7 +16,7 @@ let args = ['--color', '--config', configPath, ...extraArgs]
 console.log(`Running ${cmd} ${args.join(' ')}`)
 
 const proc = execa(cmd, args, {
-  maxBuffer: 750_000_000,
+  maxBuffer: 1_000_000_000,
 })
 
 proc.stdout.pipe(process.stdout)

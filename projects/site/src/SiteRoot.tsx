@@ -35,7 +35,6 @@ import { Navigation } from './Navigation'
 import { SiteStoreContext } from './SiteStore'
 import { themes } from './themes'
 
-
 export const SiteRoot = () => {
   return (
     <StrictMode>

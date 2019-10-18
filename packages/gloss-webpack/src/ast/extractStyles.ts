@@ -65,6 +65,7 @@ export function extractStyles(
   ast: t.File
   map: any // RawSourceMap from 'source-map'
 } {
+  console.log('sourceFileName', sourceFileName)
   if (typeof src !== 'string') {
     throw new Error('`src` must be a string of javascript')
   }
@@ -77,12 +78,6 @@ export function extractStyles(
     typeof cacheObject === 'object' && cacheObject !== null,
     '`cacheObject` must be an object',
   )
-
-  let logWarning = console.warn
-  if (typeof warnCallback !== 'undefined') {
-    invariant(typeof warnCallback === 'function', '`warnCallback` is expected to be a function')
-    logWarning = warnCallback
-  }
 
   const mediaQueryPrefixes = options.mediaQueryKeys.map(x => `${x}-`)
   const sourceDir = path.dirname(sourceFileName)
@@ -280,6 +275,11 @@ export function extractStyles(
             if (out.className || out.conditionalClassNames) {
               staticStyleDesc = out
             }
+
+            // if (defaultProps && Object.keys(defaultProps).length) {
+            //   console.log('hm')
+            //   // return literalToAst(defaultProps)
+            // }
 
             return t.nullLiteral()
           }

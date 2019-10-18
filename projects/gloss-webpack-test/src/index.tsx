@@ -1,6 +1,6 @@
 //!
-import { ProvideUI, SimpleText, View } from '@o/ui/test'
-import { Theme } from 'gloss'
+import { ProvideUI, SimpleText, Stack, View } from '@o/ui/test'
+import { Box, gloss, Theme } from 'gloss'
 import { fromStyles } from 'gloss-theme'
 import * as React from 'react'
 import { render } from 'react-dom'
@@ -30,59 +30,42 @@ function Main() {
         >
           <H2>Test header</H2>
           <SimpleText>Hello world</SimpleText>
+
+          <HeaderContainer>
+            <View width={20} height={20} background="blue" />
+            <View width={20} height={20} background="blue" />
+          </HeaderContainer>
+
+          <Stack direction="horizontal" space>
+            <View width={20} height={20} background="blue" />
+            <View width={20} height={20} background="blue" />
+          </Stack>
+
+          <Stack direction="horizontal">
+            <View width={20} height={20} background="blue" />
+            <View width={20} height={20} background="blue" />
+          </Stack>
         </View>
       </Theme>
-      {/* <Image background="red" width={200} height={200} src="home.jpg" /> */}
-      {/* <View sm-marginBottom={20}>
-        <HeaderContainer /> */}
-      {/* <BorderTop /> */}
-      {/* <Text selectable>hello world</Text>
-        <ListItemSimple title="First" icon="ok" />
-        <ListItemSimple isSelected title="ok" icon="ok" /> */}
-      {/* <Stack direction="horizontal" space="lg">
-        <Surface>hello world</Surface>
-          <View
-            nodeRef={ref}
-            pointerEvents="auto"
-            position="fixed"
-            top={0}
-            right={0}
-            height="100vh"
-            background={bg}
-            opacity={bg ? 1 : 0}
-            style={{
-              width: sidebarWidth,
-              transform: `translateX(${sidebarWidth}px)`,
-            }}
-            className="test"
-            color={theme => theme.red}
-            onClick={() => {}}
-          >
-            some children
-          </View>
-          <MySimpleView>hihi</MySimpleView>
-          <MySubView>hello world</MySubView>
-        </Stack> */}
-      {/* </View> */}
     </ProvideUI>
   )
 }
 
-// const HeaderContainer = gloss(Box, {
-//   flexDirection: 'row',
-//   flexShrink: 0,
-//   left: 0,
-//   overflow: 'hidden',
-//   position: 'sticky',
-//   right: 0,
-//   textAlign: 'left',
-//   top: 0,
-//   zIndex: 2,
-//   debug: true,
-//   background: 'red',
-// }).theme(props => ({
-//   borderBottom: [1, props.borderColorLight],
-// }))
+const HeaderContainer = gloss(Box, {
+  flexDirection: 'row',
+  flexShrink: 0,
+  left: 0,
+  overflow: 'hidden',
+  position: 'sticky',
+  right: 0,
+  textAlign: 'left',
+  top: 0,
+  zIndex: 2,
+  debug: true,
+  background: 'red',
+}).theme(props => ({
+  borderBottom: [1, props.borderColorLight],
+}))
 
 // const MySimpleView = gloss({
 //   color: 'yellow',

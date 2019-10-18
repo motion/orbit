@@ -1,4 +1,3 @@
-//!
 import { AlphaColorProps, Flex, gloss, GlossProps } from 'gloss'
 
 import { Size } from '../Space'

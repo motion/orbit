@@ -2,7 +2,7 @@ import generate from '@babel/generator'
 import traverse, { NodePath } from '@babel/traverse'
 import * as t from '@babel/types'
 import literalToAst from 'babel-literal-to-ast'
-import { CompiledTheme, getGlossProps, GlossStaticStyleDescription, GlossView, isGlossView, StaticUtils, tracker, validCSSAttr } from 'gloss'
+import { CompiledTheme, getGlossProps, GlossStaticStyleDescription, GlossView, isGlossView, StaticUtils, ThemeStyleInfo, tracker, validCSSAttr } from 'gloss'
 import invariant from 'invariant'
 import path from 'path'
 import util from 'util'
@@ -54,6 +54,11 @@ const GLOSS_SOURCES = {
 
 type CSSExtracted = { filename: string, content: string }
 
+// used for later seeing how much we can extract (and to apply theme styles)
+// gives us information if the themes can be extracted via trackState
+const viewInformation: { [key: string]: ThemeStyleInfo } = {}
+let hasParsedViewInformation = false
+
 export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
@@ -68,7 +73,6 @@ export function extractStyles(
   if (typeof src !== 'string') {
     throw new Error('`src` must be a string of javascript')
   }
-
   invariant(
     typeof sourceFileName === 'string' && path.isAbsolute(sourceFileName),
     '`sourceFileName` must be an absolute path to a .js file',
@@ -77,6 +81,18 @@ export function extractStyles(
     typeof cacheObject === 'object' && cacheObject !== null,
     '`cacheObject` must be an object',
   )
+  if (!hasParsedViewInformation) {
+    hasParsedViewInformation = true
+    for (const key in options.views) {
+      const view = options.views[key]
+      if (isGlossView(view)) {
+        const defaultProps = view.internal.glossProps.defaultProps ?? {}
+        viewInformation[key] = StaticUtils.getThemeStyles(view, options.defaultTheme, defaultProps)
+      }
+    }
+  }
+
+  console.log('viewInformation', viewInformation.Space.trackState.nonCSSVariables)
 
   const mediaQueryPrefixes = options.mediaQueryKeys.map(x => `${x}-`)
   const sourceDir = path.dirname(sourceFileName)
@@ -626,7 +642,7 @@ domNode: ${domNode}
                 ...htmlExtractedAttributes,
                 ...staticAttributes,
               }
-              const extracted = StaticUtils.getThemeStyles(view, options.defaultTheme, props)
+              const extracted = StaticUtils.getThemeStyles(view, options.defaultTheme, props).themeStyles
               if (shouldPrintDebug) {
                 console.log('extracting from theme', extracted)
               }

@@ -7,7 +7,7 @@ import { CurrentThemeContext } from './Theme'
 
 // can optionally pass in props accepted by theme
 
-type ThemeTrackState = {
+export type ThemeTrackState = {
   theme: CompiledTheme
   hasUsedOnlyCSSVariables: boolean
   nonCSSVariables: Set<string>

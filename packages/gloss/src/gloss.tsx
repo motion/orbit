@@ -11,7 +11,7 @@ import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
 import { pseudoProps } from './theme/pseudos'
 import { themeVariableManager } from './theme/ThemeVariableManager'
-import { createThemeProxy, UnwrapThemeSymbol, useTheme } from './theme/useTheme'
+import { createThemeProxy, ThemeTrackState, UnwrapThemeSymbol, useTheme } from './theme/useTheme'
 import { GlossProps, GlossPropsPartial, GlossThemeProps, GlossViewConfig } from './types'
 
 // so you can reference in postProcessProps
@@ -929,32 +929,42 @@ function getStyles(props: any, depth = 0) {
  * For use externally only (static style extract)
  * see addDynamicStyles equivalent
  */
-function getThemeStyles(view: GlossView, userTheme: CompiledTheme, props: any) {
-  const trackState = {
+export type ThemeStyleInfo = {
+  trackState: ThemeTrackState | null,
+  themeStyles: StaticStyleDesc[] | null
+}
+
+function getThemeStyles(view: GlossView, userTheme: CompiledTheme, props: any): ThemeStyleInfo {
+  const themeFns = compileThemes(view)
+  if (!themeFns) {
+    return {
+      themeStyles: null,
+      trackState: null,
+    }
+  }
+  const trackState: ThemeTrackState = {
     theme: userTheme,
     hasUsedOnlyCSSVariables: true,
     nonCSSVariables: new Set<string>(),
   }
-  const themeFns = compileThemes(view)
-  if (!themeFns) return []
   const depth = view.internal.depth
-  const styles: StaticStyleDesc[] = []
+  const themeStyles: StaticStyleDesc[] = []
   const len = themeFns.length - 1
   const theme = createThemeProxy(userTheme, trackState, props)
   for (const [index, themeFnList] of themeFns.entries()) {
     const themeDepth = depth - (len - index)
-    const themeStyles = getStylesFromThemeFns(themeFnList, theme)
-    if (Object.keys(themeStyles).length) {
+    const styles = getStylesFromThemeFns(themeFnList, theme)
+    if (Object.keys(styles).length) {
       // make an object for each level of theme
       const curThemeObj = { ['.']: {} }
-      mergeStyles('.', curThemeObj, themeStyles, true)
+      mergeStyles('.', curThemeObj, styles, true)
       const namespaces = getSortedNamespaces(curThemeObj)
       for (const ns of namespaces) {
         const styleObj = curThemeObj[ns]
         if (!styleObj) continue
         const info = addRules('', styleObj, ns, themeDepth, '', false)
         if (info) {
-          styles.push({ ns, ...info, })
+          themeStyles.push({ ns, ...info, })
         }
       }
     }
@@ -962,7 +972,7 @@ function getThemeStyles(view: GlossView, userTheme: CompiledTheme, props: any) {
   if (trackState.hasUsedOnlyCSSVariables === false) {
     throw new Error('This theme function uses non-CSS variables, we should bail from optimization')
   }
-  return styles
+  return { themeStyles, trackState }
 }
 
 export const StaticUtils = { getAllStyles, getStyles, getThemeStyles }

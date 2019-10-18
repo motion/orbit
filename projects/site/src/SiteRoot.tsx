@@ -1,37 +1,19 @@
 //!
-import { ProvideUI, SimpleText, View } from '@o/ui'
-import { gloss } from 'gloss'
+import { ProvideUI, selectDefined, Space } from '@o/ui'
 
 //
 const React = require('react')
 const { themes } = require('./themes')
-const TextFitTitle = gloss(SimpleText, {
-  userSelect: 'text',
-  lineHeight: '95%',
-  fontSize: `${6}vw`,
-  'sm-fontSize': 6 * 11.5,
-})
+// const TextFitTitle = gloss(SimpleText, {
+//   userSelect: 'text',
+//   lineHeight: '95%',
+//   fontSize: `${6}vw`,
+//   'sm-fontSize': 6 * 11.5,
+// })
 export const SiteRoot = () => {
   return (
     <ProvideUI themes={themes} activeTheme="dark">
-      <View
-        padding={[3, 8]}
-        background={[255, 255, 255, 0.1]}
-        borderRadius={100}
-        border={[2, '#00000055']}
-      >
-        <SimpleText>Watch the demo</SimpleText>
-      </View>
-      <TextFitTitle
-        fontWeight={100}
-        alignSelf="center"
-        selectable
-        textAlign="center"
-        whiteSpace="nowrap"
-        maxHeight={160}
-      >
-        something
-      </TextFitTitle>
+      <Space size={selectDefined(10, 2 * 6)} />
     </ProvideUI>
   )
 }

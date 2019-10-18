@@ -33,10 +33,6 @@ export const spaceSizes = {
 }
 
 export function getSpaceSize(space: Size | ThemeValue<Size>, scale: number = 1): number | string {
-  if (space instanceof ThemeValue) {
-    console.warn('TODO')
-    return 0
-  }
   if (typeof space === 'number') {
     return space * scale
   }
@@ -63,29 +59,31 @@ export function getSpacesSize(space: Sizes, scale: number = 1) {
   return getSpaceSize(space)
 }
 
+const getScaledSize = (dim: number | string) => {
+  return typeof dim === 'string' ? dim : `calc(${dim}px * var(--scale))`
+}
+
 export const Space = gloss<SpaceProps>(Box, {
+  size: 1,
   className: 'ui-space',
-}).theme(({ size, scale = 1, ...rest }) => {
-  const dim = getSpaceSize(size, scale)
+}).theme(props => {
+  const size = props.size
+  const dim = getScaledSize(getSpaceSize(size))
   // support media query spaces
   let mediaQueryStyles = null
-  for (const key in rest) {
+  for (const key in props) {
     if (key in mediaQueryKeysSize) {
-      const val = rest[key]
-      const mediaDim = getSpaceSize(val, scale)
+      const val = props[key]
+      const mediaDim = getScaledSize(getSpaceSize(val))
       const mediaKey = key.replace('-size', '')
       mediaQueryStyles = mediaQueryStyles || {}
       mediaQueryStyles[`${mediaKey}-width`] = mediaDim
       mediaQueryStyles[`${mediaKey}-height`] = mediaDim
-      // remove invalid style
-      delete rest[key]
     }
   }
-  const final = typeof dim === 'string' ? dim : `calc(${dim}px * var(--scale))`
   return {
-    width: final,
-    height: final,
-    ...rest,
+    width: dim,
+    height: dim,
     ...mediaQueryStyles,
   }
 })

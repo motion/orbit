@@ -587,13 +587,24 @@ domNode: ${domNode}
           }
         }
 
+        // capture views where they set it afterwards
+        // plus any defaults passed through gloss
+        const viewDefaultProps = {
+          ...view?.defaultProps,
+          ...view?.internal?.glossProps?.defaultProps,
+        }
+
         if (extractedStaticAttrs) {
-          addStyles({
-            ...view?.defaultProps,
+          const staticStyleProps = {
+            ...viewDefaultProps,
             ...localView?.propObject,
             ...htmlExtractedAttributes,
             ...staticAttributes,
-          })
+          }
+          if (shouldPrintDebug) {
+            console.log('adding static style props', staticStyleProps)
+          }
+          addStyles(staticStyleProps)
         }
 
         // if all style props have been extracted, gloss component can be
@@ -609,7 +620,7 @@ domNode: ${domNode}
             // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss
             try {
               const props = {
-                ...view.defaultProps,
+                ...viewDefaultProps,
                 // ...localView?.propObject,
                 ...htmlExtractedAttributes,
                 ...staticAttributes,

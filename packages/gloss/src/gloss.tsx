@@ -843,7 +843,7 @@ function getSelector(className: string, namespace: string) {
 
 // for now, assume now more than 6 levels nesting (css = 🤮)
 const depths = [0, 1, 2, 3, 4, 5]
-const dSelectors = depths.map(i => `._g${i}`.repeat(i + 1))
+const dSelectors = depths.map(i => i === 0 ? '' : `._g${i}`.repeat(i))
 function getSpecificSelectors(base: string, parent = '', after = '') {
   let s: string[] = []
   for (const i of depths) {

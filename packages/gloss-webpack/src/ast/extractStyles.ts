@@ -264,8 +264,10 @@ export function extractStyles(
                 for (const key in conditionalStyles[prop]) {
                   const val = conditionalStyles[prop][key]
                   const info = StaticUtils.getStyles(val)
-                  cssMap.set(info.className, { css: info.css, commentTexts: [] })
-                  out.conditionalClassNames[prop] += ` ${info.className}`
+                  if (info) {
+                    cssMap.set(info.className, { css: info.css, commentTexts: [] })
+                    out.conditionalClassNames[prop] += ` ${info.className}`
+                  }
                 }
               }
             }

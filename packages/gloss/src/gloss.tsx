@@ -843,7 +843,7 @@ function getSelector(className: string, namespace: string) {
 
 // for now, assume now more than 6 levels nesting (css = 🤮)
 function getSpecificSelectors(base: string, parent = '', after = '') {
-  return `${parent}.g0${base}${after},${parent}${`.g1${base}`.repeat(1)}${after},${parent}${`.g2${base}`.repeat(2)}${after},${parent}${`.g3${base}`.repeat(3)}${after},${parent}${`.g4${base}`.repeat(4)}${after},${parent}${`.g5${base}`.repeat(5)}${after}`
+  return `${parent}.g0${base}${after},${parent}${`.g1${base}`.repeat(2)}${after},${parent}${`.g2${base}`.repeat(3)}${after},${parent}${`.g3${base}`.repeat(4)}${after},${parent}${`.g4${base}`.repeat(5)}${after},${parent}${`.g5${base}`.repeat(6)}${after}`
 }
 
 // some internals we can export
@@ -952,18 +952,18 @@ export type StaticStyleDesc = {
   ns: string
 }
 
-function getAllStyles(props: any, ns = '.') {
+function getAllStyles(props: any, depth = 0) {
   if (!props) {
     return []
   }
-  const allStyles = { [ns]: {} }
-  mergeStyles(ns, allStyles, props)
+  const allStyles = { ['.']: {} }
+  mergeStyles('.', allStyles, props)
   const styles: StaticStyleDesc[] = []
   const namespaces = getSortedNamespaces(allStyles)
   for (const ns of namespaces) {
     const styleObj = allStyles[ns]
     if (!styleObj) continue
-    const info = addRules('', styleObj, ns, 0, false)
+    const info = addRules('', styleObj, ns, depth, false)
     if (info) {
       styles.push({ ns, ...info, })
     }
@@ -974,8 +974,8 @@ function getAllStyles(props: any, ns = '.') {
 /**
  * For use externally only (static style extract)
  */
-function getStyles(props: any) {
-  return getAllStyles(props)[0] ?? null
+function getStyles(props: any, depth = 0) {
+  return getAllStyles(props, depth)[0] ?? null
 }
 
 /**

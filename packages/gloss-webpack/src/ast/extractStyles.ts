@@ -246,7 +246,7 @@ export function extractStyles(
             restDefaultProps = defaultProps
 
             for (const ns in styles) {
-              const info = StaticUtils.getStyles(styles[ns])
+              const info = StaticUtils.getStyles(styles[ns], 1)
               if (shouldPrintDebug) {
                 console.log('got static extract', name, ns, info, styles[ns])
               }
@@ -263,7 +263,7 @@ export function extractStyles(
                 out.conditionalClassNames[prop] = ''
                 for (const key in conditionalStyles[prop]) {
                   const val = conditionalStyles[prop][key]
-                  const info = StaticUtils.getStyles(val)
+                  const info = StaticUtils.getStyles(val, 1)
                   if (info) {
                     cssMap.set(info.className, { css: info.css, commentTexts: [] })
                     out.conditionalClassNames[prop] += ` ${info.className}`
@@ -565,7 +565,7 @@ domNode: ${domNode}
         const stylesByClassName: { [key: string]: string } = {}
 
         const addStyles = (styleObj: any) => {
-          const allStyles = StaticUtils.getAllStyles(styleObj)
+          const allStyles = StaticUtils.getAllStyles(styleObj, 1)
           for (const info of allStyles) {
             if (info.css) {
               stylesByClassName[info.className] = info.css

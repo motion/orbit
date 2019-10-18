@@ -933,12 +933,11 @@ function getCompiledClasses(parent: GlossView | any, compiledInfo: GlossStaticSt
     p = p.internal.parent
     d--
   }
-  console.log('compiledClassName', { compiledClassName, conditionalClassNames })
   return { compiledClassName, conditionalClassNames }
 }
 
 const replaceDepth = (className: string, depth: number) => {
-  return `g${depth}${className.slice(2)}`
+  return className[0] === 'g' && +className[1] == +className[1] ? `g${depth}${className.slice(2)}` : className
 }
 
 /**

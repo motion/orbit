@@ -334,6 +334,7 @@ export function extractStyles(
 
         // Remember the source component
         const originalNodeName = node.name.name
+        const localView = localStaticViews[originalNodeName]
         let view = views[originalNodeName]
         let domNode = 'div'
 
@@ -447,8 +448,19 @@ export function extractStyles(
               ? attribute.value.expression
               : attribute.value
 
+          // boolean prop / conditionals
+          const allConditionalClassNames = {
+            ...view?.internal?.compiledInfo?.conditionalClassNames ?? null,
+            ...localView?.staticDesc?.conditionalClassNames ?? null,
+          }
+          if (allConditionalClassNames[name]) {
+            // extract but still put it onto staticAttributes for themeFn to use
+            staticAttributes[name] = true
+            return false
+          }
+
+          // boolean props have null value
           if (!value) {
-            logWarning('`%s` prop does not have a value', name)
             inlinePropCount++
             return true
           }
@@ -553,11 +565,11 @@ domNode: ${domNode}
 
         let classNamePropValue: t.Expression | null = null
 
-        const extractedStaticAtrs = Object.keys(staticAttributes).length > 0
+        const extractedStaticAttrs = Object.keys(staticAttributes).length > 0
         const classNamePropIndex = node.attributes.findIndex(
           attr => !t.isJSXSpreadAttribute(attr) && attr.name && attr.name.name === 'className',
         )
-        if (classNamePropIndex > -1 && extractedStaticAtrs) {
+        if (classNamePropIndex > -1 && extractedStaticAttrs) {
           classNamePropValue = getPropValueFromAttributes('className', node.attributes)
           node.attributes.splice(classNamePropIndex, 1)
         }
@@ -565,8 +577,9 @@ domNode: ${domNode}
         // used later to generate classname for item
         const stylesByClassName: { [key: string]: string } = {}
 
+        const depth = (view?.internal?.depth ?? 1) + (!localView ? 0 : 1)
         const addStyles = (styleObj: any) => {
-          const allStyles = StaticUtils.getAllStyles(styleObj, 1)
+          const allStyles = StaticUtils.getAllStyles(styleObj, depth)
           for (const info of allStyles) {
             if (info.css) {
               stylesByClassName[info.className] = info.css
@@ -574,9 +587,7 @@ domNode: ${domNode}
           }
         }
 
-        const localView = localStaticViews[node.name.name]
-
-        if (extractedStaticAtrs) {
+        if (extractedStaticAttrs) {
           addStyles({
             ...view?.defaultProps,
             ...localView?.propObject,

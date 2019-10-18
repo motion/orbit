@@ -359,6 +359,7 @@ function addStyles(
   depth: number,
   displayName?: string,
   prevClassNames?: Set<string> | null,
+  selectorPrefix?: string
 ) {
   const namespaces = getSortedNamespaces(styles)
   let classNames: string[] | null = null
@@ -370,7 +371,7 @@ function addStyles(
     // add the stylesheets and classNames
     // TODO could do a simple "diff" so that fast-changing styles only change the "changing" props
     // it would likely help things like when you animate based on mousemove, may be slower in default case
-    const className = addRules(displayName, style, ns, depth || 0, true)
+    const className = addRules(displayName, style, ns, depth || 0, selectorPrefix, true)
 
     if (className) {
       classNames = classNames || []
@@ -424,36 +425,10 @@ function addDynamicStyles(
   const dynStyles = {}
   curDynClassNames = new Set<string>()
 
-  // applies styles most important to least important
-  // that saves us some processing time (no need to set multiple times)
-  // note that means the topmost `mergeStyles` will apply as most important
-
-  // if passed any classes from a parent gloss view, merge them, ignore classname and track
-  // TODO we can remove this altogether
-  if (theme.className) {
-    const propClassNames = theme.className.split(whiteSpaceRegex)
-    // note this reverse: this is a bit odd
-    // right now we have conditionalStyles applied as their own className (so base: .1, conditional: .2)
-    // then we pass className="1 2" if we have a parent that the conditional style === true
-    // what we probably want is to merge them all into their own single className
-    // until then, we need to preserve the important order, so we reverse to make sure conditional applies first
-    const len = propClassNames.length
-    for (let i = len - 1; i >= 0; i--) {
-      const maybeClassName = propClassNames[i]
-      if (maybeClassName[0] !== 'g') continue
-      const className = maybeClassName.slice(2)
-      const info = tracker.get(className)
-      if (maybeClassName && !info) {
-        curDynClassNames.add(maybeClassName)
-      }
-    }
-  }
-
   if (!avoidStyles) {
     if (conditionalStyles) {
       mergePropStyles(dynStyles, conditionalStyles, theme)
     }
-
     if (theme && themeFns) {
       const len = themeFns.length - 1
       for (const [index, themeFnList] of themeFns.entries()) {
@@ -470,7 +445,8 @@ function addDynamicStyles(
           mergeStyles('.', curThemeObj, themeStyles, true)
           // TODO console.log this see if we can optimize
           Object.assign(dynStyles['.'], curThemeObj['.'])
-          const dynClassNames = addStyles(curThemeObj, themeDepth, displayName, prevClassNames)
+          // `html ` prefix makes it slightly stronger than the glossProp styles
+          const dynClassNames = addStyles(curThemeObj, themeDepth, displayName, prevClassNames, 'html ')
           if (dynClassNames) {
             for (const cn of dynClassNames) {
               curDynClassNames.add(cn)
@@ -480,11 +456,9 @@ function addDynamicStyles(
       }
     }
   }
-
-  // check what classNames have been removed if this is a secondary render
+  // de-register removed classNames
   if (prevClassNames) {
     for (const className of prevClassNames) {
-      // if this previous class isn't in the current classes then deregister it
       if (!curDynClassNames.has(className)) {
         deregisterClassName(className)
       }
@@ -774,7 +748,8 @@ function addRules<A extends boolean>(
   rules: BaseRules,
   namespace: string,
   depth: number,
-  insert: A,
+  selectorPrefix?: string,
+  insert?: A,
 ): (A extends true ? string : {
   css: string,
   className: string
@@ -795,7 +770,7 @@ function addRules<A extends boolean>(
   }
 
   const isMediaQuery = namespace[0] === '@'
-  const selector = getSelector(className, namespace)
+  const selector = getSelector(className, namespace, selectorPrefix)
   const css = isMediaQuery ? `${namespace} {${selector} {${style}}}` : `${selector} {${style}}`
   const finalClassName = `g${depth}${className}`
 
@@ -822,22 +797,22 @@ function addRules<A extends boolean>(
 }
 
 // has to return a .s-id and .id selector for use in parents passing down styles
-function getSelector(className: string, namespace: string) {
+function getSelector(className: string, namespace: string, selectorPrefix = '') {
   if (namespace[0] === '@') {
     // media queries need stronger binding, we'll do html selector
-    return getSpecificSelectors(className, 'body')
+    return getSpecificSelectors(className, selectorPrefix + 'body')
   }
   if (namespace[0] === '&' || namespace.indexOf('&') !== -1) {
     // namespace === '&:hover, &:focus, & > div'
     const namespacedSelectors = namespace
       .split(',')
       .flatMap(part => {
-        return getSpecificSelectors(className, '', part.replace('&', '').trim())
+        return getSpecificSelectors(className, selectorPrefix, part.replace('&', '').trim())
       })
       .join(',')
     return namespacedSelectors
   }
-  return getSpecificSelectors(className)
+  return getSpecificSelectors(className, selectorPrefix)
 }
 
 // for now, assume now more than 6 levels nesting (css = 🤮)
@@ -932,7 +907,7 @@ function getAllStyles(props: any, depth = 0) {
   for (const ns of namespaces) {
     const styleObj = allStyles[ns]
     if (!styleObj) continue
-    const info = addRules('', styleObj, ns, depth, false)
+    const info = addRules('', styleObj, ns, depth, '', false)
     if (info) {
       styles.push({ ns, ...info, })
     }
@@ -974,7 +949,7 @@ function getThemeStyles(view: GlossView, userTheme: CompiledTheme, props: any) {
       for (const ns of namespaces) {
         const styleObj = curThemeObj[ns]
         if (!styleObj) continue
-        const info = addRules('', styleObj, ns, themeDepth, false)
+        const info = addRules('', styleObj, ns, themeDepth, '', false)
         if (info) {
           styles.push({ ns, ...info, })
         }

@@ -2,7 +2,7 @@ import generate from '@babel/generator'
 import traverse, { NodePath } from '@babel/traverse'
 import * as t from '@babel/types'
 import literalToAst from 'babel-literal-to-ast'
-import { CompiledTheme, createThemeProxy, getAllStyles, getGlossProps, getStyles, GlossStaticStyleDescription, GlossView, isGlossView, tracker, validCSSAttr } from 'gloss'
+import { CompiledTheme, getGlossProps, GlossStaticStyleDescription, GlossView, isGlossView, StaticUtils, tracker, validCSSAttr } from 'gloss'
 import invariant from 'invariant'
 import path from 'path'
 import util from 'util'
@@ -563,7 +563,7 @@ domNode: ${domNode}
         const stylesByClassName: { [key: string]: string } = {}
 
         const addStyles = (styleObj: any) => {
-          const allStyles = getAllStyles(styleObj)
+          const allStyles = StaticUtils.getAllStyles(styleObj)
           for (const info of allStyles) {
             if (info.css) {
               stylesByClassName[info.className] = info.css
@@ -575,32 +575,23 @@ domNode: ${domNode}
         }
 
         const localView = localStaticViews[node.name.name]
-        const themeFn = view?.internal?.getConfig()?.themeFn
+        const themeFns = view?.internal?.themeFns
 
-        if (themeFn) {
+        if (themeFns) {
           // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss
           try {
-            const trackState = {
-              theme: options.defaultTheme,
-              hasUsedOnlyCSSVariables: true,
-              nonCSSVariables: new Set<string>(),
+            if (shouldPrintDebug) {
+              console.log('props', props, view?.internal)
             }
-            const props = {
+            const extracted = StaticUtils.getThemeStyles(view, options.defaultTheme, {
               ...view.defaultProps,
               // ...localView?.propObject,
               ...htmlExtractedAttributes,
               ...staticAttributes,
+            })
+            for (const x of extracted) {
+              stylesByClassName[x.className] = x.css
             }
-            if (shouldPrintDebug) {
-              console.log('props', props, view?.internal?.getConfig())
-            }
-            const theme = createThemeProxy(options.defaultTheme, trackState, props)
-            const themeStyles = themeFn(theme)
-            if (trackState.hasUsedOnlyCSSVariables === false) {
-              console.log('This theme function uses non-CSS variables, so we are bailing from optimization')
-              return
-            }
-            addStyles(themeStyles)
           } catch(err) {
             console.log('error running theme', sourceFileName, err.message)
             return

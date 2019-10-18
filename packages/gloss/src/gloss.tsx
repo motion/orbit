@@ -361,11 +361,7 @@ function addStyles(
   displayName?: string,
   prevClassNames?: Set<string> | null,
 ) {
-  const namespaces = Object.keys(styles)
-  if (namespaces.length > 1) {
-    // sort pseudos into priority
-    namespaces.sort(styleKeysSort)
-  }
+  const namespaces = getSortedNamespaces(styles)
   let classNames: string[] | null = null
   for (const ns of namespaces) {
     const style = styles[ns]
@@ -390,6 +386,15 @@ function addStyles(
     console.log('addStyles sorted', classNames, namespaces, styles)
   }
   return classNames
+}
+
+// sort pseudos into priority
+const getSortedNamespaces = (styles: any) => {
+  const keys = Object.keys(styles)
+  if (keys.length > 1) {
+    keys.sort(styleKeysSort)
+  }
+  return keys
 }
 
 function mergePropStyles(styles: Object, propStyles: Object, props: Object) {
@@ -456,8 +461,8 @@ function addDynamicStyles(
         const themeDepth = depth - (len - index)
         const themeStyles = getStylesFromThemeFns(themeFnList, theme)
         // TODO is this bad perf? now that we always create an object for themes
-        // this was going to always run, but there are plenty of times that themes do nothing
-        // not sure its worth checking but it avoids more object creation at expense of Object.keys()
+        // the next block would always execute, but there are times themes do nothing
+        // not sure its worth checking keys here but it avoids object creation in the block
         // i really wish js added shit like themeStyles.keysLength or something
         if (Object.keys(themeStyles).length) {
           dynStyles['.'] = dynStyles['.'] || {}
@@ -932,28 +937,88 @@ function getCompiledClasses(parent: GlossView | any, compiledInfo?: GlossStaticS
 }
 
 /**
- * For use externally only (static style extract)
+ * START external static style block (TODO move out to own thing)
+ *
+ * keeping it here for now because dont want to add more fns in sensitive loops above
+ * this is a really hacky area right now as im just trying to figure out the right way
+ * to do all of this, once it settles into something working we can set up some tests,
+ * some performance checks, and then hopefully dedupe this code with the code above +
+ * split it out and make it all a lot more clearly named/structured.
  */
-export function getAllStyles(props: any, ns = '.') {
+
+export type StaticStyleDesc = {
+  css: string,
+  className: string;
+  ns: string
+}
+
+function getAllStyles(props: any, ns = '.') {
   if (!props) {
     return []
   }
   const allStyles = { [ns]: {} }
   mergeStyles(ns, allStyles, props)
-  const allClassNames: { css: string, className: string; ns: string }[] = []
-  for (const ns in allStyles) {
+  const styles: StaticStyleDesc[] = []
+  const namespaces = getSortedNamespaces(allStyles)
+  for (const ns in namespaces) {
     const styleObj = allStyles[ns]
+    if (!styleObj) continue
     const info = addRules('', styleObj, ns, 0, false)
     if (info) {
-      allClassNames.push({ ns, ...info, })
+      styles.push({ ns, ...info, })
     }
   }
-  return allClassNames
+  return styles
 }
 
 /**
  * For use externally only (static style extract)
  */
-export function getStyles(props: any, ns = '.') {
+function getStyles(props: any, ns = '.') {
   return getAllStyles(props, ns).find(x => x.ns === ns) ?? null
 }
+
+/**
+ * For use externally only (static style extract)
+ * see addDynamicStyles equivalent
+ */
+function getThemeStyles(view: GlossView, userTheme: CompiledTheme, props: any) {
+  const trackState = {
+    theme: userTheme,
+    hasUsedOnlyCSSVariables: true,
+    nonCSSVariables: new Set<string>(),
+  }
+  const themeFns = view.internal.themeFns || []
+  const depth = view.internal.depth
+  const styles: StaticStyleDesc[] = []
+  const len = themeFns.length - 1
+  const theme = createThemeProxy(userTheme, trackState, props)
+  for (const [index, themeFnList] of themeFns.entries()) {
+    const themeDepth = depth - (len - index)
+    const themeStyles = getStylesFromThemeFns(themeFnList, theme)
+    if (Object.keys(themeStyles).length) {
+      // make an object for each level of theme
+      const curThemeObj = { ['.']: {} }
+      mergeStyles('.', curThemeObj, themeStyles, true)
+      const namespaces = getSortedNamespaces(curThemeObj)
+      for (const ns of namespaces) {
+        const styleObj = curThemeObj[ns]
+        if (!styleObj) continue
+        const info = addRules('', styleObj, ns, themeDepth, false)
+        if (info) {
+          styles.push({ ns, ...info, })
+        }
+      }
+    }
+  }
+  if (trackState.hasUsedOnlyCSSVariables === false) {
+    throw new Error('This theme function uses non-CSS variables, we should bail from optimization')
+  }
+  return styles
+}
+
+export const StaticUtils = { getAllStyles, getStyles, getThemeStyles }
+
+/**
+ * END external static style block
+ */

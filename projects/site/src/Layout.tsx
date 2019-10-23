@@ -47,6 +47,7 @@ const PageLoading = memo(() => {
 })
 
 export const Layout = memo((props: any) => {
+  console.warn('layout is rendering')
   const forceUpdate = useForceUpdate()
   // ^^^
   // for some reason literally just having *any* useState/useEffect causes this to render twice on mount.... but not other components

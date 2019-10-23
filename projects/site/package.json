@@ -41,7 +41,7 @@
     "react-dom": "^16.9.0",
     "requestidlecallback-polyfill": "1.0.2",
     "resize-observer-polyfill": "1.5.1",
-    "@welldone-software/why-did-you-render": "3.3.5",
+    "@welldone-software/why-did-you-render": "3.3.8",
     "static-mock-data": "4.0.0",
     "sticky-sidebar": "3.3.1",
     "use-memo-one": "^1.1.0",

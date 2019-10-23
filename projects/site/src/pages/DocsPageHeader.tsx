@@ -16,7 +16,7 @@ const HeaderButton = props => (
   // </Theme>
 )
 
-export const DocsPageHeader = memo(({ isSmall, inputRef, setTheme, theme }: any) => {
+export const DocsPageHeader = memo(({ inputRef, setTheme, theme }: any) => {
   const siteStore = useSiteStore()
   const docsStore = DocsStoreContext.useStore()
   return (
@@ -43,7 +43,7 @@ export const DocsPageHeader = memo(({ isSmall, inputRef, setTheme, theme }: any)
             maxWidth="calc(55% - 20px)"
             flex={1}
             size="xl"
-            placeholder={isSmall ? 'Search...' : 'Search the docs...'}
+            placeholder="Search docs..."
             after={<Key tooltip="Focus shortcut: /">/</Key>}
             // borderWidth={0}
             backdropFilter="blur(20px)"
@@ -67,7 +67,7 @@ export const DocsPageHeader = memo(({ isSmall, inputRef, setTheme, theme }: any)
               closeOnClickAway
               elevation={100}
               zIndex={1000000000000000}
-              target={<HeaderButton icon="filter">{isSmall ? '' : 'Filter'}</HeaderButton>}
+              target={<HeaderButton icon="filter">Filter</HeaderButton>}
             >
               <>
                 <ListItem selectable={false}>

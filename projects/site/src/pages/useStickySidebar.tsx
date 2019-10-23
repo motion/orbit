@@ -20,7 +20,7 @@ export function useStickySidebar({ condition = true, id, ...rest }) {
       { passive: true },
     )
     return () => window.removeEventListener('resize', forceUpdateSlow)
-  })
+  }, [])
 
   useEffect(() => {
     if (condition === false) {

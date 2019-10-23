@@ -5,7 +5,6 @@ import React, { memo, useEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View as NaviView } from 'react-navi'
 
 import { Header } from '../Header'
-import { useScreenSize } from '../hooks/useScreenSize'
 import { usePageTheme } from '../Layout'
 import { Navigation } from '../Navigation'
 import { useSiteStore } from '../SiteStore'
@@ -129,15 +128,16 @@ const FixedLayout = gloss({
   },
 })
 
-const DocsPage = memo((props: { children?: any }) => {
+const DocsPage = (props: any) => {
   const Fade = useFadePage({
     threshold: 0,
   })
-  const screen = useScreenSize()
   const siteStore = useSiteStore()
   const [showSidebar, setShowSidebar] = useState(false)
   const inputRef = useRef(null)
   const [themeName, setThemeName] = usePageTheme()
+  console.warn('docspage rendering')
+
   // const portalNode = React.useMemo(() => {
   //   const div = portals.createPortalNode()
   //   div.style.display = 'flex'
@@ -147,8 +147,6 @@ const DocsPage = memo((props: { children?: any }) => {
 
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))
-
-  const isSmall = screen === 'small'
 
   useEffect(() => {
     let sub = Navigation.subscribe(() => {
@@ -211,7 +209,6 @@ const DocsPage = memo((props: { children?: any }) => {
           <Theme name="home">
             <DocsPageHeader
               {...{
-                isSmall,
                 inputRef,
                 setTheme: setThemeName,
                 theme: themeName,
@@ -230,60 +227,28 @@ const DocsPage = memo((props: { children?: any }) => {
               noBorder
               before={
                 <>
-                  {isSmall && (
-                    <Button
-                      position="fixed"
-                      pointerEvents="auto"
-                      icon={showSidebar ? 'arrowleft' : 'arrowright'}
-                      tooltip="Toggle menu"
-                      top={-3}
-                      left={10}
-                      zIndex={10000000}
-                      iconSize={16}
-                      size={2}
-                      fontSize={16}
-                      chromeless
-                      onClick={() => setShowSidebar(!showSidebar)}
-                    />
-                  )}
+                  <Button
+                    abovesm-display="none"
+                    position="fixed"
+                    pointerEvents="auto"
+                    icon={showSidebar ? 'arrowleft' : 'arrowright'}
+                    tooltip="Toggle menu"
+                    top={-3}
+                    left={10}
+                    zIndex={10000000}
+                    iconSize={16}
+                    size={2}
+                    fontSize={16}
+                    chromeless
+                    onClick={() => setShowSidebar(!showSidebar)}
+                  />
                 </>
               }
             />
           </Theme>
         </Portal>
 
-        {isSmall && (
-          <Portal>
-            <Theme name={themeName}>
-              <FixedLayout isSmall>
-                <Sidebar
-                  hidden={!showSidebar}
-                  zIndex={10000000}
-                  elevation={25}
-                  width={260}
-                  data-is="SmallSidebar"
-                  background={theme => theme.background}
-                >
-                  <View flex={1} pointerEvents="auto">
-                    <Button
-                      chromeless
-                      size={1.5}
-                      icon="cross"
-                      position="absolute"
-                      top={0}
-                      right={0}
-                      onClick={() => setShowSidebar(false)}
-                      pointerEvents="auto"
-                      zIndex={100}
-                      opacity={0.5}
-                    />
-                    <DocsList />
-                  </View>
-                </Sidebar>
-              </FixedLayout>
-            </Theme>
-          </Portal>
-        )}
+        <FloatingDocsSidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
 
         <Theme name={themeName}>
           <main className="main-contents">
@@ -299,7 +264,8 @@ const DocsPage = memo((props: { children?: any }) => {
                   flex={1}
                   overflow="hidden"
                   className="content"
-                  padding={isSmall ? 0 : [0, 0, 0, 24]}
+                  sm-padding={0}
+                  padding={[0, 0, 0, 24]}
                 >
                   <ContentSection>
                     <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
@@ -316,10 +282,47 @@ const DocsPage = memo((props: { children?: any }) => {
       </Fade.FadeProvide>
     </DocsStoreContext.Provider>
   )
-})
+}
 
 // @ts-ignore
 DocsPage.theme = 'docsPageTheme'
+DocsPage.whyDidYouRender = true
+
+const FloatingDocsSidebar = ({ showSidebar, setShowSidebar }: any) => {
+  const [themeName] = usePageTheme()
+  return (
+    <Portal>
+      <Theme name={themeName}>
+        <FixedLayout isSmall>
+          <Sidebar
+            hidden={!showSidebar}
+            zIndex={10000000}
+            elevation={25}
+            width={260}
+            data-is="SmallSidebar"
+            background={theme => theme.background}
+          >
+            <View flex={1} pointerEvents="auto">
+              <Button
+                chromeless
+                size={1.5}
+                icon="cross"
+                position="absolute"
+                top={0}
+                right={0}
+                onClick={() => setShowSidebar(false)}
+                pointerEvents="auto"
+                zIndex={100}
+                opacity={0.5}
+              />
+              <DocsList />
+            </View>
+          </Sidebar>
+        </FixedLayout>
+      </Theme>
+    </Portal>
+  )
+}
 
 function DocsChromeSimple({ children }) {
   return (

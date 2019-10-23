@@ -493,7 +493,6 @@ export function extractStyles(
           }
 
           if (viewInformation[originalNodeName]?.trackState?.nonCSSVariables?.has(name)) {
-            console.log('this prop deopts this view', originalNodeName, name)
             inlinePropCount++
             return true
           }

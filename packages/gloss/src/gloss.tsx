@@ -9,9 +9,10 @@ import { styleKeysSort } from './styleKeysSort'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
+import { createThemeProxy } from './theme/createThemeProxy'
 import { pseudoProps } from './theme/pseudos'
 import { themeVariableManager } from './theme/ThemeVariableManager'
-import { createThemeProxy, ThemeTrackState, UnwrapThemeSymbol, useTheme } from './theme/useTheme'
+import { ThemeTrackState, UnwrapThemeSymbol, useTheme } from './theme/useTheme'
 import { GlossProps, GlossPropsPartial, GlossThemeProps, GlossViewConfig } from './types'
 
 // so you can reference in postProcessProps
@@ -968,9 +969,6 @@ function getThemeStyles(view: GlossView, userTheme: CompiledTheme, props: any): 
         }
       }
     }
-  }
-  if (trackState.hasUsedOnlyCSSVariables === false) {
-    throw new Error('This theme function uses non-CSS variables, we should bail from optimization')
   }
   return { themeStyles, trackState }
 }

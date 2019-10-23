@@ -33,6 +33,7 @@ export {
 export { GlossDefaultConfig, configureGloss, Config as glossConfiguration } from './configureGloss'
 export * from './gloss'
 export * from './GlossRoot'
+export { createThemeProxy } from './theme/createThemeProxy'
 export { isPlainObj, colorToString } from './helpers/helpers'
 export { resolveThemeValues } from './helpers/resolveThemeValues'
 export { preProcessTheme } from './theme/preProcessTheme'

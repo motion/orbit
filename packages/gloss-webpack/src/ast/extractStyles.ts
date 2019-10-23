@@ -81,6 +81,7 @@ export function extractStyles(
     typeof cacheObject === 'object' && cacheObject !== null,
     '`cacheObject` must be an object',
   )
+
   if (!hasParsedViewInformation) {
     hasParsedViewInformation = true
     for (const key in options.views) {
@@ -91,8 +92,6 @@ export function extractStyles(
       }
     }
   }
-
-  console.log('viewInformation', viewInformation.Space.trackState.nonCSSVariables)
 
   const mediaQueryPrefixes = options.mediaQueryKeys.map(x => `${x}-`)
   const sourceDir = path.dirname(sourceFileName)
@@ -444,7 +443,7 @@ export function extractStyles(
 
           // for fully deoptimizing certain keys
           if (staticStyleConfig) {
-            if (staticStyleConfig.deoptProps && staticStyleConfig.deoptProps.includes(name)) {
+            if (staticStyleConfig.deoptProps?.includes(name)) {
               shouldDeopt = true
               return true
             }
@@ -452,14 +451,13 @@ export function extractStyles(
               return true
             }
             // for avoiding processing certain keys
-            if (staticStyleConfig.avoidProps && staticStyleConfig.avoidProps.includes(name)) {
+            if (staticStyleConfig.avoidProps?.includes(name)) {
               inlinePropCount++
               return true
             }
           }
 
-          let value: any =
-            attribute.value && t.isJSXExpressionContainer(attribute.value)
+          let value: any = t.isJSXExpressionContainer(attribute?.value)
               ? attribute.value.expression
               : attribute.value
 
@@ -490,6 +488,12 @@ export function extractStyles(
           }
 
           if (name === 'ref') {
+            inlinePropCount++
+            return true
+          }
+
+          if (viewInformation[originalNodeName]?.trackState?.nonCSSVariables?.has(name)) {
+            console.log('this prop deopts this view', originalNodeName, name)
             inlinePropCount++
             return true
           }

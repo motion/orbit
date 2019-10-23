@@ -64,7 +64,7 @@ const getScaledSize = (dim: number | string) => {
 }
 
 export const Space = gloss<SpaceProps>(Box, {
-  size: 1,
+  size: 'md',
   className: 'ui-space',
 }).theme(props => {
   const size = props.size

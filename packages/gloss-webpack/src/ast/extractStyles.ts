@@ -647,7 +647,7 @@ domNode: ${domNode}
               }
               const extracted = StaticUtils.getThemeStyles(view, options.defaultTheme, props).themeStyles
               if (shouldPrintDebug) {
-                console.log('extracting from theme', extracted)
+                console.log('extracting from theme', props, extracted)
               }
               for (const x of extracted) {
                 stylesByClassName[x.className] = x.css

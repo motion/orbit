@@ -127,7 +127,12 @@ export function gloss<
     glossPropsObject = (a as any) ?? null
   }
 
-  const depth = hasGlossyParent ? target.internal.depth + 1 : 0
+  const depth = hasGlossyParent ?
+    target.internal.depth + 1 :
+    // note: target may be a class component (not a string)
+    // in this case assume were 1 depth because it accepts gloss className
+    typeof target !== 'string' ?
+      1 : 0
   const targetElement = hasGlossyParent ? target.internal.targetElement : target
   const glossProps = getGlossProps(glossPropsObject ?? null, hasGlossyParent ? target : null)
   const config = glossProps.config

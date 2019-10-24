@@ -1,33 +1,24 @@
 // //!
-// import { ProvideUI, View } from '@o/ui'
+// import { ProvideUI, Text } from '@o/ui'
 // //
 // const React = require('react')
 // const { themes } = require('./themes')
+// export const SectionP = props => (
+//   <Text
+//     tagName="div"
+//     display="flex"
+//     flexFlow="row"
+//     size={1.2}
+//     alpha={0.65}
+//     fontWeight={400}
+//     sizeLineHeight={1.2}
+//     {...props}
+//   />
+// )
 // export const SiteRoot = () => {
 //   return (
 //     <ProvideUI themes={themes} activeTheme="dark">
-//       <View
-//         key={`image-${1}`}
-//         width="100%"
-//         height="100%"
-//         borderRadius={22}
-//         boxShadow={[[0, 10, 30, [0, 0, 0]]]}
-//         overflow="hidden"
-//         initial="enter"
-//         animate="center"
-//         exit="exit"
-//         transition={{
-//           x: { type: 'spring', stiffness: 100, damping: 200 },
-//           opacity: { duration: 0.2 },
-//         }}
-//         position="absolute"
-//         drag="x"
-//         dragConstraints={{ left: 0, right: 0 }}
-//         dragElastic={1}
-//         onDragEnd={() => {}}
-//       >
-//         hello world
-//       </View>
+//       <SectionP>hi</SectionP>
 //     </ProvideUI>
 //   )
 // }

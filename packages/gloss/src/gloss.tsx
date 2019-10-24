@@ -178,7 +178,9 @@ export function gloss<
     }
 
     // compile on first run to avoid extra work
-    if (!hasCompiled) compile()
+    if (!hasCompiled) {
+      compile()
+    }
 
     const theme = useTheme(props)
     curTheme = theme[UnwrapThemeSymbol]
@@ -281,6 +283,10 @@ export function gloss<
     }
 
     finalProps.className = className
+
+    if (className.includes('g1348941817')) {
+      debugger
+    }
 
     if (isDeveloping) {
       finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName

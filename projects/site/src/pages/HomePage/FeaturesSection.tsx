@@ -206,10 +206,8 @@ export default memo(function FeaturesSection() {
 
 const dly = 200
 
-const sectionNames = ['Integrate', 'Display', 'Build']
-
 const sections = {
-  [sectionNames[0]]: {
+  Data: {
     image: require('../../public/images/screen-graphql.jpg'),
     items: [
       {
@@ -234,7 +232,7 @@ const sections = {
       },
     ],
   },
-  [sectionNames[1]]: {
+  Display: {
     image: require('../../public/images/screen-people.jpg'),
     items: [
       {
@@ -259,7 +257,7 @@ const sections = {
       },
     ],
   },
-  [sectionNames[2]]: {
+  Create: {
     image: require('../../public/images/screen-graphql.jpg'),
     items: [
       {
@@ -291,6 +289,8 @@ const sections = {
     ],
   },
 }
+
+const sectionNames = Object.keys(sections)
 
 const transition = {
   type: 'spring',

@@ -1,3 +1,16 @@
+- site: a few last small bugs
+- docs: fix bugs in various panes
+- theme: fix slowdown bug in switching theme
+- deploy site
+- app: fix static bugs layout
+- app: fix static in OrbitHeader / errors throwing
+- static: look at linaria for how it reads static side-effect free files
+- static: just run over once more improve some logic
+- app: tune it up and get it all running again
+- blog: write a blog post for beta launch
+- site: upgrade wording
+- launch
+
 current best bet for a viable product:
 
 theres three paths:

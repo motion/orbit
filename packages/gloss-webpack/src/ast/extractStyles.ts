@@ -162,6 +162,7 @@ export function extractStyles(
       staticDesc: GlossStaticStyleDescription,
       propObject: any
       defaultProps?: Object
+      parent?: GlossView
     }
   } = {}
 
@@ -252,7 +253,7 @@ export function extractStyles(
               delete defaultProps.className
             }
 
-            const depth = (view?.internal?.depth ?? 0) + 1
+            const depth = (view?.internal?.depth ?? -1) + 1
 
             for (const ns in styles) {
               const info = StaticUtils.getStyles(styles[ns], depth)
@@ -266,6 +267,7 @@ export function extractStyles(
                 console.log('no info', ns, styles)
               }
             }
+
             if (conditionalStyles) {
               out.conditionalClassNames = {}
               for (const prop in conditionalStyles) {
@@ -285,6 +287,7 @@ export function extractStyles(
               staticDesc: out,
               propObject,
               defaultProps,
+              parent: view,
             }
 
             if (out.className || out.conditionalClassNames) {
@@ -598,7 +601,7 @@ domNode: ${domNode}
         // used later to generate classname for item
         const stylesByClassName: { [key: string]: string } = {}
 
-        const depth = (view?.internal?.depth ?? 1) + (!localView ? 0 : 1)
+        const depth = (view?.internal?.depth ?? 1) + (localView?.parent?.internal?.depth ?? 0)
         const addStyles = (styleObj: any) => {
           const allStyles = StaticUtils.getAllStyles(styleObj, depth)
           for (const info of allStyles) {

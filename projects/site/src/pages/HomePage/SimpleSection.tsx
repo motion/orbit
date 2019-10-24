@@ -48,18 +48,18 @@ const SectionChrome = gloss(Stack, {
   position: 'relative',
 })
 
-export const SectionP = gloss(props => (
+export const SectionP = props => (
   <Paragraph
     tagName="div"
     display="flex"
-    flexFlow="row"
+    flexDirection="row"
     size={1.2}
     alpha={0.65}
     fontWeight={400}
     sizeLineHeight={1.2}
     {...props}
   />
-))
+)
 
 export const SectionIcon = gloss(Icon, {
   size: 32,

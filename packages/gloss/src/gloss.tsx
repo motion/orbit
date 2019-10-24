@@ -781,7 +781,8 @@ function addRules<A extends boolean>(
   const isMediaQuery = namespace[0] === '@'
   const selector = getSelector(className, namespace, selectorPrefix)
   const css = isMediaQuery ? `${namespace} {${selector} {${style}}}` : `${selector} {${style}}`
-  const finalClassName = `g${depth}${className}`
+  const finalDepth = depth + (isMediaQuery ? 1 : 0)
+  const finalClassName = `g${finalDepth}${className}`
 
   if (insert === true) {
     // this is the first time we've found this className
@@ -940,7 +941,7 @@ export type ThemeStyleInfo = {
   themeStyles: StaticStyleDesc[] | null
 }
 
-function getThemeStyles(view: GlossView, userTheme: CompiledTheme, props: any): ThemeStyleInfo {
+function getThemeStyles(view: GlossView, userTheme: CompiledTheme, props: any, extraDepth = 0): ThemeStyleInfo {
   const themeFns = compileThemes(view)
   if (!themeFns) {
     return {
@@ -953,7 +954,8 @@ function getThemeStyles(view: GlossView, userTheme: CompiledTheme, props: any): 
     hasUsedOnlyCSSVariables: true,
     nonCSSVariables: new Set<string>(),
   }
-  const depth = view.internal.depth + 1 // themes always one above
+  // themes always one above, extraDepth if theres a local view
+  const depth = view.internal.depth + 1 + extraDepth
   const themeStyles: StaticStyleDesc[] = []
   const len = themeFns.length - 1
   const theme = createThemeProxy(userTheme, trackState, props)

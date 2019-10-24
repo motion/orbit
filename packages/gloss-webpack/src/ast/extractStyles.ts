@@ -649,10 +649,10 @@ domNode: ${domNode}
                 ...htmlExtractedAttributes,
                 ...staticAttributes,
               }
-              const extracted = StaticUtils.getThemeStyles(view, options.defaultTheme, props).themeStyles
+              const extracted = StaticUtils.getThemeStyles(view, options.defaultTheme, props, localView ? 1 : 0).themeStyles
               if (shouldPrintDebug) {
                 delete props['ignoreAttrs'] // ignore this its huge in debug output
-                console.log('extracting from theme', props, extracted)
+                console.log('extracting from theme', !!localView, props, extracted)
               }
               for (const x of extracted) {
                 stylesByClassName[x.className] = x.css

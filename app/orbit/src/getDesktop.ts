@@ -160,6 +160,7 @@ export function runOrbitDesktop(
       reporter.verbose(`Running Orbit ${cmd} in ${cwd}, detached? ${detached}`)
       const child = execa.command(cmd, {
         detached,
+        all: true,
         cwd,
         env: {
           ...process.env,

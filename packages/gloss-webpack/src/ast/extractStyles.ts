@@ -426,6 +426,7 @@ export function extractStyles(
 
         let shouldDeopt = false
 
+        const ogAttributes = node.attributes
         node.attributes = node.attributes.filter((attribute, idx) => {
           if (
             t.isJSXSpreadAttribute(attribute) ||
@@ -579,6 +580,7 @@ domNode: ${domNode}
         }
 
         if (shouldDeopt) {
+          node.attributes = ogAttributes
           return
         }
 
@@ -645,11 +647,11 @@ domNode: ${domNode}
             try {
               const props = {
                 ...viewDefaultProps,
-                // ...localView?.propObject,
+                ...localView?.propObject,
                 ...htmlExtractedAttributes,
                 ...staticAttributes,
               }
-              const extracted = StaticUtils.getThemeStyles(view, options.defaultTheme, props, localView ? 1 : 0).themeStyles
+              const extracted = StaticUtils.getThemeStyles(view, options.defaultTheme, props).themeStyles
               if (shouldPrintDebug) {
                 delete props['ignoreAttrs'] // ignore this its huge in debug output
                 console.log('extracting from theme', !!localView, props, extracted)

@@ -16,16 +16,14 @@ export const fontProps = {
   },
 }
 
+// for now just copied to gloss, its a decent default set
+// need to manually sync to gloss/configureGloss
 export const widths = {
   xs: 420,
   sm: 700,
   md: 820,
   lg: 1150,
 }
-
-export const sectionMaxHeight = 1250
-export const sidePad = 24
-
 export const mediaQueries = {
   xs: `@media screen and (max-width: ${widths.xs - 1}px)`,
   sm: `@media screen and (max-width: ${widths.sm}px)`,
@@ -37,6 +35,9 @@ export const mediaQueries = {
   belowlg: `@media screen and (max-width: ${widths.lg}px)`,
   abovelg: `@media screen and (min-width: ${widths.lg + 1}px)`,
 }
+
+export const sectionMaxHeight = 1250
+export const sidePad = 24
 
 export const IS_CHROME = navigator.userAgent.toLowerCase().indexOf('chrome') > -1
 

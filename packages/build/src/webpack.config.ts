@@ -311,7 +311,7 @@ async function makeConfig() {
 
             flags.extractStaticStyles && {
               loader: GlossWebpackPlugin.loader,
-              options: require('@o/ui/glossLoaderConfig'),
+              options: require('@o/ui/glossLoaderConfig')(),
             },
           ].filter(Boolean),
         },

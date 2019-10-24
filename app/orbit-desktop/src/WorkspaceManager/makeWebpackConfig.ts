@@ -333,7 +333,7 @@ require('@o/kit').OrbitHot.fileLeave();
                     },
                     extractStaticStyles && {
                       loader: GlossWebpackPlugin.loader,
-                      options: require('@o/ui/glossLoaderConfig'),
+                      options: require('@o/ui/glossLoaderConfig')(),
                     },
                   ].filter(Boolean),
                 },

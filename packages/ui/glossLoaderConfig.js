@@ -1,17 +1,18 @@
 const path = require('path')
 const views = require('./_/index')
 const glossViews = require('gloss')
-const configureUI = require('./_/helpers/configureUI').configureUI
+const { configureUI, Config } = require('./_/helpers/configureUI')
 
-// set up toColor etc
-configureUI({})
-
-module.exports = {
-  views: { ...glossViews, ...views },
-  defaultTheme: views.themes.light,
-  mediaQueryKeys: ['xs', 'sm', 'abovesm', 'md', 'abovemd', 'lg', 'belowlg', 'abovelg'],
-  internalViewsPaths: [
-    path.join(path.dirname(require.resolve('@o/ui')), '..'),
-    path.join(path.dirname(require.resolve('gloss')), '..'),
-  ],
+module.exports = config => {
+  // set up toColor, mediaQueries
+  configureUI(config || {})
+  return {
+    views: { ...glossViews, ...views },
+    defaultTheme: views.themes.light,
+    mediaQueryKeys: Object.keys(Config.mediaQueries),
+    internalViewsPaths: [
+      path.join(path.dirname(require.resolve('@o/ui')), '..'),
+      path.join(path.dirname(require.resolve('gloss')), '..'),
+    ],
+  }
 }

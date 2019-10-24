@@ -237,7 +237,7 @@ export function gloss<
       ThemedView.displayName,
       conditionalStyles,
       dynClasses.current,
-      depth + 1,
+      depth,
       theme as any,
       themeFns,
       avoidStyles,
@@ -578,7 +578,7 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
     '.': {},
   }
   // all the "rest" go onto default props
-  let defaultProps: any = {}
+  let defaultProps: any = allProps
   let conditionalStyles = mergeStyles('.', styles, rest, false, defaultProps) ?? null
   const internalDefaultProps = defaultProps
   // merge parent config
@@ -699,7 +699,7 @@ function compileThemes(viewOG: GlossView) {
   // but if:
   //   const Child = gloss(Parent, { background: 'green' })
   //       background will *always* be green
-  // ALSO if changeBg.hoisted = true, we need to be sure its hoisted all the way up
+  // ALSO if changeBg.hoistTheme = true, we need to be sure its hoisted all the way up
   // by putting an empty theme at the front if there are child themes, but no current theme,
   // we ensure that the hoisted will always go at the top, as well as ensuring the depth/priority
   // is kept as it should be
@@ -752,6 +752,13 @@ const nicePostfix = {
   '&:focus-within': 'focuswithin',
 }
 
+const parentKeys = {}
+const createParentKey = (k: string) => {
+  const next = '-' + k.replace(/\s+/g, '')
+  parentKeys[k] = next
+  return next
+}
+
 function addRules<A extends boolean>(
   displayName = '_',
   rules: BaseRules,
@@ -777,12 +784,14 @@ function addRules<A extends boolean>(
     const postfix = nicePostfix[namespace] || stringHash(namespace)
     className += `-${postfix}`
   }
+  if (selectorPrefix) {
+    className += parentKeys[selectorPrefix] || createParentKey(selectorPrefix)
+  }
 
   const isMediaQuery = namespace[0] === '@'
   const selector = getSelector(className, namespace, selectorPrefix)
   const css = isMediaQuery ? `${namespace} {${selector} {${style}}}` : `${selector} {${style}}`
-  const finalDepth = depth + (isMediaQuery ? 1 : 0)
-  const finalClassName = `g${finalDepth}${className}`
+  const finalClassName = `g${depth}${className}`
 
   if (insert === true) {
     // this is the first time we've found this className
@@ -835,6 +844,7 @@ function getSpecificSelectors(base: string, parent = '', after = '') {
   }
   return s.join(',')
 }
+
 
 // some internals we can export
 if (isDeveloping && typeof window !== 'undefined') {
@@ -970,7 +980,7 @@ function getThemeStyles(view: GlossView, userTheme: CompiledTheme, props: any, e
       for (const ns of namespaces) {
         const styleObj = curThemeObj[ns]
         if (!styleObj) continue
-        const info = addRules('', styleObj, ns, themeDepth, '', false)
+        const info = addRules('', styleObj, ns, themeDepth, 'html ', false)
         if (info) {
           themeStyles.push({ ns, ...info, })
         }

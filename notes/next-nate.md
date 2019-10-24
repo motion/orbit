@@ -1,4 +1,6 @@
-- site: a few last small bugs
+- statics:
+  - properly fail when cant evaluate a gloss() (ExampleHalf)
+  - linaria-style constants evaluation and { [constant]: x }
 - docs: fix bugs in various panes
 - theme: fix slowdown bug in switching theme
 - deploy site

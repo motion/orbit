@@ -183,7 +183,7 @@ export const FadeInView = memo(
         ? { duration: 0 }
         : {
             ...(transition as any),
-            delay: delayIndex ? delayIndex / 10 : (delay || 1) / 1000,
+            delay: delayIndex ? delayIndex / 12 : (delay || 1) / 1000,
           }
 
     if (parallax) {

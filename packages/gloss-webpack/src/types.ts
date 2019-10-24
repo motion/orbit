@@ -1,7 +1,19 @@
-import { ExtractStylesOptions } from './ast/extractStyles'
+import { CompiledTheme, GlossView } from 'gloss'
 
 export interface CacheObject {
   [key: string]: any
+}
+
+export interface ExtractStylesOptions {
+  views: {
+    [key: string]: GlossView
+  }
+  mediaQueryKeys?: string[]
+  internalViewsPaths?: string[]
+  deoptKeys?: string[]
+  defaultTheme: CompiledTheme
+  ignore?: RegExp
+  babelOptions?: { presets: Object; plugins: Object }
 }
 
 export interface LoaderOptions extends ExtractStylesOptions {

@@ -2,29 +2,19 @@ import generate from '@babel/generator'
 import traverse, { NodePath } from '@babel/traverse'
 import * as t from '@babel/types'
 import literalToAst from 'babel-literal-to-ast'
-import { CompiledTheme, getGlossProps, GlossStaticStyleDescription, GlossView, isGlossView, StaticUtils, ThemeStyleInfo, tracker, validCSSAttr } from 'gloss'
+import { getGlossProps, GlossStaticStyleDescription, GlossView, isGlossView, StaticUtils, ThemeStyleInfo, tracker, validCSSAttr } from 'gloss'
 import invariant from 'invariant'
 import path from 'path'
 import util from 'util'
 import vm from 'vm'
 
-import { CacheObject } from '../types'
+import { CacheObject, ExtractStylesOptions } from '../types'
 import { evaluateAstNode } from './evaluateAstNode'
 import { extractStaticTernaries, Ternary } from './extractStaticTernaries'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { getStaticBindingsForScope } from './getStaticBindingsForScope'
 import { htmlAttributes } from './htmlAttributes'
 import { parse } from './parse'
-
-export interface ExtractStylesOptions {
-  views: {
-    [key: string]: GlossView<any>
-  }
-  mediaQueryKeys?: string[]
-  internalViewsPaths?: string[]
-  deoptKeys?: string[]
-  defaultTheme: CompiledTheme
-}
 
 export interface Options {
   cacheObject: CacheObject

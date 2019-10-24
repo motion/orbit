@@ -5,7 +5,11 @@ const { configureUI, Config } = require('./_/helpers/configureUI')
 
 module.exports = config => {
   // set up toColor, mediaQueries
-  configureUI(config || {})
+  try {
+    configureUI(config || {})
+  } catch {
+    // already set up
+  }
   return {
     views: { ...glossViews, ...views },
     defaultTheme: views.themes.light,

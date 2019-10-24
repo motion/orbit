@@ -1,18 +1,18 @@
 // //!
-// import { ProvideUI, selectDefined, Space } from '@o/ui'
+// import { gloss, ProvideUI, View } from '@o/ui'
 // //
 // const React = require('react')
 // const { themes } = require('./themes')
-// // const TextFitTitle = gloss(SimpleText, {
-// //   userSelect: 'text',
-// //   lineHeight: '95%',
-// //   fontSize: `${6}vw`,
-// //   'sm-fontSize': 6 * 11.5,
-// // })
+// const FlexView = gloss(View, {
+//   position: 'relative',
+//   flex: 1,
+// })
 // export const SiteRoot = () => {
 //   return (
 //     <ProvideUI themes={themes} activeTheme="dark">
-//       <Space size={selectDefined(10, 2 * 6)} />
+//       <FlexView flex={2} alignItems="center" position="relative" margin={0} sm-margin={[0, '-5%']}>
+//         hello
+//       </FlexView>
 //     </ProvideUI>
 //   )
 // }

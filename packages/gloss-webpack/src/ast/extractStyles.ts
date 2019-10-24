@@ -236,6 +236,7 @@ export function extractStyles(
             const { styles, conditionalStyles, defaultProps, internalDefaultProps } = getGlossProps(
               propObject,
               view,
+              view?.internal?.depth ?? 0
             )
             if (shouldPrintDebug) {
               console.log('glossCall.arguments parse gloss props', name, styles, conditionalStyles)
@@ -600,6 +601,9 @@ domNode: ${domNode}
           const allStyles = StaticUtils.getAllStyles(styleObj, depth)
           for (const info of allStyles) {
             if (info.css) {
+              if (shouldPrintDebug) {
+                console.log('add static styles', info.className, info.css)
+              }
               stylesByClassName[info.className] = info.css
             }
           }
@@ -647,6 +651,7 @@ domNode: ${domNode}
               }
               const extracted = StaticUtils.getThemeStyles(view, options.defaultTheme, props).themeStyles
               if (shouldPrintDebug) {
+                delete props['ignoreAttrs'] // ignore this its huge in debug output
                 console.log('extracting from theme', props, extracted)
               }
               for (const x of extracted) {

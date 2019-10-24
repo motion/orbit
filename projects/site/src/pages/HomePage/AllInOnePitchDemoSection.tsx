@@ -1,3 +1,4 @@
+//!
 import { AnimatePresence, animation, Button, gloss, Image, Space, Stack, View } from '@o/ui'
 import { Box, Inline } from 'gloss'
 import React, { memo, useState } from 'react'
@@ -238,6 +239,7 @@ export default memo(() => {
               </FadeInView>
             </FlexView>
             <FlexView
+              className="test-me-out"
               flex={2}
               alignItems="center"
               position="relative"

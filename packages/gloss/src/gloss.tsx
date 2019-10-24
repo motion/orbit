@@ -134,7 +134,7 @@ export function gloss<
     typeof target !== 'string' ?
       1 : 0
   const targetElement = hasGlossyParent ? target.internal.targetElement : target
-  const glossProps = getGlossProps(glossPropsObject ?? null, hasGlossyParent ? target : null)
+  const glossProps = getGlossProps(glossPropsObject ?? null, hasGlossyParent ? target : null, depth)
   const config = glossProps.config
   const getEl = config?.getElement
   const staticClassNames = glossProps.staticClasses?.join(' ') ?? ''
@@ -237,7 +237,7 @@ export function gloss<
       ThemedView.displayName,
       conditionalStyles,
       dynClasses.current,
-      depth,
+      depth + 1,
       theme as any,
       themeFns,
       avoidStyles,
@@ -572,7 +572,7 @@ function mergeStyles(
 // happens once at initial gloss() call, so not as perf intense
 // get all parent styles and merge them into a big object
 // const staticClasses: string[] | null = addStyles(glossProps.styles, depth)
-export function getGlossProps(allProps: GlossProps | null, parent: GlossView | null): GlossParsedProps {
+export function getGlossProps(allProps: GlossProps | null, parent: GlossView | null, depth: number): GlossParsedProps {
   const { config = null, ...rest } = allProps || {}
   const styles = {
     '.': {},
@@ -603,7 +603,7 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
     }
   }
   // merge together the parent chain of static classes
-  const curStaticClasses = addStyles(styles, (parent?.internal?.depth ?? -1) + 1) || []
+  const curStaticClasses = addStyles(styles, depth) || []
   const parentStaticClasses = parent?.internal?.glossProps.staticClasses || []
   return {
     staticClasses: [...parentStaticClasses, ...curStaticClasses],
@@ -953,7 +953,7 @@ function getThemeStyles(view: GlossView, userTheme: CompiledTheme, props: any): 
     hasUsedOnlyCSSVariables: true,
     nonCSSVariables: new Set<string>(),
   }
-  const depth = view.internal.depth
+  const depth = view.internal.depth + 1 // themes always one above
   const themeStyles: StaticStyleDesc[] = []
   const len = themeFns.length - 1
   const theme = createThemeProxy(userTheme, trackState, props)

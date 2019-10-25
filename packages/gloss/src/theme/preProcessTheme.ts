@@ -44,7 +44,6 @@ export const preProcessTheme = (props: GlossProps, theme: CompiledTheme) => {
         })
       }
       setThemeInCache(parent, altKey, nextTheme)
-      console.log('setting', themeAltCache, themeAltCache.get(parent), altKey, parent)
       return nextTheme
     }
   }

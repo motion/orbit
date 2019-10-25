@@ -21,7 +21,7 @@ export const EarlyAccessContent = (props: { theme?: string }) => {
         </>
       }
     >
-      <Theme name={props.theme || 'darkAlt'}>
+      <Theme name={'dark'}>
         <Scale size={1.2}>
           <SignupForm />
         </Scale>

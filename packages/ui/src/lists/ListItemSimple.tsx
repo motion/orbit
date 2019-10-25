@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { idFn, isDefined, selectDefined } from '@o/utils'
+import { idFn, selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
 import { Box, gloss, Theme, ThemeByName } from 'gloss'
 import React, { isValidElement, memo, useCallback } from 'react'
@@ -16,7 +16,7 @@ import { Surface } from '../Surface'
 import { DateFormat } from '../text/DateFormat'
 import { SimpleText } from '../text/SimpleText'
 import { Text } from '../text/Text'
-import { usePadding } from '../View/PaddedView'
+import { paddingTheme } from '../View/PaddedView'
 import { Stack } from '../View/Stack'
 import { View } from '../View/View'
 import { ListItemSimpleProps } from './ListItemViewProps'
@@ -27,7 +27,6 @@ import { useIsSelected } from './useIsSelected'
 export function ListItemSimple({
   style,
   nodeRef,
-  // @ts-ignore
   draggableItem,
   ...listProps
 }: ListItemSimpleProps) {
@@ -87,12 +86,12 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
   const iconBefore = iconBeforeProp || !showTitle
   const hasMouseDownEvent = !!surfaceProps.onMouseDown
   const disablePsuedoProps = selectable === false && {
-    hoverStyle: null,
-    activeStyle: null,
+    hoverStyle: false,
+    activeStyle: false,
   }
 
   const iconElement = showIcon && getIcon(props)
-  const listItemAdjustedPadding = usePadding({ padding: selectDefined(padding, 12) })
+  const listItemAdjustedPadding = paddingTheme({ padding: selectDefined(padding, 12) })
   const space = listItemAdjustedPadding ? listItemAdjustedPadding.paddingTop : undefined
 
   const hasChildren = showChildren && !!children
@@ -130,7 +129,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
     </>
   )
 
-  const hasAfterTitle = isDefined(props.afterTitle, afterHeaderElement)
+  const hasAfterTitle = !!(props.afterTitle || afterHeaderElement)
   const coat = isSelected ? (isFocused ? 'selected' : 'selectedInactive') : undefined
 
   // its a lot easier at times to just get the props from the click event
@@ -170,22 +169,24 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
       )}
       <Surface
         className="list-item-surface"
+        subTheme="listItem"
         flexDirection="row"
         alignItems="stretch"
         coat={coat}
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && handleClick) || undefined}
-        background={coat ? undefined : 'transparent'}
+        baseOverridesPsuedo={false}
         {...listItemAdjustedPadding}
-        paddingLeft={
-          (indent || 1) * (listItemAdjustedPadding ? listItemAdjustedPadding.paddingLeft : 0)
-        }
+        // TODO we'd need to indent using an inner element or similar
+        // paddingLeft={
+        //   (indent ?? 1) * (listItemAdjustedPadding ? listItemAdjustedPadding.paddingLeft : 0)
+        // }
         width="100%"
         before={
           <>
             {before}
             {!!before && <Space size={space} />}
-            {!hideBorder && <BorderBottom right={5} left={5} opacity={0.2} />}
+            {!hideBorder && <BorderBottom right={5} left={5} opacity={0.5} />}
           </>
         }
         space={space}
@@ -273,7 +274,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
           </View>
           {hasAfterTitle && (
             <>
-              <Space size={space} />
+              <Space data-is="AfterTitleSpace" size={space} />
               <Stack space={space}>
                 {props.afterTitle}
                 {afterHeaderElement}

@@ -1,5 +1,5 @@
 import { Color } from './color'
-import { isColorLike } from './isColor'
+import { isColorLike } from './isColorLike'
 import { ColorLike } from './types'
 
 const convertToColor = item => (isColorLike(item) ? new Color(item) : item)
@@ -15,10 +15,18 @@ export class LinearGradient {
     this.items = items
   }
 
-  cssVariableSafeKeys = ['cssVariable', 'setCSSVariable', 'getCSSValue']
+  cssVariableSafeKeys = ['cssVariable', 'setCSSVariable', 'getCSSValue', 'cssIsColor']
   cssVariable = ''
+  cssIsColor = true
   setCSSVariable(name: string) {
     this.cssVariable = name
+  }
+
+  toCSS() {
+    if (this.cssVariable) {
+      return `var(--${this.cssVariable})`
+    }
+    return this.toString()
   }
 
   getColors() {
@@ -41,6 +49,10 @@ export class LinearGradient {
 
   darken(amt: number) {
     return this.getColors()[1].darken(amt)
+  }
+
+  lighten(amt: number) {
+    return this.getColors()[1].lighten(amt)
   }
 
   isDark() {

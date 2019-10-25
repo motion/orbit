@@ -16,8 +16,8 @@
     "debug": "^3.1.0",
     "electron-builder": "21.2.0",
     "electron-rebuild": "1.8.6",
-    "execa": "2.0.3",
-    "fs-extra": "^7.0.0",
+    "execa": "",
+    "fs-extra": "^8.1.0",
     "node-abi": "2.11.0",
     "rimraf": "^2.6.2",
     "verdaccio": "4.2.1"

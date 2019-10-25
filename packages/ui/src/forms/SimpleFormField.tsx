@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useSurfaceHeight } from '../SizedSurface'
+import { useSurfaceHeight } from '../hooks/useSizedSurface'
 import { Space } from '../Space'
 import { SimpleText } from '../text/SimpleText'
 import { Stack, StackProps } from '../View/Stack'

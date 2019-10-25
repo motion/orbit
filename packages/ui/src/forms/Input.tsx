@@ -1,13 +1,13 @@
 import { isDefined } from '@o/utils'
-import { ThemeFn, useTheme } from 'gloss'
-import React, { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react'
+import { ThemeFn } from 'gloss'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { isWebkit } from '../constants'
 import { composeRefs } from '../helpers/composeRefs'
 import { useThrottledFn } from '../hooks/useThrottleFn'
 import { Surface, SurfaceProps } from '../Surface'
 import { DataType } from '../types'
-import { getElevation } from '../View/elevation'
+import { elevationTheme } from '../View/elevation'
 import { useVisibility } from '../Visibility'
 import { useParentForm } from './FormContext'
 
@@ -22,12 +22,14 @@ export type InputType =
   | 'number'
   | DataType
 
-export type InputProps = React.HTMLAttributes<HTMLInputElement> &
+export type InputProps = Omit<
+  React.HTMLAttributes<HTMLInputElement>,
+  'onDrag' | 'onDragEnd' | 'onDragStart'
+> &
   Omit<SurfaceProps, 'type'> & {
     onEnter?: Function
     type?: InputType
     form?: Object
-    value?: string
     step?: any
   }
 
@@ -79,7 +81,8 @@ export function Input({ onEnter, type = 'text', nodeRef, children, ...props }: I
       )}
       onChange={useCallback(
         e => {
-          updateFormContext(e.target.value)
+          console.log('updating context right?', e.target['value'])
+          updateFormContext((e.target as any).value)
           if (props.onChange) {
             props.onChange(e)
           }
@@ -89,18 +92,6 @@ export function Input({ onEnter, type = 'text', nodeRef, children, ...props }: I
     />
   )
 }
-
-const inputSurfaceTheme: ThemeFn = (props, theme) => ({
-  ...(!props.chromeless && {
-    border: [1, theme.borderColor.desaturate(0.1)],
-    '&:focus-within': {
-      boxShadow: [
-        [0, 0, 0, 3, theme.borderColor.setAlpha(a => a * 0.5)],
-        getElevation(props, theme).boxShadow,
-      ],
-    },
-  }),
-})
 
 const SimpleInput = ({
   placeholder,
@@ -116,16 +107,16 @@ const SimpleInput = ({
   defaultValue,
   nodeRef,
   ...props
-}: SurfaceProps & InputProps) => {
+}: InputProps) => {
   const visible = useVisibility()
-  const theme = useTheme()
   return (
+    // @ts-ignore
     <Surface
+      tagName={tagName}
       elementProps={useMemo(
         () => ({
           nodeRef,
           placeholder,
-          tagName,
           name,
           type,
           value,
@@ -138,27 +129,12 @@ const SimpleInput = ({
         }),
         [nodeRef, value, defaultValue, placeholder, tagName, elementProps],
       )}
-      elementTheme={useCallback((p, theme) => {
-        return {
-          // apple selection color
-          '&::selection': {
-            color: theme.colorLight,
-            background: theme.backgroundSelection || theme.backgroundStronger,
-          },
-          // autofill keep proper color
-          ...(isWebkit && {
-            '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
-              WebkitTextFillColor: p.color || theme.color,
-              backgroundColor: 'transparent',
-            },
-          }),
-        }
-      }, [])}
+      elementTheme={inputElementTheme}
       type="input"
       maxWidth="100%"
       alignItems="center"
       flexDirection="row"
-      themeSubSelect="input"
+      subTheme="input"
       pointerEvents={visible ? 'inherit' : 'none'}
       sizeFont={0.9}
       sizePadding
@@ -166,12 +142,41 @@ const SimpleInput = ({
       sizeLineHeight
       sizeRadius={0.75}
       label={name}
-      activeStyle={null}
+      activeStyle={false}
       glint={false}
       borderWidth={1}
       {...props}
       className={`ui-input ${props.className || ''}`}
-      focusWithinStyle={inputSurfaceTheme(props, theme)}
+      focusWithinStyle={inputSurfaceTheme}
     />
   )
+}
+
+const inputSurfaceTheme: ThemeFn<any> = props => {
+  return {
+    ...(!props.chromeless && {
+      border: [1, props.borderColor],
+      '&:focus-within': {
+        // @ts-ignore
+        boxShadow: [[0, 0, 0, 3, props.borderColorLight], elevationTheme(props as any).boxShadow],
+      },
+    }),
+  }
+}
+
+const inputElementTheme: ThemeFn<InputProps> = props => {
+  return {
+    // apple selection color
+    '&::selection': {
+      color: props.colorLight,
+      background: props.backgroundSelection || props.backgroundStronger,
+    },
+    // autofill keep proper color
+    ...(isWebkit && {
+      '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
+        WebkitTextFillColor: props.color,
+        backgroundColor: 'transparent',
+      },
+    }),
+  }
 }

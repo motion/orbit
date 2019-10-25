@@ -4,13 +4,13 @@ import React, { useCallback } from 'react'
 import { SelectableProps, SelectableStore, useCreateSelectableStore } from './lists/SelectableStore'
 import { SortableGrid, SortableGridProps } from './SortableGrid'
 
-type SelectableGridProps<A> = SortableGridProps<A> &
+type SelectableGridProps<A = any> = SortableGridProps<A> &
   SelectableProps & {
     getItem?: (item: A, { isSelected: boolean, select: Function }) => any
     selectableStore?: SelectableStore
   }
 
-export function SelectableGrid(props: SelectableGridProps<any>) {
+export function SelectableGrid(props: SelectableGridProps) {
   const store = useCreateSelectableStore(props)
   const getItem = useCallback(
     (_, index) => {
@@ -28,7 +28,7 @@ export function SelectableGrid(props: SelectableGridProps<any>) {
   return <SortableGrid {...props} getItem={getItem} />
 }
 
-type SelectableGridItemProps = Pick<SelectableGridProps<any>, 'getItem' | 'selectableStore'> & {
+type SelectableGridItemProps = Pick<SelectableGridProps, 'getItem' | 'selectableStore'> & {
   index: number
   item: any
 }

@@ -19,9 +19,9 @@ export const StatusBar = gloss(View, {
   overflow: 'hidden',
   alignItems: 'center',
   // backdropFilter: 'blur(10px)',
-}).theme((_, theme) => ({
-  background: theme.background.setAlpha(0.97),
-  borderTop: [1, theme.borderColor.setAlpha(a => a * 0.75)],
+}).theme(props => ({
+  background: props.background.setAlpha(0.97),
+  borderTop: [1, props.borderColor.setAlpha(a => a * 0.75)],
   boxShadow: [[0, 0, 10, [0, 0, 0, 0.06]]],
 }))
 

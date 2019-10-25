@@ -3,7 +3,7 @@ import { BuildStatusModel } from '@o/models'
 import { App } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Stack, StackProps, SurfacePassProps, View } from '@o/ui'
 import { useReaction } from '@o/use-store'
-import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
+import { FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react'
 import { useRef } from 'react'
 
@@ -29,7 +29,6 @@ export const OrbitHeader = memo(() => {
   const containerRef = useRef()
   const { focusedApp, zoomedIn } = headerStore.useStore().paneState
   const orbitStore = useOrbitStore()
-  const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()
   const appRole = useReaction(() => App.appRole)
 
@@ -99,7 +98,7 @@ export const OrbitHeader = memo(() => {
               direction="horizontal"
               space
               alignItems="center"
-              {...!isOnTearablePane && zoomedIn && { pointerEvents: 'none', opacity: 0.3 }}
+              {...(!isOnTearablePane && zoomedIn && { pointerEvents: 'none', opacity: 0.3 })}
             >
               {/* <a
                 href="#"
@@ -146,7 +145,7 @@ export const OrbitHeader = memo(() => {
       </HeaderTop>
       {/* this stays slightly below the active tab and looks nice */}
       <BorderBottom
-        borderColor={(isDeveloping && theme.headerBorderBottom) || theme.borderColor}
+        borderColor={theme => theme.headerBorderBottom || theme.borderColor}
         zIndex={0}
         opacity={0.5}
       />
@@ -175,9 +174,9 @@ const OrbitDockOpenButton = memo(() => {
           onMouseEnter={orbitDock.hoverEnter}
           onMouseLeave={orbitDock.hoverLeave}
           onClick={orbitDock.onClickDockOpen}
-          {...orbitDock.state === 'pinned' && {
+          {...(orbitDock.state === 'pinned' && {
             background: [0, 0, 0, 0.3],
-          }}
+          })}
           zIndex={2}
         />
       </HeaderButtonPassProps>
@@ -190,7 +189,7 @@ const OrbitDockOpenButton = memo(() => {
   )
 })
 
-const OpenButtonExtraArea = gloss<BoxProps & { isOpen: boolean }>({
+const OpenButtonExtraArea = gloss<{ isOpen: boolean }>({
   position: 'absolute',
   left: 0,
   right: -100,
@@ -280,8 +279,8 @@ const OrbitHeaderContainer = gloss<any>(View, {
   transition: 'all ease 300ms',
   // above OrbitPageInnerChrome/DockBackground
   zIndex: 5,
-}).theme((props, theme) => ({
-  background: props.background || theme.headerBackground || theme.background,
+}).theme(props => ({
+  background: props.headerBackground,
 }))
 
 const HeaderSide = gloss<StackProps & { slim?: boolean }>(Stack, {
@@ -298,9 +297,6 @@ const HeaderSide = gloss<StackProps & { slim?: boolean }>(Stack, {
     minWidth: 'auto',
   },
 })
-HeaderSide.defaultProps = {
-  flexDirection: 'row',
-}
 
 const getMedia = q => window.matchMedia(q.slice(q.indexOf('(') - 1))
 
@@ -313,13 +309,14 @@ getMedia(mediaQueries.small).addListener(({ matches }) => {
 const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   zIndex: -1,
   transition: 'all ease-in 300ms',
-}).theme(({ isActive }, theme) => ({
-  // background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
-}))
+})
+// .theme(({ isActive }) => ({
+//   // background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
+// }))
 
 const HeaderContain = gloss<StackProps & { isActive?: boolean; isDeveloping: boolean }>(Stack, {
   flexDirection: 'row',
-  margin: ['auto', 0],
+  margin: 'auto',
   alignItems: 'center',
   width: '67%',
   minWidth: 650,
@@ -331,8 +328,8 @@ const HeaderContain = gloss<StackProps & { isActive?: boolean; isDeveloping: boo
     minWidth: 'auto',
     margin: 'auto',
   },
-}).theme(({ isActive }, theme) => ({
-  background: isActive ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075] : 'none',
+}).theme(theme => ({
+  background: theme.isActive ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075] : 'none',
 }))
 
 const HeaderTop = gloss(View, {

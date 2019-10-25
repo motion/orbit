@@ -1,4 +1,4 @@
-import { CompiledTheme, ThemeProvide } from 'gloss'
+import { CompiledTheme, GlossRoot, Theme, ThemeProvide } from 'gloss'
 import React from 'react'
 
 import { ProvideDraggable } from './Draggable'
@@ -17,22 +17,26 @@ export type ProvideUIProps = {
 
 export const ProvideUI = (props: ProvideUIProps) => {
   return (
-    <ProvideHighlight>
-      <ThemeProvide activeTheme={props.activeTheme} themes={props.themes}>
-        <ProvideDraggable>
-          <ProvideSearch query="">
-            <ProvideVisibility visible={true}>
-              <ProvideFocus focused={true}>
-                <ProvideShortcut>
-                  <ProvideFocusManager>
-                    <ProvideShare>{props.children}</ProvideShare>
-                  </ProvideFocusManager>
-                </ProvideShortcut>
-              </ProvideFocus>
-            </ProvideVisibility>
-          </ProvideSearch>
-        </ProvideDraggable>
-      </ThemeProvide>
-    </ProvideHighlight>
+    <GlossRoot>
+      <ProvideHighlight>
+        <ThemeProvide activeTheme={props.activeTheme} themes={props.themes}>
+          <Theme scale={1}>
+            <ProvideDraggable>
+              <ProvideSearch query="">
+                <ProvideVisibility visible={true}>
+                  <ProvideFocus focused={true}>
+                    <ProvideShortcut>
+                      <ProvideFocusManager>
+                        <ProvideShare>{props.children}</ProvideShare>
+                      </ProvideFocusManager>
+                    </ProvideShortcut>
+                  </ProvideFocus>
+                </ProvideVisibility>
+              </ProvideSearch>
+            </ProvideDraggable>
+          </Theme>
+        </ThemeProvide>
+      </ProvideHighlight>
+    </GlossRoot>
   )
 }

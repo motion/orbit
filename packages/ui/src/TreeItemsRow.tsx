@@ -1,18 +1,18 @@
+import { Box, gloss, ThemeFn } from 'gloss'
+import * as React from 'react'
+
+import { colors } from './helpers/colors'
+import { Icon } from './Icon'
+import { Image } from './Image'
+import { Text, TextProps } from './text/Text'
+import { TreeItem, TreeItemID } from './Tree'
+
 /**
  * Copyright 2018-present Facebook.
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
-import { gloss, Box, BoxProps } from 'gloss'
-import * as React from 'react'
-import { colors } from './helpers/colors'
-import { Icon } from './Icon'
-import { Image } from './Image'
-import { Text } from './text/Text'
-import { TreeItem, TreeItemID } from './Tree'
-
 type TreeItemsRowProps = {
   id: TreeItemID
   level: number
@@ -25,7 +25,7 @@ type TreeItemsRowProps = {
   onTreeItemHovered?: (key: TreeItemID | null) => void
   childrenCount: number
   style?: Object
-  height: number
+  height: number | string
 }
 
 export class TreeItemsRow extends React.PureComponent<TreeItemsRowProps> {
@@ -144,7 +144,7 @@ export class TreeItemsRow extends React.PureComponent<TreeItemsRowProps> {
           {line}
           {arrow}
         </TreeItemsRowDecoration>
-        <NoShrinkText code={true}>
+        <NoShrinkText>
           {decoration}
           <PartialHighlight
             content={element.name}
@@ -158,19 +158,17 @@ export class TreeItemsRow extends React.PureComponent<TreeItemsRowProps> {
   }
 }
 
-const backgroundColor = (props, theme) => {
+const backgroundTheme: ThemeFn = props => {
+  let background
   if (props.selected) {
-    return theme.backgroundHighlight || theme.backgroundActive || theme.background
+    background = props.backgroundHighlight || props.backgroundActive || props.background
   } else if (props.even) {
-    return theme.backgroundZebra
-  } else {
-    return ''
+    background = props.backgroundZebra
   }
+  return { background }
 }
 
-const TreeItemsRowContainer = gloss<
-  BoxProps & { selected?: boolean; level?: number; even?: boolean }
->(Box, {
+const TreeItemsRowContainer = gloss<{ selected?: boolean; level?: number; even?: boolean }>(Box, {
   flexDirection: 'row',
   alignItems: 'center',
   flexShrink: 0,
@@ -178,17 +176,15 @@ const TreeItemsRowContainer = gloss<
   minWidth: '100%',
   paddingRight: 20,
   position: 'relative',
-}).theme((props, theme) => {
+}).theme(backgroundTheme, props => {
   return {
-    height: props.height,
-    background: backgroundColor(props, theme),
     color: props.selected ? colors.white : colors.grapeDark3,
     paddingLeft: (props.level - 1) * 12,
     '& *': {
       color: props.selected ? `${colors.white} !important` : '',
     },
-    '&:hover': {
-      background: props.selected ? theme.backgroundHighlightHover : theme.backgroundHover,
+    hoverStyle: {
+      background: props.selected ? props.backgroundHighlightHover : props.backgroundHover,
     },
   }
 })
@@ -235,7 +231,7 @@ class TreeItemsRowAttribute extends React.PureComponent<{
   render() {
     const { name, value, matchingSearchQuery, selected } = this.props
     return (
-      <TreeItemsRowAttributeContainer code={true}>
+      <TreeItemsRowAttributeContainer>
         <TreeItemsRowAttributeKey>{name}</TreeItemsRowAttributeKey>=
         <TreeItemsRowAttributeValue>
           <PartialHighlight
@@ -260,16 +256,19 @@ const TreeItemsRowDecoration = gloss(Box, {
   top: -1,
 })
 
-const TreeItemsLine = gloss<{ height: number; childrenCount: number }>(Box, {
+const TreeItemsLine = gloss<{ height: number | string; childrenCount: number }>(Box, {
   position: 'absolute',
   right: 3,
   zIndex: 2,
   width: 2,
   borderRadius: '999em',
-}).theme(({ height, childrenCount }, theme) => ({
-  top: height - 3,
-  height: childrenCount * height - 4,
-  background: theme.borderColor,
+}).theme(props => ({
+  // TODO can we make this work with calculated values?
+  top: 0,
+  height: props.height,
+  // top: props.height - 3,
+  // height: props.childrenCount * props.height - 4,
+  background: props.borderColor,
 }))
 
 const DecorationImage = gloss(Image, {
@@ -278,7 +277,7 @@ const DecorationImage = gloss(Image, {
   width: 12,
 })
 
-const NoShrinkText = gloss(Text, {
+const NoShrinkText = gloss<TextProps>(Text, {
   flexShrink: 0,
   flexWrap: 'nowrap',
   overflow: 'hidden',
@@ -287,20 +286,19 @@ const NoShrinkText = gloss(Text, {
 })
 
 const TreeItemsRowAttributeContainer = gloss(NoShrinkText, {
-  color: colors.dark80,
   fontWeight: 300,
   marginLeft: 5,
 })
 
 const TreeItemsRowAttributeKey = gloss(Box, {
-  color: colors.tomato,
+  color: 'red',
 })
 
 const TreeItemsRowAttributeValue = gloss(Box, {
-  color: colors.slateDark3,
+  color: 'yellow',
 })
 
-const HighlightedText = gloss<any>(Box).theme(({ selected }, theme) => ({
-  backgroundColor: theme.backgroundZebra,
-  color: selected ? `${colors.grapeDark3} !important` : 'auto',
+const HighlightedText = gloss<{ selected?: boolean }>(Box).theme(props => ({
+  backgroundColor: props.backgroundZebra,
+  color: props.selected ? `${props.colorHighlight.toCSS()} !important` : 'auto',
 }))

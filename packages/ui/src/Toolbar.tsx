@@ -44,7 +44,7 @@ export function Toolbar({
       borderPosition="outside"
     >
       <ToolbarRow elevation={elevation} padding={size} hoverStyle={false} {...props}>
-        {border !== false && borderElement[attach]}
+        {!!border && borderElement[attach]}
         <Stack direction="horizontal" flex={1} space={size}>
           {children}
         </Stack>
@@ -58,6 +58,6 @@ const ToolbarRow = gloss<ToolbarProps>(Stack, {
   alignItems: 'center',
   width: '100%',
   position: 'relative',
-}).theme((props, theme) => ({
-  background: props.background || theme.backgroundStrong,
+}).theme(props => ({
+  background: props.backgroundStrong,
 }))

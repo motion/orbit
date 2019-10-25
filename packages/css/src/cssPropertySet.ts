@@ -781,19 +781,16 @@ export type svgLength = string | number
 export type svgWritingMode = 'lr-tb' | 'rl-tb' | 'tb-rl' | 'lr' | 'rl' | 'tb'
 
 // allows functional or non-functional
+export type CSSPropertyValThemeFn<A = any> = (theme: ThemeObject, props: any) => A
+
 type CSSPropertyVal<Val, IsFunctional> = IsFunctional extends false
-  ? Val | 'inherit' | 'initial' | false
-  :
-      | Val
-      | 'inherit'
-      | 'initial'
-      | false
-      | ((theme: ThemeObject) => Val)
-      | ((theme: ThemeObject, props: any) => Val)
+  ? Val | 'inherit' | 'initial'
+  : Val | 'inherit' | 'initial' | CSSPropertyValThemeFn<Val>
 
 export type GenerateCSSPropertySet<A extends true | false> = {
   alignContent?: CSSPropertyVal<alignContent, A>
   alignItems?: CSSPropertyVal<alignItems, A>
+  alignmentBaseline?: CSSPropertyVal<alignmentBaseline, A>
   alignSelf?: CSSPropertyVal<alignSelf, A>
   all?: CSSPropertyVal<all, A>
   animation?: CSSPropertyVal<animation, A>
@@ -821,6 +818,8 @@ export type GenerateCSSPropertySet<A extends true | false> = {
   backgroundPositionY?: CSSPropertyVal<backgroundPositionY, A>
   backgroundRepeat?: CSSPropertyVal<backgroundRepeat, A>
   backgroundSize?: CSSPropertyVal<backgroundSize, A>
+  baselineShift?: CSSPropertyVal<baselineShift, A>
+  behavior?: CSSPropertyVal<behavior, A>
   blockSize?: CSSPropertyVal<blockSize, A>
   border?: CSSPropertyVal<border, A>
   borderBlockEnd?: CSSPropertyVal<borderBlockEnd, A>
@@ -891,6 +890,7 @@ export type GenerateCSSPropertySet<A extends true | false> = {
   clear?: CSSPropertyVal<clear, A>
   clip?: CSSPropertyVal<clip, A>
   clipPath?: CSSPropertyVal<clipPath, A>
+  clipRule?: CSSPropertyVal<clipRule, A>
   color?: CSSPropertyVal<ColorLike, A>
   columnCount?: CSSPropertyVal<columnCount, A>
   columnFill?: CSSPropertyVal<columnFill, A>
@@ -899,20 +899,27 @@ export type GenerateCSSPropertySet<A extends true | false> = {
   columnRuleColor?: CSSPropertyVal<columnRuleColor, A>
   columnRuleStyle?: CSSPropertyVal<columnRuleStyle, A>
   columnRuleWidth?: CSSPropertyVal<columnRuleWidth, A>
+  columns?: CSSPropertyVal<columns, A>
   columnSpan?: CSSPropertyVal<columnSpan, A>
   columnWidth?: CSSPropertyVal<columnWidth, A>
-  columns?: CSSPropertyVal<columns, A>
   contain?: CSSPropertyVal<contain, A>
   content?: CSSPropertyVal<content, A>
   counterIncrement?: CSSPropertyVal<counterIncrement, A>
   counterReset?: CSSPropertyVal<counterReset, A>
+  cue?: CSSPropertyVal<cue, A>
+  cueAfter?: CSSPropertyVal<cueAfter, A>
+  cueBefore?: CSSPropertyVal<cueBefore, A>
   cursor?: CSSPropertyVal<cursor, A>
   direction?: CSSPropertyVal<direction, A>
   display?: CSSPropertyVal<display, A>
   displayInside?: CSSPropertyVal<displayInside, A>
   displayList?: CSSPropertyVal<displayList, A>
   displayOutside?: CSSPropertyVal<displayOutside, A>
+  dominantBaseline?: CSSPropertyVal<dominantBaseline, A>
   emptyCells?: CSSPropertyVal<emptyCells, A>
+  fill?: CSSPropertyVal<fill, A>
+  fillOpacity?: CSSPropertyVal<fillOpacity, A>
+  fillRule?: CSSPropertyVal<fillRule, A>
   filter?: CSSPropertyVal<filter, A>
   flex?: CSSPropertyVal<flex, A>
   flexBasis?: CSSPropertyVal<flexBasis, A>
@@ -940,6 +947,8 @@ export type GenerateCSSPropertySet<A extends true | false> = {
   fontVariantNumeric?: CSSPropertyVal<fontVariantNumeric, A>
   fontVariantPosition?: CSSPropertyVal<fontVariantPosition, A>
   fontWeight?: CSSPropertyVal<fontWeight, A>
+  glyphOrientationHorizontal?: CSSPropertyVal<glyphOrientationHorizontal, A>
+  glyphOrientationVertical?: CSSPropertyVal<glyphOrientationVertical, A>
   grid?: CSSPropertyVal<grid, A>
   gridArea?: CSSPropertyVal<gridArea, A>
   gridAutoColumns?: CSSPropertyVal<gridAutoColumns, A>
@@ -969,6 +978,7 @@ export type GenerateCSSPropertySet<A extends true | false> = {
   inlineSize?: CSSPropertyVal<inlineSize, A>
   isolation?: CSSPropertyVal<isolation, A>
   justifyContent?: CSSPropertyVal<justifyContent, A>
+  kerning?: CSSPropertyVal<kerning, A>
   left?: CSSPropertyVal<number | string, A>
   letterSpacing?: CSSPropertyVal<letterSpacing, A>
   lineBreak?: CSSPropertyVal<lineBreak, A>
@@ -981,12 +991,18 @@ export type GenerateCSSPropertySet<A extends true | false> = {
   marginBlockEnd?: CSSPropertyVal<marginBlockEnd, A>
   marginBlockStart?: CSSPropertyVal<marginBlockStart, A>
   marginBottom?: CSSPropertyVal<marginBottom, A>
+  marginH?: CSSPropertyVal<number | string, A>
   marginInlineEnd?: CSSPropertyVal<marginInlineEnd, A>
   marginInlineStart?: CSSPropertyVal<marginInlineStart, A>
   marginLeft?: CSSPropertyVal<marginLeft, A>
   marginRight?: CSSPropertyVal<marginRight, A>
   marginTop?: CSSPropertyVal<marginTop, A>
+  marginV?: CSSPropertyVal<number | string, A>
+  marker?: CSSPropertyVal<marker, A>
+  markerEnd?: CSSPropertyVal<markerEnd, A>
+  markerMid?: CSSPropertyVal<markerMid, A>
   markerOffset?: CSSPropertyVal<markerOffset, A>
+  markerStart?: CSSPropertyVal<markerStart, A>
   mask?: CSSPropertyVal<mask, A>
   maskClip?: CSSPropertyVal<maskClip, A>
   maskComposite?: CSSPropertyVal<maskComposite, A>
@@ -1033,29 +1049,34 @@ export type GenerateCSSPropertySet<A extends true | false> = {
   paddingBlockEnd?: CSSPropertyVal<paddingBlockEnd, A>
   paddingBlockStart?: CSSPropertyVal<paddingBlockStart, A>
   paddingBottom?: CSSPropertyVal<paddingBottom, A>
+  paddingH?: CSSPropertyVal<number | string, A>
   paddingInlineEnd?: CSSPropertyVal<paddingInlineEnd, A>
   paddingInlineStart?: CSSPropertyVal<paddingInlineStart, A>
   paddingLeft?: CSSPropertyVal<paddingLeft, A>
   paddingRight?: CSSPropertyVal<paddingRight, A>
   paddingTop?: CSSPropertyVal<paddingTop, A>
-  paddingH?: CSSPropertyVal<number | string, A>
   paddingV?: CSSPropertyVal<number | string, A>
-  marginH?: CSSPropertyVal<number | string, A>
-  marginV?: CSSPropertyVal<number | string, A>
   pageBreakAfter?: CSSPropertyVal<pageBreakAfter, A>
   pageBreakBefore?: CSSPropertyVal<pageBreakBefore, A>
   pageBreakInside?: CSSPropertyVal<pageBreakInside, A>
+  pause?: CSSPropertyVal<pause, A>
+  pauseAfter?: CSSPropertyVal<pauseAfter, A>
+  pauseBefore?: CSSPropertyVal<pauseBefore, A>
   perspective?: CSSPropertyVal<perspective, A>
   perspectiveOrigin?: CSSPropertyVal<perspectiveOrigin, A>
   pointerEvents?: CSSPropertyVal<pointerEvents, A>
   position?: CSSPropertyVal<position, A>
   quotes?: CSSPropertyVal<quotes, A>
   resize?: CSSPropertyVal<resize, A>
+  rest?: CSSPropertyVal<rest, A>
+  restAfter?: CSSPropertyVal<restAfter, A>
+  restBefore?: CSSPropertyVal<restBefore, A>
   right?: CSSPropertyVal<number | string, A>
   rubyAlign?: CSSPropertyVal<rubyAlign, A>
   rubyMerge?: CSSPropertyVal<rubyMerge, A>
   rubyPosition?: CSSPropertyVal<rubyPosition, A>
   scrollBehavior?: CSSPropertyVal<scrollBehavior, A>
+  scrollSnapAlign?: CSSPropertyVal<scrollSnapAlign, A>
   scrollSnapCoordinate?: CSSPropertyVal<scrollSnapCoordinate, A>
   scrollSnapDestination?: CSSPropertyVal<scrollSnapDestination, A>
   scrollSnapPointsX?: CSSPropertyVal<scrollSnapPointsX, A>
@@ -1063,14 +1084,26 @@ export type GenerateCSSPropertySet<A extends true | false> = {
   scrollSnapType?: CSSPropertyVal<scrollSnapType, A>
   scrollSnapTypeX?: CSSPropertyVal<scrollSnapTypeX, A>
   scrollSnapTypeY?: CSSPropertyVal<scrollSnapTypeY, A>
-  scrollSnapAlign?: CSSPropertyVal<scrollSnapAlign, A>
   shapeImageThreshold?: CSSPropertyVal<shapeImageThreshold, A>
   shapeMargin?: CSSPropertyVal<shapeMargin, A>
   shapeOutside?: CSSPropertyVal<shapeOutside, A>
-  tabSize?: CSSPropertyVal<tabSize, A>
+  shapeRendering?: CSSPropertyVal<shapeRendering, A>
+  speak?: CSSPropertyVal<speak, A>
+  speakAs?: CSSPropertyVal<speakAs, A>
+  src?: CSSPropertyVal<src, A>
+  stroke?: CSSPropertyVal<stroke, A>
+  strokeDasharray?: CSSPropertyVal<strokeDasharray, A>
+  strokeDashoffset?: CSSPropertyVal<strokeDashoffset, A>
+  strokeLinecap?: CSSPropertyVal<strokeLinecap, A>
+  strokeLinejoin?: CSSPropertyVal<strokeLinejoin, A>
+  strokeMiterlimit?: CSSPropertyVal<strokeMiterlimit, A>
+  strokeOpacity?: CSSPropertyVal<strokeOpacity, A>
+  strokeWidth?: CSSPropertyVal<strokeWidth, A>
   tableLayout?: CSSPropertyVal<tableLayout, A>
+  tabSize?: CSSPropertyVal<tabSize, A>
   textAlign?: CSSPropertyVal<textAlign, A>
   textAlignLast?: CSSPropertyVal<textAlignLast, A>
+  textAnchor?: CSSPropertyVal<textAnchor, A>
   textCombineUpright?: CSSPropertyVal<textCombineUpright, A>
   textDecoration?: CSSPropertyVal<textDecoration, A>
   textDecorationColor?: CSSPropertyVal<textDecorationColor, A>
@@ -1101,9 +1134,20 @@ export type GenerateCSSPropertySet<A extends true | false> = {
   transitionProperty?: CSSPropertyVal<transitionProperty, A>
   transitionTimingFunction?: CSSPropertyVal<transitionTimingFunction, A>
   unicodeBidi?: CSSPropertyVal<unicodeBidi, A>
+  unicodeRange?: CSSPropertyVal<unicodeRange, A>
   userSelect?: CSSPropertyVal<userSelect, A>
   verticalAlign?: CSSPropertyVal<verticalAlign, A>
   visibility?: CSSPropertyVal<visibility, A>
+  voiceBalance?: CSSPropertyVal<voiceBalance, A>
+  voiceDuration?: CSSPropertyVal<voiceDuration, A>
+  voiceFamily?: CSSPropertyVal<voiceFamily, A>
+  voicePitch?: CSSPropertyVal<voicePitch, A>
+  voiceRange?: CSSPropertyVal<voiceRange, A>
+  voiceRate?: CSSPropertyVal<voiceRate, A>
+  voiceStress?: CSSPropertyVal<voiceStress, A>
+  voiceVolume?: CSSPropertyVal<voiceVolume, A>
+  WebkitAppRegion?: string
+  WebkitFontSmoothing?: string
   whiteSpace?: CSSPropertyVal<whiteSpace, A>
   widows?: CSSPropertyVal<widows, A>
   width?: CSSPropertyVal<number | string, A>
@@ -1113,55 +1157,7 @@ export type GenerateCSSPropertySet<A extends true | false> = {
   wordWrap?: CSSPropertyVal<wordWrap, A>
   writingMode?: CSSPropertyVal<writingMode, A>
   zIndex?: CSSPropertyVal<zIndex, A>
-  alignmentBaseline?: CSSPropertyVal<alignmentBaseline, A>
-  baselineShift?: CSSPropertyVal<baselineShift, A>
-  behavior?: CSSPropertyVal<behavior, A>
-  clipRule?: CSSPropertyVal<clipRule, A>
-  cue?: CSSPropertyVal<cue, A>
-  cueAfter?: CSSPropertyVal<cueAfter, A>
-  cueBefore?: CSSPropertyVal<cueBefore, A>
-  dominantBaseline?: CSSPropertyVal<dominantBaseline, A>
-  fill?: CSSPropertyVal<fill, A>
-  fillOpacity?: CSSPropertyVal<fillOpacity, A>
-  fillRule?: CSSPropertyVal<fillRule, A>
-  glyphOrientationHorizontal?: CSSPropertyVal<glyphOrientationHorizontal, A>
-  glyphOrientationVertical?: CSSPropertyVal<glyphOrientationVertical, A>
-  kerning?: CSSPropertyVal<kerning, A>
-  marker?: CSSPropertyVal<marker, A>
-  markerEnd?: CSSPropertyVal<markerEnd, A>
-  markerMid?: CSSPropertyVal<markerMid, A>
-  markerStart?: CSSPropertyVal<markerStart, A>
-  pause?: CSSPropertyVal<pause, A>
-  pauseAfter?: CSSPropertyVal<pauseAfter, A>
-  pauseBefore?: CSSPropertyVal<pauseBefore, A>
-  rest?: CSSPropertyVal<rest, A>
-  restAfter?: CSSPropertyVal<restAfter, A>
-  restBefore?: CSSPropertyVal<restBefore, A>
-  shapeRendering?: CSSPropertyVal<shapeRendering, A>
-  src?: CSSPropertyVal<src, A>
-  speak?: CSSPropertyVal<speak, A>
-  speakAs?: CSSPropertyVal<speakAs, A>
-  stroke?: CSSPropertyVal<stroke, A>
-  strokeDasharray?: CSSPropertyVal<strokeDasharray, A>
-  strokeDashoffset?: CSSPropertyVal<strokeDashoffset, A>
-  strokeLinecap?: CSSPropertyVal<strokeLinecap, A>
-  strokeLinejoin?: CSSPropertyVal<strokeLinejoin, A>
-  strokeMiterlimit?: CSSPropertyVal<strokeMiterlimit, A>
-  strokeOpacity?: CSSPropertyVal<strokeOpacity, A>
-  strokeWidth?: CSSPropertyVal<strokeWidth, A>
-  textAnchor?: CSSPropertyVal<textAnchor, A>
-  unicodeRange?: CSSPropertyVal<unicodeRange, A>
-  voiceBalance?: CSSPropertyVal<voiceBalance, A>
-  voiceDuration?: CSSPropertyVal<voiceDuration, A>
-  voiceFamily?: CSSPropertyVal<voiceFamily, A>
-  voicePitch?: CSSPropertyVal<voicePitch, A>
-  voiceRange?: CSSPropertyVal<voiceRange, A>
-  voiceRate?: CSSPropertyVal<voiceRate, A>
-  voiceStress?: CSSPropertyVal<voiceStress, A>
-  voiceVolume?: CSSPropertyVal<voiceVolume, A>
   zoom?: CSSPropertyVal<zoom, A>
-  WebkitAppRegion?: string
-  WebkitFontSmoothing?: string
 }
 
 export type GlossCSSProperties = {

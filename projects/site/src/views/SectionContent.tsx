@@ -2,7 +2,7 @@ import { View, ViewProps } from '@o/ui'
 import { gloss } from 'gloss'
 import React from 'react'
 
-import * as Constants from '../constants'
+import { mediaQueries, sidePad, widths } from '../constants'
 
 export type SectionContentProps = ViewProps & {
   outside?: React.ReactNode
@@ -25,9 +25,9 @@ export const SectionContent = ({
   ...props
 }: SectionContentProps) => {
   return (
-    <Section
+    <BlogSection
       zIndex={zIndex}
-      background={background}
+      background={background || 'transparent'}
       padding={padding}
       height={height}
       flex={flex}
@@ -38,31 +38,35 @@ export const SectionContent = ({
       <SectionContentChrome flex={flex} readablePage={readablePage} {...props}>
         {children}
       </SectionContentChrome>
-    </Section>
+    </BlogSection>
   )
 }
 
-const Section = gloss(View, {
+const BlogSection = gloss(View, {
   width: '100%',
   position: 'relative',
   alignItems: 'center',
 })
 
-export const SectionContentChrome = gloss<ViewProps & { readablePage?: boolean }>(View, {
+export const SectionContentChrome = gloss<{ readablePage?: boolean }, ViewProps>(View, {
   minHeight: '100%',
   maxHeight: '100%',
   // alignItems: 'center',
   width: '100%',
-  maxWidth: Constants.widths.lg,
-  paddingLeft: Constants.sidePad,
-  paddingRight: Constants.sidePad,
+  maxWidth: '100vw',
+  paddingLeft: sidePad,
+  paddingRight: sidePad,
   position: 'relative',
 
   readablePage: {
-    maxWidth: Constants.widths.md,
+    maxWidth: widths.md,
   },
 
-  [Constants.mediaQueries.sm]: {
+  [mediaQueries.lg]: {
+    maxWidth: widths.lg,
+  },
+
+  [mediaQueries.sm]: {
     width: '100%',
     minWidth: 'auto',
     maxWidth: 'auto',

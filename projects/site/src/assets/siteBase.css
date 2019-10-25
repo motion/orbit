@@ -1,5 +1,5 @@
 /* Site theme stuff  */
-main a {
+p a {
   color: #8c60f8;
   text-decoration: none;
   font-weight: 600;
@@ -14,21 +14,12 @@ svg {
   transform: translateZ(0);
 }
 
-main a:hover {
+p a:hover {
   color: #a07ff7;
 }
 
 .token-line {
   display: block;
-}
-
-.theme-dark .body-text,
-.theme-home .body-text {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.theme-light .body-text {
-  color: rgba(0, 0, 0, 0.9);
 }
 
 .orbit-example-section > * {
@@ -42,6 +33,10 @@ main a:hover {
 .orbit-example pre {
   min-height: 100%;
   box-sizing: border-box;
+}
+
+.ui-title {
+  font-family: 'GTEesti', Helvetica, Arial, sans-serif;
 }
 
 /* HTML */
@@ -68,6 +63,10 @@ body {
   font-feature-settings: 'liga', 'kern';
   text-rendering: optimizelegibility;
   -webkit-font-smoothing: subpixel-antialiased;
+}
+
+body * {
+  outline: 0;
 }
 
 .main-contents {
@@ -267,15 +266,17 @@ select:-webkit-autofill:focus {
   text-shadow: none;
 }
 
-*::selection {
-  background: ##8c60f8;
+.theme-home *::selection,
+.theme-dark *::selection {
+  background: rgba(100, 100, 100, 0.45);
   color: #fff;
   text-shadow: none;
 }
 
-.theme-home *::selection,
-.theme-dark *::selection {
-  background: rgba(100, 100, 100, 0.45);
+*::selection,
+.theme-docsPageTheme *::selection,
+.theme-light *::selection {
+  background: #8c60f8;
   color: #fff;
   text-shadow: none;
 }

@@ -1,5 +1,5 @@
 import { isDefined, selectDefined } from '@o/utils'
-import { Base, Theme } from 'gloss'
+import { Flex } from 'gloss'
 import React, { useRef } from 'react'
 
 import { BorderBottom } from './Border'
@@ -83,6 +83,7 @@ export const useSectionProps = useProps
 const defaultTitlePaddingAmount = [1.5, 1, 0]
 
 export function Section(direct: SectionProps) {
+  // @ts-ignore deep
   const allProps = useProps(direct)
   const [collapseProps, props] = splitCollapseProps(allProps)
   const {
@@ -173,36 +174,34 @@ export function Section(direct: SectionProps) {
 
     titleEl = (
       <Scale size={titleScale}>
-        <Theme coat="flat">
-          <TitleRow
-            backgrounded={selectDefined(backgrounded, bordered)}
-            title={title}
-            subTitle={subTitle}
-            after={afterTitle}
-            above={above}
-            before={beforeTitle}
-            below={belowTitle || <Space size={defaultTitlePaddingAmount[2] || spaceSizePx} />}
-            icon={icon}
-            userSelect="none"
-            space={spaceSizePx / 2}
-            padding={titlePaddingFinal}
-            // avoid double pad between content/title padding
-            paddingBottom={padding === true && titlePadding === undefined ? 0 : undefined}
-            size={selectDefined(titleSize, size)}
-            titleProps={titleProps}
-            useCollapse={collapse}
-            {...adjustPadProps}
-          />
-        </Theme>
+        <TitleRow
+          backgrounded={selectDefined(backgrounded, bordered)}
+          title={title}
+          subTitle={subTitle}
+          after={afterTitle}
+          above={above}
+          before={beforeTitle}
+          below={belowTitle || <Space size={defaultTitlePaddingAmount[2] || spaceSizePx} />}
+          icon={icon}
+          userSelect="none"
+          space={spaceSizePx / 2}
+          padding={titlePaddingFinal}
+          // avoid double pad between content/title padding
+          paddingBottom={padding === true && titlePadding === undefined ? 0 : undefined}
+          size={selectDefined(titleSize, size)}
+          titleProps={titleProps}
+          useCollapse={collapse}
+          {...adjustPadProps}
+        />
       </Scale>
     )
 
     if (bordered || titleBorder) {
       titleEl = (
-        <Base position="relative">
+        <Flex position="relative">
           {titleEl}
-          {!!(bordered || titleBorder) && <BorderBottom opacity={0.5} />}
-        </Base>
+          {!!(bordered || titleBorder) && <BorderBottom />}
+        </Flex>
       )
     }
   }
@@ -210,8 +209,8 @@ export function Section(direct: SectionProps) {
   return (
     <Surface
       className={`ui-section ${className}`}
-      hoverStyle={null}
-      activeStyle={null}
+      hoverStyle={false}
+      activeStyle={false}
       sizeRadius={bordered ? 1 : 0}
       elevation={selectDefined(elevation, bordered ? 1 : 0)}
       borderWidth={bordered ? 1 : 0}
@@ -221,12 +220,14 @@ export function Section(direct: SectionProps) {
       flex={selectDefined(flex, !!scrollable ? 1 : undefined)}
       background={background || 'transparent'}
       // in case they change fast
-      style={{
-        height,
-        width: width as any,
-        maxHeight,
-        maxWidth,
-      }}
+      style={
+        {
+          height,
+          width,
+          maxHeight,
+          maxWidth,
+        } as any
+      }
       minHeight={minHeight}
       borderRadius={borderRadius}
       overflow={selectDefined(

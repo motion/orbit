@@ -1,22 +1,23 @@
 import { GlossPropertySet } from '@o/css'
 import { MotionProps, MotionTransform, Transition } from 'framer-motion'
-import { AlphaColorProps, CSSPropertySet, CSSPropertySetStrict, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
+import { AlphaColorProps, CommonHTMLProps, CSSPropertySet, CSSPropertySetStrict, GlossProps } from 'gloss'
 import React from 'react'
 
 import { AnimationStore } from '../Geometry'
 import { Size } from '../Space'
+import { TextSizeProps } from '../text/textSizeTheme'
 import { CommonViewProps } from './CommonViewProps'
 import { ElevatableProps } from './elevation'
+import { MarginProps } from './marginTheme'
 import { PaddingProps } from './PaddedView'
-import { MarginProps } from './View'
 
 /**
  * The types here prevent cycles, we have a few between PaddedView/ScrollbaleView/View if not
  */
 
 // these are used to filter out all the "excess" props for docs generation
+// TODO why am i not seeing this in grep?
 export type BaseViewProps = CommonHTMLProps & CommonViewProps
-
 export const BaseViewProps = (props: BaseViewProps) => props.children
 export const BaseCSSProps = (props: CSSPropertySet) => props.children
 
@@ -29,60 +30,17 @@ export type SizesObject = {
   y?: Size
 }
 
-// TODO further simplify and standardize props, instead of using HTML props
-// so we move them more towards native like react-native-web
-// for now adapted from gloss/Base.tsx
-type CommonHTMLProps = Omit<
-  React.HTMLAttributes<HTMLDivElement>,
-  | 'title'
-  | 'about'
-  | 'accessKey'
-  | 'autoCapitalize'
-  | 'autoCorrect'
-  | 'autoSave'
-  | 'vocab'
-  | 'typeof'
-  | 'suppressHydrationWarning'
-  | 'suppressContentEditableWarning'
-  | 'spellCheck'
-  | 'security'
-  | 'slot'
-  | 'results'
-  | 'resource'
-  | 'prefix'
-  | 'property'
-  | 'radioGroup'
-  | 'contextMenu'
-  | 'dir'
-  | 'datatype'
-  | 'inlist'
-  | 'itemID'
-  | 'lang'
-  | 'is'
-  | 'itemScope'
-  | 'inputMode'
-  | 'color'
-  | 'size'
->
-
-type MotionCompatCommonProps = Omit<
-  CommonHTMLProps,
-  'onDrag' | 'onDragStart' | 'onDragEnd' | 'style'
->
-
 export type OrbitMotionTransform = {
   [P in keyof MotionTransform]: MotionTransform[P] | AnimationStore
 }
 
-export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
-  PseudoStyleProps &
-  TextSizeProps &
+export type ViewBaseProps = TextSizeProps &
   AlphaColorProps &
   ElevatableProps &
   MarginProps &
   PaddingProps &
   /** Accept the motion props */
-  Omit<MotionProps, 'animate' | 'transition'> &
+  Omit<MotionProps, 'animate' | 'transition' | 'padding'> &
   OrbitMotionTransform & {
     // could make this better done in terms of type flow, its for <Input labels...
     label?: React.ReactNode
@@ -93,24 +51,39 @@ export type ViewBaseProps = GlossProps<MotionCompatCommonProps> &
 export type OrbitCSSPropertySet = Omit<CSSPropertySetStrict, 'margin' | 'padding' | 'transition'>
 
 // add in the AnimationStores for any prop (motion accepts it)
+// for now lets limit to not all to avoid pain in having to handle AnimationStore in many higher level views
+// for example Section wants to use height/maxHeight etc in style={{}} and not have to check every value
+// and we don't watn to animate height/maxHeight almost ever (layout problems) so dont do that
+// plus in general want to only animate things that aren't too expensive
+type ExtraAnimatableProperties =
+  | 'background'
+  | 'color'
+  | 'border'
+  | 'borderColor'
+  | 'backgroundColor'
+  | 'opacity'
+
 export type OrbitCSSPropertyAnimation = {
-  [P in keyof OrbitCSSPropertySet]: OrbitCSSPropertySet[P] | AnimationStore
+  [P in ExtraAnimatableProperties]?: OrbitCSSPropertySet[P] | AnimationStore
 }
 
-export type ViewProps = Omit<ViewBaseProps, 'direction'> &
+export type ViewPropsPlain = Omit<ViewBaseProps, 'direction'> &
   // be sure to omit margin/padding
   Omit<OrbitCSSPropertyAnimation, 'direction'> & {
     direction?: 'horizontal' | 'vertical' | OrbitCSSPropertySet['direction']
     transition?: CSSPropertySetStrict['transition'] | Transition
   }
 
+export type ViewProps = GlossProps<ViewPropsPlain>
+
 export type ViewThemeProps = ViewBaseProps & GlossPropertySet
 
 export type ViewCSSProps = GlossPropertySet
 
+export type ScrollablePropVal = boolean | 'x' | 'y'
+
 export type ScrollableViewProps = Omit<ViewProps, 'flexFlow'> & {
   hideScrollbars?: boolean
-  scrollable?: boolean | 'x' | 'y'
+  scrollable?: ScrollablePropVal
   parentSpacing?: Size
-  animated?: boolean
 }

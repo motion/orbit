@@ -25,8 +25,8 @@ export const Tag = memoIsEqualDeep(({ size = 0.9, ...props }: TagProps) => {
       alignItems="center"
       display="inline-flex"
       width="max-content"
-      hoverStyle={!!props.onClick}
-      activeStyle={!!props.onClick}
+      hoverStyle={!!props.onClick ? undefined : null}
+      activeStyle={!!props.onClick ? undefined : null}
       {...props}
     />
   )

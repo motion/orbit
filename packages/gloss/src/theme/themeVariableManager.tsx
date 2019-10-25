@@ -1,6 +1,9 @@
+import { cssValue, stringHash, validCSSAttr } from '@o/css'
+
 import { makeStyleTag } from '../stylesheet/makeStyleTag'
 import { CompiledTheme } from './createTheme'
-import { preProcessTheme } from './preProcessTheme'
+import { preProcessTheme, processThemeSubset } from './preProcessTheme'
+import { pseudoProps } from './pseudos'
 import { CurrentTheme } from './Theme'
 import { unwrapTheme } from './useTheme'
 
@@ -13,10 +16,13 @@ class ThemeVariableManager {
     return this.tag!.sheet! as CSSStyleSheet
   }
 
-  getThemeVariables(theme: CompiledTheme) {
-    let rules = ``
+  getThemeVariables(theme: CompiledTheme, rules = '') {
     for (const key in theme) {
       const val = theme[key]
+      if (pseudoProps[key]) {
+        rules += this.getThemeVariables(val)
+        continue
+      }
       if (val && val.cssVariable) {
         if (val.getCSSColorVariables) {
           // allows for nicer handling of alpha changes
@@ -24,8 +30,14 @@ class ThemeVariableManager {
           rules += `--${val.cssVariable}: ${rgba};`
           rules += `--${val.cssVariable}-rgb: ${rgb};`
         } else if (val.getCSSValue) {
-          const next = val.getCSSValue()
-          if (typeof next === 'string') {
+          let next = val.getCSSValue()
+          // parse using same gloss cssValue if valid
+          if (validCSSAttr[val] && typeof next !== 'string') {
+            next = cssValue(key, next, true, {
+              ignoreCSSVariables: true,
+            })
+          }
+          if (next) {
             rules += `--${val.cssVariable}: ${next};`
           }
         }
@@ -60,9 +72,6 @@ class ThemeVariableManager {
       const rules = this.getThemeVariables(theme)
       if (rules.length) {
         const rule = `${selector} { ${rules} }`
-        if (selector === 'theme-docsPageTheme' && rules.includes('background: linear')) {
-          debugger
-        }
         this.sheet.insertRule(rule)
       }
       if (theme.coats) {
@@ -94,28 +103,43 @@ class ThemeVariableManager {
   }
 
   mountSubThemeFromParent(parent: CompiledTheme, subThemeContext: CurrentTheme) {
-    let selectors = `.theme-${parent.name} .${this.getClassNames(subThemeContext.current)}`
+    const baseSelector = `.theme-${parent.name} .${this.getClassNames(subThemeContext.current)}`
+    let selectors = baseSelector
 
     // making sure css selectors bind strongly
-    const parentParent = subThemeContext.parentContext?.parentContext?.current
-    if (parentParent && parentParent.name !== parent.name) {
-      selectors += `, .theme-${parentParent.name} ${selectors}`
+    let parentParent = subThemeContext.parentContext
+    const parentChain: string[] = []
+    let last = parent.name
+    while (parentParent) {
+      const parentTheme = parentParent.current
+      parentParent = parentParent?.parentContext
+      if (parentTheme && parentTheme.name !== last) {
+        parentChain.unshift(`.theme-${parentTheme.name}`)
+        last = parentTheme.name
+        selectors += `, ${parentChain.join(' ')} ${baseSelector}`
+      }
     }
 
     let subTheme = subThemeContext.current
     // need to re-run select using new parent theme
-    if (subTheme._themeSubSelect) {
-      subTheme = preProcessTheme(
+    if (subTheme._subTheme) {
+      subTheme = processThemeSubset(
         {
           coat: subTheme._coatName,
-          themeSubSelect: subTheme._themeSubSelect,
+          subTheme: subTheme._subTheme,
         },
         parent,
-      )
+      )!
     }
+
+    if (this.mounted.has(subTheme)) {
+      return
+    }
+
     const subRules = this.getThemeVariables(subTheme)
+
     if (subRules.length) {
-      const rule = `${selectors} { ${subRules} }`
+      const rule = `${selectors} {${subRules}}`
       this.sheet.insertRule(rule)
     }
   }
@@ -142,6 +166,25 @@ class ThemeVariableManager {
       res.push(`sub-${theme._subThemeName}`)
     }
     return res.join('-')
+  }
+
+  mountVariables(variables: Object) {
+    try {
+      const className = `v${stringHash(JSON.stringify(variables))}`
+      let rules = ''
+      for (const key in variables) {
+        rules += `--${key}: ${variables[key]};`
+      }
+      this.sheet.insertRule(`.${className} {${rules}}`)
+      return className
+    } catch(err) {
+      console.error(`Error mounting variables: ${err.message}, variables:`, variables)
+      return ''
+    }
+  }
+
+  unmountVariables(_variables: Object) {
+    // todo, similar gc to gloss
   }
 }
 

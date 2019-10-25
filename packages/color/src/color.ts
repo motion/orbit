@@ -9,7 +9,7 @@ export interface ColorOptions {
   gradientType?: string
 }
 
-export type ColorInput = string | RGB | RGBA | HSL | HSLA | HSV | HSVA | Color
+export type ColorInput = string | RGB | RGBA | HSL | HSLA | HSV | HSVA | Color | number[]
 
 const emptyKey = ''
 
@@ -106,47 +106,33 @@ export class Color {
     const { r, g, b, a } = this.toRgb()
     return {
       rgb: `${r}, ${g}, ${b}`,
-      rgba: `${r}, ${g}, ${b}, ${a}`,
+      rgba: `rgba(${r}, ${g}, ${b}, ${a})`,
     }
   }
 
-  cssVariableSafeKeys = [
-    'toRgbValue',
-    'toRgbString',
-    'getCSSValue',
-    'cssVariable',
-    'getCSSColorVariables',
-    'cssUseRgb',
-    'cssUseAlpha',
-    'setAlpha',
-    'alpha',
-    'clone',
-    'r',
-    'g',
-    'b',
-    'toRgb',
-    'roundA',
-    'format',
-    'cacheToString',
-    'hash',
-    'valueOf',
-    'cssVariableSafeKeys',
-    'originalInput',
-    'isValid',
-    '$$typeof',
-  ]
+  cssVariableSafeKeys = cssVariableSafeKeys
   cssVariable = ''
   cssUseAlpha = false
   cssUseRgb = true
+  cssIsColor = true
   setCSSVariable(name: string) {
-    // dont overwrite
-    if (this.cssVariable && this.cssVariable !== name) {
+    if (!this.cssVariable || this.cssVariable !== name) {
       return this.clone(next => {
         next.cssVariable = name
       })
-    } else {
-      this.cssVariable = name
     }
+  }
+
+  toCSS() {
+    if (this.cssVariable) {
+      if (this.cssUseRgb) {
+        if (this.cssUseAlpha) {
+          return `rgba(var(--${this.cssVariable}-rgb), ${this.alpha})`
+        }
+      }
+      return `var(--${this.cssVariable})`
+    }
+    return this.toString()
   }
 
   isDark() {
@@ -602,3 +588,31 @@ export class Color {
 export function tinycolor(color: ColorInput = '', opts: Partial<ColorOptions> = {}) {
   return new Color(color, opts)
 }
+
+const cssVariableSafeKeys = [
+  'toRgbValue',
+  'toRgbString',
+  'getCSSValue',
+  'cssVariable',
+  'getCSSColorVariables',
+  'cssUseRgb',
+  'cssUseAlpha',
+  'setAlpha',
+  'alpha',
+  'clone',
+  'r',
+  'g',
+  'b',
+  'toRgb',
+  'roundA',
+  'format',
+  'cacheToString',
+  'hash',
+  'valueOf',
+  'cssVariableSafeKeys',
+  'originalInput',
+  'cssIsColor',
+  'isValid',
+  'toCSS',
+  '$$typeof',
+]

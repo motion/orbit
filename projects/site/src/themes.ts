@@ -1,5 +1,4 @@
-import { themes as KitThemes } from '@o/kit'
-import { linearGradient, toColor } from '@o/ui'
+import { linearGradient, themes as UIThemes, toColor } from '@o/ui'
 import { createThemes } from 'gloss'
 import { colorize, fromStyles } from 'gloss-theme'
 
@@ -20,30 +19,25 @@ const selected = {
 }
 
 const light = {
-  ...KitThemes.light,
+  ...UIThemes.light,
   backgroundHighlightActive: colors.purple.lighten(0.1),
   backgroundHighlight: colors.purple,
   coats: {
-    ...KitThemes.light.coats,
+    ...UIThemes.light.coats,
     selected,
     purple,
   },
 }
 
 const dark = {
-  ...KitThemes.dark,
+  ...UIThemes.dark,
   coats: {
-    ...KitThemes.dark.coats,
+    ...UIThemes.dark.coats,
     selected,
     purple,
   },
   ...colorize({
     background: '#111',
-    inputColor: '#fff',
-    inputBackground: '#222',
-    inputBackgroundHover: '#222',
-    inputBackgroundActive: '#222',
-    listItemBackgroundHover: 'rgba(255,255,255,0.075)',
     popoverBackground: '#111',
   }),
 }
@@ -53,50 +47,47 @@ const home = {
   ...colorize({
     background: '#000',
     backgroundHover: '#111',
-    inputBackground: '#111',
-    inputBackgroundHover: '#111',
-    inputBackgroundActive: '#111',
-    listItemBackgroundHover: 'rgba(255,255,255,0.05)',
-    popoverBackground: '#111',
+
+    popover: {
+      background: '#111',
+    },
   }),
 }
 
 export const themes = createThemes({
-  ...KitThemes,
+  ...UIThemes,
 
   orbitOneDark: fromStyles({
     background: '#111',
     backgroundHover: '#111',
     borderColor: '#222',
-    buttonBackground: buttonBackground,
-    buttonBackgroundHover: buttonBackground.adjust(c => toColor(c).lighten(0.035)),
     color: '#fff',
+
+    button: {
+      background: buttonBackground,
+      backgroundHover: buttonBackground.adjust(c => toColor(c).lighten(0.035)),
+    },
   }),
 
   light,
-  dark,
+
+  dark: {
+    ...dark,
+    background: toColor('#080808'),
+  },
+
   home,
 
-  blogHeaderTheme: {
+  brown: {
     ...dark,
-    background: colors.purple,
+    background: toColor('#12100E'),
   },
 
-  darkAlt: {
-    ...dark,
-    ...fromStyles({
-      color: '#fff',
-      background: '#2C2B40',
-      backgroundStrong: toColor('#2C2B40').lighten(0.1),
-      buttonBackground: linearGradient('#2C2B40', toColor('#2C2B40').darken(0.1)),
-      buttonBackgroundHover: linearGradient(toColor('#2C2B40').lighten(0.1), toColor('#2C2B40')),
-      inputBackground: toColor('#2C2B40').darken(0.1),
-      inputBackgroundHover: toColor('#2C2B40').darken(0.1),
-    }),
-  },
+  blogHeaderTheme: purple,
 
   docsPageTheme: {
     ...light,
+    color: toColor('#111'),
     bodyBackground: toColor('#000'),
   },
 })

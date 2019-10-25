@@ -8,12 +8,13 @@ import { px, stringHash } from './helpers'
 
 export { GlossPropertySet } from './cssPropertySet'
 export { configureCSS } from './config'
-export { psuedoKeys, validCSSAttr } from './constants'
+export { validCSSAttr } from './constants'
 export {
   CSSPropertySet,
   CSSPropertySetResolved,
   CSSPropertySetStrict,
   CSSPropertySetLoose,
+  CSSPropertyValThemeFn,
 } from './cssPropertySet'
 export * from './helpers'
 export { camelToSnake, snakeToCamel } from './helpers'
@@ -22,6 +23,8 @@ export { ThemeObject, ThemeValueLike, ThemeSet, ThemeCoats } from './ThemeObject
 export type CSSConfig = {
   errorMessage?: string
   snakeCase?: boolean
+  ignoreCSSVariables?: boolean
+  resolveFunctionValue?: ((val: any) => any)
 }
 
 const emptyObject = Object.freeze({})
@@ -47,6 +50,10 @@ export function cssString(styles: Object, opts?: CSSConfig): string {
   return style
 }
 
+/**
+ * Because css objects are somewhat predictable, we can hash while looping them
+ * which saves us a full extra loop + some work of hashing the keys
+ */
 const keyHashes = {}
 export function cssStringWithHash(styles: Object, opts?: CSSConfig): [number, string] {
   if (!styles) return [0, '']
@@ -58,15 +65,17 @@ export function cssStringWithHash(styles: Object, opts?: CSSConfig): [number, st
     let value = cssValue(key, rawVal, false, opts)
     // shorthands
     if (value !== undefined) {
-      if (hash === 0) hash = 5381
-      // cache keys hashes, keys are always the same
+      // we want to return 0 if object is empty so we can check later by !hash
+      if (hash == 0) hash = 5381
+      // start key hash: keys are always the keys from css, cacheable
       let keyHash = keyHashes[key]
       if (!keyHash) {
         keyHash = keyHashes[key] = stringHash(key)
       }
       hash = (hash * 33) ^ keyHash
+      // end key hash
       if (typeof rawVal === 'number') {
-        hash = (hash * 33) ^ (Math.abs(rawVal + 250) + (rawVal < 0 ? 100 : 0))
+        hash = (hash * 33) ^ ((Math.abs(rawVal) + 250) + (rawVal < 0 ? 100 : 0))
       } else {
         hash = (hash * 33) ^ stringHash(value)
       }
@@ -80,7 +89,7 @@ export function cssStringWithHash(styles: Object, opts?: CSSConfig): [number, st
       }
     }
   }
-  return [hash, style]
+  return [Math.abs(hash), style]
 }
 
 export function css(styles: Object, opts?: CSSConfig): Object {
@@ -105,6 +114,10 @@ export function css(styles: Object, opts?: CSSConfig): Object {
 }
 
 export function cssValue(key: string, value: any, recurse = false, options?: CSSConfig) {
+  // function first so it can go through other transforms
+  if (options?.resolveFunctionValue && typeof value === 'function') {
+    value = options?.resolveFunctionValue(value)
+  }
   // get falsy values
   if (value === false) {
     value === FALSE_VALUES[key]
@@ -113,27 +126,27 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
   if (value === undefined || value === null || value === false) {
     return
   }
+  if (value && value.cssVariable && (!options || !options.ignoreCSSVariables)) {
+    if (value.toCSS) {
+      return value.toCSS()
+    }
+    return `var(--${value.cssVariable})`
+  }
   const valueType = typeof value
   if (valueType === 'string' || valueType === 'number') {
     if (valueType === 'number' && !unitlessNumberProperties.has(key)) {
       value += 'px'
     }
     return value
-  } else if (value.cssVariable) {
-    return Config.toColor(value)
-  } else if (COLOR_KEYS.has(key)) {
+  } else if (COLOR_KEYS.has(key) && Config.isColor(value)) {
     return Config.toColor(value)
   } else if (Array.isArray(value)) {
-    if (key === 'fontFamily') {
-      return value.map(x => (x.includes(' ') ? `"${x}"` : x)).join(', ')
-    } else {
-      return processArray(key, value)
-    }
+    return processArray(key, value, 0, options)
   } else if (valueType === 'object') {
     if (value.getCSSValue) {
       return value.getCSSValue()
     }
-    const res = processObject(key, value)
+    const res = processObject(key, value, options)
     if (res !== undefined) {
       return res
     }
@@ -154,7 +167,7 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
     }
   }
   if (__DEV__) {
-    console.error(`Invalid style value for ${key}`, value)
+    console.error(`Invalid style value for ${key}`, value, options)
   }
 }
 
@@ -177,38 +190,35 @@ const objectToCSS = {
           : v.position) || ''} ${v.repeat || ''}`,
 }
 
-function processArrayItem(key: string, val: any, level: number = 0) {
+function processArrayItem(key: string, val: any, level: number = 0, options?: CSSConfig) {
   // recurse
   if (Array.isArray(val)) {
-    return processArray(key, val, level + 1)
+    return processArray(key, val, level + 1, options)
   }
-  return cssValue(key, val)
+  return cssValue(key, val, false, options)
 }
 
-export function processArray(key: string, value: any[], level: number = 0): string {
-  if (key === 'background') {
-    if (Config.isColor(value)) {
-      return Config.toColor(value)
-    }
-  }
+export function processArray(key: string, value: any[], level: number = 0, options?: CSSConfig): string {
   // solid default option for borders
-  if (BORDER_KEY[key] && value.length === 2) {
+  if (BORDER_KEY.has(key) && value.length === 2) {
     value.push('solid')
   }
-  if (key === 'boxShadow') {
-    value = value.map(processBoxShadow)
-  } else {
-    value = value.map(val => processArrayItem(key, val))
+  if (key === 'fontFamily') {
+    return value.map(x => (x.includes(' ') ? `"${x}"` : x)).join(', ')
   }
-  return value.join(level === 0 && COMMA_JOINED[key] ? ', ' : ' ')
+  if (key === 'boxShadow') {
+    value = value.filter(Boolean).map(x => processBoxShadow(x, options))
+  } else {
+    value = value.map(val => processArrayItem(key, val, level, options))
+  }
+  return value.join(level === 0 && COMMA_JOINED.has(key) ? ', ' : ' ')
 }
 
-function processBoxShadow(val: boxShadowItem) {
+function processBoxShadow(val: boxShadowItem, options?: CSSConfig) {
   if (Array.isArray(val)) {
     return val
       .map(x => {
-        if (Config.isColor(x)) return Config.toColor(x)
-        return px(x as any)
+        return cssValue(Config.isColor(x) ? 'color' : '', x, false, options)
       })
       .join(' ')
   }
@@ -237,30 +247,8 @@ function objectValue(key: string, value: any) {
   return value
 }
 
-const arrayOrObject = (arr, obj) => val => (Array.isArray(val) ? arr(val) : obj(val))
-
-const gradients = {
-  linearGradient: (key, object) =>
-    `linear-gradient(${arrayOrObject(
-      all => processArray(key, all),
-      ({ deg, from, to }) => `${deg || 0}deg, ${from || 'transparent'}, ${to || 'transparent'}`,
-    )(object)})`,
-  radialGradient: processArray,
-}
-
-export function processObject(key: string, object: any): string | undefined {
-  if (
-    key === 'background' ||
-    key === 'color' ||
-    key === 'borderColor' ||
-    key === 'backgroundColor'
-  ) {
-    if (object.linearGradient) {
-      return gradients.linearGradient(key, object.linearGradient)
-    }
-    if (object.radialGradient) {
-      return gradients.radialGradient(key, object.radialGradient)
-    }
+export function processObject(key: string, object: any, options?: CSSConfig): string | undefined {
+  if (COLOR_KEYS.has(key)) {
     if (Config.isColor(object)) {
       return Config.toColor(object)
     }
@@ -274,7 +262,7 @@ export function processObject(key: string, object: any): string | undefined {
       }
       let value = object[subKey]
       if (Array.isArray(value)) {
-        value = processArray(key, value)
+        value = processArray(key, value, 0, options)
       } else {
         value = objectValue(subKey, value)
       }

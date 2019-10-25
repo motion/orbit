@@ -144,8 +144,10 @@ export function useDroppable(props: UseDroppableProps): boolean {
 
 export const DropOverlay = gloss<FullScreenProps & { isDropping?: boolean }>(FullScreen, {
   background: 'transparent',
-  isDropping: {
-    background: [255, 0, 0, 0.25],
+  conditional: {
+    isDropping: {
+      background: [255, 0, 0, 0.25],
+    },
   },
 })
 

@@ -12,11 +12,12 @@ const icons = {
   z: controlZ,
 }
 
-const ControlButtonForgiveness = gloss().theme(({ size, forgiveness }) => ({
+const ControlButtonForgiveness = gloss<any>(UI.Box).theme(({ size, forgiveness }) => ({
   padding: forgiveness,
   margin: -forgiveness,
-  width: size + forgiveness * 2,
-  height: size + forgiveness * 2,
+  // TODO css-typed-om CSS.px(), CSS.calc() here
+  width: (size?.get() ?? 0) + forgiveness.get() * 2,
+  height: (size?.get() ?? 0) + forgiveness.get() * 2,
   pointerEvents: 'auto',
   '& img': {
     opacity: 0,
@@ -34,12 +35,12 @@ const ControlButtonChrome = gloss(UI.Stack, {
   alignItems: 'center',
   justifyContent: 'center',
   pointerEvents: 'auto',
-}).theme(({ borderWidth, ...props }, theme) => {
-  const background = props.background || theme.background.darken(0.2).desaturate(0.2)
-  const borderColor = props.borderColor || UI.toColor(background).darken(0.1)
+}).theme(theme => {
+  const background = theme.background.darken(0.2).desaturate(0.2)
+  const borderColor = theme.backgroundStronger
   return {
     background,
-    boxShadow: [['inset', 0, 0, 0, borderWidth, borderColor]],
+    boxShadow: [['inset', 0, 0, 0, theme.borderWidth, borderColor]],
   }
 })
 

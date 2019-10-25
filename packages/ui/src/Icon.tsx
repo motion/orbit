@@ -1,9 +1,7 @@
-import { toColor } from '@o/color'
+import { FuzzySearch } from '@o/fuzzy-search'
 import { IconNamesList } from '@o/icons'
 import { isDefined, mergeDefined } from '@o/utils'
-import FuzzySearch from 'fuzzy-search'
-import { useTheme } from 'gloss'
-import React, { memo, Suspense, useContext } from 'react'
+import React, { CSSProperties, memo, Suspense, useCallback, useContext } from 'react'
 
 import { Config } from './helpers/configureUI'
 import { IconPropsContext } from './IconPropsContext'
@@ -64,33 +62,9 @@ Icon.acceptsProps = {
 const SIZE_STANDARD = 16
 const SIZE_LARGE = 20
 
-export const PlainIcon = ({
-  style,
-  ignoreColor,
-  svg,
-  tooltip,
-  tooltipProps,
-  name,
-  ...props
-}: IconProps) => {
-  const theme = useTheme()
+export const PlainIcon = (iconProps: Omit<IconProps, 'style'> & { style: CSSProperties }) => {
+  let { style, ignoreColor, svg, tooltip, tooltipProps, name, opacity, ...props } = iconProps
   const size = snapToSizes(props.size) * useScale()
-  let color = props.color || theme.color || '#fff'
-  let opacity
-
-  if (isDefined(props.opacity)) {
-    if (color === 'inherit') {
-      opacity = props.opacity
-    } else {
-      try {
-        const opcty = typeof props.opacity === 'number' ? props.opacity : 1
-        color = toColor(color as any).setAlpha(opcty)
-      } catch {
-        console.debug('couldnt interpret color', color)
-        opacity = props.opacity
-      }
-    }
-  }
 
   if (typeof name === 'string') {
     const nameTrim = name.trim()
@@ -101,6 +75,8 @@ export const PlainIcon = ({
   }
 
   let contents = null
+  const iconColor = useCallback(theme => theme.color, [])
+  const color = props.color || iconColor
 
   if (isDefined(svg)) {
     contents = (
@@ -108,10 +84,10 @@ export const PlainIcon = ({
         width={size}
         height={size}
         data-name={name}
-        className={`ui-icon ${props.className || ''}`}
+        {...props}
+        className={`ui-icon-svg ${props.className || ''}`}
         color={color}
         opacity={opacity}
-        {...props}
       >
         <div
           style={{
@@ -119,8 +95,10 @@ export const PlainIcon = ({
             alignItems: 'center',
             justifyContent: 'center',
             display: 'flex',
-            width: size,
-            height: size,
+            ...((typeof size === 'number' || typeof size === 'string') && {
+              width: size,
+              height: size,
+            }),
             ...style,
           }}
           dangerouslySetInnerHTML={{
@@ -138,7 +116,13 @@ export const PlainIcon = ({
     const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
 
     contents = (
-      <View color={color} width={size} height={size} {...props}>
+      <View
+        width={size}
+        height={size}
+        {...props}
+        className={`ui-icon ${props.className || ''}`}
+        color={color}
+      >
         <svg
           style={{ fill: 'currentColor', ...style }}
           data-icon={iconName}

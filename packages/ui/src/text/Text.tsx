@@ -1,46 +1,48 @@
-import { CSSPropertySetStrict } from '@o/css'
 import { HighlightOptions, highlightText, on } from '@o/utils'
-import { alphaColorTheme, CSSPropertySet, gloss, propsToStyles } from 'gloss'
+import { alphaColorTheme, CSSPropertySet, gloss, GlossProps, propsToStyles } from 'gloss'
 import keycode from 'keycode'
 import * as React from 'react'
 
 import { Config } from '../helpers/configureUI'
 import { ScaleContext } from '../Scale'
 import { Size } from '../Space'
-import { getMediaQueryTextSizeTheme } from './scaledTextSizeTheme'
+import { SimpleTextPropsBase } from './SimpleText'
+import { textSizeTheme } from './textSizeTheme'
 
 type ChildrenHlFn = (Highlights) => JSX.Element | null
 
-export type TextProps = CSSPropertySetStrict &
-  React.HTMLAttributes<HTMLParagraphElement> & {
-    color?: CSSPropertySet['color'] | false
-    editable?: boolean
-    autoselect?: boolean
-    selectable?: boolean
-    onStartEdit?: () => any
-    onFinishEdit?: (value: string, event: any) => any
-    onCancelEdit?: (value: string, event: any) => any
-    nodeRef?: React.RefObject<HTMLElement>
-    ellipse?: boolean | number
-    tagName?: string
-    lines?: number
-    alpha?: number
-    onKeyDown?: Function
-    opacity?: number
-    size?: Size
-    placeholder?: string
-    lineHeight?: number
-    sizeLineHeight?: number | boolean
-    sizeFont?: number | boolean
-    measure?: boolean
-    onMeasure?: Function
-    sizeMethod?: string
-    highlight?: HighlightOptions
-    wordBreak?: string
-    children: React.ReactNode | ChildrenHlFn
-    ignoreColor?: boolean
-    renderAsHtml?: boolean
-  }
+export type TextProps = GlossProps<
+  Omit<SimpleTextPropsBase, 'ellipse'> &
+    React.HTMLAttributes<HTMLParagraphElement> & {
+      color?: CSSPropertySet['color'] | false
+      editable?: boolean
+      autoselect?: boolean
+      selectable?: boolean
+      onStartEdit?: () => any
+      onFinishEdit?: (value: string, event: any) => any
+      onCancelEdit?: (value: string, event: any) => any
+      nodeRef?: React.RefObject<HTMLElement>
+      ellipse?: boolean | number
+      tagName?: string
+      lines?: number
+      alpha?: number
+      onKeyDown?: Function
+      opacity?: number
+      size?: Size
+      placeholder?: string
+      lineHeight?: number
+      sizeLineHeight?: number | boolean
+      sizeFont?: number | boolean
+      measure?: boolean
+      onMeasure?: Function
+      sizeMethod?: string
+      highlight?: HighlightOptions
+      wordBreak?: string
+      children: React.ReactNode | ChildrenHlFn
+      ignoreColor?: boolean
+      renderAsHtml?: boolean
+    }
+>
 
 export type Highlights = {
   highlights: string[]
@@ -95,7 +97,7 @@ export class Text extends React.PureComponent<TextProps> {
   }
 
   measure() {
-    if (this.props.ellipse > 1) {
+    if (typeof this.props.ellipse === 'number' && this.props.ellipse > 1) {
       this.setState(
         {
           doClamp: true,
@@ -209,18 +211,11 @@ export class Text extends React.PureComponent<TextProps> {
     } = this.props
     const { doClamp, textHeight } = this.state
     const scale = this.context ? this.context.size : 1
-    const { fontSizeNum: _fontSizeNum, lineHeightNum, ...textStyles } = getMediaQueryTextSizeTheme(
-      this.props,
-      {
-        scale,
-        size: props.size,
-      },
-    )
 
-    const numLinesToShow = doClamp && Math.floor(textHeight / lineHeightNum)
-    const maxHeight =
-      typeof ellipse === 'number' && lineHeightNum ? `${ellipse * lineHeightNum}px` : 'auto'
-    const oneLineEllipse = ellipse === 1
+    // const numLinesToShow = doClamp && Math.floor(textHeight / lineHeightNum)
+    const maxHeight = 'auto'
+    // typeof ellipse === 'number' && lineHeightNum ? `${ellipse * lineHeightNum}px` : 'auto'
+    const oneLineEllipse = typeof ellipse === 'number' && ellipse === 1
 
     // so we can toggle between html or text
     let finalProps: any = {
@@ -282,8 +277,8 @@ export class Text extends React.PureComponent<TextProps> {
         children: (
           <TextEllipse
             className={className}
-            ellipse={ellipse}
-            numLinesToShow={numLinesToShow}
+            ellipse={ellipse === 1 || ellipse === true ? true : ellipse}
+            numLinesToShow={ellipse}
             maxHeight={maxHeight}
             doClamp={doClamp}
             color={color}
@@ -307,7 +302,6 @@ export class Text extends React.PureComponent<TextProps> {
         ignoreColor={ignoreColor}
         color={color}
         ellipse={ellipse}
-        {...textStyles}
         onDoubleClick={this.handleDoubleClick}
         {...props}
         {...finalProps}
@@ -321,42 +315,42 @@ export class Text extends React.PureComponent<TextProps> {
 const HTMLBlock = props => <span dangerouslySetInnerHTML={{ __html: `${props.children}` }} />
 
 const TextBlock = gloss({
+  applyThemeColor: true,
   display: 'block',
   userSelect: 'none',
   wordBreak: 'break-word',
   position: 'relative',
   minHeight: 'min-content',
   maxWidth: '100%',
-  selectable: {
-    userSelect: 'text',
+  cursor: 'default',
+  conditional: {
+    selectable: {
+      userSelect: 'text',
+      cursor: 'inherit',
+    },
+    oneLineEllipse: {
+      overflow: 'hidden',
+    },
   },
-  oneLineEllipse: {
-    overflow: 'hidden',
-  },
-}).theme(propsToStyles, alphaColorTheme, selectableTheme)
+}).theme(textSizeTheme, propsToStyles, alphaColorTheme)
 
-export function selectableTheme(props) {
-  return {
-    cursor:
-      props.cursor ||
-      (props.selectable === false ? 'default' : props.selectable === true ? 'inherit' : 'inherit'),
-  }
+type TextEllipseProps = TextProps & {
+  doClamp?: boolean
 }
 
-const TextEllipse = gloss({
+const TextEllipse = gloss<TextEllipseProps>({
   display: 'inline',
   maxWidth: '100%',
-}).theme(propsToStyles, ellipseTheme)
-
-function ellipseTheme({ ellipse, doClamp, maxHeight }) {
-  if (ellipse === 1 || ellipse === true)
-    return {
+  conditional: {
+    ellipse: {
       display: 'block',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
       overflow: 'hidden',
-    } as const
-  if (ellipse > 1)
+    },
+  },
+}).theme(({ ellipse, doClamp, maxHeight }) => {
+  if (ellipse > 1) {
     return {
       WebkitLineClamp: ellipse,
       maxHeight,
@@ -366,5 +360,6 @@ function ellipseTheme({ ellipse, doClamp, maxHeight }) {
       textOverflow: 'ellipsis',
       display: '-webkit-box',
       WebkitBoxOrient: 'vertical',
-    } as const
-}
+    }
+  }
+})

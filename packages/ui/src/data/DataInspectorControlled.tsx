@@ -2,13 +2,12 @@ import { isEqual } from '@o/fast-compare'
 import { gloss } from 'gloss'
 import React, { Component } from 'react'
 
+import { fontFamilyMonospace } from '../constants'
 import { ContextMenu } from '../ContextMenu'
-import { colors } from '../helpers/colors'
 import { SimpleText, SimpleTextProps } from '../text/SimpleText'
 import { Tooltip } from '../Tooltip'
 import { DataDescription } from './DataDescription'
 import { DataPreview } from './DataPreview'
-import { fontFamilyMonospace } from './fontFamilyMonospace'
 import { getSortedKeys } from './utils'
 
 export type DataInspectorSetValue = (path: string[], val: any) => void
@@ -98,24 +97,24 @@ const { clipboard } = Electron
 // TODO
 type ElectronMenuItemOptions = any
 
-const BaseContainer = gloss<SimpleTextProps & { disabled?: boolean }>(SimpleText, {
+const BaseContainer = gloss<{ disabled?: boolean }, SimpleTextProps>(SimpleText, {
   paddingLeft: 10,
   userSelect: 'text',
   fontFamily: fontFamilyMonospace,
-}).theme((props, theme) => ({
-  color: props.color || theme.color,
+}).theme(props => ({
   opacity: props.disabled ? 0.5 : 1,
 }))
 
 const Added = gloss({
-  backgroundColor: colors.tealTint70,
+  backgroundColor: 'teal',
 })
+
 const Removed = gloss({
-  backgroundColor: colors.cherryTint70,
+  backgroundColor: 'red',
 })
 
 const RecursiveBaseWrapper = gloss('span', {
-  color: colors.red,
+  color: 'pink',
 })
 
 const PropertyContainer = gloss('span')
@@ -129,7 +128,7 @@ const ExpandControl = gloss(SimpleText, {
 })
 
 export const InspectorName = gloss('span', {
-  color: colors.grapeDark1,
+  color: 'purple',
   fontWeight: 500,
 })
 

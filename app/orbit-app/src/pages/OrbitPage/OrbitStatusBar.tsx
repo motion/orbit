@@ -34,10 +34,12 @@ const StatusBarChrome = gloss<StackProps & { isActive?: boolean }>(Stack, {
   padding: [0, 8],
   opacity: 0,
   pointerEvents: 'none',
-  isActive: {
-    opacity: 1,
-    pointerEvents: 'auto',
+  conditional: {
+    isActive: {
+      opacity: 1,
+      pointerEvents: 'auto',
+    },
   },
-}).theme((_, theme) => ({
+}).theme(theme => ({
   background: theme.background,
 }))

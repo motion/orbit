@@ -62,9 +62,9 @@ export const Arrow = ({
         width={width}
         height={height}
       >
-        <ArrowMiddle width={size} height={size}>
+        <View width={size} height={size}>
           <ArrowInner {...arrowInnerProps} />
-        </ArrowMiddle>
+        </View>
       </ArrowOuter>
     </View>
   )
@@ -82,5 +82,3 @@ const ArrowInner = gloss(View, {
   borderRadius: 1,
   transform: { rotate: '45deg' },
 })
-
-const ArrowMiddle = gloss(View)

@@ -146,6 +146,7 @@ const NavButtonChromeInner = gloss<any>(Stack, {
 })
 
 const NavButtonChrome = gloss<TabProps>(View, {
+  subTheme: 'tab',
   position: 'relative',
   flexDirection: 'row',
   justifyContent: 'center',
@@ -153,19 +154,17 @@ const NavButtonChrome = gloss<TabProps>(View, {
   borderRadius: borderSize,
   height: tabHeight,
   marginRight: 2,
-}).theme(({ isActive }, theme) => {
-  const { tabBackgroundHover, tabBackgroundActive, tabBackgroundSelected } = theme
-  const background = isActive ? tabBackgroundSelected : 'transparent'
-  const backgroundHover = isActive ? tabBackgroundSelected : tabBackgroundHover
-  const backgroundActive = isActive ? tabBackgroundSelected : tabBackgroundActive
+}).theme(theme => {
+  const { isActive, hoverStyle, activeStyle, selectedStyle } = theme
   return {
-    background,
-    '&:hover': {
-      background: backgroundHover,
+    hoverStyle: {
+      ...hoverStyle,
+      ...(isActive && selectedStyle),
       transition: isActive ? 'none' : tabTransition,
     },
-    '&:active': {
-      background: backgroundActive,
+    activeStyle: {
+      ...activeStyle,
+      ...(isActive && selectedStyle),
       transition: isActive ? 'none' : tabTransition,
     },
     '&:hover .tab-label': {

@@ -1,5 +1,3 @@
-export const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-
 const systemFont = `-apple-system, "SF Pro Text", BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Droid Sans', sans-serif`
 
 export const fontProps = {
@@ -16,16 +14,14 @@ export const fontProps = {
   },
 }
 
+// for now just copied to gloss, its a decent default set
+// need to manually sync to gloss/configureGloss
 export const widths = {
   xs: 420,
   sm: 700,
   md: 820,
   lg: 1150,
 }
-
-export const sectionMaxHeight = 1250
-export const sidePad = 24
-
 export const mediaQueries = {
   xs: `@media screen and (max-width: ${widths.xs - 1}px)`,
   sm: `@media screen and (max-width: ${widths.sm}px)`,
@@ -38,24 +34,20 @@ export const mediaQueries = {
   abovelg: `@media screen and (min-width: ${widths.lg + 1}px)`,
 }
 
-export const IS_CHROME = navigator.userAgent.toLowerCase().indexOf('chrome') > -1
+export const sectionMaxHeight = 1250
+export const sidePad = 24
 
-export const bodyElement = IS_CHROME ? document.documentElement : document.body
+type MediaQueryObject = { [key in keyof typeof mediaQueries]: Object }
 
-const hiddenWhen: { [key in keyof typeof mediaQueries]: Object } = Object.keys(mediaQueries).reduce(
-  (acc, key) => {
-    acc[key] = {
-      [`${key}-display`]: 'none',
-      [`${key}-pointerEvents`]: 'none',
-    }
-    return acc
-  },
-  {},
-) as any
+const hiddenWhen: MediaQueryObject = Object.keys(mediaQueries).reduce((acc, key) => {
+  acc[key] = {
+    [`${key}-display`]: 'none',
+    [`${key}-pointerEvents`]: 'none',
+  }
+  return acc
+}, {}) as any
 
-const visibleWhen: { [key in keyof typeof mediaQueries]: Object } = Object.keys(
-  mediaQueries,
-).reduce((acc, key) => {
+const visibleWhen: MediaQueryObject = Object.keys(mediaQueries).reduce((acc, key) => {
   acc[key] = {
     display: 'none',
     [`${key}-display`]: 'flex',

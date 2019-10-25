@@ -1,4 +1,4 @@
-import { FullScreen, fuzzyFilter, gloss, Grid, HotKeys, Image, SimpleText, Space, Stack, SubTitle, Surface, Theme, Title, View } from '@o/ui'
+import { fuzzyFilter, gloss, Grid, HotKeys, Image, SimpleText, Space, Stack, SubTitle, Surface, Theme, Title, View } from '@o/ui'
 import { createStoreContext } from '@o/use-store'
 import { Box } from 'gloss'
 import { mount, route } from 'navi'
@@ -13,7 +13,6 @@ import { SectionContent } from '../views/SectionContent'
 import { TitleText } from '../views/TitleText'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { apps } from './HomePage/apps'
-import { makeWavePattern } from './makeWavePattern'
 
 export default mount({
   '/': route({
@@ -59,21 +58,15 @@ export function AppsPage() {
   return (
     <AppStoreContext.Provider>
       <Theme name={AppsPage.theme}>
-        <FullScreen
-          position="fixed"
-          backgroundSize="cover"
-          backgroundRepeat="no-repeat"
-          backgroundPosition="bottom center"
-          right={-200}
-          left={-200}
-          opacity={0.5}
-          backgroundImage={makeWavePattern('#333')}
-          pointerEvents="none"
-        />
-
         <Header noBorder position="absolute" left={0} right={0} background="transparent" slim />
         <main className="main-contents" style={{ minHeight: 1600 }}>
-          <SectionContent flex={1} marginTop={54} paddingTop="5%" paddingBottom="5%">
+          <SectionContent
+            flex={1}
+            marginTop={54}
+            paddingTop="5%"
+            paddingBottom="5%"
+            background="#121212"
+          >
             <Stack space="xxxl">
               <TitleText size="lg" textAlign="center" margin={[0, 'auto']}>
                 Discover apps
@@ -245,7 +238,6 @@ const AppSearch = memo(() => {
   const onChange = useCallback(e => {
     const search = e.target.value
     store.filteredApps = fuzzyFilter(search, allApps, {
-      limit: 10000,
       keys: ['title'],
     })
   }, [])
@@ -288,8 +280,8 @@ const AppItem = gloss(Box, {
   width: dim,
   height: dim,
   borderRadius: 10,
-}).theme(({ isActive }, theme) => ({
-  boxShadow: isActive ? [[0, 0, 0, 2, theme.backgroundStrongest]] : null,
+}).theme(props => ({
+  boxShadow: props.isActive ? [[0, 0, 0, 2, props.backgroundStrongest]] : null,
 }))
 
 const allApps = [

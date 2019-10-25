@@ -23,7 +23,7 @@ export const posts: PostDirectory = {
   },
   'update-two': {
     view: () => import('./update-two/index.mdx'),
-    title: 'Lets make apps fun, personal & under control',
+    title: 'Orbit Center',
     date: '2019-04-25T22:12:03.284Z',
     author: 'Nathan Wienert',
     authorImage: nateImg,

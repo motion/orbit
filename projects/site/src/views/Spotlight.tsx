@@ -28,7 +28,7 @@ export const Spotlight = () => {
 
 const Square = gloss(View)
 
-const bg = (_, theme) => ({ background: theme.background })
+const bg = theme => ({ background: theme.background })
 
 const Above = gloss(Box, {
   flex: 1,

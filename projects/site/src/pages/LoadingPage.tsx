@@ -1,12 +1,7 @@
-import { FullScreen, ViewProps } from '@o/ui'
+import { FullScreen } from '@o/ui'
 import React, { useLayoutEffect, useState } from 'react'
 
 import { BrandMark } from '../views/LogoVertical'
-
-const hideProps: ViewProps = {
-  opacity: 0,
-  pointerEvents: 'none',
-}
 
 let hasLoadedOnce = false
 setTimeout(() => {
@@ -35,7 +30,10 @@ export function LoadingPage() {
       position="fixed"
       alignItems="center"
       justifyContent="center"
-      {...!loading && hideProps}
+      {...!loading && {
+        opacity: 0,
+        pointerEvents: 'none',
+      }}
     >
       <BrandMark />
     </FullScreen>

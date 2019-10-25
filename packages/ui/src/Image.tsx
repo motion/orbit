@@ -7,9 +7,6 @@ import { View } from './View/View'
 export type ImageProps = ViewProps & HTMLProps<HTMLImageElement>
 
 export const Image = gloss<ImageProps>(View, {
+  tagName: 'img',
   display: 'block',
 })
-
-Image.defaultProps = {
-  tagName: 'img',
-}

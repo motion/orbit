@@ -113,10 +113,8 @@ export const ListItem = (props: ListItemProps) => {
     [rest.onCancelEdit],
   )
 
-  return (
-    // this focused={} conditional may look weird. it's because we want to disable the focus state while editing
-    // so we look for edit, then turn off focus. `undefined` means "defer to parent value", so we are just ignoring
-    <ProvideFocus focused={isEditing === true ? false : undefined}>
+  const children = (
+    <>
       {/* this coat is for the user coat, the inner one is just for the selected/selectedActive */}
       <Theme coat={coat}>
         <ListItemSimple
@@ -137,8 +135,18 @@ export const ListItem = (props: ListItemProps) => {
           {...childrenProps}
         />
       </Theme>
-    </ProvideFocus>
+    </>
   )
+
+  if (isEditing) {
+    return (
+      // this focused={} conditional may look weird. it's because we want to disable the focus state while editing
+      // so we look for edit, then turn off focus. `undefined` means "defer to parent value", so we are just ignoring
+      <ProvideFocus focused={false}>{children}</ProvideFocus>
+    )
+  }
+
+  return children
 }
 
 const Bottom = gloss(Box, {

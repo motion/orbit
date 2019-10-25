@@ -1,4 +1,234 @@
+- statics:
+  - properly fail when cant evaluate a gloss() (ExampleHalf)
+  - linaria-style constants evaluation and { [constant]: x }
+- docs: fix bugs in various panes
+- theme: fix slowdown bug in switching theme
+- deploy site
+- app: fix static bugs layout
+- app: fix static in OrbitHeader / errors throwing
+- static: look at linaria for how it reads static side-effect free files
+- static: just run over once more improve some logic
+- app: tune it up and get it all running again
+- blog: write a blog post for beta launch
+- site: upgrade wording
+- launch
+
+current best bet for a viable product:
+
+theres three paths:
+
+1. workflow / automated flows (Zapier)
+2. more journal-like default app, documents + sheets (ObservableHQ, Jupyter)
+3. devtools: dx, introspection, maybe visual app building (Retool)
+4. data T-SNE + other stats/ml plugins, biggish data focus + viz (downstream palantir)
+
+
+---
+
+- <Theme sm-scale={1} /> support media queries here
+  - see HeadSection for real world usage
+
+- gloss
+  - fix modal backgrounds
+  - fix alt card inner text is white
+- site
+  - home
+    - make y parallax a little for each section
+    - fix no need for fixed height sections
+    - bug footer isnt wide enough
+
+then:
+
+- concurrent mode on site to prep for app
+- fix app styles using new gloss
+- release site with new gloss:
+- rewrite blog post
+
+---
+
+gloss:
+
+4. <Theme for="button" scale="lg" /> <- theme just acts as a css var setter
+
+compile time optimizations, from least advanced to most:
+
+1. Removing gloss
+
+```
+const X = gloss({
+  background: 'red',
+})
+// =>
+const X = props => <div className="" {...props} />
+```
+
+2. SimpleText.tsx compile to div
+
+Would require some pretty interesting work on scale + size css vars
+
+3. Removing simple themes
+
+Surface.GlintContain:
+
+const GlintContain = gloss(Base, {
+  height: '100%',
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  pointerEvents: 'none',
+  zIndex: 10,
+  overflow: 'hidden',
+})
+
+=>
+
+const GlintContain = props => (
+  <div className={useTheme}>
+    <div className="glint-contain-classes" {...props} />
+  </div>
+)
+
+3. Removing views we know don't do anything except theme:
+
+Arrow.tsx:
+
+actually this is really complex...
+
+4. Remove jsx props
+
+Button.tsx
+
+<Surface outline="0" .... />
+
+=>
+
+<Surface className="something">
+
+5. eval some simple constants:
+
+config option: {
+  constantFiles: [require.resolve('../constants')],
+}
+
+would optimize for example Paragraph in site
+
++ could allow for media queries in gloss styles
+
+6. allow conditional styles to define a condition fn
+
+
+---
+
+re: Surface
+
+this could be redone to be more composable:
+
+Surface does a lot right now, and its quite powerful and flexible but hard to optimize and heavy for
+basic use cases.
+
+- Glint
+- Hoverglow
+- AutoSizing
+- Breadcrumbs/Segmenting
+- Tooltip
+- Badge
+
+we can split this all up, at the cost of the user having to understand a lot more and not "just use
+props", with benefit of full static compilation abilities and less overhead in non-static cases + a
+lot more flexibility in styling.
+
+plus, we could then re-build surface if we wanted to anyway. something like RichSurface and
+Button/Input could use them by default. though i think i'd still write them differently and you'd
+get better optimization....
+
+still, its a good exercise because figuring it out means we figure out a good theme system in
+general soooo away we go:
+
+<Stack theme="surface" size="lg" space spaceAround direction="horizontal">
+  <Icon />
+  <Text></Text>
+</Stack>
+
+actually this seems to work.... because themes can handle all the hovering, border radius etc.
+size/space can go directly into theme variables right?
+
+then we could just abbreviate it as:
+
+<Surface icon="">
+  Hello world
+</Surface>
+
+and still get the benefits?
+
+button would look like:
+
+<Surface coat="button">
+  Hello world
+</Surface>
+
+we'd basically remove subSelects and just have them be coats right?
+
+...wrong. how do we then do <Button coat="flat" />. hm.
+
+so themeSelect would stay?...
+
+<Surface themeSelect="button" coat="flat">
+  Hi
+</Surface>
+
+where themeSelect basically just puts together a selection of variables from the parent theme, which
+are _just props_!. So keep in mind we can do stuff like:
+
+const LightTheme: Theme = { background: 'red', backgroundLight: 'pink', buttonBackground: 'green',
+buttonBorderWidth: 1, buttonHoverStyle: { background: '--backgroundLight' }, }
+
+How does this help in the case where you have grouping? It seems it really can't account for that.
+Wait, nm, it can. We can deopt on group which we already basically do.
+
+What about all the weird transforms we do for icons/children in Surface render function right now?
+
+That basically is all passing down stuff we'd capture in props or theme. It seems the commong
+pattern is we need:
+
+- Theme === Props, theme should just be a default representation of props that simplifies so much in
+  terms of rules.
+- Actually in that way we could probably have the following themes:
+
+const LightTheme: Theme = { background: 'green',
+
+Button: { background: 'red', },
+
+Input: { ... } }
+
+Second, we'd have an idea of the props they accept so we can know if we can compile away.
+
+basically you could go all "full optimizing compiler" in a sense, not crazy advanced but pretty damn
+advanced, you could do this:
+
+<Theme theme={{ buttonGlint: true }}> <Surface size="lg" tooltip="hi" glint={false} /> </Theme>
+
+wait........ contextual themes :/
+
+function Surface(props) { return ( <Stack id="id"> {props.glint && ( <Glint /> )} {props.tooltip &&
+( <Tooltip>id</Tooltip> )} {props.badge && ( <Badge>123</Badge> )} </Stack> ) }
+
+What about glints?
+
+as long as we can optimize them all down to "div"s then I see no reason why we dont just render the
+divs on every surface. i think thats the way to get it to optimize, lets say:
+
+Surface = () => do { const theme = useTheme() <Stack ...> {theme.glint && props.glint !== false &&
+<Glints  />} </Stack> }
+
+---
+
 ideas:
+
+- excel/sheet upgrades:
+
+  - most attractive upgrade
+  - hardest to do well
 
 - mdx mode:
 
@@ -24,40 +254,7 @@ ideas:
 
 ---
 
-google sheets:
-
-this is a huge use case, and should be in the demo.
-
-sheets to form to database would be huge.
-
----
-
-gloss:
-
-1. Make it so the second param of gloss takes props:
-
-const X = gloss(Stack, { direction: 'horizontal' })
-
-gloss would have to split it out
-
-2. Make gloss extract the gloss() styles into css
-
-3. Add an `is={}` property, can be `is="Name"` or `is={Component}`, doesnt replace tagname its more for describing.
-
----
-
-The plan from jun for Sep:
-
-"Have everything ready for beta"
-
-- Improved demo flow x2 (apps, bugs, etc)
-- Build to production
-
-they have conflicting sub-contraints in cases, resolved to (in order of importance):
-
 - [beta/demo] runthrough + bugfix over and over
-  - no rebuild all node apps
-  - show a window immediately on startup that shows status of builds
   - fix sorting apps
   - handle deleting apps, adding apps better
   - test errors/error recovery
@@ -67,25 +264,14 @@ they have conflicting sub-contraints in cases, resolved to (in order of importan
 - [demo] plug in simple ocr/import menu command
 - [beta] ~tech-blocker webpack 5 for faster from-cache resuming
 - [beta] search UI fixes
-- [beta] HMR/dev fixes and upgrades
 - [beta] search backend (nlp + scan more fixes)
-- [beta] settings upgrades: fix sort, remove, improve flows
 - [demo] ~potentially do a demo of option hold to see context menu
-- [site] cleanup sub-pages
 - [site] run over docs for a few days
 - [beta] query builder finish
 
 ---
 
 Detailed September Plan:
-
-- finish motion/carousel
-
-  - carousel is definitely slower, need to test with more items too
-  - performance opening drawer
-  - fix a lot of correctness bugs (resize window, etc)
-  - check into regressions on keyboard movement in main area/apps (is it moving inside apps when it
-    shouldnt?)
 
 - get Concurrent working with priority on new react
 - fix a ton of bugs:
@@ -109,14 +295,8 @@ Detailed September Plan:
 
   - some sort of easy drag/drop in/out type thing
   - some sort of data browsing/plugin app:
-    - database browser could be useful
+    - database browser could be useful (see flipper)
     - graphQL usage would be helpful
-
-- build to production
-  - !!! we can't do this right now for electron 8 though without some trouble, so no rounded
-    windows..?
-  - get build to prod working
-  - - get build to prod with full flow of app editing working
 
 ---
 
@@ -137,30 +317,12 @@ Either select items or define query
 
 GO TO PROD / DEV TASKS
 
-- [ ] React Window is being re-written again by bvaughn, there are bugs in it currently, an
-      afternoon to revisit and see if we can upgrade to that version
-
----
-
-- [ ] fix pane resizing bugs
 - [ ] fix issues using different app apis, test
 - [ ] persisting queries
 - [ ] persisting to bits the query information
 - [ ] parameters can add/remove them
 - [ ] parameters can use them in queries
 - [ ] can drag/drop a query into a table
-
-notes from onboarding andrew:
-
-- reloading of apps would be important from the UI in case things dont work
-- return errors from app methods / postgres to UI
-- searchResults app shouldn't insert by default
-- make workers wait for app to finish startup before starting
-- node rebuilding slowly
-- need to refresh searchResults sometimes when youve added bits, dont do too smart just check for
-  saves
-- SelectableStore should export themselves into a global, based on if they are visibile, and then
-  esc can clear selection before doing anything else
 
 ---
 
@@ -190,30 +352,6 @@ First: working, non-buggy demos of everything. Visually impressive.
 
 ---
 
-next
-
-Oct
-
-"Launch in private beta"
-
-- Improve demo apps
-- Upgrade build/release process (auto updates etc)
-- Get builds in hands of friends for initial debugging
-
-Nov
-
-"Public beta launch"
-
-- Upgrade docs, website, etc
-- Really improve apps/demos
-- Start on dockerizing things for cloud stuff
-
-Dec
-
-"Sell it / Launch"
-
----
-
 need to talk to a few startup people to get some feedback:
 
 - Webflow CEO
@@ -221,16 +359,4 @@ need to talk to a few startup people to get some feedback:
 - Zeit/Expo cofounders
 - ... add a few more
 
-Questions:
-
-small:
-
-- gloss could probably memo pretty well, should make adjustments using the benchmarks
-
-  - custom memo function:
-    - if children set, dont memo at all
-    - do a few smart props that we know are usually POJOs
-
 - https://github.com/humandx/slate-automerge
-
-- monobase for the individual docs sites...

@@ -1,0 +1,12 @@
+{
+  "name": "@o/fuzzy-search",
+  "version": "2.6.0",
+  "description": "none",
+  "main": "_/FuzzySearch.js",
+  "ts:main": "src/FuzzySearch.ts",
+  "scripts": {
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput"
+  },
+  "sideEffects": false
+}

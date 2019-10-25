@@ -47,8 +47,6 @@ const getUID = () => {
   return uid
 }
 
-const WrappedFns = new WeakMap()
-
 export function mobxProxyWorm<A extends Function>(
   obj: A,
   parentPath = '',
@@ -74,6 +72,8 @@ export function mobxProxyWorm<A extends Function>(
   resetTrack.add(() => {
     state.current = -1
   })
+
+  const WrappedFns = new WeakMap()
 
   const store = new Proxy(obj, {
     get(target, key) {

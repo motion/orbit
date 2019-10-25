@@ -1,6 +1,6 @@
 import { createStoreContext } from '@o/kit'
 import { MotionProps, useIntersectionObserver, useParallaxContainer, View, ViewProps } from '@o/ui'
-import React, { memo, useCallback, useRef, useState } from 'react'
+import React, { memo, useCallback, useRef } from 'react'
 
 import { ParallaxProp, ParallaxStageItem } from './ParallaxStage'
 
@@ -30,7 +30,7 @@ export const transitions: { [key: string]: MotionProps['transition'] } = {
   },
   bouncy: {
     type: 'spring',
-    damping: 5,
+    damping: 8,
     stiffness: 75,
   },
   normal: {
@@ -174,6 +174,7 @@ export const FadeInView = memo(
     }
 
     if (reverse) {
+      // @ts-ignore
       ;[style, animate] = [animate, style]
     }
 
@@ -182,7 +183,7 @@ export const FadeInView = memo(
         ? { duration: 0 }
         : {
             ...(transition as any),
-            delay: delayIndex ? delayIndex / 6 : (delay || 1) / 1000,
+            delay: delayIndex ? delayIndex / 12 : (delay || 1) / 1000,
           }
 
     if (parallax) {
@@ -201,6 +202,7 @@ export const FadeInView = memo(
             flexDirection="inherit"
             flexFlow="inherit"
             alignSelf="inherit"
+            {...rest}
           >
             {children}
           </View>
@@ -233,8 +235,8 @@ const fullscreenStyle = {
 export type UseFadePageProps = FadeInProps & { off?: boolean }
 
 export const useFadePage = ({
-  delay = 200,
-  threshold = 0.3,
+  delay = 0,
+  threshold = 0.1,
   off,
   ...props
 }: UseFadePageProps = {}) => {

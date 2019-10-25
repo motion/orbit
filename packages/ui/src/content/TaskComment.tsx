@@ -63,7 +63,7 @@ export function HighlightSection({ children, ...props }: ViewProps) {
   )
 }
 
-const HighlightSectionChrome = gloss({
+const HighlightSectionChrome = gloss(View, {
   padding: 20,
   overflow: 'hidden',
   position: 'relative',

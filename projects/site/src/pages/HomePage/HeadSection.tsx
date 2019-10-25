@@ -1,18 +1,18 @@
-import { gloss, Icon, Image, Parallax, Scale, SimpleText, SimpleTextProps, Space, Stack, SurfacePassProps, Tag, Theme, TitleProps, View } from '@o/ui'
+//!
+import { gloss, Icon, Image, Parallax, SimpleText, SimpleTextProps, Space, Stack, SurfacePassProps, Theme, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
-import { Base } from 'gloss'
+import { Flex } from 'gloss'
 import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
 import { useSiteStore } from '../../SiteStore'
-import { linkProps } from '../../useLink'
 import { fadeAnimations, FadeChildProps, FadeInView, transitions, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContentChrome } from '../../views/SectionContent'
-import { TitleText } from '../../views/TitleText'
 import { Join } from './Join'
 import { useScreenVal } from './SpacedPageContent'
+import { WelcomeBlogPostButton } from './WelcomeBlogPostButton'
 
 const allDelay = 2
 
@@ -49,7 +49,7 @@ const animation: {
   },
 }
 
-const Star = gloss(Base, {
+const Star = gloss(Flex, {
   borderRadius: 100,
   width: 2,
   height: 2,
@@ -245,7 +245,7 @@ const para = {
   'sm-fontSize': 22 * scale,
   'sm-lineHeight': `${2.8 * scale}rem`,
   'sm-display': 'inline',
-  fontWeight: 400,
+  fontWeight: 300,
   'abovemd-fontWeight': 300,
 } as const
 
@@ -277,26 +277,7 @@ const HeadTextSection = memo(() => {
             maxHeight={160}
           >
             <FadeInView {...animation.blog} disable={!measured}>
-              <Tag
-                size={0.85}
-                sizeHeight={1.01}
-                sizePadding={1.4}
-                sizeRadius={4}
-                coat="lightBlue"
-                zIndex={1000}
-                position="absolute"
-                top={-60}
-                right={-10}
-                borderWidth={2}
-                hoverStyle
-                iconAfter
-                icon="chevron-right"
-                // safari ellipse bugfix...
-                minWidth={205}
-                {...linkProps('/blog/update-two')}
-              >
-                Orbit enters private beta!
-              </Tag>
+              <WelcomeBlogPostButton />
             </FadeInView>
             <FadeInView disable={!measured} {...animation.title} {...fontProps.TitleFont}>
               Amazing internal tools
@@ -339,7 +320,7 @@ const HeadJoin = memo(() => {
       <FadeInView {...fadeAnimations.up} delay={500}>
         <SurfacePassProps elevation={5} {...fontProps.TitleFont}>
           <Theme name="orbitOneDark">
-            <Scale size={useScreenVal(1, 1.1, 1.2)}>
+            <Theme scale={1.2} sm-scale={1}>
               <Join
                 inputProps={{
                   minWidth: useScreenVal('auto', 300, 300),
@@ -351,7 +332,7 @@ const HeadJoin = memo(() => {
                 group
                 space={false}
               />
-            </Scale>
+            </Theme>
           </Theme>
         </SurfacePassProps>
       </FadeInView>
@@ -361,18 +342,12 @@ const HeadJoin = memo(() => {
 
 const titleSize = 9
 
-const TextFitTitle = (props: TitleProps) => {
-  return (
-    <TitleText
-      userSelect="text"
-      // @ts-ignore
-      lineHeight="95%"
-      fontSize={`${titleSize}vw`}
-      lg-fontSize={titleSize * 11.5}
-      {...props}
-    />
-  )
-}
+const TextFitTitle = gloss(SimpleText, {
+  userSelect: 'text',
+  lineHeight: '95%',
+  fontSize: `${titleSize}vw`,
+  'lg-fontSize': titleSize * 11.5,
+})
 
 const TitleParagraph = (props: SimpleTextProps) => {
   return <Paragraph alpha={0.7} xs-display="inline" {...props} />

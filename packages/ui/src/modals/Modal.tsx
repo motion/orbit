@@ -3,20 +3,18 @@ import React, { memo } from 'react'
 
 import { Button } from '../buttons/Button'
 import { Portal } from '../helpers/portal'
-import { Section, SectionProps } from '../Section'
-import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
-import { SurfaceProps } from '../Surface'
-import { ViewProps } from '../View/types'
+import { Section, SectionSpecificProps } from '../Section'
+import { Surface, SurfaceProps } from '../Surface'
+import { ScrollablePropVal, ViewProps } from '../View/types'
 import { View } from '../View/View'
 import { ProvideVisibility } from '../Visibility'
 
-// import { GlobalHotKeys } from 'react-hotkeys'
-
-export type SimpleModalProps = SectionProps &
-  SizedSurfaceProps & {
+export type SimpleModalProps = SectionSpecificProps &
+  SurfaceProps & {
     open?: boolean
     onChangeOpen?: (next: boolean) => any
     closable?: boolean
+    scrollable?: ScrollablePropVal
   }
 
 export type ModalProps = SimpleModalProps & {
@@ -24,10 +22,6 @@ export type ModalProps = SimpleModalProps & {
   backgroundProps?: ViewProps
   children?: React.ReactNode
   chromeless?: boolean
-}
-
-const modalKeyMap = {
-  esc: 'close',
 }
 
 export const Modal = memo(
@@ -89,8 +83,8 @@ function SimpleModal({
     <ProvideVisibility visible={!!open}>
       <ModalSizedSurface
         sizeRadius={1}
-        hoverStyle={null}
-        activeStyle={null}
+        hoverStyle={false}
+        activeStyle={false}
         overflow="hidden"
         elevation={10}
         noInnerElement
@@ -122,16 +116,18 @@ function SimpleModal({
   )
 }
 
-const ModalSizedSurface = gloss<SurfaceProps & { open?: boolean }>(SizedSurface, {
+const ModalSizedSurface = gloss<{ open?: boolean }, SurfaceProps>(Surface, {
   opacity: 0,
   pointerEvents: 'none',
-  open: {
-    opacity: 1,
-    pointerEvents: 'auto',
+  conditional: {
+    open: {
+      opacity: 1,
+      pointerEvents: 'auto',
+    },
   },
 })
 
-const ModalBackground = gloss<ViewProps & { open?: boolean }>(View, {
+const ModalBackground = gloss<{ open?: boolean }, ViewProps>(View, {
   position: 'absolute',
   left: 0,
   right: 0,
@@ -140,8 +136,10 @@ const ModalBackground = gloss<ViewProps & { open?: boolean }>(View, {
   zIndex: 1000000,
   justifyContent: 'center',
   alignItems: 'center',
-  open: {
-    pointerEvents: 'auto',
+  conditional: {
+    open: {
+      pointerEvents: 'auto',
+    },
   },
 }).theme(({ background, open }) => ({
   background: open ? background || 'rgba(0, 0, 0, 0.3)' : 'transparent',

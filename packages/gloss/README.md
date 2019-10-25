@@ -2,7 +2,6 @@ TODO
 
 - get much better static extraction
   - extract from gloss() style views
-  - extract ...conditional ? {} : {} and ...conditional && {}
   - extract css variables stuff
 - support flattened transform props (x, y, scale, etc)
 - maybe flatten psuedos

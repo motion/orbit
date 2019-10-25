@@ -33,7 +33,6 @@ export const Spinner = memo((directProps: SpinnerProps) => {
     },
     directProps,
   )
-  console.log('rendering me')
   if (!visibility) {
     return null
   }

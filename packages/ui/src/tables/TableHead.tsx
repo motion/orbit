@@ -9,92 +9,13 @@ import invariant from 'invariant'
 import * as React from 'react'
 
 import { ContextMenu } from '../ContextMenu'
-import { Interactive } from '../Interactive'
+import { Interactive, InteractiveProps } from '../Interactive'
 import { SimpleText } from '../text/SimpleText'
 import { DataColumns, DataType } from '../types'
 import { DEFAULT_ROW_HEIGHT, SortOrder, TableColumnOrder, TableColumnSizes, TableOnColumnResize, TableOnSort } from './types'
 import { isPercentage, normaliseColumnWidth } from './utils'
 
-const TableHeaderArrow = gloss(SimpleText, {
-  display: 'block',
-  opacity: 0.6,
-})
-
-const TableHeadColumnText = gloss(SimpleText, {
-  display: 'inline-block',
-  flex: 1,
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  fontWeight: 500,
-})
-
-TableHeadColumnText.defaultProps = {
-  size: 0.85,
-  alpha: 0.8,
-}
-
-const TableHeaderColumnInteractive = gloss(Interactive, {
-  flex: 1,
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-})
-
-const TableHeaderColumnContainer = gloss(Box, {
-  flexDirection: 'row',
-  padding: '0 8px',
-  margin: ['auto', 0],
-  alignItems: 'center',
-})
-
-const TableHeadContainer = gloss(Box, {
-  flexDirection: 'row',
-  flexShrink: 0,
-  left: 0,
-  overflow: 'hidden',
-  position: 'sticky',
-  right: 0,
-  textAlign: 'left',
-  top: 0,
-  zIndex: 2,
-}).theme((_, theme) => ({
-  borderBottom: [1, theme.borderColorLight],
-  color: theme.color,
-}))
-
-const TableHeadColumnContainer = gloss(Box, {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  position: 'relative',
-  userSelect: 'none',
-  '&:after': {
-    position: 'absolute',
-    content: '" "',
-    right: 0,
-    top: '15%',
-    height: '75%',
-    width: 1,
-  },
-  '&:last-child::after': {
-    display: 'none',
-  },
-}).theme(({ width, height }, theme) => ({
-  lineHeight: height || `${DEFAULT_ROW_HEIGHT}px`,
-  height: height || DEFAULT_ROW_HEIGHT,
-  background: theme.tableHeadBackground || theme.backgroundStrong,
-  flexShrink: width === 'flex' ? 1 : 0,
-  width: width === 'flex' ? '100%' : width,
-  '&:after': {
-    background: theme.borderColor,
-  },
-}))
-
 const RIGHT_RESIZABLE = { right: true }
-
-function calculatePercentage(parentWidth: number, selfWidth: number): string {
-  return `${(100 / parentWidth) * selfWidth}%`
-}
 
 class TableHeadColumn extends React.PureComponent<{
   id: string
@@ -177,11 +98,7 @@ class TableHeadColumn extends React.PureComponent<{
 
     if (isResizable) {
       children = (
-        <TableHeaderColumnInteractive
-          fill={true}
-          resizable={RIGHT_RESIZABLE}
-          onResize={this.onResize}
-        >
+        <TableHeaderColumnInteractive fill resizable={RIGHT_RESIZABLE} onResize={this.onResize}>
           {children}
         </TableHeaderColumnInteractive>
       )
@@ -352,4 +269,79 @@ export class TableHead extends React.PureComponent<
       </ContextMenu>
     )
   }
+}
+
+const TableHeaderArrow = gloss(SimpleText, {
+  display: 'block',
+  opacity: 0.6,
+})
+
+const TableHeadColumnText = gloss(SimpleText, {
+  size: 0.85,
+  alpha: 0.8,
+  display: 'inline-block',
+  flex: 1,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  fontWeight: 500,
+})
+
+const TableHeaderColumnInteractive = gloss<InteractiveProps>(Interactive, {
+  flex: 1,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+})
+
+const TableHeaderColumnContainer = gloss(Box, {
+  flexDirection: 'row',
+  padding: '0 8px',
+  margin: ['auto', 0],
+  alignItems: 'center',
+})
+
+const TableHeadContainer = gloss(Box, {
+  flexDirection: 'row',
+  flexShrink: 0,
+  left: 0,
+  overflow: 'hidden',
+  position: 'sticky',
+  right: 0,
+  textAlign: 'left',
+  top: 0,
+  zIndex: 2,
+}).theme(props => ({
+  borderBottom: [1, props.borderColorLight],
+}))
+
+const TableHeadColumnContainer = gloss(Box, {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  position: 'relative',
+  userSelect: 'none',
+  '&:after': {
+    position: 'absolute',
+    content: '" "',
+    right: 0,
+    top: '15%',
+    height: '75%',
+    width: 1,
+  },
+  '&:last-child::after': {
+    display: 'none',
+  },
+}).theme(props => ({
+  lineHeight: props.height || `${DEFAULT_ROW_HEIGHT}px`,
+  height: props.height || DEFAULT_ROW_HEIGHT,
+  background: props.tableHeadBackground || props.backgroundStrong,
+  flexShrink: props.width === 'flex' ? 1 : 0,
+  width: props.width === 'flex' ? '100%' : props.width,
+  '&:after': {
+    background: props.borderColor,
+  },
+}))
+
+function calculatePercentage(parentWidth: number, selfWidth: number): string {
+  return `${(100 / parentWidth) * selfWidth}%`
 }

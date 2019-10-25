@@ -1,5 +1,5 @@
 import { App } from '@o/stores'
-import { themes } from '../themes'
+import { themes } from '@o/ui'
 
 export class ThemeStore {
   showSidebar = true

@@ -6,7 +6,7 @@ import React, { createElement, isValidElement, memo, Suspense, useRef, useState 
 import { fontProps, mediaQueries } from '../../constants'
 import { linkProps } from '../../useLink'
 import { CodeBlock } from '../../views/CodeBlock'
-import { H5 } from '../../views/H1'
+import { H5 } from '../../views/Headings'
 
 export type ExampleProps = {
   source: string
@@ -66,7 +66,11 @@ export const Example = memo(
           <ExampleHalf
             minHeight={100}
             onMouseEnter={() => {
-              tm.current = setTimeout(() => setHovered(true), 200)
+              tm.current = setTimeout(() => setHovered(true), 300)
+            }}
+            onMouseMove={() => {
+              clearTimeout(tm.current)
+              tm.current = setTimeout(() => setHovered(true), 300)
             }}
             onMouseLeave={() => {
               clearTimeout(tm.current)
@@ -156,12 +160,14 @@ const AccidentalScrollPrevent = gloss<any>(Box, {
   left: 0,
   right: 0,
   bottom: 0,
-  // background: [150, 150, 150, 0.025],
+  background: [150, 150, 150, 0.1],
   zIndex: 10,
 
-  disabled: {
-    opacity: 0,
-    pointerEvents: 'none',
+  conditional: {
+    disabled: {
+      opacity: 0,
+      pointerEvents: 'none',
+    },
   },
 })
 
@@ -176,6 +182,8 @@ const ExampleContainer = gloss(Stack, {
 const ExampleHalf = gloss(Box, {
   position: 'relative',
   marginBottom: 20,
+  borderRadius: 6,
+  overflow: 'hidden',
 
   [mediaQueries.lg]: {
     marginBottom: 0,

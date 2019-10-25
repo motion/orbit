@@ -1,24 +1,29 @@
-import fs from 'fs'
+import fs from 'fs-extra'
 import invariant from 'invariant'
 import loaderUtils from 'loader-utils'
 import path from 'path'
 import util from 'util'
 import webpack from 'webpack'
 
+import { extractStyles } from './ast/extractStyles'
 import { CacheObject, LoaderOptions, PluginContext } from './types'
-import { extractStyles } from './utils/ast/extractStyles'
+
+Error.stackTraceLimit = Infinity
 
 const counter: any = Symbol.for('counter')
 
-const jsxstyleLoader: webpack.loader.Loader = function(this: any, content) {
+// for orbit stack support
+global['__DEV__'] = false
+
+const glossLoader: webpack.loader.Loader = function(this: any, content) {
   if (this.cacheable) {
     this.cacheable()
   }
 
-  const pluginContext: PluginContext = this[Symbol.for('jsxstyle-webpack-plugin')]
+  const pluginContext: PluginContext = this[Symbol.for('gloss-webpack-plugin')]
   invariant(
     pluginContext,
-    'jsxstyle-webpack-plugin must be added to the plugins array in your webpack config',
+    'gloss-webpack-plugin must be added to the plugins array in your webpack config',
   )
 
   const options: LoaderOptions = loaderUtils.getOptions(this) || {}
@@ -66,15 +71,16 @@ const jsxstyleLoader: webpack.loader.Loader = function(this: any, content) {
     options,
   )
 
-  if (!rv.cssFileName || rv.css.length === 0) {
+  if (rv.css.length === 0) {
     return content
   }
 
-  memoryFS.mkdirpSync(path.dirname(rv.cssFileName))
-  memoryFS.writeFileSync(rv.cssFileName, rv.css)
-  this.callback(null, rv.js, rv.map)
+  for (const { filename, content } of rv.css) {
+    memoryFS.mkdirpSync(path.dirname(filename))
+    memoryFS.writeFileSync(filename, content)
+  }
 
-  return
+  this.callback(null, rv.js, rv.map)
 }
 
-export default jsxstyleLoader
+export default glossLoader

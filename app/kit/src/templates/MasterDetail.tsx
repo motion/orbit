@@ -66,7 +66,7 @@ export function MasterDetail({
         >
           {master}
         </Sidebar>
-        <View flex={1} zIndex={0} {...detailProps}>
+        <View flex={1} zIndex={0} {...detailProps as any}>
           {detail}
         </View>
       </>

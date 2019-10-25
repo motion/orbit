@@ -38,7 +38,7 @@ export const SimpleSection = ({ delay = 100, index = undefined, title, children,
           </TitleText>
         </SectionTitle>
         <Space />
-        <SectionBody>{children}</SectionBody>
+        <Box>{children}</Box>
       </FadeInView>
     </SectionChrome>
   )
@@ -48,26 +48,22 @@ const SectionChrome = gloss(Stack, {
   position: 'relative',
 })
 
-export const SectionP = gloss(props => (
+export const SectionP = props => (
   <Paragraph
     tagName="div"
     display="flex"
-    flexFlow="row"
+    flexDirection="row"
     size={1.2}
     alpha={0.65}
     fontWeight={400}
     sizeLineHeight={1.2}
     {...props}
   />
-))
+)
 
-const SectionBody = gloss(Box, {
-  // flexFlow: 'row',
-})
-
-export const SectionIcon = gloss(props => <Icon size={32} {...props} />, {
+export const SectionIcon = gloss(Icon, {
+  size: 32,
   margin: [12, 20, 20, 0],
-  // opacity: 0.2,
 })
 
 const SectionTitle = gloss(View, {
@@ -89,7 +85,7 @@ const Badge = gloss(View, {
   alignItems: 'center',
   justifyContent: 'center',
   fontSize: 20,
-}).theme((_, theme) => ({
+}).theme(theme => ({
   color: theme.color.setAlpha(0.5),
   // border: [1, theme.color.setAlpha(0.1)],
 }))

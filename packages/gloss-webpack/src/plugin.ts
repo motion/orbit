@@ -4,14 +4,16 @@ import MemoryFileSystem from 'webpack/lib/MemoryOutputFileSystem'
 import NodeWatchFileSystem from 'webpack/lib/node/NodeWatchFileSystem'
 
 import { CacheObject, PluginContext } from './types'
-import { wrapFileSystem } from './utils/wrapFileSystem'
+import { wrapFileSystem } from './wrapFileSystem'
 
 import Compiler = webpack.Compiler
 import Compilation = webpack.compilation.Compilation
 
+export * from './types'
+
 const counterKey = Symbol.for('counter')
 
-class JsxstyleWebpackPlugin implements webpack.Plugin {
+export class GlossWebpackPlugin implements webpack.Plugin {
   constructor() {
     this.memoryFS = new MemoryFileSystem()
 
@@ -21,7 +23,7 @@ class JsxstyleWebpackPlugin implements webpack.Plugin {
     }
 
     // context object that gets passed to each loader.
-    // available in each loader as this[Symbol.for('jsxstyle-webpack-plugin')]
+    // available in each loader as this[Symbol.for('gloss-webpack-plugin')]
     this.ctx = {
       cacheFile: null,
       cacheObject: this.cacheObject,
@@ -32,13 +34,13 @@ class JsxstyleWebpackPlugin implements webpack.Plugin {
 
   public static loader = require.resolve('./loader')
 
-  private pluginName = 'JsxstylePlugin'
+  private pluginName = 'GlossPlugin'
   private memoryFS: MemoryFileSystem
   private cacheObject: CacheObject
   private ctx: PluginContext
 
   private nmlPlugin = (loaderContext: any): void => {
-    loaderContext[Symbol.for('jsxstyle-webpack-plugin')] = this.ctx
+    loaderContext[Symbol.for('gloss-webpack-plugin')] = this.ctx
   }
 
   private compilationPlugin = (compilation: Compilation): void => {
@@ -79,5 +81,3 @@ class JsxstyleWebpackPlugin implements webpack.Plugin {
     }
   }
 }
-
-export = JsxstyleWebpackPlugin

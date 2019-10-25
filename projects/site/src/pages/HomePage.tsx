@@ -5,6 +5,8 @@ import React, { lazy, memo, Suspense, useEffect, useLayoutEffect, useRef, useSta
 import { requestIdleCallback } from '../etc/requestIdle'
 import { Header } from '../Header'
 import { Page } from '../views/Page'
+import { SectionContent } from '../views/SectionContent'
+import FeaturesSection from './HomePage/FeaturesSection'
 import { HeadSection } from './HomePage/HeadSection'
 import { LoadingPage } from './LoadingPage'
 
@@ -41,7 +43,7 @@ export const HomePage = memo(() => {
           <HeadSection />
         </Page>
         <Page {...props}>
-          <Sections.FeaturesSection />
+          <FeaturesSection />
         </Page>
         <Page {...props}>
           <Sections.AllInOnePitchDemoSection />
@@ -122,7 +124,7 @@ function loadOnIntersect(Component: any) {
     }, [])
 
     const fallback = (
-      <Page {...props}>
+      <SectionContent flex="none" {...props}>
         <div
           className="intersect-div"
           style={{
@@ -138,18 +140,12 @@ function loadOnIntersect(Component: any) {
           ref={ref}
         />
         <Loading />
-      </Page>
+      </SectionContent>
     )
-
-    if (!show) {
-      return fallback
-    }
 
     return (
       <ErrorBoundary name={`${Component.name}`}>
-        <Suspense fallback={fallback}>
-          <Component {...props} />
-        </Suspense>
+        <Suspense fallback={fallback}>{show ? <Component {...props} /> : fallback}</Suspense>
       </ErrorBoundary>
     )
   }

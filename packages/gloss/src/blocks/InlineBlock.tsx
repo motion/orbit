@@ -1,8 +1,8 @@
 import { gloss } from '../gloss'
-import { Base, BaseProps } from './Base'
+import { Flex, FlexProps } from './Flex'
 
-export type InlineBlockProps = BaseProps
+export type InlineBlockProps = FlexProps
 
-export const InlineBlock = gloss(Base, {
+export const InlineBlock = gloss(Flex, {
   display: 'inline-block',
 })

@@ -7,12 +7,13 @@ import { Text, TextProps } from './text/Text'
 
 export type BreadcrumbsProps = {
   separator?: ReactNode
-  children?: ReactNode | ((crumb?: ReturnType<typeof useBreadcrumb>) => ReactNode)
+  children: ReactNode | ((crumb?: ReturnType<typeof useBreadcrumb>) => ReactNode)
 }
 
 class BreadcrumbStore {
   props: {
-    separator: BreadcrumbsProps['separator']
+    separator?: BreadcrumbsProps['separator']
+    id?: string
   }
 
   selectors = new ObservableSet<string>()
@@ -36,23 +37,22 @@ class BreadcrumbStore {
     },
     {
       defaultValue: [],
-      log: false,
     },
   )
 
   mount(node: string) {
     this.selectors.add(node)
   }
+
   unmount(node: string) {
     this.selectors.delete(node)
   }
 }
 
-const BContext = createStoreContext(BreadcrumbStore)
+const BreadcrumbStoreContext = createStoreContext(BreadcrumbStore)
 
-export function Breadcrumbs({ separator, children }: BreadcrumbsProps) {
-  const store = BContext.useCreateStore({ separator })
-  return <BContext.ProvideStore value={store}>{children}</BContext.ProvideStore>
+export function Breadcrumbs(props: BreadcrumbsProps) {
+  return <BreadcrumbStoreContext.Provider id={useRef(`${Math.random()}`).current} {...props} />
 }
 
 export function Breadcrumb({
@@ -86,9 +86,13 @@ export function BreadcrumbReset(props: { children: any }) {
 }
 
 export const useBreadcrumbReset = (children: any) => {
-  const hasContext = !!useContext(BContext.Context)
+  const hasContext = !!useContext(BreadcrumbStoreContext.Context)
   if (hasContext) {
-    return <BContext.ProvideStore value={null}>{children}</BContext.ProvideStore>
+    return (
+      <BreadcrumbStoreContext.ProvideStore value={null}>
+        {children}
+      </BreadcrumbStoreContext.ProvideStore>
+    )
   }
   return children
 }
@@ -99,11 +103,12 @@ export type BreadcrumbInfo = {
   isFirst: boolean
   isLast: boolean
   selector: string
+  crumbStore: BreadcrumbStore
 }
 
 export function useBreadcrumb(): BreadcrumbInfo | null {
   const selector = useRef(`crumb-${Math.random()}`.replace('.', '')).current
-  const crumbStore = BContext.useStore()
+  const crumbStore = BreadcrumbStoreContext.useStore()
   const index = crumbStore ? crumbStore.orderedChildren.findIndex(x => x === selector) : -1
 
   useLayoutEffect(() => {
@@ -122,5 +127,5 @@ export function useBreadcrumb(): BreadcrumbInfo | null {
   const isLast = index === total - 1
   const isFirst = index === 0
 
-  return { selector, index, total, isLast, isFirst }
+  return { selector, index, total, isLast, isFirst, crumbStore }
 }

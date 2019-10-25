@@ -1,5 +1,16 @@
+import { Color } from '@o/color'
+import { CreateThemeType } from 'gloss'
+
+import { Size } from './Space'
+
 // until next hotkeys patches types
 module.hot && module.hot.accept()
+
+if (typeof window !== 'undefined') {
+  if (typeof CSS['px'] === 'undefined') {
+    require('css-typed-om').default(window)
+  }
+}
 
 export * from './helpers/configureHotKeys'
 export { allIcons } from './icons'
@@ -11,6 +22,52 @@ export * from 'framer-motion'
 export { AnimatePresence } from 'framer-motion'
 export { animation } from './helpers/animation'
 export { pluralize } from './helpers/pluralize'
+
+// this is what your themes should extend
+export type UITheme = {
+  background: Color
+  backgroundHover?: Color
+  backgroundHighlight: Color
+  backgroundHighlightHover?: Color
+  backgroundStrong: Color
+  backgroundStronger: Color
+  backgroundStrongest: Color
+  backgroundZebra: Color
+  color: Color
+  colorHover?: Color
+  colorHighlight: Color
+  colorLight: Color
+  colorLighter: Color
+  colorLightest: Color
+  borderColor: Color
+  borderColorLight: Color
+  borderColorLighter: Color
+  borderColorActive: Color
+  overlayBackground: Color
+  glintColor?: Color
+  glintColorTop?: Color
+  glintColorBottom?: Color
+  backgroundSelection?: Color
+  tableHeadBackground?: Color
+  iconColor?: Color
+
+  // sizing props
+  size?: Size
+  sizeRadius?: Size
+  sizePadding?: Size
+  sizeHeight?: Size
+  sizeFont?: Size
+  sizeLineHeight?: Size
+
+  // values
+  disableGlint?: boolean
+}
+
+declare module 'gloss' {
+  interface ThemeType extends CreateThemeType<UITheme> {}
+}
+
+export * from './themes'
 
 export {
   Absolute,

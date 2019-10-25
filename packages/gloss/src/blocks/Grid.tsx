@@ -1,14 +1,10 @@
 import { gloss } from '../gloss'
-import { Base, BaseProps } from './Base'
-
-// TODO
-// we need to have gloss resolve themes *before* passing to `.theme`
-// so we can use the `px()` function from @o/css.
-// also will make types and generally using gloss nicer
+import { GlossProps } from '../types'
+import { Flex, FlexProps } from './Flex'
 
 const px = (n: number | string | any) => (typeof n === 'number' ? n + 'px' : n)
 
-export type GridProps = BaseProps & {
+type GridPropsInner = {
   itemMinHeight?: number
   itemMinWidth?: number
   itemMaxWidth?: number
@@ -17,7 +13,9 @@ export type GridProps = BaseProps & {
   autoFitRows?: boolean
 }
 
-export const Grid = gloss<GridProps>(Base, {
+export type GridProps = GlossProps<FlexProps & GridPropsInner>
+
+export const Grid = gloss<GridPropsInner, FlexProps>(Flex, {
   display: 'grid',
 }).theme(p => ({
   ...(p.colSpan ? { gridColumn: `span ${p.colSpan}` } : null),

@@ -35,7 +35,14 @@ export const FloatingChrome = (props: FloatingChromeProps) => {
   return (
     <Portal style={useMemo(() => ({ zIndex }), [zIndex])}>
       <View position="absolute" top={0} right={0} bottom={0} left={0}>
-        <View position="absolute" zIndex={zIndex} background="red" {...pos} {...style} {...rest} />
+        <View
+          position="absolute"
+          zIndex={zIndex}
+          background="red"
+          {...pos}
+          style={style}
+          {...rest}
+        />
       </View>
     </Portal>
   )

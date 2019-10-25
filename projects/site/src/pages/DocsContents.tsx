@@ -30,6 +30,7 @@ export const DocsContents = memo(
           cursor="pointer"
           elementProps={{ tagName: 'a' }}
           textDecoration="none"
+          textAlign="center"
         >
           <Stack direction="horizontal" marginTop={80} width="100%" space>
             {!!prevItem && (
@@ -151,7 +152,7 @@ export const DocsContents = memo(
                   tooltip="Source in Github"
                   size="lg"
                   {...linkProps(`https://github.com/motion/orbit`)}
-                  icon={<Icon size={16} svg={GithubIcon} />}
+                  icon={<Icon size={16} svg={GithubIcon.replace('fill="#fff', '')} />}
                   onClick={e => e.stopPropagation()}
                 />
               )}

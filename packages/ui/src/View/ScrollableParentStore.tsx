@@ -104,15 +104,17 @@ function setupScrollableIntersectionEffect(props: ScrollableIntersectionProps) {
         }
 
         // now adjust for margins
-        // @ts-ignore
         const styleMap = node.computedStyleMap()
         for (const dimension in marginDimensions) {
           const sides = marginDimensions[dimension]
           for (const side of sides) {
             const val = styleMap.get(side)
+            // @ts-ignore
             if (val.unit === 'percent') {
+              // @ts-ignore
               final[dimension] += (val.value * parentOuterWidth) / 100
             } else {
+              // @ts-ignore
               final[dimension] += val.to('px').value
             }
           }

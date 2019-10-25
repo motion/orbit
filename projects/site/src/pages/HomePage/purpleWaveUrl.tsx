@@ -15,4 +15,4 @@ const orangeWave = {
 export const Wavy = gloss(View, {
   backgroundAttachment: 'fixed',
   backgroundSize: 'contain',
-}).theme((_, theme) => (theme.background.isDark() ? purpleWave : orangeWave))
+}).theme(theme => (theme.background.isDark() ? purpleWave : orangeWave))

@@ -81,9 +81,9 @@ export const TitleRow = themeable(
     selectable,
     ...allProps
   }: TitleRowProps) => {
+    const spaceSize = getSpaceSize(selectDefined(space, size))
     const scale = useScale()
     const iconSize = 32 * scale
-    const spaceSize = getSpaceSize(selectDefined(space, size))
     const [collapseProps, rowProps] = splitCollapseProps(allProps)
     const collapse = useCollapse(collapseProps)
     const titleElement =

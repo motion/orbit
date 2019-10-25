@@ -6,7 +6,7 @@ export function addDisplayName(path, glossFnName: string, references, file, babe
   const { types: t, template } = babel
   // extra safe because babel or webpack or something can leave behind old ones of these
   const buildBuiltInWithConfig = template(`
-  typeof IDENTIFIER !== 'undefined' && IDENTIFIER.withConfig && IDENTIFIER.withConfig({displayName: "DISPLAY_NAME"})
+  if (IDENTIFIER) { IDENTIFIER.displayName = "DISPLAY_NAME" }
   `)
 
   for (const reference of references) {

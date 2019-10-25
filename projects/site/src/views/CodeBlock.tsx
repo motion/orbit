@@ -1,13 +1,12 @@
 import './duotone-dark.css'
 
-import { gloss, useTheme } from '@o/ui'
+import { gloss } from '@o/ui'
 import { Box } from 'gloss'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import darkTheme from 'prism-react-renderer/themes/nightOwl'
 import React, { memo } from 'react'
 
 export const CodeBlock = memo((props: { children: string; language?: string }) => {
-  const theme = useTheme()
   return (
     <CodeBlockChrome>
       <Highlight

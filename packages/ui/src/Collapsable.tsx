@@ -98,6 +98,4 @@ const Chevron = gloss(Icon, {
   marginRight: 4,
   marginLeft: -2,
   transition: 'all ease 200ms',
-}).theme((props, theme) => ({
-  color: selectDefined(props.color, theme.iconColor, theme.color),
-}))
+})

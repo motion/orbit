@@ -118,7 +118,7 @@ export class SelectableStore {
   private removeUnselectable = (keys: (string | number)[]) => {
     return keys.filter(k => {
       const row = this.rows[this.keyToIndex[k]]
-      if (row && row.selectable === false) {
+      if (!row || row.selectable === false) {
         return false
       }
       return true
@@ -127,7 +127,13 @@ export class SelectableStore {
 
   private setActive(next: (string | number)[]) {
     // check for disabled rows
+    this.updateActiveAndKeyToIndex(next, false)
     const nextFiltered = this.removeUnselectable(next)
+
+    // we filtered it out, just leave it as it is
+    if (!!next.length && nextFiltered.length === 0) {
+      return
+    }
 
     // dont update if not changed (simple empty check)
     if (this.active.size === 0 && nextFiltered.length === 0) {
@@ -140,7 +146,6 @@ export class SelectableStore {
     }
 
     this.active = nextActive
-    this.updateActiveAndKeyToIndex(next, false)
   }
 
   updateActiveAndKeyToIndex(next: (string | number)[] = [...this.active], updateActive = true) {
@@ -236,7 +241,9 @@ export class SelectableStore {
       this.setActive([])
     } else {
       if (!this.rows.length) return
-      this.setActive([this.getIndexKey(index)])
+      const key = this.getIndexKey(index)
+      this.keyToIndex[key] = index
+      this.setActive([key])
     }
   }
 
@@ -249,6 +256,7 @@ export class SelectableStore {
   setRowActive(index: number, e?: React.MouseEvent) {
     const row = this.rows[index]
     const rowKey = this.key(row, index)
+    this.keyToIndex[rowKey] = index
     let next = []
     const { active } = this
     const modifiers = this.getModifiers(e)

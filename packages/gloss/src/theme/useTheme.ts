@@ -1,59 +1,76 @@
-import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
+import { GlossThemeProps } from '../types'
 import { CompiledTheme } from './createTheme'
+import { createThemeProxy, UpdateProxySymbol } from './createThemeProxy'
 import { preProcessTheme } from './preProcessTheme'
 import { CurrentThemeContext } from './Theme'
 
 // can optionally pass in props accepted by theme
 
-type ThemeTrackState = {
+export type ThemeTrackState = {
+  theme: CompiledTheme
   hasUsedOnlyCSSVariables: boolean
   nonCSSVariables: Set<string>
 }
 
-type UseThemeProps = { coat?: string | false }
-
-export function useTheme(props?: UseThemeProps) {
+export function useTheme<A = {}>(props?: A): GlossThemeProps<A> {
   const themeObservable = useContext(CurrentThemeContext)
-  const [cur, setCur] = useState<CompiledTheme>(getTheme(themeObservable.current, props))
+  const forceUpdate = useState(0)[1]
   const state = useRef<ThemeTrackState>()
   if (!state.current) {
     state.current = {
+      theme: getTheme(themeObservable.current, props),
       hasUsedOnlyCSSVariables: true,
       nonCSSVariables: new Set(),
     }
   }
+  const curTheme = state.current.theme
+
+  const proxy = useMemo(() => {
+    return createThemeProxy(curTheme, state.current!, props)
+  }, [curTheme, themeObservable])
+
+  // update fast -- may be better to put in layoutEffect
+  proxy[UpdateProxySymbol] = [props, curTheme]
 
   useEffect(() => {
+    const next = getTheme(themeObservable.current, props)
+    if (next !== state.current!.theme) {
+      state.current!.theme = next
+      forceUpdate(Math.random())
+    }
+
     const sub = themeObservable.subscribe(theme => {
       if (!state.current!.hasUsedOnlyCSSVariables) {
-        console.warn('re-rendering because used variables', state.current)
-        setCur(getTheme(theme, props))
+        console.warn('re-rendering because used variables', state.current?.nonCSSVariables, props)
+        state.current!.theme = getTheme(theme, props)
+        forceUpdate(Math.random())
       }
     })
     return sub.unsubscribe
-  }, [])
+  }, [themeObservable])
 
-  if (!cur) {
-    console.warn('no theme??', themeObservable, props)
-    debugger
-    return {}
-  }
-
-  return proxyTheme(cur, state.current)
+  return proxy
 }
 
-const getTheme = (theme?: CompiledTheme, props?: UseThemeProps) => {
+const getTheme = (theme?: CompiledTheme, props?: any) => {
   if (theme) {
     // TODO this should not go here, maybe just wrap those themes in <Theme coat={false}> or something
     if (props?.coat === false) {
       return theme.parent || theme
-    }
-    if (props?.coat) {
+    } else if (props?.coat) {
       return preProcessTheme(props, theme)
     }
   }
   return theme
+}
+
+export const OriginalPropsSymbol = Symbol('OriginalPropsSymbol') as any
+
+// utility for getting original props
+export const unwrapProps = <A = any>(themeProps: A): A => {
+  return themeProps[OriginalPropsSymbol]
 }
 
 export const UnwrapThemeSymbol = Symbol('UnwrapTheme') as any
@@ -67,43 +84,4 @@ export const unwrapTheme = <CompiledTheme>(theme: CompiledTheme): CompiledTheme 
     }
   }
   return res
-}
-
-function proxyTheme(theme: CompiledTheme, trackState: ThemeTrackState) {
-  return useMemo(() => {
-    return new Proxy(theme, {
-      get(target, key) {
-        if (key === UnwrapThemeSymbol) {
-          return theme
-        }
-        if (key[0] === '_' || !Reflect.has(target, key)) {
-          return Reflect.get(target, key)
-        }
-        const val = Reflect.get(target, key)
-        if (val && val.cssVariable) {
-          return new Proxy(val, {
-            get(starget, skey) {
-              if (skey === 'cssVariable') {
-                // unwrap
-                return starget[skey]
-              }
-              if (typeof key === 'string' && typeof skey === 'string') {
-                if (!starget.cssVariableSafeKeys.includes(skey)) {
-                  trackState.nonCSSVariables.add(key)
-                  trackState.hasUsedOnlyCSSVariables = false
-                }
-              }
-              return Reflect.get(starget, skey)
-            }
-          })
-        } else {
-          if (typeof key === 'string') {
-            trackState.nonCSSVariables.add(key)
-            trackState.hasUsedOnlyCSSVariables = false
-          }
-          return val
-        }
-      },
-    })
-  }, [])
 }

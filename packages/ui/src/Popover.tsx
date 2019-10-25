@@ -13,8 +13,6 @@ import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { Surface, SurfaceProps } from './Surface'
 import { SurfacePassPropsReset } from './SurfacePropsContext'
-import { getElevation } from './View/elevation'
-import { ViewProps } from './View/types'
 import { View } from './View/View'
 
 const acceptsProps = (x, val) => x.type.acceptsProps && x.type.acceptsProps[val]
@@ -463,7 +461,8 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
     } else {
       if (!this.target && !isManuallyPositioned) {
         // potentially we can just get it directly
-        throw new Error('Couldnt pass className down to target to do measurements...')
+        console.error('Couldnt pass className down to target to do measurements...', this)
+        return
       }
     }
 
@@ -580,8 +579,6 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
         height: Math.min(window.innerHeight, popoverBounds.height),
       },
     }
-    console.log('nextState', nextState)
-
     // if changed, update
     const prevState = pick(this.state, Object.keys(nextState))
     if (!isEqual(nextState, prevState)) {
@@ -590,7 +587,6 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
         nextState.popoverBounds,
         nextState.targetBounds,
       )
-
       this.setState({
         ...nextState,
         measureState: 'done',
@@ -1087,9 +1083,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
                   {...backgroundProp}
                   size={arrowSize}
                   towards={INVERSE[direction]}
-                  // TODO this is bad because were allowing setting theme from the property...
-                  // so this wont get the theme set through the property, we should remove the property
-                  {...getElevation({ elevation }, this.context.current)}
+                  elevation={elevation}
                 />
               </ArrowContain>
             )}
@@ -1097,11 +1091,11 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
               <SurfacePassPropsReset>
                 <Surface
                   className="popover-inner-surface"
-                  themeSubSelect="popover"
+                  subTheme="popover"
                   sizeRadius
                   flex={1}
-                  hoverStyle={null}
-                  activeStyle={null}
+                  hoverStyle={false}
+                  activeStyle={false}
                   overflow="hidden"
                   elevation={elevation}
                   noInnerElement
@@ -1157,7 +1151,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
 
 const themeBg = theme => theme.background
 
-const PopoverContainer = gloss<ViewProps & { isOpen?: boolean; isTouchable?: boolean }>(View, {
+const PopoverContainer = gloss<{ isOpen?: boolean; isTouchable?: boolean }>(View, {
   position: 'absolute',
   top: 0,
   left: 0,
@@ -1168,18 +1162,15 @@ const PopoverContainer = gloss<ViewProps & { isOpen?: boolean; isTouchable?: boo
   '& > *': {
     pointerEvents: 'none !important',
   },
-  isOpen: {
-    opacity: 1,
-  },
-  isTouchable: {
-    '& > *': {
-      pointerEvents: 'all !important',
+  conditional: {
+    isOpen: {
+      opacity: 1,
     },
-  },
-}).withConfig({
-  ignoreAttrs: {
-    isOpen: true,
-    isTouchable: true,
+    isTouchable: {
+      '& > *': {
+        pointerEvents: 'all !important',
+      },
+    },
   },
 })
 
@@ -1194,15 +1185,25 @@ const Overlay = gloss<any>(Box, {
   opacity: 0,
   transition: 'all ease-in 100ms',
   zIndex: -2,
-  isShown: {
-    opacity: 1,
-    pointerEvents: 'all',
+  conditional: {
+    isShown: {
+      opacity: 1,
+      pointerEvents: 'all',
+    },
   },
 }).theme(({ overlay }) => ({
   background: overlay === true ? 'rgba(0,0,0,0.2)' : overlay,
 }))
 
-const PopoverWrap = gloss<any>(Box, {
+const PopoverWrap = gloss<{
+  distance?: number
+  forgiveness?: number
+  isOpen?: boolean
+  noPortal?: boolean
+  willReposition?: boolean
+  noHoverOnChildren?: any
+  showForgiveness?: boolean
+}>(View, {
   position: 'absolute',
   pointerEvents: 'none',
   zIndex: -1,
@@ -1212,13 +1213,9 @@ const PopoverWrap = gloss<any>(Box, {
     pointerEvents = p.noPortal ? 'inherit' : 'auto'
   }
   const transform = {
-    x: p.left,
-    y: (p.isOpen && !p.willReposition ? 0 : -5) + p.top,
+    y: (p.isOpen && !p.willReposition ? 0 : -5) + typeof p.top === 'string' ? +p.top : 0,
   }
   return {
-    width: p.width,
-    height: p.height,
-    maxHeight: p.maxHeight,
     transition: p.willReposition ? 'none' : p.transition,
     opacity: p.isOpen && !p.willReposition ? 1 : 0,
     pointerEvents,

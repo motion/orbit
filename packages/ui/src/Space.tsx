@@ -1,9 +1,7 @@
-import { selectDefined } from '@o/utils'
-import { Box, gloss } from 'gloss'
+import { Box, gloss, ThemeValue } from 'gloss'
 
 import { isBrowser } from './constants'
 import { mediaQueryKeysSize } from './mediaQueryKeys'
-import { useScale } from './Scale'
 
 // we need just a touch of css to collapse multiple spaces nicely
 if (isBrowser) {
@@ -34,7 +32,7 @@ export const spaceSizes = {
   xxxl: 48,
 }
 
-export function getSpaceSize(space: Size, scale: number = 1): number | string {
+export function getSpaceSize(space: Size | ThemeValue<Size>, scale: number = 1): number | string {
   if (typeof space === 'number') {
     return space * scale
   }
@@ -61,36 +59,34 @@ export function getSpacesSize(space: Sizes, scale: number = 1) {
   return getSpaceSize(space)
 }
 
-export const Space = gloss<SpaceProps>(Box)
-  .theme(({ size, scale = 1, ...rest }) => {
-    scale = selectDefined(scale, useScale())
-    const dim = getSpaceSize(size, scale)
-    // support media query spaces
-    let mediaQueryStyles = null
-    for (const key in rest) {
-      if (key in mediaQueryKeysSize) {
-        const val = rest[key]
-        const mediaDim = getSpaceSize(val, scale)
-        const mediaKey = key.replace('-size', '')
-        mediaQueryStyles = mediaQueryStyles || {}
-        mediaQueryStyles[`${mediaKey}-width`] = mediaDim
-        mediaQueryStyles[`${mediaKey}-height`] = mediaDim
-        // remove invalid style
-        delete rest[key]
-      }
+const getScaledSize = (dim: number | string) => {
+  return typeof dim === 'string' ? dim : `calc(${dim}px * var(--scale))`
+}
+
+export const Space = gloss<SpaceProps>(Box, {
+  size: 'md',
+  className: 'ui-space',
+}).theme(props => {
+  const size = props.size
+  const dim = getScaledSize(getSpaceSize(size))
+  // support media query spaces
+  let mediaQueryStyles = null
+  for (const key in props) {
+    if (key in mediaQueryKeysSize) {
+      const val = props[key]
+      const mediaDim = getScaledSize(getSpaceSize(val))
+      const mediaKey = key.replace('-size', '')
+      mediaQueryStyles = mediaQueryStyles || {}
+      mediaQueryStyles[`${mediaKey}-width`] = mediaDim
+      mediaQueryStyles[`${mediaKey}-height`] = mediaDim
     }
-    return {
-      width: dim,
-      height: dim,
-      ...rest,
-      ...mediaQueryStyles,
-    }
-  })
-  .withConfig({
-    defaultProps: {
-      className: 'ui-space',
-    },
-  })
+  }
+  return {
+    width: dim,
+    height: dim,
+    ...mediaQueryStyles,
+  }
+})
 
 // @ts-ignore
 Space.isSpace = true

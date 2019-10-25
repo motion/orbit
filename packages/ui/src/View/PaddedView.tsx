@@ -3,10 +3,9 @@ import { isDefined } from '@o/utils'
 import { Box, gloss } from 'gloss'
 
 import { hasMediaQueries, mediaQueryKeys } from '../mediaQueryKeys'
-import { useScale } from '../Scale'
 import { Sizes } from '../Space'
 import { getSizableValue } from './getSizableValue'
-import { ScrollableViewProps, SizesObject, ViewProps } from './types'
+import { ScrollableViewProps, SizesObject, ViewPropsPlain } from './types'
 import { wrappingSpaceTheme } from './wrappingSpaceTheme'
 
 export type PaddingProps = {
@@ -14,7 +13,7 @@ export type PaddingProps = {
 }
 
 export const PaddedView = gloss<
-  ViewProps &
+  ViewPropsPlain &
     Pick<ScrollableViewProps, 'scrollable' | 'parentSpacing'> & {
       isWrapped?: boolean
     }
@@ -42,7 +41,7 @@ export const PaddedView = gloss<
     maxWidth: props.scrollable === 'y' || !props.scrollable ? '100%' : undefined,
     maxHeight: props.scrollable === 'x' ? '100%' : undefined,
   }),
-  usePadding,
+  paddingTheme,
   wrappingSpaceTheme,
 )
 
@@ -74,17 +73,18 @@ type PaddingSpecificProps = PaddingProps & {
   paddingBottom?: any
 }
 
-export function usePadding(props: PaddingSpecificProps) {
-  const scale = useScale()
-
+export function paddingTheme(props: PaddingSpecificProps) {
   if (props.padding === false) {
     return null
   }
 
   const res: any = {}
 
+  // TODO only iterate props here because assuming static compiled optimizations
+  // we will have way less props on average
+
   // base padding
-  const base = getPaddingBaseValue(props.padding, scale)
+  const base = getPaddingBaseValue(props.padding)
   for (const key of paddingSides) {
     const val = getPaddingSideValue(base, props, paddingSides, key)
     if (isDefined(val)) {
@@ -100,7 +100,7 @@ export function usePadding(props: PaddingSpecificProps) {
       if (!isDefined(props[key])) continue
       if (key in mediaQueryKeysPadding) {
         basePaddings = basePaddings || {}
-        basePaddings[key.replace('-padding', '')] = getPaddingBaseValue(props[key], scale)
+        basePaddings[key.replace('-padding', '')] = getPaddingBaseValue(props[key])
       }
       if (key in mediaQueryKeysPaddingSides) {
         sidePaddings.push(key)
@@ -124,12 +124,14 @@ export function usePadding(props: PaddingSpecificProps) {
   return res
 }
 
-function getPaddingBaseValue(value: any, scale: number) {
+function getPaddingBaseValue(value: any) {
   const res = getSizableValue(value)
   return Array.isArray(res)
-    ? res.map(x => (typeof x === 'number' ? x * scale : x))
+    ? res.map(x => (typeof x === 'number' && x > 0 ? `calc(${x}px * var(--scale))` : x))
     : typeof res === 'number'
-    ? res * scale
+    ? res > 0
+      ? `calc(${res}px * var(--scale))`
+      : res
     : res
 }
 

@@ -26,11 +26,11 @@ const UndefinedValue = gloss('span', {
 })
 
 const StringValue = gloss('span', {
-  color: colors.cherryDark1,
+  color: 'purple',
 })
 
 const ColorValue = gloss('span', {
-  color: colors.blueGrey,
+  color: 'rgb(50, 50, 200)',
 })
 
 const SymbolValue = gloss('span', {
@@ -38,7 +38,7 @@ const SymbolValue = gloss('span', {
 })
 
 const NumberValue = gloss('span', {
-  color: colors.tealDark1,
+  color: 'rgb(50, 150, 50)',
 })
 
 const ColorBox = gloss(View, {

@@ -20,6 +20,7 @@ export const UNDEFINED = 'undefined'
 // not the best tradeoff here for understanding where you can pass in colors
 export const COLOR_KEYS = new Set<string>([
   'color',
+  'background',
   'backgroundColor',
   'borderColor',
   'borderBottomColor',
@@ -36,10 +37,7 @@ export const TRANSFORM_KEYS_MAP = {
   dropShadow: 'drop-shadow',
 }
 
-export const COMMA_JOINED = {
-  boxShadow: true,
-  transition: true,
-}
+export const COMMA_JOINED = new Set(['boxShadow', 'transition'])
 
 export const SHORTHANDS = {
   borderLeftRadius: ['borderTopLeftRadius', 'borderBottomLeftRadius'],
@@ -54,33 +52,13 @@ export const FALSE_VALUES = {
   borderColor: 'transparent',
 }
 
-export const BORDER_KEY = {
-  border: true,
-  borderLeft: true,
-  borderRight: true,
-  borderBottom: true,
-  borderTop: true,
-}
-
-export const psuedoKeys = {
-  // pseudoclasses
-  '&:hover': true,
-  '&:active': true,
-  '&:checked': true,
-  '&:focus': true,
-  '&:enabled': true,
-  '&:disabled': true,
-  '&:empty': true,
-  '&:target': true,
-  '&:required': true,
-  '&:valid': true,
-  '&:invalid': true,
-  // psuedoelements
-  '&:before': true,
-  '&:after': true,
-  '&:placeholder': true,
-  '&:selection': true,
-}
+export const BORDER_KEY = new Set([
+  'border',
+  'borderLeft',
+  'borderRight',
+  'borderBottom',
+  'borderTop',
+])
 
 export const unitlessNumberProperties = new Set<string>([
   'animationIterationCount',

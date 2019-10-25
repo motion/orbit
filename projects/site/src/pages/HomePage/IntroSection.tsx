@@ -1,4 +1,4 @@
-import { gloss, Image, Stack, View } from '@o/ui'
+import { Box, gloss, Image, Stack, View } from '@o/ui'
 import React from 'react'
 
 import { mediaQueries } from '../../constants'
@@ -91,7 +91,7 @@ export default function IntroSection() {
   )
 }
 
-const HalfGrid = gloss(Stack, {
+const HalfGrid = gloss(Box, {
   display: 'grid',
   columnGap: 50,
 

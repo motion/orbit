@@ -2,7 +2,7 @@ import { useContext, useLayoutEffect, useRef } from 'react'
 import React from 'react'
 
 import { CurrentThemeContext } from './Theme'
-import { themeVariableManager } from './themeVariableManager'
+import { themeVariableManager } from './ThemeVariableManager'
 
 export function ThemeResetSubTheme({ children }: { children: any }) {
   const themeContext = useContext(CurrentThemeContext)
@@ -12,7 +12,7 @@ export function ThemeResetSubTheme({ children }: { children: any }) {
     if (themeContext.parentContext) {
       const getClassName = () => {
         if (themeContext.parentContext?.current) {
-          return themeVariableManager.getClassNames(themeContext.parentContext!)
+          return themeVariableManager.getClassNames(themeContext.parentContext!.current)
         }
         return ''
       }
@@ -26,7 +26,7 @@ export function ThemeResetSubTheme({ children }: { children: any }) {
 
   if (themeContext.parentContext) {
     return (
-      <div ref={nodeRef} style={{ display: 'contents' }}>
+      <div ref={nodeRef} className="display-contents" style={{ display: 'contents' }}>
         {children}
       </div>
     )

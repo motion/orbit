@@ -1,124 +1,31 @@
-import { css, GlossPropertySet } from '@o/css'
+import { css } from '@o/css'
 import { motion } from 'framer-motion'
-import { Base, gloss } from 'gloss'
+import { Flex, gloss } from 'gloss'
 
 import { AnimationStore } from '../Geometry'
-import { Sizes } from '../Space'
-import { getElevation } from './elevation'
-import { getSizableValue } from './getSizableValue'
-import { usePadding } from './PaddedView'
-import { SizesObject, ViewProps, ViewThemeProps } from './types'
-
-export const motionStyleProps = {
-  x: true,
-  y: true,
-  z: true,
-  translateX: true,
-  translateY: true,
-  translateZ: true,
-  rotate: true,
-  rotateX: true,
-  rotateY: true,
-  rotateZ: true,
-  scale: true,
-  scaleX: true,
-  scaleY: true,
-  scaleZ: true,
-  skew: true,
-  skewX: true,
-  skewY: true,
-  originX: true,
-  originY: true,
-  originZ: true,
-  perspective: true,
-}
-
-// todo we can probably get rid of this by just not having isDOMElement? or some new flag
-const motionExtraProps = {
-  animate: true,
-  custom: true,
-  drag: true,
-  dragConstraints: true,
-  dragElastic: true,
-  dragMomentum: true,
-  dragPropagation: true,
-  dragTransition: true,
-  exit: true,
-  initial: true,
-  layoutTransition: true,
-  onAnimationComplete: true,
-  onAnimationEnd: true,
-  onAnimationStart: true,
-  onDirectionLock: true,
-  onDrag: true,
-  onDragEnd: true,
-  onDragStart: true,
-  onHoverEnd: true,
-  onHoverStart: true,
-  onPan: true,
-  onPanEnd: true,
-  onPanStart: true,
-  onTap: true,
-  onTapCancel: true,
-  onTapStart: true,
-  onUpdate: true,
-  positionTransition: true,
-  transformTemplate: true,
-  transition: true,
-  variants: true,
-  whileHover: true,
-  whileTap: true,
-  useInvertedScale: true,
-}
-
-// includes motion styles too
-export const motionProps = {
-  ...motionStyleProps,
-  ...motionExtraProps,
-}
+import { elevationTheme } from './elevation'
+import { marginTheme } from './marginTheme'
+import { motionExtraProps, motionStyleProps } from './motionStyleProps'
+import { paddingTheme } from './PaddedView'
+import { ViewPropsPlain } from './types'
 
 const shouldRenderToMotion = (props: any) =>
   'animate' in props || 'drag' in props || 'layoutTransition' in props
 
-// regular view
-export const View = gloss<ViewProps, ViewThemeProps>(Base, {
+export const View = gloss<ViewPropsPlain>(Flex, {
   display: 'flex',
-})
-  .theme(getMargin, usePadding, getElevation)
-  .withConfig({
+
+  // we handle this with paddingTheme/marginTheme
+  ignorePropsToStyle: {
+    padding: true,
+    margin: true,
+  },
+
+  config: {
     // shouldAvoidProcessingStyles: shouldRenderToMotion,
     postProcessProps(inProps, outProps, getStyles) {
       if (shouldRenderToMotion(inProps)) {
         let style = css(getStyles(), { snakeCase: false })
-
-        // let finalClassName = inProps.className
-        // parse style back from classname to style tag for motion
-        // if (outProps.className) {
-        //   Object.assign(style, )
-        //   console.log('classnames are', style, outProps.className)
-        //   // finalClassName = ''
-        //   // const [specific, nonSpecific] = partition(
-        //   //   outProps.className.split(' '),
-        //   //   x => x[0] === 's',
-        //   // )
-        //   // // order them so specific gets most importance
-        //   // for (const name of [...nonSpecific, ...specific]) {
-        //   //   const key = name[0] === 's' ? name.slice(1) : name
-        //   //   if (tracker.has(key)) {
-        //   //     const styles = tracker.get(key)
-        //   //     if (styles.namespace == '.') {
-        //   //       if (!styles.styleObject) {
-        //   //         styles.styleObject = css(styles.rules, { snakeCase: false })
-        //   //       }
-        //   //       Object.assign(style, styles.styleObject)
-        //   //     } else {
-        //   //       finalClassName += ` ${name}`
-        //   //     }
-        //   //   } else {
-        //   //     finalClassName += ` ${name}`
-        //   //   }
-        //   // }
-        // }
 
         for (const key in inProps) {
           const val = inProps[key]
@@ -156,19 +63,10 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
         ? motion[props.tagName] || motion.div
         : props.tagName || 'div'
     },
-  })
+  },
+}).theme(marginTheme, paddingTheme, elevationTheme)
 
 View.staticStyleConfig = {
   ...View.staticStyleConfig,
   deoptProps: ['animate', 'drag', 'layoutTransition'],
-}
-
-export type MarginProps = {
-  margin?: Sizes | SizesObject | GlossPropertySet['margin']
-}
-
-export function getMargin(props: MarginProps) {
-  if (props.margin && props.margin !== 0) {
-    return { margin: getSizableValue(props.margin) }
-  }
 }

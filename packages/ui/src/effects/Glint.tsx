@@ -19,36 +19,32 @@ type Props = {
 }
 
 export const Glint = gloss<Props>(Box, {
+  className: 'ui-glint',
   pointerEvents: 'none',
   position: 'absolute',
   left: 0,
   right: 0,
-  height: 10,
+  height: '100%',
   zIndex: 10000,
-}).theme((props, theme) => {
+}).theme(props => {
   let { bottom, opacity, size = 1, y, ...radiusProps } = props
   const isTop = isUndef(bottom)
-  let glintColor = props.color || theme[isTop ? 'glintColor' : 'glintColorBottom']
+  let glintColor = props[isTop ? 'glintColor' : 'glintColorBottom'] || props.glintColor
   if (!isDefined(glintColor)) {
     opacity = 0.1
     if (isTop) {
-      glintColor = theme.backgroundStrong
+      glintColor = props.backgroundStrong
     } else {
-      glintColor = theme.backgroundStronger
+      glintColor = props.backgroundStronger
     }
   }
   const autoHalf = (isTop ? -0.5 : 0.5) * size
   return {
-    opacity: typeof theme.glintColor !== 'undefined' ? 1 : opacity,
+    opacity: props.glintColor !== undefined ? 1 : opacity,
     [isTop ? 'top' : 'bottom']: 0,
-    height: '100%',
     transform: { y: typeof y === 'number' ? y : autoHalf },
     borderTop: isTop && [size, glintColor],
     borderBottom: !isTop && [size, glintColor],
     ...radiusProps,
   }
 })
-
-Glint.defaultProps = {
-  className: 'ui-glint',
-}

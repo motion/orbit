@@ -1,18 +1,12 @@
-import { Button, ButtonProps, useTheme } from '@o/ui'
-import React from 'react'
+import { Button, gloss } from '@o/ui'
 
-export const Key = (props: ButtonProps) => {
-  const theme = useTheme()
-  return (
-    <Button
-      display="inline"
-      size="xs"
-      glint={false}
-      fontWeight={600}
-      background={theme.background}
-      hoverStyle={false}
-      activeStyle={false}
-      {...props}
-    />
-  )
-}
+export const Key = gloss(Button, {
+  display: 'inline',
+  size: 'xs',
+  glint: false,
+  fontWeight: 600,
+  // background: 'red', //theme => theme.background,
+  hoverStyle: false,
+  activeStyle: false,
+  noInnerElement: true,
+})

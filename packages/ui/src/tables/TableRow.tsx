@@ -1,12 +1,6 @@
-/**
- * Copyright 2018-present Facebook.
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- * @format
- */
 import { Color } from '@o/color'
 import { useReaction } from '@o/use-store'
-import { Box, CompiledTheme, gloss } from 'gloss'
+import { Box, gloss, ThemeFn } from 'gloss'
 import React, { memo } from 'react'
 
 import { DataValue } from '../DataValue'
@@ -20,6 +14,12 @@ import { guesses, guessTheme } from './guessTheme'
 import { DEFAULT_ROW_HEIGHT, TableColumnKeys, TableColumnSizes, TableOnAddFilter } from './types'
 import { normaliseColumnWidth } from './utils'
 
+/**
+ * Copyright 2018-present Facebook.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ * @format
+ */
 type TableRowProps = {
   color?: Color
   even?: boolean
@@ -134,36 +134,46 @@ export const TableRow = memo(function TableRow({
   )
 })
 
-const backgroundColor = (props: TableRowProps, theme: CompiledTheme) => {
+const backgroundTheme: ThemeFn<TableRowProps> = props => {
+  let background
   if (props.background) {
-    return props.background
-  }
-  const isZebra = props.even && props.zebra
-  if (props.highlighted) {
-    if (!props.background && props.row) {
-      const cat = props.row.category
-      if (cat && guesses[cat]) {
-        return guessTheme(cat, theme).background || 'transparent'
-      }
-    }
-    return theme.backgroundHighlight
-  }
-  if (isZebra) {
-    return theme.backgroundZebra
+    background = props.background
   } else {
-    return theme.background.setAlpha(0.35)
+    const isZebra = props.even && props.zebra
+    if (props.highlighted) {
+      if (!props.background && props.row) {
+        const cat = props.row.category
+        if (cat && guesses[cat]) {
+          background = guessTheme(cat, props).background || 'transparent'
+        }
+      } else {
+        background = props.backgroundHighlight
+      }
+    } else if (isZebra) {
+      background = props.backgroundZebra
+    } else {
+      background = props.background.setAlpha(0.35)
+    }
+  }
+  return {
+    background,
+    hoverStyle: {
+      background: typeof background === 'string' ? background : background.lighten(0.075, true),
+    },
   }
 }
 
-const getColor = (props: TableRowProps, theme: CompiledTheme) => {
+const colorTheme: ThemeFn<TableRowProps> = props => {
   let color = props.color
-  if (props.row) {
+  if (props.highlighted) {
+    color = props.colorHighlight
+  } else if (props.row) {
     const cat = props.row.category
     if (guesses[cat]) {
-      color = color || guessTheme(cat, theme).color
+      color = color || guessTheme(cat, props).color
     }
   }
-  return color || 'inherit'
+  return { color: color || 'inherit' }
 }
 
 const TableBodyRowContainer = gloss<TableRowProps>(Box, {
@@ -172,24 +182,18 @@ const TableBodyRowContainer = gloss<TableRowProps>(Box, {
   overflow: 'hidden',
   width: '100%',
   userSelect: 'none',
-}).theme((props, theme) => {
-  const background = backgroundColor(props, theme)
+}).theme(backgroundTheme, colorTheme, props => {
   return {
-    background,
-    boxShadow: props.zebra ? 'none' : `inset 0 -1px ${theme.borderColor.setAlpha(0.35)}`,
-    color: props.highlighted ? theme.colorHighlight : getColor(props, theme),
+    boxShadow: props.zebra ? 'none' : ['inset', 0, -1, props.borderColorLight],
     '& *': {
-      color: props.highlighted ? `${theme.colorHighlight} !important` : null,
+      color: props.highlighted ? `${props.colorHighlight.toCSS()} !important` : null,
     },
     '& img': {
-      background: props.highlighted ? `${theme.colorHighlight} !important` : 'none',
+      background: props.highlighted ? `${props.colorHighlight.toCSS()} !important` : 'none',
     },
     height: props.multiline ? 'auto' : props.rowLineHeight,
     lineHeight: `${String(props.rowLineHeight)}px`,
     flexShrink: 0,
-    '&:hover': {
-      background: typeof background === 'string' ? background : background.lighten(0.075, true),
-    },
   }
 })
 

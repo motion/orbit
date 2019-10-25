@@ -17,7 +17,7 @@ export function render() {
         include: [
           // everything:
           // /[A-Z][a-zA-Z]+/
-          /Docs|Home|Header|Orbit|Page/,
+          // /Docs|Home|Header|Orbit|Page|Layout|Page/,
         ],
         // seems like classes dont work (transpiled probably similar to error: https://github.com/maicki/why-did-you-update/issues/47)
         exclude: [

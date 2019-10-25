@@ -1,29 +1,30 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
-import { isDefined, selectDefined, selectObject } from '@o/utils'
-import { Base, Box, CompiledTheme, gloss, propsToStyles, psuedoStyleTheme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
-import React, { HTMLProps, memo, useContext, useEffect, useMemo, useState } from 'react'
+import { isDefined, selectDefined } from '@o/utils'
+import { Box, CompiledTheme, Flex, gloss, GlossProps, propsToStyles, pseudoProps, PseudoStyle, PseudoStyleProps, pseudoStyleTheme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
+import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
 import { useBreadcrumb, useBreadcrumbReset } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
 import { themeable } from './helpers/themeable'
+import { useSizedSurfaceProps } from './hooks/useSizedSurface'
 import { Icon, IconProps } from './Icon'
 import { IconPropsContext } from './IconPropsContext'
 import { InvertScale } from './InvertScale'
 import { PassProps } from './PassProps'
 import { PopoverProps } from './Popover'
 import { getSegmentedStyle } from './SegmentedRow'
-import { useSizedSurfaceProps } from './SizedSurface'
 import { getSize } from './Sizes'
 import { Size, Space } from './Space'
 import { SizedSurfacePropsContext } from './SurfacePropsContext'
-import { scaledTextSizeTheme } from './text/scaledTextSizeTheme'
+import { textSizeTheme } from './text/textSizeTheme'
 import { Tooltip } from './Tooltip'
-import { getElevation } from './View/elevation'
-import { ViewProps } from './View/types'
-import { getMargin, View } from './View/View'
+import { elevationTheme } from './View/elevation'
+import { marginTheme } from './View/marginTheme'
+import { ViewProps, ViewPropsPlain } from './View/types'
+import { View } from './View/View'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
@@ -172,7 +173,14 @@ export type SurfaceSpecificProps = SizedSurfaceSpecificProps & {
   elementTheme?: ThemeFn
 }
 
-export type SurfaceProps = Omit<ViewProps, 'size'> & SurfaceSpecificProps
+export type SurfaceProps = GlossProps<
+  Omit<
+    ViewPropsPlain,
+    'size' | 'activeStyle' | 'focusStyle' | 'focusWithinStyle' | 'disabledStyle' | 'selectedStyle'
+  > &
+    SurfaceSpecificProps &
+    PseudoThemeProps
+>
 
 const getBorderRadius = (t, b, l, r, tl, tr, bl, br) => {
   return {
@@ -185,7 +193,6 @@ const getBorderRadius = (t, b, l, r, tl, tr, bl, br) => {
 
 type ThroughProps = Pick<
   SurfaceProps,
-  | 'height'
   | 'iconPadding'
   | 'alignItems'
   | 'justifyContent'
@@ -225,7 +232,7 @@ const setTooltip = (tooltip, setTooltipState) => {
   }
 }
 
-export const Surface = themeable((direct: SurfaceProps) => {
+export const Surface = themeable(function Surface(direct: SurfaceProps) {
   const sizedProps = useSizedSurfaceProps(direct)
   const props = SizedSurfacePropsContext.useProps(sizedProps) as SurfaceProps
   const crumb = useBreadcrumb()
@@ -253,7 +260,7 @@ export const Surface = themeable((direct: SurfaceProps) => {
     size: ogSize,
     sizeLineHeight,
     tagName,
-    themeSubSelect: subTheme,
+    subTheme: subTheme,
     tooltip,
     tooltipProps,
     padding,
@@ -281,6 +288,7 @@ export const Surface = themeable((direct: SurfaceProps) => {
 
   // goes to BOTH the outer element and inner element
   let throughProps: ThroughProps = {
+    elementTheme,
     iconPadding: typeof iconPadding === 'number' ? iconPadding : size * 8,
     alignItems,
     justifyContent,
@@ -296,18 +304,8 @@ export const Surface = themeable((direct: SurfaceProps) => {
 
   let lineHeight = props.lineHeight
   if (!props.lineHeight && sizeLineHeight && +height == +height) {
-    lineHeight = `${height}px`
-  }
-
-  if (noInnerElement) {
-    throughProps.tagName = tagName
-    if (elementProps) {
-      throughProps = {
-        elementTheme,
-        ...throughProps,
-        ...elementProps,
-      }
-    }
+    // @ts-ignore
+    lineHeight = typeof height === 'number' ? `${height * 0.92}px` : height
   }
 
   const childrenProps: HTMLProps<HTMLDivElement> = {}
@@ -370,8 +368,6 @@ export const Surface = themeable((direct: SurfaceProps) => {
         activeStyle={props.activeStyle}
         focusStyle={props.focusStyle}
         disabledStyle={props.disabledStyle}
-        color="inherit"
-        {...perfectCenterStyle(throughProps)}
         {...iconProps}
       >
         {!stringIcon && icon}
@@ -400,29 +396,24 @@ export const Surface = themeable((direct: SurfaceProps) => {
             {`.${tooltipState.id}`}
           </Tooltip>
         )}
+        {/* TODO: this can be one element i think */}
         {hasAnyGlint && (
           <GlintContain
             className="ui-glint-contain"
             {...borderProps}
-            {...borderPosition === 'inside' &&
+            {...(borderPosition === 'inside' &&
               borderWidth > 0 && {
                 height: roundHalf(+height - size / 2) - 1,
                 transform: {
                   y: roundHalf(size),
                 },
-              }}
+              })}
           >
             {glint && !props.chromeless && (
-              <Glint coat={coat} size={size} {...borderProps} themeSubSelect={subTheme} />
+              <Glint className="ui-glint-top" coat={coat} size={size} {...borderProps} subTheme={subTheme} />
             )}
             {glintBottom && !props.chromeless && (
-              <Glint
-                coat={coat}
-                size={size}
-                bottom={0}
-                {...borderProps}
-                themeSubSelect={subTheme}
-              />
+              <Glint className="ui-glint-bottom" coat={coat} size={size} bottom={0} {...borderProps} subTheme={subTheme} />
             )}
           </GlintContain>
         )}
@@ -472,6 +463,7 @@ export const Surface = themeable((direct: SurfaceProps) => {
             {...elementProps}
             disabled={disabled}
             elementTheme={elementTheme}
+            tagName={tagName}
           >
             {children}
           </Element>
@@ -492,28 +484,23 @@ export const Surface = themeable((direct: SurfaceProps) => {
     childrenProps.children = <InvertScale>{ogChildren}</InvertScale>
   }
 
-  const iconOpacity = typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any)
-  const iconColor = (props.iconProps && props.iconProps.color) || props.color || theme.color
-  const iconColorHover =
-    (!!props.hoverStyle && typeof props.hoverStyle === 'object' && props.hoverStyle.color) ||
-    theme.colorHover
+  const iconOpacity = props.alpha ?? props.opacity
+  const iconColor = props.iconProps?.color ?? props.color
+  const iconColorHover = props?.iconProps?.colorHover ?? props?.colorHover
   const iconContext = useMemo<Partial<IconProps>>(() => {
     return {
       coat,
       opacity: iconOpacity,
-      color: iconColor,
+      color: iconColor ?? (theme => theme.color),
+      colorHover: iconColorHover ?? (theme => theme.colorHover),
       justifyContent: 'center',
-      hoverStyle: {
-        ...selectObject(props.hoverStyle),
-        color: iconColorHover,
-      },
     }
-  }, [coat, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
+  }, [coat, iconOpacity, iconColor, iconColorHover])
 
   // @ts-ignore
   const surfaceFrameProps: SurfaceFrameProps = {
-    className: `${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`,
-    themeSubSelect: subTheme,
+    className: `${tooltipState.id ?? ''} ${(crumb && crumb.selector) ?? ''} ${className ?? ''}`.trim(),
+    subTheme: subTheme,
     lineHeight,
     padding,
     borderWidth,
@@ -530,17 +517,23 @@ export const Surface = themeable((direct: SurfaceProps) => {
     borderTopRadius,
     borderBottomRadius,
     ...childrenProps,
-    tagName: noInnerElement ? tagName : 'div',
+    tagName: !showElement ? tagName : 'div',
     opacity: crumb && crumb.total === 0 ? 0 : props.opacity,
   }
 
   return useBreadcrumbReset(
     SizedSurfacePropsContext.useReset(
-    <IconPropsContext.Provider value={iconContext}>
+      <IconPropsContext.Provider value={iconContext}>
         <SurfaceFrame {...surfaceFrameProps} />
-    </IconPropsContext.Provider>
-  ))
+      </IconPropsContext.Provider>,
+    ),
+  )
 })
+
+Surface['defaultProps'] = {
+  // todo better pattern here
+  baseOverridesPsuedo: true,
+}
 
 const hasChildren = (children: React.ReactNode) => {
   if (Array.isArray(children)) {
@@ -554,100 +547,93 @@ const chromelessStyle = {
   background: 'transparent',
 }
 
-const defaultTextTheme = {
-  fontSize: undefined,
-  lineHeight: undefined,
+type PseudoThemeProps = {
+  [K in keyof PseudoStyleProps]: ThemeFn | PseudoStyle
+}
+
+/**
+ * Allows you to pass theme functions as props
+ */
+const pseudoFunctionThemes /* : ThemeFn<PseudoThemeProps> */ = (props, prev) => {
+  for (const key in pseudoProps) {
+    if (typeof props[key] === 'function') {
+      const val = props[key](props, prev)
+      if (val) {
+        prev[key] = prev[key] || {}
+        Object.assign(prev[key], val)
+      }
+    }
+  }
 }
 
 // fontFamily: inherit on both fixes elements
-type SurfaceFrameProps = SurfaceProps & ThroughProps
-const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
-  display: 'flex', // in case they change tagName
+const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
   fontFamily: 'inherit',
   position: 'relative',
   whiteSpace: 'pre',
 
-  circular: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 0,
+  conditional: {
+    circular: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 0,
+    },
+    disabled: {
+      cursor: 'not-allowed',
+    },
   },
+}).theme(pseudoFunctionThemes, pseudoStyleTheme, (props, prev) => {
+  // todo fix types here
+  const marginStyle = marginTheme(props as any)
+  const { fontSize, lineHeight } = textSizeTheme(props)
 
-  disabled: {
-    cursor: 'not-allowed',
-  },
-}).theme((props, theme) => {
-  const { fontSize, lineHeight } = scaledTextSizeTheme(props) || defaultTextTheme
-  const themeStyle = psuedoStyleTheme(props, theme)
-  const propStyles = propsToStyles(props, theme)
-  const marginStyle = getMargin(props)
+  if (prev && props.chromeless) {
+    delete prev.hoverStyle
+    delete prev.activeStyle
+  }
 
   let styles: CSSPropertySet = {}
-  let boxShadow = props.boxShadow || theme.boxShadow || null
+  let boxShadow = [].concat(props.boxShadow || null).filter(Boolean)
 
-  const borderColor = themeStyle?.borderColor
-  const borderWidth = selectDefined(props.borderWidth, theme.borderWidth, 0)
+  const borderWidth = selectDefined(props.borderWidth, 0)
 
   // borderPosition controls putting borders inside vs outside
   // useful for having nice looking buttons (inside) vs container-like views (outside)
-  if (borderColor && !props.chromeless) {
+  if (props.borderColor && !props.chromeless) {
     if (props.borderPosition === 'inside') {
       // inside
-      boxShadow = [...(boxShadow || []), ['inset', 0, 0, 0, borderWidth, borderColor]]
+      boxShadow = [...(boxShadow || []), ['inset', 0, 0, 0, borderWidth, props.borderColor]]
       styles.borderWidth = 0
     } else {
       // outside
-      styles.border = [borderWidth, props.borderStyle || 'solid', borderColor]
+      styles.border = [borderWidth, props.borderStyle || 'solid', props.borderColor]
     }
   }
 
   if (props.elevation) {
-    boxShadow = [...(boxShadow || []), ...getElevation(props, theme).boxShadow]
+    // @ts-ignore
+    boxShadow = [...(boxShadow || []), ...elevationTheme(props as any).boxShadow]
   }
 
   const res = {
-    fontWeight: props.fontWeight || theme.fontWeight,
-    overflow: props.overflow || theme.overflow,
-    // note: base theme styles go *above* propsToStyles...
-    ...themeStyle,
-    // TODO this could be automatically handled in propStyles if we want...
-    ...(!props.chromeless && props.active && { '&:hover': themeStyle['&:active'] }),
     ...(props.chromeless && chromelessStyle),
     ...(props.circular && {
       width: props.height,
     }),
     fontSize,
     lineHeight,
-    ...propStyles,
     ...marginStyle,
     ...styles,
     boxShadow,
-    '&:hover': props.active
-      ? null
-      : {
-          ...(!props.chromeless && themeStyle?.['&:hover']),
-          ...propStyles['&:hover'],
-        },
   }
 
   return res
 })
 
-const halfPxDown = {
-  transform: {
-    y: 0.5,
-  },
-}
-const perfectCenterStyle = props => {
-  if (props.height && props.height % 2 === 1) {
-    return halfPxDown
-  }
-}
+const applyElementTheme: ThemeFn<any> = props =>
+  props.elementTheme ? props.elementTheme(props) : null
 
-const applyElementTheme = (props, theme) =>
-  props.elementTheme ? props.elementTheme(props, theme) : null
-
-const Element = gloss<SurfaceFrameProps & { disabled?: boolean }>({
+const Element = gloss<ThroughProps & { disabled?: boolean }>({
   display: 'flex', // in case they change tagName
   flex: 1,
   overflow: 'hidden',
@@ -663,22 +649,28 @@ const Element = gloss<SurfaceFrameProps & { disabled?: boolean }>({
   background: 'transparent',
   // otherwise it wont be full height so impossible to position things at start/end
   height: 'inherit',
-  ellipse: {
-    display: 'block',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
+
+  conditional: {
+    ellipse: {
+      display: 'block',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+    },
   },
-}).theme(propsToStyles, perfectCenterStyle, applyElementTheme)
+}).theme(propsToStyles, applyElementTheme)
 
 const getIconSize = (props: SurfaceProps) => {
   if (isDefined(props.iconSize)) return props.iconSize
   const iconSize = props.height ? +props.height * 0.1 + 8 : 12
-  const size = getSize(props.size) * iconSize * (props.sizeIcon === true ? 1 : selectDefined(props.sizeIcon, 1))
+  const size =
+    getSize(props.size) *
+    iconSize *
+    (props.sizeIcon === true ? 1 : selectDefined(props.sizeIcon, 1))
   return Math.floor(size)
 }
 
-const GlintContain = gloss(Base, {
+const GlintContain = gloss(Flex, {
   height: '100%',
   position: 'absolute',
   top: 0,

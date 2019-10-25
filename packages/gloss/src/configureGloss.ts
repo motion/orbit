@@ -1,29 +1,35 @@
 import { colorToString } from './helpers/helpers'
-import { GlossConfig } from './types'
+import { GlossConfiguration } from './types'
 
+// for now just copied from site, its a decent default set
+// need to manually sync to site/constants
+const widths = {
+  xs: 420,
+  sm: 700,
+  md: 820,
+  lg: 1150,
+}
 export const defaultMediaQueries = {
-  sm: '@media screen and (max-width: 500px)',
-  notsm: '@media screen and (min-width: 501px)',
-  md: '@media screen and (min-width: 780px)',
-  lg: '@media screen and (min-width: 900px)',
-  xl: '@media screen and (min-width: 1100px)',
+  xs: `@media screen and (max-width: ${widths.xs - 1}px)`,
+  sm: `@media screen and (max-width: ${widths.sm}px)`,
+  abovesm: `@media screen and (min-width: ${widths.sm + 1}px)`,
+  md: `@media screen and (max-width: ${widths.md}px)`,
+  belowmd: `@media screen and (max-width: ${widths.md}px)`,
+  abovemd: `@media screen and (min-width: ${widths.md + 1}px)`,
+  lg: `@media screen and (min-width: ${widths.lg}px)`,
+  belowlg: `@media screen and (max-width: ${widths.lg}px)`,
+  abovelg: `@media screen and (min-width: ${widths.lg + 1}px)`,
 }
 
-export const GlossDefaultConfig: GlossConfig = {
+export const GlossDefaultConfig: GlossConfiguration = {
   isColor: color => color && !!color.rgb,
   toColor: colorToString,
   mediaQueries: defaultMediaQueries,
-  pseudoAbbreviations: {
-    hoverStyle: '&:hover',
-    activeStyle: '&:active',
-    focusStyle: '&:focus',
-    disabledStyle: '&:disabled',
-  },
 }
 
 export let Config = { ...GlossDefaultConfig }
 
-export function configureGloss(options: Partial<GlossConfig>) {
+export function configureGloss(options: Partial<GlossConfiguration>) {
   Object.assign(Config, options)
   Object.freeze(Config) // only allow once
 }

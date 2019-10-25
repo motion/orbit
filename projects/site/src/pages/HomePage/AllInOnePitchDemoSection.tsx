@@ -1,6 +1,7 @@
+//!
 import { AnimatePresence, animation, Button, gloss, Image, Space, Stack, View } from '@o/ui'
 import { Box, Inline } from 'gloss'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useState } from 'react'
 
 import { mediaStyles } from '../../constants'
 import listScreen from '../../public/images/screen-list.jpg'
@@ -17,7 +18,7 @@ import { SpacedPageContent } from './SpacedPageContent'
 import { TitleTextSub } from './TitleTextSub'
 
 const SubSection = props => (
-  <Flex minWidth={200} alignItems="center" padding={['sm', true]} {...props} />
+  <View minWidth={200} alignItems="center" padding={['sm', true]} {...props} />
 )
 
 const Dot = gloss(Box, {
@@ -31,12 +32,12 @@ const Dot = gloss(Box, {
   cursor: 'pointer',
   transition: 'all ease 300ms',
 
-  active: {
-    opacity: 1,
+  hoverStyle: {
+    opacity: 0.8,
   },
 
-  '&:hover': {
-    opacity: 0.8,
+  activeStyle: {
+    opacity: 1,
   },
 })
 
@@ -53,7 +54,7 @@ const CenterText = props => (
   />
 )
 
-const Flex = gloss(View, {
+const FlexView = gloss(View, {
   position: 'relative',
   flex: 1,
 })
@@ -215,7 +216,7 @@ export default memo(() => {
           <Space />
 
           <Stack direction="horizontal" space>
-            <Flex alignItems="center" sm-display="none">
+            <FlexView alignItems="center" sm-display="none">
               <FadeInView parallax {...fadeAnimations.left} delayIndex={4}>
                 <Image
                   userSelect="none"
@@ -236,8 +237,9 @@ export default memo(() => {
                   }}
                 />
               </FadeInView>
-            </Flex>
-            <Flex
+            </FlexView>
+            <FlexView
+              className="test-me-out"
               flex={2}
               alignItems="center"
               position="relative"
@@ -277,7 +279,7 @@ export default memo(() => {
                 parallax
                 {...fadeAnimations.up}
                 delayIndex={5}
-                marginBottom={-250}
+                marginBottom={-100}
                 zIndex={10}
               >
                 <TiltSquircle
@@ -361,9 +363,9 @@ export default memo(() => {
                   </View>
                 </AnimatePresence>
               </FadeInView>
-            </Flex>
+            </FlexView>
 
-            <Flex alignItems="center" sm-display="none">
+            <FlexView alignItems="center" sm-display="none">
               <FadeInView parallax {...fadeAnimations.right} delayIndex={4}>
                 <Image
                   userSelect="none"
@@ -391,7 +393,7 @@ export default memo(() => {
                   src={require('../../public/images/curve-arrow.svg')}
                 />
               </FadeInView>
-            </Flex>
+            </FlexView>
           </Stack>
 
           <FadeInView parallax delayIndex={8} flexFlow="row" margin={[42, 'auto', 0]}>

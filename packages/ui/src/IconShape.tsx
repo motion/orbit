@@ -81,8 +81,11 @@ export const IconShape = memo(
     const theme = useTheme({
       coat: false,
     })
+    const selectedTheme = useTheme({
+      coat: 'selected',
+    })
 
-    const themeColor = theme.iconFillColor || theme.color
+    const themeColor = theme.iconColor || theme.color
     const colorLightness = toColor(gradient[0] || themeColor).lightness()
 
     let color = !!gradient ? `url(#${gradientId})` : `${themeColor.toString()}`
@@ -98,7 +101,7 @@ export const IconShape = memo(
             left={1}
             zIndex={0}
             borderRadius={size / 3.2}
-            boxShadow={[[0, 0, 0, 3, theme.coats.selected['background']]]}
+            boxShadow={[[0, 0, 0, 3, selectedTheme.background]]}
           />
         )}
         {!cutout && (

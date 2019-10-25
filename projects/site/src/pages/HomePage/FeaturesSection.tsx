@@ -48,22 +48,6 @@ export default memo(function FeaturesSection() {
         })}
       />
 
-      {/* left */}
-      {/* <Page.BackgroundParallax
-        speed={0.3}
-        offset={0.5}
-        x="60%"
-        top="20%"
-        scale={1.3}
-        className="glow-two"
-        opacity={0.25}
-        background="radial-gradient(circle closest-side, #D25CCD, transparent)"
-        parallax={geometry => ({
-          y: geometry.useParallax(),
-          x: geometry.useParallax().transform(x => -x * 1.5 + 240),
-        })}
-      /> */}
-
       <Stack
         direction="horizontal"
         alignItems="center"
@@ -222,10 +206,8 @@ export default memo(function FeaturesSection() {
 
 const dly = 200
 
-const sectionNames = ['Integrate', 'Display', 'Build']
-
 const sections = {
-  [sectionNames[0]]: {
+  Data: {
     image: require('../../public/images/screen-graphql.jpg'),
     items: [
       {
@@ -250,7 +232,7 @@ const sections = {
       },
     ],
   },
-  [sectionNames[1]]: {
+  Display: {
     image: require('../../public/images/screen-people.jpg'),
     items: [
       {
@@ -275,7 +257,7 @@ const sections = {
       },
     ],
   },
-  [sectionNames[2]]: {
+  Create: {
     image: require('../../public/images/screen-graphql.jpg'),
     items: [
       {
@@ -307,6 +289,8 @@ const sections = {
     ],
   },
 }
+
+const sectionNames = Object.keys(sections)
 
 const transition = {
   type: 'spring',

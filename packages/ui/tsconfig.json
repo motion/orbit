@@ -11,6 +11,7 @@
     { "path": "../gloss" },
     { "path": "../gloss-theme" },
     { "path": "../fast-compare" },
+    { "path": "../fuzzy-search" },
     { "path": "../utils" },
     { "path": "../use-store" }
   ]

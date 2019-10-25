@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
+    "strict": true,
     "composite": true,
     "outDir": "_",
     "rootDir": "src"

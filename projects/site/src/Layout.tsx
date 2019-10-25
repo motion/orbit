@@ -1,4 +1,4 @@
-import { Button, ErrorBoundary, FullScreen, Portal, ProvideUI, scrollTo, Theme, Title, View } from '@o/ui'
+import { Button, ErrorBoundary, FullScreen, Portal, scrollTo, Theme, Title, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { throttle } from 'lodash'
@@ -29,6 +29,7 @@ export const usePageTheme = () => {
       next => {
         setNext(prev => {
           if (prev !== next) {
+            console.log('setting theme', next, prev)
             updateLayout()
             return next
           }
@@ -46,6 +47,7 @@ const PageLoading = memo(() => {
 })
 
 export const Layout = memo((props: any) => {
+  console.warn('layout is rendering')
   const forceUpdate = useForceUpdate()
   // ^^^
   // for some reason literally just having *any* useState/useEffect causes this to render twice on mount.... but not other components
@@ -89,7 +91,7 @@ export const Layout = memo((props: any) => {
   }, [theme])
 
   return (
-    <ProvideUI themes={themes} activeTheme={theme}>
+    <Theme name={theme}>
       <PageLoading />
       <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
       {/* small */}
@@ -103,6 +105,7 @@ export const Layout = memo((props: any) => {
           right={10}
           zIndex={1000000000}
           icon="menu"
+          color="#999"
           iconSize={16}
           size={2}
           chromeless
@@ -110,7 +113,7 @@ export const Layout = memo((props: any) => {
         />
       </Theme>
       <View
-        className={`view-layout theme-${theme}`}
+        className={`view-layout layout-theme-${theme}`}
         minHeight="100vh"
         minWidth="100vw"
         overflow={isDefined(maxHeight) ? 'hidden' : 'visible'}
@@ -126,7 +129,7 @@ export const Layout = memo((props: any) => {
         </ErrorBoundary>
       </View>
       <LayoutSidebar />
-    </ProvideUI>
+    </Theme>
   )
 })
 

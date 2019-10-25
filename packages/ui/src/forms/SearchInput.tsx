@@ -34,10 +34,12 @@ export function SearchInput({
   ...props
 }: SearchInputProps) {
   const clearVisible = typeof clearable === 'boolean' ? clearable : value && !!value.length
-  const theme = useTheme()
+  const theme = useTheme({
+    subTheme: 'searchInput',
+  })
   return (
     <Input
-      sizeRadius={selectDefined(theme.searchInputSizeRadius, 3)}
+      sizeRadius={selectDefined(theme.sizeRadius, 3)}
       flex={1}
       icon="search"
       placeholder="Search..."
@@ -75,21 +77,21 @@ export function SearchInput({
 }
 
 export const ClearButton = gloss<ButtonProps & { invisible?: boolean }>(Button, {
+  icon: 'cross',
+  circular: true,
+  size: 0.75,
+  sizeIcon: 1.5,
+  coat: 'flat',
+  glint: false,
+  glintBottom: false,
   opacity: 1,
   pointerEvents: 'none',
-  invisible: {
-    opacity: 0,
-    pointerEvents: 'auto',
-  },
-}).withConfig({
-  defaultProps: {
-    icon: 'cross',
-    circular: true,
-    size: 0.75,
-    sizeIcon: 1.5,
-    coat: 'flat',
-    glint: false,
-    glintBottom: false,
+
+  conditional: {
+    invisible: {
+      opacity: 0,
+      pointerEvents: 'auto',
+    },
   },
 })
 

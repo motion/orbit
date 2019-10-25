@@ -1,5 +1,4 @@
-import { themes } from '@o/kit'
-import { ContextMenuProvider, ErrorBoundary, Loading, ProvideBanner, ProvideUI } from '@o/ui'
+import { ContextMenuProvider, ErrorBoundary, Loading, ProvideBanner, ProvideUI, themes } from '@o/ui'
 import React from 'react'
 
 import { IS_ELECTRON } from './constants'

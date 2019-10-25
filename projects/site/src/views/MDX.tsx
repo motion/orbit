@@ -9,7 +9,7 @@ import { Example } from '../pages/DocsPage/Example'
 import { linkProps } from '../useLink'
 import { CodeBlock } from './CodeBlock'
 import { contentSpace, contentSpaceLg } from './contentSpaceSm'
-import { H1, H2, H3, H4, H5 } from './H1'
+import { H1, H2, H3, H4, H5 } from './Headings'
 import { IntroText } from './IntroText'
 import { Key } from './Key'
 
@@ -34,7 +34,7 @@ const components = {
 
   LargeImage: ({ alt, ...rest }) => (
     <>
-      <View width="140%" margin="20px -20%" md-margin={[20, -20]} md-width="calc(100% + 40px)">
+      <View width="110%" margin="20px -5%" md-margin={[20, -20]} md-width="calc(100% + 40px)">
         <Image width="100%" height="auto" alt={alt} {...rest} />
       </View>
       {!!alt && <Alt>{alt}</Alt>}
@@ -91,12 +91,10 @@ const components = {
     return (
       <>
         <Paragraph
-          tagName="p"
           className="body-text"
           margin={0}
           fontSize="inherit"
           lineHeight="inherit"
-          color="inherit"
           {...props}
         />
         {contentSpace}
@@ -157,26 +155,6 @@ const components = {
   },
 }
 
-// const ContentItem = gloss({
-//   display: 'inherit',
-//   // maxWidth: 820,
-// })
-// wrap with media query helper thing
-// for (const key of Object.keys(components)) {
-//   // ignore inline elements
-//   if (key === 'a' || key === 'code' || key === 'pre') {
-//     continue
-//   }
-//   const OGComponent = components[key]
-//   components[key] = props => (
-//     <ContentItem>
-//       <OGComponent {...props} />
-//     </ContentItem>
-//   )
-// }
-// dont wrap example
-// components['Example'] = Example
-
 export function MDX({ children, ...props }: any) {
   return (
     <MDXProvider
@@ -197,26 +175,15 @@ const InlineCode = gloss({
   lineHeight: '1.4rem',
   fontWeight: 400,
   fontSize: '80%',
-}).theme((_, theme) => ({
+}).theme(theme => ({
   background: theme.backgroundStronger,
   color: theme.colorLighter,
 }))
 
-//   theme.background.isDark()
-//     ? {
-//         background: '#1A71E399',
-//         color: [255, 255, 255, 0.8],
-//       }
-//     : {
-//         background: '#efefef',
-//         color: [0, 0, 0, 0.8],
-//       },
-// )
-
 const LinkedInlineCode = gloss(InlineCode, {
   cursor: 'pointer',
-}).theme((_, theme) => ({
-  '&:hover': {
-    color: theme.background.isDark() ? '#fff' : '#000',
+}).theme(theme => ({
+  hoverStyle: {
+    color: theme.color,
   },
 }))

@@ -9,6 +9,6 @@ export function LocationLink({ url, ...rest }: { url: string } & BlockProps) {
 
 const LinkChrome = gloss(Block, {
   display: 'inline',
-}).theme((_, theme) => ({
-  borderBottom: [1, theme.borderColorActive],
+}).theme(props => ({
+  borderBottom: [1, props.borderColorActive],
 }))

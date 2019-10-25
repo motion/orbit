@@ -51,13 +51,10 @@ export function ThreadMessage({ date, participants, body }: ThreadMessageLike) {
 const Message = gloss(Box)
 
 const Paragraph = gloss(HighlightText, {
+  className: 'markdown',
   marginBottom: '0.35rem',
   userSelect: 'auto',
 })
-
-Paragraph.defaultProps = {
-  className: 'markdown',
-}
 
 const MessageHeader = gloss({
   flexDirection: 'row',

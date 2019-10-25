@@ -5,7 +5,7 @@ import * as React from 'react'
 const MenuItemFrame = gloss(Stack, {
   padding: [5, 8],
   alignItems: 'center',
-  '&:hover': {
+  hoverStyle: {
     background: [255, 255, 255, 0.2],
   },
 })

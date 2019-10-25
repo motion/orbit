@@ -19,15 +19,17 @@ export function textSizeTheme(props: TextSizeProps) {
   const res = getTextSizeTheme(props)
 
   // media query size
+  // TODO this whole loop needs rethinking
   if (hasMediaQueries) {
     for (const key in mediaQueryKeysSize) {
       if (isDefined(props[key])) {
         const mediaKey = key.replace('-size', '')
         const mediaSizeVal = props[key]
-        const mediaSize = getTextSize(mediaSizeVal)
         const mediaStyles = getTextSizeTheme({
           scale: props.scale,
-          size: mediaSize
+          size: getTextSize(mediaSizeVal),
+          sizeFont: props[mediaKey + '-sizeFont'] ?? props.sizeFont,
+          sizeLineHeight: props[mediaKey + '-sizeLineHeight'] ?? props.sizeLineHeight,
         })
         for (const textKey in mediaStyles) {
           res[`${mediaKey}-${textKey}`] = mediaStyles[textKey]

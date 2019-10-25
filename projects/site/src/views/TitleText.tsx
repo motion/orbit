@@ -1,11 +1,6 @@
 import { getSizeRelative, Title, TitleProps } from '@o/ui'
 import React from 'react'
 
-const titleProps = {
-  fontWeight: 800,
-  selectable: true,
-}
-
 export const TitleText = ({
   sizeRelative = 0,
   ...props
@@ -20,5 +15,15 @@ export const TitleText = ({
   const mdSize =
     props['md-size'] ||
     (typeof size === 'string' ? getSizeRelative(size as any, -1 + sizeRelative) : size)
-  return <Title {...titleProps} {...props} size={size} sm-size={smSize} md-size={mdSize} />
+  console.log('ok', props.children, size, mdSize, smSize)
+  return (
+    <Title
+      fontWeight={800}
+      selectable={true}
+      {...props}
+      size={size}
+      sm-size={smSize}
+      md-size={mdSize}
+    />
+  )
 }

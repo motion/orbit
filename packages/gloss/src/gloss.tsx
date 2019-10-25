@@ -284,10 +284,6 @@ export function gloss<
 
     finalProps.className = className
 
-    if (className.includes('g1348941817')) {
-      debugger
-    }
-
     if (isDeveloping) {
       finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
     }

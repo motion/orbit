@@ -1,6 +1,6 @@
 import * as babelParser from '@babel/parser'
 
-export const parserOptions: babelParser.ParserOptions = {
+export const parserOptions: babelParser.ParserOptions = Object.freeze({
   plugins: [
     'asyncGenerators',
     'classProperties',
@@ -16,8 +16,10 @@ export const parserOptions: babelParser.ParserOptions = {
     'nullishCoalescingOperator',
   ],
   sourceType: 'module',
-}
+})
 
-export function parse(code: string | Buffer): any {
-  return babelParser.parse(code.toString(), parserOptions)
+const parser = babelParser.parse.bind(babelParser)
+
+export function parse(code: string | Buffer) {
+  return parser(code.toString(), parserOptions)
 }

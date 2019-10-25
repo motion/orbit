@@ -1,60 +1,46 @@
-//!
-import { Box, gloss } from 'gloss'
+import './assets/font-gteesti/stylesheet.css'
+import './assets/siteBase.css'
+import 'requestidlecallback-polyfill'
 
-import { mediaQueries } from './constants'
+if (process.env.NODE_ENV === 'development') {
+  require('./installDevHelpers')
+}
 
-const ExampleHalf = gloss(Box, {
-  position: 'relative',
-  marginBottom: 20,
-  borderRadius: 6,
-  overflow: 'hidden',
-  [mediaQueries.lg]: {
-    marginBottom: 0,
-  },
-})
-// import './assets/font-gteesti/stylesheet.css'
-// import './assets/siteBase.css'
-// import 'requestidlecallback-polyfill'
+// import './assets/font-colfax/stylesheet.css'
+async function start() {
+  let polyfills = []
 
-// if (process.env.NODE_ENV === 'development') {
-//   require('./installDevHelpers')
-// }
+  // polyfills
+  if (!Array.prototype.flatMap) {
+    polyfills.push(import('array-flat-polyfill'))
+  }
+  if (!window['IntersectionObserver']) {
+    polyfills.push(import('intersection-observer'))
+  }
+  if (!window['ResizeObserver']) {
+    polyfills.push(async () => {
+      window['ResizeObserver'] = (await import('resize-observer-polyfill')).default
+    })
+  }
 
-// // import './assets/font-colfax/stylesheet.css'
-// async function start() {
-//   let polyfills = []
+  await Promise.all(polyfills.map(x => x()))
 
-//   // polyfills
-//   if (!Array.prototype.flatMap) {
-//     polyfills.push(import('array-flat-polyfill'))
-//   }
-//   if (!window['IntersectionObserver']) {
-//     polyfills.push(import('intersection-observer'))
-//   }
-//   if (!window['ResizeObserver']) {
-//     polyfills.push(async () => {
-//       window['ResizeObserver'] = (await import('resize-observer-polyfill')).default
-//     })
-//   }
+  let unloaded = false
+  window.addEventListener('beforeunload', () => {
+    console.log('unloading')
+    unloaded = true
+  })
+  const og = window.requestAnimationFrame
+  window.requestAnimationFrame = cb => {
+    if (!unloaded) {
+      return og(cb)
+    }
+  }
 
-//   await Promise.all(polyfills.map(x => x()))
+  require('./configurations')
+  require('./startSite')
+}
 
-//   let unloaded = false
-//   window.addEventListener('beforeunload', () => {
-//     console.log('unloading')
-//     unloaded = true
-//   })
-//   const og = window.requestAnimationFrame
-//   window.requestAnimationFrame = cb => {
-//     if (!unloaded) {
-//       return og(cb)
-//     }
-//   }
+start()
 
-//   require('./configurations')
-//   require('./startSite')
-// }
-
-// start()
-
-// process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()
+process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()

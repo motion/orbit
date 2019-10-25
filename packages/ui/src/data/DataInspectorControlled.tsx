@@ -2,12 +2,12 @@ import { isEqual } from '@o/fast-compare'
 import { gloss } from 'gloss'
 import React, { Component } from 'react'
 
+import { fontFamilyMonospace } from '../constants'
 import { ContextMenu } from '../ContextMenu'
 import { SimpleText, SimpleTextProps } from '../text/SimpleText'
 import { Tooltip } from '../Tooltip'
 import { DataDescription } from './DataDescription'
 import { DataPreview } from './DataPreview'
-import { fontFamilyMonospace } from './fontFamilyMonospace'
 import { getSortedKeys } from './utils'
 
 export type DataInspectorSetValue = (path: string[], val: any) => void

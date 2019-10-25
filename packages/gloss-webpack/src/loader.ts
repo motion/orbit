@@ -8,6 +8,8 @@ import webpack from 'webpack'
 import { extractStyles } from './ast/extractStyles'
 import { CacheObject, LoaderOptions, PluginContext } from './types'
 
+Error.stackTraceLimit = Infinity
+
 const counter: any = Symbol.for('counter')
 
 // for orbit stack support
@@ -79,8 +81,6 @@ const glossLoader: webpack.loader.Loader = function(this: any, content) {
   }
 
   this.callback(null, rv.js, rv.map)
-
-  return
 }
 
 export default glossLoader

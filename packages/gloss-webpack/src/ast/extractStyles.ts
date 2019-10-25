@@ -193,28 +193,20 @@ export function extractStyles(
         const localViewName = t.isIdentifier(glossCall.arguments[0]) && glossCall.arguments[0].name
         let view: GlossView<any> | null = null
 
-        if (localViewName) {
-          // extends one of our optimizable views
-          if (views[localViewName]) {
-            views[name] = options.views[localViewName]
-            view = views[name]
-          }
-        }
-
         // parse style objects out and return them as array of [{ ['namespace']: 'className' }]
         let staticStyleDesc: GlossStaticStyleDescription | null = null
-
-        const attemptEval = createEvaluator(path, sourceFileName)
 
         // this stuff is used by step 2 (theme functions)
         // any props leftover after parsing gloss style props
         let restDefaultProps = {}
 
+        const evaluate = createEvaluator(path, sourceFileName)
+
         glossCall.arguments = glossCall.arguments.map((arg, index) => {
           if ((index === 0 || index === 1) && t.isObjectExpression(arg)) {
             let propObject = {}
             try {
-              propObject = attemptEval(arg)
+              propObject = evaluate(arg)
               if (shouldPrintDebug) {
                 console.log('propObject', propObject)
               }
@@ -222,6 +214,15 @@ export function extractStyles(
               console.log('Cant parse style object', name, '>', localViewName)
               console.log('err', err)
               return arg
+            }
+
+            // if no error, set local view info
+            if (localViewName) {
+              // extends one of our optimizable views
+              if (views[localViewName]) {
+                views[name] = options.views[localViewName]
+                view = views[name]
+              }
             }
 
             // uses the base styles if necessary, merges just like gloss does
@@ -962,23 +963,21 @@ domNode: ${domNode}
 }
 
 const execFile = (file: string) => {
-  console.log('eval2', file)
   const out = babel.transformFileSync(file, {
+    cwd: path.join(__dirname, '..', '..'),
     configFile: false,
     babelrc: false,
-    babelrcRoots: [],
     parserOpts: parserOptions,
     plugins: [
       '@babel/plugin-transform-modules-commonjs',
-      '@babel/plugin-transform-typescript',
-    ],
-    presets: [],
-    cwd: path.join(__dirname, '..', '..')
+      // omg this fixed it...
+      ['@babel/plugin-transform-typescript', { isTSX: true }],
+      '@babel/plugin-transform-react-jsx',
+    ]
   }).code
-  console.log('out is', out)
   const exported = {
     exports: {}
   }
-  // vm.runInContext(out, vm.createContext(exported))
+  vm.runInContext(out, vm.createContext(exported))
   return exported.exports
 }

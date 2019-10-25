@@ -18,3 +18,5 @@ export const zIndex = {
   Banner: 1000000000000,
   Popover: 100000000000,
 }
+
+export const fontFamilyMonospace = `'Operator Mono', 'Meslo LG S DZ', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace`

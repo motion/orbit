@@ -20,6 +20,7 @@
 
     // dev time needs
     { "path": "./packages/build" },
+    { "path": "./packages/plugin-transform-react-constant-elements" },
     { "path": "./packages/gloss-webpack" },
     { "path": "./packages/wait-for-fonts" }
   ]

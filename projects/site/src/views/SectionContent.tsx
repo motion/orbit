@@ -2,7 +2,7 @@ import { View, ViewProps } from '@o/ui'
 import { gloss } from 'gloss'
 import React from 'react'
 
-import * as Constants from '../constants'
+import { mediaQueries, sidePad, widths } from '../constants'
 
 export type SectionContentProps = ViewProps & {
   outside?: React.ReactNode
@@ -54,19 +54,19 @@ export const SectionContentChrome = gloss<{ readablePage?: boolean }, ViewProps>
   // alignItems: 'center',
   width: '100%',
   maxWidth: '100vw',
-  paddingLeft: Constants.sidePad,
-  paddingRight: Constants.sidePad,
+  paddingLeft: sidePad,
+  paddingRight: sidePad,
   position: 'relative',
 
   readablePage: {
-    maxWidth: Constants.widths.md,
+    maxWidth: widths.md,
   },
 
-  [Constants.mediaQueries.lg]: {
-    maxWidth: Constants.widths.lg,
+  [mediaQueries.lg]: {
+    maxWidth: widths.lg,
   },
 
-  [Constants.mediaQueries.sm]: {
+  [mediaQueries.sm]: {
     width: '100%',
     minWidth: 'auto',
     maxWidth: 'auto',

@@ -9,34 +9,28 @@ export type CompiledTheme<A extends Partial<ThemeObject> = any> = {
 
 let id = 0
 const ThemeMap = new WeakMap()
-
 export function createTheme<A extends Partial<ThemeObject>>(
   theme: A,
-  parentName: string = '',
+  prefixName: string = '',
   renameKeys = true,
 ): CompiledTheme<A> {
   if (ThemeMap.has(theme)) {
     return theme
   }
-  const name = `${parentName ? parentName + '-' : ''}${theme.name || ''}` || `theme-${id++}`
+  const name = `${prefixName ? prefixName + '-' : ''}${theme.name || ''}` || `theme-${id++}`
   const res = Object.keys(theme).reduce((acc, key) => {
     let val = theme[key]
     const cssVariableName = `${key}`
     if (key === 'coats' && val) {
-      // recurse into coats
-      val = Object.keys(val).reduce((acc, ckey) => {
-        acc[ckey] =
-          typeof val[ckey] === 'function'
-            ? val[ckey]
-            : createTheme(
-                {
-                  ...val[ckey],
-                  coats: undefined,
-                },
-                `${name}-coat`,
-              )
-        return acc
-      }, {})
+      const coats = val
+      val = {}
+      for (const coatKey in coats) {
+        const coat = coats[coatKey]
+        val[coatKey] =
+          typeof coat === 'function'
+            ? coat
+            : createTheme({ ...coat, name: coatKey, coats: undefined }, `${name}-coat`)
+      }
     } else if (val && typeof val.setCSSVariable === 'function') {
       if (renameKeys) {
         const res = val.setCSSVariable(cssVariableName)

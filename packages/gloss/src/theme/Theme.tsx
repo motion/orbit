@@ -29,16 +29,16 @@ type ThemeProps = ThemeChangeProps & {
 export const Theme = (props: ThemeProps): JSX.Element => {
   const { coat, subTheme, name, children, ...themeVariables } = props
   const willChangeTheme = !!(coat || subTheme || name)
-  const hasThemeVariables = Object.keys(themeVariables).length
+  const themeVarKeys = Object.keys(themeVariables)
+  const hasThemeVariables = themeVarKeys.length
   const theme = useNextTheme({ coat, subTheme, name })
-  const themeObservableContext = useCreateThemeObservable({ theme })
+  const themeObservableContext = useCreateThemeObservable(theme)
   const nodeRef = useRef<HTMLDivElement>(null)
 
   // change theme by name, coat, subTheme
   useLayoutEffect(() => {
+    if (!themeObservableContext) return
     if (willChangeTheme) {
-      // hasnt changed
-      if (!themeObservableContext) return
       const setClassName = () => {
         if (nodeRef.current) {
           const classNames = themeVariableManager.getClassNames(themeObservableContext.current)
@@ -62,10 +62,7 @@ export const Theme = (props: ThemeProps): JSX.Element => {
         }
       }
     }
-  }, [
-    theme,
-    hasThemeVariables ? Object.keys(themeVariables).map(x => themeVariables[x]) : undefined,
-  ])
+  }, [theme, hasThemeVariables ? themeVarKeys.map(x => themeVariables[x]) : undefined])
 
   if (willChangeTheme && hasThemeVariables) {
     console.warn(
@@ -146,18 +143,15 @@ export const CurrentThemeContext = createContext<CurrentTheme>({
   current: null as any,
 })
 
-function useCreateThemeObservable(props: { theme?: CompiledTheme }) {
+function useCreateThemeObservable(theme?: CompiledTheme) {
   const themeObservers = useRef<Set<ThemeObserver>>(new Set())
   const parentContext = useContext(CurrentThemeContext)
 
   // never change this just emit
   const context: CurrentTheme | null = useMemo(() => {
-    if (!props.theme) {
-      return parentContext
-    }
     return {
       parentContext,
-      current: props.theme,
+      current: theme ?? parentContext.current,
       subscribe: cb => {
         themeObservers.current.add(cb)
         return {
@@ -170,15 +164,15 @@ function useCreateThemeObservable(props: { theme?: CompiledTheme }) {
   }, [])
 
   useLayoutEffect(() => {
-    if (context && props.theme) {
-      if (context.current !== props.theme) {
-        context.current = props.theme
+    if (context && theme) {
+      if (context.current !== theme) {
+        context.current = theme
         themeObservers.current.forEach(cb => {
-          props.theme && cb(props.theme)
+          theme && cb(theme)
         })
       }
     }
-  }, [props.theme])
+  }, [theme])
 
   return context
 }

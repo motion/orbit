@@ -1,5 +1,3 @@
-export const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-
 const systemFont = `-apple-system, "SF Pro Text", BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Droid Sans', sans-serif`
 
 export const fontProps = {
@@ -39,24 +37,17 @@ export const mediaQueries = {
 export const sectionMaxHeight = 1250
 export const sidePad = 24
 
-export const IS_CHROME = navigator.userAgent.toLowerCase().indexOf('chrome') > -1
+type MediaQueryObject = { [key in keyof typeof mediaQueries]: Object }
 
-export const bodyElement = IS_CHROME ? document.documentElement : document.body
+const hiddenWhen: MediaQueryObject = Object.keys(mediaQueries).reduce((acc, key) => {
+  acc[key] = {
+    [`${key}-display`]: 'none',
+    [`${key}-pointerEvents`]: 'none',
+  }
+  return acc
+}, {}) as any
 
-const hiddenWhen: { [key in keyof typeof mediaQueries]: Object } = Object.keys(mediaQueries).reduce(
-  (acc, key) => {
-    acc[key] = {
-      [`${key}-display`]: 'none',
-      [`${key}-pointerEvents`]: 'none',
-    }
-    return acc
-  },
-  {},
-) as any
-
-const visibleWhen: { [key in keyof typeof mediaQueries]: Object } = Object.keys(
-  mediaQueries,
-).reduce((acc, key) => {
+const visibleWhen: MediaQueryObject = Object.keys(mediaQueries).reduce((acc, key) => {
   acc[key] = {
     display: 'none',
     [`${key}-display`]: 'flex',

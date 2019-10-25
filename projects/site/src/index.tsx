@@ -1,46 +1,60 @@
-import './assets/font-gteesti/stylesheet.css'
-import './assets/siteBase.css'
-import 'requestidlecallback-polyfill'
+//!
+import { Box, gloss } from 'gloss'
 
-if (process.env.NODE_ENV === 'development') {
-  require('./installDevHelpers')
-}
+import { mediaQueries } from './constants'
 
-// import './assets/font-colfax/stylesheet.css'
-async function start() {
-  let polyfills = []
+const ExampleHalf = gloss(Box, {
+  position: 'relative',
+  marginBottom: 20,
+  borderRadius: 6,
+  overflow: 'hidden',
+  [mediaQueries.lg]: {
+    marginBottom: 0,
+  },
+})
+// import './assets/font-gteesti/stylesheet.css'
+// import './assets/siteBase.css'
+// import 'requestidlecallback-polyfill'
 
-  // polyfills
-  if (!Array.prototype.flatMap) {
-    polyfills.push(import('array-flat-polyfill'))
-  }
-  if (!window['IntersectionObserver']) {
-    polyfills.push(import('intersection-observer'))
-  }
-  if (!window['ResizeObserver']) {
-    polyfills.push(async () => {
-      window['ResizeObserver'] = (await import('resize-observer-polyfill')).default
-    })
-  }
+// if (process.env.NODE_ENV === 'development') {
+//   require('./installDevHelpers')
+// }
 
-  await Promise.all(polyfills.map(x => x()))
+// // import './assets/font-colfax/stylesheet.css'
+// async function start() {
+//   let polyfills = []
 
-  let unloaded = false
-  window.addEventListener('beforeunload', () => {
-    console.log('unloading')
-    unloaded = true
-  })
-  const og = window.requestAnimationFrame
-  window.requestAnimationFrame = cb => {
-    if (!unloaded) {
-      return og(cb)
-    }
-  }
+//   // polyfills
+//   if (!Array.prototype.flatMap) {
+//     polyfills.push(import('array-flat-polyfill'))
+//   }
+//   if (!window['IntersectionObserver']) {
+//     polyfills.push(import('intersection-observer'))
+//   }
+//   if (!window['ResizeObserver']) {
+//     polyfills.push(async () => {
+//       window['ResizeObserver'] = (await import('resize-observer-polyfill')).default
+//     })
+//   }
 
-  require('./configurations')
-  require('./startSite')
-}
+//   await Promise.all(polyfills.map(x => x()))
 
-start()
+//   let unloaded = false
+//   window.addEventListener('beforeunload', () => {
+//     console.log('unloading')
+//     unloaded = true
+//   })
+//   const og = window.requestAnimationFrame
+//   window.requestAnimationFrame = cb => {
+//     if (!unloaded) {
+//       return og(cb)
+//     }
+//   }
 
-process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()
+//   require('./configurations')
+//   require('./startSite')
+// }
+
+// start()
+
+// process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()

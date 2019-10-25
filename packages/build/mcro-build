@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+Error.stackTraceLimit = Infinity
+
 const shouldBuild = process.argv.indexOf('--build') > 0
 
 function start() {
@@ -11,7 +13,9 @@ function start() {
 }
 
 if (process.argv.indexOf('--clean') > 0) {
-  require('./_/helpers/clean').clean().then(start)
+  require('./_/helpers/clean')
+    .clean()
+    .then(start)
 } else {
   start()
 }

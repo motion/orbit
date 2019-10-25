@@ -3,10 +3,10 @@ const views = require('./_/index')
 const glossViews = require('gloss')
 const { configureUI, Config } = require('./_/helpers/configureUI')
 
-module.exports = config => {
+module.exports = (glossConfig, uiConfig) => {
   // set up toColor, mediaQueries
   try {
-    configureUI(config || {})
+    configureUI(uiConfig || {})
   } catch {
     // already set up
   }
@@ -18,5 +18,6 @@ module.exports = config => {
       path.join(path.dirname(require.resolve('@o/ui')), '..'),
       path.join(path.dirname(require.resolve('gloss')), '..'),
     ],
+    ...glossConfig,
   }
 }

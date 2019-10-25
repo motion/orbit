@@ -30,7 +30,7 @@
     "common-tags": "^1.8.0",
     "convert-hrtime": "^3.0.0",
     "execa": "3.1.0",
-    "fs-extra": "^7.0.0",
+    "fs-extra": "^8.1.0",
     "hosted-git-info": "2.7.1",
     "is-valid-path": "0.1.1",
     "isomorphic-fetch": "^2.2.1",

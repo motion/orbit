@@ -6,11 +6,9 @@ export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any
     const ret: Record<string, any> = {}
     for (let idx = -1, len = exprNode.properties.length; ++idx < len; ) {
       const value = exprNode.properties[idx]
-
       if (!t.isObjectProperty(value)) {
         throw new Error('evaluateAstNode can only evaluate object properties')
       }
-
       let key: any = null
       if (value.computed) {
         if (typeof evalFn !== 'function') {
@@ -27,7 +25,6 @@ export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any
       } else {
         throw new Error('Unsupported key type: ' + value.key.type)
       }
-
       ret[key] = evaluateAstNode(value.value, evalFn)
     }
     return ret
@@ -90,8 +87,6 @@ export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any
       return evaluateAstNode(exprNode.left, evalFn) / evaluateAstNode(exprNode.right, evalFn)
     }
   }
-
-  // TODO: member expression?
 
   // if we've made it this far, the value has to be evaluated
   if (typeof evalFn !== 'function') {

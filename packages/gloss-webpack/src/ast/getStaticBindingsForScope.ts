@@ -1,4 +1,5 @@
 import * as t from '@babel/types'
+import fs from 'fs-extra'
 import path from 'path'
 
 import { evaluateAstNode } from './evaluateAstNode'
@@ -31,6 +32,8 @@ export function getStaticBindingsForScope(
   scope: any,
   sourceFileName: string,
   bindingCache: BindingCache,
+  whitelistStaticModules: string[] = [],
+  execFile: (str: string) => any,
 ): Record<string, any> {
   const bindings: Record<string, Binding> = scope.getAllBindings()
   const ret: Record<string, any> = {}
@@ -53,79 +56,75 @@ export function getStaticBindingsForScope(
 
       // if modulePath is an absolute or relative path
       if (moduleName.startsWith('.') || moduleName.startsWith('/')) {
+        const fullPath = path.resolve(sourceDir, moduleName)
         // if moduleName doesn't end with an extension, add .js
         if (path.extname(moduleName) === '') {
-          moduleName += '.js'
+          if (fs.pathExistsSync(fullPath + '.ts')) {
+            moduleName += '.ts'
+          } else if (fs.pathExistsSync(fullPath + '.tsx')) {
+            moduleName += '.ts'
+          } else {
+            moduleName += '.js'
+          }
         }
         // get absolute path
         moduleName = path.resolve(sourceDir, moduleName)
       }
 
-      // if (whitelist.indexOf(moduleName) > -1) {
-      //   const src = require(moduleName)
-      //   if (sourceModule.destructured) {
-      //     if (sourceModule.imported) {
-      //       ret[k] = src[sourceModule.imported]
-      //     }
-      //   } else {
-      //     // crude esmodule check
-      //     // TODO: make sure this actually works
-      //     if (src && src.__esModule) {
-      //       ret[k] = src.default
-      //     } else {
-      //       ret[k] = src
-      //     }
-      //   }
-      // }
+      if (sourceModule.destructured) {
+        if (whitelistStaticModules.includes(moduleName)) {
+          if (sourceModule.imported) {
+            console.log('get em', moduleName, !!execFile)
+            const out = execFile(moduleName)
+            ret[k] = out[sourceModule.imported]
+          }
+        }
+      }
+    } else {
       continue
-    }
+      const { parent, parentPath } = binding.path
 
-    const { parent, parentPath } = binding.path
+      if (!t.isVariableDeclaration(parent) || parent.kind !== 'const') {
+        continue
+      }
+      // pick out the right variable declarator
+      const dec = parent.declarations.find(d => t.isIdentifier(d.id) && d.id.name === k)
+      // if init is not set, there's nothing to evaluate
+      // TODO: handle spread syntax
+      if (!dec || !dec.init) {
+        continue
+      }
+      // missing start/end will break caching
+      if (typeof dec.id.start !== 'number' || typeof dec.id.end !== 'number') {
+        console.error('dec.id.start/end is not a number')
+        continue
+      }
+      if (!t.isIdentifier(dec.id)) {
+        console.error('dec is not an identifier')
+        continue
+      }
 
-    if (!t.isVariableDeclaration(parent) || parent.kind !== 'const') {
-      continue
-    }
+      const cacheKey = `${dec.id.name}_${dec.id.start}-${dec.id.end}`
+      // retrieve value from cache
+      if (bindingCache[cacheKey]) {
+        ret[k] = bindingCache[cacheKey]
+        continue
+      }
 
-    // pick out the right variable declarator
-    const dec = parent.declarations.find(d => t.isIdentifier(d.id) && d.id.name === k)
+      // skip ObjectExpressions not defined in the root
+      if (t.isObjectExpression(dec.init) && parentPath.parentPath.type !== 'Program') {
+        continue
+      }
 
-    // if init is not set, there's nothing to evaluate
-    // TODO: handle spread syntax
-    if (!dec || !dec.init) {
-      continue
-    }
-
-    // missing start/end will break caching
-    if (typeof dec.id.start !== 'number' || typeof dec.id.end !== 'number') {
-      console.error('dec.id.start/end is not a number')
-      continue
-    }
-
-    if (!t.isIdentifier(dec.id)) {
-      console.error('dec is not an identifier')
-      continue
-    }
-
-    const cacheKey = `${dec.id.name}_${dec.id.start}-${dec.id.end}`
-
-    // retrieve value from cache
-    if (bindingCache.hasOwnProperty(cacheKey)) {
-      ret[k] = bindingCache[cacheKey]
-      continue
-    }
-
-    // skip ObjectExpressions not defined in the root
-    if (t.isObjectExpression(dec.init) && parentPath.parentPath.type !== 'Program') {
-      continue
-    }
-
-    // evaluate
-    try {
-      ret[k] = evaluateAstNode(dec.init)
-      bindingCache[cacheKey] = ret[k]
-      continue
-    } catch (e) {
-      // console.error('evaluateAstNode could not eval dec.init:', e);
+      // evaluate
+      try {
+        console.log('attempting to evaluate?', dec)
+        ret[k] = evaluateAstNode(dec.init)
+        bindingCache[cacheKey] = ret[k]
+        continue
+      } catch (e) {
+        // console.error('evaluateAstNode could not eval dec.init:', e);
+      }
     }
   }
 

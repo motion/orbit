@@ -1,6 +1,7 @@
 {
 	"name": "@o/build",
 	"version": "2.6.0",
+	"main": "_/index",
 	"bin": {
 		"mcro-build": "./mcro-build"
 	},

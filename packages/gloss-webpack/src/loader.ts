@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'fs-extra'
 import invariant from 'invariant'
 import loaderUtils from 'loader-utils'
 import path from 'path'
@@ -6,7 +6,6 @@ import util from 'util'
 import webpack from 'webpack'
 
 import { extractStyles } from './ast/extractStyles'
-import { Module } from './evaluate/Module'
 import { CacheObject, LoaderOptions, PluginContext } from './types'
 
 const counter: any = Symbol.for('counter')
@@ -57,8 +56,6 @@ const glossLoader: webpack.loader.Loader = function(this: any, content) {
 
   const { memoryFS, cacheObject } = pluginContext
 
-  Module.invalidate()
-
   const rv = extractStyles(
     content,
     this.resourcePath,
@@ -71,8 +68,6 @@ const glossLoader: webpack.loader.Loader = function(this: any, content) {
     },
     options,
   )
-
-  Module.invalidate()
 
   if (rv.css.length === 0) {
     return content

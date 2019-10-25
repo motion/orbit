@@ -1,8 +1,11 @@
 import * as LernaProject from '@lerna/project'
 import * as Fs from 'fs'
+import { pathExists } from 'fs-extra'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
+
+import { OrbitBuildOptions } from './types'
 
 // require so it doesnt get removed on save
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin')
@@ -14,7 +17,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { BundleStatsWebpackPlugin } = require('bundle-stats')
 
 // const WebpackDeepScopeAnalysisPlugin = require('webpack-deep-scope-plugin').default
-const GlossWebpackPlugin = require('@o/gloss-webpack')
+const { GlossWebpackPlugin } = require('@o/gloss-webpack')
 const LodashWebpackPlugin = require('lodash-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
@@ -223,6 +226,13 @@ async function makeConfig() {
   const tsEntries = packages.map(pkg => Path.join(pkg.location, 'src'))
   // console.log('tsEntries', tsEntries)
 
+  // load external config
+  let externalConfig: OrbitBuildOptions = {}
+  const externalConfigPath = Path.join(cwd, 'build.config.js')
+  if (await pathExists(externalConfigPath)) {
+    externalConfig = await require(externalConfigPath)()
+  }
+
   const config = {
     cache: { type: 'memory' },
     watch: !!IS_RUNNING,
@@ -311,7 +321,7 @@ async function makeConfig() {
 
             flags.extractStaticStyles && {
               loader: GlossWebpackPlugin.loader,
-              options: require('@o/ui/glossLoaderConfig')(),
+              options: require('@o/ui/glossLoaderConfig')(externalConfig.glossOptions),
             },
           ].filter(Boolean),
         },

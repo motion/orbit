@@ -14,6 +14,7 @@ export interface ExtractStylesOptions {
   defaultTheme: CompiledTheme
   ignore?: RegExp
   babelOptions?: { presets: Object; plugins: Object }
+  whitelistStaticModules?: string[]
 }
 
 export interface LoaderOptions extends ExtractStylesOptions {

@@ -1,9 +1,8 @@
-import { PluginOptions } from '@babel/core'
+import * as babel from '@babel/core'
 
-import { BabelState } from '../types'
 import { addDisplayName } from './addDisplayName'
 
-export default function gloss(_context: any, options: PluginOptions) {
+export default function gloss(_context: any, options: babel.PluginOptions) {
   return {
     plugins: [
       [
@@ -17,12 +16,12 @@ export default function gloss(_context: any, options: PluginOptions) {
   }
 }
 
-function glossPlugin(babel) {
+const glossPlugin = (babel): babel.PluginObj => {
   return {
     name: 'gloss-babel',
     visitor: {
       Program: {
-        enter(path: any, state: BabelState) {
+        enter(path, state) {
           // We need our transforms to run before anything else
           // So we traverse here instead of a in a visitor
           path.traverse(traverseGlossBlocks(babel, state))
@@ -32,9 +31,9 @@ function glossPlugin(babel) {
   }
 }
 
-function traverseGlossBlocks(babel, state: BabelState) {
+function traverseGlossBlocks(babel, state) {
   const references = new Set()
-  return {
+  const res: babel.Visitor = {
     ImportDeclaration(path) {
       const fileName = path.hub.file.opts.filename
       // options
@@ -48,9 +47,11 @@ function traverseGlossBlocks(babel, state: BabelState) {
       const glossFnName = matchNames.find(needle => names.indexOf(needle) !== -1)
       if (!glossFnName) return
       references.add(fileName)
+      // @ts-ignore
       const paths = path.scope.getBinding(glossFnName).referencePaths
       // add display name
       addDisplayName(path, glossFnName, paths, state.file, babel)
     },
   }
+  return res
 }

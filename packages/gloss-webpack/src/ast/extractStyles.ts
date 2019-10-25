@@ -1,3 +1,4 @@
+import * as babel from '@babel/core'
 import generate from '@babel/generator'
 import traverse, { NodePath } from '@babel/traverse'
 import * as t from '@babel/types'
@@ -14,7 +15,7 @@ import { extractStaticTernaries, Ternary } from './extractStaticTernaries'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { getStaticBindingsForScope } from './getStaticBindingsForScope'
 import { htmlAttributes } from './htmlAttributes'
-import { parse } from './parse'
+import { parse, parserOptions } from './parse'
 
 export interface Options {
   cacheObject: CacheObject
@@ -111,7 +112,7 @@ export function extractStyles(
       if (item.source.value === 'gloss') {
         importsGloss = true
       }
-      if (!importsGloss && !isInternal && !GLOSS_SOURCES.hasOwnProperty(item.source.value)) {
+      if (!importsGloss && !isInternal && !GLOSS_SOURCES[item.source.value]) {
         return true
       }
       glossSrc = true
@@ -321,8 +322,33 @@ export function extractStyles(
     }
   }
 
-  // per-file cache of evaluated bindings
-  // const bindingCache = {}
+  function createEvaluator(path: NodePath<any>, sourceFileName: string) {
+    // Generate scope object at this level
+    const staticNamespace = getStaticBindingsForScope(
+      path.scope,
+      sourceFileName,
+      // per-file cache of evaluated bindings
+      // TODO can be per-module?
+      {},
+      options.whitelistStaticModules,
+      execFile,
+    )
+    const evalContext = vm.createContext(staticNamespace)
+    const evalFn = (n: t.Node) => {
+      // called when evaluateAstNode encounters a dynamic-looking prop
+      // variable
+      if (t.isIdentifier(n)) {
+        invariant(
+          staticNamespace[n.name],
+          'identifier not in staticNamespace',
+        )
+        return staticNamespace[n.name]
+      }
+      return vm.runInContext(`(${generate(n).code})`, evalContext)
+    }
+    return (n: t.Node) => evaluateAstNode(n, evalFn)
+  }
+
 
   /**
    * Step 2: Statically extract from JSX < /> nodes
@@ -335,7 +361,7 @@ export function extractStyles(
           // skip non-identifier opening elements (member expressions, etc.)
           !t.isJSXIdentifier(node.name) ||
           // skip non-gloss components
-          !validComponents.hasOwnProperty(node.name.name)
+          !validComponents[node.name.name]
         ) {
           return
         }
@@ -478,7 +504,7 @@ export function extractStyles(
             return true
           }
           // pass ref, key, and style props through untouched
-          if (UNTOUCHED_PROPS.hasOwnProperty(name)) {
+          if (UNTOUCHED_PROPS[name]) {
             return true
           }
 
@@ -935,25 +961,24 @@ domNode: ${domNode}
   }
 }
 
-function createEvaluator(path: NodePath<any>, sourceFileName: string) {
-  // Generate scope object at this level
-  const staticNamespace = getStaticBindingsForScope(
-    path.scope,
-    sourceFileName,
-    {},
-  )
-  const evalContext = vm.createContext(staticNamespace)
-  // called when evaluateAstNode encounters a dynamic-looking prop
-  const evalFn = (n: t.Node) => {
-    // variable
-    if (t.isIdentifier(n)) {
-      invariant(
-        staticNamespace.hasOwnProperty(n.name),
-        'identifier not in staticNamespace',
-      )
-      return staticNamespace[n.name]
-    }
-    return vm.runInContext(`(${generate(n).code})`, evalContext)
+const execFile = (file: string) => {
+  console.log('eval2', file)
+  const out = babel.transformFileSync(file, {
+    configFile: false,
+    babelrc: false,
+    babelrcRoots: [],
+    parserOpts: parserOptions,
+    plugins: [
+      '@babel/plugin-transform-modules-commonjs',
+      '@babel/plugin-transform-typescript',
+    ],
+    presets: [],
+    cwd: path.join(__dirname, '..', '..')
+  }).code
+  console.log('out is', out)
+  const exported = {
+    exports: {}
   }
-  return (n: t.Node) => evaluateAstNode(n, evalFn)
+  // vm.runInContext(out, vm.createContext(exported))
+  return exported.exports
 }

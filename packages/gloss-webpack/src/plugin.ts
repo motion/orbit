@@ -9,9 +9,11 @@ import { wrapFileSystem } from './wrapFileSystem'
 import Compiler = webpack.Compiler
 import Compilation = webpack.compilation.Compilation
 
+export * from './types'
+
 const counterKey = Symbol.for('counter')
 
-class GlossWebpackPlugin implements webpack.Plugin {
+export class GlossWebpackPlugin implements webpack.Plugin {
   constructor() {
     this.memoryFS = new MemoryFileSystem()
 
@@ -79,5 +81,3 @@ class GlossWebpackPlugin implements webpack.Plugin {
     }
   }
 }
-
-export = GlossWebpackPlugin

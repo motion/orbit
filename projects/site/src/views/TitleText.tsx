@@ -15,7 +15,6 @@ export const TitleText = ({
   const mdSize =
     props['md-size'] ||
     (typeof size === 'string' ? getSizeRelative(size as any, -1 + sizeRelative) : size)
-  console.log('ok', props.children, size, mdSize, smSize)
   return (
     <Title
       fontWeight={800}

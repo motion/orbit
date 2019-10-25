@@ -74,14 +74,12 @@ export function getStaticBindingsForScope(
       if (sourceModule.destructured) {
         if (whitelistStaticModules.includes(moduleName)) {
           if (sourceModule.imported) {
-            console.log('get em', moduleName, !!execFile)
             const out = execFile(moduleName)
             ret[k] = out[sourceModule.imported]
           }
         }
       }
     } else {
-      continue
       const { parent, parentPath } = binding.path
 
       if (!t.isVariableDeclaration(parent) || parent.kind !== 'const') {
@@ -118,7 +116,6 @@ export function getStaticBindingsForScope(
 
       // evaluate
       try {
-        console.log('attempting to evaluate?', dec)
         ret[k] = evaluateAstNode(dec.init)
         bindingCache[cacheKey] = ret[k]
         continue

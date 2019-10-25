@@ -962,7 +962,12 @@ domNode: ${domNode}
   }
 }
 
+const execCache = {}
 const execFile = (file: string) => {
+  if (execCache[file]) {
+    return execCache[file]
+  }
+  console.log('exec', file)
   const out = babel.transformFileSync(file, {
     cwd: path.join(__dirname, '..', '..'),
     configFile: false,
@@ -979,5 +984,7 @@ const execFile = (file: string) => {
     exports: {}
   }
   vm.runInContext(out, vm.createContext(exported))
-  return exported.exports
+  const res = exported.exports
+  execCache[file] = res
+  return res
 }

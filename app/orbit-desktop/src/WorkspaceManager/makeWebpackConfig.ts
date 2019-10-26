@@ -61,7 +61,7 @@ export function makeWebpackConfig(
     devtool,
     injectHot,
     plugins,
-    extractStaticStyles = true,
+    extractStaticStyles,
   } = params
 
   // optimize react

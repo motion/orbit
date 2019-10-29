@@ -693,7 +693,8 @@ domNode: ${domNode}
             stylesByClassName[localView.staticDesc.className] = null
           }
 
-          const themeFns = view?.internal.getConfig().themeFns
+          view.compile()
+          const themeFns = view?.internal?.getConfig()?.themeFns
           if (themeFns) {
             // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss
             try {

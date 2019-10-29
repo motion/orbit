@@ -410,14 +410,14 @@ export function extractStyles(
           return false
         }
 
-        const attemptEval = createEvaluator(traversePath.scope as any, sourceFileName)
+        const attemptEval = createEvaluator(traversePath as any, sourceFileName)
 
         let lastSpreadIndex: number = -1
         const flattenedAttributes: (t.JSXAttribute | t.JSXSpreadAttribute)[] = []
         node.attributes.forEach(attr => {
           if (t.isJSXSpreadAttribute(attr)) {
             try {
-              const spreadValue = attemptEval(attr.argument)
+              const spreadValue = attemptEval(attr.argument, { evaluateFunctions: false })
 
               if (typeof spreadValue !== 'object' || spreadValue == null) {
                 lastSpreadIndex = flattenedAttributes.push(attr) - 1
@@ -555,7 +555,7 @@ export function extractStyles(
             // TODO make this more customizable / per-tagname
             if (htmlAttributes[name]) {
               try {
-                htmlExtractedAttributes[name] = attemptEval(value)
+                htmlExtractedAttributes[name] = attemptEval(value, { evaluateFunctions: false })
               } catch(err) {
                 console.log('err getting html attr', name, value, err)
                 // ok
@@ -575,7 +575,7 @@ export function extractStyles(
 
           // if value can be evaluated, extract it and filter it out
           try {
-            staticAttributes[name] = attemptEval(value)
+            staticAttributes[name] = attemptEval(value, { evaluateFunctions: false })
             return false
           } catch {
             // ok
@@ -584,8 +584,8 @@ export function extractStyles(
           if (t.isConditionalExpression(value)) {
             // if both sides of the ternary can be evaluated, extract them
             try {
-              const consequent = attemptEval(value.consequent)
-              const alternate = attemptEval(value.alternate)
+              const consequent = attemptEval(value.consequent, { evaluateFunctions: false })
+              const alternate = attemptEval(value.alternate, { evaluateFunctions: false })
               staticTernaries.push({
                 alternate,
                 consequent,
@@ -602,7 +602,7 @@ export function extractStyles(
             // convert a simple logical expression to a ternary with a null alternate
             if (value.operator === '&&') {
               try {
-                const consequent = attemptEval(value.right)
+                const consequent = attemptEval(value.right, { evaluateFunctions: false })
                 staticTernaries.push({
                   alternate: null,
                   consequent,

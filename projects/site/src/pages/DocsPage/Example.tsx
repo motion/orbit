@@ -1,3 +1,4 @@
+//!
 import { Button, Divider, gloss, Icon, Loading, SimpleText, Space, Stack, useIntersectionObserver, View } from '@o/ui'
 import { Box } from 'gloss'
 import { capitalize } from 'lodash'
@@ -79,7 +80,7 @@ export const Example = memo(
           >
             {exampleElement}
             {willScroll && (
-              <AccidentalScrollPrevent disabled={hovered}>
+              <AccidentalScrollPrevent disallowScroll={hovered}>
                 <View
                   position="absolute"
                   bottom={0}
@@ -164,7 +165,7 @@ const AccidentalScrollPrevent = gloss<any>(Box, {
   zIndex: 10,
 
   conditional: {
-    disabled: {
+    disallowScroll: {
       opacity: 0,
       pointerEvents: 'none',
     },

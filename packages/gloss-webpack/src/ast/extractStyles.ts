@@ -460,6 +460,7 @@ export function extractStyles(
         const htmlExtractedAttributes = {}
         let inlinePropCount = 0
         const staticTernaries: Ternary[] = []
+        const classNameObjects: (t.StringLiteral | t.Expression)[] = []
 
         let shouldDeopt = false
 
@@ -486,9 +487,6 @@ export function extractStyles(
               shouldDeopt = true
               return true
             }
-            if (shouldDeopt) {
-              return true
-            }
             // for avoiding processing certain keys
             if (staticStyleConfig.avoidProps?.includes(name)) {
               inlinePropCount++
@@ -506,8 +504,21 @@ export function extractStyles(
             ...localView?.staticDesc?.conditionalClassNames ?? null,
           }
           if (allConditionalClassNames[name]) {
-            // extract but still put it onto staticAttributes for themeFn to use
-            staticAttributes[name] = true
+            // we can just extract to className
+            if (value === null) {
+              // extract but still put it onto staticAttributes for themeFn to use
+              staticAttributes[name] = true
+              return false
+            }
+
+            // if dynamic value we just use it on className
+            classNameObjects.push(
+              t.conditionalExpression(
+                value,
+                t.stringLiteral(allConditionalClassNames[name]),
+                t.stringLiteral('')
+              )
+            )
             return false
           }
 
@@ -762,8 +773,8 @@ domNode: ${domNode}
         if (shouldPrintDebug) {
           console.log('stylesByClassName pre ternaries', stylesByClassName)
         }
+
         const extractedStyleClassNames = Object.keys(stylesByClassName).join(' ')
-        const classNameObjects: (t.StringLiteral | t.Expression)[] = []
 
         if (classNamePropValue) {
           try {

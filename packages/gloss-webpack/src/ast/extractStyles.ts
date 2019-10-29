@@ -341,7 +341,7 @@ export function extractStyles(
   }
 
   // creates an evaluator to get complex values from babel in this path
-  function createEvaluator(path: NodePath<any>, sourceFileName: string) {
+  function createEvaluator(path: NodePath<any>, sourceFileName: string, defaultOpts?: EvaluateASTNodeOptions) {
     // Generate scope object at this level
     const staticNamespace = getStaticBindingsForScope(
       path.scope,
@@ -366,7 +366,7 @@ export function extractStyles(
       return vm.runInContext(`(${generate(n).code})`, evalContext)
     }
     return (n: t.Node, o?: EvaluateASTNodeOptions) => {
-      return evaluateAstNode(n, evalFn, o)
+      return evaluateAstNode(n, evalFn, { ...defaultOpts, ...o })
     }
   }
 
@@ -410,14 +410,14 @@ export function extractStyles(
           return false
         }
 
-        const attemptEval = createEvaluator(traversePath as any, sourceFileName)
+        const attemptEval = evaluateAstNode //createEvaluator(traversePath as any, sourceFileName, { evaluateFunctions: false })
 
         let lastSpreadIndex: number = -1
         const flattenedAttributes: (t.JSXAttribute | t.JSXSpreadAttribute)[] = []
         node.attributes.forEach(attr => {
           if (t.isJSXSpreadAttribute(attr)) {
             try {
-              const spreadValue = attemptEval(attr.argument, { evaluateFunctions: false })
+              const spreadValue = attemptEval(attr.argument)
 
               if (typeof spreadValue !== 'object' || spreadValue == null) {
                 lastSpreadIndex = flattenedAttributes.push(attr) - 1
@@ -555,9 +555,9 @@ export function extractStyles(
             // TODO make this more customizable / per-tagname
             if (htmlAttributes[name]) {
               try {
-                htmlExtractedAttributes[name] = attemptEval(value, { evaluateFunctions: false })
+                htmlExtractedAttributes[name] = attemptEval(value)
               } catch(err) {
-                console.log('err getting html attr', name, value, err)
+                console.log('err getting html attr', name, value, err.message)
                 // ok
               }
               return true
@@ -575,7 +575,7 @@ export function extractStyles(
 
           // if value can be evaluated, extract it and filter it out
           try {
-            staticAttributes[name] = attemptEval(value, { evaluateFunctions: false })
+            staticAttributes[name] = attemptEval(value)
             return false
           } catch {
             // ok
@@ -584,8 +584,8 @@ export function extractStyles(
           if (t.isConditionalExpression(value)) {
             // if both sides of the ternary can be evaluated, extract them
             try {
-              const consequent = attemptEval(value.consequent, { evaluateFunctions: false })
-              const alternate = attemptEval(value.alternate, { evaluateFunctions: false })
+              const consequent = attemptEval(value.consequent)
+              const alternate = attemptEval(value.alternate)
               staticTernaries.push({
                 alternate,
                 consequent,
@@ -602,7 +602,7 @@ export function extractStyles(
             // convert a simple logical expression to a ternary with a null alternate
             if (value.operator === '&&') {
               try {
-                const consequent = attemptEval(value.right, { evaluateFunctions: false })
+                const consequent = attemptEval(value.right)
                 staticTernaries.push({
                   alternate: null,
                   consequent,
@@ -693,7 +693,7 @@ domNode: ${domNode}
             stylesByClassName[localView.staticDesc.className] = null
           }
 
-          const themeFns = view?.internal?.themeFns
+          const themeFns = view?.internal.getConfig().themeFns
           if (themeFns) {
             // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss
             try {

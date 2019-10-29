@@ -27,11 +27,12 @@ export interface GlossView<RawProps = {}, P = GlossProps<RawProps>> {
   (props: P, context?: any): React.ReactElement<any> | null
   defaultProps?: Partial<P>
   displayName?: string
-  readonly internal: GlossInternals<P>
-  readonly shouldUpdateMap: WeakMap<object, boolean>
-  // extra:
   ignoreAttrs?: { [key: string]: boolean }
   theme: (...themeFns: ThemeFn<RawProps>[]) => this
+  // internals
+  readonly internal: GlossInternals<P>
+  readonly shouldUpdateMap: WeakMap<object, boolean>
+  compile?: () => void
   staticStyleConfig?: {
     parentView?: GlossView<any>
     cssAttributes?: Object
@@ -82,7 +83,6 @@ const GLOSS_SIMPLE_COMPONENT_SYMBOL = Symbol('__GLOSS_SIMPLE_COMPONENT__') as an
 export const tracker: StyleTracker = new Map()
 export const sheet = new StyleSheet(true)
 const gc = new GarbageCollector(sheet, tracker)
-const whiteSpaceRegex = /[\s]+/g
 
 let curTheme
 // helpful global to let us add debugging in dev mode anywhere in here
@@ -331,6 +331,7 @@ export function gloss<
   }
 
   let ThemedView = createGlossView(GlossView, internal)
+  ThemedView.compile = compile
 
   // inherit default props
   if (hasGlossyParent) {

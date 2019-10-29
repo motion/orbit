@@ -1,12 +1,12 @@
 // //!
-// import { Avatar, ProvideUI } from '@o/ui'
+// import { Image, ProvideUI } from '@o/ui'
 // //
 // const React = require('react')
 // const { themes } = require('./themes')
 // export const SiteRoot = () => {
 //   return (
 //     <ProvideUI themes={themes} activeTheme="dark">
-//       <Avatar size={32} src={'ok'} />
+//       ok
 //     </ProvideUI>
 //   )
 // }

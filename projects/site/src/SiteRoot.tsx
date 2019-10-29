@@ -1,23 +1,30 @@
 // //!
-// import { ProvideUI } from '@o/ui'
-// import { Box, gloss } from 'gloss'
-// import { mediaQueries } from './constants'
+// import { ProvideUI, View } from '@o/ui'
+// import { gloss } from 'gloss'
 // //
 // const React = require('react')
 // const { themes } = require('./themes')
-// const ExampleHalf = gloss(Box, {
-//   position: 'relative',
-//   marginBottom: 20,
-//   borderRadius: 6,
-//   overflow: 'hidden',
-//   [mediaQueries.lg]: {
-//     marginBottom: 0,
+// const OrbitToolbarChrome = gloss(View, {
+//   flexDirection: 'row',
+//   position: 'absolute',
+//   top: 0,
+//   left: 0,
+//   right: 0,
+//   alignItems: 'center',
+//   justifyContent: 'center',
+//   zIndex: 100000000,
+//   transition: 'none',
+//   background: theme => theme.background,
+//   conditional: {
+//     transparent: {
+//       background: 'transparent',
+//     },
 //   },
 // })
 // export const SiteRoot = () => {
 //   return (
 //     <ProvideUI themes={themes} activeTheme="dark">
-//       <ExampleHalf>hi</ExampleHalf>
+//       <OrbitToolbarChrome>hi</OrbitToolbarChrome>
 //     </ProvideUI>
 //   )
 // }

@@ -1,6 +1,15 @@
 import * as t from '@babel/types'
 
-export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any): any {
+export type EvaluateASTNodeOptions = {
+  evaluateFunctions?: boolean
+  unevaluated?: (t.ObjectProperty | t.ObjectMethod | t.SpreadElement)[]
+}
+
+const UnevaluatedSymbol = Symbol('unevaluated')
+
+export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any, options?: EvaluateASTNodeOptions): any {
+  options.unevaluated = options.unevaluated || []
+
   // loop through ObjectExpression keys
   if (t.isObjectExpression(exprNode)) {
     const ret: Record<string, any> = {}
@@ -16,7 +25,7 @@ export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any
             'evaluateAstNode does not support computed keys unless an eval function is provided',
           )
         }
-        key = evaluateAstNode(value.key, evalFn)
+        key = evaluateAstNode(value.key, evalFn, options)
       } else if (t.isIdentifier(value.key)) {
         key = value.key.name
       } else if (t.isLiteral(value.key)) {
@@ -25,13 +34,18 @@ export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any
       } else {
         throw new Error('Unsupported key type: ' + value.key.type)
       }
-      ret[key] = evaluateAstNode(value.value, evalFn)
+      const res = evaluateAstNode(value.value, evalFn, options)
+      if (res === UnevaluatedSymbol) {
+        options.unevaluated.push(value)
+      } else {
+        ret[key] = res
+      }
     }
     return ret
   }
 
   if (t.isUnaryExpression(exprNode) && exprNode.operator === '-') {
-    const ret = evaluateAstNode(exprNode.argument, evalFn)
+    const ret = evaluateAstNode(exprNode.argument, evalFn, options)
     if (ret == null) {
       return null
     }
@@ -52,7 +66,7 @@ export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any
       const expr = exprNode.expressions[idx]
       ret += quasi.value.raw
       if (expr) {
-        ret += evaluateAstNode(expr, evalFn)
+        ret += evaluateAstNode(expr, evalFn, options)
       }
     }
     return ret
@@ -66,7 +80,7 @@ export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any
 
   if (t.isArrayExpression(exprNode)) {
     return exprNode.elements.map(x => {
-      return evaluateAstNode(x, evalFn)
+      return evaluateAstNode(x, evalFn, options)
     })
   }
 
@@ -78,14 +92,18 @@ export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any
 
   if (t.isBinaryExpression(exprNode)) {
     if (exprNode.operator === '+') {
-      return evaluateAstNode(exprNode.left, evalFn) + evaluateAstNode(exprNode.right, evalFn)
+      return evaluateAstNode(exprNode.left, evalFn, options) + evaluateAstNode(exprNode.right, evalFn, options)
     } else if (exprNode.operator === '-') {
-      return evaluateAstNode(exprNode.left, evalFn) - evaluateAstNode(exprNode.right, evalFn)
+      return evaluateAstNode(exprNode.left, evalFn, options) - evaluateAstNode(exprNode.right, evalFn, options)
     } else if (exprNode.operator === '*') {
-      return evaluateAstNode(exprNode.left, evalFn) * evaluateAstNode(exprNode.right, evalFn)
+      return evaluateAstNode(exprNode.left, evalFn, options) * evaluateAstNode(exprNode.right, evalFn, options)
     } else if (exprNode.operator === '/') {
-      return evaluateAstNode(exprNode.left, evalFn) / evaluateAstNode(exprNode.right, evalFn)
+      return evaluateAstNode(exprNode.left, evalFn, options) / evaluateAstNode(exprNode.right, evalFn, options)
     }
+  }
+
+  if ((t.isFunctionExpression(exprNode) || t.isArrowFunctionExpression(exprNode)) && options?.evaluateFunctions === false) {
+    return UnevaluatedSymbol
   }
 
   // if we've made it this far, the value has to be evaluated

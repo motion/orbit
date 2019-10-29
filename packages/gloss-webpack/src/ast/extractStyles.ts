@@ -10,7 +10,7 @@ import util from 'util'
 import vm from 'vm'
 
 import { CacheObject, ExtractStylesOptions } from '../types'
-import { evaluateAstNode } from './evaluateAstNode'
+import { evaluateAstNode, EvaluateASTNodeOptions } from './evaluateAstNode'
 import { extractStaticTernaries, Ternary } from './extractStaticTernaries'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { getStaticBindingsForScope } from './getStaticBindingsForScope'
@@ -205,8 +205,14 @@ export function extractStyles(
         glossCall.arguments = glossCall.arguments.map((arg, index) => {
           if ((index === 0 || index === 1) && t.isObjectExpression(arg)) {
             let propObject = {}
+            let unevaluated: any[] = []
             try {
-              propObject = evaluate(arg)
+              const opts: EvaluateASTNodeOptions = {
+                evaluateFunctions: false,
+                unevaluated: []
+              }
+              propObject = evaluate(arg, opts)
+              unevaluated = opts.unevaluated
               if (shouldPrintDebug) {
                 console.log('propObject', propObject)
               }
@@ -287,8 +293,19 @@ export function extractStyles(
             }
 
             // keep any non-style props on the glossProps
+            let defaultPropsLeave = unevaluated
+
             if (internalDefaultProps && Object.keys(internalDefaultProps).length) {
-              return literalToAst(internalDefaultProps)
+              const objectLeaveProps = literalToAst(internalDefaultProps) as t.ObjectExpression
+              defaultPropsLeave = [
+                ...defaultPropsLeave,
+                ...objectLeaveProps.properties
+              ]
+            }
+
+            // if we have defaultProps or unevaluated non-extracted items, leave them
+            if (defaultPropsLeave.length) {
+              return t.objectExpression(defaultPropsLeave)
             }
 
             return t.nullLiteral()
@@ -347,7 +364,7 @@ export function extractStyles(
       }
       return vm.runInContext(`(${generate(n).code})`, evalContext)
     }
-    return (n: t.Node) => evaluateAstNode(n, evalFn)
+    return (n: t.Node, o: EvaluateASTNodeOptions) => evaluateAstNode(n, evalFn, o)
   }
 
 

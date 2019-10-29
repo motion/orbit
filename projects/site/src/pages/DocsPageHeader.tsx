@@ -108,7 +108,7 @@ export const DocsPageHeader = memo(({ inputRef, setTheme, theme }: any) => {
               <HeaderButton
                 icon="moon"
                 tooltip="Toggle dark mode"
-                onClick={() => setTheme(theme === 'docsPageTheme' ? 'dark' : 'docsPageTheme')}
+                onClick={() => setTimeout(() => setTheme(theme === 'docsPageTheme' ? 'dark' : 'docsPageTheme'))}
               />
             </Stack>
           </Absolute>

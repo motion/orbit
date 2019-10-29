@@ -57,13 +57,7 @@ export function Tree(props: TreeProps) {
   })
   return (
     <TreeChrome nodeRef={ref}>
-      <TreeItems
-        width={width}
-        height={height}
-        rowHeight={`calc(${DEFAULT_ROW_HEIGHT}px * var(--scale))`}
-        zebra
-        {...props}
-      />
+      <TreeItems width={width} height={height} rowHeight={DEFAULT_ROW_HEIGHT} zebra {...props} />
     </TreeChrome>
   )
 }

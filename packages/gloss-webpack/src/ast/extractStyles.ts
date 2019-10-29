@@ -396,6 +396,10 @@ export function extractStyles(
         let staticStyleConfig: GlossView<any>['staticStyleConfig'] | null = null
         if (view) {
           staticStyleConfig = view.staticStyleConfig
+          // lets us have plain functional views like Stack
+          if (staticStyleConfig.parentView) {
+            view = staticStyleConfig.parentView
+          }
           domNode = view.staticStyleConfig?.tagName
             ?? view.internal?.glossProps.defaultProps.tagName
             ?? 'div'
@@ -557,7 +561,7 @@ export function extractStyles(
               try {
                 htmlExtractedAttributes[name] = attemptEval(value)
               } catch(err) {
-                console.log('err getting html attr', name, value, err.message)
+                console.log('err getting html attr', name, err.message)
                 // ok
               }
               return true
@@ -693,7 +697,6 @@ domNode: ${domNode}
             stylesByClassName[localView.staticDesc.className] = null
           }
 
-          view.compile()
           const themeFns = view?.internal?.getConfig()?.themeFns
           if (themeFns) {
             // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss

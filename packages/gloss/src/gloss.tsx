@@ -828,7 +828,7 @@ function getSelector(className: string, namespace: string, selectorPrefix = '') 
     const namespacedSelectors = namespace
       .split(',')
       .flatMap(part => {
-        return getSpecificSelectors(className, selectorPrefix, part.replace('&', '').trim())
+        return getSpecificSelectors(className, selectorPrefix, part.replace('&', ''))
       })
       .join(',')
     return namespacedSelectors

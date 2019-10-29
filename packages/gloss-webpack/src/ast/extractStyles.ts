@@ -340,6 +340,7 @@ export function extractStyles(
     }
   }
 
+  // creates an evaluator to get complex values from babel in this path
   function createEvaluator(path: NodePath<any>, sourceFileName: string) {
     // Generate scope object at this level
     const staticNamespace = getStaticBindingsForScope(
@@ -364,7 +365,9 @@ export function extractStyles(
       }
       return vm.runInContext(`(${generate(n).code})`, evalContext)
     }
-    return (n: t.Node, o: EvaluateASTNodeOptions) => evaluateAstNode(n, evalFn, o)
+    return (n: t.Node, o?: EvaluateASTNodeOptions) => {
+      return evaluateAstNode(n, evalFn, o)
+    }
   }
 
 
@@ -407,7 +410,7 @@ export function extractStyles(
           return false
         }
 
-        const attemptEval = evaluateAstNode // createEvaluator(traversePath.scope, sourceFileName)
+        const attemptEval = createEvaluator(traversePath.scope as any, sourceFileName)
 
         let lastSpreadIndex: number = -1
         const flattenedAttributes: (t.JSXAttribute | t.JSXSpreadAttribute)[] = []

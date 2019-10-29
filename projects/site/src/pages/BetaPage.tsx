@@ -26,7 +26,7 @@ export function BetaPage() {
 
         <View position="relative">
           <FadeInView minHeight={500} delay={200}>
-            <EarlyAccessContent theme={BetaPage.theme} />
+            <EarlyAccessContent />
           </FadeInView>
 
           {/* offset for stripe at bottom */}

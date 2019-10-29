@@ -8,6 +8,7 @@ export type EvaluateASTNodeOptions = {
 const UnevaluatedSymbol = Symbol('unevaluated')
 
 export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any, options?: EvaluateASTNodeOptions): any {
+  options = options || {}
   options.unevaluated = options.unevaluated || []
 
   // loop through ObjectExpression keys

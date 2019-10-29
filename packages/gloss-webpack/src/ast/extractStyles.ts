@@ -553,7 +553,8 @@ export function extractStyles(
             if (htmlAttributes[name]) {
               try {
                 htmlExtractedAttributes[name] = attemptEval(value)
-              } catch {
+              } catch(err) {
+                console.log('err getting html attr', name, value, err)
                 // ok
               }
               return true

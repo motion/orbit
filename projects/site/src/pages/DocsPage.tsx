@@ -1,5 +1,5 @@
 import { Button, configureHotKeys, Contents, gloss, Portal, ProvideBanner, Sidebar, Space, Stack, Theme, View } from '@o/ui'
-import { createUsableStore, useReaction } from '@o/use-store'
+import { useReaction } from '@o/use-store'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View as NaviView } from 'react-navi'
@@ -143,27 +143,12 @@ const DocsPageFrame = props => {
   )
 }
 
-class Stoer {}
-const useit = createUsableStore(Stoer)
-
 const DocsPage = memo((props: any) => {
-  console.warn('docspage rendering')
-  useit.useStore({
-    debug: true
-  })
-  return null
   const siteStore = useSiteStore()
   return null
   const [showSidebar, setShowSidebar] = useState(false)
   const inputRef = useRef(null)
   const [themeName, setThemeName] = usePageTheme()
-
-  // const portalNode = React.useMemo(() => {
-  //   const div = portals.createPortalNode()
-  //   div.style.display = 'flex'
-  //   div.style.height = 'calc(100vh - 100px)'
-  //   return div
-  // }, [])
 
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))

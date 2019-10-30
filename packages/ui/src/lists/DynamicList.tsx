@@ -1,4 +1,3 @@
-//!
 import { VariableSizeList } from '@o/react-window'
 import * as ReactWindow from '@o/react-window'
 import React, { forwardRef, memo, RefObject } from 'react'

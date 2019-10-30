@@ -273,7 +273,7 @@ const DocsPage = memo((props: any) => {
               </Stack>
             </Stack>
 
-            <Space size={250} />
+            <Space size={50} />
 
             <BlogFooter />
           </SectionContent>

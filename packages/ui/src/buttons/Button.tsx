@@ -45,6 +45,7 @@ export const Button = memoIsEqualDeep((direct: ButtonProps) => {
         glintBottom
         pointerEvents={props.disabled ? 'none' : undefined}
         glowProps={glowProps}
+        // pass coat, surface uses it a few times internally
         coat={coat}
         onClick={useCallback(() => {
           if (isDefined(props.active) && props.onChangeActive) {

@@ -31,14 +31,10 @@ function isColorLikeString(str: string) {
   return false
 }
 
+const isNumberOrString = (x: any) => typeof x === 'number' || typeof x === 'string'
+
 function isColorLikeArray(array: (number | string)[]) {
-  return (
-    typeof array[0] === 'number' &&
-    typeof array[1] === 'number' &&
-    typeof array[2] === 'number' &&
-    (typeof array[3] === 'undefined' || typeof array[3] === 'number') &&
-    typeof array[4] === 'undefined'
-  )
+  return (array.length === 3 || array.length === 4) && array.every(isNumberOrString)
 }
 
 function isColorLikeObject(object: ColorObject) {

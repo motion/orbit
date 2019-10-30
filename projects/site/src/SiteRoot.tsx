@@ -1,14 +1,12 @@
 // //!
-// import { ProvideUI, Stack } from '@o/ui'
+// import { ProvideUI, Space } from '@o/ui'
 // //
 // const React = require('react')
 // const { themes } = require('./themes')
 // export const SiteRoot = () => {
 //   return (
 //     <ProvideUI themes={themes} activeTheme="dark">
-//       <Stack flex={1} overflow="hidden" className="content" sm-padding={0} padding={[0, 0, 0, 24]}>
-//         ok
-//       </Stack>
+//       <Space className="ok" size={10} />
 //     </ProvideUI>
 //   )
 // }

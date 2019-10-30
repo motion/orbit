@@ -653,7 +653,7 @@ domNode: ${domNode}
         const classNamePropIndex = node.attributes.findIndex(
           attr => !t.isJSXSpreadAttribute(attr) && attr.name && attr.name.name === 'className',
         )
-        if (classNamePropIndex > -1 && extractedStaticAttrs) {
+        if (classNamePropIndex > -1) {
           classNamePropValue = getPropValueFromAttributes('className', node.attributes)
           node.attributes.splice(classNamePropIndex, 1)
         }
@@ -725,6 +725,24 @@ domNode: ${domNode}
             } catch(err) {
               console.log('error running theme', sourceFileName, err.message)
               return
+            }
+          }
+
+          // add any default html props to tag
+          for (const key in viewDefaultProps) {
+            const val = viewDefaultProps[key]
+            if (key === 'className') {
+              classNameObjects.push(t.stringLiteral(val))
+              continue
+            }
+            if (htmlAttributes[key]) {
+              // add to start so hopefully gets overwritten if set later?
+              node.attributes.unshift(
+                t.jsxAttribute(
+                  t.jsxIdentifier(key),
+                  literalToAst(val)
+                )
+              )
             }
           }
 

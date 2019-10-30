@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySetResolved } from '@o/css'
 import { selectDefined } from '@o/utils'
-import { GlossThemeProps, ThemeFn } from 'gloss'
+import { GlossThemeProps, resolveValueSafe, ThemeFn } from 'gloss'
 
 export type ElevatableProps = {
   /** Height of the shadow */
@@ -42,19 +42,16 @@ const elevatedShadow = (props: GlossThemeProps<ElevatableProps>) => {
             0,
             0,
             0,
-            props.elevationShadowOpacity ||
-              round(0.05 * smoother((11 - Math.min(10, el)) * 0.2)) +
+            props.elevationShadowOpacity ??
+              `calc(${round(0.05 * smoother((11 - Math.min(10, el)) * 0.2))} + ${resolveValueSafe(
                 selectDefined(props.boxShadowOpacity, 0),
+              )})`,
           ]),
   ]
 }
 
 export const elevationTheme: ThemeFn<ElevatableProps> = props => {
-  if (!props.elevation) {
-    return {
-      boxShadow: props.boxShadow,
-    }
-  }
+  if (!props.elevation) return
   return {
     boxShadow: [elevatedShadow(props), ...(Array.isArray(props.boxShadow) ? props.boxShadow : [])],
   }

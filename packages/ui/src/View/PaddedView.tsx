@@ -12,6 +12,7 @@ export type PaddingProps = {
   padding?: Sizes | SizesObject | GlossPropertySet['padding']
 }
 
+// @ts-ignore (framer motion weird Just err)
 export const PaddedView = gloss<
   ViewPropsPlain &
     Pick<ScrollableViewProps, 'scrollable' | 'parentSpacing'> & {

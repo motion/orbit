@@ -1,17 +1,25 @@
-- statics:
-  - properly fail when cant evaluate a gloss() (ExampleHalf)
-  - linaria-style constants evaluation and { [constant]: x }
-- docs: fix bugs in various panes
-- theme: fix slowdown bug in switching theme
-- deploy site
-- app: fix static bugs layout
-- app: fix static in OrbitHeader / errors throwing
-- static: look at linaria for how it reads static side-effect free files
-- static: just run over once more improve some logic
-- app: tune it up and get it all running again
-- blog: write a blog post for beta launch
-- site: upgrade wording
-- launch
+site final fixes:
+
+- header link transitions on click need to delay more
+- home: image changes on FeatureSection
+- home: parallax come in earlier
+- home: allinone flex spacing is off on sections, dots dont hl
+- apps: inputs are flat
+- apps: text not selectable
+- apps: shorten grid height
+- about: improve manifesto / writing
+- docs: fix a few search bugs
+- docs: tables broken
+- docs: just load all the example sections
+- docs: slimmer search area at top, entire bg blur
+- docs: tooltips, fix animation not working
+- docs: filter (remove for now)
+- docs: dark mode hover on listitem not showing
+- blog: its too wide for some reason
+- blog: fix up update one formatting
+- blog: write update 2 draft 2 (new working title: Orbit is a Longshot)
+- concurrent mode!
+
 
 current best bet for a viable product:
 

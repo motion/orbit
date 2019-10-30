@@ -12,13 +12,11 @@ export type PaddingProps = {
   padding?: Sizes | SizesObject | GlossPropertySet['padding']
 }
 
-// (framer motion weird Just err)
-// @ts-ignore
 export const PaddedView = gloss<
   ViewPropsPlain &
-    Pick<ScrollableViewProps, 'scrollable' | 'parentSpacing'> & {
-      isWrapped?: boolean
-    }
+  Pick<ScrollableViewProps, 'scrollable' | 'parentSpacing'> & {
+    isWrapped?: boolean
+  }
 >(Box, {
   flexDirection: 'inherit',
   flexWrap: 'inherit',

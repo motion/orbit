@@ -55,7 +55,6 @@ export function evaluateAstNode(exprNode: t.Node, evalFn?: (node: t.Node) => any
 
   if (t.isTemplateLiteral(exprNode)) {
     if (typeof evalFn !== 'function') {
-      console.log('evalFn', evalFn)
       throw new Error(
         'evaluateAstNode does not support template literals unless an eval function is provided',
       )

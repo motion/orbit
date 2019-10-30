@@ -1,4 +1,3 @@
-//!
 import { Button, Divider, gloss, Icon, Loading, SimpleText, Space, Stack, useIntersectionObserver, View } from '@o/ui'
 import { Box } from 'gloss'
 import { capitalize } from 'lodash'

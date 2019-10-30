@@ -1,4 +1,3 @@
-//!
 import { selectDefined } from '@o/utils'
 import { gloss } from 'gloss'
 import React, { isValidElement } from 'react'

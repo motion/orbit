@@ -1,4 +1,3 @@
-//!
 import { SimpleText, View, ViewProps } from '@o/ui'
 import React, { memo } from 'react'
 

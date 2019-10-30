@@ -13,10 +13,17 @@ import { createThemeProxy } from './theme/createThemeProxy'
 import { pseudoProps } from './theme/pseudos'
 import { themeVariableManager } from './theme/ThemeVariableManager'
 import { ThemeTrackState, UnwrapThemeSymbol, useTheme } from './theme/useTheme'
+import { defaultTheme } from './themes/defaultTheme'
 import { GlossProps, GlossPropsPartial, GlossThemeProps, GlossViewConfig } from './types'
 
 // so you can reference in postProcessProps
 export { StyleTracker } from './stylesheet/gc'
+
+// why is this global/mutable? because its in the most sensitive area perf-wise,
+// otherwise we'd be passing in an object to css() every time, which is called thousands of times
+// for now set curTheme = defaultTheme so dynamics can use it... this is a bit jank due to curTheme being global
+// curTheme is used at startup when getGlossProps runs
+let curTheme = defaultTheme
 
 /**
  * Note: ThemeProps is optional, for the user to define that they are
@@ -84,7 +91,6 @@ export const tracker: StyleTracker = new Map()
 export const sheet = new StyleSheet(true)
 const gc = new GarbageCollector(sheet, tracker)
 
-let curTheme
 // helpful global to let us add debugging in dev mode anywhere in here
 let shouldDebug = false
 const isDeveloping = process.env.NODE_ENV === 'development'

@@ -52,6 +52,9 @@ export type UsableStore<T, Props> = T & AutomagicStore<Props> & { useStore: UseS
 
 type InferProps<T> = T extends { props: infer R } ? R : undefined
 
+/**
+ * Cache stores, used for HMR
+ */
 const StoreCache = {}
 const StoreCacheInitialProps = {}
 
@@ -153,10 +156,9 @@ export function useHooks<A extends () => any>(hooks: A): ReturnType<A> & HooksOb
 function setupReactiveStore<A>(Store: new () => A, props?: any): ReactiveStoreDesc {
   const component = useCurrentComponent()
   const AutomagicStore = decorate(Store, props)
-
   // capture hooks for this store, must be before new AutomagicStore()
   const store = new AutomagicStore()
-  const hasHooks = Object.keys(store).some(x => store[x] && !!store[x].__rerunHooks)
+  const hasHooks = Object.keys(store).some(x => !!store[x]?.__rerunHooks)
 
   if (config.onMount) {
     config.onMount(store)
@@ -283,27 +285,9 @@ function useReactiveStore<A extends any>(
     updateProps(store, props)
   }
 
-  if (!state.current.pendingHooks) {
-    if (!shouldSetupStore) {
-      // re-run hooks
-      const hooks = state.current.hooks
-      if (hooks && hooks.length) {
-        transaction(function updateHooks() {
-          for (const hook of hooks) {
-            let next = hook.__rerunHooks()
-            if (next) {
-              for (const key in next) {
-                if (key[0] === '_' && key[1] === '_') continue
-                if (next[key] !== hooks[key]) {
-                  console.log('updating hooks', hook[key], next[key])
-                  hook[key] = next[key]
-                }
-              }
-            }
-          }
-        })
-      }
-    }
+  if (!state.current.pendingHooks && !shouldSetupStore) {
+    // re-run hooks
+    updateStoreHooks(state.current.hooks)
   }
 
   if (hasChangedSource) {
@@ -312,6 +296,24 @@ function useReactiveStore<A extends any>(
   }
 
   return { store, hasChangedSource, dispose }
+}
+
+function updateStoreHooks(hooks: HooksObject[] | null) {
+  if (!hooks?.length) return
+  transaction(function updateHooks() {
+    for (const hook of hooks) {
+      let next = hook.__rerunHooks()
+      if (next) {
+        for (const key in next) {
+          if (key[0] === '_' && key[1] === '_') continue
+          if (next[key] !== hooks[key]) {
+            console.log('updating hooks', hook[key], next[key])
+            hook[key] = next[key]
+          }
+        }
+      }
+    }
+  })
 }
 
 // allows us to use instantiated or non-instantiated stores

@@ -1,5 +1,5 @@
-import { Button, configureHotKeys, gloss, Portal, ProvideBanner, Sidebar, Space, Stack, Theme, View } from '@o/ui'
-import { useReaction } from '@o/use-store'
+import { Button, configureHotKeys, Contents, gloss, Portal, ProvideBanner, Sidebar, Space, Stack, Theme, View } from '@o/ui'
+import { createUsableStore, useReaction } from '@o/use-store'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View as NaviView } from 'react-navi'
@@ -40,9 +40,11 @@ export default compose(
     }
     return (
       <ProvideBanner>
-        <DocsPage>
-          <NaviView disableScrolling={window['recentHMR']} />
-        </DocsPage>
+        <DocsPageFrame>
+          <DocsPage>
+            <NaviView disableScrolling={window['recentHMR']} />
+          </DocsPage>
+        </DocsPageFrame>
       </ProvideBanner>
     )
   }),
@@ -128,15 +130,33 @@ const FixedLayout = gloss({
   },
 })
 
-const DocsPage = (props: any) => {
+const DocsPageFrame = props => {
   const Fade = useFadePage({
     threshold: 0,
   })
+  return (
+    <Fade.FadeProvide>
+      <Contents nodeRef={Fade.ref}>
+        <DocsPage {...props} />
+      </Contents>
+    </Fade.FadeProvide>
+  )
+}
+
+class Stoer {}
+const useit = createUsableStore(Stoer)
+
+const DocsPage = memo((props: any) => {
+  console.warn('docspage rendering')
+  useit.useStore({
+    debug: true
+  })
+  return null
   const siteStore = useSiteStore()
+  return null
   const [showSidebar, setShowSidebar] = useState(false)
   const inputRef = useRef(null)
   const [themeName, setThemeName] = usePageTheme()
-  console.warn('docspage rendering')
 
   // const portalNode = React.useMemo(() => {
   //   const div = portals.createPortalNode()
@@ -282,11 +302,10 @@ const DocsPage = (props: any) => {
       </Fade.FadeProvide>
     </DocsStoreContext.Provider>
   )
-}
+})
 
 // @ts-ignore
 DocsPage.theme = 'docsPageTheme'
-DocsPage.whyDidYouRender = true
 
 const FloatingDocsSidebar = ({ showSidebar, setShowSidebar }: any) => {
   const [themeName] = usePageTheme()

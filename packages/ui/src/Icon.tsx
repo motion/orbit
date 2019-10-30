@@ -47,7 +47,7 @@ export const Icon = memo((rawProps: IconProps) => {
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const ResolvedIcon = Config.useIcon || PlainIcon
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<div style={{ width: props.size, height: props.size }} />}>
       <ResolvedIcon subTheme="icon" {...props} />
     </Suspense>
   )

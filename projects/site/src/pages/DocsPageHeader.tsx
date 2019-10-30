@@ -1,3 +1,4 @@
+//!
 import { Absolute, ListItem, ListShortcuts, Popover, RoundButton, Stack } from '@o/ui'
 import React, { memo, useMemo } from 'react'
 
@@ -104,13 +105,11 @@ export const DocsPageHeader = memo(({ inputRef, setTheme, theme }: any) => {
             justifyContent="flex-start"
             flexDirection="row"
           >
-            <Stack direction="horizontal" group>
-              <HeaderButton
-                icon="moon"
-                tooltip="Toggle dark mode"
-                onClick={() => setTimeout(() => setTheme(theme === 'docsPageTheme' ? 'dark' : 'docsPageTheme'))}
-              />
-            </Stack>
+            <HeaderButton
+              icon="moon"
+              tooltip="Toggle dark mode"
+              onClick={() => setTimeout(() => setTheme(theme === 'docsPageTheme' ? 'dark' : 'docsPageTheme'))}
+            />
           </Absolute>
         </Stack>
       </FadeInView>

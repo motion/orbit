@@ -238,7 +238,7 @@ const sections = {
       {
         title: 'Complete UI Kit',
         icon: 'button',
-        body: [`Beautiful, flexible, virtualized, concurrent, with easy data loading.`],
+        body: [`Smart, flexible, virtualized, concurrent, easy data loading.`],
       },
       {
         title: `Drag & Drop Data`,
@@ -268,23 +268,17 @@ const sections = {
       {
         title: `Next-gen Hot Reload`,
         icon: `refresh`,
-        body: [
-          `Per-app Webpack with instant React Refresh. Toggle between editing and production instantly.`,
-        ],
+        body: [`Per-app Webpack for instant HMR. Every app is editable at runtime.`],
       },
       {
         title: `Modern view system`,
         icon: `grid-view`,
-        body: [
-          `React Concurrent, Suspense, Framer Motion and more integrated by default, in every view.`,
-        ],
+        body: [`React Concurrent, Suspense, Framer Motion and more, in every view.`],
       },
       {
         title: `Incredible Dev Tooling`,
         icon: `draw`,
-        body: [
-          `From debuggins to data management, error recovery and more - Orbit comes with great DX.`,
-        ],
+        body: [`Debugging, data management, error recovery - many dev tools built-in.`],
       },
     ],
   },

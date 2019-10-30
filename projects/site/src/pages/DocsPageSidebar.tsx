@@ -16,7 +16,7 @@ export const DocsPageSidebar = memo(({ children, ...rest }: any) => {
       <Stack position="relative" className="sidebar__inner" flex={1}>
         <Stack margin={[25, 0, 0]} flex={1} position="relative">
           {children}
-          <BorderRight top={10} />
+          <BorderRight opacity={0.5} top={10} />
         </Stack>
       </Stack>
     </Stack>

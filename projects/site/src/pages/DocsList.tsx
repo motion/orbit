@@ -7,10 +7,7 @@ import { DocsStoreContext } from './DocsStore'
 
 const itemProps = {
   hideBorder: true,
-  titleProps: {
-    fontSize: 13,
-  },
-  padding: [10, 12],
+  padding: [11, 12],
   iconProps: {
     opacity: 0.65,
   },

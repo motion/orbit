@@ -64,7 +64,7 @@ const components = {
   ),
   li: props => (
     <>
-      <li style={{ marginLeft: 26 }} {...props} />
+      <li style={{ marginLeft: 26, opacity: 0.9 }} {...props} />
       <Space size="sm" />
     </>
   ),
@@ -95,6 +95,7 @@ const components = {
           margin={0}
           fontSize="inherit"
           lineHeight="inherit"
+          alpha={0.9}
           {...props}
         />
         {contentSpace}

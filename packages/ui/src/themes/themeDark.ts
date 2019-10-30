@@ -138,18 +138,12 @@ export const dark: ThemeObject = fromStyles({
   },
 
   input: {
-    background: transparent,
-    backgroundHover: transparent,
-    backgroundActive: transparent,
-    backgroundFocus: transparent,
     backgroundSelection: c('#444'),
   },
 
   listItem: {
     ...fromStyles({
       background,
-      backgroundSelected: c([60, 60, 60, 0.2]),
-      backgroundHover: c([20, 20, 20, 0.13]),
     }),
     background: transparent,
   },

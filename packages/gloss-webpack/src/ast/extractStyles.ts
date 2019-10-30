@@ -740,7 +740,7 @@ domNode: ${domNode}
               node.attributes.unshift(
                 t.jsxAttribute(
                   t.jsxIdentifier(key),
-                  literalToAst(val)
+                  t.jsxExpressionContainer(literalToAst(val))
                 )
               )
             }

@@ -13,13 +13,12 @@ export const SignupForm = memo((props: ViewProps) => {
       abovemd-minWidth={340}
       margin="auto"
       borderRadius={14}
-      overflow="hidden"
       elevation={1}
       background={theme => theme.backgroundStrong}
       alignSelf="center"
       {...props}
     >
-      <View padding="lg">
+      <View padding={['lg', 'xxl']}>
         <Join
           header={
             <>
@@ -30,7 +29,7 @@ export const SignupForm = memo((props: ViewProps) => {
                 alpha={0.6}
                 size="xs"
               >
-                Beta Signup
+                Join the beta list
               </SimpleText>
             </>
           }

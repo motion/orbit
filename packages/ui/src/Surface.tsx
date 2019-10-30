@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined } from '@o/utils'
-import { Box, CompiledTheme, Flex, gloss, GlossProps, propsToStyles, pseudoProps, PseudoStyle, PseudoStyleProps, pseudoStyleTheme, ThemeFn, ThemeSelect, useTheme } from 'gloss'
+import { Box, CompiledTheme, Flex, gloss, GlossProps, propsToStyles, pseudoProps, PseudoStyle, PseudoStyleProps, pseudoStyleTheme, ThemeFn, ThemeSelect, ThemeValue, useTheme } from 'gloss'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
@@ -524,7 +524,7 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
   return useBreadcrumbReset(
     SizedSurfacePropsContext.useReset(
       <IconPropsContext.Provider value={iconContext}>
-        <SurfaceFrame {...surfaceFrameProps} />
+        <SurfaceFrame coat={coat} {...surfaceFrameProps} />
       </IconPropsContext.Provider>,
     ),
   )
@@ -601,8 +601,10 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
   // useful for having nice looking buttons (inside) vs container-like views (outside)
   if (props.borderColor && !props.chromeless) {
     if (props.borderPosition === 'inside') {
+      const borderWidthValue = borderWidth instanceof ThemeValue ? borderWidth.getSafe() : borderWidth
+      const borderWidthCalculated = typeof borderWidthValue === 'number' ? `calc(${borderWidthValue} * 1px)` : borderWidthValue
       // inside
-      boxShadow = [...(boxShadow || []), ['inset', 0, 0, 0, borderWidth, props.borderColor]]
+      boxShadow = [...(boxShadow || []), ['inset', 0, 0, 0, borderWidthCalculated, props.borderColor]]
       styles.borderWidth = 0
     } else {
       // outside
@@ -612,7 +614,7 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
 
   if (props.elevation) {
     // @ts-ignore
-    boxShadow = [...(boxShadow || []), ...elevationTheme(props as any).boxShadow]
+    boxShadow = [...(boxShadow || []), ...elevationTheme(props as any)?.boxShadow]
   }
 
   const res = {

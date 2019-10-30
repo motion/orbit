@@ -13,6 +13,7 @@ export const posts: PostDirectory = {
     date: '2018-10-05T22:12:03.284Z',
     author: 'Nathan Wienert',
     authorImage: nateImg,
+    private: true,
   },
   'update-one': {
     view: () => import('./update-one/index.mdx'),
@@ -27,5 +28,6 @@ export const posts: PostDirectory = {
     date: '2019-04-25T22:12:03.284Z',
     author: 'Nathan Wienert',
     authorImage: nateImg,
+    private: true,
   },
 }

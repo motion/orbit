@@ -10,9 +10,9 @@ import { elementOffset } from './helpers/elementOffset'
 import { useDebounce } from './hooks/useDebounce'
 import { useNodeSize } from './hooks/useNodeSize'
 import { Rect, usePosition } from './hooks/usePosition'
-import { useResizeObserver } from './hooks/useResizeObserver'
 import { ViewProps } from './View/types'
 import { View } from './View/View'
+import { WindowResizeListener } from './WindowResizeListener'
 
 // const rnd = x => (typeof x === 'number' ? Math.round(x * 100) / 100 : x)
 // const table = x =>
@@ -203,6 +203,10 @@ export type ParallaxViewProps = Omit<ViewProps, 'direction'> &
     parallax?: (geometry: ParallaxGeometryStore) => { [key: string]: AnimationStore }
   }
 
+const plxResizeListener = new WindowResizeListener({
+  debounce: 50,
+})
+
 export function ParallaxView(props: ParallaxViewProps) {
   const {
     offset = 0,
@@ -248,23 +252,19 @@ export function ParallaxView(props: ParallaxViewProps) {
 
   const updateDb = useDebounce(update, 40)
 
-  useEffect(() => {
-    window.addEventListener('resize', updateDb)
-    return () => {
-      window.removeEventListener('resize', updateDb)
-    }
-  }, [])
+  useEffect(() => plxResizeListener.mount(update))
 
-  useResizeObserver({
-    ref: documentRef,
-    onChange: updateDb,
-  })
+  // useResizeObserver({
+  //   ref: documentRef,
+  //   onChange: updateDb,
+  // })
 
   useReaction(
     () => parent.bounds,
     updateDb,
     {
       avoidRender: true,
+      lazy: true,
     },
     [sizeKey, offsetKey],
   )

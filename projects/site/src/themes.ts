@@ -57,6 +57,7 @@ const home = {
 export const themes = createThemes({
   ...UIThemes,
 
+  // TODO cant we remove everything but the buton: {} subset?
   orbitOneDark: fromStyles({
     background: '#111',
     backgroundHover: '#111',
@@ -77,11 +78,6 @@ export const themes = createThemes({
   },
 
   home,
-
-  brown: {
-    ...dark,
-    background: toColor('#12100E'),
-  },
 
   blogHeaderTheme: purple,
 

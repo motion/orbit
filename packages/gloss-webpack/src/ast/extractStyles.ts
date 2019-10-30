@@ -10,7 +10,7 @@ import util from 'util'
 import vm from 'vm'
 
 import { CacheObject, ExtractStylesOptions } from '../types'
-import { evaluateAstNode } from './evaluateAstNode'
+import { evaluateAstNode, EvaluateASTNodeOptions } from './evaluateAstNode'
 import { extractStaticTernaries, Ternary } from './extractStaticTernaries'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { getStaticBindingsForScope } from './getStaticBindingsForScope'
@@ -205,14 +205,22 @@ export function extractStyles(
         glossCall.arguments = glossCall.arguments.map((arg, index) => {
           if ((index === 0 || index === 1) && t.isObjectExpression(arg)) {
             let propObject = {}
+            let unevaluated: any[] = []
             try {
-              propObject = evaluate(arg)
+              const opts: EvaluateASTNodeOptions = {
+                evaluateFunctions: false,
+                unevaluated: []
+              }
+              propObject = evaluate(arg, opts)
+              unevaluated = opts.unevaluated
               if (shouldPrintDebug) {
                 console.log('propObject', propObject)
               }
             } catch (err) {
-              console.log('Cant parse style object', name, '>', localViewName)
-              console.log('err', err)
+              console.log('Cant parse style object - this is ok, just de-opt', name, '>', localViewName)
+              if (shouldPrintDebug) {
+                console.log('err', err)
+              }
               return arg
             }
 
@@ -256,7 +264,9 @@ export function extractStyles(
                 cssMap.set(info.className, { css: info.css, commentTexts: [] })
                 out.className += ` ${info.className}`
               } else {
-                console.log('no info', ns, styles)
+                if (shouldPrintDebug) {
+                  console.log('no info', ns, styles)
+                }
               }
             }
 
@@ -287,8 +297,19 @@ export function extractStyles(
             }
 
             // keep any non-style props on the glossProps
+            let defaultPropsLeave = unevaluated
+
             if (internalDefaultProps && Object.keys(internalDefaultProps).length) {
-              return literalToAst(internalDefaultProps)
+              const objectLeaveProps = literalToAst(internalDefaultProps) as t.ObjectExpression
+              defaultPropsLeave = [
+                ...defaultPropsLeave,
+                ...objectLeaveProps.properties
+              ]
+            }
+
+            // if we have defaultProps or unevaluated non-extracted items, leave them
+            if (defaultPropsLeave.length) {
+              return t.objectExpression(defaultPropsLeave)
             }
 
             return t.nullLiteral()
@@ -323,7 +344,8 @@ export function extractStyles(
     }
   }
 
-  function createEvaluator(path: NodePath<any>, sourceFileName: string) {
+  // creates an evaluator to get complex values from babel in this path
+  function createEvaluator(path: NodePath<any>, sourceFileName: string, defaultOpts?: EvaluateASTNodeOptions) {
     // Generate scope object at this level
     const staticNamespace = getStaticBindingsForScope(
       path.scope,
@@ -347,7 +369,9 @@ export function extractStyles(
       }
       return vm.runInContext(`(${generate(n).code})`, evalContext)
     }
-    return (n: t.Node) => evaluateAstNode(n, evalFn)
+    return (n: t.Node, o?: EvaluateASTNodeOptions) => {
+      return evaluateAstNode(n, evalFn, { ...defaultOpts, ...o })
+    }
   }
 
 
@@ -376,6 +400,10 @@ export function extractStyles(
         let staticStyleConfig: GlossView<any>['staticStyleConfig'] | null = null
         if (view) {
           staticStyleConfig = view.staticStyleConfig
+          // lets us have plain functional views like Stack
+          if (staticStyleConfig.parentView) {
+            view = staticStyleConfig.parentView
+          }
           domNode = view.staticStyleConfig?.tagName
             ?? view.internal?.glossProps.defaultProps.tagName
             ?? 'div'
@@ -390,7 +418,7 @@ export function extractStyles(
           return false
         }
 
-        const attemptEval = evaluateAstNode // createEvaluator(traversePath.scope, sourceFileName)
+        const attemptEval = evaluateAstNode //createEvaluator(traversePath as any, sourceFileName, { evaluateFunctions: false })
 
         let lastSpreadIndex: number = -1
         const flattenedAttributes: (t.JSXAttribute | t.JSXSpreadAttribute)[] = []
@@ -443,6 +471,7 @@ export function extractStyles(
         const htmlExtractedAttributes = {}
         let inlinePropCount = 0
         const staticTernaries: Ternary[] = []
+        const classNameObjects: (t.StringLiteral | t.Expression)[] = []
 
         let shouldDeopt = false
 
@@ -457,6 +486,7 @@ export function extractStyles(
             // haven't hit the last spread operator
             idx < lastSpreadIndex
           ) {
+            if (shouldPrintDebug) console.log('inline prop via non normal attr')
             inlinePropCount++
             return true
           }
@@ -469,11 +499,9 @@ export function extractStyles(
               shouldDeopt = true
               return true
             }
-            if (shouldDeopt) {
-              return true
-            }
             // for avoiding processing certain keys
             if (staticStyleConfig.avoidProps?.includes(name)) {
+              if (shouldPrintDebug) console.log('inline prop via avoidProps')
               inlinePropCount++
               return true
             }
@@ -489,8 +517,21 @@ export function extractStyles(
             ...localView?.staticDesc?.conditionalClassNames ?? null,
           }
           if (allConditionalClassNames[name]) {
-            // extract but still put it onto staticAttributes for themeFn to use
-            staticAttributes[name] = true
+            // we can just extract to className
+            if (value === null) {
+              // extract but still put it onto staticAttributes for themeFn to use
+              staticAttributes[name] = true
+              return false
+            }
+
+            // if dynamic value we just use it on className
+            classNameObjects.push(
+              t.conditionalExpression(
+                value,
+                t.stringLiteral(allConditionalClassNames[name]),
+                t.stringLiteral('')
+              )
+            )
             return false
           }
 
@@ -514,9 +555,13 @@ export function extractStyles(
             return true
           }
 
-          if (viewInformation[originalNodeName]?.trackState?.nonCSSVariables?.has(name)) {
-            inlinePropCount++
-            return true
+          const trackState = viewInformation[originalNodeName]?.trackState
+          if (trackState) {
+            if (trackState?.nonCSSVariables?.has(name)) {
+              if (shouldPrintDebug) console.log('inline prop via nonCSSVariables')
+              inlinePropCount++
+              return true
+            }
           }
 
           if (!isCSSAttribute(name)) {
@@ -525,11 +570,22 @@ export function extractStyles(
             if (htmlAttributes[name]) {
               try {
                 htmlExtractedAttributes[name] = attemptEval(value)
-              } catch {
+              } catch(err) {
+                // oo fancy! this basically says if we can't eval this safely, and its used by the themeFn
+                // then we need to deopt here. if it can be evaluated, we're good, we'll run theme here later
+                if (trackState?.usedProps?.has(name)) {
+                  if (shouldPrintDebug) {
+                    console.log('we use this in this component', name)
+                  }
+                  inlinePropCount++
+                  return true
+                }
+                // console.log('err getting html attr', name, err.message)
                 // ok
               }
               return true
             }
+            if (shouldPrintDebug) console.log('inline prop via !isCSSAttribute')
             inlinePropCount++
             return true
           }
@@ -586,6 +642,7 @@ export function extractStyles(
           }
 
           // if we've made it this far, the prop stays inline
+          if (shouldPrintDebug) console.log('inline prop via no match')
           inlinePropCount++
           return true
         })
@@ -610,7 +667,7 @@ domNode: ${domNode}
         const classNamePropIndex = node.attributes.findIndex(
           attr => !t.isJSXSpreadAttribute(attr) && attr.name && attr.name.name === 'className',
         )
-        if (classNamePropIndex > -1 && extractedStaticAttrs) {
+        if (classNamePropIndex > -1) {
           classNamePropValue = getPropValueFromAttributes('className', node.attributes)
           node.attributes.splice(classNamePropIndex, 1)
         }
@@ -661,7 +718,7 @@ domNode: ${domNode}
             stylesByClassName[localView.staticDesc.className] = null
           }
 
-          const themeFns = view?.internal?.themeFns
+          const themeFns = view?.internal?.getConfig()?.themeFns
           if (themeFns) {
             // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss
             try {
@@ -682,6 +739,27 @@ domNode: ${domNode}
             } catch(err) {
               console.log('error running theme', sourceFileName, err.message)
               return
+            }
+          }
+
+          // add any default html props to tag
+          for (const key in viewDefaultProps) {
+            const val = viewDefaultProps[key]
+            if (key === 'className') {
+              classNameObjects.push(t.stringLiteral(val))
+              continue
+            }
+            if (htmlAttributes[key]) {
+              // @ts-ignore
+              if (!node.attributes.some(x => x?.name?.name === key)) {
+                // add to start so if its spread onto later its overwritten
+                node.attributes.unshift(
+                  t.jsxAttribute(
+                    t.jsxIdentifier(key),
+                    t.jsxExpressionContainer(literalToAst(val))
+                  )
+                )
+              }
             }
           }
 
@@ -745,8 +823,8 @@ domNode: ${domNode}
         if (shouldPrintDebug) {
           console.log('stylesByClassName pre ternaries', stylesByClassName)
         }
+
         const extractedStyleClassNames = Object.keys(stylesByClassName).join(' ')
-        const classNameObjects: (t.StringLiteral | t.Expression)[] = []
 
         if (classNamePropValue) {
           try {

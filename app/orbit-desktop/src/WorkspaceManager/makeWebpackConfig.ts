@@ -10,7 +10,7 @@ import merge from 'webpack-merge'
 
 export type DLLReferenceDesc = { manifest: string; filepath: string }
 
-const GlossWebpackPlugin = require('@o/gloss-webpack')
+const { GlossWebpackPlugin } = require('@o/gloss-webpack')
 
 export type WebpackParams = {
   name?: string
@@ -61,7 +61,7 @@ export function makeWebpackConfig(
     devtool,
     injectHot,
     plugins,
-    extractStaticStyles = true,
+    extractStaticStyles,
   } = params
 
   // optimize react

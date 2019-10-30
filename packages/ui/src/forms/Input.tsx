@@ -158,7 +158,7 @@ const inputSurfaceTheme: ThemeFn<any> = props => {
       border: [1, props.borderColor],
       '&:focus-within': {
         // @ts-ignore
-        boxShadow: [[0, 0, 0, 3, props.borderColorLight], elevationTheme(props as any).boxShadow],
+        boxShadow: [[0, 0, 0, 3, props.borderColorLight], elevationTheme(props as any)?.boxShadow],
       },
     }),
   }

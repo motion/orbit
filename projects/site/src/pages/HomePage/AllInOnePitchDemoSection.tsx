@@ -1,4 +1,3 @@
-//!
 import { AnimatePresence, animation, Button, gloss, Image, Space, Stack, View } from '@o/ui'
 import { Box, Inline } from 'gloss'
 import React, { memo, useState } from 'react'

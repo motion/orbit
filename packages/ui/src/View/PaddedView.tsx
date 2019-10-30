@@ -74,14 +74,10 @@ type PaddingSpecificProps = PaddingProps & {
 }
 
 export function paddingTheme(props: PaddingSpecificProps) {
-  if (props.padding === false) {
-    return null
-  }
-
   const res: any = {}
 
-  // TODO only iterate props here because assuming static compiled optimizations
-  // we will have way less props on average
+  // TODO only iterate props here rather than iterate possible media query keys
+  // why? assuming static compiled optimizations we have less props on average
 
   // base padding
   const base = getPaddingBaseValue(props.padding)
@@ -95,27 +91,30 @@ export function paddingTheme(props: PaddingSpecificProps) {
   // media query padding
   if (hasMediaQueries) {
     let basePaddings = null
-    let sidePaddings = []
+    let mediaQueries = new Set<string>()
     for (const key in props) {
       if (!isDefined(props[key])) continue
       if (key in mediaQueryKeysPadding) {
         basePaddings = basePaddings || {}
-        basePaddings[key.replace('-padding', '')] = getPaddingBaseValue(props[key])
+        const mediaKey = key.replace('-padding', '')
+        basePaddings[mediaKey] = getPaddingBaseValue(props[key])
+        // ensure we next go over the sides and add them
+        mediaQueries.add(mediaKey)
       }
       if (key in mediaQueryKeysPaddingSides) {
-        sidePaddings.push(key)
+        mediaQueries.add(key.replace('-padding', ''))
       }
     }
-    for (const key of sidePaddings) {
-      const sides = mediaQueryKeysPaddingSides[key]
-      for (const paddingSide of sides) {
-        if (isDefined(props[paddingSide])) {
-          res[paddingSide] = getPaddingSideValue(
-            basePaddings ? basePaddings[key.slice(key.indexOf('-'))] : undefined,
-            props,
-            sides,
-            paddingSide,
-          )
+    if (mediaQueries.size) {
+      for (const key of [...mediaQueries]) {
+        const base = basePaddings?.[key]
+        const sides = mediaQueryKeysPaddingSides[key]
+        for (const sideKey of sides) {
+          // fallback always to base because we are overriding
+          const val = getPaddingSideValue(base, props, sides, sideKey) ?? base
+          if (isDefined(val)) {
+            res[sideKey] = val
+          }
         }
       }
     }
@@ -152,8 +151,7 @@ function getPaddingSideValue(
         return base[keyIndex % 2]
       }
       return base[keyIndex]
-    } else {
-      return base
     }
+    return base
   }
 }

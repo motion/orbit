@@ -40,9 +40,9 @@ export default compose(
     }
     return (
       <ProvideBanner>
-        <DocsPage>
+        <DocsPageFrame>
           <NaviView disableScrolling={window['recentHMR']} />
-        </DocsPage>
+        </DocsPageFrame>
       </ProvideBanner>
     )
   }),
@@ -128,22 +128,24 @@ const FixedLayout = gloss({
   },
 })
 
-const DocsPage = (props: any) => {
+const DocsPageFrame = props => {
   const Fade = useFadePage({
     threshold: 0,
   })
+  return (
+    <Fade.FadeProvide>
+      <div ref={Fade.ref}>
+        <DocsPage {...props} />
+      </div>
+    </Fade.FadeProvide>
+  )
+}
+
+const DocsPage = memo((props: any) => {
   const siteStore = useSiteStore()
   const [showSidebar, setShowSidebar] = useState(false)
   const inputRef = useRef(null)
   const [themeName, setThemeName] = usePageTheme()
-  console.warn('docspage rendering')
-
-  // const portalNode = React.useMemo(() => {
-  //   const div = portals.createPortalNode()
-  //   div.style.display = 'flex'
-  //   div.style.height = 'calc(100vh - 100px)'
-  //   return div
-  // }, [])
 
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))
@@ -197,96 +199,92 @@ const DocsPage = (props: any) => {
 
   return (
     <DocsStoreContext.Provider>
-      <Fade.FadeProvide>
-        <Portal
-          prepend
-          style={{
-            position: 'sticky',
-            top: 10,
-            zIndex: 10000000,
-          }}
-        >
-          <Theme name="home">
-            <DocsPageHeader
-              {...{
-                inputRef,
-                setTheme: setThemeName,
-                theme: themeName,
-                setShowSidebar,
-                siteStore,
-                showSidebar,
-              }}
-            />
-          </Theme>
-        </Portal>
-
-        <Portal prepend>
-          <Theme name="home">
-            <Header
-              slim
-              noBorder
-              before={
-                <>
-                  <Button
-                    abovesm-display="none"
-                    position="fixed"
-                    pointerEvents="auto"
-                    icon={showSidebar ? 'arrowleft' : 'arrowright'}
-                    tooltip="Toggle menu"
-                    top={-3}
-                    left={10}
-                    zIndex={10000000}
-                    iconSize={16}
-                    size={2}
-                    fontSize={16}
-                    chromeless
-                    onClick={() => setShowSidebar(!showSidebar)}
-                  />
-                </>
-              }
-            />
-          </Theme>
-        </Portal>
-
-        <FloatingDocsSidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
-
-        <Theme name={themeName}>
-          <main className="main-contents">
-            <SectionContent background={theme => theme.background} maxWidth={1400}>
-              <Stack direction="horizontal" id="main" className="main">
-                <DocsPageSidebar sm-display="none">
-                  <FadeInView data-is="DocsPageSidebar" flex={1} pointerEvents="auto">
-                    <DocsList shouldRenderAll />
-                  </FadeInView>
-                </DocsPageSidebar>
-                <Stack
-                  nodeRef={Fade.ref}
-                  flex={1}
-                  overflow="hidden"
-                  className="content"
-                  sm-padding={0}
-                  padding={[0, 0, 0, 24]}
-                >
-                  <ContentSection>
-                    <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
-                  </ContentSection>
-                </Stack>
-              </Stack>
-
-              <Space size={250} />
-
-              <BlogFooter />
-            </SectionContent>
-          </main>
+      <Portal
+        prepend
+        style={{
+          position: 'sticky',
+          top: 10,
+          zIndex: 10000000,
+        }}
+      >
+        <Theme name="home">
+          <DocsPageHeader
+            {...{
+              inputRef,
+              setTheme: setThemeName,
+              theme: themeName,
+              setShowSidebar,
+              siteStore,
+              showSidebar,
+            }}
+          />
         </Theme>
-      </Fade.FadeProvide>
+      </Portal>
+
+      <Portal prepend>
+        <Theme name="home">
+          <Header
+            slim
+            noBorder
+            before={
+              <>
+                <Button
+                  abovesm-display="none"
+                  position="fixed"
+                  pointerEvents="auto"
+                  icon={showSidebar ? 'arrowleft' : 'arrowright'}
+                  tooltip="Toggle menu"
+                  top={-3}
+                  left={10}
+                  zIndex={10000000}
+                  iconSize={16}
+                  size={2}
+                  fontSize={16}
+                  chromeless
+                  onClick={() => setShowSidebar(!showSidebar)}
+                />
+              </>
+            }
+          />
+        </Theme>
+      </Portal>
+
+      <FloatingDocsSidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
+
+      <Theme name={themeName}>
+        <main className="main-contents">
+          <SectionContent background={theme => theme.background} maxWidth={1400}>
+            <Stack direction="horizontal" id="main" className="main">
+              <DocsPageSidebar sm-display="none">
+                <FadeInView data-is="FadeInView-DocsPageSidebar" flex={1} pointerEvents="auto">
+                  <DocsList shouldRenderAll />
+                </FadeInView>
+              </DocsPageSidebar>
+              <Stack
+                flex={1}
+                overflow="hidden"
+                className="content"
+                sm-padding={0}
+                padding={[0, 0, 0, 24]}
+              >
+                <ContentSection>
+                  <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
+                </ContentSection>
+              </Stack>
+            </Stack>
+
+            <Space size={50} />
+
+            <BlogFooter />
+          </SectionContent>
+        </main>
+      </Theme>
     </DocsStoreContext.Provider>
   )
-}
+})
 
 // @ts-ignore
 DocsPage.theme = 'docsPageTheme'
-DocsPage.whyDidYouRender = true
 
 const FloatingDocsSidebar = ({ showSidebar, setShowSidebar }: any) => {
   const [themeName] = usePageTheme()

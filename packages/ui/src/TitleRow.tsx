@@ -62,8 +62,8 @@ export type TitleRowSpecificProps = ThemeableProps &
 
 export type TitleRowProps = Omit<StackProps, 'size' | 'children'> & TitleRowSpecificProps
 
-export const TitleRow = themeable(
-  ({
+export const TitleRow = themeable((props: TitleRowProps) => {
+  const {
     before,
     borderSize = 1,
     bordered,
@@ -80,59 +80,58 @@ export const TitleRow = themeable(
     space,
     selectable,
     ...allProps
-  }: TitleRowProps) => {
-    const spaceSize = getSpaceSize(selectDefined(space, size))
-    const scale = useScale()
-    const iconSize = 32 * scale
-    const [collapseProps, rowProps] = splitCollapseProps(allProps)
-    const collapse = useCollapse(collapseProps)
-    const titleElement =
-      !!title &&
-      (isValidElement(title) ? (
-        title
-      ) : (
-        <Title size={size} selectable={selectable} ellipse {...titleProps}>
-          {title}
-        </Title>
-      ))
+  } = props
+  const spaceSize = getSpaceSize(selectDefined(space, size))
+  const scale = useScale()
+  const iconSize = 32 * scale
+  const [collapseProps, rowProps] = splitCollapseProps(allProps)
+  const collapse = useCollapse(collapseProps)
+  const titleElement =
+    !!title &&
+    (isValidElement(title) ? (
+      title
+    ) : (
+      <Title size={size} selectable={selectable} ellipse {...titleProps}>
+        {title}
+      </Title>
+    ))
 
-    return (
-      <TitleRowChrome
-        onDoubleClick={(collapse.isCollapsable && collapse.toggle) || undefined}
-        background={backgrounded ? titleRowBg : null}
-        space={space}
-        {...rowProps}
-      >
-        {above}
-        <Stack direction="horizontal" alignItems="center" space={size}>
-          {collapse.isCollapsable && <CollapseArrow useCollapse={collapse} />}
-          {before}
-          {typeof icon === 'string' ? (
-            <Icon alignSelf="center" name={icon} size={iconSize} />
-          ) : React.isValidElement(icon) ? (
-            React.cloneElement(icon as any, { size: iconSize })
-          ) : (
-            icon || null
+  return (
+    <TitleRowChrome
+      onDoubleClick={(collapse.isCollapsable && collapse.toggle) || undefined}
+      background={backgrounded ? titleRowBg : null}
+      space={space}
+      {...rowProps}
+    >
+      {above}
+      <Stack direction="horizontal" alignItems="center" space={size}>
+        {collapse.isCollapsable && <CollapseArrow useCollapse={collapse} />}
+        {before}
+        {typeof icon === 'string' ? (
+          <Icon alignSelf="center" name={icon} size={iconSize} />
+        ) : React.isValidElement(icon) ? (
+          React.cloneElement(icon as any, { size: iconSize })
+        ) : (
+          icon || null
+        )}
+        <Stack space={spaceSize} flex={1} alignItems="flex-start">
+          {titleElement}
+          {!!subTitle && (
+            <SubTitle selectable={selectable} ellipse marginBottom={0}>
+              {subTitle}
+            </SubTitle>
           )}
-          <Stack space={spaceSize} flex={1} alignItems="flex-start">
-            {titleElement}
-            {!!subTitle && (
-              <SubTitle selectable={selectable} ellipse marginBottom={0}>
-                {subTitle}
-              </SubTitle>
-            )}
-            {children}
-          </Stack>
-          <Stack direction="horizontal" alignItems="center" space>
-            {after}
-          </Stack>
+          {children}
         </Stack>
-        {below}
-        {bordered && <BorderBottom height={borderSize} />}
-      </TitleRowChrome>
-    )
-  },
-)
+        <Stack direction="horizontal" alignItems="center" space>
+          {after}
+        </Stack>
+      </Stack>
+      {below}
+      {bordered && <BorderBottom height={borderSize} />}
+    </TitleRowChrome>
+  )
+})
 
 const titleRowBg = theme => theme.backgroundStrong
 

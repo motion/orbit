@@ -203,6 +203,7 @@ export function Section(direct: SectionProps) {
           {!!(bordered || titleBorder) && <BorderBottom />}
         </Flex>
       )
+      console.log('titleEl', titleEl)
     }
   }
 

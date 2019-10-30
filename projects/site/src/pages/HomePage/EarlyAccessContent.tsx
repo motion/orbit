@@ -1,5 +1,4 @@
 import { Paragraph, Scale } from '@o/ui'
-import { Theme } from 'gloss'
 import React from 'react'
 
 import { Link } from '../../views/Link'
@@ -9,7 +8,7 @@ import { SignupForm } from './SignupForm'
 import { SpacedPageContent } from './SpacedPageContent'
 import { TitleTextSub } from './TitleTextSub'
 
-export const EarlyAccessContent = (props: { theme?: string }) => {
+export const EarlyAccessContent = () => {
   return (
     <SpacedPageContent
       alignItems="center"
@@ -21,11 +20,9 @@ export const EarlyAccessContent = (props: { theme?: string }) => {
         </>
       }
     >
-      <Theme name={'dark'}>
-        <Scale size={1.2}>
-          <SignupForm />
-        </Scale>
-      </Theme>
+      <Scale size={1.2}>
+        <SignupForm />
+      </Scale>
       <Paragraph margin={[0, 'auto']}>
         Have a unique use case? <Link href="mailto:hi@tryorbit.com">Contact us</Link>.
       </Paragraph>

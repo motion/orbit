@@ -4,7 +4,6 @@ import React, { forwardRef, memo, RefObject } from 'react'
 import { VariableSizeListProps } from 'react-window'
 
 import { useNodeSize } from '../hooks/useNodeSize'
-import { View } from '../View/View'
 
 // avoid type errors
 const { DynamicSizeList } = ReactWindow as any
@@ -15,7 +14,7 @@ const { DynamicSizeList } = ReactWindow as any
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-// @ts-ignore
+
 export type DynamicListProps = Omit<VariableSizeListProps, 'itemSize' | 'height' | 'width'> & {
   height?: number
   width?: number
@@ -32,9 +31,9 @@ export const DynamicList = memo(
       [measureKey],
     )
     return (
-      <View data-is="DynamicListChrome" overflow="hidden" flex={1} nodeRef={ref}>
+      <div data-is="DynamicListChrome" ref={ref as any} style={{ overflow: 'hidden', flex: 1 }}>
         <DynamicSizeList ref={listRef} width={width} height={height} {...props} />
-      </View>
+      </div>
     )
   }),
 )

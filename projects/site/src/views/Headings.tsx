@@ -31,7 +31,7 @@ export const H4 = props => (
   <View>
     {contentSpaceSm}
     <TitleText tagName="h4" size="xxxs" fontWeight={400} alpha={0.7} {...props} />
-    {contentSpaceSm}
+    {contentSpace}
   </View>
 )
 

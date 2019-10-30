@@ -66,11 +66,11 @@ export const Example = memo(
           <ExampleHalf
             minHeight={100}
             onMouseEnter={() => {
-              tm.current = setTimeout(() => setHovered(true), 300)
+              tm.current = setTimeout(() => setHovered(true), 150)
             }}
             onMouseMove={() => {
               clearTimeout(tm.current)
-              tm.current = setTimeout(() => setHovered(true), 300)
+              tm.current = setTimeout(() => setHovered(true), 150)
             }}
             onMouseLeave={() => {
               clearTimeout(tm.current)
@@ -79,7 +79,7 @@ export const Example = memo(
           >
             {exampleElement}
             {willScroll && (
-              <AccidentalScrollPrevent disabled={hovered}>
+              <AccidentalScrollPrevent disallowScroll={hovered}>
                 <View
                   position="absolute"
                   bottom={0}
@@ -154,7 +154,7 @@ export const Example = memo(
   },
 )
 
-const AccidentalScrollPrevent = gloss<any>(Box, {
+const AccidentalScrollPrevent = gloss(Box, {
   position: 'absolute',
   top: 0,
   left: 0,
@@ -162,9 +162,8 @@ const AccidentalScrollPrevent = gloss<any>(Box, {
   bottom: 0,
   background: [150, 150, 150, 0.1],
   zIndex: 10,
-
   conditional: {
-    disabled: {
+    disallowScroll: {
       opacity: 0,
       pointerEvents: 'none',
     },

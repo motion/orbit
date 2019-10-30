@@ -23,11 +23,12 @@ export const Footer = () => {
       width="100%"
       minHeight={250}
       flex={8}
-      alignItems="flex-end"
+      alignItems="flex-start"
       scrollable="y"
     >
-      <Stack {...sectionMinWidth} flex={1} space="md">
+      <Stack {...sectionMinWidth} flex={1} space="sm">
         <SmallTitle coat="lightRed">Orbit</SmallTitle>
+        <Space size={10} />
         <SmallLink href="/">Home</SmallLink>
         <SmallLink href="/beta">Download</SmallLink>
         <SmallLink href="/start">Getting Started</SmallLink>
@@ -37,16 +38,18 @@ export const Footer = () => {
         <SmallLink href="/beta">Beta</SmallLink>
       </Stack>
 
-      <Stack {...sectionMinWidth} flex={1} space="md">
+      <Stack {...sectionMinWidth} flex={1} space="sm">
         <SmallTitle>Support & Terms</SmallTitle>
+        <Space size={10} />
         <SmallLink href="mailto:hi@tryorbit.com">Contact us</SmallLink>
         <SmallLink href="/privacy">Privacy Policy</SmallLink>
         <SmallLink href="/terms">Terms & Conditions</SmallLink>
         <SmallLink href="/faq">FAQ</SmallLink>
       </Stack>
 
-      <Stack {...sectionMinWidth} flex={1} space="md">
+      <Stack {...sectionMinWidth} flex={1} space="sm">
         <SmallTitle>Community</SmallTitle>
+        <Space size={10} />
         <SmallLink href="/about">About</SmallLink>
         <SmallLink href="/blog">Blog</SmallLink>
         <SmallLink href="mailto:hi@tryorbit.com">Contact</SmallLink>
@@ -59,10 +62,11 @@ export const Footer = () => {
         sm-order={-1}
         minWidth={200}
         flex={2}
-        space="md"
+        space="sm"
         sm-alignItems="center"
       >
         <SmallTitle alpha={0.6}>Stay in touch</SmallTitle>
+        <Space size={10} />
         <Space size="xs" />
         <Stack direction="horizontal" space>
           <BottomButton href="https://github.com/tryorbit">
@@ -120,8 +124,8 @@ const SmallLink = (props: Partial<LinkProps>) => (
     coat={false}
     width="100%"
     textAlign="left"
-    fontWeight={500}
-    fontSize={15}
+    fontWeight={400}
+    fontSize={14}
     href=""
     {...props}
   />

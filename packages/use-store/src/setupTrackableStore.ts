@@ -60,6 +60,7 @@ export function setupTrackableStore(
     }
     rerender()
   }
+
   // see queueUpdate
   update.__debug_update__ = { name, storeName, action: '', info: null as any }
 
@@ -80,6 +81,7 @@ export function setupTrackableStore(
         update.__debug_update__.action = 'deepKeysObserver'
         update.__debug_update__.info = deepKeys
       }
+      console.log('deep keys observer triggered updating')
       queueUpdate(update)
     },
   )
@@ -99,6 +101,7 @@ export function setupTrackableStore(
               update.__debug_update__.action = 'observers'
               update.__debug_update__.info = key
             }
+            console.log('111')
             queueUpdate(update)
           }
         }
@@ -118,6 +121,7 @@ export function setupTrackableStore(
               update.__debug_update__.action = 'getters'
               update.__debug_update__.info = key
             }
+            console.log('222')
             queueUpdate(update)
           }
         }
@@ -165,6 +169,7 @@ export function setupTrackableStore(
             console.log('got update while paused', name, storeName, trackedKeysWhilePaused)
             update.__debug_update__.action = 'trackedKeysWhilePaused'
           }
+          console.log('qwhatasda')
           queueUpdate(update)
         }
         trackedKeysWhilePaused.clear()
@@ -209,8 +214,12 @@ export function useTrackableStore<A>(
     cur.dispose()
   }
 
-  if (plainStore && (!(cur && cur.store) || shouldUpdate)) {
-    trackableStore.current = setupTrackableStore(plainStore, rerenderCb, { component, ...opts })
+  if (plainStore && (!cur?.store || shouldUpdate)) {
+    trackableStore.current = setupTrackableStore(
+      plainStore,
+      rerenderCb,
+      __DEV__ ? { component, ...opts } : opts,
+    )
     cur = trackableStore.current
   }
 

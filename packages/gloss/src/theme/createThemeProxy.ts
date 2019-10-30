@@ -53,9 +53,9 @@ export function createThemeProxy(
               // resolve functions
               next = next(theme)
             }
-            // we need to know if they use props, so we can determine if we need to bail
+            // this is only for static css extraction, we can optimize it away at runtime
             if (typeof key === 'string') {
-              markNonCSS(trackState, key as any)
+              trackState.usedProps.add(key)
             }
             return next
           }
@@ -99,6 +99,9 @@ export function createThemeProxy(
 }
 
 function markNonCSS(trackState: ThemeTrackState, key: string) {
+  if (key === 'onMouseMove') {
+    debugger
+  }
   trackState.nonCSSVariables.add(key)
   trackState.hasUsedOnlyCSSVariables = false
 }

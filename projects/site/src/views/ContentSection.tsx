@@ -6,7 +6,7 @@ export const ContentSection = (props: StackProps) => {
   return (
     <Stack
       className="content-section"
-      padding={['md', '3%']}
+      padding={['md', '2%']}
       sm-padding={['md', 0]}
       // lg-padding={['md', 0]}
       width="100%"

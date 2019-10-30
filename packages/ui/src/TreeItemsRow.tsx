@@ -178,6 +178,7 @@ const TreeItemsRowContainer = gloss<{ selected?: boolean; level?: number; even?:
   position: 'relative',
 }).theme(backgroundTheme, props => {
   return {
+    height: `calc(${props.height}px * var(--scale))`,
     color: props.selected ? colors.white : colors.grapeDark3,
     paddingLeft: (props.level - 1) * 12,
     '& *': {
@@ -263,9 +264,8 @@ const TreeItemsLine = gloss<{ height: number | string; childrenCount: number }>(
   width: 2,
   borderRadius: '999em',
 }).theme(props => ({
-  // TODO can we make this work with calculated values?
   top: 0,
-  height: props.height,
+  height: `calc(${props.height}px * var(--scale))`,
   // top: props.height - 3,
   // height: props.childrenCount * props.height - 4,
   background: props.borderColor,

@@ -41,9 +41,7 @@ export default compose(
     return (
       <ProvideBanner>
         <DocsPageFrame>
-          <DocsPage>
-            <NaviView disableScrolling={window['recentHMR']} />
-          </DocsPage>
+          <NaviView disableScrolling={window['recentHMR']} />
         </DocsPageFrame>
       </ProvideBanner>
     )

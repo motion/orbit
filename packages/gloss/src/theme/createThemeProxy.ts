@@ -53,13 +53,10 @@ export function createThemeProxy(
               // resolve functions
               next = next(theme)
             }
-            // this was for static css extraction but breaks things
-            // what we should do is likely look at which values are actually used in output
-            // not which are read, because we do things like (isDefined(props[key])) (see paddingTheme)
-            // we need to know if they use props, so we can determine if we need to bail
-            // if (typeof key === 'string') {
-            //   markNonCSS(trackState, key as any)
-            // }
+            // this is only for static css extraction, we can optimize it away at runtime
+            if (typeof key === 'string') {
+              trackState.usedProps.add(key)
+            }
             return next
           }
         }

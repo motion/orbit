@@ -965,7 +965,8 @@ function getThemeStyles(view: GlossView, userTheme: CompiledTheme, props: any, e
   const trackState: ThemeTrackState = {
     theme: userTheme,
     hasUsedOnlyCSSVariables: true,
-    nonCSSVariables: new Set<string>(),
+    nonCSSVariables: new Set(),
+    usedProps: new Set()
   }
   // themes always one above, extraDepth if theres a local view
   const depth = view.internal.depth + 1 + extraDepth

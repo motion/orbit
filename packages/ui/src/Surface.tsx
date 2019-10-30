@@ -1,3 +1,4 @@
+//!
 import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined } from '@o/utils'

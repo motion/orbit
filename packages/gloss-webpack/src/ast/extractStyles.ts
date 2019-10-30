@@ -553,10 +553,13 @@ export function extractStyles(
             return true
           }
 
-          if (viewInformation[originalNodeName]?.trackState?.nonCSSVariables?.has(name)) {
-            if (shouldPrintDebug) console.log('inline prop via nonCSSVariables')
-            inlinePropCount++
-            return true
+          const trackState = viewInformation[originalNodeName]?.trackState
+          if (trackState) {
+            if (trackState?.nonCSSVariables?.has(name)) {
+              if (shouldPrintDebug) console.log('inline prop via nonCSSVariables')
+              inlinePropCount++
+              return true
+            }
           }
 
           if (!isCSSAttribute(name)) {
@@ -566,6 +569,13 @@ export function extractStyles(
               try {
                 htmlExtractedAttributes[name] = attemptEval(value)
               } catch(err) {
+                // oo fancy! this basically says if we can't eval this safely, and its used by the themeFn
+                // then we need to deopt here. if it can be evaluated, we're good, we'll run theme here later
+                if (trackState?.usedProps?.has(name)) {
+                  console.log('we use this in this component', name)
+                  inlinePropCount++
+                  return true
+                }
                 // console.log('err getting html attr', name, err.message)
                 // ok
               }
@@ -736,13 +746,16 @@ domNode: ${domNode}
               continue
             }
             if (htmlAttributes[key]) {
-              // add to start so hopefully gets overwritten if set later?
-              node.attributes.unshift(
-                t.jsxAttribute(
-                  t.jsxIdentifier(key),
-                  t.jsxExpressionContainer(literalToAst(val))
+              // @ts-ignore
+              if (!node.attributes.some(x => x?.name?.name === key)) {
+                // add to start so if its spread onto later its overwritten
+                node.attributes.unshift(
+                  t.jsxAttribute(
+                    t.jsxIdentifier(key),
+                    t.jsxExpressionContainer(literalToAst(val))
+                  )
                 )
-              )
+              }
             }
           }
 

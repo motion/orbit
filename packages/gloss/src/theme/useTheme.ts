@@ -12,6 +12,7 @@ export type ThemeTrackState = {
   theme: CompiledTheme
   hasUsedOnlyCSSVariables: boolean
   nonCSSVariables: Set<string>
+  usedProps: Set<string>
 }
 
 export function useTheme<A = {}>(props?: A): GlossThemeProps<A> {
@@ -23,6 +24,7 @@ export function useTheme<A = {}>(props?: A): GlossThemeProps<A> {
       theme: getTheme(themeObservable.current, props),
       hasUsedOnlyCSSVariables: true,
       nonCSSVariables: new Set(),
+      usedProps: new Set(),
     }
   }
   const curTheme = state.current.theme

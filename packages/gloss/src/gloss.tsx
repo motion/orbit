@@ -86,7 +86,7 @@ export type GlossStaticStyleDescription = {
   }
 }
 
-const GLOSS_SIMPLE_COMPONENT_SYMBOL = Symbol('__GLOSS_SIMPLE_COMPONENT__') as any
+const GlossComponentSymbol = Symbol('__GLOSS_SIMPLE_COMPONENT__') as any
 export const tracker: StyleTracker = new Map()
 export const sheet = new StyleSheet(true)
 const gc = new GarbageCollector(sheet, tracker)
@@ -116,7 +116,7 @@ export function gloss<
 
   let target: any = a || 'div'
   let glossPropsObject: GlossProps | null = (b as any) ?? null
-  const hasGlossyParent = !!target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+  const hasGlossyParent = !!target[GlossComponentSymbol]
 
   // shorthand: gloss({ ... })
   if (
@@ -361,7 +361,7 @@ function createGlossView(GlossView, config) {
   // @ts-ignore
   const res = memo(GlossView, isEqual) as any
   res.internal = config
-  res[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
+  res[GlossComponentSymbol] = true
   res.theme = (...themeFns) => {
     config.themeFns = themeFns
     return res
@@ -867,7 +867,7 @@ if (typeof window !== 'undefined') {
 }
 
 export const isGlossView = (view: any): boolean => {
-  return view && !!view[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+  return view && !!view[GlossComponentSymbol]
 }
 
 export const baseIgnoreAttrs = {

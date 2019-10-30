@@ -27,7 +27,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const WebpackNotifierPlugin = require('webpack-notifier')
-// const TerserPlugin = require('terser-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 // const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 // const CircularDependencyPlugin = require('circular-dependency-plugin')
@@ -52,7 +52,7 @@ const readPackage = (key: string) => {
   }
 }
 
-const getFlag = (flag, isBoolean = false) => {
+function getFlag(flag, isBoolean = false) {
   if (isBoolean) {
     return process.argv.some(x => x === flag)
   }
@@ -78,6 +78,8 @@ if (flags.prod) {
   if (process.env.NODE_ENV !== 'production') {
     console.log(`\n\n warning! prod build in dev mode ⚠️\n\n`)
   }
+} else {
+  process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 }
 
 if (flags.disableHMR) {
@@ -126,17 +128,7 @@ const defines = {
   'process.env.SPLIT_CHUNKS': JSON.stringify(process.env.SPLIT_CHUNKS),
 }
 
-console.log(
-  'webpack info',
-  (NO_OPTIMIZE && 'NO_OPTIMIZE!!') || '',
-  JSON.stringify(
-    { hot, devtool, buildNodeModules, entry, outputPath, target, isProd, tsConfig, defines },
-    null,
-    2,
-  ),
-)
-
-const optimization = {
+const optimizationConfigs = {
   prod: {
     nodeEnv: 'production',
     namedChunks: true,
@@ -196,6 +188,34 @@ const optimization = {
   },
 }
 
+const optimization = NO_OPTIMIZE
+  ? {
+      minimize: false,
+    }
+  : optimizationConfigs[isProd ? 'prod' : 'dev']
+
+console.log(
+  'webpack info',
+  (NO_OPTIMIZE && 'NO_OPTIMIZE!!') || '',
+  JSON.stringify(
+    {
+      mode,
+      isProd,
+      entry,
+      hot,
+      devtool,
+      buildNodeModules,
+      outputPath,
+      target,
+      tsConfig,
+      optimization,
+      defines,
+    },
+    null,
+    2,
+  ),
+)
+
 const alias = {
   // Uncomment lines below if you want to profile in production...
   // 'react-dom': 'react-dom/profiling',
@@ -245,11 +265,7 @@ async function makeConfig() {
             electron: '{}',
           }
         : {},
-    optimization: NO_OPTIMIZE
-      ? {
-          minimize: false,
-        }
-      : optimization[isProd ? 'prod' : 'dev'],
+    optimization,
     output: {
       path: outputPath,
       publicPath: '/',

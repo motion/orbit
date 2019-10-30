@@ -64,7 +64,7 @@ export const light: ThemeObject = fromStyles({
     background: lightButtonBg,
     backgroundActive: linearGradient('#e9e9e9', '#eee'),
     // buttonBackgroundFocus: lightButtonBg,
-    boxShadowFocus: '2px 2px red',
+    // boxShadowFocus: '2px 2px red',
     backgroundHover: lightButtonBg.adjust(x => toColor(x).lighten(0.025)),
     glintColorBottom: c([0, 0, 0, 0.08]),
   },

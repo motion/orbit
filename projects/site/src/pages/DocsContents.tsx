@@ -59,9 +59,9 @@ export const DocsContents = memo(
     )
 
     const padding = useScreenVal(
-      ['xxl', 'md', true, 'md'],
-      ['xxl', 'md', true, 'md'],
-      ['xxxl', 'xl', true, 'xl'],
+      ['xl', 'md', true, 'md'],
+      ['xl', 'md', true, 'md'],
+      ['xxl', 'xl', true, 'xl'],
     )
 
     return (

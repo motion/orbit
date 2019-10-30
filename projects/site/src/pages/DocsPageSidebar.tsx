@@ -14,7 +14,7 @@ export const DocsPageSidebar = memo(({ children, ...rest }: any) => {
   return (
     <Stack id="sidebar" width={230} pointerEvents="auto" height="100vh" {...rest}>
       <Stack position="relative" className="sidebar__inner" flex={1}>
-        <Stack margin={[25, 0, 0]} flex={1} position="relative">
+        <Stack margin={[20, 0, 0]} flex={1} position="relative">
           {children}
           <BorderRight opacity={0.5} top={10} />
         </Stack>

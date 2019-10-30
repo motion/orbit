@@ -6,8 +6,8 @@ export const ContentSection = (props: StackProps) => {
   return (
     <Stack
       className="content-section"
-      padding={['md', '2%']}
-      sm-padding={['md', 0]}
+      padding={[0, '2%']}
+      sm-padding={[0, 0]}
       // lg-padding={['md', 0]}
       width="100%"
       // maxWidth={760}

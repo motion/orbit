@@ -203,7 +203,7 @@ const DocsPage = memo((props: any) => {
         prepend
         style={{
           position: 'sticky',
-          top: 10,
+          top: 0,
           zIndex: 10000000,
         }}
       >

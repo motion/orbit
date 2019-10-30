@@ -1,4 +1,4 @@
-import { Button, configureHotKeys, Contents, gloss, Portal, ProvideBanner, Sidebar, Space, Stack, Theme, View } from '@o/ui'
+import { Button, configureHotKeys, gloss, Portal, ProvideBanner, Sidebar, Space, Stack, Theme, View } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useEffect, useRef, useState } from 'react'
@@ -134,9 +134,9 @@ const DocsPageFrame = props => {
   })
   return (
     <Fade.FadeProvide>
-      <Contents nodeRef={Fade.ref}>
+      <div ref={Fade.ref}>
         <DocsPage {...props} />
-      </Contents>
+      </div>
     </Fade.FadeProvide>
   )
 }
@@ -256,7 +256,7 @@ const DocsPage = memo((props: any) => {
           <SectionContent background={theme => theme.background} maxWidth={1400}>
             <Stack direction="horizontal" id="main" className="main">
               <DocsPageSidebar sm-display="none">
-                <FadeInView data-is="DocsPageSidebar" flex={1} pointerEvents="auto">
+                <FadeInView data-is="FadeInView-DocsPageSidebar" flex={1} pointerEvents="auto">
                   <DocsList shouldRenderAll />
                 </FadeInView>
               </DocsPageSidebar>

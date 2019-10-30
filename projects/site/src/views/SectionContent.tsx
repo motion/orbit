@@ -70,7 +70,7 @@ export const SectionContentChrome = gloss<{ readablePage?: boolean }, ViewProps>
     width: '100%',
     minWidth: 'auto',
     maxWidth: 'auto',
-    paddingLeft: '3%',
-    paddingRight: '3%',
+    paddingLeft: '2%',
+    paddingRight: '2%',
   },
 })

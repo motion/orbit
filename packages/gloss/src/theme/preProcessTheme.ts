@@ -12,7 +12,7 @@ export function processThemeSubset(props: GlossProps, theme: CompiledTheme): Com
   const parent = unwrapTheme(theme)
   const coatTheme = getThemeCoat(props.coat, parent)
   const subSetTheme = selectThemeSubset(props.subTheme, coatTheme || parent)
-  return subSetTheme || coatTheme ? { ...subSetTheme, ...coatTheme } : null
+  return subSetTheme || coatTheme ? { ...parent, ...subSetTheme, ...coatTheme } : null
 }
 
 export const preProcessTheme = (props: GlossProps, theme: CompiledTheme) => {

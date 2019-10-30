@@ -1,3 +1,3 @@
-import { Text } from './Text'
+import { SimpleText } from '@o/ui'
 
-export const Paragraph = Text
+export const Paragraph = SimpleText

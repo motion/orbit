@@ -25,8 +25,8 @@ export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = [])
   const updateFn = (val: SizeState) => {
     // avoid updates when not visible, it can return width: 0, height: 0
     if (!isVisible.current) return
-    const cb = props.onChange || setState
     if (!isEqual(val, cur.current)) {
+      const cb = props.onChange || setState
       cur.current = val
       cb(val)
     }

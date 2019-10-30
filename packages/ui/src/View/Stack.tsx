@@ -107,8 +107,8 @@ Stack.defaultProps = {
 // static config
 Stack.staticStyleConfig = {
   parentView: View,
-  deoptProps: ['animate', 'drag', 'layoutTransition'],
-  avoidProps: ['padding', 'minHeight'],
+  deoptProps: ['padding', 'animate', 'drag', 'layoutTransition'],
+  avoidProps: ['minHeight'],
   cssAttributes: {
     ...validCSSAttr,
     // anything we do special with in render(), we ignore for static extraction:

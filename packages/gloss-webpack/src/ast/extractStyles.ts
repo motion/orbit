@@ -217,8 +217,10 @@ export function extractStyles(
                 console.log('propObject', propObject)
               }
             } catch (err) {
-              console.log('Cant parse style object', name, '>', localViewName)
-              console.log('err', err)
+              console.log('Cant parse style object - this is ok, just de-opt', name, '>', localViewName)
+              if (shouldPrintDebug) {
+                console.log('err', err)
+              }
               return arg
             }
 
@@ -482,6 +484,7 @@ export function extractStyles(
             // haven't hit the last spread operator
             idx < lastSpreadIndex
           ) {
+            if (shouldPrintDebug) console.log('inline prop via non normal attr')
             inlinePropCount++
             return true
           }
@@ -496,6 +499,7 @@ export function extractStyles(
             }
             // for avoiding processing certain keys
             if (staticStyleConfig.avoidProps?.includes(name)) {
+              if (shouldPrintDebug) console.log('inline prop via avoidProps')
               inlinePropCount++
               return true
             }
@@ -550,6 +554,7 @@ export function extractStyles(
           }
 
           if (viewInformation[originalNodeName]?.trackState?.nonCSSVariables?.has(name)) {
+            if (shouldPrintDebug) console.log('inline prop via nonCSSVariables')
             inlinePropCount++
             return true
           }
@@ -561,11 +566,12 @@ export function extractStyles(
               try {
                 htmlExtractedAttributes[name] = attemptEval(value)
               } catch(err) {
-                console.log('err getting html attr', name, err.message)
+                // console.log('err getting html attr', name, err.message)
                 // ok
               }
               return true
             }
+            if (shouldPrintDebug) console.log('inline prop via !isCSSAttribute')
             inlinePropCount++
             return true
           }
@@ -622,6 +628,7 @@ export function extractStyles(
           }
 
           // if we've made it this far, the prop stays inline
+          if (shouldPrintDebug) console.log('inline prop via no match')
           inlinePropCount++
           return true
         })

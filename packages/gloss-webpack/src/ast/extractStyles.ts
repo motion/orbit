@@ -572,7 +572,9 @@ export function extractStyles(
                 // oo fancy! this basically says if we can't eval this safely, and its used by the themeFn
                 // then we need to deopt here. if it can be evaluated, we're good, we'll run theme here later
                 if (trackState?.usedProps?.has(name)) {
-                  console.log('we use this in this component', name)
+                  if (shouldPrintDebug) {
+                    console.log('we use this in this component', name)
+                  }
                   inlinePropCount++
                   return true
                 }

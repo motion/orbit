@@ -33,6 +33,9 @@ theres three paths:
 
 ---
 
+- <Theme for={Text} fontFamily="xuz" />
+  - solves/simplifies a lot of things (remove Config.defaultProps.text)
+
 - <Theme sm-scale={1} /> support media queries here
   - see HeadSection for real world usage
 

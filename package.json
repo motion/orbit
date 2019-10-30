@@ -110,7 +110,7 @@
     "webpack-cli": "^3.3.7"
   },
   "resolutions": {
-    "framer-motion": "1.6.7",
+    "framer-motion": "1.6.15",
     "react": "16.9.0",
     "react-dom": "16.9.0",
     "node-gyp": "5.0.3",

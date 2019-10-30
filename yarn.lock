@@ -9238,10 +9238,10 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
-framer-motion@*, framer-motion@1.6.7:
-  version "1.6.7"
-  resolved "https://registry.npmjs.org/framer-motion/-/framer-motion-1.6.7.tgz#faba70c1654e95f825052ea20c506c5d8138a1c4"
-  integrity sha512-1tAqvyf70jj1b7ue86iDYEQ5ShwH4Ge6y+slAmkGrxPn9y+BgdZDP3pG10Gs6GgpNalNglKH9hRb8Uw75SwHog==
+framer-motion@*, framer-motion@1.6.15:
+  version "1.6.15"
+  resolved "https://registry.npmjs.org/framer-motion/-/framer-motion-1.6.15.tgz#64410f24c3a6efc1c4105c9b5be48871909b790f"
+  integrity sha512-PEnw903cJoOsUcbHgP9V+9uaZMVswCOZu2AVtwgjldjC5aS71/ZDtyi9MLAvNIKp5OV4We9x50Gl6QF3qo2zPg==
   dependencies:
     "@popmotion/easing" "^1.0.2"
     "@popmotion/popcorn" "^0.4.2"
@@ -9249,7 +9249,7 @@ framer-motion@*, framer-motion@1.6.7:
     hey-listen "^1.0.8"
     popmotion "9.0.0-beta-8"
     style-value-types "^3.1.6"
-    stylefire "^6.0.10"
+    stylefire "^7.0.0"
     tslib "^1.10.0"
   optionalDependencies:
     "@emotion/is-prop-valid" "^0.8.2"
@@ -19778,10 +19778,10 @@ styled-jsx@^2.2.6:
     stylis "3.5.1"
     stylis-rule-sheet "0.0.10"
 
-stylefire@^6.0.10:
-  version "6.0.12"
-  resolved "https://registry.npmjs.org/stylefire/-/stylefire-6.0.12.tgz#0564551eae9f8569802a20362bc6a60497d04752"
-  integrity sha512-cE7pGHZpA1DZ6yIYFbrLpF13e98jRu0vWwU4oK/En1PKpAo6IrEdWo8rDd5qzQkUQ+Jl8ioDhK4yzj9UEHDOwQ==
+stylefire@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.npmjs.org/stylefire/-/stylefire-7.0.0.tgz#2ae16a97f41b8664f2501252ee40c19baba0ea22"
+  integrity sha512-Ea1knZTN5KmbUKSilTsjFEtHcGs+Vl+cQWNnvWQwqRVG+W6J/WgkWjo620hf4II/PTH8uSIF17vGrkpHC41nAA==
   dependencies:
     "@popmotion/popcorn" "^0.4.2"
     framesync "^4.0.0"

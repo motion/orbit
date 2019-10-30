@@ -71,7 +71,7 @@ export const createLink = memoize((href: string, header = null, isExternal = fal
           document.body.classList.remove('loading')
           document.body.classList.remove('will-load')
         })
-    }, 105)
+    }, 125)
   }
 })
 

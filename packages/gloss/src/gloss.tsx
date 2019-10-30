@@ -850,7 +850,7 @@ function getSpecificSelectors(base: string, parent = '', after = '') {
 
 
 // some internals we can export
-if (isDeveloping && typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
   window['gloss'] = window['gloss'] || {
     tracker,
     gc,

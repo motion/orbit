@@ -48,6 +48,8 @@ then:
 
 gloss:
 
+remove SurfacePassProps?
+
 4. <Theme for="button" scale="lg" /> <- theme just acts as a css var setter
 
 compile time optimizations, from least advanced to most:

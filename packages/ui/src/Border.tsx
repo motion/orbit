@@ -7,6 +7,7 @@ type BorderProps = AbsoluteProps & {
 }
 
 const borderTheme: ThemeFn = props => {
+  console.log('we out here now', props)
   return {
     background: props.borderColor,
     hoverable: {

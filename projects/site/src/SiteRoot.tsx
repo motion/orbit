@@ -1,3 +1,12 @@
+import { ErrorBoundary, ProvideUI } from '@o/ui'
+import React, { StrictMode, Suspense } from 'react'
+import { Router, View } from 'react-navi'
+
+import { Layout } from './Layout'
+import { Navigation } from './Navigation'
+import { SiteStoreContext } from './SiteStore'
+import { themes } from './themes'
+
 // //!
 // import { ProvideUI, selectDefined, Space } from '@o/ui'
 // //
@@ -11,15 +20,6 @@
 //     </ProvideUI>
 //   )
 // }
-import { ErrorBoundary, ProvideUI } from '@o/ui'
-import React, { StrictMode, Suspense } from 'react'
-import { Router, View } from 'react-navi'
-
-import { Layout } from './Layout'
-import { Navigation } from './Navigation'
-import { SiteStoreContext } from './SiteStore'
-import { themes } from './themes'
-
 export const SiteRoot = () => {
   return (
     <ProvideUI themes={themes} activeTheme="home">

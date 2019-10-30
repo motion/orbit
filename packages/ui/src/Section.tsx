@@ -1,3 +1,4 @@
+//!
 import { isDefined, selectDefined } from '@o/utils'
 import { Flex } from 'gloss'
 import React, { useRef } from 'react'
@@ -203,6 +204,7 @@ export function Section(direct: SectionProps) {
           {!!(bordered || titleBorder) && <BorderBottom />}
         </Flex>
       )
+      console.log('titleEl', titleEl)
     }
   }
 

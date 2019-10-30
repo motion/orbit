@@ -264,7 +264,9 @@ export function extractStyles(
                 cssMap.set(info.className, { css: info.css, commentTexts: [] })
                 out.className += ` ${info.className}`
               } else {
-                console.log('no info', ns, styles)
+                if (shouldPrintDebug) {
+                  console.log('no info', ns, styles)
+                }
               }
             }
 

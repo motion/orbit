@@ -1,9 +1,67 @@
-# Orbit is a longshot
+It's been over 4 years since our team first raised money. While there are many stories I could tell,
+I want to focus on one general topic as we head into private beta: how my thinking has changed the
+most in our various struggles and successes.
 
-It's been about 5 years since we raised money, albeit to build
-[something a bit different](https://www.youtube.com/watch?v=HHTYHm6qLFY) from what Orbit is now, and
-with a variety of pivots along the way, but while our [private beta announcement]() post is also
-being posted at about the same time, I think this post is the _post I want to write_, so here it is.
+I'd say that is **we have no good system for building truly ambitious companies, and nearly every
+startup is being funded and coerced into building iterative, marginal ideas which amounts to a
+tremendous waste of our collective potential**.
+
+There are huge problems all around us, ones that don't necessarily need huge funding, but more need
+long timelines and small or medium sized group of talented people to be able to work on them without
+disruption.
+
+I'm really grateful to our investors at Founders Fund, because they are the only ones I know of who
+at least somewhat tackle this problem. They do it by being focused exclusively on "moonshot" ideas,
+by being completely hands-off with the founders, and with being more willing than most to fund risky
+ideas. We need more of that.
+
+Before I get into anything, I think it's most useful to see the dramatic evolution of Orbit over the
+last half decade. It both helps you understand where we are today, but also just shows what can
+happen if you're allowed to really push on ideas and not be afraid to take dramatic turns, late in
+the development process.
+
+This is only possible if we have investors who truly do "invest in the people", who are willing to
+take long term risk, and who are willing to put up a good amount of money without demanding constant
+reporting, checkins, and pressure to perform at constant meetings.
+
+## The evolution of Orbit
+
+### Dev tools
+
+A dev-focused startup creating a Meteor-like platform on React with a dramatically simpler syntax,
+focused heavily on DX. If the video wasn't worth watching I wouldn't embed it here, but we really
+did push this far and I'm proud of the work.
+
+<iframe
+  width="100%"
+  height="420"
+  src="https://www.youtube.com/embed/HHTYHm6qLFY"
+  frameborder="0"
+  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen
+></iframe>
+
+All of the above was _really working_ (with a lot of babel compile-time magic to get variables to be
+reactive, plus static style extraction), but we ended up not releasing it for a variety of reasons
+I'd be happy to detail in another post.
+
+2. What could be described as "Uber for internal data science", started as a service that would ETL
+   data sources into a graph and APIs, where we then had built an interface to put together
+   interactive, explorable data-visualizations very easily for contractors we'd hire to plug into.
+3. With the second idea successfully deployed at a few companies, feedabck from one of our bigger
+   clients was that a single use case within it: t-SNE, a high-dimensional and unsupervised
+   clustering algorithm, especially the ease of iteration, visualization, and then further analysis
+   of clusters, would be dramatically helpful. Our novel improvement was to take the current-best
+   Barnes-Hut approximation t-SNE algorithm and approximate it with neural net to enable basically
+   instant (linear-time) clustering.
+4. After which we ran into a variety of problems, one a founders health, another with an employee,
+   and finally a realization that perhaps tackling many problems at once that were either outside
+   our expertise or interest at once wasn't the "right" way to go about it. We decided to hit reset.
+   We wanted to make the app work a bit more towards the consumer, a bit more on problems we
+   understood.
+5. After much research, introspection, and discussion, and reviewing our past work, we felt that the
+   general area of "why is knowledge at work siloed, cluttered, stale, and left in noisy places". We
+   embarked again two and half years ago on this, and it went as follows:
 
 This blog post will cover the following:
 

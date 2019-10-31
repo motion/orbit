@@ -1,11 +1,15 @@
 /* Site theme stuff  */
-p a {
+.content-section a {
   color: #8c60f8;
   text-decoration: none;
   font-weight: 600;
   /* -webkit-text-underline-offset: 2px;
   -webkit-text-decoration-thickness: 2px; */
   /* text-decoration-color: #8c60f833; */
+}
+
+.content-section a:hover {
+  color: #b698ff;
 }
 
 svg {

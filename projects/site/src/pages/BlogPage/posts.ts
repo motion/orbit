@@ -32,7 +32,7 @@ export const posts: PostDirectory = {
   },
   launch: {
     view: () => import('./launch/index.mdx'),
-    title: 'Taking the long road',
+    title: 'Orbit is a longshot',
     date: '2019-04-25T22:12:03.284Z',
     author: 'Nathan Wienert',
     authorImage: nateImg,

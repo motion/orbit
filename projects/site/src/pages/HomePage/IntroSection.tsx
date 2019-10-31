@@ -74,15 +74,15 @@ export default function IntroSection() {
           </View>
           <Stack space="xl" justifyContent="center">
             <IntroPara delayIndex={1} stagger={0} size={1.8}>
-              <strong style={{ color: '#fff' }}>We're rethinking how we build apps for work</strong>
-              &nbsp;with a fun, creative workspace where unified data is explorable and moldable.
+              <strong style={{ color: '#fff' }}>We're rethinking how we build and use apps</strong>
+              &nbsp;with a powerful internal tool platform.
             </IntroPara>
             <IntroPara delayIndex={2} stagger={-0.5}>
-              It's a smart, fast heads up display that's always there. Create new apps in minutes,
-              share them with a press of a button.
+              We need control over what we build. A better default toolkit, and a lower barrier to
+              starting and building. With easy data plugins, and a collaborative app-store.
             </IntroPara>
             <IntroPara delayIndex={3} stagger={-1}>
-              Powerful enough to run your business, easier to use than bootstrap.
+              Think of it as Bootstrap, designed for internal apps.
             </IntroPara>
           </Stack>
         </HalfGrid>

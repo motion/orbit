@@ -168,12 +168,12 @@ export default memo(() => {
             </FadeInView>
             <FadeInView parallax delayIndex={1}>
               <TitleText textAlign="center" size="xxl">
-                Import, view, export
+                Batteries included
               </TitleText>
             </FadeInView>
             <TitleTextSub margin="auto" minWidth={320}>
               <FadeInView parallax sm-display="inline" delayIndex={2}>
-                Create an app, plug in data, deploy. Easier than ever.
+                Import, display, build, and export. Easier than ever.
               </FadeInView>
             </TitleTextSub>
           </>

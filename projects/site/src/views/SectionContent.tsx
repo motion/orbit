@@ -20,6 +20,7 @@ export const SectionContent = ({
   height,
   flex,
   minHeight,
+  maxHeight,
   forwardRef,
   readablePage,
   ...props
@@ -32,6 +33,7 @@ export const SectionContent = ({
       height={height}
       flex={flex}
       minHeight={minHeight}
+      maxHeight={maxHeight}
       nodeRef={forwardRef}
     >
       {outside}

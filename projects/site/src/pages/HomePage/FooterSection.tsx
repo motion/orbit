@@ -16,6 +16,7 @@ export default memo(function FeetSection(props: { hideJoin?: boolean }) {
         alignItems="center"
         marginTop="auto"
         minHeight={600}
+        width="100%"
       >
         <Space size="xl" />
         <View flex={3} />

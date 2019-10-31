@@ -21,7 +21,7 @@ export const BottomButton = ({
       }}
       userSelect="none"
       circular
-      size={2}
+      size={1.5}
       cursor="pointer"
       {...props}
     >

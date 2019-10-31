@@ -59,10 +59,14 @@ export default memo(function FeaturesSection() {
         <Stack padding="lg" flex={2}>
           <View flex={1}>
             <ParallaxStageItem stagger={0}>
+              <TitleText fontWeight={300} size="md" alpha={0.5}>
+                Introducing a new type of thing
+              </TitleText>
+              <Space />
               <TitleText alignItems="flex-start" justifyContent="flex-start" size="xxl">
                 The all-in-one
                 <br />
-                data studio
+                app + data studio
               </TitleText>
             </ParallaxStageItem>
             <ParallaxStageItem stagger={1}>

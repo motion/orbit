@@ -40,7 +40,7 @@ export default memo(function FeaturesSection() {
         top="20%"
         scale={2}
         className="glow-two"
-        opacity={0.23}
+        opacity={0.26}
         background="radial-gradient(circle closest-side, #12A1CC, transparent)"
         parallax={geometry => ({
           y: geometry.useParallax(),
@@ -59,14 +59,19 @@ export default memo(function FeaturesSection() {
         <Stack padding="lg" flex={2}>
           <View flex={1}>
             <ParallaxStageItem stagger={0}>
-              <TitleText fontWeight={300} size="md" alpha={0.5}>
+              <TitleText fontWeight={300} size="sm" alpha={0.5}>
                 Introducing a new type of thing
               </TitleText>
               <Space />
-              <TitleText alignItems="flex-start" justifyContent="flex-start" size="xxl">
+              <TitleText
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                size="xxl"
+                sizeLineHeight={0.85}
+              >
                 The all-in-one
                 <br />
-                app + data studio
+                app/data studio
               </TitleText>
             </ParallaxStageItem>
             <ParallaxStageItem stagger={1}>
@@ -170,37 +175,40 @@ export default memo(function FeaturesSection() {
               },
             }}
           >
-            {Object.keys(sections).map((key, index) => (
-              <Image
-                key={key}
-                transition={transition}
-                animate={{
-                  opacity: cur === index ? 1 : 0,
-                  y:
-                    cur === index
-                      ? '0%'
-                      : cur > index
-                      ? `-${(cur - index) * 20}%`
-                      : `${(index - cur) * 20}%`,
-                }}
-                width="100%"
-                position="absolute"
-                top={0}
-                left={0}
-                height="auto"
-                minWidth={1000}
-                marginRight={-1000}
-                src={sections[key].image}
-                borderRadius={15}
-                overflow="hidden"
-                boxShadow={[
-                  {
-                    blur: 100,
-                    color: '#000',
-                  },
-                ]}
-              />
-            ))}
+            {Object.keys(sections).map((key, index) => {
+              const y =
+                cur === index
+                  ? '0%'
+                  : cur > index
+                  ? `-${(cur - index) * 20}%`
+                  : `${(index - cur) * 20}%`
+              return (
+                <Image
+                  key={key}
+                  transition={transition}
+                  animate={{
+                    opacity: cur === index ? 1 : 0,
+                    y,
+                  }}
+                  width="100%"
+                  position="absolute"
+                  top={0}
+                  left={0}
+                  height="auto"
+                  minWidth={1000}
+                  marginRight={-1000}
+                  src={sections[key].image}
+                  borderRadius={15}
+                  overflow="hidden"
+                  boxShadow={[
+                    {
+                      blur: 100,
+                      color: '#000',
+                    },
+                  ]}
+                />
+              )
+            })}
           </ParallaxStageItem>
         </View>
       </Stack>

@@ -18,15 +18,15 @@ export const Footer = () => {
       sm-flexDirection="column"
       sm-flexWrap="nowrap"
       space="lg"
-      padding={[0, true, 'xxxl']}
+      padding={[0, 0, 'xxxl']}
       sm-padding={0}
       width="100%"
-      minHeight={250}
+      minHeight={270}
       flex={8}
       alignItems="flex-start"
       scrollable="y"
     >
-      <Stack {...sectionMinWidth} flex={1} space="sm">
+      <Stack {...sectionMinWidth} flex={1} space={12}>
         <SmallTitle coat="lightRed">Orbit</SmallTitle>
         <Space size={10} />
         <SmallLink href="/">Home</SmallLink>
@@ -38,7 +38,7 @@ export const Footer = () => {
         <SmallLink href="/beta">Beta</SmallLink>
       </Stack>
 
-      <Stack {...sectionMinWidth} flex={1} space="sm">
+      <Stack {...sectionMinWidth} flex={1} space={12}>
         <SmallTitle>Support & Terms</SmallTitle>
         <Space size={10} />
         <SmallLink href="mailto:hi@tryorbit.com">Contact us</SmallLink>
@@ -47,7 +47,7 @@ export const Footer = () => {
         <SmallLink href="/faq">FAQ</SmallLink>
       </Stack>
 
-      <Stack {...sectionMinWidth} flex={1} space="sm">
+      <Stack {...sectionMinWidth} flex={1} space={12}>
         <SmallTitle>Community</SmallTitle>
         <Space size={10} />
         <SmallLink href="/about">About</SmallLink>
@@ -61,8 +61,8 @@ export const Footer = () => {
         {...sectionMinWidth}
         sm-order={-1}
         minWidth={200}
-        flex={2}
-        space="sm"
+        flex={1.5}
+        space={12}
         sm-alignItems="center"
       >
         <SmallTitle alpha={0.6}>Stay in touch</SmallTitle>

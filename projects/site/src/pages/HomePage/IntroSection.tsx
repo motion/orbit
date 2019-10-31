@@ -53,8 +53,8 @@ export default function IntroSection() {
                 display="block"
                 src={require('../../public/images/screen1.jpeg')}
                 width="100%"
-                abovemd-marginLeft="-20%"
-                abovemd-width="120%"
+                abovemd-marginLeft="-30%"
+                abovemd-width="130%"
                 abovesm-marginLeft="-50%"
                 abovesm-width="150%"
                 height="auto"

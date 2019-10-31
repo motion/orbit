@@ -134,24 +134,24 @@ export default memo(() => {
   return (
     <Fade.FadeProvide>
       {/* pink left */}
-      {/* <Page.BackgroundParallax
+      <Page.BackgroundParallax
         speed={-0.5}
         offset={0.3}
         x="-65%"
         scale={1.8}
         className="glow-one"
-        opacity={1}
+        opacity={0.1}
         background="radial-gradient(circle closest-side, #D25CCD, transparent)"
-      /> */}
+      />
 
       {/* pink left */}
       <Page.BackgroundParallax
-        speed={0.3}
+        speed={-0.2}
         offset={0}
         scale={2.2}
-        className="glow-two"
-        opacity={0.2}
-        background="radial-gradient(circle closest-side, #2F30C9, transparent)"
+        x="50%"
+        opacity={0.1}
+        background="radial-gradient(circle closest-side, #0C0DA7, transparent)"
         parallax={geometry => ({
           y: geometry.useParallax(),
           x: geometry.useParallax().transform(x => x * 1 - 240),

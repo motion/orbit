@@ -620,7 +620,7 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
   const parentStaticClasses = parent?.internal?.glossProps.staticClasses || []
   return {
     staticClasses: [...parentStaticClasses, ...curStaticClasses],
-    config: config ? compileConfig(config, parent) : null,
+    config: compileConfig(config, parent),
     styles,
     conditionalStyles,
     defaultProps,

@@ -38,6 +38,7 @@ const components = {
         <Image width="100%" height="auto" alt={alt} {...rest} />
       </View>
       {!!alt && <Alt>{alt}</Alt>}
+      {contentSpaceLg}
     </>
   ),
 
@@ -64,7 +65,7 @@ const components = {
   ),
   li: props => (
     <>
-      <li style={{ marginLeft: 26, opacity: 0.9 }} {...props} />
+      <li style={{ marginLeft: 26 }} {...props} />
       <Space size="sm" />
     </>
   ),

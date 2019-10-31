@@ -17,8 +17,8 @@ export const BlogTitle = (props: any) => {
             cursor="pointer"
             {...props}
           >
-            <TitleText cursor="pointer" size="xxxs" fontWeight={200} textTransform="uppercase">
-              The Orbit Blog
+            <TitleText size="md" cursor="pointer" fontWeight={100}>
+              The Blog
             </TitleText>
           </Stack>
         </Link>

@@ -72,7 +72,7 @@ function PostPage(props: { post: PostEntry; children?: any }) {
     <Theme name="light">
       <Space size="xxxl" />
       <SectionContent readablePage>
-        <ContentSection>
+        <ContentSection maxWidth={820}>
           <TitleText size="lg" fontWeight={400}>
             {props.post.title}
           </TitleText>

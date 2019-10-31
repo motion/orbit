@@ -640,7 +640,7 @@ function compileConfig(
 ): GlossViewConfig {
   const compiledConf: GlossViewConfig = { ...config }
   let cur = parent
-  while (cur) {
+  while (cur?.internal) {
     const parentConf = cur.internal.glossProps.config
     if (parentConf) {
       if (parentConf.postProcessProps) {

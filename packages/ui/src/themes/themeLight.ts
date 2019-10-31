@@ -6,7 +6,7 @@ import { coats } from './themeCoats'
 import { colors, transparent } from './themeColors'
 
 const c = toColor
-const color = toColor('#444')
+const color = toColor('#252525')
 const colorLight = color.lighten(0.1)
 const colorLighter = color.lighten(0.2)
 const colorLightest = color.lighten(0.3)

@@ -43,7 +43,7 @@ const elevatedShadow = (props: GlossThemeProps<ElevatableProps>) => {
             0,
             0,
             props.elevationShadowOpacity ??
-              `calc(${round(0.05 * smoother((11 - Math.min(10, el)) * 0.2))} + ${
+              `calc(${round(0.015 * smoother((11 - Math.min(10, el)) * 0.2))} + ${
                 selectDefined(resolveValueSafe(props.boxShadowOpacity), 0)})`,
           ]),
   ]

@@ -71,7 +71,7 @@ export default memo(function FeaturesSection() {
               >
                 The all-in-one
                 <br />
-                app/data studio
+                team app studio
               </TitleText>
             </ParallaxStageItem>
             <ParallaxStageItem stagger={1}>
@@ -219,7 +219,7 @@ export default memo(function FeaturesSection() {
 const dly = 200
 
 const sections = {
-  Data: {
+  'Use Data': {
     image: require('../../public/images/screen-graphql.jpg'),
     items: [
       {
@@ -244,7 +244,7 @@ const sections = {
       },
     ],
   },
-  Display: {
+  'Create Apps': {
     image: require('../../public/images/screen-people.jpg'),
     items: [
       {
@@ -269,7 +269,7 @@ const sections = {
       },
     ],
   },
-  Create: {
+  'Move Faster': {
     image: require('../../public/images/screen-graphql.jpg'),
     items: [
       {

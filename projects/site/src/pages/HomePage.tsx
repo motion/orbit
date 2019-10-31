@@ -42,19 +42,19 @@ export const HomePage = memo(() => {
         <Page {...props} height="auto" zIndex={0}>
           <HeadSection />
         </Page>
-        <Page {...props}>
+        <Page {...props} maxHeight={1000}>
           <FeaturesSection />
+        </Page>
+        <Page {...props} maxHeight={700}>
+          <Sections.IntroSection />
         </Page>
         <Page {...props}>
           <Sections.AllInOnePitchDemoSection />
         </Page>
-        <Page {...props} maxHeight={900}>
-          <Sections.IntroSection />
-        </Page>
-        <Page {...props} maxHeight={650}>
+        <Page {...props} maxHeight={750}>
           <Sections.DeploySection />
         </Page>
-        <Page {...props} maxHeight={900}>
+        <Page {...props} maxHeight={950}>
           <Sections.DataAppKitFeaturesSection />
         </Page>
         <Page {...props} maxHeight={700}>

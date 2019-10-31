@@ -41,6 +41,7 @@ export const Button = memoIsEqualDeep((direct: ButtonProps) => {
         sizeLineHeight
         justifyContent="center"
         borderWidth={borderWidthTheme}
+        elementProps={buttonElementProps}
         glint
         glintBottom
         pointerEvents={props.disabled ? 'none' : undefined}
@@ -58,6 +59,10 @@ export const Button = memoIsEqualDeep((direct: ButtonProps) => {
     </Theme>
   )
 })
+
+const buttonElementProps = {
+  color: 'inherit',
+}
 
 Button['acceptsProps'] = {
   hover: true,

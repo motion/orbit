@@ -639,10 +639,8 @@ const Element = gloss<ThroughProps & { disabled?: boolean }>({
   display: 'flex', // in case they change tagName
   flex: 1,
   overflow: 'hidden',
-  // needed to reset for <button /> at least
   fontSize: 'inherit',
   lineHeight: 'inherit',
-  color: 'inherit',
   textAlign: 'inherit',
   fontFamily: 'inherit',
   padding: 0,

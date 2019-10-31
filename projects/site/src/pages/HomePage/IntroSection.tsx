@@ -78,8 +78,8 @@ export default function IntroSection() {
               &nbsp;with a powerful internal tool platform.
             </IntroPara>
             <IntroPara delayIndex={2} stagger={-0.5}>
-              We need control over what we build. A better default toolkit, and a lower barrier to
-              starting and building. With easy data plugins, and a collaborative app-store.
+              A better default toolkit for common apps, making it far easier to code powerful apps
+              for teams. With easy data plugins, a rich view kit, and a collaborative app-store.
             </IntroPara>
             <IntroPara delayIndex={3} stagger={-1}>
               Think of it as Bootstrap, designed for internal apps.

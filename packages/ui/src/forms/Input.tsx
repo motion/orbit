@@ -1,5 +1,5 @@
 import { isDefined } from '@o/utils'
-import { ThemeFn } from 'gloss'
+import { ThemeFn, unwrapProps, unwrapTheme } from 'gloss'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { isWebkit } from '../constants'
@@ -164,6 +164,7 @@ const inputSurfaceTheme: ThemeFn<any> = props => {
 }
 
 const inputElementTheme: ThemeFn<InputProps> = props => {
+  console.log('color is', props.color, unwrapTheme(props), unwrapProps(props))
   return {
     // apple selection color
     '&::selection': {

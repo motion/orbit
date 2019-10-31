@@ -96,30 +96,30 @@ export function AboutPage() {
                   >
                     <Stack space="xxxl" id="mission">
                       <BigTitle>
-                        Making it easy to build beautiful apps that work for the user first.
+                        Make it easy to put together powerful tools for your team.
                       </BigTitle>
 
                       <BigParagraph>
-                        We're rethinking how operating systems work, starting by giving you a
-                        magical workspace where you can create apps with ease, import and move data
-                        between them, and publish them for anyone else.
+                        There's a better future ahead where building apps and managing data is
+                        unified into a collaborative IDE and workspace. One where it's easy to
+                        explore, easy to build, and totally under our control.
                       </BigParagraph>
 
                       <BigParagraph>
-                        It's a new type of thing: an app platform that runs for you personally, but
-                        is powerful enough to build custom tools for you and your team.
+                        Orbis is a new type of thing: an app platform focused on work apps.
                       </BigParagraph>
                     </Stack>
 
                     <Divider />
 
                     <Stack space="xxxl" id="team">
-                      <BigTitle>Passionate about making it easy to build creatively.</BigTitle>
+                      <BigTitle>Passionate about the future of software and creation.</BigTitle>
 
                       <BigParagraph>
                         Our team is all over the world. We're always looking for great developers
-                        who are passionate about making development easier, and who are driven by
-                        creating high quality products.
+                        who are passionate about rethinking and improving our interfaces, making
+                        development far easier and more intuitive, and who are driven by creating
+                        things of high quality.
                       </BigParagraph>
 
                       <BigParagraph>

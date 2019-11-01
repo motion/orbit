@@ -32,6 +32,7 @@ export function Page(props: SectionContentProps) {
           flex="none"
           xs-height="auto"
           xs-minHeight="auto"
+          contain="content paint"
         />
         {/* </ParallaxStageItem> */}
       </Parallax.Container>

@@ -69,9 +69,9 @@ export default memo(function FeaturesSection() {
                 size="xxl"
                 sizeLineHeight={0.85}
               >
-                The all-in-one
+                An all-in-one
                 <br />
-                team app studio
+                data/app studio
               </TitleText>
             </ParallaxStageItem>
             <ParallaxStageItem stagger={1}>

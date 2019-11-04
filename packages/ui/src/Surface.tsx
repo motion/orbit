@@ -125,8 +125,8 @@ export type SurfaceSpecificProps = SizedSurfaceSpecificProps & {
   /** Set icon size separately */
   iconSize?: number
 
-  /** Avoid adding the inner element: will prevent icons from working */
-  noInnerElement?: boolean
+  /** Can force to show or never show an inner element */
+  showInnerElement?: 'always' | 'never'
 
   theme?: CompiledTheme
 
@@ -256,7 +256,7 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
     iconPadding,
     iconProps,
     justifyContent,
-    noInnerElement,
+    showInnerElement,
     size: ogSize,
     sizeLineHeight,
     tagName,
@@ -342,7 +342,7 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
   // we conditionally set children here to avoid having children: undefined
   if (dangerouslySetInnerHTML) {
     childrenProps.dangerouslySetInnerHTML = dangerouslySetInnerHTML
-  } else if (noInnerElement) {
+  } else if (showInnerElement === 'never') {
     if (isDefined(before, after)) {
       childrenProps.children = (
         <>
@@ -355,9 +355,8 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
       childrenProps.children = children || null
     }
   } else {
-    showElement = !!(hasChildren(children) || elementProps)
+    showElement = !!(hasChildren(children) || showInnerElement === 'always')
     const spaceElement = <Space size={selectDefined(space, size * 6)} />
-
     const innerElements = !!icon && (
       <PassProps
         passCondition={acceptsIcon}
@@ -509,6 +508,8 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
     height,
     applyPsuedoColors: true,
     disabled,
+    tagName: !showElement ? tagName : 'div',
+    opacity: crumb && crumb.total === 0 ? 0 : props.opacity,
     ...(!showElement && elementProps),
     ...throughProps,
     ...viewProps,
@@ -517,8 +518,10 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
     borderTopRadius,
     borderBottomRadius,
     ...childrenProps,
-    tagName: !showElement ? tagName : 'div',
-    opacity: crumb && crumb.total === 0 ? 0 : props.opacity,
+  }
+
+  if (props.debug) {
+    console.log('ok', showElement, props, surfaceFrameProps)
   }
 
   return useBreadcrumbReset(
@@ -639,10 +642,8 @@ const Element = gloss<ThroughProps & { disabled?: boolean }>({
   display: 'flex', // in case they change tagName
   flex: 1,
   overflow: 'hidden',
-  // needed to reset for <button /> at least
   fontSize: 'inherit',
   lineHeight: 'inherit',
-  color: 'inherit',
   textAlign: 'inherit',
   fontFamily: 'inherit',
   padding: 0,

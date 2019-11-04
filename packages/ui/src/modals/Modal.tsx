@@ -87,7 +87,7 @@ function SimpleModal({
         activeStyle={false}
         overflow="hidden"
         elevation={10}
-        noInnerElement
+        showInnerElement="never"
         minWidth={200}
         minHeight={200}
         open={open}

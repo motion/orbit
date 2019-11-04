@@ -6,7 +6,7 @@ import { coats } from './themeCoats'
 import { colors, transparent } from './themeColors'
 
 const c = toColor
-const color = toColor('#444')
+const color = toColor('#252525')
 const colorLight = color.lighten(0.1)
 const colorLighter = color.lighten(0.2)
 const colorLightest = color.lighten(0.3)
@@ -64,7 +64,7 @@ export const light: ThemeObject = fromStyles({
     background: lightButtonBg,
     backgroundActive: linearGradient('#e9e9e9', '#eee'),
     // buttonBackgroundFocus: lightButtonBg,
-    boxShadowFocus: '2px 2px red',
+    // boxShadowFocus: '2px 2px red',
     backgroundHover: lightButtonBg.adjust(x => toColor(x).lighten(0.025)),
     glintColorBottom: c([0, 0, 0, 0.08]),
   },

@@ -10,7 +10,6 @@ import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContentChrome } from '../../views/SectionContent'
 import { Join } from './Join'
-import { useScreenVal } from './SpacedPageContent'
 import { WelcomeBlogPostButton } from './WelcomeBlogPostButton'
 
 const allDelay = 2
@@ -322,7 +321,8 @@ const HeadJoin = memo(() => {
             <Theme scale={1.2} sm-scale={1}>
               <Join
                 inputProps={{
-                  minWidth: useScreenVal('auto', 300, 300),
+                  minWidth: 300,
+                  'sm-minWidth': 'auto',
                   textAlign: 'left',
                 }}
                 borderRadius={1000}

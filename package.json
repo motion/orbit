@@ -29,10 +29,11 @@
     "start:plain-react": "yarn clean:apps && cd example-workspace && PLAIN_REACT=1 NODE_ENV=development orbit ws --logLevel 3",
     "start:noworkers": "yarn fix-permissions && cd example-workspace && DISABLE_WORKERS=true NODE_ENV=development orbit ws --logLevel 3",
     "start:dev": "yarn fix-permissions && cd example-workspace && NODE_ENV=development orbit ws --dev --logLevel 4",
+    "start:dev:verbose": "cd example-workspace && NODE_ENV=development orbit ws --dev --logLevel 6",
+    "start:dev:debug": "cd example-workspace && NODE_ENV=development orbit ws --dev --logLevel 9",
     "start:dev:plain-react": "yarn clean:apps && cd example-workspace && PLAIN_REACT=1 NODE_ENV=development orbit ws --dev --logLevel 4",
     "start:dev:all": "DEV_ALL_APPS=1 yarn start:dev",
     "start:dev:clean": "cd example-workspace && NODE_ENV=development orbit ws --dev --logLevel 2 --clean",
-    "start:dev:verbose": "cd example-workspace && NODE_ENV=development orbit ws --dev --logLevel 6",
     "start:dev:noworkers": "(cd example-workspace && NODE_ENV=development DISABLE_WORKERS=true orbit ws --dev --logLevel 4)",
     "start:dev:noworkers:debug": "(cd example-workspace && DISABLE_WORKERS=true orbit ws --dev --logLevel 8)",
     "start:dev:ocr": "(cd example-workspace && NODE_ENV=development ENABLE_OCR=true DISABLE_WORKERS=true orbit ws --dev --logLevel 4)",
@@ -110,7 +111,7 @@
     "webpack-cli": "^3.3.7"
   },
   "resolutions": {
-    "framer-motion": "1.6.7",
+    "framer-motion": "1.6.15",
     "react": "16.9.0",
     "react-dom": "16.9.0",
     "node-gyp": "5.0.3",

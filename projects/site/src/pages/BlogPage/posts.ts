@@ -24,7 +24,15 @@ export const posts: PostDirectory = {
   },
   'update-two': {
     view: () => import('./update-two/index.mdx'),
-    title: 'Orbit Center',
+    title: 'Orbit enters private beta',
+    date: '2019-04-25T22:12:03.284Z',
+    author: 'Nathan Wienert',
+    authorImage: nateImg,
+    private: true,
+  },
+  launch: {
+    view: () => import('./launch/index.mdx'),
+    title: 'Orbit is a longshot',
     date: '2019-04-25T22:12:03.284Z',
     author: 'Nathan Wienert',
     authorImage: nateImg,

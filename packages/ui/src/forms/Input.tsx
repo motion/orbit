@@ -81,7 +81,6 @@ export function Input({ onEnter, type = 'text', nodeRef, children, ...props }: I
       )}
       onChange={useCallback(
         e => {
-          console.log('updating context right?', e.target['value'])
           updateFormContext((e.target as any).value)
           if (props.onChange) {
             props.onChange(e)
@@ -125,6 +124,7 @@ const SimpleInput = ({
           onKeyDown,
           onKeyUp,
           onKeyPress,
+          color: 'inherit',
           ...elementProps,
         }),
         [nodeRef, value, defaultValue, placeholder, tagName, elementProps],
@@ -145,6 +145,7 @@ const SimpleInput = ({
       activeStyle={false}
       glint={false}
       borderWidth={1}
+      showInnerElement="always"
       {...props}
       className={`ui-input ${props.className || ''}`}
       focusWithinStyle={inputSurfaceTheme}

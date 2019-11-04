@@ -53,6 +53,7 @@ let hasParsedViewInformation = false
 export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
+  { outPath, outRelPath }: any,
   { cacheObject }: Options,
   options: ExtractStylesOptions,
 ): {
@@ -256,7 +257,7 @@ export function extractStyles(
             const depth = (view?.internal?.depth ?? -1) + 1
 
             for (const ns in styles) {
-              const info = StaticUtils.getStyles(styles[ns], depth)
+              const info = StaticUtils.getStyles(styles[ns], depth, ns)
               if (shouldPrintDebug) {
                 console.log('got static extract', name, ns, info, styles[ns])
               }
@@ -274,9 +275,9 @@ export function extractStyles(
               out.conditionalClassNames = {}
               for (const prop in conditionalStyles) {
                 out.conditionalClassNames[prop] = ''
-                for (const key in conditionalStyles[prop]) {
-                  const val = conditionalStyles[prop][key]
-                  const info = StaticUtils.getStyles(val, depth)
+                for (const ns in conditionalStyles[prop]) {
+                  const val = conditionalStyles[prop][ns]
+                  const info = StaticUtils.getStyles(val, depth, ns)
                   if (info) {
                     cssMap.set(info.className, { css: info.css, commentTexts: [] })
                     out.conditionalClassNames[prop] += ` ${info.className}`
@@ -540,6 +541,7 @@ export function extractStyles(
             inlinePropCount++
             return true
           }
+
           // if one or more spread operators are present and we haven't hit the last one yet, the prop stays inline
           if (lastSpreadIndex > -1 && idx <= lastSpreadIndex) {
             inlinePropCount++
@@ -592,9 +594,17 @@ export function extractStyles(
 
           // allow statically defining a change from one prop to another (see Stack)
           if (typeof cssAttributes[name] === 'object') {
-            const definition = cssAttributes[name]
-            name = definition.name
-            value = definition.value[value]
+            if (t.isStringLiteral(value)) {
+              const definition = cssAttributes[name]
+              name = definition.name
+              value = definition.value[value.value]
+              staticAttributes[name] = value
+              return false
+            } else {
+              console.log('couldnt parse a user defined cssAttribute', name, value)
+              inlinePropCount++
+              return true
+            }
           }
 
           // if value can be evaluated, extract it and filter it out
@@ -675,7 +685,7 @@ domNode: ${domNode}
         // used later to generate classname for item
         const stylesByClassName: { [key: string]: string } = {}
 
-        const depth = (view?.internal?.depth ?? 1) + (localView?.parent?.internal?.depth ?? 0)
+        const depth = (view?.internal?.depth ?? 1) + (localView?.parent?.internal?.depth ?? 1)
         const addStyles = (styleObj: any) => {
           const allStyles = StaticUtils.getAllStyles(styleObj, depth)
           for (const info of allStyles) {
@@ -995,17 +1005,18 @@ domNode: ${domNode}
   // Write out CSS using it's className, this gives us de-duping for shared classnames
   for (const [className, entry] of cssMap.entries()) {
     const content = `${entry.commentTexts.map(txt => `${txt}\n`).join('')}${entry.css}`
-    const relFileName = `./${className}__gloss.css`
-    const filename = path.join(sourceDir, relFileName)
+    const name = `${className}__gloss.css`
+    const importPath = `${outRelPath}/${name}`
+    const filename = path.join(outPath, name)
     // append require/import statement to the document
     if (content !== '') {
       css.push({ filename, content })
       if (useImportSyntax) {
-        ast.program.body.unshift(t.importDeclaration([], t.stringLiteral(relFileName)))
+        ast.program.body.unshift(t.importDeclaration([], t.stringLiteral(importPath)))
       } else {
         ast.program.body.unshift(
           t.expressionStatement(
-            t.callExpression(t.identifier('require'), [t.stringLiteral(relFileName)]),
+            t.callExpression(t.identifier('require'), [t.stringLiteral(importPath)]),
           ),
         )
       }

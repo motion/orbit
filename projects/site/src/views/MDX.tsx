@@ -38,6 +38,7 @@ const components = {
         <Image width="100%" height="auto" alt={alt} {...rest} />
       </View>
       {!!alt && <Alt>{alt}</Alt>}
+      {contentSpaceLg}
     </>
   ),
 
@@ -95,6 +96,7 @@ const components = {
           margin={0}
           fontSize="inherit"
           lineHeight="inherit"
+          alpha={0.9}
           {...props}
         />
         {contentSpace}

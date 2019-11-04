@@ -13,7 +13,7 @@ export function ManageSmartSync({ whitelist }: { whitelist: WhiteList }) {
       sizeHeight
       alignItems="center"
       tooltip="Turning this on will let Orbit manage space"
-      noInnerElement
+      showInnerElement="never"
     >
       <Label>
         <Stack direction="horizontal" space>

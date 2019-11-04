@@ -61,7 +61,7 @@ export function makeWebpackConfig(
     devtool,
     injectHot,
     plugins,
-    extractStaticStyles,
+    extractStaticStyles = false,
   } = params
 
   // optimize react
@@ -169,6 +169,7 @@ export function makeWebpackConfig(
         target,
         mode,
         watch,
+        extractStaticStyles,
       },
       null,
       2,

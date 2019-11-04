@@ -113,6 +113,7 @@ export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
       direction="vertical"
       className="orbit-dock-panel"
       bottom="auto"
+      space={0}
     >
       {props.apps.map((app, index) => (
         <OrbitDockButton
@@ -123,14 +124,14 @@ export const OrbitDockPanel = (props: { apps: AppBit[]; offset: number }) => {
           borderRadius={0}
           glintBottom={false}
           windowHeight={windowHeight}
-          {...index === 0 && {
+          {...(index === 0 && {
             borderTopRadius: 8,
             borderBottomRadius: 0,
-          }}
-          {...index === props.apps.length - 1 && {
+          })}
+          {...(index === props.apps.length - 1 && {
             borderTopRadius: 0,
             borderBottomRadius: 8,
-          }}
+          })}
         />
       ))}
     </Dock>

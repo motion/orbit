@@ -1,29 +1,14 @@
-- statics:
-  - properly fail when cant evaluate a gloss() (ExampleHalf)
-  - linaria-style constants evaluation and { [constant]: x }
-- docs: fix bugs in various panes
-- theme: fix slowdown bug in switching theme
-- deploy site
-- app: fix static bugs layout
-- app: fix static in OrbitHeader / errors throwing
-- static: look at linaria for how it reads static side-effect free files
-- static: just run over once more improve some logic
-- app: tune it up and get it all running again
-- blog: write a blog post for beta launch
-- site: upgrade wording
-- launch
-
 current best bet for a viable product:
 
-theres three paths:
-
 1. workflow / automated flows (Zapier)
-2. more journal-like default app, documents + sheets (ObservableHQ, Jupyter)
-3. devtools: dx, introspection, maybe visual app building (Retool)
-4. data T-SNE + other stats/ml plugins, biggish data focus + viz (downstream palantir)
+2. devtools: dx, introspection, maybe visual app building (Retool)
+3. data T-SNE + other stats/ml plugins, biggish data focus + viz (downstream palantir)
 
 
 ---
+
+- <Theme for={Text} fontFamily="xuz" />
+  - solves/simplifies a lot of things (remove Config.defaultProps.text)
 
 - <Theme sm-scale={1} /> support media queries here
   - see HeadSection for real world usage

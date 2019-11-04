@@ -40,7 +40,7 @@ export default memo(function FeaturesSection() {
         top="20%"
         scale={2}
         className="glow-two"
-        opacity={0.23}
+        opacity={0.26}
         background="radial-gradient(circle closest-side, #12A1CC, transparent)"
         parallax={geometry => ({
           y: geometry.useParallax(),
@@ -59,10 +59,19 @@ export default memo(function FeaturesSection() {
         <Stack padding="lg" flex={2}>
           <View flex={1}>
             <ParallaxStageItem stagger={0}>
-              <TitleText alignItems="flex-start" justifyContent="flex-start" size="xxl">
-                The all-in-one
+              <TitleText fontWeight={300} size="sm" alpha={0.5}>
+                Introducing a new type of thing
+              </TitleText>
+              <Space />
+              <TitleText
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                size="xxl"
+                sizeLineHeight={0.85}
+              >
+                An all-in-one
                 <br />
-                data studio
+                data/app studio
               </TitleText>
             </ParallaxStageItem>
             <ParallaxStageItem stagger={1}>
@@ -166,37 +175,40 @@ export default memo(function FeaturesSection() {
               },
             }}
           >
-            {Object.keys(sections).map((key, index) => (
-              <Image
-                key={key}
-                transition={transition}
-                animate={{
-                  opacity: cur === index ? 1 : 0,
-                  y:
-                    cur === index
-                      ? '0%'
-                      : cur > index
-                      ? `-${(cur - index) * 20}%`
-                      : `${(index - cur) * 20}%`,
-                }}
-                width="100%"
-                position="absolute"
-                top={0}
-                left={0}
-                height="auto"
-                minWidth={1000}
-                marginRight={-1000}
-                src={sections[key].image}
-                borderRadius={15}
-                overflow="hidden"
-                boxShadow={[
-                  {
-                    blur: 100,
-                    color: '#000',
-                  },
-                ]}
-              />
-            ))}
+            {Object.keys(sections).map((key, index) => {
+              const y =
+                cur === index
+                  ? '0%'
+                  : cur > index
+                  ? `-${(cur - index) * 20}%`
+                  : `${(index - cur) * 20}%`
+              return (
+                <Image
+                  key={key}
+                  transition={transition}
+                  animate={{
+                    opacity: cur === index ? 1 : 0,
+                    y,
+                  }}
+                  width="100%"
+                  position="absolute"
+                  top={0}
+                  left={0}
+                  height="auto"
+                  minWidth={1000}
+                  marginRight={-1000}
+                  src={sections[key].image}
+                  borderRadius={15}
+                  overflow="hidden"
+                  boxShadow={[
+                    {
+                      blur: 100,
+                      color: '#000',
+                    },
+                  ]}
+                />
+              )
+            })}
           </ParallaxStageItem>
         </View>
       </Stack>
@@ -207,7 +219,7 @@ export default memo(function FeaturesSection() {
 const dly = 200
 
 const sections = {
-  Data: {
+  'Use Data': {
     image: require('../../public/images/screen-graphql.jpg'),
     items: [
       {
@@ -232,13 +244,13 @@ const sections = {
       },
     ],
   },
-  Display: {
+  'Create Apps': {
     image: require('../../public/images/screen-people.jpg'),
     items: [
       {
         title: 'Complete UI Kit',
         icon: 'button',
-        body: [`Beautiful, flexible, virtualized, concurrent, with easy data loading.`],
+        body: [`Smart, flexible, virtualized, concurrent, easy data loading.`],
       },
       {
         title: `Drag & Drop Data`,
@@ -257,7 +269,7 @@ const sections = {
       },
     ],
   },
-  Create: {
+  'Move Faster': {
     image: require('../../public/images/screen-graphql.jpg'),
     items: [
       {
@@ -268,23 +280,17 @@ const sections = {
       {
         title: `Next-gen Hot Reload`,
         icon: `refresh`,
-        body: [
-          `Per-app Webpack with instant React Refresh. Toggle between editing and production instantly.`,
-        ],
+        body: [`Per-app Webpack for instant HMR. Every app is editable at runtime.`],
       },
       {
         title: `Modern view system`,
         icon: `grid-view`,
-        body: [
-          `React Concurrent, Suspense, Framer Motion and more integrated by default, in every view.`,
-        ],
+        body: [`React Concurrent, Suspense, Framer Motion and more, in every view.`],
       },
       {
         title: `Incredible Dev Tooling`,
         icon: `draw`,
-        body: [
-          `From debuggins to data management, error recovery and more - Orbit comes with great DX.`,
-        ],
+        body: [`Debugging, data management, error recovery - many dev tools built-in.`],
       },
     ],
   },

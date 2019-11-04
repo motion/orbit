@@ -6,7 +6,7 @@ import { AnimationStore } from '../Geometry'
 import { elevationTheme } from './elevation'
 import { marginTheme } from './marginTheme'
 import { motionExtraProps, motionStyleProps } from './motionStyleProps'
-import { paddingTheme } from './PaddedView'
+import { paddingTheme } from './paddingTheme'
 import { ViewPropsPlain } from './types'
 
 const shouldRenderToMotion = (props: any) =>

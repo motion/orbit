@@ -3,7 +3,6 @@ import { Button, gloss, Icon, scrollTo, Section, Space, Stack, SurfacePassProps,
 import React, { memo } from 'react'
 
 import { colors } from '../colors'
-import { Navigation } from '../Navigation'
 import { linkProps } from '../useLink'
 import { CodeBlock } from '../views/CodeBlock'
 import { MDX } from '../views/MDX'
@@ -34,24 +33,12 @@ export const DocsContents = memo(
         >
           <Stack direction="horizontal" marginTop={80} width="100%" space>
             {!!prevItem && (
-              <Button
-                onClick={e => {
-                  e.preventDefault()
-                  Navigation.navigate(`/docs/${prevItem['id']}`, { replace: true })
-                }}
-              >
+              <Button {...linkProps(`/docs/${prevItem['id']}`)}>
                 Previous: {prevItem['title']}
               </Button>
             )}
             {!!nextItem && (
-              <Button
-                onClick={e => {
-                  e.preventDefault()
-                  Navigation.navigate(`/docs/${nextItem['id']}`, { replace: true })
-                }}
-              >
-                Next: {nextItem['title']}
-              </Button>
+              <Button {...linkProps(`/docs/${nextItem['id']}`)}>Next: {nextItem['title']}</Button>
             )}
           </Stack>
         </SurfacePassProps>
@@ -59,9 +46,9 @@ export const DocsContents = memo(
     )
 
     const padding = useScreenVal(
-      ['xxl', 'md', true, 'md'],
-      ['xxl', 'md', true, 'md'],
-      ['xxxl', 'xl', true, 'xl'],
+      ['xl', 'md', true, 'md'],
+      ['xl', 'md', true, 'md'],
+      ['xxl', 'xl', true, 'xl'],
     )
 
     return (
@@ -97,6 +84,7 @@ export const DocsContents = memo(
               marginRight={30}
               size="md"
               alpha={0.65}
+              fontWeight={400}
               hoverStyle={{
                 color: colors.purple,
               }}
@@ -104,7 +92,6 @@ export const DocsContents = memo(
               <Stack direction="horizontal" margin={[0, 0, -8]}>
                 {!!types && (
                   <Button
-                    iconSize={16}
                     icon="properties"
                     tooltip="Component Props"
                     onClick={e => {
@@ -117,7 +104,6 @@ export const DocsContents = memo(
                 )}
                 {!!source && (
                   <Button
-                    iconSize={16}
                     icon="code"
                     tooltip="View Component Source"
                     onClick={e => {
@@ -130,7 +116,6 @@ export const DocsContents = memo(
                 )}
                 {!!source && (
                   <Button
-                    iconSize={16}
                     icon="code"
                     tooltip="View Source for this Page"
                     onClick={e => {

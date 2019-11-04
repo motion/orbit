@@ -49,7 +49,7 @@ export function BlogPageIndex() {
 export const PostMeta = ({ post }) => {
   return (
     <Stack direction="horizontal" fontWeight={400} alignItems="center" fontSize={15} alpha={0.65}>
-      <Avatar size={32} src={post.authorImage} />
+      <Avatar size={28} src={post.authorImage} />
       <SimpleText alpha={0.5}>
         &nbsp; &nbsp;
         {post.author}

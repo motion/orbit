@@ -53,8 +53,8 @@ export default function IntroSection() {
                 display="block"
                 src={require('../../public/images/screen1.jpeg')}
                 width="100%"
-                abovemd-marginLeft="-20%"
-                abovemd-width="120%"
+                abovemd-marginLeft="-30%"
+                abovemd-width="130%"
                 abovesm-marginLeft="-50%"
                 abovesm-width="150%"
                 height="auto"
@@ -74,15 +74,15 @@ export default function IntroSection() {
           </View>
           <Stack space="xl" justifyContent="center">
             <IntroPara delayIndex={1} stagger={0} size={1.8}>
-              <strong style={{ color: '#fff' }}>We're rethinking how we build apps for work</strong>
-              &nbsp;with a fun, creative workspace where unified data is explorable and moldable.
+              <strong style={{ color: '#fff' }}>We're rethinking how we build and use apps</strong>
+              &nbsp;with a powerful internal tool platform.
             </IntroPara>
             <IntroPara delayIndex={2} stagger={-0.5}>
-              It's a smart, fast heads up display that's always there. Create new apps in minutes,
-              share them with a press of a button.
+              A better default toolkit for common apps, making it far easier to code powerful apps
+              for teams. With easy data plugins, a rich view kit, and a collaborative app-store.
             </IntroPara>
             <IntroPara delayIndex={3} stagger={-1}>
-              Powerful enough to run your business, easier to use than bootstrap.
+              Think of it as Bootstrap, designed for internal apps.
             </IntroPara>
           </Stack>
         </HalfGrid>

@@ -16,7 +16,7 @@ import { Surface } from '../Surface'
 import { DateFormat } from '../text/DateFormat'
 import { SimpleText } from '../text/SimpleText'
 import { Text } from '../text/Text'
-import { paddingTheme } from '../View/PaddedView'
+import { paddingTheme } from '../View/paddingTheme'
 import { Stack } from '../View/Stack'
 import { View } from '../View/View'
 import { ListItemSimpleProps } from './ListItemViewProps'
@@ -91,7 +91,10 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
   }
 
   const iconElement = showIcon && getIcon(props)
-  const listItemAdjustedPadding = paddingTheme({ padding: selectDefined(padding, 12) })
+  const paddingIn = selectDefined(padding, 12)
+  const paddingVerticalPx = Array.isArray(paddingIn) ? +paddingIn[0] : +paddingIn
+  // @ts-ignore TODO
+  const listItemAdjustedPadding = paddingTheme({ padding: paddingIn })
   const space = listItemAdjustedPadding ? listItemAdjustedPadding.paddingTop : undefined
 
   const hasChildren = showChildren && !!children
@@ -191,7 +194,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
         }
         space={space}
         icon={iconBefore && iconElement}
-        noInnerElement={!iconElement}
+        showInnerElement={iconElement ? 'always' : 'never'}
         {...disablePsuedoProps}
         {...surfaceProps}
         onMouseUp={handleMouseUp}
@@ -222,7 +225,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
             )}
             {showSubtitle && (
               <>
-                <Space size={space / 2} />
+                <Space size={paddingVerticalPx / 2} />
                 <ListItemSubtitle>
                   {!!location && locationElement}
                   {!!subTitle &&

@@ -101,7 +101,6 @@ export function setupTrackableStore(
               update.__debug_update__.action = 'observers'
               update.__debug_update__.info = key
             }
-            console.log('111')
             queueUpdate(update)
           }
         }
@@ -121,7 +120,6 @@ export function setupTrackableStore(
               update.__debug_update__.action = 'getters'
               update.__debug_update__.info = key
             }
-            console.log('222')
             queueUpdate(update)
           }
         }
@@ -169,7 +167,6 @@ export function setupTrackableStore(
             console.log('got update while paused', name, storeName, trackedKeysWhilePaused)
             update.__debug_update__.action = 'trackedKeysWhilePaused'
           }
-          console.log('qwhatasda')
           queueUpdate(update)
         }
         trackedKeysWhilePaused.clear()

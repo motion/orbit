@@ -1,4 +1,4 @@
-import { Button, ButtonProps, Image, useTheme } from '@o/ui'
+import { Button, ButtonProps, Image } from '@o/ui'
 import React from 'react'
 
 export const BottomButton = ({
@@ -9,11 +9,9 @@ export const BottomButton = ({
   src?: string
   href?: any
 }) => {
-  const theme = useTheme()
   return (
     <Button
-      color={theme.color}
-      coat="clear"
+      coat="translucent"
       elementProps={{
         href,
         tagName: 'a',
@@ -21,7 +19,7 @@ export const BottomButton = ({
       }}
       userSelect="none"
       circular
-      size={2}
+      size={1.5}
       cursor="pointer"
       {...props}
     >

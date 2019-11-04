@@ -79,7 +79,10 @@ export const themes = createThemes({
 
   home,
 
-  blogHeaderTheme: purple,
+  blogHeaderTheme: {
+    ...purple,
+    background: purple.background.darken(0.1),
+  },
 
   docsPageTheme: {
     ...light,

@@ -32,6 +32,14 @@ export default function DeploySection() {
         })}
       />
 
+      <Page.BackgroundParallax
+        speed={-0.57}
+        offset={0.4}
+        scale={1.5}
+        opacity={0.24}
+        background="radial-gradient(circle closest-side, #FF0033, transparent)"
+      />
+
       <SpacedPageContent
         padding={['10vh', 0, '10vh']}
         nodeRef={Fade.ref}
@@ -98,23 +106,22 @@ export default function DeploySection() {
                 alpha={0.8}
                 fontWeight={400}
               >
-                Not just config-free, but a meticulously built environment designed for
-                productivity.
+                A meticulously built developer environment designed for productivity.
               </ParagraphIntro>
             </FadeInView>
 
             <FadeInView parallax delayIndex={2}>
               <Stack space="sm">
-                <Item>A 0-setup visual app workspace.</Item>
-                <Item>Per-app fast refresh with error recovery.</Item>
-                <Item>A suite of developer tools.</Item>
-                <Item>Every library you'd want.</Item>
+                <Item>No config, no code to start an app.</Item>
+                <Item>100ms hot reloads with error recovery.</Item>
+                <Item>A suite of tools for understanding state/data.</Item>
+                <Item>Rich debugging tools built-in.</Item>
               </Stack>
             </FadeInView>
 
             <FadeInView parallax delayIndex={3}>
               <Link fontWeight={600} size="lg" href="/start">
-                Get started with Orbit ›
+                Get started ››
               </Link>
             </FadeInView>
           </Stack>

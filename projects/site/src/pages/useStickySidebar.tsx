@@ -37,7 +37,7 @@ export function useStickySidebar({ condition = true, id, ...rest }) {
         resizeSensor: true,
         ...rest,
       })
-    }, 20)
+    }, 150)
     return () => {
       sidebar && sidebar.destroy()
     }

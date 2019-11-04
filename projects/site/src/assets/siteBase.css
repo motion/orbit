@@ -1,11 +1,15 @@
 /* Site theme stuff  */
-p a {
+.content-section a {
   color: #8c60f8;
   text-decoration: none;
   font-weight: 600;
   /* -webkit-text-underline-offset: 2px;
   -webkit-text-decoration-thickness: 2px; */
   /* text-decoration-color: #8c60f833; */
+}
+
+.content-section a:hover {
+  color: #b698ff;
 }
 
 svg {
@@ -255,8 +259,8 @@ textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-  -webkit-text-fill-color: inherit;
-  /* background-color: inherit; */
+  -webkit-text-fill-color: red;
+  background-color: red;
   transition: background-color 5000s ease-in-out 0s;
 }
 

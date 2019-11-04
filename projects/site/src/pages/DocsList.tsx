@@ -7,10 +7,7 @@ import { DocsStoreContext } from './DocsStore'
 
 const itemProps = {
   hideBorder: true,
-  titleProps: {
-    fontSize: 13,
-  },
-  padding: [10, 12],
+  padding: [11, 12],
   iconProps: {
     opacity: 0.65,
   },
@@ -23,11 +20,7 @@ export const DocsList = memo((props: { shouldRenderAll?: boolean }) => {
     if (props.shouldRenderAll) {
       await sleep(1400) // wait for intro animation
       await whenIdle()
-      await sleep(50)
-      await whenIdle()
-      await sleep(50)
-      await whenIdle()
-      await sleep(50)
+      await sleep(150)
       await whenIdle()
       setMounted(true)
     }
@@ -47,7 +40,7 @@ export const DocsList = memo((props: { shouldRenderAll?: boolean }) => {
           groupName: `Current Page`,
           ...curRow.current,
         },
-        { separator: `Results for "${docsStore.search}"`, selectable: false },
+        { separator: `Results for "${docsStore.search}"`, selectable: false, hideBorder: true },
       ]
     }
     items = [...items, ...results]

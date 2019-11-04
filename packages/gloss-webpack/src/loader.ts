@@ -1,4 +1,3 @@
-import fs from 'fs'
 import invariant from 'invariant'
 import loaderUtils from 'loader-utils'
 import path from 'path'
@@ -25,16 +24,14 @@ const glossLoader: webpack.loader.Loader = function(this: any, content) {
 
   const options: LoaderOptions = loaderUtils.getOptions(this) || {}
   const { memoryFS, cacheObject } = pluginContext
-
-  const outDir = path.join(__dirname, '..', '.out')
-  try {
-    fs.mkdirSync(outDir)
-  } catch {}
+  const outDir = '.out'
+  const outPath = path.join(require.resolve('gloss'), '..', '..', outDir)
+  const outRelPath = `gloss/${outDir}`
 
   const rv = extractStyles(
     content,
     this.resourcePath,
-    outDir,
+    { outPath, outRelPath },
     {
       cacheObject,
       errorCallback: (str: string, ...args: any[]) =>
@@ -52,6 +49,8 @@ const glossLoader: webpack.loader.Loader = function(this: any, content) {
   for (const { filename, content } of rv.css) {
     memoryFS.mkdirpSync(path.dirname(filename))
     memoryFS.writeFileSync(filename, content)
+    // fs.mkdirpSync(path.dirname(filename))
+    // fs.writeFileSync(filename, content)
   }
 
   this.callback(null, rv.js, rv.map)

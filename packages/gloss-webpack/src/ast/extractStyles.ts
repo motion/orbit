@@ -53,7 +53,7 @@ let hasParsedViewInformation = false
 export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
-  outDir: string,
+  { outPath, outRelPath }: any,
   { cacheObject }: Options,
   options: ExtractStylesOptions,
 ): {
@@ -996,17 +996,18 @@ domNode: ${domNode}
   // Write out CSS using it's className, this gives us de-duping for shared classnames
   for (const [className, entry] of cssMap.entries()) {
     const content = `${entry.commentTexts.map(txt => `${txt}\n`).join('')}${entry.css}`
-    const relFileName = `${outDir}/${className}__gloss.css`
-    const filename = relFileName
+    const name = `${className}__gloss.css`
+    const importPath = `${outRelPath}/${name}`
+    const filename = path.join(outPath, name)
     // append require/import statement to the document
     if (content !== '') {
       css.push({ filename, content })
       if (useImportSyntax) {
-        ast.program.body.unshift(t.importDeclaration([], t.stringLiteral(relFileName)))
+        ast.program.body.unshift(t.importDeclaration([], t.stringLiteral(importPath)))
       } else {
         ast.program.body.unshift(
           t.expressionStatement(
-            t.callExpression(t.identifier('require'), [t.stringLiteral(relFileName)]),
+            t.callExpression(t.identifier('require'), [t.stringLiteral(importPath)]),
           ),
         )
       }

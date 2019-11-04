@@ -1,5 +1,5 @@
 import { isDefined } from '@o/utils'
-import { ThemeFn, unwrapProps, unwrapTheme } from 'gloss'
+import { ThemeFn } from 'gloss'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { isWebkit } from '../constants'
@@ -144,6 +144,7 @@ const SimpleInput = ({
       activeStyle={false}
       glint={false}
       borderWidth={1}
+      showInnerElement="always"
       {...props}
       className={`ui-input ${props.className || ''}`}
       focusWithinStyle={inputSurfaceTheme}
@@ -164,7 +165,6 @@ const inputSurfaceTheme: ThemeFn<any> = props => {
 }
 
 const inputElementTheme: ThemeFn<InputProps> = props => {
-  console.log('color is', props.color, unwrapTheme(props), unwrapProps(props))
   return {
     // apple selection color
     '&::selection': {

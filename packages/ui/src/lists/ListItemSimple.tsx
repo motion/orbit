@@ -192,7 +192,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
         }
         space={space}
         icon={iconBefore && iconElement}
-        noInnerElement={!iconElement}
+        showInnerElement={iconElement ? 'always' : 'never'}
         {...disablePsuedoProps}
         {...surfaceProps}
         onMouseUp={handleMouseUp}

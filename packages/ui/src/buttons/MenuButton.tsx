@@ -20,10 +20,10 @@ export const MenuButton = memo((props: MenuButtonProps) => {
   const { items, scrollable, children, openIconProps, open, openOnHover, size, ...rest } = props
   const sizedSurfaceProps = useSizedSurfaceProps(props)
   const sizePx = getSize(size)
-  const height = useSurfaceHeight(size)
+  const height = useSurfaceHeight(sizePx)
   // using the same group ensures the tooltip closes when the menu opens
   const group = useRef(`${Math.random()}`).current
-  const spaceElement = <Space size={sizedSurfaceProps.sizePadding} scale={0.55 * sizePx} />
+  const spaceElement = <Space size={(sizedSurfaceProps.padding?.[1] ?? 8)} />
   return (
     <Button tooltipProps={{ group }} paddingRight={0} size={size} {...rest}>
       {!!children && (
@@ -36,12 +36,11 @@ export const MenuButton = memo((props: MenuButtonProps) => {
         items={items}
         scrollable={scrollable}
         group={group}
-        {...{
-          open,
-          items,
-          openOnHover,
-          size,
-        }}
+        open={open}
+        // @ts-ignore
+        items={items}
+        openOnHover={openOnHover}
+        size={size}
         target={
           <View
             height={height}

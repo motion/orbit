@@ -35,7 +35,7 @@ export const CardSimple = ({
       cursor={hasClick ? 'pointer' : 'inherit'}
       subTheme="cardSimple"
       {...props}
-      noInnerElement
+      showInnerElement="never"
     >
       <Stack padding={padding} space={space} group={group} scrollable={scrollable}>
         {!!title && (

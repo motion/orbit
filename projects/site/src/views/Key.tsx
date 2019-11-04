@@ -5,8 +5,7 @@ export const Key = gloss(Button, {
   size: 'xs',
   glint: false,
   fontWeight: 600,
-  // background: 'red', //theme => theme.background,
   hoverStyle: false,
   activeStyle: false,
-  noInnerElement: true,
+  showInnerElement: 'never',
 })

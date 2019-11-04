@@ -85,7 +85,7 @@ export function ChatMessage(rawProps: ChatMessageProps) {
       <Surface
         background={theme => theme.backgroundStronger.setAlpha(0.33)}
         padding={[6, 10]}
-        noInnerElement
+        showInnerElement="never"
         sizeRadius={1}
       >
         {content}

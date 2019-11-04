@@ -1098,7 +1098,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
                   activeStyle={false}
                   overflow="hidden"
                   elevation={elevation}
-                  noInnerElement
+                  showInnerElement="never"
                   opacity={1}
                   {...restProps}
                   {...backgroundProp}

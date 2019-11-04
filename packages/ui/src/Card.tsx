@@ -107,7 +107,7 @@ export function Card(props: CardProps) {
       subTheme="card"
       coat={isSelected ? 'selected' : coat}
       sizeRadius={sizeRadius}
-      noInnerElement
+      showInnerElement="never"
       size={size}
       hoverStyle={false}
       activeStyle={false}

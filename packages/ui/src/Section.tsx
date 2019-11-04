@@ -216,7 +216,7 @@ export function Section(direct: SectionProps) {
       elevation={selectDefined(elevation, bordered ? 1 : 0)}
       borderWidth={bordered ? 1 : 0}
       margin={margin}
-      noInnerElement
+      showInnerElement="never"
       // scrollable section wont scroll if no flex, see ManageApps
       flex={selectDefined(flex, !!scrollable ? 1 : undefined)}
       background={background || 'transparent'}

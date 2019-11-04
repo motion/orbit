@@ -1,4 +1,4 @@
-import { Button, Divider, gloss, Icon, Loading, SimpleText, Space, Stack, useIntersectionObserver, View } from '@o/ui'
+import { Button, Divider, gloss, Icon, Loading, SimpleText, Space, Stack, useOnMount, View } from '@o/ui'
 import { Box } from 'gloss'
 import { capitalize } from 'lodash'
 import React, { createElement, isValidElement, memo, Suspense, useRef, useState } from 'react'
@@ -40,7 +40,15 @@ export const Example = memo(
     // const route = useCurrentRoute()
     const [showSource, setShowSource] = useState(true)
     const [hovered, setHovered] = useState(false)
+    const [show, setShow] = useState(false)
     const tm = useRef(null)
+
+    useOnMount(() => {
+      let tm = setTimeout(() => {
+        setShow(true)
+      })
+      return () => clearTimeout(tm)
+    })
 
     if (!source || !id) {
       return children || null
@@ -49,18 +57,8 @@ export const Example = memo(
     const exampleElement = isValidElement(examples[id]) ? examples[id] : createElement(examples[id])
 
     const exampleRef = useRef()
-    const [hasIntersected, setHasIntersected] = useState(false)
-    useIntersectionObserver({
-      disable: hasIntersected,
-      ref: exampleRef,
-      onChange(entries) {
-        if (entries.some(x => x.isIntersecting)) {
-          setHasIntersected(true)
-        }
-      },
-    })
 
-    const contents = hasIntersected && (
+    const contents = show && (
       <ExampleContainer {...props}>
         {!onlySource && (
           <ExampleHalf

@@ -257,7 +257,7 @@ export function extractStyles(
             const depth = (view?.internal?.depth ?? -1) + 1
 
             for (const ns in styles) {
-              const info = StaticUtils.getStyles(styles[ns], depth)
+              const info = StaticUtils.getStyles(styles[ns], depth, ns)
               if (shouldPrintDebug) {
                 console.log('got static extract', name, ns, info, styles[ns])
               }
@@ -275,9 +275,9 @@ export function extractStyles(
               out.conditionalClassNames = {}
               for (const prop in conditionalStyles) {
                 out.conditionalClassNames[prop] = ''
-                for (const key in conditionalStyles[prop]) {
-                  const val = conditionalStyles[prop][key]
-                  const info = StaticUtils.getStyles(val, depth)
+                for (const ns in conditionalStyles[prop]) {
+                  const val = conditionalStyles[prop][ns]
+                  const info = StaticUtils.getStyles(val, depth, ns)
                   if (info) {
                     cssMap.set(info.className, { css: info.css, commentTexts: [] })
                     out.conditionalClassNames[prop] += ` ${info.className}`

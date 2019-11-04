@@ -929,12 +929,12 @@ export type StaticStyleDesc = {
   ns: string
 }
 
-function getAllStyles(props: any, depth = 0) {
+function getAllStyles(props: any, depth = 0, ns = '.') {
   if (!props) {
     return []
   }
-  const allStyles = { ['.']: {} }
-  mergeStyles('.', allStyles, props)
+  const allStyles = { [ns]: {} }
+  mergeStyles(ns, allStyles, props)
   const styles: StaticStyleDesc[] = []
   const namespaces = getSortedNamespaces(allStyles)
   for (const ns of namespaces) {
@@ -951,8 +951,8 @@ function getAllStyles(props: any, depth = 0) {
 /**
  * For use externally only (static style extract)
  */
-function getStyles(props: any, depth = 0) {
-  return getAllStyles(props, depth)[0] ?? null
+function getStyles(props: any, depth = 0, ns = '.') {
+  return getAllStyles(props, depth, ns)[0] ?? null
 }
 
 /**

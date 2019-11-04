@@ -3,7 +3,6 @@ import { Button, gloss, Icon, scrollTo, Section, Space, Stack, SurfacePassProps,
 import React, { memo } from 'react'
 
 import { colors } from '../colors'
-import { Navigation } from '../Navigation'
 import { linkProps } from '../useLink'
 import { CodeBlock } from '../views/CodeBlock'
 import { MDX } from '../views/MDX'
@@ -34,24 +33,12 @@ export const DocsContents = memo(
         >
           <Stack direction="horizontal" marginTop={80} width="100%" space>
             {!!prevItem && (
-              <Button
-                onClick={e => {
-                  e.preventDefault()
-                  Navigation.navigate(`/docs/${prevItem['id']}`, { replace: true })
-                }}
-              >
+              <Button {...linkProps(`/docs/${prevItem['id']}`)}>
                 Previous: {prevItem['title']}
               </Button>
             )}
             {!!nextItem && (
-              <Button
-                onClick={e => {
-                  e.preventDefault()
-                  Navigation.navigate(`/docs/${nextItem['id']}`, { replace: true })
-                }}
-              >
-                Next: {nextItem['title']}
-              </Button>
+              <Button {...linkProps(`/docs/${nextItem['id']}`)}>Next: {nextItem['title']}</Button>
             )}
           </Stack>
         </SurfacePassProps>

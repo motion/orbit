@@ -30,6 +30,7 @@ export const DynamicList = memo(
       },
       [measureKey],
     )
+    console.log('list height', height, ref)
     return (
       <div data-is="DynamicListChrome" ref={ref as any} style={{ overflow: 'hidden', flex: 1 }}>
         <DynamicSizeList ref={listRef} width={width} height={height} {...props} />

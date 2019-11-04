@@ -40,7 +40,7 @@ export const DocsList = memo((props: { shouldRenderAll?: boolean }) => {
           groupName: `Current Page`,
           ...curRow.current,
         },
-        { separator: `Results for "${docsStore.search}"`, selectable: false },
+        { separator: `Results for "${docsStore.search}"`, selectable: false, hideBorder: true },
       ]
     }
     items = [...items, ...results]

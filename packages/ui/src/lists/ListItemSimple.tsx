@@ -91,8 +91,10 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
   }
 
   const iconElement = showIcon && getIcon(props)
+  const paddingIn = selectDefined(padding, 12)
+  const paddingVerticalPx = Array.isArray(paddingIn) ? +paddingIn[0] : +paddingIn
   // @ts-ignore TODO
-  const listItemAdjustedPadding = paddingTheme({ padding: selectDefined(padding, 12) })
+  const listItemAdjustedPadding = paddingTheme({ padding: paddingIn })
   const space = listItemAdjustedPadding ? listItemAdjustedPadding.paddingTop : undefined
 
   const hasChildren = showChildren && !!children
@@ -223,7 +225,7 @@ const ListItemInner = memo(function ListItemInner(props: ListItemSimpleProps) {
             )}
             {showSubtitle && (
               <>
-                <Space size={space / 2} />
+                <Space size={paddingVerticalPx / 2} />
                 <ListItemSubtitle>
                   {!!location && locationElement}
                   {!!subTitle &&

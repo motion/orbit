@@ -124,6 +124,7 @@ const SimpleInput = ({
           onKeyDown,
           onKeyUp,
           onKeyPress,
+          color: 'inherit',
           ...elementProps,
         }),
         [nodeRef, value, defaultValue, placeholder, tagName, elementProps],

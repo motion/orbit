@@ -20,11 +20,7 @@ export const DocsList = memo((props: { shouldRenderAll?: boolean }) => {
     if (props.shouldRenderAll) {
       await sleep(1400) // wait for intro animation
       await whenIdle()
-      await sleep(50)
-      await whenIdle()
-      await sleep(50)
-      await whenIdle()
-      await sleep(50)
+      await sleep(150)
       await whenIdle()
       setMounted(true)
     }

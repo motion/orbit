@@ -84,6 +84,7 @@ export const DocsContents = memo(
               marginRight={30}
               size="md"
               alpha={0.65}
+              fontWeight={400}
               hoverStyle={{
                 color: colors.purple,
               }}
@@ -91,7 +92,6 @@ export const DocsContents = memo(
               <Stack direction="horizontal" margin={[0, 0, -8]}>
                 {!!types && (
                   <Button
-                    iconSize={16}
                     icon="properties"
                     tooltip="Component Props"
                     onClick={e => {
@@ -104,7 +104,6 @@ export const DocsContents = memo(
                 )}
                 {!!source && (
                   <Button
-                    iconSize={16}
                     icon="code"
                     tooltip="View Component Source"
                     onClick={e => {
@@ -117,7 +116,6 @@ export const DocsContents = memo(
                 )}
                 {!!source && (
                   <Button
-                    iconSize={16}
                     icon="code"
                     tooltip="View Source for this Page"
                     onClick={e => {

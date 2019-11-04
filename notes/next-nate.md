@@ -1,34 +1,8 @@
-site final fixes:
-
-- header link transitions on click need to delay more
-- home: image changes on FeatureSection
-- home: parallax come in earlier
-- home: allinone flex spacing is off on sections, dots dont hl
-- apps: inputs are flat
-- apps: text not selectable
-- apps: shorten grid height
-- about: improve manifesto / writing
-- docs: fix a few search bugs
-- docs: tables broken
-- docs: just load all the example sections
-- docs: slimmer search area at top, entire bg blur
-- docs: tooltips, fix animation not working
-- docs: filter (remove for now)
-- docs: dark mode hover on listitem not showing
-- blog: its too wide for some reason
-- blog: fix up update one formatting
-- blog: write update 2 draft 2 (new working title: Orbit is a Longshot)
-- concurrent mode!
-
-
 current best bet for a viable product:
 
-theres three paths:
-
 1. workflow / automated flows (Zapier)
-2. more journal-like default app, documents + sheets (ObservableHQ, Jupyter)
-3. devtools: dx, introspection, maybe visual app building (Retool)
-4. data T-SNE + other stats/ml plugins, biggish data focus + viz (downstream palantir)
+2. devtools: dx, introspection, maybe visual app building (Retool)
+3. data T-SNE + other stats/ml plugins, biggish data focus + viz (downstream palantir)
 
 
 ---

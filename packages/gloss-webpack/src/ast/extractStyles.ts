@@ -53,6 +53,7 @@ let hasParsedViewInformation = false
 export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
+  outDir: string,
   { cacheObject }: Options,
   options: ExtractStylesOptions,
 ): {
@@ -995,8 +996,8 @@ domNode: ${domNode}
   // Write out CSS using it's className, this gives us de-duping for shared classnames
   for (const [className, entry] of cssMap.entries()) {
     const content = `${entry.commentTexts.map(txt => `${txt}\n`).join('')}${entry.css}`
-    const relFileName = `./${className}__gloss.css`
-    const filename = path.join(sourceDir, relFileName)
+    const relFileName = `${outDir}/${className}__gloss.css`
+    const filename = relFileName
     // append require/import statement to the document
     if (content !== '') {
       css.push({ filename, content })

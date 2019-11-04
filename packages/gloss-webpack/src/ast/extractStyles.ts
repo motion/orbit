@@ -541,6 +541,7 @@ export function extractStyles(
             inlinePropCount++
             return true
           }
+
           // if one or more spread operators are present and we haven't hit the last one yet, the prop stays inline
           if (lastSpreadIndex > -1 && idx <= lastSpreadIndex) {
             inlinePropCount++
@@ -593,9 +594,17 @@ export function extractStyles(
 
           // allow statically defining a change from one prop to another (see Stack)
           if (typeof cssAttributes[name] === 'object') {
-            const definition = cssAttributes[name]
-            name = definition.name
-            value = definition.value[value]
+            if (t.isStringLiteral(value)) {
+              const definition = cssAttributes[name]
+              name = definition.name
+              value = definition.value[value.value]
+              staticAttributes[name] = value
+              return false
+            } else {
+              console.log('couldnt parse a user defined cssAttribute', name, value)
+              inlinePropCount++
+              return true
+            }
           }
 
           // if value can be evaluated, extract it and filter it out
@@ -676,7 +685,7 @@ domNode: ${domNode}
         // used later to generate classname for item
         const stylesByClassName: { [key: string]: string } = {}
 
-        const depth = (view?.internal?.depth ?? 1) + (localView?.parent?.internal?.depth ?? 0)
+        const depth = (view?.internal?.depth ?? 1) + (localView?.parent?.internal?.depth ?? 1)
         const addStyles = (styleObj: any) => {
           const allStyles = StaticUtils.getAllStyles(styleObj, depth)
           for (const info of allStyles) {

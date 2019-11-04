@@ -30,21 +30,21 @@ const guides = [
     ...titleItem,
   },
 
-  {
-    selectable: false,
-    hideBorder: true,
-    children: <ListSubTitle paddingTop={30}>Examples</ListSubTitle>,
-  },
-  {
-    id: 'databaseviewer',
-    title: 'Database Viewer',
-    ...titleItem,
-  },
-  {
-    id: 'customermanager',
-    title: 'Customer Manager',
-    ...titleItem,
-  },
+  // {
+  //   selectable: false,
+  //   hideBorder: true,
+  //   children: <ListSubTitle paddingTop={30}>Examples</ListSubTitle>,
+  // },
+  // {
+  //   id: 'databaseviewer',
+  //   title: 'Database Viewer',
+  //   ...titleItem,
+  // },
+  // {
+  //   id: 'customermanager',
+  //   title: 'Customer Manager',
+  //   ...titleItem,
+  // },
 ]
 
 const uikit = [
@@ -58,8 +58,8 @@ const uikit = [
     ),
   },
 
-  { id: 'ui-layout', title: 'Laying out your interface', ...titleItem },
-  { id: 'ui-hooks', title: 'Hooks', ...titleItem },
+  // { id: 'ui-layout', title: 'Laying out your interface', ...titleItem },
+  // { id: 'ui-hooks', title: 'Hooks', ...titleItem },
   // { id: 'ui-themes', title: 'Themes', ...titleItem },
   // { id: 'customSurfaces', title: 'Customizing surfaces', ...titleItem },
   // { id: 'templates', title: 'Templates', ...titleItem },

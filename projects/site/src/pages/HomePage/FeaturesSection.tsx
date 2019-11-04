@@ -60,7 +60,7 @@ export default memo(function FeaturesSection() {
           <View flex={1}>
             <ParallaxStageItem stagger={0}>
               <TitleText fontWeight={300} size="sm" alpha={0.5}>
-                Introducing a new type of thing
+                Create internal apps with
               </TitleText>
               <Space />
               <TitleText
@@ -69,9 +69,9 @@ export default memo(function FeaturesSection() {
                 size="xxl"
                 sizeLineHeight={0.85}
               >
-                An all-in-one
+                The all-in-one
                 <br />
-                data/app studio
+                app workspace
               </TitleText>
             </ParallaxStageItem>
             <ParallaxStageItem stagger={1}>

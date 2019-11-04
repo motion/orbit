@@ -48,10 +48,10 @@ export const HomePage = memo(() => {
         <Page {...props} maxHeight={700}>
           <Sections.IntroSection />
         </Page>
-        <Page {...props}>
+        <Page {...props} height="100vh">
           <Sections.AllInOnePitchDemoSection />
         </Page>
-        <Page {...props} maxHeight={750}>
+        <Page {...props} maxHeight={850}>
           <Sections.DeploySection />
         </Page>
         <Page {...props} maxHeight={950}>

@@ -9,7 +9,7 @@ import { SectionContent } from '../../views/SectionContent'
 
 const IntroPara = ({ delayIndex, stagger, ...props }) => (
   <FadeInView parallax delayIndex={delayIndex} stagger={stagger}>
-    <Paragraph alpha={0.85} size={1.5} fontWeight={200} sizeLineHeight={1.4} {...props} />
+    <Paragraph alpha={0.85} size={1.4} fontWeight={200} sizeLineHeight={1.4} {...props} />
   </FadeInView>
 )
 
@@ -26,7 +26,7 @@ export default function IntroSection() {
         x="-5%"
         zIndex={-1}
         opacity={0.3}
-        scale={2.5}
+        scale={3}
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
       />
       <Page.BackgroundParallax
@@ -34,7 +34,7 @@ export default function IntroSection() {
         offset={0.45}
         x="-5%"
         zIndex={0}
-        opacity={0.05}
+        opacity={0.1}
         scale={0.5}
         background="radial-gradient(circle closest-side, #FFF358, #FFF358 80%, transparent 85%, transparent)"
       />
@@ -78,8 +78,8 @@ export default function IntroSection() {
               &nbsp;with a powerful internal tool platform.
             </IntroPara>
             <IntroPara delayIndex={2} stagger={-0.5}>
-              A better default toolkit for common apps, making it far easier to code powerful apps
-              for teams. With easy data plugins, a rich view kit, and a collaborative app-store.
+              It's a powerful platform to build common apps for teams. With easy data plugins, a
+              rich view kit, and a collaborative app-store.
             </IntroPara>
             <IntroPara delayIndex={3} stagger={-1}>
               Think of it as Bootstrap, designed for internal apps.

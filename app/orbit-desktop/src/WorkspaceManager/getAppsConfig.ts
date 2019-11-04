@@ -90,7 +90,7 @@ export async function getAppsConfig(
     // always development
     mode: 'development',
     outputDir: baseOutputDir,
-    extractStaticStyles: true,
+    extractStaticStyles: false,
     publicPath: '/',
     outputFile: 'base.dll.js',
     output: {
@@ -211,7 +211,7 @@ export async function getAppsConfig(
             target: 'web',
             hot: true,
             watch,
-            extractStaticStyles: true,
+            extractStaticStyles: false,
           },
           extraConfig[name],
         )
@@ -233,7 +233,7 @@ export async function getAppsConfig(
         watch,
         hot: true,
         dllReferences,
-        extractStaticStyles: true,
+        extractStaticStyles: false,
         output: {
           library: '__orbit_main',
         },
@@ -332,7 +332,7 @@ async function getSharedDllParams(params: WebpackParams): Promise<WebpackParams>
   // shared libraries
   return {
     name: `shared`,
-    extractStaticStyles: true,
+    extractStaticStyles: false,
     injectHot: join(require.resolve('@o/kit'), '..', '..', 'src', 'index.ts'),
     entry: [...new Set(allPackages)],
     ignore: ['electron-log', 'configstore', 'typeorm'],

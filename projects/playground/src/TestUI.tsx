@@ -2,14 +2,16 @@ import { Button, CardSimple, Parallax, Stack, Title, View } from '@o/ui'
 import _ from 'lodash'
 import * as React from 'react'
 
+import { TestUIMotion } from './TestUIMotion'
+
 export function TestUI() {
   return (
     <>
       {/* <TestMediaQueries /> */}
       {/* <TestUIPopovers /> */}
-      <TestUIGlossSpeed />
+      {/* <TestUIGlossSpeed /> */}
       {/* <TestUIEditor /> */}
-      {/* <TestUIMotion /> */}
+      <TestUIMotion />
       {/* <TestUIAnimation /> */}
       {/* <TestUIParallax /> */}
       {/* <TestCSSVariables /> */}

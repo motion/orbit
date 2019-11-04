@@ -156,7 +156,6 @@ export class DatabaseManager {
         spaceConfig: {},
         appState: {},
         settings: {
-          hasOnboarded: false,
           openShortcut: 'Option+Space',
           autoLaunch: true,
           autoUpdate: true,

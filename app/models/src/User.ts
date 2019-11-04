@@ -1,5 +1,4 @@
 export interface UserSettings {
-  hasOnboarded?: boolean
   autoUpdate?: boolean
   autoLaunch?: boolean
   theme?: 'dark' | 'light' | 'automatic'

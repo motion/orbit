@@ -33,9 +33,7 @@ export class OnboardManager {
 
   async start() {
     const user = await getRepository(UserEntity).findOne({})
-    if (!user.settings.hasOnboarded) {
-      this.scanHistory()
-    }
+    this.scanHistory()
   }
 
   async scanHistory() {

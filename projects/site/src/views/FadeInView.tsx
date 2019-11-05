@@ -243,8 +243,10 @@ export type UseFadePageProps = FadeInProps & { off?: boolean }
 
 // trigger initial animations only after page is ready
 const FadeViewListeners = new Set()
+let hasLoadedFadeViews = false
 export const startFadeViews = () => {
   FadeViewListeners.forEach(x => x())
+  hasLoadedFadeViews = true
 }
 
 export const useFadePage = ({
@@ -257,9 +259,13 @@ export const useFadePage = ({
   const store = FadeStoreContext.useCreateStore({ disable: props.disable }, { react: false })
 
   useEffect(() => {
-    FadeViewListeners.add(() => {
+    if (hasLoadedFadeViews) {
       store.setPageShown()
-    })
+    } else {
+      FadeViewListeners.add(() => {
+        store.setPageShown()
+      })
+    }
   }, [])
 
   useIntersectionObserver({

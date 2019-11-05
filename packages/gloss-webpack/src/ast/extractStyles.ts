@@ -396,6 +396,8 @@ export function extractStyles(
         const originalNodeName = node.name.name
         const localView = localStaticViews[originalNodeName]
         let view = views[originalNodeName]
+        // for parentView config
+        let extraDepth = 0
         let domNode = 'div'
 
         let staticStyleConfig: GlossView<any>['staticStyleConfig'] | null = null
@@ -404,6 +406,7 @@ export function extractStyles(
           // lets us have plain functional views like Stack
           if (staticStyleConfig.parentView) {
             view = staticStyleConfig.parentView
+            extraDepth = 1
           }
           domNode = view.staticStyleConfig?.tagName
             ?? view.internal?.glossProps.defaultProps.tagName
@@ -685,7 +688,7 @@ domNode: ${domNode}
         // used later to generate classname for item
         const stylesByClassName: { [key: string]: string } = {}
 
-        const depth = (view?.internal?.depth ?? 1) + (localView?.parent?.internal?.depth ?? 1)
+        const depth = (view?.internal?.depth ?? 1) + (localView?.parent?.internal?.depth ?? 1) + extraDepth
         const addStyles = (styleObj: any) => {
           const allStyles = StaticUtils.getAllStyles(styleObj, depth)
           for (const info of allStyles) {

@@ -333,7 +333,7 @@ export const effects = {
 
   setPane(appId: string, opts: { avoidScroll?: boolean; avoidZoom?: boolean } = {}) {
     paneManagerStore.setPane(appId)
-    orbitSearchResultsStore.setSelectedApp(appId)
+    orbitSearchResultsStore.setSelectedApp(+appId)
 
     // scroll to pane if its in carousel
     if (!opts.avoidScroll) {

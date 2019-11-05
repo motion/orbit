@@ -177,8 +177,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     })
   }, [innerRef])
 
-  console.warn('render OrbitPage')
-
   return (
     <MainShortcutHandler handlers={handlers}>
       {!false && <OrbitHeader />}

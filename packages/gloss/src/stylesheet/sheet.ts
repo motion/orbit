@@ -51,6 +51,13 @@ export class StyleSheet {
   }
 
   insert(key: string, rule: string) {
+    // this helps catch a nasty class of bugs where you insert an accidental huge string/object
+    // that you didn't meant to pass into css, causing big slowdowns
+    if (__DEV__) {
+      if (rule.length > 2000) {
+        debugger
+      }
+    }
     const tag = this.tag
     if (!tag) {
       return

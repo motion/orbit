@@ -146,6 +146,10 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
     if (value.getCSSValue) {
       return value.getCSSValue()
     }
+    // remove any weird looking objects (non-plain)
+    if (value.constructor.name !== 'Object') {
+      return
+    }
     const res = processObject(key, value, options)
     if (res !== undefined) {
       return res

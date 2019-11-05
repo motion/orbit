@@ -1,4 +1,5 @@
 import '../public/styles/base.css'
+import 'requestidlecallback-polyfill'
 
 /**
  *  ⚠️    ⚠️    ⚠️    ⚠️    ⚠️    ⚠️
@@ -96,6 +97,8 @@ async function main() {
   // we've already started, ignore
   if (getGlobalConfig()) return
 
+  await initPolyfills()
+
   // if you want to show a loading screen, do it above here
   await fetchInitialConfig()
 
@@ -192,6 +195,23 @@ async function startApp(forceRefresh: boolean | 'mode' = false) {
   } else {
     ReactDOM.render(elements, RootNode)
   }
+}
+
+async function initPolyfills() {
+  let polyfills: any[] = []
+  // polyfills
+  if (!Array.prototype.flatMap) {
+    polyfills.push(import('array-flat-polyfill'))
+  }
+  if (!window['IntersectionObserver']) {
+    polyfills.push(import('intersection-observer'))
+  }
+  if (!window['ResizeObserver']) {
+    polyfills.push(async () => {
+      window['ResizeObserver'] = (await import('resize-observer-polyfill')).default
+    })
+  }
+  await Promise.all(polyfills.map(x => x()))
 }
 
 // hot reloading

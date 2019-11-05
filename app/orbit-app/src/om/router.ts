@@ -343,6 +343,7 @@ export const effects = {
         appsCarouselStore.scrollToIndex(index, !opts.avoidZoom)
       }
     }
+
     // focus input after page navigate
     headerStore.focus()
   },

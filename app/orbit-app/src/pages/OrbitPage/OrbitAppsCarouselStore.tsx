@@ -125,17 +125,21 @@ class OrbitAppsCarouselStore {
   setScrollSpring(index: number) {
     if (index === this.scrollOut.value.get()) return
     if (this.rowRef.current) {
+      console.trace('setscrollspring')
       clearTimeout(this.uncontrolledTm)
-      console.log('this triggers a layout calculation...')
-      // @ts-ignore
-      this.rowRef.current.style.scrollSnapType = 'initial'
-      this.controlled = true
+      if (!this.controlled) {
+        console.log('this triggers a layout calculation...')
+        // @ts-ignore
+        this.rowRef.current.style.scrollSnapType = 'initial'
+        this.controlled = true
+      }
       this.scrollOut.value.set(index)
     }
   }
 
   // after we finish animation we need to go back to scroll snap
   setUncontrolled = () => {
+    console.warn('set unctronolled')
     this.controlled = false
     this.scrollOut.value.stop()
     // @ts-ignore

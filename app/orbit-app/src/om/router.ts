@@ -133,7 +133,7 @@ const showPage: Operator<HistoryItem> = pipe(
 
 const getFirstApp = om => {
   return om.state.apps.activeApps.find(
-    x => x.tabDisplay !== 'hidden' && !!getAppDefinition(x.identifier!).app,
+    x => x.tabDisplay !== 'hidden' && !!getAppDefinition(x.identifier!)?.app,
   )
 }
 
@@ -146,13 +146,14 @@ type ShowAppPageProps = {
 }
 
 const showHomePage: Action<ShowAppPageProps | null> = (om, item) => {
-  const firstApp = getFirstApp(om)
-  if (firstApp) {
-    const id = `${firstApp.id}`
-    om.actions.router.showAppPage({ ...item, id })
-  } else {
-    console.log('no home app found')
-  }
+  om.actions.router.showPage({ ...item, name: 'home', path: '/' })
+  // const firstApp = getFirstApp(om)
+  // if (firstApp) {
+  //   const id = `${firstApp.id}`
+  //   om.actions.router.showAppPage({ ...item, id })
+  // } else {
+  //   console.log('no home app found')
+  // }
 }
 
 const showChromePage: Action = om => {

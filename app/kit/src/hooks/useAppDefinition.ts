@@ -61,7 +61,7 @@ export function useAppDefinition(identifier?: string | false): AppDefinition | n
   }
   const id = identifier || (appStore ? appStore.identifier || '' : '') || ''
   if (!id) {
-    console.error('no definition', identifier)
+    console.error('no definition!', identifier)
     return null
   }
   return getAppDefinition(id) || null

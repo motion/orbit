@@ -16,16 +16,14 @@ export default function DeploySection() {
   const Fade = useFadePage()
   return (
     <Fade.FadeProvide>
-      {/* pink left */}
       <Page.BackgroundParallax
-        speed={0.7}
+        speed={0.5}
         offset={0}
         top="-20%"
         bottom="-20%"
-        scale={1.3}
-        className="glow-two"
-        opacity={0.14}
-        background="radial-gradient(circle closest-side, #2F30C9, transparent)"
+        scale={1.5}
+        opacity={0.34}
+        background="radial-gradient(circle closest-side, #9930C9, transparent)"
         parallax={geometry => ({
           y: geometry.useParallax(),
           x: geometry.useParallax().transform(x => x * 1 - 240),
@@ -37,7 +35,7 @@ export default function DeploySection() {
         offset={0.4}
         scale={1.5}
         opacity={0.24}
-        background="radial-gradient(circle closest-side, #FF0033, transparent)"
+        background="radial-gradient(circle closest-side, #550033, transparent)"
       />
 
       <SpacedPageContent

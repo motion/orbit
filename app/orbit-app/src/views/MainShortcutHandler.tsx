@@ -47,8 +47,6 @@ export default memo(function MainShortcutHandler(props: {
   const shortcutStore = useShortcutStore({ react: false })!
   const { actions, effects } = useOm()
 
-  console.warn('rendering main shortcut handler')
-
   const handlers = useMemo(() => {
     let res: any = {
       COMMAND_NEW: actions.router.showSetupAppPage,

@@ -15348,12 +15348,19 @@ overmind-devtools@^20.3.0:
     overmind-devtools-client "2.3.0"
     ws "^7.0.0"
 
-overmind-react@20.2.0, overmind-react@^20.2.0:
+overmind-react@20.2.0:
   version "20.2.0"
   resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-20.2.0.tgz#c771d10263b6a55fa815733cec3b531116b43cb1"
   integrity sha512-xdIJw0e/9n10MQMzpXqfw6DcY3aYRBQjR/krxtpPFnOu7Fe3UM/dGUtZMvawgnHQT7GQrurFpJeqJL3FUfqoAA==
   dependencies:
     overmind "19.2.0"
+
+overmind-react@^21.0.0:
+  version "21.0.0"
+  resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-21.0.0.tgz#34a1e656b206687e0d915155b0384862c37ca4f2"
+  integrity sha512-MTCPa6G+Y4RtMr2xPrWkXI32eBLCHzrpvRbC6F57arauh6OIAWpoSkaOsonqAL/mUpRuJD2Oswvh9qEAZ8q/AA==
+  dependencies:
+    overmind "20.0.0"
 
 overmind-themes@1.0.2:
   version "1.0.2"
@@ -15364,7 +15371,7 @@ overmind-themes@1.0.2:
     color "^3.0.0"
     tslib "^1.9.3"
 
-overmind@19.2.0, overmind@^19.2.0:
+overmind@19.2.0:
   version "19.2.0"
   resolved "https://registry.npmjs.org/overmind/-/overmind-19.2.0.tgz#2f0d57e6da4f4669ed95dec3975e111091613327"
   integrity sha512-wR8atU5RoE8iXvZS3MKrAKbn52fncKUktSQu17eIf1ihbrslAiO2InipwGdr4m8HGdvOgTiBPi5s/ygn6bMsyw==
@@ -15372,6 +15379,15 @@ overmind@19.2.0, overmind@^19.2.0:
     betsy "1.0.2"
     is-plain-obj "^1.1.0"
     proxy-state-tree "4.4.3"
+
+overmind@20.0.0, overmind@^20.0.0:
+  version "20.0.0"
+  resolved "https://registry.npmjs.org/overmind/-/overmind-20.0.0.tgz#7f2d59c3cde031a77747f5f5137391dcc4d0e0d4"
+  integrity sha512-+wxeoqtfPtG8JK+zBSwlyYZAddL0xFPmq47BHNsFosXN1D53NLANNR+MiiJ6fXzkWRPf1pURxq6DkJNqB8EB7w==
+  dependencies:
+    betsy "1.0.2"
+    is-plain-obj "^1.1.0"
+    proxy-state-tree "4.5.0"
 
 p-cancelable@^0.3.0:
   version "0.3.0"
@@ -16886,6 +16902,13 @@ proxy-state-tree@4.4.3:
   version "4.4.3"
   resolved "https://registry.npmjs.org/proxy-state-tree/-/proxy-state-tree-4.4.3.tgz#b3d127085f1e98ec533f1ddfa8a2a8e6b43bdb19"
   integrity sha512-ucXlGp6fVCLhiwA+Gx8ePvA47S+JFTgJbj7gHBPr2vyaDX1RXrAjmy1OwdChsL3/3ogLc2xkJGn9p+p2DaIC7Q==
+  dependencies:
+    is-plain-obj "^1.1.0"
+
+proxy-state-tree@4.5.0:
+  version "4.5.0"
+  resolved "https://registry.npmjs.org/proxy-state-tree/-/proxy-state-tree-4.5.0.tgz#f96cc7907f35cfe81209661ba56f4846f877a654"
+  integrity sha512-UaLQKwuQv0j9vhtwd4qj27PdF3VPLca89FfJGwTObtU3dYf1stCatIBwew7Y7geH1IbaoFN+V4DO2EQeJ476AQ==
   dependencies:
     is-plain-obj "^1.1.0"
 

@@ -46,7 +46,7 @@ export class PaneManagerStore {
     return this.activePaneFast
   }
 
-  setPane = (id: string) => {
+  setPane(id: string) {
     if (this.panes.some(pane => pane.id === id)) {
       this.paneId = id
     }

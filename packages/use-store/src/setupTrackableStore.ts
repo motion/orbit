@@ -81,7 +81,6 @@ export function setupTrackableStore(
         update.__debug_update__.action = 'deepKeysObserver'
         update.__debug_update__.info = deepKeys
       }
-      console.log('deep keys observer triggered updating')
       queueUpdate(update)
     },
   )

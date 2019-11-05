@@ -3,7 +3,7 @@ import { App } from '@o/stores'
 import { Divider, Dock, DockButton, DockButtonProps, FloatingCard, ListPassProps, memoizeWeak, Stack, useDebounceValue, usePosition, useWindowSize, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { partition } from 'lodash'
-import React, { memo, useContext, useMemo, useRef } from 'react'
+import React, { memo, useCallback, useContext, useMemo, useRef } from 'react'
 
 import { useOm } from '../../om/om'
 import { appsDrawerStore, paneManagerStore, useAppsDrawerStore } from '../../om/stores'
@@ -278,7 +278,7 @@ const OrbitDockButton = memo(function OrbitDockButton({
         hoverStyle={{
           opacity: 1,
         }}
-        onClick={useMemo(() => {
+        onClick={useCallback(() => {
           om.actions.router.showAppPage({ id: `${app.id!}` })
         }, [app])}
         icon={definition.icon || 'layers'}

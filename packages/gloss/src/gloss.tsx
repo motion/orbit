@@ -591,7 +591,7 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
     '.': {},
   }
   // all the "rest" go onto default props
-  let defaultProps: any = allProps
+  let defaultProps: any = getGlossDefaultProps(allProps)
   let conditionalStyles = mergeStyles('.', styles, rest, false, defaultProps) ?? null
   const internalDefaultProps = defaultProps
   // merge parent config
@@ -626,6 +626,17 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
     defaultProps,
     internalDefaultProps,
   }
+}
+
+// excludes gloss internal props and leaves style/html props
+function getGlossDefaultProps(props: any) {
+  const x = {}
+  for (const key in props) {
+    if (key === 'conditional' || key === 'config') continue
+    if (isSubStyle(key)) continue
+    x[key] = props[key]
+  }
+  return x
 }
 
 /**

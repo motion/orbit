@@ -1,7 +1,7 @@
-import { Grid, Space, Stack, StackProps, TitleRow } from '@o/ui'
+import { Grid, Space, Stack, StackProps, TitleRow, View } from '@o/ui'
 import { compose, mount, route, withView } from 'navi'
 import React from 'react'
-import { View } from 'react-navi'
+import { View as NaviView } from 'react-navi'
 
 import { Header } from '../Header'
 import { linkProps } from '../useLink'
@@ -20,7 +20,7 @@ export default compose(
   withView(() => {
     return (
       <GuidesPage>
-        <View />
+        <NaviView />
       </GuidesPage>
     )
   }),
@@ -115,13 +115,15 @@ export function GuidesPageIndex() {
   )
 }
 
-export function GuidesLayout({ children, title, ...props }: StackProps & { title: string }) {
+export function GuidesLayout({ children, title }: StackProps & { title: string }) {
   return (
     <>
       <SectionContent minHeight={500} padding="xxl">
-        <TitleRow size="lg" title={title} bordered padding />
-        <Space size="xl" />
-        <Stack space="xl">{children}</Stack>
+        <View padding={[0, 50]} sm-padding={0}>
+          <TitleRow size="lg" title={title} bordered padding />
+          <Space size="xl" />
+          <Stack space="xl">{children}</Stack>
+        </View>
       </SectionContent>
       <GuidesFooter />
     </>

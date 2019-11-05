@@ -167,7 +167,7 @@ export default memo(() => {
               <PillButton>Build</PillButton>
             </FadeInView>
             <FadeInView parallax delayIndex={1}>
-              <TitleText textAlign="center" size="xxl">
+              <TitleText textAlign="center" size="xxxl">
                 Batteries included
               </TitleText>
             </FadeInView>

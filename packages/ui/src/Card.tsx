@@ -82,7 +82,7 @@ export function Card(props: CardProps) {
       // caused this inner node to not size as it should, this fixes it!
       transform="translate3d(0, 0, 0)"
       suspense
-      background={backgroundTheme}
+      background={props.background ?? backgroundTheme}
       {...innerColProps}
     >
       {showChildren && children}

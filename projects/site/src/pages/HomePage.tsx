@@ -4,6 +4,7 @@ import React, { lazy, memo, Suspense, useEffect, useLayoutEffect, useRef, useSta
 
 import { requestIdleCallback } from '../etc/requestIdle'
 import { Header } from '../Header'
+import { startFadeViews } from '../views/FadeInView'
 import { Page } from '../views/Page'
 import { SectionContent } from '../views/SectionContent'
 import FeaturesSection from './HomePage/FeaturesSection'
@@ -30,10 +31,30 @@ const props = {
   minHeight: 'max-content',
 }
 
+let hasLoadedOnce = false
+setTimeout(() => {
+  hasLoadedOnce = true
+}, 100)
+
 export const HomePage = memo(() => {
+  let [loading, setLoading] = useState(!hasLoadedOnce)
+
+  useLayoutEffect(() => {
+    if (hasLoadedOnce) return
+    onLoadAllImages().then(() => {
+      window['requestIdleCallback'](() => {
+        setLoading(false)
+        hasLoadedOnce = true
+        setTimeout(() => {
+          startFadeViews()
+        }, 20)
+      })
+    })
+  }, [])
+
   return (
     <>
-      <LoadingPage />
+      <LoadingPage loading={loading} />
       <Header />
       <main
         className="main-contents"
@@ -48,10 +69,10 @@ export const HomePage = memo(() => {
         <Page {...props} maxHeight={700}>
           <Sections.IntroSection />
         </Page>
-        <Page {...props}>
+        <Page {...props} height="100vh">
           <Sections.AllInOnePitchDemoSection />
         </Page>
-        <Page {...props} maxHeight={750}>
+        <Page {...props} maxHeight={850}>
           <Sections.DeploySection />
         </Page>
         <Page {...props} maxHeight={950}>
@@ -165,5 +186,26 @@ function retry<A>(fn, retriesLeft = 5, interval = 1000) {
           retry(fn, retriesLeft - 1, interval).then(x => resolve(x as A), reject)
         }, interval)
       })
+  })
+}
+
+function onLoadAllImages() {
+  return new Promise(res => {
+    let imgs = Array.from(document.images).filter(x => !x.complete)
+    let len = imgs.length
+    let counter = 0
+
+    if (!len) return res()
+
+    for (const img of imgs) {
+      img.addEventListener('load', incrementCounter, false)
+    }
+
+    function incrementCounter() {
+      counter++
+      if (counter === len) {
+        res()
+      }
+    }
   })
 }

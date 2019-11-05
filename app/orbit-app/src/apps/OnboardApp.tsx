@@ -46,14 +46,6 @@ class OnboardStore {
       ...space,
       onboarded: true,
     })
-    // const user = om.state.user.user
-    // await save(UserModel, {
-    //   ...user,
-    //   settings: {
-    //     ...user.settings,
-    //     hasOnboarded: true,
-    //   },
-    // })
     om.actions.router.showAppPage({ id: 'apps' })
   }
 }

@@ -1,6 +1,6 @@
 import { createStoreContext } from '@o/kit'
 import { MotionProps, useIntersectionObserver, useParallaxContainer, View, ViewProps } from '@o/ui'
-import React, { memo, useCallback, useRef } from 'react'
+import React, { memo, useCallback, useEffect, useRef } from 'react'
 
 import { ParallaxProp, ParallaxStageItem } from './ParallaxStage'
 
@@ -110,9 +110,16 @@ const FadeStoreContext = createStoreContext(
       disable: boolean
     }
     shownInternal = false
+    pageShown = false
+
     get shown() {
-      return !this.props.disable && this.shownInternal
+      return this.pageShown && !this.props.disable && this.shownInternal
     }
+
+    setPageShown() {
+      this.pageShown = true
+    }
+
     setShown() {
       this.shownInternal = true
     }
@@ -234,6 +241,12 @@ const fullscreenStyle = {
 
 export type UseFadePageProps = FadeInProps & { off?: boolean }
 
+// trigger initial animations only after page is ready
+const FadeViewListeners = new Set()
+export const startFadeViews = () => {
+  FadeViewListeners.forEach(x => x())
+}
+
 export const useFadePage = ({
   delay = 0,
   threshold = 0.1,
@@ -242,6 +255,13 @@ export const useFadePage = ({
 }: UseFadePageProps = {}) => {
   const ref = useRef(null)
   const store = FadeStoreContext.useCreateStore({ disable: props.disable }, { react: false })
+
+  useEffect(() => {
+    FadeViewListeners.add(() => {
+      store.setPageShown()
+    })
+  }, [])
+
   useIntersectionObserver({
     ref,
     options: { threshold: threshold, rootMargin: props.intersection },
@@ -254,6 +274,7 @@ export const useFadePage = ({
       }
     },
   })
+
   return {
     ref,
     FadeProvide: useCallback(({ children }) => {

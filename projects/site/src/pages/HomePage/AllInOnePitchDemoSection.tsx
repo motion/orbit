@@ -14,20 +14,26 @@ import { PillButtonDark } from '../../views/PillButtonDark'
 import { TiltSquircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
-import { TitleTextSub } from './TitleTextSub'
 
 const SubSection = props => (
-  <View minWidth={200} alignItems="center" padding={['sm', true]} {...props} />
+  <View
+    data-is="SubSection"
+    flex={1}
+    minWidth={200}
+    alignItems="center"
+    padding={['sm', true]}
+    {...props}
+  />
 )
 
 const Dot = gloss(Box, {
   borderRadius: 100,
-  width: 9,
-  height: 9,
+  width: 8,
+  height: 8,
   border: [5, 'transparent'],
-  margin: [0, 10],
+  margin: [0, 8],
   background: [255, 255, 255, 0.5],
-  opacity: 0.5,
+  opacity: 0.35,
   cursor: 'pointer',
   transition: 'all ease 300ms',
 
@@ -35,8 +41,10 @@ const Dot = gloss(Box, {
     opacity: 0.8,
   },
 
-  activeStyle: {
-    opacity: 1,
+  conditional: {
+    isActive: {
+      opacity: 1,
+    },
   },
 })
 
@@ -171,11 +179,11 @@ export default memo(() => {
                 Batteries included
               </TitleText>
             </FadeInView>
-            <TitleTextSub margin="auto" minWidth={320}>
+            {/* <TitleTextSub margin="auto" minWidth={320}>
               <FadeInView parallax sm-display="inline" delayIndex={2}>
                 Import, display, build, and export. Easier than ever.
               </FadeInView>
-            </TitleTextSub>
+            </TitleTextSub> */}
           </>
         }
       >
@@ -194,10 +202,6 @@ export default memo(() => {
             <SubSection flex={2} padding={[false, 'xxl']}>
               <FadeInView parallax delayIndex={4} {...fadeAnimations.up}>
                 <PillButtonDark>Display</PillButtonDark>
-                <Space />
-                <CenterText maxWidth={400} margin={[0, 'auto']}>
-                  Rich, powerful views to display data & tasks easily.
-                </CenterText>
               </FadeInView>
             </SubSection>
             <SubSection maxWidth="33%">
@@ -238,11 +242,10 @@ export default memo(() => {
               </FadeInView>
             </FlexView>
             <FlexView
-              className="test-me-out"
               flex={2}
               alignItems="center"
               position="relative"
-              margin={0}
+              margin={[-90, 0, 0]}
               sm-margin={[0, '-5%']}
             >
               <FadeInView parallax width="100%" delayIndex={6} {...fadeAnimations.up}>
@@ -395,9 +398,9 @@ export default memo(() => {
             </FlexView>
           </Stack>
 
-          <FadeInView parallax delayIndex={8} flexFlow="row" margin={[42, 'auto', 0]}>
+          <FadeInView parallax delayIndex={8} flexFlow="row" margin={[15, 'auto', 0]}>
             {[0, 1, 2].map(x => (
-              <Dot key={`dot-${x}`} active={x === index} onClick={() => goTo(x)} />
+              <Dot key={`dot-${x}`} isActive={x === index} onClick={() => goTo(x)} />
             ))}
           </FadeInView>
         </Stack>

@@ -582,8 +582,9 @@ export function mergeStyles(
 }
 
 function stylesToClassNames(stylesByNs: any) {
+  if (!stylesByNs) return null
   const statics: { [key: string]: ClassNames } = {}
-  for (const ns of stylesByNs) {
+  for (const ns in stylesByNs) {
     const styles = stylesByNs[ns]
     statics[ns] = addRules('', styles, ns, false)
   }

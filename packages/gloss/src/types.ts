@@ -86,7 +86,6 @@ export type GlossBaseProps<Props = {}> = {
 export type GlossViewConfig<Props = {}> = {
   displayName?: string
   ignoreAttrs?: { [key: string]: boolean }
-  shouldAvoidProcessingStyles?: (props: Props) => boolean
   postProcessProps?: (curProps: Props, nextProps: any, getFinalStyles: () => CSSPropertySet) => any
   getElement?: (props: Props) => any
   isDOMElement?: boolean

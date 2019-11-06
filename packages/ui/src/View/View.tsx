@@ -22,7 +22,6 @@ export const View = gloss<ViewPropsPlain>(Flex, {
   },
 
   config: {
-    // shouldAvoidProcessingStyles: shouldRenderToMotion,
     postProcessProps(inProps, outProps, getStyles) {
       if (shouldRenderToMotion(inProps)) {
         let style = css(getStyles(), { snakeCase: false })

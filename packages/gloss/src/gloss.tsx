@@ -145,7 +145,6 @@ export function gloss<
   const targetElement = hasGlossyParent ? target.internal.targetElement : target
   const glossProps = getGlossProps(glossPropsObject ?? null, hasGlossyParent ? target : null)
   const config = glossProps.config
-  const staticClassNames = glossProps.staticClasses?.join(' ') ?? ''
 
   // calc before render
   const ignoreAttrs = glossProps.defaultProps?.ignoreAttrs ?? (hasGlossyParent && target.ignoreAttrs) ?? baseIgnoreAttrs
@@ -154,14 +153,6 @@ export function gloss<
   // static compilation information
   // just add conditional classnames right away, they are small
   const { compiledClassName, conditionalClassNames } = getCompiledClasses(target, compiledInfo || null, depth)
-
-  //!
-  // for (const key in glossProps.conditionalStyles) {
-  //   const names = addStyles(glossProps.conditionalStyles[key])
-  //   if (names) {
-  //     conditionalClassNames[key] = names.join(' ')
-  //   }
-  // }
 
   // put the "rest" of non-styles onto defaultProps
   GlossView.defaultProps = glossProps.defaultProps
@@ -247,10 +238,6 @@ export function gloss<
 
     // set up final props with filtering for various attributes
     let finalProps: any = {}
-    let avoidStyles = false
-    if (config?.shouldAvoidProcessingStyles) {
-      avoidStyles = config.shouldAvoidProcessingStyles(props)
-    }
 
     const dynClassNames = []
     dynClasses.current = dynClassNames

@@ -45,7 +45,6 @@ export const alphaColorTheme: ThemeFn<AlphaColorProps> = (props, previous) => {
   if (color) {
     if (props.applyThemeColor) {
       if (
-        typeof color !== 'string' &&
         color.originalInput !== 'inherit' &&
         typeof alpha === 'number'
       ) {
@@ -73,6 +72,8 @@ export const alphaColorTheme: ThemeFn<AlphaColorProps> = (props, previous) => {
     mergeStyles(unwrapProps(props), next, previous)
   }
 }
+
+alphaColorTheme.hoistTheme = true
 
 function merge(
   pseudoKey: string,

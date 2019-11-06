@@ -68,9 +68,11 @@ type GlossInternals<Props = any> = {
   }
 }
 
+type ClassNamesByNs = ({ [key: string]: ClassNames } | null)
+
 type GlossParsedProps<Props = any> = {
   staticClasses: string[] | null
-  statics: ({ [key: string]: ClassNames } | null)[]
+  statics: ClassNamesByNs[]
   config: GlossViewConfig<Props> | null
   defaultProps: Partial<Props> | null
   internalDefaultProps: any
@@ -248,11 +250,6 @@ export function gloss<
       avoidStyles = config.shouldAvoidProcessingStyles(props)
     }
 
-    if (themeFns) {
-      console.log('glossProps', glossProps)
-      console.log('what up doe', getClassNames(theme, themeFns, [], themeFns.length))
-    }
-
     const dynClassNames = []
     dynClasses.current = dynClassNames
 
@@ -276,7 +273,9 @@ export function gloss<
       }
     }
 
-    finalProps.className = getClassNames(theme, themeFns, glossProps.statics)
+    const classNames = getClassNames(theme, themeFns || [], glossProps.statics)
+    console.log('got em', glossProps, classNames)
+    finalProps.className = classNames.join(' ')
     // let className = staticClassNames
     // if (props.className) {
     //   className += ` ${props.className}`
@@ -295,7 +294,7 @@ export function gloss<
     // hook: setting your own props
     const postProcessProps = config && config.postProcessProps
     if (postProcessProps) {
-      postProcessProps(props, finalProps, () => getStylesForClassNames(className))
+      postProcessProps(props, finalProps, () => getStylesForClassNames(classNames))
     }
 
     if (isDeveloping && shouldDebug) {
@@ -345,7 +344,7 @@ export function gloss<
   return ThemedView as any
 }
 
-function getStylesForClassNames(_className: string) {
+function getStylesForClassNames(_classNames: string[]) {
   // TODO
   console.log('todo')
   return {}
@@ -567,14 +566,14 @@ function getConditionalStyles(conditionalStyles: Object) {
   return propStyles
 }
 
-function stylesToClassNames(stylesByNs: any) {
+function stylesToClassNamesByNS(stylesByNs: any) {
   if (!stylesByNs) return null
   const statics: { [key: string]: ClassNames } = {}
   for (const ns in stylesByNs) {
     const styles = stylesByNs[ns]
     if (ns === 'conditional') {
       for (const condition in styles) {
-        const next = stylesToClassNames(styles[condition])
+        const next = stylesToClassNamesByNS(styles[condition])
         if (next) {
           statics[condition] = next
         }
@@ -597,7 +596,7 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
   const styles = {}
   mergeStyles('.', styles, glossProp, true, defaultProps)
   const hasStyles = Object.keys(styles).length
-  const staticStyleDesc = hasStyles ? stylesToClassNames(styles) : null
+  const staticStyleDesc = hasStyles ? stylesToClassNamesByNS(styles) : null
   const statics = [staticStyleDesc, ...(parent?.internal.glossProps.statics ?? [])]
 
   const internalDefaultProps = defaultProps
@@ -650,12 +649,13 @@ type ClassNames = {
   [key: string]: string | ClassNames
 }
 
-function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNames[]) {
+function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNamesByNs[]): string[] {
   const classNames = {}
   const depth = styles.length
   for (let i = 0; i < depth; i++) {
     const themeStyles = themes[i] && getStylesFromThemeFns(themes[i], props)
     const staticStyles = styles[i]
+    console.log('depth', i, props['alpha'], themeStyles, themes[i], staticStyles)
     if (themeStyles) {
       for (const key in themeStyles) {
         mergeStyle(key, themeStyles[key], classNames)
@@ -663,20 +663,19 @@ function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNames[]) {
     }
     if (staticStyles) {
       for (const key in staticStyles) {
-        mergeStyle(key, themeStyles[key], classNames)
+        mergeStyle(key, staticStyles[key], classNames)
       }
     }
   }
-  console.log('ends with', classNames)
   return Object.values(classNames)
 }
 
-function mergeStyle(key: string, val: any, existing: ClassNames) {
+function mergeStyle(key: string, val: any, classNames: ClassNames) {
   // check for validity
   if (validCSSAttr[key]) {
     // dont overwrite as we go down in importance
-    if (existing[key]) return
-    addRule(key, val, '.', existing, true, '')
+    if (classNames[key]) return
+    addRule(key, cssValue(key, val, false, cssOpts), '.', classNames, true, '')
     return
   }
   // will be captured next in isSubStyle
@@ -684,10 +683,11 @@ function mergeStyle(key: string, val: any, existing: ClassNames) {
     key = pseudoProps[key]
   }
   if (isSubStyle(key)) {
-    existing[key] = existing[key] || {}
+    classNames[key] = classNames[key] || {}
+    console.log('what is', val)
     for (const skey in val[key]) {
-      if (existing[key][skey]) continue
-      addRule(skey, val, key, existing[key] as ClassNames, true, '')
+      if (classNames[key][skey]) continue
+      addRule(skey, cssValue(skey, val[key][skey], false, cssOpts), key, classNames[key] as ClassNames, true, '')
     }
     return
   }
@@ -792,18 +792,7 @@ export function compileThemes(viewOG: GlossView) {
     cur = conf.parent
   }
 
-  // we need to make sure theme priority is either above or below the static styles, depending.
-  // so if:
-  //   const Parent = gloss({ background: 'red' }).theme(changeBg)
-  //       changeBg *should* override background
-  // but if:
-  //   const Child = gloss(Parent, { background: 'green' })
-  //       background will *always* be green
-  // ALSO if changeBg.hoistTheme = true, we need to be sure its hoisted all the way up
-  // by putting an empty theme at the front if there are child themes, but no current theme,
-  // we ensure that the hoisted will always go at the top, as well as ensuring the depth/priority
-  // is kept as it should be
-  if (all.length && !hasOwnTheme) {
+  if (!hasOwnTheme) {
     all.unshift([])
   }
 
@@ -811,7 +800,7 @@ export function compileThemes(viewOG: GlossView) {
   if (hoisted.length) {
     all[0] = [
       ...hoisted,
-      ...all[0]
+      ...(all[0] || []),
     ]
   }
 
@@ -830,7 +819,9 @@ export function getStylesFromThemeFns(themeFns: ThemeFn[], themeProps: Object) {
     const next = themeFn(themeProps as any, styles)
     if (next) {
       styles = styles || {}
-      Object.assign(styles, next)
+      for (const key in next) {
+        styles[key] = styles[key] || next[key]
+      }
     }
   }
   return styles

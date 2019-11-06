@@ -254,33 +254,12 @@ export function gloss<
     }
 
     const dynClassNames = []
-    // const dynClassNames = addDynamicStyles(
-    //   ThemedView.displayName,
-    //   dynClasses.current,
-    //   theme as any,
-    //   themeFns,
-    //   avoidStyles,
-    // )
     dynClasses.current = dynClassNames
 
     const isDOMElement = typeof element === 'string' || (config ? config.isDOMElement : false)
 
-    let className = staticClassNames
-    if (props.className) {
-      className += ` ${props.className}`
-    }
-    if (dynClassNames.length) {
-      className += ' ' + dynClassNames.join(' ')
-    }
-    if (compiledClassName) {
-      className += compiledClassName
-    }
-
     for (const key in props) {
-      if (props[key] === true && conditionalClassNames[key]) {
-        className += ` ${conditionalClassNames[key]} `
-        continue
-      }
+      if (conditionalClassNames[key]) continue
       if (isDOMElement) {
         if (ignoreAttrs[key]) continue
         // TODO: need to figure out this use case: when a valid prop attr, but invalid val
@@ -297,7 +276,17 @@ export function gloss<
       }
     }
 
-    finalProps.className = className
+    finalProps.className = getClassNames(theme, themeFns, glossProps.statics)
+    // let className = staticClassNames
+    // if (props.className) {
+    //   className += ` ${props.className}`
+    // }
+    // if (dynClassNames.length) {
+    //   className += ' ' + dynClassNames.join(' ')
+    // }
+    // if (compiledClassName) {
+    //   className += compiledClassName
+    // }
 
     if (isDeveloping) {
       finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
@@ -492,11 +481,11 @@ const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
 
 export function mergeStyles(
   id: string,
-  styles: Object,
+  styles: { [key: string]: any },
   nextStyles?: CSSPropertySet | null | void,
   overwrite?: boolean,
   rest?: Object
-): { [key: string]: any } | undefined {
+): Object | undefined {
   if (!nextStyles) return
   for (const key in nextStyles) {
     // dont overwrite as we go down
@@ -607,7 +596,6 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
 
   const styles = {}
   mergeStyles('.', styles, glossProp, true, defaultProps)
-  console.log('styles', styles, glossProp?.conditional)
   const hasStyles = Object.keys(styles).length
   const staticStyleDesc = hasStyles ? stylesToClassNames(styles) : null
   const statics = [staticStyleDesc, ...(parent?.internal.glossProps.statics ?? [])]
@@ -662,8 +650,9 @@ type ClassNames = {
   [key: string]: string | ClassNames
 }
 
-function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNames[], depth: number) {
+function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNames[]) {
   const classNames = {}
+  const depth = styles.length
   for (let i = 0; i < depth; i++) {
     const themeStyles = themes[i] && getStylesFromThemeFns(themes[i], props)
     const staticStyles = styles[i]
@@ -678,6 +667,7 @@ function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNames[], de
       }
     }
   }
+  console.log('ends with', classNames)
   return Object.values(classNames)
 }
 

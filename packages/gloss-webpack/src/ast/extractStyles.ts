@@ -235,10 +235,12 @@ export function extractStyles(
             }
 
             // uses the base styles if necessary, merges just like gloss does
+            if (shouldPrintDebug) console.log('view?.internal?.depth', view?.internal?.depth)
+            const depth = (view?.internal?.depth ?? -1) + 1
             const { styles, conditionalStyles, defaultProps, internalDefaultProps } = getGlossProps(
               propObject,
               view,
-              view?.internal?.depth ?? 0
+              depth
             )
             if (shouldPrintDebug) {
               console.log('glossCall.arguments parse gloss props', name, styles, conditionalStyles)
@@ -253,8 +255,6 @@ export function extractStyles(
               out.className = defaultProps.className
               delete defaultProps.className
             }
-
-            const depth = (view?.internal?.depth ?? -1) + 1
 
             for (const ns in styles) {
               const info = StaticUtils.getStyles(styles[ns], depth, ns)

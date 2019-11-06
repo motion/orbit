@@ -79,8 +79,8 @@ export default function IntroSection() {
               &nbsp;with a powerful internal tool platform.
             </IntroPara>
             <IntroPara delayIndex={2} stagger={-0.5}>
-              It's a powerful platform to build common apps for teams. With easy data plugins, a
-              rich view kit, and a collaborative app-store.
+              An easy, beautiful workspace where you can install and build apps. Easy data plugins,
+              a rich view kit, and a collaborative app-store.
             </IntroPara>
             <IntroPara delayIndex={3} stagger={-1}>
               {wordsWithBrandMark(`Think of it as Bootstrap, for internal apps.`)}

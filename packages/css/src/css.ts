@@ -8,7 +8,7 @@ import { px, stringHash } from './helpers'
 
 export { GlossPropertySet } from './cssPropertySet'
 export { configureCSS } from './config'
-export { validCSSAttr } from './constants'
+export { validCSSAttr, cssAttributeAbbreviations } from './constants'
 export {
   CSSPropertySet,
   CSSPropertySetResolved,

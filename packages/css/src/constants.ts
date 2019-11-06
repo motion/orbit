@@ -12,6 +12,21 @@ export const validCSSAttr: Partial<ValidCSSPropertyMap> =
     ? require('./validCSSAttribute.node').default
     : require('./validCSSAttribute.dom').default
 
+const existing = new Set()
+export const cssAttributeAbbreviations = Object.keys(validCSSAttr).reduce((acc, key) => {
+  let found = ''
+  let i = 1
+  while (true) {
+    found = key.slice(0, i)
+    if (!existing.has(found)) break
+    i++
+  }
+  existing.add(found)
+  acc[key] = found
+  return acc
+}, {})
+console.log('cssAttributeAbbreviations', cssAttributeAbbreviations)
+
 // various helpful constants
 
 export const UNDEFINED = 'undefined'

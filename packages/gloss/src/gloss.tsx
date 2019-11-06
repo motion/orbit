@@ -1,4 +1,4 @@
-import { CSSPropertySet, CSSPropertySetLoose, cssStringWithHash, stringHash, validCSSAttr } from '@o/css'
+import { cssAttributeAbbreviations, CSSPropertySet, CSSPropertySetLoose, cssValue, stringHash, validCSSAttr } from '@o/css'
 import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
@@ -383,7 +383,7 @@ function addStyles(
   selectorPrefix?: string
 ) {
   const namespaces = getSortedNamespaces(styles)
-  let classNames: string[] | null = null
+  let allClassNames: string[] | null = null
   for (const ns of namespaces) {
     const style = styles[ns]
     // they may return falsy, conditional '&:hover': active ? hoverStyle : null
@@ -392,21 +392,24 @@ function addStyles(
     // add the stylesheets and classNames
     // TODO could do a simple "diff" so that fast-changing styles only change the "changing" props
     // it would likely help things like when you animate based on mousemove, may be slower in default case
-    const className = addRules(displayName, style, ns, depth || 0, selectorPrefix, true)
+    const classNames = addRules(displayName, style, ns, depth || 0, selectorPrefix, true)
 
-    if (className) {
-      classNames = classNames || []
-      classNames.push(className)
+    if (classNames.length) {
+      allClassNames = allClassNames || []
+      // @ts-ignore
+      allClassNames = [...allClassNames, ...classNames]
       // if this is the first mount render or we didn't previously have this class then add it as new
-      if (!prevClassNames || !prevClassNames.includes(className)) {
-        gc.registerClassUse(className.slice(2))
+      for (const className of classNames) {
+        if (!prevClassNames || !prevClassNames.includes(className)) {
+          gc.registerClassUse(className)
+        }
       }
     }
   }
   if (isDeveloping && shouldDebug) {
-    console.log('addStyles sorted', classNames, namespaces, styles)
+    console.log('addStyles sorted', allClassNames, namespaces, styles)
   }
-  return classNames
+  return allClassNames
 }
 
 // sort pseudos into priority
@@ -783,92 +786,55 @@ const createParentKey = (k: string) => {
   return next
 }
 
+// : (A extends true ? string[] : {
+//   css: string,
+//   className: string
+// }) | null
 function addRules<A extends boolean>(
   displayName = '_',
   rules: BaseRules,
   namespace: string,
-  depth: number,
-  selectorPrefix?: string,
+  _depth: number,
+  _selectorPrefix?: string,
   insert?: A,
-): (A extends true ? string : {
-  css: string,
-  className: string
-}) | null {
-  const [hash, style] = cssStringWithHash(rules, cssOpts)
-
-  // empty object, no need to add anything
-  if (!hash) {
-    return null
-  }
-
-  let className = `${hash}`
-  // build the class name with the display name of the styled component and a unique id based on the css and namespace
-  // ensure we are unique for unique namespaces
-  if (namespace !== '.') {
-    const postfix = nicePostfix[namespace] || stringHash(namespace)
-    className += `-${postfix}`
-  }
-  if (selectorPrefix) {
-    className += parentKeys[selectorPrefix] || createParentKey(selectorPrefix)
-  }
-
+): string[] {
   const isMediaQuery = namespace[0] === '@'
-  const selector = getSelector(className, namespace, selectorPrefix)
-  const css = isMediaQuery ? `${namespace} {${selector} {${style}}}` : `${selector} {${style}}`
-  const finalClassName = `g${depth}${className}`
+  const classNames: string[] = []
 
-  if (insert === true) {
-    // this is the first time we've found this className
-    if (!tracker.has(className)) {
-      // insert the new style text
-      tracker.set(className, {
-        displayName,
-        namespace,
-        rules,
-        selector,
-        style,
-        className,
-      })
-      sheet.insert(isMediaQuery ? namespace : selector, css)
+  for (const key in rules) {
+    const val = cssValue(key, rules[key], false, cssOpts)
+    const style = `${key}: ${val}`
+    const className = cssAttributeAbbreviations[key] + stringHash(val)
+    let selector = `.${className}`
+    if (namespace[0] === '&' || namespace.indexOf('&') !== -1) {
+      selector = namespace.split(',').map(part => `.${className} ${part.replace('&', '')}`).join(',')
     }
-    // @ts-ignore
-    return finalClassName
+    const css = isMediaQuery ? `${namespace} {${selector} {${style}}}` : `${selector} {${style}}`
+    if (className !== undefined) {
+      classNames.push(className)
+      if (insert === true) {
+        // this is the first time we've found this className
+        if (!tracker.has(className)) {
+          // insert the new style text
+          tracker.set(className, {
+            displayName,
+            namespace,
+            rules,
+            selector,
+            style,
+            className,
+          })
+          sheet.insert(isMediaQuery ? namespace : selector, css)
+        }
+      }
+    }
   }
+
+  return classNames
 
   // @ts-ignore
-  return { css, className: finalClassName }
+  // return { css, className: finalClassName }
 }
-
-// has to return a .s-id and .id selector for use in parents passing down styles
-function getSelector(className: string, namespace: string, selectorPrefix = '') {
-  if (namespace[0] === '@') {
-    // media queries need stronger binding, we'll do html selector
-    return getSpecificSelectors(className, selectorPrefix + 'body')
-  }
-  if (namespace[0] === '&' || namespace.indexOf('&') !== -1) {
-    // namespace === '&:hover, &:focus, & > div'
-    const namespacedSelectors = namespace
-      .split(',')
-      .flatMap(part => {
-        return getSpecificSelectors(className, selectorPrefix, part.replace('&', ''))
-      })
-      .join(',')
-    return namespacedSelectors
-  }
-  return getSpecificSelectors(className, selectorPrefix)
-}
-
-// for now, assume now more than 6 levels nesting (css = 🤮)
-const depths = [0, 1, 2, 3, 4, 5]
-const dSelectors = depths.map(i => i === 0 ? '' : `._g${i}`.repeat(i))
-function getSpecificSelectors(base: string, parent = '', after = '') {
-  let s: string[] = []
-  for (const i of depths) {
-    s.push(`${parent}${dSelectors[i]} .g${i}${base}${after}`)
-  }
-  return s.join(',')
-}
-
 
 // some internals we can export
 if (typeof window !== 'undefined') {
@@ -953,6 +919,7 @@ function getAllStyles(props: any, depth = 0, ns = '.') {
     if (!styleObj) continue
     const info = addRules('', styleObj, ns, depth, '', false)
     if (info) {
+      // @ts-ignore
       styles.push({ ns, ...info, })
     }
   }
@@ -1007,6 +974,7 @@ function getThemeStyles(view: GlossView, userTheme: CompiledTheme, props: any, e
         if (!styleObj) continue
         const info = addRules('', styleObj, ns, themeDepth, 'html ', false)
         if (info) {
+          // @ts-ignore
           themeStyles.push({ ns, ...info, })
         }
       }

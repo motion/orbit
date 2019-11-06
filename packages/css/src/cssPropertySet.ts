@@ -1068,7 +1068,7 @@ export type GenerateCSSPropertySet<A extends true | false> = {
   position?: CSSPropertyVal<position, A>
   quotes?: CSSPropertyVal<quotes, A>
   resize?: CSSPropertyVal<resize, A>
-  rest?: CSSPropertyVal<rest, A>
+  props?: CSSPropertyVal<rest, A>
   restAfter?: CSSPropertyVal<restAfter, A>
   restBefore?: CSSPropertyVal<restBefore, A>
   right?: CSSPropertyVal<number | string, A>

@@ -11,8 +11,8 @@ export type TextSizeProps = {
   fontSize?: Size
   size?: Size
   scale?: Size
-  marginTop?: number
-  marginBottom?: number
+  marginTop?: any
+  marginBottom?: any
 }
 
 export function textSizeTheme(props: TextSizeProps) {

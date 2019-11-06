@@ -3,9 +3,11 @@ import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
-import { createGlossIsEqual } from './createGlossIsEqual'
+import { compileConfig } from './helpers/compileConfig'
+import { compileThemes } from './helpers/compileThemes'
+import { createGlossIsEqual } from './helpers/createGlossIsEqual'
+import { styleKeysSort } from './helpers/styleKeysSort'
 import { validPropLoose, ValidProps } from './helpers/validProp'
-import { styleKeysSort } from './styleKeysSort'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
@@ -436,45 +438,8 @@ function mergePropStyles(styles: Object, propStyles: Object, props: Object) {
 
 function deregisterClassName(name: string) {
   // slice 2 to remove specifity
-  gc.deregisterClassUse(name.slice(2))
+  gc.deregisterClassUse(name)
 }
-
-// function addDynamicStyles(
-//   displayName: string = 'g',
-//   prevClassNames: string[] | null,
-//   props: GlossThemeProps,
-//   themeFns?: ThemeFn[][] | null,
-//   avoidStyles?: boolean,
-// ) {
-//   let dynClassNames: string[] = []
-
-//   if (!avoidStyles && props && themeFns) {
-//     for (const themeFnList of themeFns) {
-//       const themeStyles = getStylesFromThemeFns(themeFnList, props)
-//       if (Object.keys(themeStyles).length) {
-//         // make an object for each level of theme
-//         const curThemeObj = { ['.']: {} }
-//         mergeStyles('.', curThemeObj, themeStyles, false)
-//         console.log('applying theme', curThemeObj)
-//         const next = addStyles(curThemeObj, displayName, dynClassNames, prevClassNames)
-//         if (next) {
-//           dynClassNames = [...next, dynClassNames]
-//         }
-//       }
-//     }
-//   }
-
-//   // de-register removed classNames
-//   if (prevClassNames) {
-//     for (const className of prevClassNames) {
-//       if (dynClassNames.indexOf(className) === -1) {
-//         deregisterClassName(className)
-//       }
-//     }
-//   }
-
-//   return dynClassNames
-// }
 
 const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
 
@@ -718,101 +683,6 @@ function getGlossDefaultProps(props: any) {
   return x
 }
 
-/**
- * We need to compile a few things to get the config right:
- *   1. get all the parents postProcessProps until:
- *   2. encounter a parent with getElement (and use that isDOMElement)
- *   3. stop there, don't keep going higher
- */
-function compileConfig(
-  config: GlossViewConfig | null,
-  parent: GlossView | null,
-): GlossViewConfig {
-  const compiledConf: GlossViewConfig = { ...config }
-  let cur = parent
-  while (cur?.internal) {
-    const parentConf = cur.internal.glossProps.config
-    if (parentConf) {
-      if (parentConf.postProcessProps) {
-        // merge the postProcessProps
-        const og = compiledConf.postProcessProps
-        if (parentConf.postProcessProps !== og) {
-          compiledConf.postProcessProps = og
-            ? (a, b, c) => {
-                og(a, b, c)
-                parentConf.postProcessProps!(a, b, c)
-              }
-            : parentConf.postProcessProps
-        }
-      }
-      // find the first getElement and break here
-      if (parentConf.getElement) {
-        compiledConf.getElement = parentConf.getElement
-        compiledConf.isDOMElement = parentConf.isDOMElement
-        break
-      }
-    }
-    cur = cur.internal.parent
-  }
-  return compiledConf
-}
-
-// compile theme from parents
-export function compileThemes(viewOG: GlossView) {
-  let cur = viewOG
-  const hasOwnTheme = cur.internal.themeFns
-
-  // this is a list of a list of theme functions
-  // we run theme functions from parents before, working down to ours
-  // the parent ones have a lower priority, so we want them first
-  const added = new Set()
-  let all: ThemeFn[][] = []
-  const hoisted: ThemeFn[] = []
-
-  // get themes in order from most important (current) to least important (grandparent)
-  while (cur) {
-    const conf = cur.internal
-    if (conf.themeFns) {
-      let curThemes: ThemeFn[] = []
-      for (const fn of conf.themeFns) {
-        if (added.has(fn)) {
-          continue // prevent duplicates in parents
-        }
-        added.add(fn)
-        if (fn.hoistTheme) {
-          hoisted.push(fn)
-        } else {
-          curThemes.push(fn)
-        }
-      }
-      if (curThemes.length) {
-        all.push(curThemes)
-      }
-    }
-    cur = conf.parent
-  }
-
-  if (!hasOwnTheme) {
-    all.unshift([])
-  }
-
-  // hoisted always go onto starting of the cur theme
-  if (hoisted.length) {
-    all[0] = [
-      ...hoisted,
-      ...(all[0] || []),
-    ]
-  }
-
-  const themes = all.filter(Boolean)
-
-  if (!themes.length) {
-    return null
-  }
-
-  return themes
-}
-
 export function getStylesFromThemeFns(themeFns: ThemeFn[], themeProps: Object) {
   let styles: CSSPropertySetLoose = {}
   for (const themeFn of themeFns) {
@@ -953,5 +823,3 @@ function getCompiledClasses(parent: GlossView | any, compiledInfo: GlossStaticSt
 const replaceDepth = (className: string, depth: number) => {
   return className[0] === 'g' && +className[1] == +className[1] ? `g${depth}${className.slice(2)}` : className
 }
-
-

@@ -27,11 +27,14 @@ export const validCSSAttr: Partial<ValidCSSPropertyMap> = {
   }, {}),
 }
 
+// css attribute key abbreviations
 const existing = new Set()
-export const cssAttributeAbbreviations = Object.keys(validCSSAttr).reduce((acc, key) => {
+export const cssAttributeAbbreviations = {}
+export const cssAbbreviationToAttribute = {} // inverse
+for (const key in validCSSAttr) {
   let found = ''
   if (key.length < 4) {
-    found = `${key}`
+    found = `${key}-`
   } else {
     let i = 1
     while (true) {
@@ -40,23 +43,21 @@ export const cssAttributeAbbreviations = Object.keys(validCSSAttr).reduce((acc, 
       if (i > abbrevs.length) {
         found += `${i}`
       }
+      found += '-'
       if (!existing.has(found)) break
       i++
     }
   }
   existing.add(found)
-  acc[key] = found
-  return acc
-}, {})
-
+  cssAbbreviationToAttribute[found] = key
+  cssAttributeAbbreviations[key] = found
+}
 function getAbbrevs(key: string) {
   let options = [key[0]]
   const uppercases = key.match(/[A-Z]/g)
   if (uppercases) options = [...options, ...uppercases]
   return options
 }
-
-console.log('cssAttributeAbbreviations', cssAttributeAbbreviations)
 
 // various helpful constants
 

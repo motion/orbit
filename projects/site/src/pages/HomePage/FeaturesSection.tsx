@@ -73,7 +73,7 @@ export default memo(function FeaturesSection() {
               >
                 The all-in-one
                 <br />
-                app workspace
+                workspace
               </TitleText>
             </ParallaxStageItem>
             <ParallaxStageItem stagger={1}>
@@ -227,7 +227,7 @@ const sections = {
       {
         title: `One-click data sources`,
         icon: `data`,
-        body: [`Every app provides data, installs with a click.`],
+        body: [`Apps provide data, install with a click.`],
       },
       {
         title: 'Query Builder',

@@ -7,10 +7,25 @@ import { CSSPropertySet } from './cssPropertySet'
 type CSSPropertyKey = keyof CSSPropertySet
 type ValidCSSPropertyMap = { [key in CSSPropertyKey]: boolean }
 
-export const validCSSAttr: Partial<ValidCSSPropertyMap> =
+export const SHORTHANDS = {
+  borderLeftRadius: ['borderTopLeftRadius', 'borderBottomLeftRadius'],
+  borderRightRadius: ['borderTopRightRadius', 'borderBottomRightRadius'],
+  borderBottomRadius: ['borderBottomLeftRadius', 'borderBottomRightRadius'],
+  borderTopRadius: ['borderTopRightRadius', 'borderTopLeftRadius'],
+}
+
+const regularCSSAttributes =
   process.env.RENDER_TARGET === 'node'
     ? require('./validCSSAttribute.node').default
     : require('./validCSSAttribute.dom').default
+
+export const validCSSAttr: Partial<ValidCSSPropertyMap> = {
+  ...regularCSSAttributes,
+  ...Object.keys(SHORTHANDS).reduce((acc, key) => {
+    acc[key] = true
+    return acc
+  }, {}),
+}
 
 const existing = new Set()
 export const cssAttributeAbbreviations = Object.keys(validCSSAttr).reduce((acc, key) => {
@@ -69,13 +84,6 @@ export const TRANSFORM_KEYS_MAP = {
 }
 
 export const COMMA_JOINED = new Set(['boxShadow', 'transition'])
-
-export const SHORTHANDS = {
-  borderLeftRadius: ['borderTopLeftRadius', 'borderBottomLeftRadius'],
-  borderRightRadius: ['borderTopRightRadius', 'borderBottomRightRadius'],
-  borderBottomRadius: ['borderBottomLeftRadius', 'borderBottomRightRadius'],
-  borderTopRadius: ['borderTopRightRadius', 'borderTopLeftRadius'],
-}
 
 export const FALSE_VALUES = {
   background: 'transparent',

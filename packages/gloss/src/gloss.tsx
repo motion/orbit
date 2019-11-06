@@ -1,4 +1,4 @@
-import { CAMEL_TO_SNAKE, cssAttributeAbbreviations, CSSPropertySet, CSSPropertySetLoose, cssValue, stringHash, validCSSAttr } from '@o/css'
+import { CAMEL_TO_SNAKE, cssAttributeAbbreviations, CSSPropertySet, CSSPropertySetLoose, cssValue, SHORTHANDS, stringHash, validCSSAttr } from '@o/css'
 import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
@@ -783,49 +783,59 @@ function addRules<A extends boolean>(
   _selectorPrefix?: string,
   insert?: A,
 ): string[] {
-  const isMediaQuery = namespace[0] === '@'
   const classNames: string[] = []
-
   for (let key in rules) {
-    const abbrev = cssAttributeAbbreviations[key]
-    if (!abbrev) {
-      console.warn('what the key', key)
+    if (!cssAttributeAbbreviations[key]) {
+      // console.warn('what the key', key)
       continue
     }
     const val = cssValue(key, rules[key], false, cssOpts)
-    key = CAMEL_TO_SNAKE[key] || key
     if (val === undefined) continue
-    const style = `${key}:${val};`
-    const className = abbrev + stringHash(`${val}`)
-    let selector = `.${className}`
-    if (selector === '.NaN') debugger
-    if (namespace[0] === '&' || namespace.indexOf('&') !== -1) {
-      selector = namespace.split(',').map(part => `.${className} ${part.replace('&', '')}`).join(',')
-    }
-    const css = isMediaQuery ? `${namespace} {${selector} {${style}}}` : `${selector} {${style}}`
-    if (className !== undefined) {
-      classNames.push(className)
-      if (insert === true) {
-        // this is the first time we've found this className
-        if (!tracker.has(className)) {
-          // insert the new style text
-          tracker.set(className, {
-            displayName,
-            namespace,
-            selector,
-            style,
-            className,
-          })
-          sheet.insert(isMediaQuery ? namespace : selector, css)
-        }
+    if (SHORTHANDS[key]) {
+      for (let k of SHORTHANDS[key]) {
+        addRule(k, val, namespace, classNames, insert, displayName)
       }
+    } else {
+      addRule(key, val, namespace, classNames, insert, displayName)
     }
   }
-
   return classNames
 
   // @ts-ignore
   // return { css, className: finalClassName }
+}
+
+function addRule(key: string, val: string, namespace: string, classNames: string[], insert: any, displayName: string) {
+  const abbrev = cssAttributeAbbreviations[key]
+  key = CAMEL_TO_SNAKE[key] || key
+  const isMediaQuery = namespace[0] === '@'
+  if (!abbrev) {
+    debugger
+  }
+  const style = `${key}:${val};`
+  const className = abbrev + stringHash(`${val}`)
+  let selector = `.${className}`
+  if (namespace[0] === '&' || namespace.indexOf('&') !== -1) {
+    selector = namespace.split(',').map(part => `.${className} ${part.replace('&', '')}`).join(',')
+  }
+  const css = isMediaQuery ? `${namespace} {${selector} {${style}}}` : `${selector} {${style}}`
+  if (className !== undefined) {
+    classNames.push(className)
+    if (insert === true) {
+      // this is the first time we've found this className
+      if (!tracker.has(className)) {
+        // insert the new style text
+        tracker.set(className, {
+          displayName,
+          namespace,
+          selector,
+          style,
+          className,
+        })
+        sheet.insert(isMediaQuery ? namespace : selector, css)
+      }
+    }
+  }
 }
 
 // some internals we can export

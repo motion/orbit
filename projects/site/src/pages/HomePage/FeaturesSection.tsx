@@ -62,7 +62,9 @@ export default memo(function FeaturesSection() {
               <TitleText fontWeight={300} size="sm" alpha={0.5}>
                 Create internal apps with
               </TitleText>
-              <Space />
+            </ParallaxStageItem>
+            <Space />
+            <ParallaxStageItem stagger={1}>
               <TitleText
                 alignItems="flex-start"
                 justifyContent="flex-start"

@@ -7,7 +7,7 @@ import { GlossViewConfig } from '../types'
  *   2. encounter a parent with getElement (and use that isDOMElement)
  *   3. stop there, don't keep going higher
  */
-function compileConfig(
+export function compileConfig(
   config: GlossViewConfig | null,
   parent: GlossView | null,
 ): GlossViewConfig {

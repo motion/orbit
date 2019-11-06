@@ -6,6 +6,7 @@ import { px, stringHash } from './helpers'
 
 // exports
 
+export { SNAKE_TO_CAMEL, CAMEL_TO_SNAKE } from './cssNameMap'
 export { GlossPropertySet } from './cssPropertySet'
 export { configureCSS } from './config'
 export { validCSSAttr, cssAttributeAbbreviations } from './constants'

@@ -1,4 +1,4 @@
-import { cssAttributeAbbreviations, CSSPropertySet, CSSPropertySetLoose, cssValue, stringHash, validCSSAttr } from '@o/css'
+import { CAMEL_TO_SNAKE, cssAttributeAbbreviations, CSSPropertySet, CSSPropertySetLoose, cssValue, stringHash, validCSSAttr } from '@o/css'
 import React from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
@@ -88,7 +88,7 @@ export type GlossStaticStyleDescription = {
 
 const GlossComponentSymbol = Symbol('__GLOSS_SIMPLE_COMPONENT__') as any
 export const tracker: StyleTracker = new Map()
-export const sheet = new StyleSheet(true)
+export const sheet = new StyleSheet(false)
 const gc = new GarbageCollector(sheet, tracker)
 
 // helpful global to let us add debugging in dev mode anywhere in here
@@ -771,21 +771,6 @@ const cssOpts = {
   resolveFunctionValue: val => val(curTheme)
 }
 
-const nicePostfix = {
-  '&:hover': 'hover',
-  '&:active': 'active',
-  '&:disabled': 'disabled',
-  '&:focus': 'focus',
-  '&:focus-within': 'focuswithin',
-}
-
-const parentKeys = {}
-const createParentKey = (k: string) => {
-  const next = '-' + k.replace(/\s+/g, '')
-  parentKeys[k] = next
-  return next
-}
-
 // : (A extends true ? string[] : {
 //   css: string,
 //   className: string
@@ -801,11 +786,19 @@ function addRules<A extends boolean>(
   const isMediaQuery = namespace[0] === '@'
   const classNames: string[] = []
 
-  for (const key in rules) {
+  for (let key in rules) {
+    const abbrev = cssAttributeAbbreviations[key]
+    if (!abbrev) {
+      console.warn('what the key', key)
+      continue
+    }
     const val = cssValue(key, rules[key], false, cssOpts)
-    const style = `${key}: ${val}`
-    const className = cssAttributeAbbreviations[key] + stringHash(val)
+    key = CAMEL_TO_SNAKE[key] || key
+    if (val === undefined) continue
+    const style = `${key}:${val};`
+    const className = abbrev + stringHash(`${val}`)
     let selector = `.${className}`
+    if (selector === '.NaN') debugger
     if (namespace[0] === '&' || namespace.indexOf('&') !== -1) {
       selector = namespace.split(',').map(part => `.${className} ${part.replace('&', '')}`).join(',')
     }
@@ -819,7 +812,6 @@ function addRules<A extends boolean>(
           tracker.set(className, {
             displayName,
             namespace,
-            rules,
             selector,
             style,
             className,

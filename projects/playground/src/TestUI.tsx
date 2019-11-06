@@ -1,5 +1,6 @@
-import { View } from '@o/ui'
 import * as React from 'react'
+
+import { TestCSSVariables } from './TestCSSVariables'
 
 export function TestUI() {
   return (
@@ -11,12 +12,7 @@ export function TestUI() {
       {/* <TestUIMotion /> */}
       {/* <TestUIAnimation /> */}
       {/* <TestUIParallax /> */}
-      {/* <TestCSSVariables /> */}
-      <TestIndividualClassNames />
+      <TestCSSVariables />
     </>
   )
-}
-
-function TestIndividualClassNames() {
-  return <View />
 }

@@ -15,16 +15,32 @@ export const validCSSAttr: Partial<ValidCSSPropertyMap> =
 const existing = new Set()
 export const cssAttributeAbbreviations = Object.keys(validCSSAttr).reduce((acc, key) => {
   let found = ''
-  let i = 1
-  while (true) {
-    found = key.slice(0, i)
-    if (!existing.has(found)) break
-    i++
+  if (key.length < 4) {
+    found = `${key}`
+  } else {
+    let i = 1
+    while (true) {
+      const abbrevs = getAbbrevs(key)
+      found = abbrevs.slice(0, i).join('')
+      if (i > abbrevs.length) {
+        found += `${i}`
+      }
+      if (!existing.has(found)) break
+      i++
+    }
   }
   existing.add(found)
   acc[key] = found
   return acc
 }, {})
+
+function getAbbrevs(key: string) {
+  let options = [key[0]]
+  const uppercases = key.match(/[A-Z]/g)
+  if (uppercases) options = [...options, ...uppercases]
+  return options
+}
+
 console.log('cssAttributeAbbreviations', cssAttributeAbbreviations)
 
 // various helpful constants

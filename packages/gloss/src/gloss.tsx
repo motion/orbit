@@ -70,12 +70,11 @@ type GlossInternals<Props = any> = {
 
 type GlossParsedProps<Props = any> = {
   staticClasses: string[] | null
-  statics: { [key: string]: ClassNames }[]
+  statics: ({ [key: string]: ClassNames } | null)[]
   config: GlossViewConfig<Props> | null
   defaultProps: Partial<Props> | null
   internalDefaultProps: any
   styles: Object | null
-  conditionalStyles: Object | null
 }
 
 export type GlossStaticStyleDescription = {
@@ -151,12 +150,14 @@ export function gloss<
   // static compilation information
   // just add conditional classnames right away, they are small
   const { compiledClassName, conditionalClassNames } = getCompiledClasses(target, compiledInfo || null, depth)
-  for (const key in glossProps.conditionalStyles) {
-    const names = addStyles(glossProps.conditionalStyles[key])
-    if (names) {
-      conditionalClassNames[key] = names.join(' ')
-    }
-  }
+
+  //!
+  // for (const key in glossProps.conditionalStyles) {
+  //   const names = addStyles(glossProps.conditionalStyles[key])
+  //   if (names) {
+  //     conditionalClassNames[key] = names.join(' ')
+  //   }
+  // }
 
   // put the "rest" of non-styles onto defaultProps
   GlossView.defaultProps = glossProps.defaultProps
@@ -489,70 +490,41 @@ function deregisterClassName(name: string) {
 
 const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
 
-//
-// this... THIS...
-//  ... this is a tricky function
-//  because its used on initial mount AND during renders
-//  which is actually useful, yes, because you want the logic the same
-//  BUT its also used nested! See themeFn => mergePropStyles
-//  likely can be refactored, but just need to study it a bit before you do
-//
 export function mergeStyles(
   id: string,
-  baseStyles: Object,
+  styles: Object,
   nextStyles?: CSSPropertySet | null | void,
   overwrite?: boolean,
   rest?: Object
-): Object | undefined {
+): { [key: string]: any } | undefined {
   if (!nextStyles) return
-  // this is just for the conditional prop styles
-  let propStyles
   for (const key in nextStyles) {
     // dont overwrite as we go down
-    if (overwrite !== true && baseStyles[id][key] !== undefined) {
+    if (overwrite !== true && styles[id] && styles[id][key] !== undefined) {
       continue
     }
     if (key === 'conditional') {
-      // propStyles
-      //   definition: gloss({ conditional: { isTall: { height: '100%' } } })
-      //   usage: <Component isTall />
-      for (const pKey in nextStyles[key]) {
-        let subStyles = nextStyles[key][pKey]
-        propStyles = propStyles || {}
-        propStyles[pKey] = {}
-        // they can nest (media queries/psuedo), split it out, eg:
-        for (const sKey in subStyles) {
-          // key = isTall
-          // sKey = &:before
-          if (isSubStyle(sKey)) {
-            // keep all sub-styles on their key
-            propStyles[pKey] = propStyles[pKey] || {}
-            propStyles[pKey][sKey] = subStyles[sKey]
-          } else {
-            // we put base styles here, see 'base' check above
-            propStyles[pKey]['.'] = propStyles[pKey]['.'] || {}
-            propStyles[pKey]['.'][sKey] = subStyles[sKey]
-          }
-        }
-      }
+      styles.conditional = styles.conditional || {}
+      styles.conditional = getConditionalStyles(nextStyles[key])
       continue
     }
     if (validCSSAttr[key]) {
       // valid regular attr
-      baseStyles[id][key] = nextStyles[key]
+      styles[id] = styles[id] || {}
+      styles[id][key] = nextStyles[key]
     } else if (isSubStyle(key)) {
       for (const sKey in nextStyles[key]) {
-        if (overwrite === true || !baseStyles[key] || baseStyles[key][sKey] === undefined) {
-          baseStyles[key] = baseStyles[key] || {}
-          baseStyles[key][sKey] = nextStyles[key][sKey]
+        if (overwrite === true || !styles[key] || styles[key][sKey] === undefined) {
+          styles[key] = styles[key] || {}
+          styles[key][sKey] = nextStyles[key][sKey]
         }
       }
     } else {
       const pseudoKey = pseudoProps[key]
       if (pseudoKey) {
         // merge in case they defined it two different ways
-        baseStyles[pseudoKey] = baseStyles[pseudoKey] || {}
-        Object.assign(baseStyles[pseudoKey], nextStyles[key])
+        styles[pseudoKey] = styles[pseudoKey] || {}
+        Object.assign(styles[pseudoKey], nextStyles[key])
         continue
       }
 
@@ -564,8 +536,8 @@ export function mergeStyles(
           const mediaSelector = Config.mediaQueries[mediaName]
           if (mediaSelector) {
             const styleKey = key.slice(index + 1)
-            baseStyles[mediaSelector] = baseStyles[mediaSelector] || {}
-            baseStyles[mediaSelector][styleKey] = nextStyles[key]
+            styles[mediaSelector] = styles[mediaSelector] || {}
+            styles[mediaSelector][styleKey] = nextStyles[key]
             continue
           }
         }
@@ -577,7 +549,32 @@ export function mergeStyles(
       }
     }
   }
+}
 
+// conditional
+//   const Component = gloss({ conditional: { isTall: { height: '100%' } } })
+//   usage: <Component isTall />
+function getConditionalStyles(conditionalStyles: Object) {
+  let propStyles
+  for (const pKey in conditionalStyles) {
+    const subStyles = conditionalStyles[pKey]
+    propStyles = propStyles || {}
+    propStyles[pKey] = {}
+    // they can nest (media queries/psuedo), split it out, eg:
+    for (const sKey in subStyles) {
+      // key = isTall
+      // sKey = &:before
+      if (isSubStyle(sKey)) {
+        // keep all sub-styles on their key
+        propStyles[pKey] = propStyles[pKey] || {}
+        propStyles[pKey][sKey] = subStyles[sKey]
+      } else {
+        // we put base styles here, see 'base' check above
+        propStyles[pKey]['.'] = propStyles[pKey]['.'] || {}
+        propStyles[pKey]['.'][sKey] = subStyles[sKey]
+      }
+    }
+  }
   return propStyles
 }
 
@@ -586,7 +583,16 @@ function stylesToClassNames(stylesByNs: any) {
   const statics: { [key: string]: ClassNames } = {}
   for (const ns in stylesByNs) {
     const styles = stylesByNs[ns]
-    statics[ns] = addRules('', styles, ns, false)
+    if (ns === 'conditional') {
+      for (const condition in styles) {
+        const next = stylesToClassNames(styles[condition])
+        if (next) {
+          statics[condition] = next
+        }
+      }
+    } else {
+      statics[ns] = addRules('', styles, ns, false)
+    }
   }
   return statics
 }
@@ -596,14 +602,15 @@ function stylesToClassNames(stylesByNs: any) {
 // const staticClasses: string[] | null = addStyles(glossProps.styles, depth)
 export function getGlossProps(allProps: GlossProps | null, parent: GlossView | null): GlossParsedProps {
   const { config = null, ...glossProp } = allProps || {}
-  const styles = {
-    '.': {},
-  }
   // all the "glossProp" go onto default props
   let defaultProps: any = getGlossDefaultProps(allProps)
-  let conditionalStyles = mergeStyles('.', styles, glossProp, false, defaultProps) ?? null
 
-  const statics = stylesToClassNames(styles)
+  const styles = {}
+  mergeStyles('.', styles, glossProp, true, defaultProps)
+  console.log('styles', styles, glossProp?.conditional)
+  const hasStyles = Object.keys(styles).length
+  const staticStyleDesc = hasStyles ? stylesToClassNames(styles) : null
+  const statics = [staticStyleDesc, ...(parent?.internal.glossProps.statics ?? [])]
 
   const internalDefaultProps = defaultProps
   // merge parent config
@@ -613,17 +620,6 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
       defaultProps = {
         ...parentGlossProps.defaultProps,
         ...defaultProps,
-      }
-    }
-    const parentPropStyles = parentGlossProps.conditionalStyles
-    if (parentPropStyles) {
-      for (const key in parentPropStyles) {
-        conditionalStyles = conditionalStyles || {}
-        conditionalStyles[key] = conditionalStyles[key] || {}
-        conditionalStyles[key] = {
-          ...parentPropStyles[key],
-          ...conditionalStyles[key],
-        }
       }
     }
   }
@@ -636,7 +632,6 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
     statics,
     config: compileConfig(config, parent),
     styles,
-    conditionalStyles,
     defaultProps,
     internalDefaultProps,
   }

@@ -5,6 +5,11 @@ import { gloss } from 'gloss'
 const P2 = gloss(Paragraph, {
   color: 'red',
   fontSize: 25,
+  conditional: {
+    bigger: {
+      fontSize: 200,
+    },
+  },
 })
 //
 const React = require('react')
@@ -24,6 +29,7 @@ export const SiteRoot = () => {
       >
         123
       </P2>
+      <P2 bigger>123</P2>
     </ProvideUI>
   )
 }

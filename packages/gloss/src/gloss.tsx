@@ -9,10 +9,9 @@ import { styleKeysSort } from './styleKeysSort'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
 import { CompiledTheme } from './theme/createTheme'
-import { createThemeProxy } from './theme/createThemeProxy'
 import { pseudoProps } from './theme/pseudos'
 import { themeVariableManager } from './theme/ThemeVariableManager'
-import { ThemeTrackState, UnwrapThemeSymbol, useTheme } from './theme/useTheme'
+import { UnwrapThemeSymbol, useTheme } from './theme/useTheme'
 import { defaultTheme } from './themes/defaultTheme'
 import { GlossProps, GlossPropsPartial, GlossThemeProps, GlossViewConfig } from './types'
 
@@ -71,6 +70,7 @@ type GlossInternals<Props = any> = {
 
 type GlossParsedProps<Props = any> = {
   staticClasses: string[] | null
+  statics: { [key: string]: ClassNames }[]
   config: GlossViewConfig<Props> | null
   defaultProps: Partial<Props> | null
   internalDefaultProps: any
@@ -248,7 +248,7 @@ export function gloss<
     }
 
     if (themeFns) {
-      console.log('glossProps', glossProps.styles)
+      console.log('glossProps', glossProps)
       console.log('what up doe', getClassNames(theme, themeFns, [], themeFns.length))
     }
 
@@ -425,7 +425,7 @@ function addStyles(
 }
 
 // sort pseudos into priority
-const getSortedNamespaces = (styles: any) => {
+export const getSortedNamespaces = (styles: any) => {
   const keys = Object.keys(styles)
   if (keys.length > 1) {
     keys.sort(styleKeysSort)
@@ -497,7 +497,7 @@ const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
 //  BUT its also used nested! See themeFn => mergePropStyles
 //  likely can be refactored, but just need to study it a bit before you do
 //
-function mergeStyles(
+export function mergeStyles(
   id: string,
   baseStyles: Object,
   nextStyles?: CSSPropertySet | null | void,
@@ -581,6 +581,15 @@ function mergeStyles(
   return propStyles
 }
 
+function stylesToClassNames(stylesByNs: any) {
+  const statics: { [key: string]: ClassNames } = {}
+  for (const ns of stylesByNs) {
+    const styles = stylesByNs[ns]
+    statics[ns] = addRules('', styles, ns, false)
+  }
+  return statics
+}
+
 // happens once at initial gloss() call, so not as perf intense
 // get all parent styles and merge them into a big object
 // const staticClasses: string[] | null = addStyles(glossProps.styles, depth)
@@ -592,6 +601,9 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
   // all the "glossProp" go onto default props
   let defaultProps: any = getGlossDefaultProps(allProps)
   let conditionalStyles = mergeStyles('.', styles, glossProp, false, defaultProps) ?? null
+
+  const statics = stylesToClassNames(styles)
+
   const internalDefaultProps = defaultProps
   // merge parent config
   if (parent?.internal) {
@@ -620,6 +632,7 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
   const staticClasses = getUniqueStylesByClassName([...curStaticClasses, ...parentStaticClasses])
   return {
     staticClasses,
+    statics,
     config: compileConfig(config, parent),
     styles,
     conditionalStyles,
@@ -759,7 +772,7 @@ function compileConfig(
 }
 
 // compile theme from parents
-function compileThemes(viewOG: GlossView) {
+export function compileThemes(viewOG: GlossView) {
   let cur = viewOG
   const hasOwnTheme = cur.internal.themeFns
 
@@ -825,7 +838,7 @@ function compileThemes(viewOG: GlossView) {
   return themes
 }
 
-function getStylesFromThemeFns(themeFns: ThemeFn[], themeProps: Object) {
+export function getStylesFromThemeFns(themeFns: ThemeFn[], themeProps: Object) {
   let styles: CSSPropertySetLoose = {}
   for (const themeFn of themeFns) {
     const next = themeFn(themeProps as any, styles)
@@ -849,7 +862,7 @@ const cssOpts = {
 //   css: string,
 //   className: string
 // }) | null
-function addRules<A extends boolean>(
+export function addRules<A extends boolean>(
   displayName = '_',
   rules: BaseRules,
   namespace: string,
@@ -964,101 +977,4 @@ const replaceDepth = (className: string, depth: number) => {
   return className[0] === 'g' && +className[1] == +className[1] ? `g${depth}${className.slice(2)}` : className
 }
 
-/**
- * START external static style block (TODO move out to own thing)
- *
- * keeping it here for now because dont want to add more fns in sensitive loops above
- * this is a really hacky area right now as im just trying to figure out the right way
- * to do all of this, once it settles into something working we can set up some tests,
- * some performance checks, and then hopefully dedupe this code with the code above +
- * split it out and make it all a lot more clearly named/structured.
- */
 
-export type StaticStyleDesc = {
-  css: string,
-  className: string;
-  ns: string
-}
-
-function getAllStyles(props: any, _depth = 0, ns = '.') {
-  if (!props) {
-    return []
-  }
-  const allStyles = { [ns]: {} }
-  mergeStyles(ns, allStyles, props)
-  const styles: StaticStyleDesc[] = []
-  const namespaces = getSortedNamespaces(allStyles)
-  for (const ns of namespaces) {
-    const styleObj = allStyles[ns]
-    if (!styleObj) continue
-    const info = addRules('', styleObj, ns, false)
-    if (info) {
-      // @ts-ignore
-      styles.push({ ns, ...info, })
-    }
-  }
-  return styles
-}
-
-/**
- * For use externally only (static style extract)
- */
-function getStyles(props: any, depth = 0, ns = '.') {
-  return getAllStyles(props, depth, ns)[0] ?? null
-}
-
-/**
- * For use externally only (static style extract)
- * see addDynamicStyles equivalent
- */
-export type ThemeStyleInfo = {
-  trackState: ThemeTrackState | null,
-  themeStyles: StaticStyleDesc[] | null
-}
-
-function getThemeStyles(view: GlossView, userTheme: CompiledTheme, props: any, _extraDepth = 0): ThemeStyleInfo {
-  const themeFns = compileThemes(view)
-  if (!themeFns) {
-    return {
-      themeStyles: null,
-      trackState: null,
-    }
-  }
-  const trackState: ThemeTrackState = {
-    theme: userTheme,
-    hasUsedOnlyCSSVariables: true,
-    nonCSSVariables: new Set(),
-    usedProps: new Set()
-  }
-  // themes always one above, extraDepth if theres a local view
-  // const depth = view.internal.depth + extraDepth
-  const themeStyles: StaticStyleDesc[] = []
-  const len = themeFns.length - 1
-  const theme = createThemeProxy(userTheme, trackState, props)
-  for (const [index, themeFnList] of themeFns.entries()) {
-    // const themeDepth = depth - (len - index)
-    const styles = getStylesFromThemeFns(themeFnList, theme)
-    if (Object.keys(styles).length) {
-      // make an object for each level of theme
-      const curThemeObj = { ['.']: {} }
-      mergeStyles('.', curThemeObj, styles, true)
-      const namespaces = getSortedNamespaces(curThemeObj)
-      for (const ns of namespaces) {
-        const styleObj = curThemeObj[ns]
-        if (!styleObj) continue
-        const info = addRules('', styleObj, ns, false)
-        if (info) {
-          // @ts-ignore
-          themeStyles.push({ ns, ...info, })
-        }
-      }
-    }
-  }
-  return { themeStyles, trackState }
-}
-
-export const StaticUtils = { getAllStyles, getStyles, getThemeStyles }
-
-/**
- * END external static style block
- */

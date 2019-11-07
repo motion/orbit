@@ -12,7 +12,6 @@ export function addDisplayName(path, glossFnName: string, references, file, babe
   for (const reference of references) {
     const displayName = getDisplayName(reference)
     const isView = isGlossView(glossFnName, reference)
-    console.log('check', isView, reference)
     if (!isView) continue
     path.parent.body.push(
       buildBuiltInWithConfig({

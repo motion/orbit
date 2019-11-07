@@ -1,5 +1,4 @@
 import { isDefined } from '@o/utils'
-import { ThemeFn } from 'gloss'
 
 import { hasMediaQueries, mediaQueryKeysSize } from '../mediaQueryKeys'
 import { getTextSize } from '../Sizes'
@@ -16,7 +15,7 @@ export type TextSizeProps = {
   marginBottom?: any
 }
 
-export const textSizeTheme: ThemeFn<TextSizeProps> = (props) => {
+export const textSizeTheme = (props: TextSizeProps) => {
   const res = getTextSizeTheme(props)
   // media query size
   // TODO this whole loop needs rethinking

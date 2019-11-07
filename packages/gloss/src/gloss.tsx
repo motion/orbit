@@ -548,7 +548,6 @@ function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNamesByNs[]
 }
 
 function mergeStyle(key: string, val: any, classNames: ClassNames, _namespace = '.') {
-  console.log('merge then', key, val)
   // check for validity
   if (validCSSAttr[key]) {
     // dont overwrite as we go down in importance

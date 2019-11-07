@@ -588,7 +588,7 @@ const SurfaceFrame = gloss<ThroughProps, ViewProps>(View, {
 }).theme(pseudoFunctionThemes, pseudoStyleTheme, (props, prev) => {
   // todo fix types here
   const marginStyle = marginTheme(props as any)
-  const { fontSize, lineHeight } = textSizeTheme(props)
+  const { fontSize, lineHeight } = textSizeTheme(props as any)
 
   if (prev && props.chromeless) {
     delete prev.hoverStyle

@@ -472,7 +472,7 @@ function stylesToClassNamesByNS(stylesByNs: any) {
         }
       }
     } else {
-      statics[ns] = addRules('', styles, ns, false)
+      statics[ns] = addRules('', styles, ns, true)
     }
   }
   return statics
@@ -502,6 +502,7 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
       }
     }
   }
+
   return {
     statics,
     config: compileConfig(config, parent),
@@ -529,9 +530,15 @@ function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNamesByNs[]
     }
     if (staticStyles) {
       for (const ns in staticStyles) {
-        const stylesByNs = staticStyles[ns]
-        for (const key in stylesByNs) {
-          mergeStyle(key, stylesByNs[key], classNames, ns)
+        if (ns !== '.') {
+          console.log('skipping ns for now until figured out', ns)
+          continue
+        }
+        const styleClasses = staticStyles[ns]
+        for (const key in styleClasses) {
+          if (validCSSAttr[key] && !classNames[key]) {
+            classNames[key] = styleClasses[key]
+          }
         }
       }
     }

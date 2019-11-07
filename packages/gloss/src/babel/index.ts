@@ -31,14 +31,17 @@ const glossPlugin = (babel): babel.PluginObj => {
   }
 }
 
+const defaultNames = ['gloss']
+const defaultImports = ['gloss', '../gloss']
+
 function traverseGlossBlocks(babel, state) {
   const references = new Set()
   const res: babel.Visitor = {
     ImportDeclaration(path) {
       const fileName = path.hub.file.opts.filename
       // options
-      const matchNames: string[] = state.opts.matchNames || ['gloss']
-      const matchImports: string[] = state.opts.matchImports || ['gloss']
+      const matchNames: string[] = state.opts.matchNames || defaultNames
+      const matchImports: string[] = state.opts.matchImports || defaultImports
       if (matchImports.indexOf(path.node.source.value) === -1) {
         return
       }

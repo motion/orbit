@@ -5,13 +5,14 @@ import { isGlossView } from './utils'
 export function addDisplayName(path, glossFnName: string, references, file, babel) {
   const { types: t, template } = babel
   // extra safe because babel or webpack or something can leave behind old ones of these
-  const buildBuiltInWithConfig = template(`
-  if (IDENTIFIER) { IDENTIFIER.displayName = "DISPLAY_NAME" }
-  `)
+  const buildBuiltInWithConfig = template(
+    `\nif (IDENTIFIER) IDENTIFIER.displayName = "DISPLAY_NAME";`,
+  )
 
   for (const reference of references) {
     const displayName = getDisplayName(reference)
     const isView = isGlossView(glossFnName, reference)
+    console.log('check', isView, reference)
     if (!isView) continue
     path.parent.body.push(
       buildBuiltInWithConfig({

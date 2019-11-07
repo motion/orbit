@@ -1,4 +1,5 @@
-import { addRules, compileThemes, getSortedNamespaces, getStylesFromThemeFns, GlossView, mergeStyles } from './gloss'
+import { addRules, getSortedNamespaces, getStylesFromThemeFns, GlossView, mergeStyles } from './gloss'
+import { compileThemes } from './helpers/compileThemes'
 import { CompiledTheme } from './theme/createTheme'
 import { createThemeProxy } from './theme/createThemeProxy'
 import { ThemeTrackState } from './theme/useTheme'

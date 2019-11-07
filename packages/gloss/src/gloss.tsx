@@ -166,6 +166,7 @@ export function gloss<
     hasCompiled = true
     shouldUpdateMap = GlossView['shouldUpdateMap']
     themeFns = compileThemes(ThemedView)
+    GlossView['displayName'] = ThemedView.displayName
   }
 
   setTimeout(compile, 0)

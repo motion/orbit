@@ -21,6 +21,7 @@ export * from './blocks/InlineBlock'
 export * from './blocks/InlineFlex'
 
 // configureGloss
+export { ThemeStyleInfo, StaticUtils } from './StaticUtils'
 export {
   GlossThemeProps,
   GlossProps,

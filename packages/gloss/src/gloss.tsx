@@ -73,7 +73,6 @@ type GlossInternals<Props = any> = {
 type ClassNamesByNs = ({ [key: string]: ClassNames } | null)
 
 type GlossParsedProps<Props = any> = {
-  staticClasses: string[] | null
   statics: ClassNamesByNs[]
   config: GlossViewConfig<Props> | null
   defaultProps: Partial<Props> | null
@@ -157,7 +156,7 @@ export function gloss<
   // put the "rest" of non-styles onto defaultProps
   GlossView.defaultProps = glossProps.defaultProps
 
-  let themeFns: ThemeFn[][] | null = null
+  let themeFns: ThemeFn[][] = []
   let hasCompiled = false
   let shouldUpdateMap: WeakMap<any, boolean>
 
@@ -262,19 +261,9 @@ export function gloss<
       }
     }
 
-    const classNames = getClassNames(theme, themeFns || [], glossProps.statics)
-    console.log('got em', glossProps, classNames)
+    const classNames = getClassNames(theme, themeFns, glossProps.statics)
+    console.log('got em', classNames, themeFns, glossProps)
     finalProps.className = classNames.join(' ')
-    // let className = staticClassNames
-    // if (props.className) {
-    //   className += ` ${props.className}`
-    // }
-    // if (dynClassNames.length) {
-    //   className += ' ' + dynClassNames.join(' ')
-    // }
-    // if (compiledClassName) {
-    //   className += compiledClassName
-    // }
 
     if (isDeveloping) {
       finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
@@ -352,54 +341,6 @@ function createGlossView(GlossView, config) {
     return res
   }
   return res
-}
-
-// takes a style object, adds it to stylesheet, returns classnames
-function addStyles(
-  styles: any,
-  displayName?: string,
-  curClassNames?: string[],
-  prevClassNames?: string[] | null,
-) {
-  const namespaces = getSortedNamespaces(styles)
-  let allClassNames: string[] | null = null
-  for (const ns of namespaces) {
-    const style = styles[ns]
-    // they may return falsy, conditional '&:hover': active ? hoverStyle : null
-    if (!style) continue
-
-    const next = addRules(displayName, style, ns, true)
-    const nextClassNames = Object.values(next) as any
-
-    // TODO optimize/refactor, just getting working
-    let classNames: string[] = []
-    if (curClassNames) {
-      for (const cn of nextClassNames) {
-        const prefix = getPrefix(cn)
-        if (curClassNames.some(x => x.indexOf(prefix) === 0) === false) {
-          classNames.push(cn)
-        }
-      }
-    } else {
-      classNames = nextClassNames
-    }
-
-    if (classNames.length) {
-      allClassNames = allClassNames || []
-      // @ts-ignore
-      allClassNames = [...allClassNames, ...classNames]
-      // if this is the first mount render or we didn't previously have this class then add it as new
-      for (const className of classNames) {
-        if (!prevClassNames || !prevClassNames.includes(className)) {
-          gc.registerClassUse(className)
-        }
-      }
-    }
-  }
-  if (isDeveloping && shouldDebug) {
-    console.log('addStyles sorted', allClassNames, namespaces, styles)
-  }
-  return allClassNames
 }
 
 // sort pseudos into priority
@@ -539,7 +480,6 @@ function stylesToClassNamesByNS(stylesByNs: any) {
 
 // happens once at initial gloss() call, so not as perf intense
 // get all parent styles and merge them into a big object
-// const staticClasses: string[] | null = addStyles(glossProps.styles, depth)
 export function getGlossProps(allProps: GlossProps | null, parent: GlossView | null): GlossParsedProps {
   const { config = null, ...glossProp } = allProps || {}
   // all the "glossProp" go onto default props
@@ -562,12 +502,7 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
       }
     }
   }
-  // merge together the parent chain of static classes
-  const curStaticClasses = addStyles(styles) || []
-  const parentStaticClasses = parent?.internal?.glossProps.staticClasses || []
-  const staticClasses = getUniqueStylesByClassName([...curStaticClasses, ...parentStaticClasses])
   return {
-    staticClasses,
     statics,
     config: compileConfig(config, parent),
     styles,
@@ -576,53 +511,36 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
   }
 }
 
-// const styleInfo = {
-//   borderLeftRadius: 'bLR-123213123'
-// }
-
-// const X = gloss({ background: 'red' })
-//   { background: 'bg-1231321' }
-// const X2 = gloss(X, { background: 'yellow' })
-//   { background: 'bg-1231312' }
-// const X3 = gloss(X2).theme(() => ({ background: 'green' }))
-//   [{ background: 'green' }]
-// const X4 = gloss(X3, { background: 'orange' })
-//
-
-/**
- * themes: [[themeCurrent, ...themeHoisted], x, x, x]
- * statics: [{ background: 'bg-123123213' }, undefined, undefined, { background: '12312321' }]
- *
- * const className = getClassNames(props, themes, statics, depth)
- *
- */
-
 type ClassNames = {
   [key: string]: string | ClassNames
 }
 
 function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNamesByNs[]): string[] {
   const classNames = {}
-  const depth = styles.length
+  const depth = themes.length
   for (let i = 0; i < depth; i++) {
-    const themeStyles = themes[i] && getStylesFromThemeFns(themes[i], props)
+    const themeStyles = !!themes[i]?.length && getStylesFromThemeFns(themes[i], props)
     const staticStyles = styles[i]
-    console.log('depth', i, props['alpha'], themeStyles, themes[i], staticStyles)
+    console.log('get', themeStyles, staticStyles)
     if (themeStyles) {
       for (const key in themeStyles) {
         mergeStyle(key, themeStyles[key], classNames)
       }
     }
     if (staticStyles) {
-      for (const key in staticStyles) {
-        mergeStyle(key, staticStyles[key], classNames)
+      for (const ns in staticStyles) {
+        const stylesByNs = staticStyles[ns]
+        for (const key in stylesByNs) {
+          mergeStyle(key, stylesByNs[key], classNames, ns)
+        }
       }
     }
   }
   return Object.values(classNames)
 }
 
-function mergeStyle(key: string, val: any, classNames: ClassNames) {
+function mergeStyle(key: string, val: any, classNames: ClassNames, _namespace = '.') {
+  console.log('merge then', key, val)
   // check for validity
   if (validCSSAttr[key]) {
     // dont overwrite as we go down in importance

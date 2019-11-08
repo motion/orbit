@@ -521,7 +521,7 @@ export const Surface = themeable(function Surface(direct: SurfaceProps) {
   }
 
   if (props.debug) {
-    console.log('ok', showElement, props, surfaceFrameProps)
+    console.log('debug surface', showElement, props, surfaceFrameProps)
   }
 
   return useBreadcrumbReset(

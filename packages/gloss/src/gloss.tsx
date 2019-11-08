@@ -262,8 +262,14 @@ export function gloss<
       }
     }
 
+    if (shouldDebug) {
+      debugger
+    }
     const classNames = getClassNames(theme, themeFns, glossProps.statics)
-    console.log('got em', classNames, themeFns, glossProps)
+    // console.log('got em', classNames, themeFns, glossProps)
+    if (shouldDebug) {
+      console.log('classNames', classNames)
+    }
     finalProps.className = classNames.join(' ')
 
     if (isDeveloping) {
@@ -523,7 +529,7 @@ function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNamesByNs[]
   for (let i = 0; i < depth; i++) {
     const themeStyles = !!themes[i]?.length && getStylesFromThemeFns(themes[i], props)
     const staticStyles = styles[i]
-    console.log('get', themeStyles, staticStyles)
+    // console.log('get', themeStyles, staticStyles)
     if (themeStyles) {
       for (const key in themeStyles) {
         mergeStyle(key, themeStyles[key], classNames)
@@ -532,12 +538,16 @@ function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNamesByNs[]
     if (staticStyles) {
       for (const ns in staticStyles) {
         if (ns !== '.') {
-          console.log('skipping ns for now until figured out', ns)
+          // TODO
+          // console.log('skipping ns for now until figured out', ns)
           continue
         }
         const styleClasses = staticStyles[ns]
         for (const key in styleClasses) {
           if (validCSSAttr[key] && !classNames[key]) {
+            if (key === 'borderLeftRadius') {
+              debugger
+            }
             classNames[key] = styleClasses[key]
           }
         }
@@ -552,7 +562,7 @@ function mergeStyle(key: string, val: any, classNames: ClassNames, _namespace = 
   if (validCSSAttr[key]) {
     // dont overwrite as we go down in importance
     if (classNames[key]) return
-    addRule(key, cssValue(key, val, false, cssOpts), '.', classNames, true, '')
+    addStyleRule(key, val, '.', classNames)
     return
   }
   // will be captured next in isSubStyle
@@ -561,12 +571,54 @@ function mergeStyle(key: string, val: any, classNames: ClassNames, _namespace = 
   }
   if (isSubStyle(key)) {
     classNames[key] = classNames[key] || {}
-    console.log('what is', val)
+    // console.log('what is', val)
     for (const skey in val[key]) {
       if (classNames[key][skey]) continue
-      addRule(skey, cssValue(skey, val[key][skey], false, cssOpts), key, classNames[key] as ClassNames, true, '')
+      addStyleRule(skey,  val[key][skey], key, classNames[key] as ClassNames)
     }
     return
+  }
+}
+
+function addStyleRule(key: string, val: string, namespace: string, classNames: ClassNames) {
+  const finalValue = cssValue(key, val, false, cssOpts)
+  if (SHORTHANDS[key]) {
+    for (let k of SHORTHANDS[key]) {
+      k = CAMEL_TO_SNAKE[k] || k
+      addRule(key, finalValue, namespace, classNames, true, '')
+    }
+  } else {
+    addRule(key, finalValue, namespace, classNames, true, '')
+  }
+}
+
+function addRule(key: string, val: string, namespace: string, classNames: ClassNames, insert: any, displayName: string) {
+  const abbrev = cssAttributeAbbreviations[key]
+  key = CAMEL_TO_SNAKE[key] || key
+  const isMediaQuery = namespace[0] === '@'
+  const style = `${key}:${val};`
+  const className = abbrev + stringHash(`${val}`)
+  let selector = `.${className}`
+  if (namespace[0] === '&' || namespace.indexOf('&') !== -1) {
+    selector = namespace.split(',').map(part => `.${className} ${part.replace('&', '')}`).join(',')
+  }
+  const css = isMediaQuery ? `${namespace} {${selector} {${style}}}` : `${selector} {${style}}`
+  if (className !== undefined) {
+    classNames[key] = className
+    if (insert === true) {
+      // this is the first time we've found this className
+      if (!tracker.has(className)) {
+        // insert the new style text
+        tracker.set(className, {
+          displayName,
+          namespace,
+          selector,
+          style,
+          className,
+        })
+        sheet.insert(isMediaQuery ? namespace : selector, css)
+      }
+    }
   }
 }
 
@@ -647,39 +699,6 @@ export function addRules<A extends boolean>(
 
   // @ts-ignore
   // return { css, className: finalClassName }
-}
-
-function addRule(key: string, val: string, namespace: string, classNames: ClassNames, insert: any, displayName: string) {
-  const abbrev = cssAttributeAbbreviations[key]
-  key = CAMEL_TO_SNAKE[key] || key
-  const isMediaQuery = namespace[0] === '@'
-  if (!abbrev) {
-    debugger
-  }
-  const style = `${key}:${val};`
-  const className = abbrev + stringHash(`${val}`)
-  let selector = `.${className}`
-  if (namespace[0] === '&' || namespace.indexOf('&') !== -1) {
-    selector = namespace.split(',').map(part => `.${className} ${part.replace('&', '')}`).join(',')
-  }
-  const css = isMediaQuery ? `${namespace} {${selector} {${style}}}` : `${selector} {${style}}`
-  if (className !== undefined) {
-    classNames[key] = className
-    if (insert === true) {
-      // this is the first time we've found this className
-      if (!tracker.has(className)) {
-        // insert the new style text
-        tracker.set(className, {
-          displayName,
-          namespace,
-          selector,
-          style,
-          className,
-        })
-        sheet.insert(isMediaQuery ? namespace : selector, css)
-      }
-    }
-  }
 }
 
 // some internals we can export

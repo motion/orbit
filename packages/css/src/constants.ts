@@ -14,17 +14,28 @@ export const SHORTHANDS = {
   borderTopRadius: ['borderTopRightRadius', 'borderTopLeftRadius'],
 }
 
-const regularCSSAttributes =
+export const validCSSAttr: ValidCSSPropertyMap =
   process.env.RENDER_TARGET === 'node'
     ? require('./validCSSAttribute.node').default
     : require('./validCSSAttribute.dom').default
 
-export const validCSSAttr: Partial<ValidCSSPropertyMap> = {
-  ...regularCSSAttributes,
-  ...Object.keys(SHORTHANDS).reduce((acc, key) => {
-    acc[key] = true
-    return acc
-  }, {}),
+// conversions
+export const CAMEL_TO_SNAKE = {}
+export const SNAKE_TO_CAMEL = {}
+for (const camelKey in validCSSAttr) {
+  let snakeKey = ''
+  if (camelKey.indexOf('webkit') === 0) {
+    snakeKey += '-'
+  }
+  for (const letter of camelKey) {
+    if (letter.toUpperCase() === letter) {
+      snakeKey += `-${letter.toLowerCase()}`
+    } else {
+      snakeKey += letter
+    }
+  }
+  CAMEL_TO_SNAKE[camelKey] = snakeKey
+  SNAKE_TO_CAMEL[snakeKey] = camelKey
 }
 
 // css attribute key abbreviations

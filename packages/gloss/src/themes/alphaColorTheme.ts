@@ -73,8 +73,6 @@ export const alphaColorTheme: ThemeFn<AlphaColorProps> = (props, previous) => {
   }
 }
 
-alphaColorTheme.hoistTheme = true
-
 function merge(
   pseudoKey: string,
   colorKey: string,

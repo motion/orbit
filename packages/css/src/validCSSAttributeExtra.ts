@@ -1,5 +1,3 @@
-import { CAMEL_TO_SNAKE } from './cssNameMap'
-
 export const validCSSAttributeExtra = {
   borderLeftRadius: true,
   borderRightRadius: true,
@@ -10,8 +8,4 @@ export const validCSSAttributeExtra = {
   // where we dont pass down the css props. if we did, we dont want this
   src: false,
   size: false,
-}
-
-for (const key in CAMEL_TO_SNAKE) {
-  validCSSAttributeExtra[key] = true
 }

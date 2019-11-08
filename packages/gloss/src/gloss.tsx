@@ -262,7 +262,7 @@ export function gloss<
       }
     }
 
-    const classNames = getClassNames(theme, themeFns, glossProps.statics)
+    const classNames = getClassNames(theme, themeFns, glossProps.statics, props['debug'])
     // console.log('got em', classNames, themeFns, glossProps)
     if (shouldDebug) {
       console.log('classNames', classNames)
@@ -507,6 +507,10 @@ export function getGlossProps(allProps: GlossProps | null, parent: GlossView | n
     }
   }
 
+  if (allProps?.['debug']) {
+    console.log('debug getGlossProps', { styles, staticStyleDesc, statics, defaultProps })
+  }
+
   return {
     statics,
     config: compileConfig(config, parent),
@@ -520,13 +524,15 @@ type ClassNames = {
   [key: string]: string | ClassNames
 }
 
-function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNamesByNs[]): string[] {
+function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNamesByNs[], shouldDebug: boolean): string[] {
   const classNames = {}
   const depth = themes.length
   for (let i = 0; i < depth; i++) {
     const themeStyles = !!themes[i]?.length && getStylesFromThemeFns(themes[i], props)
     const staticStyles = styles[i]
-    // console.log('get', themeStyles, staticStyles)
+    if (shouldDebug) {
+      console.log('level', i, { themeStyles, staticStyles })
+    }
     if (themeStyles) {
       for (const key in themeStyles) {
         mergeStyle(key, themeStyles[key], classNames)
@@ -540,11 +546,14 @@ function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNamesByNs[]
           continue
         }
         const styleClasses = staticStyles[ns]
+        if (shouldDebug) {
+          console.log('level', i, 'add', ns, styleClasses, classNames)
+        }
         for (const key in styleClasses) {
-          if (validCSSAttr[key] && !classNames[key]) {
-            if (key === 'borderLeftRadius') {
-              debugger
-            }
+          if (shouldDebug) {
+            console.log('key', key, styleClasses[key])
+          }
+          if (!classNames[key]) {
             classNames[key] = styleClasses[key]
           }
         }
@@ -557,8 +566,7 @@ function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNamesByNs[]
 function mergeStyle(key: string, val: any, classNames: ClassNames, _namespace = '.') {
   // check for validity
   if (validCSSAttr[key]) {
-    // dont overwrite as we go down in importance
-    if (classNames[key]) return
+    console.log('add', key, val, classNames[key])
     addStyleRule(key, val, '.', classNames)
     return
   }
@@ -594,6 +602,10 @@ function addRule(key: string, val: string, namespace: string, classNames: ClassN
     debugger
   }
   key = CAMEL_TO_SNAKE[key] || key
+  // already added
+  if (classNames[key]) {
+    return
+  }
   const isMediaQuery = namespace[0] === '@'
   const style = `${key}:${val};`
   const className = abbrev + stringHash(`${val}`)
@@ -635,11 +647,12 @@ function getUniqueStylesByClassName(classNames: string[]) {
   return res
 }
 
-// excludes gloss internal props and leaves style/html props
+// excludes gloss internal + style props, leaves html
 function getGlossDefaultProps(props: any) {
   const x = {}
   for (const key in props) {
     if (key === 'conditional' || key === 'config') continue
+    if (validCSSAttr[key]) continue
     if (isSubStyle(key)) continue
     x[key] = props[key]
   }

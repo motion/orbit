@@ -262,9 +262,6 @@ export function gloss<
       }
     }
 
-    if (shouldDebug) {
-      debugger
-    }
     const classNames = getClassNames(theme, themeFns, glossProps.statics)
     // console.log('got em', classNames, themeFns, glossProps)
     if (shouldDebug) {
@@ -584,8 +581,7 @@ function addStyleRule(key: string, val: string, namespace: string, classNames: C
   const finalValue = cssValue(key, val, false, cssOpts)
   if (SHORTHANDS[key]) {
     for (let k of SHORTHANDS[key]) {
-      k = CAMEL_TO_SNAKE[k] || k
-      addRule(key, finalValue, namespace, classNames, true, '')
+      addRule(k, finalValue, namespace, classNames, true, '')
     }
   } else {
     addRule(key, finalValue, namespace, classNames, true, '')
@@ -594,6 +590,9 @@ function addStyleRule(key: string, val: string, namespace: string, classNames: C
 
 function addRule(key: string, val: string, namespace: string, classNames: ClassNames, insert: any, displayName: string) {
   const abbrev = cssAttributeAbbreviations[key]
+  if (!abbrev) {
+    debugger
+  }
   key = CAMEL_TO_SNAKE[key] || key
   const isMediaQuery = namespace[0] === '@'
   const style = `${key}:${val};`

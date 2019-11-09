@@ -37,7 +37,7 @@ export default memo(function FeetSection(props: { hideJoin?: boolean }) {
         top="-120%"
         backgroundPosition="top center"
         opacity={1}
-        backgroundImage={blackWavePattern}
+        backgroundImage={false ?? blackWavePattern}
       />
     </>
   )

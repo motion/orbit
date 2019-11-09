@@ -98,6 +98,8 @@
     "eslint-plugin-react": "7.12.4",
     "global": "^4.3.2",
     "jest": "24.8.0",
+    "react-test-renderer": "^16.11.0",
+    "@testing-library/react": "^9.3.2",
     "lerna": "^3.16.4",
     "lerna-changelog": "^0.8.2",
     "mobx": "^5.14.0",
@@ -107,7 +109,7 @@
     "sb-promisify": "^2.0.2",
     "sqlite": "^3.0.3",
     "ts-jest": "24.0.0",
-    "typescript": "3.7.1-rc",
+    "typescript": "3.7.2",
     "webpack-cli": "^3.3.7"
   },
   "resolutions": {

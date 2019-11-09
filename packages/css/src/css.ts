@@ -1,6 +1,5 @@
 import { Config } from './config'
-import { BORDER_KEY, COLOR_KEYS, COMMA_JOINED, FALSE_VALUES, SHORTHANDS, TRANSFORM_KEYS_MAP, unitlessNumberProperties } from './constants'
-import { CAMEL_TO_SNAKE } from './cssNameMap'
+import { BORDER_KEY, CAMEL_TO_SNAKE, COLOR_KEYS, COMMA_JOINED, FALSE_VALUES, SHORTHANDS, TRANSFORM_KEYS_MAP, unitlessNumberProperties } from './constants'
 import { boxShadowItem, boxShadowSyntax } from './cssPropertySet'
 import { px, stringHash } from './helpers'
 
@@ -8,7 +7,7 @@ import { px, stringHash } from './helpers'
 
 export { GlossPropertySet } from './cssPropertySet'
 export { configureCSS } from './config'
-export { validCSSAttr } from './constants'
+export { SNAKE_TO_CAMEL, CAMEL_TO_SNAKE, SHORTHANDS, validCSSAttr, cssAttributeAbbreviations } from './constants'
 export {
   CSSPropertySet,
   CSSPropertySetResolved,
@@ -145,6 +144,10 @@ export function cssValue(key: string, value: any, recurse = false, options?: CSS
   } else if (valueType === 'object') {
     if (value.getCSSValue) {
       return value.getCSSValue()
+    }
+    // remove any weird looking objects (non-plain)
+    if (value.constructor.name !== 'Object') {
+      return
     }
     const res = processObject(key, value, options)
     if (res !== undefined) {

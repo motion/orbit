@@ -11,13 +11,12 @@ export type TextSizeProps = {
   fontSize?: Size
   size?: Size
   scale?: Size
-  marginTop?: number
-  marginBottom?: number
+  marginTop?: any
+  marginBottom?: any
 }
 
-export function textSizeTheme(props: TextSizeProps) {
+export const textSizeTheme = (props: TextSizeProps) => {
   const res = getTextSizeTheme(props)
-
   // media query size
   // TODO this whole loop needs rethinking
   if (hasMediaQueries) {
@@ -37,7 +36,6 @@ export function textSizeTheme(props: TextSizeProps) {
       }
     }
   }
-
   return res
 }
 

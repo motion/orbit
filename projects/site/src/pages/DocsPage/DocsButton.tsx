@@ -6,7 +6,7 @@ export let Basic = () => {
   return (
     <Stack space>
       <Stack direction="horizontal" space flexWrap="wrap">
-        <Button debug>Hello World</Button>
+        <Button>Hello World</Button>
         <Button icon="cog">Hello World</Button>
         <Button icon="cog" iconAfter>
           Hello World

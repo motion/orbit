@@ -1,4 +1,4 @@
-import { Config } from './configureGloss'
+import { Config } from '../configureGloss'
 
 /**
  * Sorts styles so the pseudo keys go in their logical override

@@ -45,7 +45,6 @@ export const alphaColorTheme: ThemeFn<AlphaColorProps> = (props, previous) => {
   if (color) {
     if (props.applyThemeColor) {
       if (
-        typeof color !== 'string' &&
         color.originalInput !== 'inherit' &&
         typeof alpha === 'number'
       ) {

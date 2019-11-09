@@ -60,8 +60,10 @@ export const SectionContentChrome = gloss<{ readablePage?: boolean }, ViewProps>
   paddingRight: sidePad,
   position: 'relative',
 
-  readablePage: {
-    maxWidth: widths.md,
+  conditional: {
+    readablePage: {
+      maxWidth: widths.md,
+    },
   },
 
   [mediaQueries.lg]: {

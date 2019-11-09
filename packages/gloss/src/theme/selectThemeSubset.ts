@@ -1,6 +1,6 @@
 import { ThemeObject } from '@o/css'
 
-import { weakKey } from '../helpers/WeakKeys'
+import { weakKey } from '../helpers/weakKey'
 import { CompiledTheme } from './createTheme'
 import { ThemeSelect } from './Theme'
 

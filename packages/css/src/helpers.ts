@@ -1,4 +1,4 @@
-import { CAMEL_TO_SNAKE, SNAKE_TO_CAMEL } from './cssNameMap'
+import { CAMEL_TO_SNAKE, SNAKE_TO_CAMEL } from './constants'
 
 export const px = (x: number | string) =>
   typeof x === 'number' ? `${x}px` : `${+x}` === x ? `${x}px` : x

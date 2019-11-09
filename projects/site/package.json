@@ -4,8 +4,8 @@
   "private": true,
   "main": "./src/index.tsx",
   "scripts": {
-    "start": "mcro-build --port 5000 --extract-static-styles --target web",
-    "start:prod": "mcro-build --extract-static-styles --prod --port 5000 --report --target web",
+    "start": "mcro-build --port 5000 --target web",
+    "start:prod": "OPTIMIZE_REACT=1 mcro-build --extract-static-styles --prod --port 5000 --report --target web",
     "build": "OPTIMIZE_REACT=1 ANALYZE_BUNDLE=1 mcro-build --extract-static-styles --prod --build --target web",
     "build:no-min": "NO_OPTIMIZE=1 mcro-build --prod --build --target web",
     "build:debug": "NODE_ENV=development mcro-build --prod --build --target web",

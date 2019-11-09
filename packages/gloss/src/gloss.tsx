@@ -1,5 +1,5 @@
-import { CAMEL_TO_SNAKE, cssAttributeAbbreviations, CSSPropertySet, CSSPropertySetLoose, cssValue, SHORTHANDS, stringHash, validCSSAttr } from '@o/css'
-import React from 'react'
+import { CAMEL_TO_SNAKE, cssAttributeAbbreviations, CSSPropertySet, CSSPropertySetLoose, cssValue, SHORTHANDS, SNAKE_TO_CAMEL, stringHash, validCSSAttr } from '@o/css'
+import React, { useMemo } from 'react'
 import { createElement, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './configureGloss'
@@ -263,11 +263,12 @@ export function gloss<
     }
 
     const classNames = getClassNames(theme, themeFns, glossProps.statics, props['debug'])
-    // console.log('got em', classNames, themeFns, glossProps)
     if (shouldDebug) {
       console.log('classNames', classNames)
     }
-    finalProps.className = classNames.join(' ')
+    finalProps.className = Object.values(classNames).join(' ') + (
+      typeof props.className === 'string' ? ' ' + props.className : ''
+    )
 
     if (isDeveloping) {
       finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
@@ -282,7 +283,7 @@ export function gloss<
     if (isDeveloping && shouldDebug) {
       const styles = finalProps.className
         .split(' ')
-        .map(x => tracker.get(x.slice(2)))
+        .map(x => tracker.get(x))
         .filter(Boolean)
       console.log('styles\n', styles, '\nprops\n', props, '\noutProps\n', finalProps)
       shouldDebug = false
@@ -326,10 +327,19 @@ export function gloss<
   return ThemedView as any
 }
 
-function getStylesForClassNames(_classNames: string[]) {
-  // TODO
-  console.log('todo')
-  return {}
+const CNCache = new WeakMap()
+const getStylesForClassNames = (classNames: ClassNames): Object => {
+  if (CNCache.has(classNames)) return CNCache.get(classNames)
+  const style = {}
+  for (let key in classNames) {
+    const cn = classNames[key]
+    key = SNAKE_TO_CAMEL[key]
+    if (typeof cn === 'string') {
+      style[key] = tracker.get(cn)?.value
+    }
+  }
+  CNCache.set(classNames, style)
+  return style
 }
 
 function createGlossView(GlossView, config) {
@@ -524,8 +534,8 @@ type ClassNames = {
   [key: string]: string | ClassNames
 }
 
-function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNamesByNs[], shouldDebug: boolean): string[] {
-  const classNames = {}
+function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNamesByNs[], shouldDebug: boolean): ClassNames {
+  const classNames: ClassNames = {}
   const depth = themes.length
   for (let i = 0; i < depth; i++) {
     const themeStyles = !!themes[i]?.length && getStylesFromThemeFns(themes[i], props)
@@ -560,13 +570,12 @@ function getClassNames(props: any, themes: ThemeFn[][], styles: ClassNamesByNs[]
       }
     }
   }
-  return Object.values(classNames)
+  return classNames
 }
 
 function mergeStyle(key: string, val: any, classNames: ClassNames, _namespace = '.') {
   // check for validity
   if (validCSSAttr[key]) {
-    console.log('add', key, val, classNames[key])
     addStyleRule(key, val, '.', classNames)
     return
   }
@@ -589,26 +598,23 @@ function addStyleRule(key: string, val: string, namespace: string, classNames: C
   const finalValue = cssValue(key, val, false, cssOpts)
   if (SHORTHANDS[key]) {
     for (let k of SHORTHANDS[key]) {
-      addRule(k, finalValue, namespace, classNames, true, '')
+      addRule(k, finalValue, namespace, classNames, true)
     }
   } else {
-    addRule(key, finalValue, namespace, classNames, true, '')
+    addRule(key, finalValue, namespace, classNames, true)
   }
 }
 
-function addRule(key: string, val: string, namespace: string, classNames: ClassNames, insert: any, displayName: string) {
+function addRule(key: string, value: string, namespace: string, classNames: ClassNames, insert: any) {
   const abbrev = cssAttributeAbbreviations[key]
-  if (!abbrev) {
-    debugger
-  }
   key = CAMEL_TO_SNAKE[key] || key
   // already added
   if (classNames[key]) {
     return
   }
   const isMediaQuery = namespace[0] === '@'
-  const style = `${key}:${val};`
-  const className = abbrev + stringHash(`${val}`)
+  const style = `${key}:${value};`
+  const className = abbrev + stringHash(`${value}`)
   let selector = `.${className}`
   if (namespace[0] === '&' || namespace.indexOf('&') !== -1) {
     selector = namespace.split(',').map(part => `.${className} ${part.replace('&', '')}`).join(',')
@@ -621,10 +627,10 @@ function addRule(key: string, val: string, namespace: string, classNames: ClassN
       if (!tracker.has(className)) {
         // insert the new style text
         tracker.set(className, {
-          displayName,
           namespace,
           selector,
           style,
+          value,
           className,
         })
         sheet.insert(isMediaQuery ? namespace : selector, css)
@@ -652,8 +658,8 @@ function getGlossDefaultProps(props: any) {
   const x = {}
   for (const key in props) {
     if (key === 'conditional' || key === 'config') continue
-    if (validCSSAttr[key]) continue
-    if (isSubStyle(key)) continue
+    // if (validCSSAttr[key]) continue
+    // if (isSubStyle(key)) continue
     x[key] = props[key]
   }
   return x

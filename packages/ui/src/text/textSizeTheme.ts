@@ -39,6 +39,8 @@ export const textSizeTheme = (props: TextSizeProps) => {
   return res
 }
 
+textSizeTheme.hoistTheme = true
+
 const booleanToNumber = (val: boolean | number): number => {
   return val === true ? 1 : val === false ? 0 : val
 }

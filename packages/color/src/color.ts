@@ -4,6 +4,8 @@ import { inputToRGB } from './format-input'
 import { HSL, HSLA, HSV, HSVA, RGB, RGBA } from './interfaces'
 import { bound01, boundAlpha, clamp01 } from './util'
 
+export * from './memoizeOne'
+
 export interface ColorOptions {
   format?: ColorFormats
   gradientType?: string

@@ -32,6 +32,8 @@ export const propsToStyles: ThemeFn = (theme, previous) => {
   return styles
 }
 
+propsToStyles.hoistTheme = true
+
 export const propToStyle = (key: string, value: any) => {
   if (validCSSAttr[key]) {
     return value

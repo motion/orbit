@@ -22,6 +22,7 @@ export function WelcomeBlogPostButton() {
       icon="chevron-right"
       // safari ellipse bugfix...
       minWidth={205}
+      debug
       {...linkProps('/blog/update-two')}
     >
       Orbit enters private beta!

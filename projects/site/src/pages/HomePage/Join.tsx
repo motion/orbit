@@ -72,7 +72,6 @@ export class Join extends React.Component<any> {
                 name="EMAIL"
                 id="mce-EMAIL"
                 placeholder="Email address..."
-                debug
                 flex={1}
                 size={1.25}
                 sizeRadius={5}

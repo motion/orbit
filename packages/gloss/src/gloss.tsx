@@ -605,7 +605,7 @@ function addStyleRule(key: string, val: string, namespace: string, classNames: C
   }
 }
 
-function addRule(key: string, value: string, namespace: string, classNames: ClassNames, insert: any) {
+function addRule(key: string, value: string, namespace: string, classNames: ClassNames, insert: any, displayName?: string) {
   const abbrev = cssAttributeAbbreviations[key]
   key = CAMEL_TO_SNAKE[key] || key
   // already added
@@ -625,6 +625,9 @@ function addRule(key: string, value: string, namespace: string, classNames: Clas
     if (insert === true) {
       // this is the first time we've found this className
       if (!tracker.has(className)) {
+        if (shouldDebug) {
+          console.log('adding style', displayName)
+        }
         // insert the new style text
         tracker.set(className, {
           namespace,

@@ -8,6 +8,7 @@ import sanitizeHtml from 'sanitize-html'
 import upndown from 'upndown'
 import URI from 'urijs'
 import { parse } from 'url'
+
 import CrawlerDB from './crawlerDB'
 
 // dont use last two cores if possible

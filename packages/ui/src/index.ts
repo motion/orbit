@@ -10,6 +10,9 @@ if (typeof window !== 'undefined') {
   if (typeof CSS['px'] === 'undefined') {
     require('css-typed-om').default(window)
   }
+
+  // TODO...
+  window['__DEV__'] = window['__DEV__'] || process.env.NODE_ENV === 'development'
 }
 
 export * from './helpers/configureHotKeys'

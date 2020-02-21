@@ -1,4 +1,5 @@
 import { isDefined } from '@o/utils'
+import { CSSPropertySet, ThemeFn } from 'gloss'
 
 import { hasMediaQueries, mediaQueryKeysSize } from '../mediaQueryKeys'
 import { getTextSize } from '../Sizes'
@@ -7,15 +8,15 @@ import { Size } from '../Space'
 export type TextSizeProps = {
   sizeFont?: boolean | number
   sizeLineHeight?: boolean | number
-  lineHeight?: Size
-  fontSize?: Size
+  lineHeight?: any
+  fontSize?: any
   size?: Size
   scale?: Size
   marginTop?: number
   marginBottom?: number
 }
 
-export function textSizeTheme(props: TextSizeProps) {
+export const textSizeTheme: ThemeFn<TextSizeProps> = (props) => {
   const res = getTextSizeTheme(props)
 
   // media query size
@@ -47,7 +48,7 @@ const booleanToNumber = (val: boolean | number): number => {
   return val === true ? 1 : val === false ? 0 : val
 }
 
-function getTextSizeTheme(props: TextSizeProps) {
+function getTextSizeTheme(props: TextSizeProps): CSSPropertySet {
   const sizeVal = getTextSize(props.size) ?? 1
   const baseFontSize = 14
   const size = `${sizeVal}px`

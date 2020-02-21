@@ -14,9 +14,9 @@ const ResponsiveGridLayout = WidthProvider(Responsive)
 
 if (isBrowser) {
   // original
-  require('./react-grid-layout.css')
+  require('../../react-grid-layout.css')
   // // our overrides
-  require('./react-grid-layout-styles.css')
+  require('../../react-grid-layout-styles.css')
 }
 
 type GridItemDimensions = {

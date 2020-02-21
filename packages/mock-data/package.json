@@ -1,6 +1,6 @@
 {
   "name": "@o/mock-data",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "author": "Motion",
   "main": "index.js",
   "sideEffects": false,

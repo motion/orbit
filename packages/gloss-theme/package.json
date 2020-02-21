@@ -1,6 +1,6 @@
 {
   "name": "gloss-theme",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "Make themes for gloss easily",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
@@ -17,9 +17,9 @@
   "license": "MIT",
   "homepage": "https://github.com/motion/gloss-theme",
   "dependencies": {
-    "@o/css": "^2.6.0",
-    "@o/fast-compare": "^2.6.0",
-    "gloss": "^2.6.0"
+    "@o/css": "^2.7.0",
+    "@o/fast-compare": "^2.7.0",
+    "gloss": "^2.7.0"
   },
   "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

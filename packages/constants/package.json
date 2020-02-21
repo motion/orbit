@@ -2,7 +2,7 @@
   "name": "@o/constants",
   "main": "./_/constants.js",
   "sideEffects": false,
-  "version": "2.6.0",
+  "version": "2.7.0",
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc --watch  --preserveWatchOutput || true"

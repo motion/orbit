@@ -1,6 +1,6 @@
 {
   "name": "@o/gloss-webpack",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "main": "_/plugin.js",
   "sideEffects": false,
   "scripts": {
@@ -9,16 +9,16 @@
   },
   "license": "MIT",
   "dependencies": {
-    "gloss": "*",
     "@babel/core": "^7.6.0",
     "@babel/generator": "^7.6.0",
     "@babel/parser": "^7.6.0",
     "@babel/traverse": "^7.6.0",
     "@babel/types": "^7.6.1",
-    "invariant": "^2.2.1",
-    "loader-utils": "^1.1.0",
     "babel-literal-to-ast": "^2.1.0",
-    "fs-extra": "^8.1.0"
+    "fs-extra": "^8.1.0",
+    "gloss": "^2.7.0",
+    "invariant": "^2.2.1",
+    "loader-utils": "^1.1.0"
   },
   "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

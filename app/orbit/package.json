@@ -1,6 +1,6 @@
 {
   "name": "orbit",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "main": "_/index.js",
   "bin": {
     "orbit": "_/index.js"
@@ -16,14 +16,14 @@
   },
   "dependencies": {
     "@babel/code-frame": "^7.0.0",
-    "@o/orbit-workspace-deps": "^2.6.0",
-    "@o/config": "*",
-    "@o/libs-node": "^2.6.0",
-    "@o/logger": "*",
-    "@o/mediator": "^2.6.0",
-    "@o/models": "^2.6.0",
-    "@o/telemetry": "^2.6.0",
-    "@o/utils": "^2.6.0",
+    "@o/config": "^2.7.0",
+    "@o/libs-node": "^2.7.0",
+    "@o/logger": "^2.7.0",
+    "@o/mediator": "^2.7.0",
+    "@o/models": "^2.7.0",
+    "@o/orbit-workspace-deps": "^2.7.0",
+    "@o/telemetry": "^2.7.0",
+    "@o/utils": "^2.7.0",
     "bonjour": "*",
     "chalk": "^2.4.2",
     "ci-info": "^2.0.0",

@@ -17,5 +17,6 @@
     "@o/worker-kit": "^2.7.0",
     "@octokit/rest": "^16.21.0",
     "lodash": "4.17.11"
-  }
+  },
+  "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"
 }

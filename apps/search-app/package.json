@@ -13,5 +13,6 @@
     "@o/ui": "^2.7.0",
     "date-fns": "2.0.0-alpha.7",
     "lodash": "4.17.11"
-  }
+  },
+  "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"
 }

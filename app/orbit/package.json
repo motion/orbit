@@ -47,5 +47,6 @@
   },
   "devDependencies": {
     "@types/yargs": "^12.0.10"
-  }
+  },
+  "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"
 }

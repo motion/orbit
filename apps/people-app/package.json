@@ -13,5 +13,6 @@
   "dependencies": {
     "@o/kit": "^2.7.0",
     "@o/ui": "^2.7.0"
-  }
+  },
+  "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"
 }

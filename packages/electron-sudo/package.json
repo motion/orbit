@@ -13,5 +13,5 @@
     "test-win32": "npm run build-win32 && node node_modules\\mocha\\bin\\mocha --compilers js:babel-core/register tests",
     "test": "npm run build && node_modules/mocha/bin/mocha --compilers js:babel-core/register ./tests"
   },
-  "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
+  "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"
 }

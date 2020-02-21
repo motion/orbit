@@ -21,5 +21,6 @@
     "postgraphile": "4.4.0",
     "postgraphile-core": "^4.4.0",
     "typeorm": "^0.3.0-alpha.23"
-  }
+  },
+  "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"
 }

@@ -21,5 +21,6 @@
     "lodash": "4.17.11",
     "request": "^2.88.0",
     "slack": "^11.0.1"
-  }
+  },
+  "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"
 }

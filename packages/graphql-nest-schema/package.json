@@ -11,5 +11,6 @@
     "invariant": "^2.2.4",
     "node-fetch": "^2.5.0",
     "uuid": "^3.3.2"
-  }
+  },
+  "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"
 }

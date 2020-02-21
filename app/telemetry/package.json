@@ -13,5 +13,6 @@
     "configstore": "4.0.0",
     "is-docker": "2.0.0",
     "prompts": "2.0.4"
-  }
+  },
+  "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"
 }

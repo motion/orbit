@@ -9,5 +9,6 @@
   "dependencies": {
     "loader-utils": "^1.2.3",
     "source-map": "^0.6.1"
-  }
+  },
+  "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"
 }

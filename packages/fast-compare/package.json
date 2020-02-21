@@ -8,5 +8,6 @@
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"
 }

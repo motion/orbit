@@ -11,5 +11,6 @@
     "@o/logger": "^2.7.0",
     "@o/utils": "^2.7.0",
     "configstore": "4.0.0"
-  }
+  },
+  "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"
 }

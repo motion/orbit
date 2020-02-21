@@ -14,5 +14,6 @@
     "@o/utils": "^2.7.0",
     "immer": "^3.1.2",
     "reconnecting-websocket": "4.1.10"
-  }
+  },
+  "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"
 }

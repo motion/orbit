@@ -20,5 +20,6 @@
     "node-readability": "3.0.0",
     "puppeteer": "1.13.0",
     "urijs": "^1.19.0"
-  }
+  },
+  "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"
 }

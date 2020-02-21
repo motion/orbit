@@ -32,5 +32,6 @@
     "sudo-prompt": "^8.2.0",
     "tmp": "^0.0.33",
     "tslib": "^1.8.1"
-  }
+  },
+  "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"
 }

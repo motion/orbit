@@ -7,11 +7,12 @@ import { ProvideHighlight } from './Highlight'
 import { ProvideSearch } from './Search'
 import { ProvideShare } from './Share'
 import { ProvideShortcut } from './Shortcut'
+import { themes } from './themes'
 import { ProvideVisibility } from './Visibility'
 
 export type ProvideUIProps = {
-  activeTheme: string
-  themes: { [key: string]: CompiledTheme }
+  activeTheme?: string
+  themes?: { [key: string]: CompiledTheme }
   children?: any
 }
 
@@ -19,7 +20,7 @@ export const ProvideUI = (props: ProvideUIProps) => {
   return (
     <GlossRoot>
       <ProvideHighlight>
-        <ThemeProvide activeTheme={props.activeTheme} themes={props.themes}>
+        <ThemeProvide activeTheme={props.activeTheme ?? "light"} themes={props.themes ?? themes}>
           <Theme scale={1}>
             <ProvideDraggable>
               <ProvideSearch query="">

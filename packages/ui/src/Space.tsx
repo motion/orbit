@@ -5,7 +5,7 @@ import { mediaQueryKeysSize } from './mediaQueryKeys'
 
 // we need just a touch of css to collapse multiple spaces nicely
 if (isBrowser) {
-  require('./Space.css')
+  require('../Space.css')
 }
 
 export type SizeName = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'

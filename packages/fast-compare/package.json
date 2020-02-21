@@ -1,6 +1,6 @@
 {
   "name": "@o/fast-compare",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "description": "none",
   "main": "_/fastCompare.js",
   "ts:main": "src/fastCompare.ts",

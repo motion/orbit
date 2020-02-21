@@ -3,14 +3,14 @@
   "main": "_/automagical.js",
   "ts:main": "src/automagical.ts",
   "sideEffects": false,
-  "version": "2.7.0",
+  "version": "2.7.1",
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/fast-compare": "^2.7.0",
-    "@o/logger": "^2.7.0",
+    "@o/fast-compare": "^2.7.1",
+    "@o/logger": "^2.7.1",
     "event-kit": "2.5.3",
     "global": "^4.3.2",
     "json-stringify-pretty-compact": "1.2.0",

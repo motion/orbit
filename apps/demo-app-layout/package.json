@@ -1,6 +1,6 @@
 {
   "name": "@o/demo-app-layout",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "main": "index.tsx",
   "ts:main": "src/index.tsx",
   "config": {
@@ -11,9 +11,9 @@
     "build": "orbit build"
   },
   "dependencies": {
-    "@o/kit": "^2.7.0",
-    "@o/mock-data": "^2.7.0",
-    "@o/ui": "^2.7.0"
+    "@o/kit": "^2.7.1",
+    "@o/mock-data": "^2.7.1",
+    "@o/ui": "^2.7.1"
   },
   "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"
 }

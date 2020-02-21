@@ -1,6 +1,6 @@
 {
   "name": "@o/config",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "main": "_/config.js",
   "sideEffects": false,
   "scripts": {
@@ -8,8 +8,8 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/logger": "^2.7.0",
-    "@o/utils": "^2.7.0",
+    "@o/logger": "^2.7.1",
+    "@o/utils": "^2.7.1",
     "configstore": "4.0.0"
   },
   "gitHead": "cedfe08ce0ef7045a44fda403a3fad4b859dec72"

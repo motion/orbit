@@ -1,16 +1,16 @@
 {
   "name": "@o/search-app",
   "description": "Search across all synced data.",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "main": "index.tsx",
   "scripts": {
     "start": "orbit dev",
     "build": "orbit build"
   },
   "dependencies": {
-    "@o/kit": "^2.7.0",
-    "@o/kit-internal": "^2.7.0",
-    "@o/ui": "^2.7.0",
+    "@o/kit": "^2.7.1",
+    "@o/kit-internal": "^2.7.1",
+    "@o/ui": "^2.7.1",
     "date-fns": "2.0.0-alpha.7",
     "lodash": "4.17.11"
   },

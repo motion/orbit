@@ -1,6 +1,6 @@
 {
   "name": "@o/ui",
-  "version": "2.7.2",
+  "version": "2.7.4",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
   "sideEffects": [
@@ -29,8 +29,8 @@
     "css-typed-om": "^0.4.0",
     "date-fns": "2.0.0-alpha.7",
     "framer-motion": "1.6.15",
-    "gloss": "^2.7.2",
-    "gloss-theme": "^2.7.2",
+    "gloss": "^2.7.4",
+    "gloss-theme": "^2.7.4",
     "hash-sum": "2.0.0",
     "invariant": "^2.2.4",
     "keycode": "^2.1.9",

@@ -1,7 +1,7 @@
 {
   "name": "@o/website-app",
   "description": "Crawl a website given a URL.",
-  "version": "2.7.2",
+  "version": "2.7.4",
   "main": "index.tsx",
   "config": {
     "orbitApp": true
@@ -11,9 +11,9 @@
     "build": "orbit build"
   },
   "dependencies": {
-    "@o/kit": "^2.7.2",
-    "@o/ui": "^2.7.2",
-    "@o/worker-kit": "^2.7.2",
+    "@o/kit": "^2.7.4",
+    "@o/ui": "^2.7.4",
+    "@o/worker-kit": "^2.7.4",
     "get-urls": "^8.0.0",
     "immer": "^3.1.2",
     "lodash": "4.17.11",

@@ -1,21 +1,21 @@
 {
   "name": "@o/playground",
   "private": true,
-  "version": "2.7.2",
+  "version": "2.7.4",
   "scripts": {
     "start": "mcro-build --entry ./src/index --port 5001 --target web"
   },
   "dependencies": {
     "@babel/core": "^7.6.0",
     "@babel/runtime": "^7.4.5",
-    "@o/babel-preset-motion": "^2.7.2",
-    "@o/kit": "^2.7.2",
-    "@o/ui": "^2.7.2",
+    "@o/babel-preset-motion": "^2.7.4",
+    "@o/kit": "^2.7.4",
+    "@o/ui": "^2.7.4",
     "@o/use-store": "^2.7.1",
     "@welldone-software/why-did-you-render": "3.3.8",
     "core-js": "2.6.5",
     "framer-motion": "*",
-    "gloss": "^2.7.2",
+    "gloss": "^2.7.4",
     "lodash": "4.17.11",
     "react": "^16.9.0",
     "react-dom": "^16.9.0"

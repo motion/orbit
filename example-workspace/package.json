@@ -1,23 +1,23 @@
 {
   "name": "@o/example-workspace",
-  "version": "2.7.2",
+  "version": "2.7.4",
   "private": true,
   "config": {
     "orbitWorkspace": true
   },
   "dependencies": {
     "@babel/runtime": "^7.4.5",
-    "@o/confluence-app": "^2.7.2",
-    "@o/demo-app-api-grid": "^2.7.2",
-    "@o/demo-app-flow": "^2.7.2",
-    "@o/demo-app-layout": "^2.7.2",
-    "@o/demo-app-user-manager": "^2.7.2",
-    "@o/drive-app": "^2.7.2",
-    "@o/gmail-app": "^2.7.2",
-    "@o/lists-app": "^2.7.2",
-    "@o/people-app": "^2.7.2",
-    "@o/postgres-app": "^2.7.2",
-    "@o/slack-app": "^2.7.2",
-    "orbit": "^2.7.2"
+    "@o/confluence-app": "^2.7.4",
+    "@o/demo-app-api-grid": "^2.7.4",
+    "@o/demo-app-flow": "^2.7.4",
+    "@o/demo-app-layout": "^2.7.4",
+    "@o/demo-app-user-manager": "^2.7.4",
+    "@o/drive-app": "^2.7.4",
+    "@o/gmail-app": "^2.7.4",
+    "@o/lists-app": "^2.7.4",
+    "@o/people-app": "^2.7.4",
+    "@o/postgres-app": "^2.7.4",
+    "@o/slack-app": "^2.7.4",
+    "orbit": "^2.7.4"
   }
 }

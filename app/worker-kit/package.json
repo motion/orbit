@@ -1,6 +1,6 @@
 {
   "name": "@o/worker-kit",
-  "version": "2.7.2",
+  "version": "2.7.4",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
   "sideEffects": false,
@@ -10,10 +10,10 @@
   },
   "dependencies": {
     "@o/config": "^2.7.1",
-    "@o/libs": "^2.7.2",
+    "@o/libs": "^2.7.4",
     "@o/logger": "^2.7.1",
     "@o/mediator": "^2.7.1",
-    "@o/models": "^2.7.2",
+    "@o/models": "^2.7.4",
     "@o/utils": "^2.7.1",
     "dompurify": "^1.0.7",
     "jsdom": "^11.12.0",

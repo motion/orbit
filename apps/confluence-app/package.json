@@ -1,7 +1,7 @@
 {
   "name": "@o/confluence-app",
   "description": "Query, explore and sync the full Confluence API",
-  "version": "2.7.2",
+  "version": "2.7.4",
   "main": "index.tsx",
   "config": {
     "orbitApp": true
@@ -11,9 +11,9 @@
     "build": "orbit build"
   },
   "dependencies": {
-    "@o/kit": "^2.7.2",
-    "@o/ui": "^2.7.2",
-    "@o/worker-kit": "^2.7.2"
+    "@o/kit": "^2.7.4",
+    "@o/ui": "^2.7.4",
+    "@o/worker-kit": "^2.7.4"
   },
   "gitHead": "fe92417d7f38b74d6a8299c18e2b137bac8545f7"
 }

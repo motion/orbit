@@ -1,6 +1,6 @@
 {
   "name": "@o/demo-app-flow",
-  "version": "2.7.4",
+  "version": "2.7.5",
   "main": "index.tsx",
   "config": {
     "orbitApp": true
@@ -10,8 +10,8 @@
     "build": "orbit build"
   },
   "dependencies": {
-    "@o/kit": "^2.7.4",
-    "@o/ui": "^2.7.4"
+    "@o/kit": "^2.7.5",
+    "@o/ui": "^2.7.5"
   },
   "gitHead": "fcc1c2cd12f294df9c4e63750d8f517d556ee392"
 }

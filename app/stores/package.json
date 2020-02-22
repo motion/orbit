@@ -1,6 +1,6 @@
 {
   "name": "@o/stores",
-  "version": "2.7.4",
+  "version": "2.7.5",
   "main": "_/index.js",
   "ts:main": "./src/index.ts",
   "sideEffects": false,
@@ -12,7 +12,7 @@
     "@o/config": "^2.7.1",
     "@o/constants": "^2.7.1",
     "@o/mobx-bridge": "^2.7.1",
-    "@o/models": "^2.7.4",
+    "@o/models": "^2.7.5",
     "@o/use-store": "^2.7.1",
     "global": "^4.3.2",
     "lodash": "4.17.11"

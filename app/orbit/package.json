@@ -1,6 +1,6 @@
 {
   "name": "orbit",
-  "version": "2.7.4",
+  "version": "2.7.5",
   "main": "_/index.js",
   "bin": {
     "orbit": "_/index.js"
@@ -17,10 +17,10 @@
   "dependencies": {
     "@babel/code-frame": "^7.0.0",
     "@o/config": "^2.7.1",
-    "@o/libs-node": "^2.7.4",
+    "@o/libs-node": "^2.7.5",
     "@o/logger": "^2.7.1",
     "@o/mediator": "^2.7.1",
-    "@o/models": "^2.7.4",
+    "@o/models": "^2.7.5",
     "@o/orbit-workspace-deps": "^2.7.1",
     "@o/telemetry": "^2.7.1",
     "@o/utils": "^2.7.1",

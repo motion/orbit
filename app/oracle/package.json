@@ -1,6 +1,6 @@
 {
   "name": "@o/oracle",
-  "version": "2.7.4",
+  "version": "2.7.5",
   "private": true,
   "main": "./_/Oracle.js",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@o/logger": "^2.7.1",
-    "@o/models": "^2.7.4",
+    "@o/models": "^2.7.5",
     "electron-util": "^0.12.1",
     "fs-extra": "^8.1.0",
     "ws": "^7.0.0"

@@ -1,6 +1,6 @@
 {
   "name": "@o/apps-manager",
-  "version": "2.7.4",
+  "version": "2.7.5",
   "main": "_/AppsManager.js",
   "private": true,
   "scripts": {
@@ -10,10 +10,10 @@
   "dependencies": {
     "@o/config": "^2.7.1",
     "@o/constants": "^2.7.1",
-    "@o/libs-node": "^2.7.4",
+    "@o/libs-node": "^2.7.5",
     "@o/logger": "^2.7.1",
     "@o/mediator": "^2.7.1",
-    "@o/models": "^2.7.4",
+    "@o/models": "^2.7.5",
     "@o/use-store": "^2.7.1",
     "@o/utils": "^2.7.1",
     "fs-extra": "^8.1.0"

@@ -1,4 +1,4 @@
-import { Bit, ButtonPerson, DateFormat, HighlightText, Surface, Text, View } from '@o/ui'
+import { ButtonPerson, DateFormat, HighlightText, Surface, Text, View } from '@o/ui'
 import { gloss } from 'gloss'
 import React, { useContext } from 'react'
 
@@ -13,7 +13,7 @@ export type ChatMessage = {
 
 type ChatMessageProps = Partial<ItemsPropsContextType> & {
   message: ChatMessage
-  people?: Bit[]
+  people?: any[]
   previousMessage?: ChatMessage
 }
 

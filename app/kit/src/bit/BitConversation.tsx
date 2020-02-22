@@ -1,6 +1,7 @@
 import { useModels } from '@o/bridge'
 import { Bit, BitModel } from '@o/models'
-import { ChatMessages, Section, Stack } from '@o/ui'
+import { Section, Stack } from '@o/ui'
+import { ChatMessages } from '@o/ui-extra'
 import * as React from 'react'
 
 import { AppBitMainProps } from '../types/AppTypes'

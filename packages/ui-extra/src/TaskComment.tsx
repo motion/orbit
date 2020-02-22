@@ -1,7 +1,7 @@
+import { BorderBottom, DateFormat, Icon, RoundButton, Space, Stack, Text, View, ViewProps } from '@o/ui'
 import { gloss } from 'gloss'
 import * as React from 'react'
 
-import { BorderBottom, DateFormat, Icon, RoundButton, Space, Stack, Text, View, ViewProps } from '../buttons/RoundButton'
 import { Markdown } from './Markdown'
 
 export type TaskCommentLike = {

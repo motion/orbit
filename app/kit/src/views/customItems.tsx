@@ -1,4 +1,5 @@
-import { Avatar, ConfigureUIProps, Document, Markdown, Task, Thread } from '@o/ui'
+import { Avatar, ConfigureUIProps } from '@o/ui'
+import { Document, Markdown, Task, Thread } from '@o/ui-extra'
 import React from 'react'
 
 import { BitConversation } from '../bit/BitConversation'

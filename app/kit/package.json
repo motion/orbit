@@ -20,6 +20,7 @@
     "@o/models": "^2.7.4",
     "@o/stores": "^2.7.4",
     "@o/ui": "^2.7.4",
+    "@o/ui-extra": "*",
     "@o/use-store": "^2.7.1",
     "@o/utils": "^2.7.1",
     "compromise": "^11.14.3",

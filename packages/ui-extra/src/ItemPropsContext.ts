@@ -1,9 +1,7 @@
+import { TextProps, ViewProps } from '@o/ui'
 import { createContext } from 'react'
 
-import { ItemRenderText } from '../lists/ListItemViewProps'
-import { TextProps } from '../text/Text'
-import { ViewProps } from '../View/types'
-
+export type ItemRenderText = (text: string) => JSX.Element
 export const ItemPropsContext = createContext({
   oneLine: false,
   preventSelect: false,

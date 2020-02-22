@@ -1,4 +1,5 @@
-import { ChatMessage, HighlightText, ItemPropsContext, ListItemViewProps } from '@o/ui'
+import { HighlightText, ListItemViewProps } from '@o/ui'
+import { ChatMessage, ItemPropsContext } from '@o/ui-extra'
 import React, { useContext } from 'react'
 
 const getMessages = (messages: any[], { shownLimit, searchTerm }) => {

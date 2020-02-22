@@ -1,14 +1,9 @@
+import { DateFormat, HighlightText, RoundButtonSmall, Space, Text, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import { Box, gloss } from 'gloss'
 import * as React from 'react'
 import ShadowDOM from 'react-shadow'
 
-import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
-import { HighlightText } from '../Highlight'
-import { Space } from '../Space'
-import { DateFormat } from '../text/DateFormat'
-import { Text } from '../text/Text'
-import { View } from '../View/View'
 import { useCaptureLinks } from './Thread'
 
 export type ThreadMessageLike = {

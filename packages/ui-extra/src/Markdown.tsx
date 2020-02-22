@@ -1,8 +1,8 @@
+import { HighlightText } from '@o/ui'
 import React, { useContext } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkEmoji from 'remark-emoji'
 
-import { HighlightText } from '../Highlight'
 import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
 
 const ListItem = (props: any) => <HighlightText tagName="li" display="list-item" {...props} />

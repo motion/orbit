@@ -1,6 +1,6 @@
+import { HighlightText } from '@o/ui'
 import React, { useContext } from 'react'
 
-import { HighlightText } from '../Highlight'
 import { ItemPropsContext } from './ItemPropsContext'
 import { Markdown } from './Markdown'
 import { HighlightSection, TaskComment, TaskCommentLike } from './TaskComment'

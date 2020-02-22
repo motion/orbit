@@ -1,8 +1,5 @@
+import { Bit, ChatMessage, Stack } from '@o/ui'
 import * as React from 'react'
-
-import { Bit } from '../helpers/BitLike'
-import { Stack } from '../View/Stack'
-import { ChatMessage } from './ChatMessage'
 
 export function ChatMessages({ messages, people }: { messages: ChatMessage[]; people?: Bit[] }) {
   return (

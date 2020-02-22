@@ -1,13 +1,7 @@
+import { Bit, ButtonPerson, DateFormat, HighlightText, Surface, Text, View } from '@o/ui'
 import { gloss } from 'gloss'
 import React, { useContext } from 'react'
 
-import { ButtonPerson } from '../buttons/ButtonPerson'
-import { Bit } from '../helpers/BitLike'
-import { HighlightText } from '../Highlight'
-import { Surface } from '../Surface'
-import { DateFormat } from '../text/DateFormat'
-import { Text } from '../text/Text'
-import { View } from '../View/View'
 import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
 import { Markdown } from './Markdown'
 

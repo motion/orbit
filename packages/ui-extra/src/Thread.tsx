@@ -1,8 +1,6 @@
+import { HighlightText, Stack, UIConfig } from '@o/ui'
 import * as React from 'react'
 
-import { Config } from '../helpers/configureUI'
-import { HighlightText } from '../Highlight'
-import { Stack } from '../View/Stack'
 import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
 import { ThreadMessage, ThreadMessageLike } from './ThreadMessage'
 
@@ -55,7 +53,7 @@ export const useCaptureLinks = (node: any) => {
         }
       }
       if (found) {
-        Config.handleLink(event, found.href)
+        UIConfig.handleLink(event, found.href)
       }
     }
     node.addEventListener('click', onClickLink)

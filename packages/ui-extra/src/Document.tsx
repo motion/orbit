@@ -1,9 +1,5 @@
+import { HighlightText, ItemPropsContext, ItemsPropsContextType, Stack, Title } from '@o/ui'
 import React, { useContext } from 'react'
-
-import { HighlightText } from '../Highlight'
-import { Title } from '../text/Title'
-import { Stack } from '../View/Stack'
-import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
 
 export type DocumentProps = Partial<ItemsPropsContextType> & {
   body: string

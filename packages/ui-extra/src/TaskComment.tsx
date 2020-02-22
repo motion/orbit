@@ -1,15 +1,7 @@
 import { gloss } from 'gloss'
 import * as React from 'react'
 
-import { BorderBottom } from '../Border'
-import { RoundButton } from '../buttons/RoundButton'
-import { Icon } from '../Icon'
-import { Space } from '../Space'
-import { DateFormat } from '../text/DateFormat'
-import { Text } from '../text/Text'
-import { Stack } from '../View/Stack'
-import { ViewProps } from '../View/types'
-import { View } from '../View/View'
+import { BorderBottom, DateFormat, Icon, RoundButton, Space, Stack, Text, View, ViewProps } from '../buttons/RoundButton'
 import { Markdown } from './Markdown'
 
 export type TaskCommentLike = {

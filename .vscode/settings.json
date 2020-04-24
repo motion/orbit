@@ -11,7 +11,10 @@
     "javascriptreact",
     { "language": "typescript", "autoFix": true },
     { "language": "typescriptreact", "autoFix": true }
-  ]
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
   // see https://dev.to/robertcoopercode/using-eslint-and-prettier-in-a-typescript-project-53jb
   // "editor.formatOnSave": true,
   // "[javascript]": {

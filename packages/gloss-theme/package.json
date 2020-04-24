@@ -1,6 +1,6 @@
 {
   "name": "gloss-theme",
-  "version": "2.7.5",
+  "version": "2.7.6",
   "description": "Make themes for gloss easily",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
@@ -18,8 +18,8 @@
   "homepage": "https://github.com/motion/gloss-theme",
   "dependencies": {
     "@o/css": "^2.7.1",
-    "@o/fast-compare": "^2.7.1",
-    "gloss": "^2.7.5"
+    "@o/fast-compare": "^2.7.6",
+    "gloss": "^2.7.6"
   },
   "gitHead": "0d2af411909b4a971ae481d82a410ef16af209b2"
 }

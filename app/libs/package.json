@@ -1,6 +1,6 @@
 {
   "name": "@o/libs",
-  "version": "2.7.5",
+  "version": "2.7.6",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
   "sideEffects": false,
@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@o/config": "^2.7.1",
-    "@o/fast-compare": "^2.7.1",
-    "@o/models": "^2.7.5",
+    "@o/fast-compare": "^2.7.6",
+    "@o/models": "^2.7.6",
     "@o/utils": "^2.7.1"
   },
   "gitHead": "0d2af411909b4a971ae481d82a410ef16af209b2"

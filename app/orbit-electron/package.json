@@ -42,7 +42,6 @@
     "reconnecting-websocket": "4.1.10",
     "source-map-support": "^0.5.13",
     "typeorm": "^0.3.0-alpha.23",
-    "usage": "^0.7.1",
     "wait-on": "3.3.0-beta.0"
   },
   "peerDependencies": {

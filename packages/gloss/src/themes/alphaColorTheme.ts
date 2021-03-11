@@ -87,7 +87,7 @@ function merge(
   if (color) {
     if (color !== 'inherit' && typeof alpha === 'number') {
       next[pseudoKey] = {
-        color: Config.toColor(color).setAlpha(alpha),
+        // color: Config.toColor(color).setAlpha(alpha),
       }
     } else if (baseColor !== color) {
       next[pseudoKey] = {

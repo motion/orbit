@@ -168,12 +168,13 @@ export default memo(() => {
             </FadeInView>
             <FadeInView parallax delayIndex={1}>
               <TitleText textAlign="center" size="xxxl">
-                Batteries included
+                Earn, curate, enjoy
               </TitleText>
             </FadeInView>
             <TitleTextSub margin="auto" minWidth={320}>
               <FadeInView parallax sm-display="inline" delayIndex={2}>
-                Import, display, build, and export. Easier than ever.
+                When building a better food search app, we realized we needed to think differently.
+                How do you sustain high quality? It's all in the community.
               </FadeInView>
             </TitleTextSub>
           </>

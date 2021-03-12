@@ -34,7 +34,7 @@ const linkDelay = 80
 export const LinksLeft = props => {
   return (
     <>
-      <HeaderLink delay={linkDelay * 1} {...props} href="/guides">
+      {/* <HeaderLink delay={linkDelay * 1} {...props} href="/guides">
         Guides
       </HeaderLink>
       <HeaderLink delay={linkDelay * 2} {...props} href="/docs">
@@ -42,14 +42,14 @@ export const LinksLeft = props => {
       </HeaderLink>
       <HeaderLink delay={linkDelay * 3} {...props} href="/apps">
         Apps
-      </HeaderLink>
+      </HeaderLink> */}
     </>
   )
 }
 
 export const LinksRight = props => (
   <>
-    <HeaderLink delay={linkDelay * 4} {...props} href="/beta">
+    {/* <HeaderLink delay={linkDelay * 4} {...props} href="/beta">
       Beta
     </HeaderLink>
     <HeaderLink delay={linkDelay * 5} {...props} href="/blog">
@@ -57,6 +57,6 @@ export const LinksRight = props => (
     </HeaderLink>
     <HeaderLink delay={linkDelay * 6} {...props} href="/about">
       About
-    </HeaderLink>
+    </HeaderLink> */}
   </>
 )

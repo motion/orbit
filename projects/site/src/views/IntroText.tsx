@@ -1,7 +1,8 @@
-import { Image, TextProps } from '@o/ui'
+import { Image, Space, TextProps } from '@o/ui'
 import React from 'react'
 
 import markSolid from '../public/images/mark-solid.svg'
+import { LogoCircle } from './DishLogo'
 import { Text } from './Text'
 
 export const IntroText = (props: TextProps) => {
@@ -21,7 +22,9 @@ export const wordsWithBrandMark = (text: any) => {
       {allButLast}{' '}
       <span style={{ display: 'inline-block' }}>
         {last}
-        <BrandMarkInline />
+        <span style={{ marginLeft: 5 }}>
+          <LogoCircle scale={0.65} />
+        </span>
       </span>
     </>
   )

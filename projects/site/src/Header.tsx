@@ -1,4 +1,4 @@
-import { BorderBottom, RowProps, Stack, ViewProps } from '@o/ui'
+import { BorderBottom, Stack, ViewProps } from '@o/ui'
 import { Box, gloss, useTheme } from 'gloss'
 import React, { memo, useLayoutEffect, useRef, useState } from 'react'
 
@@ -17,7 +17,7 @@ export type HeaderProps = {
   noBorder?: boolean
   before?: React.ReactNode
   logoProps?: ViewProps
-} & RowProps
+}
 
 export const Header = memo(({ slim, noBorder, before, logoProps, ...rest }: HeaderProps) => {
   const theme = useTheme()
@@ -82,7 +82,7 @@ export const Header = memo(({ slim, noBorder, before, logoProps, ...rest }: Head
                 transition={shown ? transitions.normal : transitions.fastStatic}
                 delay={shown ? 100 : 0}
               >
-                <LogoVertical {...logoProps} />
+                <LogoVertical />
               </FadeInView>
               {linksRight}
             </HeaderContain>

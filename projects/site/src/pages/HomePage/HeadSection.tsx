@@ -1,11 +1,29 @@
-import { gloss, Icon, Image, Parallax, SimpleText, SimpleTextProps, Space, Stack, SurfacePassProps, Theme, View } from '@o/ui'
+import {
+  gloss,
+  Icon,
+  Image,
+  Parallax,
+  SimpleText,
+  SimpleTextProps,
+  Space,
+  Stack,
+  SurfacePassProps,
+  Theme,
+  View,
+} from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import { Flex } from 'gloss'
 import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
 import { useSiteStore } from '../../SiteStore'
-import { fadeAnimations, FadeChildProps, FadeInView, transitions, useFadePage } from '../../views/FadeInView'
+import {
+  fadeAnimations,
+  FadeChildProps,
+  FadeInView,
+  transitions,
+  useFadePage,
+} from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContentChrome } from '../../views/SectionContent'
@@ -51,13 +69,13 @@ const Star = gloss(Flex, {
   borderRadius: 100,
   width: 2,
   height: 2,
-  background: 'rgba(255,255,255,0.8)',
+  background: 'rgba(255,255,255,0.48)',
   position: 'absolute',
   boxShadow: [
     {
-      spread: 10,
-      blur: 10,
-      color: 'rgba(255,255,255,0.1)',
+      spread: 0,
+      blur: 15,
+      color: 'rgba(255,255,255,0.5)',
       x: 0,
       y: 0,
     },
@@ -82,13 +100,13 @@ export function HeadSection() {
         background="radial-gradient(circle closest-side, #1D4B84, transparent)"
       />
 
-      {/* <Page.ParallaxView
+      <Page.ParallaxView
         className="stars"
         speed={1}
         position="absolute"
         width="50%"
         height="50%"
-        top="0%"
+        top="3%"
         right="-80%"
         parallax={geometry => ({
           x: geometry.useParallax().transform(x => -x * 3),
@@ -120,9 +138,9 @@ export function HeadSection() {
         <Star top="50%" left="80%" />
         <Star top="0%" left="30%" />
         <Star top="0%" left="80%" />
-      </Page.ParallaxView> */}
+      </Page.ParallaxView>
 
-      <Stack opacity={fontsLoaded ? 1 : 0} margin={['auto', 0]} height="calc(100% - 120px)">
+      <Stack opacity={fontsLoaded ? 1 : 0} margin={['auto', 0]} height="calc(100% - 100px)">
         <Space size="xxl" />
         <Stack
           maxHeight="80vh"
@@ -143,7 +161,7 @@ export function HeadSection() {
           userSelect="none"
           zIndex={-1}
         >
-          <Parallax.View speed={-0.1}>
+          <Parallax.View speed={-0.3}>
             <FadeInView speed={1} {...animation.screen}>
               <View
                 transform={{
@@ -151,11 +169,12 @@ export function HeadSection() {
                   rotateY: '15deg',
                   rotateX: '58deg',
                   rotateZ: '-22deg',
+                  scale: 1.2,
                 }}
               >
                 <Image
                   display="block"
-                  src={require('../../public/images/screen.jpg')}
+                  src={require('../../assets/dish.jpg')}
                   width="auto"
                   height={500}
                   maxWidth={1200}
@@ -166,74 +185,12 @@ export function HeadSection() {
           </Parallax.View>
         </View>
       </Stack>
-      <View
-        zIndex={100}
-        position="absolute"
-        left="50%"
-        top="50%"
-        marginTop={180}
-        marginLeft={`${-180 / 2}px`}
-        width={180}
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Parallax.View speed={0.1} alignItems="inherit" justifyContent="inherit">
-          <FadeInView
-            speed={-0.1}
-            {...animation.watch}
-            flex={1}
-            alignItems="inherit"
-            justifyContent="inherit"
-          >
-            <View
-              animate
-              transformOrigin="center center"
-              width={80}
-              height={80}
-              whileHover={{
-                scale: 1.2,
-              }}
-              whileTap={{
-                rotate: '360deg',
-              }}
-              sm-transform={{
-                scale: 0.8,
-              }}
-            >
-              <View
-                background={[255, 255, 255, 0.1]}
-                borderRadius={100}
-                alignItems="center"
-                justifyContent="center"
-                width="100%"
-                height="100%"
-                pointerEvents="auto"
-                cursor="pointer"
-                transition="all ease 1s"
-                hoverStyle={{
-                  background: [255, 255, 255, 0.15],
-                }}
-              >
-                <Icon size={28} color="#fff" name="play" />
-              </View>
-            </View>
-            <Space />
-            <View
-              padding={[3, 8]}
-              background={[255, 255, 255, 0.1]}
-              borderRadius={100}
-              border={[2, '#00000055']}
-            >
-              <SimpleText>Watch the demo</SimpleText>
-            </View>
-          </FadeInView>
-        </Parallax.View>
-      </View>
     </Fade.FadeProvide>
   )
 }
 
 const scale = 0.8
+
 const para = {
   display: 'flex',
   fontSize: `${3.4 * scale}vw`,
@@ -247,11 +204,26 @@ const para = {
   'abovemd-fontWeight': 300,
 } as const
 
+const scaleSm = 0.4
+
+const paraSmall = {
+  display: 'flex',
+  fontSize: `${3.4 * scaleSm}vw`,
+  lineHeight: `${5.1 * scaleSm}vw`,
+  'lg-fontSize': 38 * scaleSm,
+  'lg-lineHeight': `${3.2 * scaleSm}rem`,
+  'sm-fontSize': 22 * scaleSm,
+  'sm-lineHeight': `${2.8 * scaleSm}rem`,
+  'sm-display': 'inline',
+  fontWeight: 300,
+  'abovemd-fontWeight': 300,
+} as const
+
 const HeadTextSection = memo(() => {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const measured = fontsLoaded
   // const pFit = useTextFit({ min: 16, updateKey: fontsLoaded })
-  const br = <View className="head-space" height={30} sm-height={15} />
+  const br = <View className="head-space" height={40} sm-height={15} />
   const sectionHeight = useSiteStore().sectionHeight
 
   return (
@@ -263,6 +235,7 @@ const HeadTextSection = memo(() => {
         alignItems="center"
         justifyContent="center"
         zIndex={10}
+        marginTop={40}
         position="relative"
       >
         <View width="100%" alignItems="center">
@@ -272,28 +245,31 @@ const HeadTextSection = memo(() => {
             selectable
             textAlign="center"
             whiteSpace="nowrap"
-            maxHeight={160}
+            maxHeight={260}
           >
-            <FadeInView {...animation.blog} disable={!measured}>
+            {/* <FadeInView {...animation.blog} disable={!measured}>
               <WelcomeBlogPostButton />
-            </FadeInView>
+            </FadeInView> */}
             <FadeInView disable={!measured} {...animation.title} {...fontProps.TitleFont}>
-              Amazing internal tools
+              the pokedex for the real world
             </FadeInView>
           </TextFitTitle>
           {br}
-          <FadeInView {...animation.sub1} minHeight="min-content">
-            <TitleParagraph {...para}>
-              {/* first line */}Create internal tools you'd never have attempted before.
-            </TitleParagraph>
-          </FadeInView>
+          {/* <FadeInView {...animation.sub1} minHeight="min-content">
+            <TitleParagraph {...para}>Dish is a search app we own.</TitleParagraph>
+          </FadeInView> */}
           <span style={{ userSelect: 'none' }}>&nbsp;</span>
           <View sm-display="none">
             <FadeInView {...animation.sub2} minHeight="min-content">
-              <TitleParagraph {...para}>
-                {/* second line */}
-                The all-in-one data & app studio for teams.
-              </TitleParagraph>
+              <Paragraph size={1.65} maxWidth={600}>
+                A better way to curate experience.{' '}
+                <span style={{ color: '#feac1f' }}>
+                  {' '}
+                  Join a search engine that shares profits with it's community, designed around a
+                  blockchain.
+                </span>{' '}
+                Owned and powered by users.
+              </Paragraph>
             </FadeInView>
           </View>
           {br}
@@ -339,13 +315,13 @@ const HeadJoin = memo(() => {
   )
 })
 
-const titleSize = 9
+const titleSize = 6
 
 const TextFitTitle = gloss(SimpleText, {
   userSelect: 'text',
   lineHeight: '95%',
   fontSize: `${titleSize}vw`,
-  'lg-fontSize': titleSize * 11.5,
+  'lg-fontSize': titleSize * 10,
 })
 
 const TitleParagraph = (props: SimpleTextProps) => {

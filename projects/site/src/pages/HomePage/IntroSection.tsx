@@ -10,7 +10,7 @@ import { SectionContent } from '../../views/SectionContent'
 
 const IntroPara = ({ delayIndex, stagger, ...props }) => (
   <FadeInView parallax delayIndex={delayIndex} stagger={stagger}>
-    <Paragraph alpha={0.85} size={1.4} fontWeight={200} sizeLineHeight={1.4} {...props} />
+    <Paragraph alpha={0.85} size={1.4} fontWeight={400} sizeLineHeight={1.4} {...props} />
   </FadeInView>
 )
 
@@ -52,7 +52,7 @@ export default function IntroSection() {
             <FadeInView parallax>
               <Image
                 display="block"
-                src={require('../../public/images/screen1.jpeg')}
+                src={require('../../assets/search.jpg')}
                 width="100%"
                 abovemd-marginLeft="-30%"
                 abovemd-width="130%"
@@ -74,16 +74,21 @@ export default function IntroSection() {
             </FadeInView>
           </View>
           <Stack space="xl" justifyContent="center">
-            <IntroPara delayIndex={1} stagger={0} size={1.8}>
-              <strong style={{ color: '#fff' }}>We're rethinking how we build and use apps</strong>
-              &nbsp;with a powerful internal tool platform.
+            <IntroPara delayIndex={1} stagger={0} size={2.3} sizeLineHeight={1.2}>
+              <strong style={{ color: '#e61277' }}>We're rethinking search</strong>
+              &nbsp;to prove quality and community go together.
             </IntroPara>
-            <IntroPara delayIndex={2} stagger={-0.5}>
-              It's a powerful platform to build common apps for teams. With easy data plugins, a
-              rich view kit, and a collaborative app-store.
+            <IntroPara fontWeight="600" delayIndex={2} stagger={-0.5}>
+              <span style={{ color: '#249be9' }}>
+                Dish starts as an app to find local <em>restaurant</em> gems 💎
+              </span>
+              : a fun, list making community debating the best food in your city. Create{' '}
+              <strong>playlists</strong>, vote and debate the best ones.
             </IntroPara>
-            <IntroPara delayIndex={3} stagger={-1}>
-              {wordsWithBrandMark(`Think of it as Bootstrap, for internal apps.`)}
+            <IntroPara alpha={0.65} delayIndex={3} stagger={-1}>
+              {wordsWithBrandMark(
+                `In order to keep it fun and high quality, we're launching it with a coin. All the fun of the old web, with some ideas from the new one.`,
+              )}
             </IntroPara>
           </Stack>
         </HalfGrid>

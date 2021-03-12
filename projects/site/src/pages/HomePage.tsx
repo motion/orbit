@@ -9,6 +9,7 @@ import { Page } from '../views/Page'
 import { SectionContent } from '../views/SectionContent'
 import FeaturesSection from './HomePage/FeaturesSection'
 import { HeadSection } from './HomePage/HeadSection'
+import IntroSection from './HomePage/IntroSection'
 import { LoadingPage } from './LoadingPage'
 
 const Sections = {
@@ -22,7 +23,7 @@ const Sections = {
   FeaturesSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/FeaturesSection')))),
   SecuritySection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/SecuritySection')))),
   FooterSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/FooterSection')))),
-  IntroSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/IntroSection')))),
+  // IntroSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/IntroSection')))),
 }
 
 const props = {
@@ -63,13 +64,13 @@ export const HomePage = memo(() => {
         <Page {...props} height="auto" zIndex={0}>
           <HeadSection />
         </Page>
+        <Page {...props} maxHeight={700}>
+          <IntroSection />
+        </Page>
         <Page {...props} maxHeight={1000}>
           <FeaturesSection />
         </Page>
-        <Page {...props} maxHeight={700}>
-          <Sections.IntroSection />
-        </Page>
-        <Page {...props} height="100vh">
+        <Page {...props} height="120vh">
           <Sections.AllInOnePitchDemoSection />
         </Page>
         <Page {...props} maxHeight={850}>

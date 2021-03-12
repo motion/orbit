@@ -3,8 +3,7 @@ import { scrollTo, Space, SVG, View, ViewProps } from '@o/ui'
 import { useTheme } from 'gloss'
 import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'
-
-import { logo } from './LogoHorizontal'
+import { Logo, LogoCircle, LogoColor } from './DishLogo'
 
 export const LogoVertical = memo(
   ({ size, ...rest }: ViewProps & { size?: 'small' | 'medium' | 'large' }) => {
@@ -18,10 +17,6 @@ export const LogoVertical = memo(
         alignItems="center"
         justifyContent="center"
         userSelect="none"
-        sm-transform={{
-          scale: 0.7,
-        }}
-        transform={{ scale: 0.9 }}
         padding={[0, 35]}
         onClick={async e => {
           e.preventDefault()
@@ -33,9 +28,9 @@ export const LogoVertical = memo(
         }}
         {...rest}
       >
-        <BrandMark />
-        <Space size={12} />
-        <BrandWords width={logo.w * 0.47} height={logo.h * 0.47} />
+        <LogoCircle />
+        <Space size={40} />
+        <LogoColor />
       </View>
     )
   },

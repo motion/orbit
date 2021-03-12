@@ -12,14 +12,14 @@ export function PillButton({ children, ...props }: ButtonProps) {
       color="#000"
       {...fontProps.TitleFont}
       fontWeight={600}
-      fontSize={12}
-      lineHeight={20}
+      fontSize={16}
+      lineHeight={24}
       letterSpacing={3}
       whiteSpace="pre"
       textTransform="uppercase"
       userSelect="none"
       width="max-content"
-      padding={[2, 12]}
+      padding={[5, 16]}
       margin={[0, 'auto']}
       {...props}
     >

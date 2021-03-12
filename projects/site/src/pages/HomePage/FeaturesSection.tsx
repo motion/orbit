@@ -1,6 +1,7 @@
 import { Grid, Image, Space, Stack, View } from '@o/ui'
 import { flatMap } from 'lodash'
 import React, { memo, useRef, useState } from 'react'
+import { LogoCircle } from '../../views/DishLogo'
 
 import { useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
@@ -60,18 +61,16 @@ export default memo(function FeaturesSection() {
           <View flex={1}>
             <ParallaxStageItem stagger={0}>
               <TitleText fontWeight={300} size="sm" alpha={0.5}>
-                Create internal apps with
+                It's time for a
               </TitleText>
               <Space />
               <TitleText
                 alignItems="flex-start"
                 justifyContent="flex-start"
-                size="xxl"
-                sizeLineHeight={0.85}
+                size="xxxl"
+                sizeLineHeight={1.1}
               >
-                The all-in-one
-                <br />
-                app workspace
+                Better deal.
               </TitleText>
             </ParallaxStageItem>
             <ParallaxStageItem stagger={1}>
@@ -182,6 +181,11 @@ export default memo(function FeaturesSection() {
                   : cur > index
                   ? `-${(cur - index) * 20}%`
                   : `${(index - cur) * 20}%`
+
+              if (index === 0) {
+                return <LogoCircle scale={13} />
+              }
+
               return (
                 <Image
                   key={key}
@@ -219,32 +223,32 @@ export default memo(function FeaturesSection() {
 const dly = 200
 
 const sections = {
-  'Use Data': {
+  Earn: {
     image: require('../../public/images/screen-graphql.jpg'),
     items: [
       {
-        title: `One-click data sources`,
+        title: `Referrals`,
         icon: `data`,
         body: [`Every app provides data, installs with a click.`],
       },
       {
-        title: 'Query Builder',
+        title: 'Create lists',
         icon: 'code-block',
         body: [`Create queries visually, plug into apps with a drag.`],
       },
       {
-        title: `GraphQL Explorer`,
+        title: `Take photos`,
         icon: `satellite`,
         body: [`A full graph of your data sources by default.`],
       },
       {
-        title: `Manage/Sync Bits`,
+        title: `Write reviews`,
         icon: `data`,
         body: [`Store results as bits, use them in other apps easily.`],
       },
     ],
   },
-  'Create Apps': {
+  Explore: {
     image: require('../../public/images/screen-people.jpg'),
     items: [
       {
@@ -269,7 +273,7 @@ const sections = {
       },
     ],
   },
-  'Move Faster': {
+  Maintain: {
     image: require('../../public/images/screen-graphql.jpg'),
     items: [
       {

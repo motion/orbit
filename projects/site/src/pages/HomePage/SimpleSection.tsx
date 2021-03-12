@@ -29,7 +29,7 @@ export const SimpleSection = ({ delay = 100, index = undefined, title, children,
               WebkitBackgroundClip: 'text',
             }}
             {...titleFont}
-            size="xxxs"
+            size="xs"
             textAlign="left"
             flex={1}
             fontWeight={400}
@@ -53,7 +53,7 @@ export const SectionP = props => (
     tagName="div"
     display="flex"
     flexDirection="row"
-    size={1.1}
+    size={1.4}
     alpha={0.65}
     fontWeight={400}
     sizeLineHeight={1.2}

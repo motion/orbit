@@ -12,23 +12,16 @@ export const Footer = () => {
   }
   return (
     <Stack
-      direction="horizontal"
-      flexDirection="row"
-      flexWrap="wrap"
-      sm-flexDirection="column"
-      sm-flexWrap="nowrap"
+      direction="vertical"
       space="lg"
       padding={[0, 0, 'xxxl']}
       sm-padding={0}
       width="100%"
       minHeight={270}
       flex={8}
-      alignItems="flex-start"
-      scrollable="y"
+      alignItems="center"
     >
-      <Stack {...sectionMinWidth} flex={1} space={12}>
-        <SmallTitle coat="lightRed">Orbit</SmallTitle>
-        <Space size={10} />
+      <Stack {...sectionMinWidth} alignItems="center" justifyContent="center" flex={1} space={12}>
         <SmallLink href="/">Home</SmallLink>
         <SmallLink href="/beta">Download</SmallLink>
         <SmallLink href="/start">Getting Started</SmallLink>
@@ -36,25 +29,6 @@ export const Footer = () => {
         <SmallLink href="/docs">Documentation</SmallLink>
         <SmallLink href="/about">Team</SmallLink>
         <SmallLink href="/beta">Beta</SmallLink>
-      </Stack>
-
-      <Stack {...sectionMinWidth} flex={1} space={12}>
-        <SmallTitle>Support & Terms</SmallTitle>
-        <Space size={10} />
-        <SmallLink href="mailto:hi@tryorbit.com">Contact us</SmallLink>
-        <SmallLink href="/privacy">Privacy Policy</SmallLink>
-        <SmallLink href="/terms">Terms & Conditions</SmallLink>
-        <SmallLink href="/faq">FAQ</SmallLink>
-      </Stack>
-
-      <Stack {...sectionMinWidth} flex={1} space={12}>
-        <SmallTitle>Community</SmallTitle>
-        <Space size={10} />
-        <SmallLink href="/about">About</SmallLink>
-        <SmallLink href="/blog">Blog</SmallLink>
-        <SmallLink href="mailto:hi@tryorbit.com">Contact</SmallLink>
-        <SmallLink href="https://twitter.com/tryorbit">Twitter</SmallLink>
-        <SmallLink href="https://github.com/tryorbit">Github</SmallLink>
       </Stack>
 
       <Stack

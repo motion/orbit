@@ -1,6 +1,6 @@
 {
   "name": "@o/graphql-nest-schema",
-  "version": "2.7.20",
+  "version": "2.7.21",
   "author": "Motion",
   "main": "index.js",
   "sideEffects": false,

@@ -1,6 +1,6 @@
 {
   "name": "@o/slackdown",
-  "version": "2.7.20",
+  "version": "2.7.21",
   "description": "",
   "main": "_/slackdown.js",
   "sideEffects": false,

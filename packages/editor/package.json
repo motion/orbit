@@ -1,6 +1,6 @@
 {
   "name": "@o/editor",
-  "version": "2.7.20",
+  "version": "2.7.21",
   "description": "",
   "main": "_/Editor.js",
   "ts:main": "src/Editor.ts",

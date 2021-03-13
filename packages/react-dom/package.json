@@ -1,7 +1,7 @@
 {
 	"name": "@o/react-dom",
 	"main": "index.js",
-	"version": "2.7.20",
+	"version": "2.7.21",
 	"publishConfig": {
 		"access": "public"
 	},

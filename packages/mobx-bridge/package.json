@@ -2,14 +2,14 @@
   "name": "@o/mobx-bridge",
   "main": "_/Bridge.js",
   "sideEffects": false,
-  "version": "2.7.20",
+  "version": "2.7.21",
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@o/config": "^2.7.9",
-    "@o/logger": "^2.7.20",
+    "@o/logger": "^2.7.21",
     "lodash": "4.17.11",
     "reconnecting-websocket": "4.1.10",
     "stringify-object": "^3.2.2",

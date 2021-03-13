@@ -1,6 +1,6 @@
 {
   "name": "@o/devcert",
-  "version": "2.7.20",
+  "version": "2.7.21",
   "description": "Generate trusted local SSL/TLS certificates for local SSL development",
   "main": "_/index.js",
   "scripts": {

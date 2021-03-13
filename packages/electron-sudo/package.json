@@ -1,6 +1,6 @@
 {
   "name": "@o/electron-sudo",
-  "version": "2.7.20",
+  "version": "2.7.21",
   "description": "Electron subprocess with administrative privileges, prompting the user with an OS dialog if necessary.",
   "main": "_/index.js",
   "sideEffects": false,

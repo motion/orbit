@@ -1,6 +1,6 @@
 {
   "name": "@o/ui-extra",
-  "version": "2.7.20",
+  "version": "2.7.21",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
   "sideEffects": [
@@ -12,7 +12,7 @@
     "watch": "tsc -b --preserveWatchOutput --watch"
   },
   "dependencies": {
-    "@o/ui": "^2.7.20",
+    "@o/ui": "^2.7.21",
     "react-markdown": "4.0.6",
     "react-shadow": "^17.1.3",
     "remark-emoji": "2.0.2"

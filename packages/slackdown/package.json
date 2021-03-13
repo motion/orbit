@@ -1,6 +1,6 @@
 {
   "name": "@o/slackdown",
-  "version": "2.7.16",
+  "version": "2.7.17",
   "description": "",
   "main": "_/slackdown.js",
   "sideEffects": false,
@@ -10,5 +10,5 @@
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
-  "gitHead": "8993797cf6ea8997a16623781bc80ce060396eef"
+  "gitHead": "05c15d13b05da332542bd563ec05ecbf2cbb36d6"
 }

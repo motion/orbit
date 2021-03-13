@@ -1,6 +1,6 @@
 {
   "name": "@o/reactron",
-  "version": "2.7.16",
+  "version": "2.7.17",
   "description": "React renderer for Electron apps",
   "main": "_/index.js",
   "sideEffects": false,
@@ -19,11 +19,11 @@
     "access": "public"
   },
   "dependencies": {
-    "@o/logger": "^2.7.16",
+    "@o/logger": "^2.7.17",
     "electron-devtools-installer": "2.2.4",
     "lodash": "^4.17.15",
     "react-reconciler": "^0.21.0",
     "scheduler": "^0.15.0"
   },
-  "gitHead": "8993797cf6ea8997a16623781bc80ce060396eef"
+  "gitHead": "05c15d13b05da332542bd563ec05ecbf2cbb36d6"
 }

@@ -3,7 +3,7 @@
   "main": "_/index.js",
   "sideEffects": false,
   "private": true,
-  "version": "2.7.16",
+  "version": "2.7.17",
   "bin": "./_/index.js",
   "scripts": {
     "build": "tsc -b || true",

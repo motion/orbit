@@ -2,13 +2,7 @@
   "name": "orbit-monorepo",
   "private": true,
   "workspaces": [
-    "app/*",
-    "packages/*",
-    "apps/*",
-    "projects/*",
-    "services/*",
-    "example-workspace",
-    "example-workspace/apps/*"
+    "packages/*"
   ],
   "scripts": {
     "preinstall": "yarn electron:unpatch",

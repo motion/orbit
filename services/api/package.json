@@ -1,6 +1,6 @@
 {
   "name": "@o/orbit-api",
-  "version": "2.7.0",
+  "version": "2.7.7",
   "main": "index.js",
   "private": true,
   "workspaces": {

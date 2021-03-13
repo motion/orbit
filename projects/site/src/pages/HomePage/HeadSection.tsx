@@ -262,10 +262,10 @@ const HeadTextSection = memo(() => {
           <View sm-display="none">
             <FadeInView {...animation.sub2} minHeight="min-content">
               <Paragraph size={1.65} maxWidth={600}>
-                A better way to curate experience.{' '}
+                A better way to curate our experiences.{' '}
                 <span style={{ color: '#feac1f' }}>
                   {' '}
-                  Join a search engine that shares profits with it's community, designed around a
+                  It's a search engine that governs and shares value with it's community using a
                   blockchain.
                 </span>{' '}
                 Owned and powered by users.

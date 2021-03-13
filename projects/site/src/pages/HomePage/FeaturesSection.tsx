@@ -8,6 +8,7 @@ import { Page } from '../../views/Page'
 import { ParallaxStageItem } from '../../views/ParallaxStage'
 import { PillButtonDark } from '../../views/PillButtonDark'
 import { TitleText } from '../../views/TitleText'
+import { IntroPara } from './IntroPara'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
 
 export default memo(function FeaturesSection() {
@@ -63,7 +64,7 @@ export default memo(function FeaturesSection() {
               <TitleText fontWeight={300} size="sm" alpha={0.5}>
                 It's time for a
               </TitleText>
-              <Space />
+              <Space size={10} />
               <TitleText
                 alignItems="flex-start"
                 justifyContent="flex-start"
@@ -72,7 +73,13 @@ export default memo(function FeaturesSection() {
               >
                 Better deal.
               </TitleText>
+              <Space size={14} />
+              <IntroPara delayIndex={1} stagger={0} size={1.7} sizeLineHeight={1.2}>
+                <strong style={{ color: '#e61277' }}>The guide that gives back</strong>, and lets
+                you control your content.
+              </IntroPara>
             </ParallaxStageItem>
+            <Space size={10} />
             <ParallaxStageItem stagger={1}>
               <Stack direction="horizontal" space="lg" margin={['4%', 'auto', '8%', 0]}>
                 {sectionNames.map(section => (

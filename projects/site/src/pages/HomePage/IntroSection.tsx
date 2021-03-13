@@ -5,14 +5,8 @@ import { mediaQueries } from '../../constants'
 import { FadeInView, useFadePage } from '../../views/FadeInView'
 import { wordsWithBrandMark } from '../../views/IntroText'
 import { Page } from '../../views/Page'
-import { Paragraph } from '../../views/Paragraph'
 import { SectionContent } from '../../views/SectionContent'
-
-const IntroPara = ({ delayIndex, stagger, ...props }) => (
-  <FadeInView parallax delayIndex={delayIndex} stagger={stagger}>
-    <Paragraph alpha={0.85} size={1.4} fontWeight={400} sizeLineHeight={1.4} {...props} />
-  </FadeInView>
-)
+import { IntroPara } from './IntroPara'
 
 export default function IntroSection() {
   const Fade = useFadePage({
@@ -75,19 +69,19 @@ export default function IntroSection() {
           </View>
           <Stack space="xl" justifyContent="center">
             <IntroPara delayIndex={1} stagger={0} size={2.3} sizeLineHeight={1.2}>
-              <strong style={{ color: '#e61277' }}>We're rethinking search</strong>
-              &nbsp;to prove quality and community go together.
+              <strong style={{ color: '#e61277' }}>A hitchhikers guide to earth</strong>
+              &nbsp;would be nice, wouldn't it?
             </IntroPara>
-            <IntroPara fontWeight="600" delayIndex={2} stagger={-0.5}>
+            <IntroPara size={1.7} fontWeight="600" delayIndex={2} stagger={-0.5}>
               <span style={{ color: '#249be9' }}>
-                Dish starts as an app to find local <em>restaurant</em> gems 💎
+                Dish is starting as an app to share and list your favorite <em>restaurants</em> 💎
               </span>
-              : a fun, list making community debating the best food in your city. Create{' '}
-              <strong>playlists</strong>, vote and debate the best ones.
+              . Make playlists of nights out, vote on the best dishes, find the best food in your
+              city.
             </IntroPara>
             <IntroPara alpha={0.65} delayIndex={3} stagger={-1}>
               {wordsWithBrandMark(
-                `In order to keep it fun and high quality, we're launching it with a coin. All the fun of the old web, with some ideas from the new one.`,
+                `In order to keep it fun and high quality, we're launching it with a coin. All the fun of the old web, powered by an idea from the new one.`,
               )}
             </IntroPara>
           </Stack>

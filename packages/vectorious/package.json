@@ -1,6 +1,6 @@
 {
   "name": "@o/vectorious",
-  "version": "2.7.20",
+  "version": "2.7.21",
   "description": "vectorious with no blas dep",
   "main": "vectorious.js",
   "sideEffects": false,
@@ -8,5 +8,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "065787b42bd200dc04a5c680f6af9a2f9d80dc4e"
+  "gitHead": "15944705729411950ec042c3861680fa7636821c"
 }

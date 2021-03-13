@@ -1,6 +1,6 @@
 {
   "name": "@o/react-textfit",
-  "version": "2.7.20",
+  "version": "2.7.21",
   "description": "React component to fit headlines and paragraphs into any element",
   "main": "_/Textfit.js",
   "sideEffects": false,
@@ -21,5 +21,5 @@
     "process": "^0.11.9",
     "resize-observer-polyfill": "^1.5.0"
   },
-  "gitHead": "065787b42bd200dc04a5c680f6af9a2f9d80dc4e"
+  "gitHead": "15944705729411950ec042c3861680fa7636821c"
 }

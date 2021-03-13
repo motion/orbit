@@ -1,6 +1,6 @@
 {
   "name": "@o/crawler",
-  "version": "2.7.20",
+  "version": "2.7.21",
   "main": "_/index.js",
   "sideEffects": false,
   "module": "src/index.js",
@@ -12,7 +12,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@o/logger": "^2.7.20",
+    "@o/logger": "^2.7.21",
     "babel-polyfill": "7.0.0-beta.3",
     "lodash": "4.17.11",
     "readability-from-string": "^2.0.0",
@@ -20,5 +20,5 @@
     "upndown": "^2.1.0",
     "urijs": "^1.19.0"
   },
-  "gitHead": "065787b42bd200dc04a5c680f6af9a2f9d80dc4e"
+  "gitHead": "15944705729411950ec042c3861680fa7636821c"
 }

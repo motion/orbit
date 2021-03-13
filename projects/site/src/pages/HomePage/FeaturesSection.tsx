@@ -3,9 +3,8 @@ import { flatMap } from 'lodash'
 import React, { memo, useRef, useState } from 'react'
 import { LogoCircle } from '../../views/DishLogo'
 
-import { FadeInView, useFadePage } from '../../views/FadeInView'
+import { useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
-import { Paragraph } from '../../views/Paragraph'
 import { ParallaxStageItem } from '../../views/ParallaxStage'
 import { PillButtonDark } from '../../views/PillButtonDark'
 import { TitleText } from '../../views/TitleText'
@@ -36,10 +35,26 @@ export default memo(function FeaturesSection() {
   const cur = Object.keys(sections).indexOf(activeSection)
   return (
     <Fade.FadeProvide>
+      {/* teal right */}
+      <Page.BackgroundParallax
+        speed={0.3}
+        offset={0.5}
+        x="90%"
+        top="20%"
+        scale={2}
+        className="glow-two"
+        opacity={0.26}
+        background="radial-gradient(circle closest-side, #12A1CC, transparent)"
+        parallax={geometry => ({
+          y: geometry.useParallax(),
+          x: geometry.useParallax().transform(x => -x * 1 + 240),
+        })}
+      />
+
       <Page.BackgroundParallax speed={0.4} offset={0.5}>
         <View
-          width={100}
-          height={100}
+          width={1200}
+          height={1200}
           borderRadius={1000}
           borderWidth={1}
           borderColor="rgba(255,255,255,0.3)"
@@ -51,14 +66,14 @@ export default memo(function FeaturesSection() {
         alignItems="center"
         nodeRef={Fade.ref}
         margin={[0, 'auto']}
-        // padding={['4vh', 0, '4vh']}
-        maxWidth="100%"
+        padding={[0, 0, 100, 0]}
+        maxWidth="100vw"
       >
         <Stack padding="lg" flex={2}>
           <View flex={1}>
             <ParallaxStageItem stagger={0}>
               <TitleText fontWeight={300} size="sm" alpha={0.5}>
-                It's time for a
+                Dishcoin is simply
               </TitleText>
               <Space size={10} />
               <TitleText
@@ -67,11 +82,12 @@ export default memo(function FeaturesSection() {
                 size="xxxl"
                 sizeLineHeight={1.1}
               >
-                Better deal.
+                A better deal.
               </TitleText>
               <Space size={14} />
               <IntroPara delayIndex={1} stagger={0} size={1.7} sizeLineHeight={1.2}>
-                <strong style={{ color: '#e61277' }}>The guide that gives back</strong>
+                <strong style={{ color: '#e61277' }}>When you add this up</strong>, why wouldn't
+                you?
               </IntroPara>
             </ParallaxStageItem>
             <Space size={10} />
@@ -85,15 +101,69 @@ export default memo(function FeaturesSection() {
               </Stack>
             </ParallaxStageItem>
           </View>
-
-          <FadeInView parallax delayIndex={2}>
-            <Stack space="sm">
-              <Item>No config, no code to start an app.</Item>
-              <Item>100ms hot reloads with error recovery.</Item>
-              <Item>A suite of tools for understanding state/data.</Item>
-              <Item>Rich debugging tools built-in.</Item>
+          <ParallaxStageItem
+            parallax={{
+              x: {
+                transition: 'ease-in-quad',
+                move: 100,
+                clamp: [-100, 100],
+              },
+              opacity: {
+                transition: 'ease-in',
+                clamp: [0, 1],
+              },
+            }}
+            stagger={2}
+            nodeRef={gridContainer}
+          >
+            <Stack direction="horizontal" flexWrap="nowrap">
+              {Object.keys(sections).map((section, index) => {
+                return (
+                  <Stack
+                    animate={{
+                      opacity: cur === index ? 1 : 0,
+                      x:
+                        cur === index
+                          ? '0%'
+                          : cur > index
+                          ? `-${(cur - index) * 20}%`
+                          : `${(index - cur) * 20}%`,
+                    }}
+                    pointerEvents={cur === index ? 'auto' : 'none'}
+                    transition={transition}
+                    key={section}
+                    space={20}
+                    alignItems="start"
+                    // itemMinWidth={240}
+                    className="feature-grid"
+                    marginRight="-100%"
+                  >
+                    {sections[section].items.map(({ title, icon, body }, index) => (
+                      <Item key={`${section}${index}`} delay={dly * (index + 1)} title={title}>
+                        <SectionP>
+                          {/* <SectionIcon name={icon} /> */}
+                          {flatMap(body, (x, i) => {
+                            return (
+                              <React.Fragment key={i}>
+                                {+i === body.length - 1 ? (
+                                  x
+                                ) : (
+                                  <>
+                                    {x}
+                                    <Space />
+                                  </>
+                                )}
+                              </React.Fragment>
+                            )
+                          })}
+                        </SectionP>
+                      </Item>
+                    ))}
+                  </Stack>
+                )
+              })}
             </Stack>
-          </FadeInView>
+          </ParallaxStageItem>
         </Stack>
 
         <View flex={0.15} />
@@ -118,49 +188,7 @@ export default memo(function FeaturesSection() {
               },
             }}
           >
-            {Object.keys(sections).map((key, index) => {
-              const y =
-                cur === index
-                  ? '0%'
-                  : cur > index
-                  ? `-${(cur - index) * 20}%`
-                  : `${(index - cur) * 20}%`
-
-              if (index === 0) {
-                return (
-                  <View transform={{ z: 0 }}>
-                    <LogoCircle scale={10} />
-                  </View>
-                )
-              }
-
-              return (
-                <Image
-                  key={key}
-                  transition={transition}
-                  animate={{
-                    opacity: cur === index ? 1 : 0,
-                    y,
-                  }}
-                  width="100%"
-                  position="absolute"
-                  top={0}
-                  left={0}
-                  height="auto"
-                  minWidth={1000}
-                  marginRight={-1000}
-                  src={sections[key].image}
-                  borderRadius={15}
-                  overflow="hidden"
-                  boxShadow={[
-                    {
-                      blur: 100,
-                      color: '#000',
-                    },
-                  ]}
-                />
-              )
-            })}
+            <LogoCircle scale={12} />
           </ParallaxStageItem>
         </View>
       </Stack>
@@ -171,57 +199,41 @@ export default memo(function FeaturesSection() {
 const dly = 200
 
 const sections = {
-  Earn: {
+  Founders: {
     image: require('../../public/images/screen-graphql.jpg'),
     items: [
       {
-        title: `Referrals`,
         icon: `data`,
-        body: [`Every app provides data, installs with a click.`],
+        body: [`Less pressure to grow fast.`],
       },
       {
-        title: 'Create lists',
         icon: 'code-block',
-        body: [`Create queries visually, plug into apps with a drag.`],
+        body: [`Raise money on their terms.`],
       },
       {
-        title: `Take photos`,
         icon: `satellite`,
-        body: [`A full graph of your data sources by default.`],
-      },
-      {
-        title: `Write reviews`,
-        icon: `data`,
-        body: [`Store results as bits, use them in other apps easily.`],
+        body: [`Pitch to customers directly.`],
       },
     ],
   },
-  Explore: {
+  Investors: {
     image: require('../../public/images/screen-people.jpg'),
     items: [
       {
-        title: 'Complete UI Kit',
         icon: 'button',
-        body: [`Smart, flexible, virtualized, concurrent, easy data loading.`],
+        body: [`Clearer.`],
       },
       {
-        title: `Drag & Drop Data`,
         icon: `exchange`,
         body: [`First class data drag & drop to move data in, out & between apps.`],
       },
       {
-        title: `Every hook you need`,
         icon: `shop`,
         body: [`Extensive libraries for displaying data all built on the latest React.`],
       },
-      {
-        title: `Clipboard`,
-        icon: `clipboard`,
-        body: [`A persistent, incredibly easy way to enable cross-app data sharing.`],
-      },
     ],
   },
-  Maintain: {
+  Community: {
     image: require('../../public/images/screen-graphql.jpg'),
     items: [
       {
@@ -238,11 +250,6 @@ const sections = {
         title: `Modern view system`,
         icon: `grid-view`,
         body: [`React Concurrent, Suspense, Framer Motion and more, in every view.`],
-      },
-      {
-        title: `Incredible Dev Tooling`,
-        icon: `draw`,
-        body: [`Debugging, data management, error recovery - many dev tools built-in.`],
       },
     ],
   },

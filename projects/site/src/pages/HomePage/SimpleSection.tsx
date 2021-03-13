@@ -53,8 +53,7 @@ export const SectionP = props => (
     tagName="div"
     display="flex"
     flexDirection="row"
-    size={1.4}
-    alpha={0.65}
+    size={1.6}
     fontWeight={400}
     sizeLineHeight={1.2}
     {...props}
@@ -62,8 +61,8 @@ export const SectionP = props => (
 )
 
 export const SectionIcon = gloss(Icon, {
-  size: 28,
-  margin: [10, 20, 10, 0],
+  size: 20,
+  margin: [4, 20, 4, 0],
 })
 
 const SectionTitle = gloss(View, {

@@ -1,6 +1,6 @@
 {
   "name": "@o/webpack-fast-refresh",
-  "version": "2.7.13",
+  "version": "2.7.14",
   "main": "index.js",
   "description": "React Fast Refresh plugin and loader for webpack",
   "author": "Apostolos Tsakpinis <apostolos@webhotelier.net>",
@@ -19,5 +19,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "a94194618cb73145a17dffb9fe00052d6a702e50"
+  "gitHead": "2c659d5650383024d8bfaf71509d4f2ac800ef9d"
 }

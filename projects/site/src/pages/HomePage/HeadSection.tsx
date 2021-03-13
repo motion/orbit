@@ -251,7 +251,7 @@ const HeadTextSection = memo(() => {
               <WelcomeBlogPostButton />
             </FadeInView> */}
             <FadeInView disable={!measured} {...animation.title} {...fontProps.TitleFont}>
-              the pokedex for the real world
+              the pokédex for the real world
             </FadeInView>
           </TextFitTitle>
           {br}

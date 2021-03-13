@@ -1,6 +1,6 @@
 {
   "name": "@o/ui",
-  "version": "2.7.18",
+  "version": "2.7.19",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
   "sideEffects": [
@@ -12,16 +12,16 @@
     "watch": "tsc -b --preserveWatchOutput --watch"
   },
   "dependencies": {
-    "@o/color": "^2.7.18",
-    "@o/css": "^2.7.18",
-    "@o/fast-compare": "^2.7.18",
-    "@o/fuzzy-search": "^2.7.18",
+    "@o/color": "^2.7.19",
+    "@o/css": "^2.7.19",
+    "@o/fast-compare": "^2.7.19",
+    "@o/fuzzy-search": "^2.7.19",
     "@o/icons": "3.10.5",
-    "@o/logger": "^2.7.18",
+    "@o/logger": "^2.7.19",
     "@o/react-sortable-hoc": "1.10.4",
     "@o/react-window": "1.9.0-alpha.3",
-    "@o/use-store": "^2.7.18",
-    "@o/utils": "^2.7.18",
+    "@o/use-store": "^2.7.19",
+    "@o/utils": "^2.7.19",
     "@popmotion/popcorn": "^0.4.2",
     "@seznam/compose-react-refs": "^1.0.1",
     "@svgdotjs/svg.js": "3.0.13",
@@ -29,8 +29,8 @@
     "css-typed-om": "^0.4.0",
     "date-fns": "2.0.0-alpha.7",
     "framer-motion": "1.6.15",
-    "gloss": "^2.7.18",
-    "gloss-theme": "^2.7.18",
+    "gloss": "^2.7.19",
+    "gloss-theme": "^2.7.19",
     "hash-sum": "2.0.0",
     "invariant": "^2.2.4",
     "keycode": "^2.1.9",
@@ -65,5 +65,5 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
   },
-  "gitHead": "3cd8b5f4088043006defef327a085caa9c6343ae"
+  "gitHead": "ba0bb4ef020144b5f29ada3f63e88b0d4bcba764"
 }

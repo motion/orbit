@@ -1,6 +1,6 @@
 {
   "name": "@o/editor",
-  "version": "2.7.18",
+  "version": "2.7.19",
   "description": "",
   "main": "_/Editor.js",
   "ts:main": "src/Editor.ts",
@@ -50,5 +50,5 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
   },
-  "gitHead": "3cd8b5f4088043006defef327a085caa9c6343ae"
+  "gitHead": "ba0bb4ef020144b5f29ada3f63e88b0d4bcba764"
 }

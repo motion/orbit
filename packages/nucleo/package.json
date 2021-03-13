@@ -1,6 +1,6 @@
 {
   "name": "@o/nucleo",
-  "version": "2.7.15",
+  "version": "2.7.16",
   "description": "",
   "main": "index.js",
   "sideEffects": false,
@@ -9,5 +9,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "ed2dc9868cdcb031d3f0c9effe856c6353f6ce2f"
+  "gitHead": "8993797cf6ea8997a16623781bc80ce060396eef"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@o/ui-extra",
-  "version": "2.7.8",
+  "version": "2.7.9",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
   "sideEffects": [
@@ -12,7 +12,7 @@
     "watch": "tsc -b --preserveWatchOutput --watch"
   },
   "dependencies": {
-    "@o/ui": "^2.7.8",
+    "@o/ui": "^2.7.9",
     "react-markdown": "4.0.6",
     "react-shadow": "^17.1.3",
     "remark-emoji": "2.0.2"
@@ -20,5 +20,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "97011cd655962493c8139ea0a580aedf7d6def26"
+  "gitHead": "32ccaf3266d9d0b0af041c44a817433cdedcb132"
 }

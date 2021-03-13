@@ -1,6 +1,6 @@
 {
   "name": "@o/libs-node",
-  "version": "2.7.8",
+  "version": "2.7.9",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
   "sideEffects": false,
@@ -9,9 +9,9 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/logger": "^2.7.8",
-    "@o/models": "^2.7.8",
-    "@o/use-store": "^2.7.8",
+    "@o/logger": "^2.7.9",
+    "@o/models": "^2.7.9",
+    "@o/use-store": "^2.7.9",
     "chokidar": "^3.0.1",
     "command-exists": "^1.2.8",
     "execa": "3.1.0",
@@ -20,5 +20,5 @@
   "peerDependencies": {
     "typeorm": "*"
   },
-  "gitHead": "97011cd655962493c8139ea0a580aedf7d6def26"
+  "gitHead": "32ccaf3266d9d0b0af041c44a817433cdedcb132"
 }

@@ -1,7 +1,7 @@
 {
   "name": "@o/postgres-app",
   "description": "Plug in Postgres SQL database and query it",
-  "version": "2.7.8",
+  "version": "2.7.9",
   "main": "index.tsx",
   "config": {
     "orbitApp": true
@@ -11,9 +11,9 @@
     "build": "orbit build"
   },
   "dependencies": {
-    "@o/kit": "^2.7.8",
-    "@o/ui": "^2.7.8",
-    "@o/worker-kit": "^2.7.8",
+    "@o/kit": "^2.7.9",
+    "@o/ui": "^2.7.9",
+    "@o/worker-kit": "^2.7.9",
     "apollo-link": "^1.2.12",
     "graphql": "^14.4.2",
     "pg": "^7.11.0",
@@ -22,5 +22,5 @@
     "postgraphile-core": "^4.4.0",
     "typeorm": "^0.3.0-alpha.23"
   },
-  "gitHead": "97011cd655962493c8139ea0a580aedf7d6def26"
+  "gitHead": "32ccaf3266d9d0b0af041c44a817433cdedcb132"
 }

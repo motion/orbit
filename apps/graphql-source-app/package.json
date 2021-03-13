@@ -1,7 +1,7 @@
 {
   "name": "@o/graphql-source-app",
   "description": "Add a remote GraphQL API into your local graph.",
-  "version": "2.7.8",
+  "version": "2.7.9",
   "main": "index.ts",
   "config": {
     "orbitApp": true
@@ -11,10 +11,10 @@
     "build": "orbit build"
   },
   "dependencies": {
-    "@o/kit": "^2.7.8",
+    "@o/kit": "^2.7.9",
     "apollo-link": "^1.2.12",
     "apollo-link-http": "^1.5.15",
     "graphql-tools": "^4.0.5"
   },
-  "gitHead": "97011cd655962493c8139ea0a580aedf7d6def26"
+  "gitHead": "32ccaf3266d9d0b0af041c44a817433cdedcb132"
 }

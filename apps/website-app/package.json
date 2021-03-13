@@ -1,7 +1,7 @@
 {
   "name": "@o/website-app",
   "description": "Crawl a website given a URL.",
-  "version": "2.7.8",
+  "version": "2.7.9",
   "main": "index.tsx",
   "config": {
     "orbitApp": true
@@ -11,9 +11,9 @@
     "build": "orbit build"
   },
   "dependencies": {
-    "@o/kit": "^2.7.8",
-    "@o/ui": "^2.7.8",
-    "@o/worker-kit": "^2.7.8",
+    "@o/kit": "^2.7.9",
+    "@o/ui": "^2.7.9",
+    "@o/worker-kit": "^2.7.9",
     "get-urls": "^8.0.0",
     "immer": "^3.1.2",
     "lodash": "4.17.11",
@@ -21,5 +21,5 @@
     "puppeteer": "1.13.0",
     "urijs": "^1.19.0"
   },
-  "gitHead": "97011cd655962493c8139ea0a580aedf7d6def26"
+  "gitHead": "32ccaf3266d9d0b0af041c44a817433cdedcb132"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@o/crawler",
-  "version": "2.7.8",
+  "version": "2.7.9",
   "main": "_/index.js",
   "sideEffects": false,
   "module": "src/index.js",
@@ -9,7 +9,7 @@
     "start:prod": "NODE_ENV=production node lib/index.js"
   },
   "dependencies": {
-    "@o/logger": "^2.7.8",
+    "@o/logger": "^2.7.9",
     "babel-polyfill": "7.0.0-beta.3",
     "lodash": "4.17.11",
     "readability-from-string": "^2.0.0",
@@ -17,5 +17,5 @@
     "upndown": "^2.1.0",
     "urijs": "^1.19.0"
   },
-  "gitHead": "fe92417d7f38b74d6a8299c18e2b137bac8545f7"
+  "gitHead": "32ccaf3266d9d0b0af041c44a817433cdedcb132"
 }

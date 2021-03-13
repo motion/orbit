@@ -1,6 +1,6 @@
 {
   "name": "add-source-loader",
-  "version": "2.7.8",
+  "version": "2.7.9",
   "description": "",
   "main": "index.js",
   "sideEffects": false,
@@ -10,5 +10,5 @@
     "loader-utils": "^1.2.3",
     "source-map": "^0.6.1"
   },
-  "gitHead": "fe92417d7f38b74d6a8299c18e2b137bac8545f7"
+  "gitHead": "32ccaf3266d9d0b0af041c44a817433cdedcb132"
 }

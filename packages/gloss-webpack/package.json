@@ -1,6 +1,6 @@
 {
   "name": "@o/gloss-webpack",
-  "version": "2.7.17",
+  "version": "2.7.18",
   "main": "_/plugin.js",
   "sideEffects": false,
   "scripts": {
@@ -16,12 +16,12 @@
     "@babel/types": "^7.6.1",
     "babel-literal-to-ast": "^2.1.0",
     "fs-extra": "^8.1.0",
-    "gloss": "^2.7.17",
+    "gloss": "^2.7.18",
     "invariant": "^2.2.1",
     "loader-utils": "^1.1.0"
   },
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "05c15d13b05da332542bd563ec05ecbf2cbb36d6"
+  "gitHead": "3cd8b5f4088043006defef327a085caa9c6343ae"
 }

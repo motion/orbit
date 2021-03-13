@@ -1,6 +1,6 @@
 {
   "name": "gloss",
-  "version": "2.7.17",
+  "version": "2.7.18",
   "description": "Higher order component for nicer component styles",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
@@ -20,8 +20,8 @@
   "license": "MIT",
   "homepage": "https://github.com/motion/gloss",
   "dependencies": {
-    "@o/css": "^2.7.17",
-    "@o/fast-compare": "^2.7.17"
+    "@o/css": "^2.7.18",
+    "@o/fast-compare": "^2.7.18"
   },
   "devDependencies": {
     "@babel/generator": "^7.4.4",
@@ -39,5 +39,5 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
   },
-  "gitHead": "05c15d13b05da332542bd563ec05ecbf2cbb36d6"
+  "gitHead": "3cd8b5f4088043006defef327a085caa9c6343ae"
 }

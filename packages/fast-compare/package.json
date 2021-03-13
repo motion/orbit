@@ -1,6 +1,6 @@
 {
   "name": "@o/fast-compare",
-  "version": "2.7.17",
+  "version": "2.7.18",
   "description": "none",
   "main": "_/fastCompare.js",
   "module": "_/esm/fastCompare.js",
@@ -13,5 +13,5 @@
     "access": "public"
   },
   "sideEffects": false,
-  "gitHead": "05c15d13b05da332542bd563ec05ecbf2cbb36d6"
+  "gitHead": "3cd8b5f4088043006defef327a085caa9c6343ae"
 }

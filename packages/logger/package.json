@@ -1,6 +1,6 @@
 {
   "name": "@o/logger",
-  "version": "2.7.17",
+  "version": "2.7.18",
   "author": "Motion",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
@@ -15,5 +15,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "05c15d13b05da332542bd563ec05ecbf2cbb36d6"
+  "gitHead": "3cd8b5f4088043006defef327a085caa9c6343ae"
 }

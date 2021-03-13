@@ -1,6 +1,6 @@
 {
   "name": "@o/use-store",
-  "version": "2.7.19",
+  "version": "2.7.20",
   "description": "",
   "ts:main": "src/useStore.ts",
   "main": "_/useStore.js",
@@ -12,9 +12,9 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/automagical": "^2.7.19",
-    "@o/fast-compare": "^2.7.19",
-    "@o/utils": "^2.7.19",
+    "@o/automagical": "^2.7.20",
+    "@o/fast-compare": "^2.7.20",
+    "@o/utils": "^2.7.20",
     "lodash": "^4.17.15",
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
@@ -22,5 +22,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "ba0bb4ef020144b5f29ada3f63e88b0d4bcba764"
+  "gitHead": "fe19ea8eda9fff42b3d54204eef3928e961acd3b"
 }

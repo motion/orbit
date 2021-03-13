@@ -1,6 +1,6 @@
 {
   "name": "gloss-theme",
-  "version": "2.7.19",
+  "version": "2.7.20",
   "description": "Make themes for gloss easily",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
@@ -20,9 +20,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@o/css": "^2.7.19",
-    "@o/fast-compare": "^2.7.19",
-    "gloss": "^2.7.19"
+    "@o/css": "^2.7.20",
+    "@o/fast-compare": "^2.7.20",
+    "gloss": "^2.7.20"
   },
-  "gitHead": "ba0bb4ef020144b5f29ada3f63e88b0d4bcba764"
+  "gitHead": "fe19ea8eda9fff42b3d54204eef3928e961acd3b"
 }

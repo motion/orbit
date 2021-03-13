@@ -2,7 +2,7 @@
   "name": "@o/constants",
   "main": "./_/constants.js",
   "sideEffects": false,
-  "version": "2.7.19",
+  "version": "2.7.20",
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc --watch  --preserveWatchOutput || true"
@@ -10,5 +10,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "ba0bb4ef020144b5f29ada3f63e88b0d4bcba764"
+  "gitHead": "fe19ea8eda9fff42b3d54204eef3928e961acd3b"
 }

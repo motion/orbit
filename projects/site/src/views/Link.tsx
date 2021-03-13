@@ -17,7 +17,7 @@ export function Link({ children, href, width, margin, ...props }: LinkProps) {
       <SimpleText
         tagName="a"
         coat="simpleBlue"
-        alpha={isActive ? 1 : 0.78}
+        alpha={isActive ? 1 : 0.5}
         hoverStyle={{ alpha: 1 }}
         activeStyle={{ alpha: isActive ? 1 : 0.7 }}
         transition="all ease 300ms"

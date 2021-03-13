@@ -47,6 +47,7 @@
     "use-memo-one": "^1.1.0"
   },
   "devDependencies": {
+    "@o/build": "*",
     "@babel/core": "^7.6.0",
     "@babel/preset-env": "*",
     "@babel/preset-react": "*",

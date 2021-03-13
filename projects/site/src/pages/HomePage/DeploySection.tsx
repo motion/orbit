@@ -1,4 +1,4 @@
-import { Icon, Image, Parallax, SimpleText, Space, Stack, Tooltip, View } from '@o/ui'
+import { Image, Parallax, Space, Stack, Tooltip, View } from '@o/ui'
 import React from 'react'
 
 import appScreenshot from '../../public/images/app-screenshot.jpg'
@@ -10,6 +10,7 @@ import { Page } from '../../views/Page'
 import { ParagraphIntro } from '../../views/ParagraphIntro'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
+import { Item } from './Item'
 import { SpacedPageContent } from './SpacedPageContent'
 
 export default function DeploySection() {
@@ -148,10 +149,3 @@ export default function DeploySection() {
     </Fade.FadeProvide>
   )
 }
-
-const Item = props => (
-  <Stack direction="horizontal" space padding={['sm', 0]}>
-    <Icon opacity={0.5} name="tick" />
-    <SimpleText flex={1} size="md" alpha={0.75} {...props} />
-  </Stack>
-)

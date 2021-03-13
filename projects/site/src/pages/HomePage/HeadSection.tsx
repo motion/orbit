@@ -17,53 +17,15 @@ import React, { memo } from 'react'
 
 import { fontProps } from '../../constants'
 import { useSiteStore } from '../../SiteStore'
-import {
-  fadeAnimations,
-  FadeChildProps,
-  FadeInView,
-  transitions,
-  useFadePage,
-} from '../../views/FadeInView'
+import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContentChrome } from '../../views/SectionContent'
+import { animation } from './animation'
 import { Join } from './Join'
 import { WelcomeBlogPostButton } from './WelcomeBlogPostButton'
 
-const allDelay = 2
-
-const animation: {
-  [key: string]: FadeChildProps
-} = {
-  title: {
-    delayIndex: allDelay + 0,
-  },
-  sub1: {
-    delayIndex: allDelay + 1,
-    ...fadeAnimations.up,
-  },
-  sub2: {
-    delayIndex: allDelay + 2,
-    ...fadeAnimations.up,
-  },
-  join: {
-    delayIndex: allDelay + 3,
-    ...fadeAnimations.up,
-  },
-  watch: {
-    delayIndex: allDelay + 4,
-    ...fadeAnimations.up,
-  },
-  screen: {
-    delayIndex: allDelay + 5,
-    ...fadeAnimations.up,
-    transition: transitions.slowBouncy,
-  },
-  blog: {
-    delayIndex: allDelay + 16,
-    transition: transitions.bouncy,
-  },
-}
+export const allDelay = 2
 
 const Star = gloss(Flex, {
   borderRadius: 100,
@@ -235,7 +197,7 @@ const HeadTextSection = memo(() => {
         alignItems="center"
         justifyContent="center"
         zIndex={10}
-        marginTop={40}
+        marginTop={100}
         position="relative"
       >
         <View width="100%" alignItems="center">
@@ -251,7 +213,7 @@ const HeadTextSection = memo(() => {
               <WelcomeBlogPostButton />
             </FadeInView> */}
             <FadeInView disable={!measured} {...animation.title} {...fontProps.TitleFont}>
-              the pokédex for the real world
+              your pokédex for the real world
             </FadeInView>
           </TextFitTitle>
           {br}
@@ -261,14 +223,12 @@ const HeadTextSection = memo(() => {
           <span style={{ userSelect: 'none' }}>&nbsp;</span>
           <View sm-display="none">
             <FadeInView {...animation.sub2} minHeight="min-content">
-              <Paragraph size={1.65} maxWidth={600}>
-                A better way to curate our experiences.{' '}
-                <span style={{ color: '#feac1f' }}>
-                  {' '}
-                  It's a search engine that governs and shares value with it's community using a
-                  blockchain.
-                </span>{' '}
-                Owned and powered by users.
+              <Paragraph size={1.8} sizeLineHeight={1.6} maxWidth={710} fontWeight={300}>
+                Communities exploring the world on a map.
+                <br />{' '}
+                <span style={{ color: '#feac1f' }}> Designed to last: owned by it's members.</span>
+                <br />
+                Meet dish, an experiment.
               </Paragraph>
             </FadeInView>
           </View>

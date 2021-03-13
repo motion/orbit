@@ -140,7 +140,7 @@ export default memo(() => {
         x="-65%"
         scale={1.8}
         className="glow-one"
-        opacity={0.1}
+        opacity={0.4}
         background="radial-gradient(circle closest-side, #D25CCD, transparent)"
       />
 
@@ -180,64 +180,10 @@ export default memo(() => {
           </>
         }
       >
-        <Stack maxWidth="100%" margin={[0, 'auto', 0]} sm-margin={0}>
-          <Stack direction="horizontal" space {...mediaStyles.visibleWhen.abovesm}>
-            <SubSection maxWidth="33%">
-              <FadeInView parallax {...fadeAnimations.left} delayIndex={3}>
-                <PillButtonDark>Import</PillButtonDark>
-                <Space />
-                <CenterText>
-                  Plug in the <Inline color="#E01C5A">{elements[index].beforeName}</Inline> data
-                  source & others with a click.
-                </CenterText>
-              </FadeInView>
-            </SubSection>
-            <SubSection flex={2} padding={[false, 'xxl']}>
-              <FadeInView parallax delayIndex={4} {...fadeAnimations.up}>
-                <PillButtonDark>Display</PillButtonDark>
-                <Space />
-                <CenterText maxWidth={400} margin={[0, 'auto']}>
-                  Rich, powerful views to display data & tasks easily.
-                </CenterText>
-              </FadeInView>
-            </SubSection>
-            <SubSection maxWidth="33%">
-              <FadeInView parallax {...fadeAnimations.right} delayIndex={3}>
-                <PillButtonDark>Export</PillButtonDark>
-                <Space />
-                <CenterText>
-                  One click <Inline color="#F14336">{elements[index].afterName}</Inline> API to send
-                  your results out.
-                </CenterText>
-              </FadeInView>
-            </SubSection>
-          </Stack>
-
+        <Stack minWidth={300} maxWidth="100%" margin={[0, 'auto', 0]} sm-margin={0}>
           <Space />
 
           <Stack direction="horizontal" space>
-            <FlexView alignItems="center" sm-display="none">
-              <FadeInView parallax {...fadeAnimations.left} delayIndex={4}>
-                <Image
-                  userSelect="none"
-                  alignSelf="center"
-                  width={80}
-                  height={80}
-                  src={elements[index].iconBefore}
-                />
-              </FadeInView>
-              <Space size="xxl" />
-              <FadeInView parallax {...fadeAnimations.left} delayIndex={5} alignSelf="flex-end">
-                <Image
-                  userSelect="none"
-                  opacity={0.5}
-                  src={require('../../public/images/curve-arrow.svg')}
-                  transform={{
-                    scale: 0.5,
-                  }}
-                />
-              </FadeInView>
-            </FlexView>
             <FlexView
               className="test-me-out"
               flex={2}
@@ -311,57 +257,6 @@ export default memo(() => {
                     {elements[index].body}
                   </Paragraph>
                 </TiltSquircle>
-              </FadeInView>
-
-              <FadeInView
-                parallax
-                transition={transitions.slowNotBouncy}
-                {...fadeAnimations.up}
-                delayIndex={6}
-                width="100%"
-                height={300}
-                position="relative"
-              >
-                <AnimatePresence initial={false} custom={direction}>
-                  <View
-                    key={`image-${page}`}
-                    custom={direction}
-                    variants={variants}
-                    width="100%"
-                    height="100%"
-                    borderRadius={22}
-                    boxShadow={[[0, 10, 30, [0, 0, 0]]]}
-                    overflow="hidden"
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{
-                      x: { type: 'spring', stiffness: 100, damping: 200 },
-                      opacity: { duration: 0.2 },
-                    }}
-                    position="absolute"
-                    drag="x"
-                    dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={1}
-                    onDragEnd={(e, { offset, velocity }) => {
-                      const swipe = swipePower(offset.x, velocity.x)
-                      if (swipe < -swipeConfidenceThreshold) {
-                        paginate(1)
-                      } else if (swipe > swipeConfidenceThreshold) {
-                        paginate(-1)
-                      }
-                    }}
-                  >
-                    <Image
-                      className="carousel-image"
-                      userSelect="none"
-                      src={elements[index].image}
-                      width="100%"
-                      height="auto"
-                      opacity={0.45}
-                    />
-                  </View>
-                </AnimatePresence>
               </FadeInView>
             </FlexView>
 

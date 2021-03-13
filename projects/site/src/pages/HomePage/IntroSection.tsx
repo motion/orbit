@@ -1,9 +1,11 @@
-import { Box, gloss, Image, Stack, View } from '@o/ui'
+import { Box, gloss, Image, Space, Stack, View } from '@o/ui'
 import React from 'react'
 
 import { mediaQueries } from '../../constants'
+import { LogoCircle } from '../../views/DishLogo'
 import { FadeInView, useFadePage } from '../../views/FadeInView'
 import { wordsWithBrandMark } from '../../views/IntroText'
+import { Link } from '../../views/Link'
 import { Page } from '../../views/Page'
 import { SectionContent } from '../../views/SectionContent'
 import { IntroPara } from './IntroPara'
@@ -20,9 +22,9 @@ export default function IntroSection() {
         offset={-0.9}
         x="-5%"
         zIndex={-1}
-        opacity={0.3}
+        opacity={0.5}
         scale={3}
-        background="radial-gradient(circle closest-side, #1D4B84, transparent)"
+        background="radial-gradient(circle closest-side, #215faa, transparent)"
       />
       <Page.BackgroundParallax
         speed={-0.25}
@@ -43,7 +45,7 @@ export default function IntroSection() {
         <HalfGrid>
           {/* marginbottom is safari fix */}
           <View belowmd-marginBottom={50}>
-            <FadeInView parallax>
+            <FadeInView parallax speed={-0.2}>
               <Image
                 display="block"
                 src={require('../../assets/search.jpg')}
@@ -74,16 +76,17 @@ export default function IntroSection() {
             </IntroPara>
             <IntroPara size={1.7} fontWeight="600" delayIndex={2} stagger={-0.5}>
               <span style={{ color: '#249be9' }}>
-                Dish is starting as an app to share and list your favorite <em>restaurants</em> 💎
+                We want to find better quality lists of things
               </span>
-              . Make playlists of nights out, vote on the best dishes, find the best food in your
-              city.
+              , like the best pho or taco in your city. We've indexed sentiment and reviews across
+              the web, but to maintain quality, we need a great community.
             </IntroPara>
-            <IntroPara alpha={0.65} delayIndex={3} stagger={-1}>
-              {wordsWithBrandMark(
-                `In order to keep it fun and high quality, we're launching it with a coin. All the fun of the old web, powered by an idea from the new one.`,
-              )}
-            </IntroPara>
+            <Link href="/">
+              <IntroPara alpha={0.65} delayIndex={3} stagger={-1}>
+                So, we're making a coin – DishCoin &nbsp;&nbsp;&nbsp;&nbsp;
+                <LogoCircle scale={0.65} />
+              </IntroPara>
+            </Link>
           </Stack>
         </HalfGrid>
       </SectionContent>

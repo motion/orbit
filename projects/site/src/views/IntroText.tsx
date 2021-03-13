@@ -17,17 +17,15 @@ export const wordsWithBrandMark = (text: any) => {
   const words = `${text}`.split(' ')
   const allButLast = words.slice(0, words.length - 1).join(' ')
   const last = words[words.length - 1]
-  return (
-    <>
-      {allButLast}{' '}
-      <span style={{ display: 'inline-block' }}>
-        {last}
-        <span style={{ marginLeft: 5 }}>
-          <LogoCircle scale={0.65} />
-        </span>
+  return [
+    allButLast,
+    <span style={{ display: 'inline-block' }}>
+      {last}
+      <span style={{ marginLeft: 5 }}>
+        <LogoCircle scale={0.65} />
       </span>
-    </>
-  )
+    </span>,
+  ] as const
 }
 
 export const BrandMarkInline = () => (

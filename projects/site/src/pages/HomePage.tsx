@@ -13,15 +13,10 @@ import IntroSection from './HomePage/IntroSection'
 import { LoadingPage } from './LoadingPage'
 
 const Sections = {
-  DeploySection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/DeploySection')))),
   AllInOnePitchDemoSection: loadOnIntersect(
     lazy(() => retry(() => import('./HomePage/AllInOnePitchDemoSection'))),
   ),
-  DataAppKitFeaturesSection: loadOnIntersect(
-    lazy(() => retry(() => import('./HomePage/DataAppKitFeaturesSection'))),
-  ),
   FeaturesSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/FeaturesSection')))),
-  SecuritySection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/SecuritySection')))),
   FooterSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/FooterSection')))),
   // IntroSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/IntroSection')))),
 }
@@ -70,17 +65,8 @@ export const HomePage = memo(() => {
         <Page {...props} maxHeight={1000}>
           <FeaturesSection />
         </Page>
-        <Page {...props} height="120vh">
+        <Page {...props}>
           <Sections.AllInOnePitchDemoSection />
-        </Page>
-        <Page {...props} maxHeight={850}>
-          <Sections.DeploySection />
-        </Page>
-        <Page {...props} maxHeight={950}>
-          <Sections.DataAppKitFeaturesSection />
-        </Page>
-        <Page {...props} maxHeight={700}>
-          <Sections.SecuritySection />
         </Page>
         <Page {...props} maxHeight={600}>
           <Theme name="home">

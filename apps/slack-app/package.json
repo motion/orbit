@@ -1,7 +1,7 @@
 {
   "name": "@o/slack-app",
   "description": "Query, explore and sync the full Slack API",
-  "version": "2.7.7",
+  "version": "2.7.8",
   "main": "index.tsx",
   "config": {
     "orbitApp": true
@@ -11,10 +11,10 @@
     "build": "orbit build"
   },
   "dependencies": {
-    "@o/kit": "^2.7.7",
+    "@o/kit": "^2.7.8",
     "@o/swagger-to-graphql": "1.4.10",
-    "@o/ui": "^2.7.7",
-    "@o/worker-kit": "^2.7.7",
+    "@o/ui": "^2.7.8",
+    "@o/worker-kit": "^2.7.8",
     "autolinker": "^1.7.1",
     "express-graphql": "0.8.0",
     "graphql": "^14.4.2",
@@ -22,5 +22,5 @@
     "request": "^2.88.0",
     "slack": "^11.0.1"
   },
-  "gitHead": "0d2af411909b4a971ae481d82a410ef16af209b2"
+  "gitHead": "97011cd655962493c8139ea0a580aedf7d6def26"
 }

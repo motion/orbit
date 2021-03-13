@@ -1,6 +1,6 @@
 {
   "name": "@o/nucleo",
-  "version": "2.7.1",
+  "version": "2.7.8",
   "description": "",
   "main": "index.js",
   "sideEffects": false,

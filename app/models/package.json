@@ -1,6 +1,6 @@
 {
   "name": "@o/models",
-  "version": "2.7.7",
+  "version": "2.7.8",
   "main": "_/index.js",
   "ts:main": "./src/index.ts",
   "sideEffects": "false",
@@ -9,10 +9,10 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/config": "^2.7.1",
-    "@o/mediator": "^2.7.6",
-    "@o/ui": "^2.7.7",
-    "@o/utils": "^2.7.1",
+    "@o/config": "^2.7.8",
+    "@o/mediator": "^2.7.8",
+    "@o/ui": "^2.7.8",
+    "@o/utils": "^2.7.8",
     "global": "^4.3.2",
     "lodash": "4.17.11",
     "reconnecting-websocket": "4.1.10",
@@ -28,5 +28,5 @@
     "react-dom": "*",
     "typeorm": "*"
   },
-  "gitHead": "0d2af411909b4a971ae481d82a410ef16af209b2"
+  "gitHead": "97011cd655962493c8139ea0a580aedf7d6def26"
 }

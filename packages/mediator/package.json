@@ -1,6 +1,6 @@
 {
   "name": "@o/mediator",
-  "version": "2.7.6",
+  "version": "2.7.8",
   "author": "Motion",
   "main": "_/index.js",
   "sideEffects": false,
@@ -9,10 +9,10 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/config": "^2.7.1",
-    "@o/fast-compare": "^2.7.6",
-    "@o/logger": "^2.7.1",
-    "@o/utils": "^2.7.1",
+    "@o/config": "^2.7.8",
+    "@o/fast-compare": "^2.7.8",
+    "@o/logger": "^2.7.8",
+    "@o/utils": "^2.7.8",
     "ws": "^7.0.0",
     "zen-observable": "0.8.13"
   },

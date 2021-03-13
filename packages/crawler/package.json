@@ -1,6 +1,6 @@
 {
   "name": "@o/crawler",
-  "version": "2.7.1",
+  "version": "2.7.8",
   "main": "_/index.js",
   "sideEffects": false,
   "module": "src/index.js",
@@ -9,7 +9,7 @@
     "start:prod": "NODE_ENV=production node lib/index.js"
   },
   "dependencies": {
-    "@o/logger": "^2.7.1",
+    "@o/logger": "^2.7.8",
     "babel-polyfill": "7.0.0-beta.3",
     "lodash": "4.17.11",
     "readability-from-string": "^2.0.0",

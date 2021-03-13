@@ -1,11 +1,11 @@
 {
   "name": "@o/cosal",
-  "version": "2.7.1",
+  "version": "2.7.8",
   "main": "_/cosal.js",
   "sideEffects": false,
   "dependencies": {
-    "@o/logger": "^2.7.1",
-    "@o/vectorious": "^2.7.1",
+    "@o/logger": "^2.7.8",
+    "@o/vectorious": "^2.7.8",
     "compute-covariance": "^1.0.1",
     "electron-util": "^0.12.1",
     "fs-extra": "^8.1.0",

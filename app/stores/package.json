@@ -1,6 +1,6 @@
 {
   "name": "@o/stores",
-  "version": "2.7.7",
+  "version": "2.7.8",
   "main": "_/index.js",
   "ts:main": "./src/index.ts",
   "sideEffects": false,
@@ -9,16 +9,16 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/config": "^2.7.1",
-    "@o/constants": "^2.7.1",
-    "@o/mobx-bridge": "^2.7.1",
-    "@o/models": "^2.7.7",
-    "@o/use-store": "^2.7.6",
+    "@o/config": "^2.7.8",
+    "@o/constants": "^2.7.8",
+    "@o/mobx-bridge": "^2.7.8",
+    "@o/models": "^2.7.8",
+    "@o/use-store": "^2.7.8",
     "global": "^4.3.2",
     "lodash": "4.17.11"
   },
   "peerDependencies": {
     "mobx": "*"
   },
-  "gitHead": "0d2af411909b4a971ae481d82a410ef16af209b2"
+  "gitHead": "97011cd655962493c8139ea0a580aedf7d6def26"
 }

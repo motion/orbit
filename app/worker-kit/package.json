@@ -1,6 +1,6 @@
 {
   "name": "@o/worker-kit",
-  "version": "2.7.7",
+  "version": "2.7.8",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
   "sideEffects": false,
@@ -9,12 +9,12 @@
     "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {
-    "@o/config": "^2.7.1",
-    "@o/libs": "^2.7.7",
-    "@o/logger": "^2.7.1",
-    "@o/mediator": "^2.7.6",
-    "@o/models": "^2.7.7",
-    "@o/utils": "^2.7.1",
+    "@o/config": "^2.7.8",
+    "@o/libs": "^2.7.8",
+    "@o/logger": "^2.7.8",
+    "@o/mediator": "^2.7.8",
+    "@o/models": "^2.7.8",
+    "@o/utils": "^2.7.8",
     "dompurify": "^1.0.7",
     "jsdom": "^11.12.0",
     "lodash": "4.17.11",
@@ -24,5 +24,5 @@
     "electron": "*",
     "react": "*"
   },
-  "gitHead": "0d2af411909b4a971ae481d82a410ef16af209b2"
+  "gitHead": "97011cd655962493c8139ea0a580aedf7d6def26"
 }

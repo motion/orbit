@@ -1,6 +1,6 @@
 {
   "name": "@o/css",
-  "version": "2.7.10",
+  "version": "2.7.11",
   "description": "",
   "main": "_/css.js",
   "module": "_/css.mjs",
@@ -17,5 +17,5 @@
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "node ./_/test.js"
   },
-  "gitHead": "17456721e624e7668d8a725e1c2e595ce0426fa3"
+  "gitHead": "0e520c48a028087fee4e76b6c0f554d8c83fb301"
 }

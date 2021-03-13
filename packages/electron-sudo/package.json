@@ -1,6 +1,6 @@
 {
   "name": "@o/electron-sudo",
-  "version": "2.7.10",
+  "version": "2.7.11",
   "description": "Electron subprocess with administrative privileges, prompting the user with an OS dialog if necessary.",
   "main": "_/index.js",
   "sideEffects": false,
@@ -16,5 +16,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "17456721e624e7668d8a725e1c2e595ce0426fa3"
+  "gitHead": "0e520c48a028087fee4e76b6c0f554d8c83fb301"
 }

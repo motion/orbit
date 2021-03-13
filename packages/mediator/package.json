@@ -1,6 +1,6 @@
 {
   "name": "@o/mediator",
-  "version": "2.7.14",
+  "version": "2.7.15",
   "author": "Motion",
   "main": "_/index.js",
   "sideEffects": false,
@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@o/config": "^2.7.9",
-    "@o/fast-compare": "^2.7.14",
-    "@o/logger": "^2.7.14",
-    "@o/utils": "^2.7.14",
+    "@o/fast-compare": "^2.7.15",
+    "@o/logger": "^2.7.15",
+    "@o/utils": "^2.7.15",
     "ws": "^7.0.0",
     "zen-observable": "0.8.13"
   },
@@ -25,5 +25,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "2c659d5650383024d8bfaf71509d4f2ac800ef9d"
+  "gitHead": "ed2dc9868cdcb031d3f0c9effe856c6353f6ce2f"
 }

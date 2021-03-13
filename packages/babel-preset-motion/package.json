@@ -2,7 +2,7 @@
   "name": "@o/babel-preset-motion",
   "main": "babel-preset-motion.js",
   "sideEffects": false,
-  "version": "2.7.14",
+  "version": "2.7.15",
   "dependencies": {
     "@babel/core": "^7.6.0",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
@@ -23,12 +23,12 @@
     "babel-plugin-react-native-web": "^0.11.5",
     "babel-plugin-transform-react-constant-elements": "^6.23.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
-    "gloss": "^2.7.14",
+    "gloss": "^2.7.15",
     "react-refresh": "^0.5.2"
   },
   "publishConfig": {
     "access": "public"
   },
   "license": "MIT",
-  "gitHead": "2c659d5650383024d8bfaf71509d4f2ac800ef9d"
+  "gitHead": "ed2dc9868cdcb031d3f0c9effe856c6353f6ce2f"
 }

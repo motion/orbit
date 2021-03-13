@@ -1,6 +1,6 @@
 {
   "name": "@o/devcert",
-  "version": "2.7.12",
+  "version": "2.7.13",
   "description": "Generate trusted local SSL/TLS certificates for local SSL development",
   "main": "_/index.js",
   "scripts": {
@@ -36,5 +36,5 @@
     "tmp": "^0.0.33",
     "tslib": "^1.8.1"
   },
-  "gitHead": "86da5b903bf346c9a2f5392054943ed868752dc1"
+  "gitHead": "a94194618cb73145a17dffb9fe00052d6a702e50"
 }

@@ -3,14 +3,14 @@
   "main": "_/automagical.js",
   "ts:main": "src/automagical.ts",
   "sideEffects": false,
-  "version": "2.7.12",
+  "version": "2.7.13",
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/fast-compare": "^2.7.12",
-    "@o/logger": "^2.7.12",
+    "@o/fast-compare": "^2.7.13",
+    "@o/logger": "^2.7.13",
     "event-kit": "2.5.3",
     "global": "^4.3.2",
     "json-stringify-pretty-compact": "1.2.0",
@@ -25,5 +25,5 @@
   "devDependencies": {
     "@types/webpack-env": "*"
   },
-  "gitHead": "86da5b903bf346c9a2f5392054943ed868752dc1"
+  "gitHead": "a94194618cb73145a17dffb9fe00052d6a702e50"
 }

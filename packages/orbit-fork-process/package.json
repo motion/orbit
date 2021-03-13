@@ -2,7 +2,7 @@
 	"name": "@o/orbit-fork-process",
 	"main": "_/forkProcess.js",
 	"private": true,
-	"version": "2.7.9",
+	"version": "2.7.10",
 	"scripts": {
 		"build": "tsc -b || true",
 		"watch": "tsc -b --watch --preserveWatchOutput"

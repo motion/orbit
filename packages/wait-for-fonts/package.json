@@ -3,7 +3,7 @@
   "main": "_/index.js",
   "ts:main": "src/index.ts",
   "sideEffects": false,
-  "version": "2.7.9",
+  "version": "2.7.10",
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput"
@@ -11,5 +11,8 @@
   "peerDependencies": {
     "react": "^16.9.0"
   },
-  "gitHead": "32ccaf3266d9d0b0af041c44a817433cdedcb132"
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "17456721e624e7668d8a725e1c2e595ce0426fa3"
 }

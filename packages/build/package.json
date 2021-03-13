@@ -1,6 +1,6 @@
 {
 	"name": "@o/build",
-	"version": "2.7.9",
+	"version": "2.7.10",
 	"main": "_/index",
 	"bin": {
 		"mcro-build": "./mcro-build"
@@ -10,14 +10,17 @@
 		"build": "tsc -b || true",
 		"watch": "tsc -b --watch --preserveWatchOutput"
 	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"dependencies": {
 		"@babel/core": "^7.6.0",
 		"@hot-loader/react-dom": "16.8.6",
 		"@lerna/project": "^3.15.0",
 		"@mdx-js/loader": "^1.4.5",
-		"@o/babel-preset-motion": "^2.7.9",
-		"@o/gloss-webpack": "^2.7.9",
-		"@o/ui": "^2.7.9",
+		"@o/babel-preset-motion": "^2.7.10",
+		"@o/gloss-webpack": "^2.7.10",
+		"@o/ui": "^2.7.10",
 		"babel-loader": "8.0.6",
 		"bundle-stats": "1.6.0",
 		"circular-dependency-plugin": "5.2.0",
@@ -28,7 +31,7 @@
 		"execa": "3.1.0",
 		"file-loader": "4.2.0",
 		"fork-ts-checker-webpack-plugin": "1.5.0",
-		"gloss": "^2.7.9",
+		"gloss": "^2.7.10",
 		"html-critical-webpack-plugin": "2.1.0",
 		"html-webpack-plugin": "3.2.0",
 		"ignore-loader": "0.1.2",

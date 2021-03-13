@@ -1,11 +1,11 @@
 {
   "name": "@o/cosal",
-  "version": "2.7.9",
+  "version": "2.7.10",
   "main": "_/cosal.js",
   "sideEffects": false,
   "dependencies": {
-    "@o/logger": "^2.7.9",
-    "@o/vectorious": "^2.7.9",
+    "@o/logger": "^2.7.10",
+    "@o/vectorious": "^2.7.10",
     "compute-covariance": "^1.0.1",
     "electron-util": "^0.12.1",
     "fs-extra": "^8.1.0",
@@ -18,5 +18,8 @@
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "node ./_/test.js"
   },
-  "gitHead": "32ccaf3266d9d0b0af041c44a817433cdedcb132"
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "17456721e624e7668d8a725e1c2e595ce0426fa3"
 }

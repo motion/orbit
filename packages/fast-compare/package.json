@@ -1,6 +1,6 @@
 {
   "name": "@o/fast-compare",
-  "version": "2.7.9",
+  "version": "2.7.10",
   "description": "none",
   "main": "_/fastCompare.js",
   "module": "_/esm/fastCompare.js",
@@ -9,6 +9,9 @@
     "build": "tsc -b & tsc -b tsconfig.esm.json & wait",
     "watch": "tsc -b --watch --preserveWatchOutput & tsc -b tsconfig.esm.json --watch --preserveWatchOutput & wait"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "sideEffects": false,
-  "gitHead": "32ccaf3266d9d0b0af041c44a817433cdedcb132"
+  "gitHead": "17456721e624e7668d8a725e1c2e595ce0426fa3"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@o/graphql-nest-schema",
-  "version": "2.7.9",
+  "version": "2.7.10",
   "author": "Motion",
   "main": "index.js",
   "sideEffects": false,
@@ -12,5 +12,8 @@
     "node-fetch": "^2.5.0",
     "uuid": "^3.3.2"
   },
-  "gitHead": "32ccaf3266d9d0b0af041c44a817433cdedcb132"
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "17456721e624e7668d8a725e1c2e595ce0426fa3"
 }

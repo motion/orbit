@@ -224,11 +224,10 @@ const HeadTextSection = memo(() => {
           <View sm-display="none">
             <FadeInView {...animation.sub2} minHeight="min-content">
               <Paragraph size={1.8} sizeLineHeight={1.6} maxWidth={710} fontWeight={300}>
-                Communities exploring the world on a map.
-                <br />{' '}
-                <span style={{ color: '#feac1f' }}> Designed to last: owned by it's members.</span>
+                A community, curating a better map of the world.
+                <br /> <span style={{ color: '#feac1f' }}> Designed to last with DishCoin.</span>
                 <br />
-                Meet dish, an experiment.
+                <span style={{ opacity: 0.5 }}>Meet dish, an experiment.</span>
               </Paragraph>
             </FadeInView>
           </View>

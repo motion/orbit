@@ -66,28 +66,22 @@ export default memo(function FeaturesSection() {
         alignItems="center"
         nodeRef={Fade.ref}
         margin={[0, 'auto']}
-        padding={[0, 0, 100, 0]}
+        padding={['6vh', 0, '6vh', 0]}
         maxWidth="100vw"
       >
         <Stack padding="lg" flex={2}>
           <View flex={1}>
             <ParallaxStageItem stagger={0}>
               <TitleText fontWeight={300} size="sm" alpha={0.5}>
-                Dishcoin is simply
+                Why use a coin?
               </TitleText>
               <Space size={10} />
-              <TitleText
-                alignItems="flex-start"
-                justifyContent="flex-start"
-                size="xxxl"
-                sizeLineHeight={1.1}
-              >
-                A better deal.
+              <TitleText alignItems="flex-start" justifyContent="flex-start" size="xxxl">
+                It's a better deal.
               </TitleText>
               <Space size={14} />
               <IntroPara delayIndex={1} stagger={0} size={1.7} sizeLineHeight={1.2}>
-                <strong style={{ color: '#e61277' }}>When you add this up</strong>, why wouldn't
-                you?
+                <strong style={{ color: '#e61277' }}>Earn for your contributions</strong>
               </IntroPara>
             </ParallaxStageItem>
             <Space size={10} />
@@ -133,9 +127,8 @@ export default memo(function FeaturesSection() {
                     transition={transition}
                     key={section}
                     space={20}
+                    width="100%"
                     alignItems="start"
-                    // itemMinWidth={240}
-                    className="feature-grid"
                     marginRight="-100%"
                   >
                     {sections[section].items.map(({ title, icon, body }, index) => (
@@ -199,57 +192,54 @@ export default memo(function FeaturesSection() {
 const dly = 200
 
 const sections = {
+  Community: {
+    image: require('../../public/images/screen-graphql.jpg'),
+    items: [
+      {
+        icon: `satellite`,
+        body: [`Earn tokens for your contributions.`],
+      },
+      {
+        icon: `refresh`,
+        body: [`Reputation designed to prevent fraud transparently.`],
+      },
+      {
+        icon: `grid-view`,
+        body: [`Data mobility, community-led governance, built-in appeals.`],
+      },
+    ],
+  },
+  Curators: {
+    image: require('../../public/images/screen-people.jpg'),
+    items: [
+      {
+        icon: 'button',
+        body: [`Earn tokens for moderation and curation.`],
+      },
+      {
+        icon: `exchange`,
+        body: [`Vote on and guide sub-communities.`],
+      },
+      {
+        icon: `shop`,
+        body: [`Invite chains and strong ID verification make moderation easier.`],
+      },
+    ],
+  },
   Founders: {
     image: require('../../public/images/screen-graphql.jpg'),
     items: [
       {
         icon: `data`,
-        body: [`Less pressure to grow fast.`],
+        body: [`Less pressure to grow fast = higher quality apps.`],
       },
       {
         icon: 'code-block',
-        body: [`Raise money on their terms.`],
+        body: [`Built-in rewards system removes pressures to sell-out.`],
       },
       {
         icon: `satellite`,
-        body: [`Pitch to customers directly.`],
-      },
-    ],
-  },
-  Investors: {
-    image: require('../../public/images/screen-people.jpg'),
-    items: [
-      {
-        icon: 'button',
-        body: [`Clearer.`],
-      },
-      {
-        icon: `exchange`,
-        body: [`First class data drag & drop to move data in, out & between apps.`],
-      },
-      {
-        icon: `shop`,
-        body: [`Extensive libraries for displaying data all built on the latest React.`],
-      },
-    ],
-  },
-  Community: {
-    image: require('../../public/images/screen-graphql.jpg'),
-    items: [
-      {
-        title: `A space to collaborate`,
-        icon: `satellite`,
-        body: [`The easiest collaboration story: no servers, no credentials.`],
-      },
-      {
-        title: `Next-gen Hot Reload`,
-        icon: `refresh`,
-        body: [`Per-app Webpack for instant HMR. Every app is editable at runtime.`],
-      },
-      {
-        title: `Modern view system`,
-        icon: `grid-view`,
-        body: [`React Concurrent, Suspense, Framer Motion and more, in every view.`],
+        body: [`Pitch to customers directly, share growth with contributors.`],
       },
     ],
   },

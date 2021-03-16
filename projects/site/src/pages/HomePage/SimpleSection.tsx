@@ -53,7 +53,7 @@ export const SectionP = props => (
     tagName="div"
     display="flex"
     flexDirection="row"
-    size={1.6}
+    size={1.25}
     fontWeight={400}
     sizeLineHeight={1.2}
     {...props}

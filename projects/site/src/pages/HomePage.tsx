@@ -59,7 +59,7 @@ export const HomePage = memo(() => {
         <Page {...props} height="auto" zIndex={0}>
           <HeadSection />
         </Page>
-        <Page {...props} maxHeight={700}>
+        <Page {...props}>
           <IntroSection />
         </Page>
         <Page {...props} maxHeight={1000}>

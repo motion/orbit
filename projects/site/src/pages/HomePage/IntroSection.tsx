@@ -55,9 +55,10 @@ export default function IntroSection() {
                 abovesm-marginLeft="-50%"
                 abovesm-width="150%"
                 height="auto"
-                maxWidth={1200}
+                maxWidth={700}
                 margin="auto"
                 borderRadius={20}
+                maxHeight={500}
                 boxShadow={[
                   {
                     spread: 5,
@@ -78,12 +79,13 @@ export default function IntroSection() {
               <span style={{ color: '#249be9' }}>
                 We want to find better quality lists of things
               </span>
-              , like the best pho or taco in your city. We've indexed sentiment and reviews across
-              the web, but to maintain quality, we need a great community.
+              , like the best pho or tacos. We index sentiment and reviews across the web, but to
+              maintain quality, we need a great community.
             </IntroPara>
             <Link href="/">
               <IntroPara alpha={0.65} delayIndex={3} stagger={-1}>
-                So, we're making a coin – DishCoin &nbsp;&nbsp;&nbsp;&nbsp;
+                To do that, we're building an amazing app, and giving back to users with DishCoin
+                &nbsp;&nbsp;&nbsp;&nbsp;
                 <LogoCircle scale={0.65} />
               </IntroPara>
             </Link>

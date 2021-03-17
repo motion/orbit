@@ -1,6 +1,6 @@
 {
   "name": "@o/build",
-  "version": "2.7.25",
+  "version": "2.7.26",
   "main": "_/index",
   "bin": {
     "mcro-build": "./mcro-build"
@@ -20,7 +20,7 @@
     "@o/babel-preset-motion": "^2.7.21",
     "@o/gloss-webpack": "^2.7.21",
     "@o/ui": "^2.7.21",
-    "@o/webpack-fast-refresh": "^2.7.21",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "babel-loader": "8.0.6",
     "bundle-stats": "1.6.0",
     "circular-dependency-plugin": "5.2.0",

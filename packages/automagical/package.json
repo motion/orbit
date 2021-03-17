@@ -2,6 +2,7 @@
   "name": "@o/automagical",
   "main": "_/automagical.js",
   "ts:main": "src/automagical.ts",
+  "type": "module",
   "sideEffects": false,
   "version": "2.8.15",
   "scripts": {

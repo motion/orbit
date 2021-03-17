@@ -4,6 +4,7 @@
   "description": "",
   "ts:main": "src/useStore.ts",
   "main": "_/useStore.js",
+  "type": "module",
   "sideEffects": false,
   "author": "Nate Wienert",
   "license": "MIT",

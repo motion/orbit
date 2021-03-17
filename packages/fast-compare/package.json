@@ -3,6 +3,7 @@
   "version": "2.8.15",
   "description": "none",
   "main": "_/fastCompare.js",
+  "type": "module",
   "module": "_/esm/fastCompare.js",
   "ts:main": "src/fastCompare.ts",
   "scripts": {

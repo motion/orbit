@@ -5,7 +5,7 @@
     "incremental": true,
     "declaration": true,
     "declarationMap": true,
-    "module": "CommonJS",
+    "module": "ESNext",
     "removeComments": true,
     "moduleResolution": "node",
     "esModuleInterop": true,

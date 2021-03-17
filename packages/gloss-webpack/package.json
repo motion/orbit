@@ -2,6 +2,7 @@
   "name": "@o/gloss-webpack",
   "version": "2.8.15",
   "main": "_/plugin.js",
+  "type": "module",
   "sideEffects": false,
   "scripts": {
     "build": "tsc -b || true",

@@ -2,7 +2,7 @@
   "name": "@o/mobx-bridge",
   "main": "_/Bridge.js",
   "sideEffects": false,
-  "version": "2.8.11",
+  "version": "2.8.13",
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput"

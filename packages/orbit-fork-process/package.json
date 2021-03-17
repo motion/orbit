@@ -2,13 +2,13 @@
 	"name": "@o/orbit-fork-process",
 	"main": "_/forkProcess.js",
 	"private": true,
-	"version": "2.8.1",
+	"version": "2.8.11",
 	"scripts": {
 		"build": "tsc -b || true",
 		"watch": "tsc -b --watch --preserveWatchOutput"
 	},
 	"dependencies": {
-		"@o/config": "^2.8.1",
+		"@o/config": "^2.8.11",
 		"ps-tree": "1.1.0"
 	}
 }

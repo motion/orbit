@@ -14,7 +14,7 @@
     "event-kit": "2.5.3",
     "global": "^4.3.2",
     "json-stringify-pretty-compact": "1.2.0",
-    "mobx": "*",
+    "mobx": "^5.13.0",
     "react": "^16.9.0",
     "scheduler": "^0.15.0",
     "zen-observable": "0.8.13"

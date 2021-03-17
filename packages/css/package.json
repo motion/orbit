@@ -1,6 +1,6 @@
 {
   "name": "@o/css",
-  "version": "2.8.15",
+  "version": "2.8.16",
   "description": "",
   "type": "module",
   "main": "_/css.js",

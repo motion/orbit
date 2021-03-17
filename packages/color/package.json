@@ -1,6 +1,6 @@
 {
   "name": "@o/color",
-  "version": "2.8.15",
+  "version": "2.8.16",
   "main": "_/index.js",
   "type": "module",
   "ts:main": "src/index.ts",

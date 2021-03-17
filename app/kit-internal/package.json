@@ -1,6 +1,6 @@
 {
   "name": "@o/kit-internal",
-  "version": "2.8.18",
+  "version": "2.8.19",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
   "sideEffects": false,
@@ -10,15 +10,15 @@
     "watch": "tsc --emitDeclarationOnly --preserveWatchOutput --watch"
   },
   "dependencies": {
-    "@o/bridge": "^2.8.18",
-    "@o/fast-compare": "^2.8.18",
-    "@o/kit": "^2.8.18",
-    "@o/models": "^2.8.18",
-    "@o/stores": "^2.8.18",
-    "@o/ui": "^2.8.18",
-    "@o/use-store": "^2.8.18",
-    "@o/utils": "^2.8.18",
-    "gloss": "^2.8.18",
+    "@o/bridge": "^2.8.19",
+    "@o/fast-compare": "^2.8.19",
+    "@o/kit": "^2.8.19",
+    "@o/models": "^2.8.19",
+    "@o/stores": "^2.8.19",
+    "@o/ui": "^2.8.19",
+    "@o/use-store": "^2.8.19",
+    "@o/utils": "^2.8.19",
+    "gloss": "^2.8.19",
     "immer": "^3.1.2"
   },
   "peerDependencies": {

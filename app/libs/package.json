@@ -1,6 +1,6 @@
 {
   "name": "@o/libs",
-  "version": "2.8.18",
+  "version": "2.8.19",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
   "sideEffects": false,
@@ -9,10 +9,10 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/config": "^2.8.18",
-    "@o/fast-compare": "^2.8.18",
-    "@o/models": "^2.8.18",
-    "@o/utils": "^2.8.18"
+    "@o/config": "^2.8.19",
+    "@o/fast-compare": "^2.8.19",
+    "@o/models": "^2.8.19",
+    "@o/utils": "^2.8.19"
   },
   "gitHead": "17456721e624e7668d8a725e1c2e595ce0426fa3"
 }

@@ -1,7 +1,7 @@
 {
   "name": "@o/lists-app",
   "description": "Create lists of any bits or data.",
-  "version": "2.8.18",
+  "version": "2.8.19",
   "main": "index.tsx",
   "config": {
     "orbitApp": true
@@ -11,8 +11,8 @@
     "build": "orbit build"
   },
   "dependencies": {
-    "@o/kit": "^2.8.18",
-    "@o/ui": "^2.8.18",
+    "@o/kit": "^2.8.19",
+    "@o/ui": "^2.8.19",
     "lodash": "4.17.11",
     "pluralize": "^7.0.0"
   },

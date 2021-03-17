@@ -1,6 +1,6 @@
 {
   "name": "@o/mediator",
-  "version": "2.8.11",
+  "version": "2.8.14",
   "author": "Motion",
   "main": "_/index.js",
   "sideEffects": false,
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@o/config": "^2.8.11",
-    "@o/fast-compare": "^2.7.21",
+    "@o/fast-compare": "^2.8.14",
     "@o/logger": "^2.8.11",
     "@o/utils": "^2.8.11",
     "ws": "^7.0.0",

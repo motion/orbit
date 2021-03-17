@@ -1,6 +1,6 @@
 {
   "name": "@o/orbit-dotapp",
-  "version": "2.8.11",
+  "version": "2.8.14",
   "main": "./_/main.js",
   "private": true,
   "scripts": {
@@ -10,7 +10,7 @@
     "dist": "pkg ./_/main.js --targets node10-macos-x64 -o ./dist/main"
   },
   "dependencies": {
-    "@o/mediator": "^2.8.11",
+    "@o/mediator": "^2.8.14",
     "@o/utils": "^2.8.11",
     "bonjour": "*",
     "reconnecting-websocket": "4.1.10",

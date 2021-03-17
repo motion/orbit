@@ -1,7 +1,7 @@
 {
   "name": "@o/playground",
   "private": true,
-  "version": "2.8.11",
+  "version": "2.8.12",
   "scripts": {
     "start": "mcro-build --entry ./src/index --port 5001 --target web"
   },
@@ -9,9 +9,9 @@
     "@babel/core": "^7.6.0",
     "@babel/runtime": "^7.4.5",
     "@o/babel-preset-motion": "^2.8.11",
-    "@o/kit": "^2.8.11",
-    "@o/ui": "^2.8.11",
-    "@o/use-store": "^2.8.11",
+    "@o/kit": "^2.8.12",
+    "@o/ui": "^2.8.12",
+    "@o/use-store": "^2.8.12",
     "@welldone-software/why-did-you-render": "3.3.8",
     "core-js": "2.6.5",
     "framer-motion": "*",

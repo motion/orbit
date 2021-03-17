@@ -1,6 +1,6 @@
 {
   "name": "@o/site",
-  "version": "2.8.11",
+  "version": "2.8.12",
   "private": true,
   "main": "./src/index.tsx",
   "scripts": {
@@ -18,9 +18,9 @@
     "@babel/runtime": "^7.4.5",
     "@mdx-js/react": "^1.4.5",
     "@o/babel-preset-motion": "^2.8.11",
-    "@o/kit": "^2.8.11",
-    "@o/ui": "^2.8.11",
-    "@o/use-store": "^2.8.11",
+    "@o/kit": "^2.8.12",
+    "@o/ui": "^2.8.12",
+    "@o/use-store": "^2.8.12",
     "@o/utils": "^2.8.11",
     "@o/wait-for-fonts": "^2.7.9",
     "@welldone-software/why-did-you-render": "3.3.8",
@@ -50,7 +50,7 @@
     "@babel/core": "^7.6.0",
     "@babel/preset-env": "*",
     "@babel/preset-react": "*",
-    "@o/build": "^2.8.11",
+    "@o/build": "^2.8.12",
     "react-docgen-typescript": "1.14.0"
   }
 }

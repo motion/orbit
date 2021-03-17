@@ -1,6 +1,6 @@
 {
   "name": "@o/build",
-  "version": "2.8.11",
+  "version": "2.8.12",
   "main": "_/index",
   "bin": {
     "mcro-build": "./mcro-build"
@@ -19,7 +19,7 @@
     "@mdx-js/loader": "^1.4.5",
     "@o/babel-preset-motion": "^2.8.11",
     "@o/gloss-webpack": "^2.8.11",
-    "@o/ui": "^2.8.11",
+    "@o/ui": "^2.8.12",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "babel-loader": "8.0.6",
     "bundle-stats": "1.6.0",

@@ -1,6 +1,6 @@
 {
   "name": "@o/orbit-workers",
-  "version": "2.8.11",
+  "version": "2.8.12",
   "main": "_/main.js",
   "private": true,
   "scripts": {
@@ -8,16 +8,16 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/apps-manager": "^2.8.11",
+    "@o/apps-manager": "^2.8.12",
     "@o/bridge": "^2.8.11",
     "@o/config": "^2.8.11",
-    "@o/libs-node": "^2.8.11",
+    "@o/libs-node": "^2.8.12",
     "@o/logger": "^2.8.11",
     "@o/mediator": "^2.8.11",
-    "@o/models": "^2.8.11",
-    "@o/use-store": "^2.8.11",
+    "@o/models": "^2.8.12",
+    "@o/use-store": "^2.8.12",
     "@o/utils": "^2.8.11",
-    "@o/worker-kit": "^2.8.11",
+    "@o/worker-kit": "^2.8.12",
     "global": "^4.3.2",
     "lodash": "4.17.11",
     "mobx": "*",

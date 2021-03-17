@@ -8,7 +8,7 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "peerDependencies": {
-    "mobx": "*"
+    "mobx": "^5.13.0"
   },
   "publishConfig": {
     "access": "public"

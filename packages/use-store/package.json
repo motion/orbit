@@ -1,6 +1,6 @@
 {
   "name": "@o/use-store",
-  "version": "2.8.16",
+  "version": "2.8.17",
   "description": "",
   "ts:main": "src/useStore.ts",
   "main": "_/useStore.js",
@@ -13,9 +13,9 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/automagical": "^2.8.16",
-    "@o/fast-compare": "^2.8.16",
-    "@o/utils": "^2.8.16",
+    "@o/automagical": "^2.8.17",
+    "@o/fast-compare": "^2.8.17",
+    "@o/utils": "^2.8.17",
     "lodash": "^4.17.15",
     "react": "^16.9.0",
     "react-dom": "^16.9.0"

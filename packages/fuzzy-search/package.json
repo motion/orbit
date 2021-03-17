@@ -1,6 +1,6 @@
 {
   "name": "@o/fuzzy-search",
-  "version": "2.8.16",
+  "version": "2.8.17",
   "description": "none",
   "main": "_/FuzzySearch.js",
   "ts:main": "src/FuzzySearch.ts",

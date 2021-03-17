@@ -10,7 +10,7 @@ import { OrbitBuildOptions } from './types'
 // require so it doesnt get removed on save
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin')
 const IgnoreNotFoundExportPlugin = require('ignore-not-found-export-webpack-plugin')
-const ReactRefreshPlugin = require('@o/webpack-fast-refresh')
+const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 // reduced a 5mb bundle by 0.01mb...
 const ShakePlugin = require('webpack-common-shake').Plugin
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
@@ -305,7 +305,7 @@ async function makeConfig() {
       alias,
     },
     resolveLoader: {
-      modules: buildNodeModules,
+      modules: [...buildNodeModules, 'node_modules'],
     },
     module: {
       rules: [
@@ -326,9 +326,6 @@ async function makeConfig() {
         },
         {
           test: /\.(j|t)sx?$/,
-          // in prod mode include everything for better bundling,
-          // in dev mode just the entries in monorepo
-          ...(isProd ? null : { include: tsEntries }),
           use: [
             {
               loader: 'babel-loader',

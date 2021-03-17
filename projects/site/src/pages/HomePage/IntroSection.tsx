@@ -77,18 +77,18 @@ export default function IntroSection() {
             </IntroPara>
             <IntroPara size={1.7} fontWeight="600" delayIndex={2} stagger={-0.5}>
               <span style={{ color: '#249be9' }}>
-                We want to find better quality lists of things
-              </span>
-              , like the best pho or tacos. We index sentiment and reviews across the web, but to
-              maintain quality, we need a great community.
+                We want to find better quality food, and more,
+              </span>{' '}
+              like the best pho or tacos in our city. So we index sentiment from reviews and sources
+              across the web.
             </IntroPara>
-            <Link href="/">
-              <IntroPara alpha={0.65} delayIndex={3} stagger={-1}>
-                To do that, we're building an amazing app, and giving back to users with DishCoin
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <LogoCircle scale={0.65} />
-              </IntroPara>
-            </Link>
+            {/* <Link href="/"> */}
+            <IntroPara alpha={0.65} delayIndex={3} stagger={-1}>
+              But we need a great community. So we're giving back to users with DishCoin. More on
+              that below. &nbsp;&nbsp;&nbsp;&nbsp;
+              <LogoCircle scale={0.65} />
+            </IntroPara>
+            {/* </Link> */}
           </Stack>
         </HalfGrid>
       </SectionContent>

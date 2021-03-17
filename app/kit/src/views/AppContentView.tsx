@@ -41,6 +41,7 @@ export function AppContentView(props: AppContentViewProps) {
           ],
           [all],
         )}
+        // @ts-ignore
         getItem={useCallback((item, { isSelected, select }) => {
           const { definition, app } = all.find(x => x.definition.id === item.id)!
           return (

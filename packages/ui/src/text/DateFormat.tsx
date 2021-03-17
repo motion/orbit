@@ -32,6 +32,7 @@ export function DateFormat({
   if (nice) {
     return <TimeAgo>{date}</TimeAgo>
   }
+  // @ts-ignore
   let finalOptions: Intl.DateTimeFormatOptions = {
     ...defaultOptions,
     ...options,

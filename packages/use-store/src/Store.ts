@@ -14,6 +14,7 @@ export interface ReactiveStore<A extends Object> {
  *   2. No need for decoration anymore
  */
 
+// @ts-ignore
 export class Store<Props extends any> implements ReactiveStore<Props> {
   props: Props
   subscriptions = new CompositeDisposable()

@@ -54,6 +54,7 @@ export function extractStaticTernaries(
 
     // strip parens
     if (t.isExpressionStatement(test)) {
+      // @ts-ignore
       ternaryTest = test.expression
     }
 

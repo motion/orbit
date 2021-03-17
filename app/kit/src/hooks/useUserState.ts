@@ -1,7 +1,14 @@
 import { loadOne, save, useModel } from '@o/bridge'
 import { StateModel } from '@o/models'
 import { useScopedStateId } from '@o/ui'
-import { ImmutableUpdateFn, isDefined, OR_TIMED_OUT, orTimeout, ScopedState, selectDefined } from '@o/utils'
+import {
+  ImmutableUpdateFn,
+  isDefined,
+  OR_TIMED_OUT,
+  orTimeout,
+  ScopedState,
+  selectDefined,
+} from '@o/utils'
 import produce from 'immer'
 import { useCallback, useState } from 'react'
 
@@ -88,7 +95,7 @@ function useEnsureDefaultState<A>(identifier: string | false, type: string, valu
 
   cache[key] = {
     resolved: false,
-    promise: new Promise(res => {
+    promise: new Promise<void>(res => {
       const finish = () => {
         console.debug(`ensureDefaultState: finish`)
         cache[key].resolved = true

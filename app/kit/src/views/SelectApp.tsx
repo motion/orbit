@@ -1,4 +1,5 @@
 import { AppBit, AppDefinition } from '@o/models'
+// @ts-ignore
 import { Select, SelectProps } from '@o/ui'
 import React from 'react'
 

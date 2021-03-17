@@ -57,6 +57,7 @@ export class AuthServer {
 
     log.verbose('stopping auth https server')
     await new Promise((ok, fail) => {
+      // @ts-ignore
       this.server.close(err => (err ? fail(err) : ok()))
     })
     log.verbose('auth https server was stopped')
@@ -76,9 +77,7 @@ export class AuthServer {
     this.app.get('/hello', (_, res) => res.send('hello world'))
     this.app.get('/authorize', (req, res) => {
       res.send(
-        `<html><body>Authorized. Please click <a href="orbit://https://orbitauth.com${
-          req.originalUrl
-        }">this link</a></body></html>`,
+        `<html><body>Authorized. Please click <a href="orbit://https://orbitauth.com${req.originalUrl}">this link</a></body></html>`,
       )
     })
 

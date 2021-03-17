@@ -19,7 +19,9 @@ export class PaneManagerStore {
     disabled?: boolean
   }
 
+  // @ts-ignore
   paneId = this.props.defaultPaneId
+  // @ts-ignore
   panes = [...(this.props.defaultPanes || [])]
 
   syncPaneIndexProp = react(

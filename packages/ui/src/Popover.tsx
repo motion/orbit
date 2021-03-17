@@ -739,6 +739,7 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
   }
 
   clearHovered() {
+    // @ts-ignore
     return new Promise(resolve => this.setState({ menuHovered: 0, targetHovered: 0 }, resolve))
   }
 

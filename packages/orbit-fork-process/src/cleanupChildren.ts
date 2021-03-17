@@ -4,7 +4,7 @@ export function cleanupChildren(pid = process.getuid()) {
   const exitWait = setTimeout(() => {
     console.log('failed to exit gracefully!')
   }, 200)
-  return new Promise(res => {
+  return new Promise<void>(res => {
     psTree(pid, (err, children) => {
       if (err) {
         console.log('error getting children', err)

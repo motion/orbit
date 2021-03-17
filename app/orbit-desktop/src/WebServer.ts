@@ -62,7 +62,7 @@ export class WebServer {
   }
 
   start() {
-    return new Promise(async res => {
+    return new Promise<void>(async res => {
       log.verbose(`Killing old server on ${Config.ports.server}...`)
       await killPort(Config.ports.server)
 

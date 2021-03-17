@@ -1,6 +1,13 @@
 import { createStoreContext, ensure, react, syncFromProp, syncToProp, useStore } from '@o/use-store'
 import { Contents, gloss } from 'gloss'
-import React, { cloneElement, HTMLAttributes, isValidElement, memo, useCallback, useEffect } from 'react'
+import React, {
+  cloneElement,
+  HTMLAttributes,
+  isValidElement,
+  memo,
+  useCallback,
+  useEffect,
+} from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 
 import { isBrowser } from '../constants'
@@ -105,6 +112,7 @@ class GridStore {
     }, 'xxs')
   }
 
+  // @ts-ignore
   layout = syncFromProp(this.props, {
     key: 'layout',
     defaultKey: 'defaultLayout',
@@ -117,6 +125,7 @@ class GridStore {
     const col = this.getCol(width)
     dualCompact(layout)
     this.layout = {
+      // @ts-ignore
       ...this.layout,
       [col]: layout,
     }
@@ -268,6 +277,7 @@ function GridLayoutObject(props: GridLayoutPropsItems) {
     gridStore.setItems(sizes)
   }, [JSON.stringify(sizes)])
 
+  // @ts-ignore
   if (!gridStore.layout.lg) {
     return null
   }

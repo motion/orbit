@@ -1,11 +1,26 @@
 import { Model } from '@o/mediator'
-import { ImmutableUpdateFn, isDefined, OR_TIMED_OUT, orTimeout, selectDefined, shouldDebug } from '@o/utils'
+import {
+  ImmutableUpdateFn,
+  isDefined,
+  OR_TIMED_OUT,
+  orTimeout,
+  selectDefined,
+  shouldDebug,
+} from '@o/utils'
 import produce from 'immer'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { queueUpdate } from './batchUpdate'
-import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from './Mediator'
+import {
+  loadCount,
+  loadMany,
+  loadOne,
+  observeCount,
+  observeMany,
+  observeOne,
+  save,
+} from './Mediator'
 
 export type UseModelOptions = {
   defaultValue?: any
@@ -163,7 +178,7 @@ function use<ModelType, Args>(
         state.current.waitForFirstResolve = true
         let resolve
         let resolved = false
-        const promise = new Promise(res => {
+        const promise = new Promise<void>(res => {
           const finish = (response: any) => {
             const next = selectDefined(response, defaultValue)
             console.debug(`useModel() finish got`, response)

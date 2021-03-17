@@ -140,7 +140,7 @@ export function createReaction(
       const finish = (success: boolean) => () => {
         cancellation()
         if (success) {
-          resolve()
+          resolve(true)
         } else {
           reject(SHARED_REJECTION_ERROR)
         }

@@ -23,7 +23,7 @@ function createResource(fetch: any) {
 
       cache[key] = {
         value: undefined,
-        read: new Promise(res => {
+        read: new Promise<void>(res => {
           fetch(...args)
             .then(x => {
               cache[key].value = x

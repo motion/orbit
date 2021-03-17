@@ -1,6 +1,14 @@
 import { isDefined, selectDefined } from '@o/utils'
 import { pick } from 'lodash'
-import React, { forwardRef, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
+import React, {
+  forwardRef,
+  useCallback,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from 'react'
 
 import { Center } from '../Center'
 import { splitCollapseProps } from '../Collapsable'
@@ -19,7 +27,14 @@ import { useVisibility } from '../Visibility'
 import { ListItem } from './ListItem'
 import { HandleSelection, ListItemProps, ListItemSimpleProps } from './ListItemViewProps'
 import { PropsContext, useListProps } from './ListPropsContext'
-import { Direction, selectablePropKeys, SelectableProps, SelectableStore, SelectableStoreProvider, useCreateSelectableStore } from './SelectableStore'
+import {
+  Direction,
+  selectablePropKeys,
+  SelectableProps,
+  SelectableStore,
+  SelectableStoreProvider,
+  useCreateSelectableStore,
+} from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
 // TODO round out, we can likely import models
@@ -186,6 +201,7 @@ export const List = memoIsEqualDeep(
         onEdit: onEdit ? title => onEdit(item, title) : undefined,
         ...normalized,
         ...itemExtraProps,
+        // @ts-ignore
         ...filterExtraProps,
       }
       return itemProps

@@ -59,23 +59,16 @@ module.exports = function(_, givenOpts) {
         plug('@babel/preset-react', {
           pragmaFrag: 'React.Fragment',
         }),
-        plug(
-          '@babel/preset-env',
-          {
-            loose: true,
-            modules: false,
-            targets: {
-              chrome: '78',
-              esmodules: true,
-            },
-            exclude: ['transform-regenerator', 'transform-async-to-generator'],
-            ...opts.env,
+        plug('@babel/preset-env', {
+          loose: true,
+          modules: false,
+          targets: {
+            chrome: '78',
+            esmodules: true,
           },
-          undefined,
-          {
-            usually: 'production',
-          },
-        ),
+          exclude: ['transform-regenerator', 'transform-async-to-generator'],
+          ...opts.env,
+        }),
         plug('@babel/preset-typescript'),
       ].filter(Boolean),
   }

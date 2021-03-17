@@ -15,6 +15,7 @@ export function createContextualProps<A extends any>(defaults?: A): ContextualPr
   const Context = createContext<Partial<A> | null>(null)
   const PassProps = ({ children, ...rest }: Partial<Omit<A, 'children'> & { children?: any }>) => {
     const parentProps = useContext(Context)
+    // @ts-ignore
     const val = { ...defaults, ...parentProps, ...rest }
     const memoVal = useMemo(
       () => val,

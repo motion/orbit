@@ -13,7 +13,7 @@ const REMOTE_URL = 'http://localhost:3001'
 
 const onFocus = page => {
   return page.evaluate(() => {
-    return new Promise(res => {
+    return new Promise<void>(res => {
       if (document.hasFocus()) {
         res()
       } else {

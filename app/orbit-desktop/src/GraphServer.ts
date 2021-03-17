@@ -9,7 +9,12 @@ import bodyParser from 'body-parser'
 import express from 'express'
 import { GraphQLSchema } from 'graphql'
 import { graphqlExpress } from 'graphql-server-express'
-import { introspectSchema, makeExecutableSchema, makeRemoteExecutableSchema, mergeSchemas } from 'graphql-tools'
+import {
+  introspectSchema,
+  makeExecutableSchema,
+  makeRemoteExecutableSchema,
+  mergeSchemas,
+} from 'graphql-tools'
 
 import { getActiveSpace } from './helpers/getActiveSpace'
 
@@ -52,7 +57,7 @@ export class GraphServer {
       }
     })
 
-    return new Promise(async res => {
+    return new Promise<void>(async res => {
       const Config = getGlobalConfig()
       const port = Config.ports.graphServer
       log.verbose(`Starting on ${port}`)
@@ -85,9 +90,7 @@ export class GraphServer {
 
       if (app && !appDef) {
         log.debug(
-          `GraphServer, ${
-            app.identifier
-          }: WARNING! found an app-bit but no app-def, DB maybe out of sync.`,
+          `GraphServer, ${app.identifier}: WARNING! found an app-bit but no app-def, DB maybe out of sync.`,
         )
       }
 

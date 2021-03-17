@@ -1,3 +1,4 @@
+// @ts-ignore
 import usage from 'usage'
 
 const { pid } = process
@@ -21,8 +22,7 @@ setTimeout(() => {
       }
       // in percent
       if (res.cpu > 90) {
-        if (burnTime % 10 === 0)
-          console.log(`CPU usage above 90% for ${burnTime} seconds`)
+        if (burnTime % 10 === 0) console.log(`CPU usage above 90% for ${burnTime} seconds`)
         burnTime++
       } else {
         burnTime = 0

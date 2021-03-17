@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ensure, react, syncFromProp, syncToProp, useStore } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { capitalize } from 'lodash'
@@ -275,6 +276,7 @@ export const FilterableSearchInput = memo(
         clearable={!!store.query}
         onClickClear={store.clear}
         focusedToken={store.focusedToken}
+        // @ts-ignore
         filters={store.filters}
         filterProps={{
           onFocus: store.onTokenFocus,

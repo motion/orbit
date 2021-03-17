@@ -10,6 +10,7 @@ import { Input, InputProps } from './Input'
 
 export type SearchInputProps = InputProps & {
   actions?: React.ReactNode
+  // @ts-ignore
   filters?: TableFilter[]
   onClickClear?: InputProps['onClick']
   focusedToken?: number

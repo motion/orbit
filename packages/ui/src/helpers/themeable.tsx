@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { CompiledTheme, Theme, ThemeSelect } from 'gloss'
 import React from 'react'
 

@@ -17,6 +17,7 @@ export function startElectron({ mainProcess, loadingWindow }) {
     if (app.isReady) {
       finishLaunchingElectron({ mainProcess, loadingWindow })
     } else {
+      // @ts-ignore
       app.on('ready', finishLaunchingElectron)
     }
   } else {

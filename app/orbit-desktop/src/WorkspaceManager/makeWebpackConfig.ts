@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Logger } from '@o/logger'
 import ReactRefreshPlugin from '@o/webpack-fast-refresh'
 import { pathExistsSync, readJSONSync } from 'fs-extra'

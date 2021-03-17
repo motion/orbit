@@ -1,8 +1,7 @@
 {
   "name": "@o/gloss-webpack",
-  "version": "2.8.17",
+  "version": "2.8.18",
   "main": "_/plugin.js",
-  "type": "module",
   "sideEffects": false,
   "scripts": {
     "build": "tsc -b || true",
@@ -17,7 +16,7 @@
     "@babel/types": "^7.6.1",
     "babel-literal-to-ast": "^2.1.0",
     "fs-extra": "^8.1.0",
-    "gloss": "^2.8.17",
+    "gloss": "^2.8.18",
     "invariant": "^2.2.1",
     "loader-utils": "^1.1.0"
   },

@@ -1,6 +1,6 @@
 {
   "name": "add-source-loader",
-  "version": "2.8.17",
+  "version": "2.8.18",
   "description": "",
   "main": "index.js",
   "sideEffects": false,

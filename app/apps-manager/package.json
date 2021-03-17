@@ -1,6 +1,6 @@
 {
   "name": "@o/apps-manager",
-  "version": "2.8.17",
+  "version": "2.8.18",
   "main": "_/AppsManager.js",
   "private": true,
   "scripts": {
@@ -8,14 +8,14 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/config": "^2.8.17",
-    "@o/constants": "^2.8.17",
-    "@o/libs-node": "^2.8.17",
-    "@o/logger": "^2.8.17",
-    "@o/mediator": "^2.8.17",
-    "@o/models": "^2.8.17",
-    "@o/use-store": "^2.8.17",
-    "@o/utils": "^2.8.17",
+    "@o/config": "^2.8.18",
+    "@o/constants": "^2.8.18",
+    "@o/libs-node": "^2.8.18",
+    "@o/logger": "^2.8.18",
+    "@o/mediator": "^2.8.18",
+    "@o/models": "^2.8.18",
+    "@o/use-store": "^2.8.18",
+    "@o/utils": "^2.8.18",
     "fs-extra": "^8.1.0"
   },
   "peerDependencies": {

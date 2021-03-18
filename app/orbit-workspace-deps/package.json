@@ -1,8 +1,8 @@
 {
   "name": "@o/orbit-workspace-deps",
-  "version": "2.8.21",
+  "version": "2.8.22",
   "private": true,
   "dependencies": {
-    "@o/webpack-fast-refresh": "^2.8.21"
+    "@o/webpack-fast-refresh": "^2.8.22"
   }
 }

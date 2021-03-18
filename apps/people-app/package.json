@@ -1,7 +1,7 @@
 {
   "name": "@o/people-app",
   "description": "A contact manager across all bits synced of type person.",
-  "version": "2.8.21",
+  "version": "2.8.22",
   "main": "index.tsx",
   "config": {
     "orbitApp": true
@@ -11,8 +11,8 @@
     "build": "orbit build"
   },
   "dependencies": {
-    "@o/kit": "^2.8.21",
-    "@o/ui": "^2.8.21"
+    "@o/kit": "^2.8.22",
+    "@o/ui": "^2.8.22"
   },
   "gitHead": "17456721e624e7668d8a725e1c2e595ce0426fa3"
 }

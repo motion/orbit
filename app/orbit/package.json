@@ -1,6 +1,6 @@
 {
   "name": "orbit",
-  "version": "2.8.19",
+  "version": "2.8.20",
   "private": true,
   "main": "_/index.js",
   "bin": {
@@ -18,10 +18,10 @@
   "dependencies": {
     "@babel/code-frame": "^7.0.0",
     "@o/config": "^2.8.19",
-    "@o/libs-node": "^2.8.19",
+    "@o/libs-node": "^2.8.20",
     "@o/logger": "^2.8.19",
     "@o/mediator": "^2.8.19",
-    "@o/models": "^2.8.19",
+    "@o/models": "^2.8.20",
     "@o/orbit-workspace-deps": "^2.8.19",
     "@o/telemetry": "^2.8.19",
     "@o/utils": "^2.8.19",

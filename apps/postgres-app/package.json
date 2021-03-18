@@ -1,7 +1,7 @@
 {
   "name": "@o/postgres-app",
   "description": "Plug in Postgres SQL database and query it",
-  "version": "2.8.19",
+  "version": "2.8.20",
   "main": "index.tsx",
   "config": {
     "orbitApp": true
@@ -11,9 +11,9 @@
     "build": "orbit build"
   },
   "dependencies": {
-    "@o/kit": "^2.8.19",
-    "@o/ui": "^2.8.19",
-    "@o/worker-kit": "^2.8.19",
+    "@o/kit": "^2.8.20",
+    "@o/ui": "^2.8.20",
+    "@o/worker-kit": "^2.8.20",
     "apollo-link": "^1.2.12",
     "graphql": "^14.4.2",
     "pg": "^7.11.0",

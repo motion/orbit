@@ -1,6 +1,6 @@
 {
   "name": "@o/orbit-repl",
-  "version": "2.8.19",
+  "version": "2.8.20",
   "private": true,
   "bin": "./dev.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "devDependencies": {
-    "@o/debug-apps": "^2.8.19",
+    "@o/debug-apps": "^2.8.20",
     "execa": "3.1.0"
   }
 }

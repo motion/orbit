@@ -1,7 +1,7 @@
 {
   "name": "@o/gloss-webpack-test",
   "private": true,
-  "version": "2.8.20",
+  "version": "2.8.21",
   "main": "src/index.tsx",
   "scripts": {
     "build": "NODE_ENV=development mcro-build --extract-static-styles --split-chunks --extract-css --build --entry ./src/index --port 5001 --target web --devtool source-map --disable-hmr",
@@ -11,9 +11,9 @@
   "dependencies": {
     "@babel/core": "^7.6.0",
     "@babel/runtime": "^7.4.5",
-    "@o/babel-preset-motion": "^2.8.20",
-    "@o/ui": "^2.8.20",
-    "gloss": "^2.8.20",
+    "@o/babel-preset-motion": "^2.8.21",
+    "@o/ui": "^2.8.21",
+    "gloss": "^2.8.21",
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
   }

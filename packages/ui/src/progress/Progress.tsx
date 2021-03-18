@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { ProgressBar } from './progressBar'
-import { ProgressCircle } from './progressCircle'
+import { ProgressBar } from './ProgressBar'
+import { ProgressCircle } from './ProgressCircle'
 
 type Props = {
   percent?: number

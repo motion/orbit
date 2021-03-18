@@ -27,7 +27,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const WebpackNotifierPlugin = require('webpack-notifier')
-const TerserPlugin = require('terser-webpack-plugin')
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 // const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 // const CircularDependencyPlugin = require('circular-dependency-plugin')
@@ -238,7 +237,7 @@ const babelrcOptions = {
   cacheDirectory: false,
 }
 
-console.log('babel', babelpath, babelrcOptions)
+console.log('babel2', babelpath, babelrcOptions)
 
 async function makeConfig() {
   // get the list of paths to all monorepo packages to apply ts-loader too

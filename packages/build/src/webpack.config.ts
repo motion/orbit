@@ -300,7 +300,7 @@ async function makeConfig() {
     devtool,
     resolve: {
       extensions: ['.js', '.ts', '.tsx', '.jsx', '.wasm', '.mjs'],
-      mainFields: ['ts:main', 'module', 'source', 'browser', 'main'],
+      mainFields: ['module', 'source', 'browser', 'main'],
       alias,
     },
     resolveLoader: {

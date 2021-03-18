@@ -4,10 +4,6 @@
   "compilerOptions": {
     "composite": true,
     "strictNullChecks": true,
-    "esModuleInterop": true,
-    "module": "CommonJS",
-    "target": "ES2020",
-    "resolveJsonModule": false,
     "outDir": "_",
     "rootDir": "src"
   },
